@@ -1,0 +1,208 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/fonts/Manrope/Manrope-ExtraLight.woff2') format('woff2');
+    font-weight: 200;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/fonts/Manrope/Manrope-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/fonts/Manrope/Manrope-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/fonts/Manrope/Manrope-Medium.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/fonts/Manrope/Manrope-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/fonts/Manrope/Manrope-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Manrope';
+    src: url('/fonts/Manrope/Manrope-ExtraBold.woff2') format('woff2');
+    font-weight: 800;
+    font-style: normal;
+}
+
+* {
+    font-family: 'Manrope';
+}
+
+@theme {
+    --color-primary: rgba(0, 51, 102, 1);
+    --color-secondary: rgba(245, 248, 252, 1);
+    --color-main: rgba(38, 38, 38, 1);
+    --color-light: rgba(126, 126, 126, 1);
+    --color-rare: rgba(174, 189, 209, 1);
+    --color-dark-primary: rgba(31, 41, 55, 1);
+    --color-dark-secondary: rgba(17, 24, 39, 1);
+    --color-secondary-2: rgba(233, 239, 255, 1);
+    --color-dark-border: rgba(75, 85, 99, 1);
+    --color-light-border: rgba(209, 213, 219, 1);
+    --color-idle: rgba(204, 204, 204, 1);
+    --color-success: rgba(46, 213, 115, 1);
+    --color-warning: rgba(255, 171, 0, 1);
+    --color-error: rgba(255, 71, 87, 1);
+    --color-info: rgba(0, 122, 255, 1);
+    --color-muted: rgb(239 239 239);
+    --color-danger: rgba(255, 71, 87, 1);
+    --color-brand: rgba(85, 181, 108, 1);
+}
+
+@keyframes pulse {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.skeleton-pulse {
+    background-color: var(--color-secondary);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.dark .skeleton-pulse {
+    background-color: var(--color-dark-primary);
+}
+
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
+.icon-filter {
+    filter: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)
+        hue-rotate(190deg) brightness(90%) contrast(105%);
+}
+
+.dark .icon-dark-filter {
+    filter: brightness(0) saturate(100%) invert(64%) sepia(9%) saturate(2009%)
+        hue-rotate(82deg) brightness(94%) contrast(101%);
+}
+
+@layer components {
+    .button {
+        font-family: 'Manrope', sans-serif;
+        white-space: nowrap;
+        font-size: 1rem;
+        font-weight: 600;
+        padding: 0.7rem 2rem;
+        border-radius: 2.5rem;
+        cursor: pointer;
+        transition: all var(--ease-in-out) 0.3s;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: none !important;
+        color: white;
+    }
+
+    .button:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+
+    .button.primary {
+        background: var(--color-brand);
+        color: white;
+    }
+
+    .button.secondary {
+        background: var(--color-secondary);
+        color: var(--color-primary-50);
+        border: 0.125rem solid var(--color-primary-50);
+    }
+
+    .button.outline {
+        background-color: var(--color-primary-50);
+        color: var(--color-secondary);
+        border: 0.125rem solid var(--color-primary);
+    }
+
+    .button.primarysmall {
+        background: var(--color-primary-600);
+        color: var(--color-primary-50);
+        height: var(--spacing-8);
+        border: 0.125rem solid var(--color-primary-600);
+    }
+
+    .button.success {
+        background-color: var(--color-success);
+        color: var(--color-primary-50);
+    }
+
+    .button.danger {
+        background-color: var(--color-danger);
+        color: var(--color-primary-50);
+        padding: 0 var(--spacing-4);
+        border-radius: var(--radius-full);
+        border: 0.0625rem solid var(--color-danger);
+    }
+
+    .button.warning {
+        background-color: var(--color-warning);
+        color: var(--color-secondary);
+    }
+
+    /* .button.primary:hover {
+        background-color: var(--color-primary-50);
+        color: var(--color-primary);
+        border: 0.125rem solid var(--color-primary);
+        transition: all var(--ease-in-out) 0.3s;
+    } */
+
+    /* .button.secondary:hover {
+        background-color: var(--color-primary-50);
+        color: var(--color-secondary);
+        border: 0.125rem solid var(--color-secondary);
+        transition: all var(--ease-in-out) 0.3s;
+    } */
+
+    /* .button.outline:hover {
+        background-color: var(--color-primary);
+        color: var(--color-primary-50);
+        border: 0.125rem solid var(--color-primary);
+        transition: all var(--ease-in-out) 0.3s;
+    } */
+}
