@@ -33,17 +33,17 @@ const Input = ({
                 ref={inputRef}
                 type="search"
                 placeholder={placeholder}
-                className="w-full px-4 py-3 rounded-[2.5rem] border border-light-border dark:border-dark-border dark:bg-dark-secondary dark:text-light focus:outline-none focus:ring-2"
+                className="w-full px-4 py-3 rounded-[2.5rem] border border-border dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder-gray-400 dark:placeholder-white"
                 aria-label="Search"
                 onChange={(e) => onSearch?.(e.target.value)}
             />
             {showShortcut && (
-                <div className="absolute right-12 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm text-light ">
-                    <kbd className="px-2 py-1 text-base font-semibold text-light bg-secondary dark:bg-dark-primary rounded">
+                <div className="absolute right-12 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm text-white ">
+                    <kbd className="px-2 py-1 text-accent text-sm font-light bg-secondary dark:bg-dark-primary rounded">
                         Ctrl
                     </kbd>
                     <span>+</span>
-                    <kbd className="px-2 py-1 text-base font-semibold text-light bg-secondary dark:bg-dark-primary rounded">
+                    <kbd className="px-2 py-1 text-accent text-sm font-light bg-secondary dark:bg-dark-primary rounded">
                         K
                     </kbd>
                 </div>

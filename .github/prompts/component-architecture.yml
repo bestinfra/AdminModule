@@ -1,0 +1,270 @@
+component_architecture:
+  patterns:
+    - "Atomic Design"
+    - "Container/Presentational Pattern"
+    - "Compound Components"
+    - "Render Props Pattern"
+
+component_types:
+  atoms:
+    description: "Basic building blocks - buttons, inputs, icons"
+    location: "src/components/global/"
+    examples:
+      - "Button.tsx"
+      - "Input.tsx"
+      - "LoadingSpinner.tsx"
+    naming: "PascalCase"
+    props_interface: "ComponentNameProps"
+    export_type: "named export"
+
+  molecules:
+    description: "Simple combinations of atoms"
+    location: "src/components/global/"
+    examples:
+      - "Card.tsx"
+      - "Table.tsx"
+      - "TimeRangeSelector.tsx"
+    dependencies: "atoms"
+    state_management: "local state only"
+
+  organisms:
+    description: "Complex UI sections"
+    location: "src/components/layout/"
+    examples:
+      - "Header.tsx"
+      - "Sidebar.tsx"
+      - "MainLayout.tsx"
+    dependencies: "atoms, molecules"
+    state_management: "context or props"
+
+  templates:
+    description: "Page-level layouts"
+    location: "src/pages/"
+    examples:
+      - "Dashboard.tsx"
+      - "ModuleSelection.tsx"
+      - "Ticket.tsx"
+    dependencies: "organisms, molecules, atoms"
+    state_management: "context, hooks, API calls"
+
+  pages:
+    description: "Complete page implementations"
+    location: "src/pages/"
+    routing: "React Router"
+    data_fetching: "API calls, context"
+    error_handling: "Error boundaries"
+
+component_structure:
+  file_organization:
+    - "Component file (.tsx)"
+    - "Types file (if complex) (.types.ts)"
+    - "Styles file (if needed) (.module.css)"
+    - "Test file (.test.tsx)"
+
+  component_template:
+    imports:
+      - "React imports"
+      - "TypeScript types"
+      - "Third-party libraries"
+      - "Local components"
+    
+    types:
+      - "Props interface"
+      - "State interface (if needed)"
+      - "Event handlers"
+    
+    component:
+      - "Function component declaration"
+      - "Props destructuring"
+      - "State management"
+      - "Event handlers"
+      - "Effects (if needed)"
+      - "Render logic"
+    
+    exports:
+      - "Named export for component"
+      - "Type exports (if needed)"
+
+naming_conventions:
+  files:
+    - "PascalCase for component files"
+    - "camelCase for utility files"
+    - "kebab-case for CSS files"
+  
+  components:
+    - "PascalCase for component names"
+    - "Descriptive and semantic names"
+    - "Avoid abbreviations"
+  
+  props:
+    - "camelCase for prop names"
+    - "Boolean props start with 'is', 'has', 'can'"
+    - "Event handlers start with 'on'"
+    - "Callback props end with 'Callback' or 'Handler'"
+
+props_patterns:
+  required_props:
+    - "Essential functionality"
+    - "No default values"
+    - "Clear TypeScript types"
+  
+  optional_props:
+    - "Default values provided"
+    - "Marked with '?' in TypeScript"
+    - "Sensible defaults"
+  
+  children_props:
+    - "React.ReactNode type"
+    - "Flexible content rendering"
+    - "Compound component support"
+
+state_management:
+  local_state:
+    - "useState for simple state"
+    - "useReducer for complex state"
+    - "Component-specific data"
+  
+  context_state:
+    - "AppContext for global state"
+    - "ThemeProvider for theme"
+    - "Shared across components"
+  
+  external_state:
+    - "API calls with useEffect"
+    - "Loading states"
+    - "Error handling"
+
+styling_guidelines:
+  approach: "Tailwind CSS"
+  responsive_design: "Mobile-first"
+  theme_support: "Dark/Light mode"
+  custom_classes: "Component-specific utilities"
+  
+  class_organization:
+    - "Layout classes first"
+    - "Spacing classes"
+    - "Typography classes"
+    - "Color classes"
+    - "Interactive states"
+
+error_handling:
+  error_boundaries:
+    - "Page-level error boundaries"
+    - "Graceful fallbacks"
+    - "Error reporting"
+  
+  loading_states:
+    - "Skeleton components"
+    - "Loading spinners"
+    - "Progressive loading"
+  
+  validation:
+    - "Prop validation with TypeScript"
+    - "Runtime validation for user input"
+    - "Form validation"
+
+performance_optimization:
+  memoization:
+    - "React.memo for expensive renders"
+    - "useMemo for expensive calculations"
+    - "useCallback for event handlers"
+  
+  lazy_loading:
+    - "React.lazy for route-based code splitting"
+    - "Dynamic imports for heavy components"
+  
+  bundle_optimization:
+    - "Tree shaking friendly imports"
+    - "Avoid unnecessary re-renders"
+
+testing_strategy:
+  unit_tests:
+    - "Component rendering"
+    - "Props validation"
+    - "Event handlers"
+    - "State changes"
+  
+  integration_tests:
+    - "Component interactions"
+    - "User workflows"
+    - "API integration"
+  
+  test_files:
+    - "Same directory as component"
+    - "ComponentName.test.tsx"
+    - "Test utilities in __tests__ folder"
+
+accessibility:
+  semantic_html:
+    - "Proper HTML elements"
+    - "ARIA attributes"
+    - "Keyboard navigation"
+  
+  screen_readers:
+    - "Alt text for images"
+    - "Descriptive labels"
+    - "Focus management"
+  
+  color_contrast:
+    - "WCAG AA compliance"
+    - "Theme-aware colors"
+    - "High contrast support"
+
+documentation:
+  component_docs:
+    - "Props documentation"
+    - "Usage examples"
+    - "Storybook stories"
+  
+  code_comments:
+    - "Complex logic explanation"
+    - "Business rules"
+    - "TODO comments for future work"
+  
+  readme_files:
+    - "Component library documentation"
+    - "Getting started guide"
+    - "Best practices"
+
+folder_structure:
+  components:
+    global:
+      - "Reusable across modules"
+      - "No business logic"
+      - "Pure UI components"
+    
+    forms:
+      - "Form-specific components"
+      - "Validation logic"
+      - "Form state management"
+    
+    layout:
+      - "Page layout components"
+      - "Navigation components"
+      - "Structure components"
+    
+    skeletons:
+      - "Loading state components"
+      - "Placeholder components"
+      - "Progressive loading"
+
+  pages:
+    - "Route-based components"
+    - "Page-level logic"
+    - "Data fetching"
+    - "Error boundaries"
+
+  providers:
+    - "Context providers"
+    - "Theme providers"
+    - "State management"
+
+  hooks:
+    - "Custom React hooks"
+    - "Business logic hooks"
+    - "Utility hooks"
+
+  types:
+    - "TypeScript type definitions"
+    - "Interface declarations"
+    - "Type utilities" 

@@ -36,7 +36,7 @@ const Holder: React.FC<HolderProps> = ({
             <div className="flex justify-between items-center dark:bg-dark-secondary bg-secondary p-5 ">
                 <h3 className="m-0 text-base font-normal text-primary dark:text-white flex items-center gap-1">
                     {title}
-                    <span className="text-light font-normal text-sm">
+                    <span className="text-light font-normal text-sm dark:text-accent">
                         {DateRange}
                     </span>
                 </h3>
