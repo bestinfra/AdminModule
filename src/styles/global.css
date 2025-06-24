@@ -61,11 +61,12 @@
     --color-main: rgba(38, 38, 38, 1);
     --color-light: rgba(126, 126, 126, 1);
     --color-rare: rgba(174, 189, 209, 1);
-    --color-dark-primary: rgba(31, 41, 55, 1);
-    --color-dark-secondary: rgba(17, 24, 39, 1);
+    --color-dark-primary: rgba(4, 19, 40, 1);
+    --color-dark-secondary: rgba(6, 21, 45, 1);
     --color-secondary-2: rgba(233, 239, 255, 1);
     --color-dark-border: rgba(75, 85, 99, 1);
-    --color-light-border: rgba(209, 213, 219, 1);
+
+
     --color-idle: rgba(204, 204, 204, 1);
     --color-success: rgba(46, 213, 115, 1);
     --color-warning: rgba(255, 171, 0, 1);
@@ -73,7 +74,16 @@
     --color-info: rgba(0, 122, 255, 1);
     --color-muted: rgb(239 239 239);
     --color-danger: rgba(255, 71, 87, 1);
-    --color-brand: rgba(85, 181, 108, 1);
+    --color-brand: rgba(85, 181, 108, 1);  /* green */
+    /* new added colors */
+    --color-border:rgba(233, 239, 255, 1); 
+    --color-dark-border: rgba(9, 27, 59, 1); 
+    --color-background-secondary: rgba(245, 248, 252, 1);
+    --color-brand-blue: rgba(22, 59, 124, 1);
+    --color-grey:rgba(126, 126, 126, 1);
+    --color-accent: rgba(71, 97, 137, 1);
+
+
 }
 
 @keyframes pulse {
@@ -94,7 +104,7 @@
 }
 
 .dark .skeleton-pulse {
-    background-color: var(--color-dark-primary);
+    background-color: var(--color-dark-secondary);
 }
 
 .scrollbar-hide {
@@ -122,6 +132,7 @@ img {
 }
 
 @layer components {
+    
     .button {
         font-family: 'Manrope', sans-serif;
         white-space: nowrap;
@@ -185,6 +196,7 @@ img {
         color: var(--color-secondary);
     }
 
+
     /* .button.primary:hover {
         background-color: var(--color-primary-50);
         color: var(--color-primary);
@@ -205,4 +217,70 @@ img {
         border: 0.125rem solid var(--color-primary);
         transition: all var(--ease-in-out) 0.3s;
     } */
+     /* Input Fields */
+     .input {
+        width: 100%;
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        border-radius: 1.5rem;
+
+        border: 1px solid var(--color-border);
+        background-color: white;
+        color: var(--color-main);
+        transition: all 0.2s ease;
+    }
+
+    .input:focus {
+        outline: none;
+        border-color: var(--color-border);
+    }
+
+    .input:disabled {
+        background-color: var(--color-muted);
+        color: var(--color-light);
+        cursor: not-allowed;
+    }
+
+    .dark .input {
+        background-color: var(--color-dark-primary);
+        color: white;
+        border-color: var(--color-dark-border);
+    }
+
+    .dark .input:focus {
+        border-color: var(--color-border);
+    }
+
+    /* Textarea */
+    .textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    /* Select */
+    .select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg fill='gray' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
+        padding-right: 2.5rem;
+    }
+
+    /* Label */
+    .label {
+        display: block;
+        font-size: 1rem;
+        font-weight: 500;
+        color: var(--color-main);
+    }
+
+    .dark .label {
+        color: white;
+    }   
+
+
+
+
+
 }
