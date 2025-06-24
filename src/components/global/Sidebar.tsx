@@ -6,9 +6,11 @@ import { useApp } from '../../context/AppContext';
 
 interface SubMenuItem {
     title: string;
-    link: string;
+    link?: string;
     icon?: string;
     count?: number;
+    hasSubmenu?: boolean;
+    submenu?: SubMenuItem[];
 }
 
 interface MenuItem {
@@ -112,6 +114,53 @@ const defaultMenus: MenuCategory[] = [
                     {
                         title: 'Monthly Reports',
                         link: '/user/reports/monthly',
+                    },
+                ],
+            },
+            {
+                title: 'Apps',
+                icon: '/icons/dashboard.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Dashboard',
+                        link: '',
+                    },
+                    {
+                        title: 'Pages',
+                        link: '/apps/pages',
+                    },
+                    {
+                        title: 'Media Library',
+                        link: '/apps/media-library',
+                    },
+                    // {
+                    //     title: 'Modules',
+                    //     link: '',
+                    // },
+                    {
+                        title: 'Settings',
+                        link: '/apps/settings',
+                        // icon: '/icons/dashboard.svg',
+                        // hasSubmenu: true,
+                        // submenu: [
+                        //     {
+                        //         title: 'Applications',
+                        //         link: '/apps/applications',
+                        //     },
+                        //     {
+                        //         title: 'Branding',
+                        //         link: '/apps/branding',
+                        //     },
+                        //     {
+                        //         title: 'Domain & Hosting',
+                        //         link: '/apps/domain-hosting',
+                        //     },
+                        //     {
+                        //         title: 'Modules',
+                        //         link: '/apps/modules',
+                        //     },
+                        // ],
                     },
                 ],
             },
@@ -333,42 +382,133 @@ const Sidebar = ({
                                                                             key={
                                                                                 subIndex
                                                                             }>
-                                                                            <Link
-                                                                                to={
-                                                                                    subItem.link
-                                                                                }
-                                                                                className={`flex justify-between items-center px-7 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 ${
-                                                                                    location.pathname ===
-                                                                                    subItem.link
-                                                                                        ? 'text-primary dark:text-white dark:hover:text-white'
-                                                                                        : 'text-idle dark:hover:text-white'
-                                                                                }`}>
-                                                                                <span className="relative flex items-center">
-                                                                                    <span
-                                                                                        className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                                                                                            location.pathname ===
-                                                                                            subItem.link
-                                                                                                ? 'bg-primary dark:bg-white'
-                                                                                                : 'bg-idle '
-                                                                                        }`}></span>
-                                                                                    {
-                                                                                        subItem.title
-                                                                                    }
-                                                                                </span>
-                                                                                {subItem.count && (
-                                                                                    <span
-                                                                                        className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand justify-center hover:bg-brand items-center ${
-                                                                                            location.pathname ===
-                                                                                            subItem.link
-                                                                                                ? 'bg-brand'
-                                                                                                : 'bg-primary'
-                                                                                        }`}>
-                                                                                        {
-                                                                                            subItem.count
+                                                                            {subItem.hasSubmenu ? (
+                                                                                <div className="relative w-full">
+                                                                                    <button
+                                                                                        onClick={() =>
+                                                                                            toggleSubmenu(
+                                                                                                `${menuItem.title}-${subItem.title}`
+                                                                                            )
                                                                                         }
+                                                                                        className={`flex justify-between items-center px-7 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 w-full text-left ${
+                                                                                            location.pathname === subItem.link
+                                                                                                ? 'text-primary dark:text-white dark:hover:text-white'
+                                                                                                : 'text-idle dark:hover:text-white'
+                                                                                        }`}
+                                                                                        aria-expanded={
+                                                                                            expandedMenus[
+                                                                                                `${menuItem.title}-${subItem.title}`
+                                                                                            ]
+                                                                                        }
+                                                                                        aria-controls={`submenu-${menuItem.title}-${subItem.title}`}>
+                                                                                        <span className="relative flex items-center">
+                                                                                            <span
+                                                                                                className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                                                                                                    location.pathname === subItem.link
+                                                                                                        ? 'bg-primary dark:bg-white'
+                                                                                                        : 'bg-idle '
+                                                                                                }`}></span>
+                                                                                            {subItem.title}
+                                                                                        </span>
+                                                                                        <span
+                                                                                            className={`transition-transform ${
+                                                                                                expandedMenus[
+                                                                                                    `${menuItem.title}-${subItem.title}`
+                                                                                                ]
+                                                                                                    ? 'rotate-180'
+                                                                                                    : ''
+                                                                                            }`}>
+                                                                                            <img
+                                                                                                src="/icons/arrow-down.svg"
+                                                                                                alt=""
+                                                                                                className="w-3 h-3"
+                                                                                                aria-hidden="true"
+                                                                                            />
+                                                                                        </span>
+                                                                                    </button>
+                                                                                    <ul
+                                                                                        id={`submenu-${menuItem.title}-${subItem.title}`}
+                                                                                        className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
+                                                                                            expandedMenus[
+                                                                                                `${menuItem.title}-${subItem.title}`
+                                                                                            ]
+                                                                                                ? 'max-h-[500px] opacity-100'
+                                                                                                : 'max-h-0 opacity-0'
+                                                                                        }`}>
+                                                                                        {subItem.submenu?.map(
+                                                                                            (
+                                                                                                nestedItem,
+                                                                                                nestedIndex
+                                                                                            ) => (
+                                                                                                <li
+                                                                                                    key={
+                                                                                                        nestedIndex
+                                                                                                    }>
+                                                                                                    <Link
+                                                                                                        to={
+                                                                                                            nestedItem.link || '#'
+                                                                                                        }
+                                                                                                        className={`flex justify-between items-center px-10 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 ${
+                                                                                                            location.pathname === nestedItem.link
+                                                                                                                ? 'text-primary dark:text-white dark:hover:text-white'
+                                                                                                                : 'text-idle dark:hover:text-white'
+                                                                                                        }`}>
+                                                                                                        <span className="relative flex items-center">
+                                                                                                            <span
+                                                                                                                className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                                                                                                                    location.pathname === nestedItem.link
+                                                                                                                        ? 'bg-primary dark:bg-white'
+                                                                                                                        : 'bg-idle '
+                                                                                                                }`}></span>
+                                                                                                            {nestedItem.title}
+                                                                                                        </span>
+                                                                                                        {nestedItem.count && (
+                                                                                                            <span
+                                                                                                                className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand justify-center hover:bg-brand items-center ${
+                                                                                                                    location.pathname === nestedItem.link
+                                                                                                                        ? 'bg-brand'
+                                                                                                                        : 'bg-primary'
+                                                                                                                }`}>
+                                                                                                                {nestedItem.count}
+                                                                                                            </span>
+                                                                                                        )}
+                                                                                                    </Link>
+                                                                                                </li>
+                                                                                            )
+                                                                                        )}
+                                                                                    </ul>
+                                                                                </div>
+                                                                            ) : (
+                                                                                <Link
+                                                                                    to={
+                                                                                        subItem.link || '#'
+                                                                                    }
+                                                                                    className={`flex justify-between items-center px-7 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 ${
+                                                                                        location.pathname === subItem.link
+                                                                                            ? 'text-primary dark:text-white dark:hover:text-white'
+                                                                                            : 'text-idle dark:hover:text-white'
+                                                                                    }`}>
+                                                                                    <span className="relative flex items-center">
+                                                                                        <span
+                                                                                            className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
+                                                                                                location.pathname === subItem.link
+                                                                                                    ? 'bg-primary dark:bg-white'
+                                                                                                    : 'bg-idle '
+                                                                                            }`}></span>
+                                                                                        {subItem.title}
                                                                                     </span>
-                                                                                )}
-                                                                            </Link>
+                                                                                    {subItem.count && (
+                                                                                        <span
+                                                                                            className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand justify-center hover:bg-brand items-center ${
+                                                                                                location.pathname === subItem.link
+                                                                                                    ? 'bg-brand'
+                                                                                                    : 'bg-primary'
+                                                                                            }`}>
+                                                                                            {subItem.count}
+                                                                                        </span>
+                                                                                    )}
+                                                                                </Link>
+                                                                            )}
                                                                         </li>
                                                                     )
                                                                 )}
