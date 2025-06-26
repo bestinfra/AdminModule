@@ -56,7 +56,7 @@ interface TicketModuleData {
 const App: React.FC = () => {
     const [loading, setLoading] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-        const [ticketData, setTicketData] = useState<TicketData[]>([
+    const [ticketData, setTicketData] = useState<TicketData[]>([
         {
             id: 1,
             ticketNumber: 'TICK-001',
@@ -146,7 +146,7 @@ const App: React.FC = () => {
             name: 'description',
             type: 'textarea' as const,
             label: 'Label6',
-                    placeholder: 'Enter Label 6',
+            placeholder: 'Enter Label 6',
             required: true,
             validation: {
                 minLength: 10,

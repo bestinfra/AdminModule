@@ -51,9 +51,9 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
     return (
         <div
             ref={containerRef}
-            className="inline-flex bg-white dark:bg-dark-primary rounded-3xl p-1 relative overflow-hidden">
+            className="inline-flex bg-white dark:bg-primary-dark rounded-3xl p-1 relative overflow-hidden">
             <div
-                className="absolute bg-secondary dark:bg-dark-secondary rounded-3xl"
+                className="absolute bg-primary-lightest dark:bg-primary-dark-light rounded-3xl"
                 style={{
                     width: `${dimensions.width}px`,
                     height: 'calc(100% - 8px)',
@@ -70,9 +70,9 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
                 <span
                     ref={selectedTimeRange === range ? selectedRef : null}
                     key={range}
-                    className={`relative z-10 border-none dark:text-light text-main px-3 py-2 rounded-3xl font-medium text-sm cursor-pointer ${
+                    className={`relative z-10 border-none dark:text-subinfo text-main px-3 py-2 rounded-3xl font-medium text-sm cursor-pointer ${
                         selectedTimeRange === range
-                            ? 'text-primary dark:text-white'
+                            ? 'text-subinfo dark:text-white'
                             : ''
                     }`}
                     onClick={() => handleTimeRangeChange(range)}>

@@ -412,7 +412,7 @@ const Table: React.FC<TableProps> = ({
                     className="w-full rounded-2xl border border-secondary border-separate border-spacing-0 overflow-hidden"
                     role="grid"
                     aria-label={text || 'Data Table'}>
-                    <thead className="bg-secondary overflow-hidden">
+                    <thead className="bg-primary-lightest overflow-hidden">
                         <tr className="font-manrope text-base font-normal w-full">
                             {columns.map((column) => (
                                 <th
@@ -652,7 +652,7 @@ const Table: React.FC<TableProps> = ({
                                             ? !serverPagination.hasPrevPage
                                             : currentPage === 1
                                     }
-                                    className="px-4 py-2 border border-primary-200 rounded-full bg-white cursor-pointer hover:bg-primary hover:text-primary-50 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed font-manrope">
+                                    className="px-4 py-2 border border-primary-200 rounded-full bg-white cursor-pointer hover:bg-primary hover:text-secondary-50 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed font-manrope">
                                     Previous
                                 </button>
                                 <span className="text-sm">
@@ -676,7 +676,7 @@ const Table: React.FC<TableProps> = ({
                                             ? !serverPagination.hasNextPage
                                             : currentPage === totalPages
                                     }
-                                    className="px-4 py-2 border border-primary-200 rounded-full bg-white cursor-pointer hover:bg-primary hover:text-primary-50 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed font-manrope">
+                                    className="px-4 py-2 border border-primary-200 rounded-full bg-white cursor-pointer hover:bg-primary hover:text-secondary-50 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed font-manrope">
                                     Next
                                 </button>
                             </div>
@@ -685,7 +685,7 @@ const Table: React.FC<TableProps> = ({
                 ))}
 
             {showDeleteModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-secondary-900/50 backdrop-blur-sm">
+                <div className="fixed inset-0 flex items-center justify-center bg-primary-lightest-900/50 backdrop-blur-sm">
                     <div className="bg-white p-8 rounded-2xl w-[22%] flex flex-col gap-4">
                         <div className="flex justify-between items-center">
                             <div className="text-lg font-semibold">

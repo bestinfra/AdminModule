@@ -114,7 +114,7 @@ const Modal: React.FC<ModalProps> = ({
           <main className={`flex min-h-full items-center justify-center p-4 ${centered ? '' : 'pt-16'}`}>
             <article
               ref={modalRef}
-              className={`relative w-full ${sizeClasses[size]} bg-white hover:bg-brand-blue-dark dark:bg-gray-800 rounded-xl shadow-2xl border border-border dark:border-gray-700 transform transition-all duration-300 ease-out ${
+              className={`relative w-full ${sizeClasses[size]} bg-white hover:bg-brand-blue-dark dark:bg-primary-dark-light rounded-xl shadow-2xl border border-primary-border dark:border-primary-dark-light transform transition-all duration-300 ease-out ${
                 isOpen 
                   ? 'scale-100 opacity-100 translate-y-0' 
                   : 'scale-95 opacity-0 translate-y-4'
@@ -123,11 +123,11 @@ const Modal: React.FC<ModalProps> = ({
               role="document"
             >
               {(title || showCloseIcon) && (
-                <header className="flex items-center justify-between px-6 py-4  border-b  border-border dark:border-gray-700 bg-white dark:bg-dark-primary rounded-t-xl ">
+                <header className="flex items-center justify-between px-6 py-4  border-b  border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-t-xl ">
                   {title && (
                     <h2
                       id={`${uniqueModalId}-title`}
-                      className="text-lg font-semibold text-gray-900 dark:text-white"
+                      className="text-lg font-semibold text-main dark:text-white"
                     >
                       {title}
                     </h2>
@@ -148,14 +148,14 @@ const Modal: React.FC<ModalProps> = ({
                 </header>
               )}
 
-              <main className="px-6 py-6 dark:bg-dark-primary text-main dark:text-white">
+              <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white">
                 <section id={`${uniqueModalId}-description`} className="space-y-4">
                   {children}
                 </section>
               </main>
 
               {showConfirmButton && (
-                <footer className="flex justify-end px-6 py-4 border-t border-border dark:border-gray-700 bg-white dark:bg-dark-primary rounded-b-xl">
+                <footer className="flex justify-end px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
                   <Button
                     label={confirmButtonLabel}
                     onClick={onConfirm}

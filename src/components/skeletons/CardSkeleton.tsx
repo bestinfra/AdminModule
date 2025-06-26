@@ -1,7 +1,7 @@
 const CardSkeleton = () => {
     return (
-        <article className="bg-secondary dark:bg-dark-secondary rounded-3xl shadow-md/20 shadow-black dark:shadow-md/60 dark:shadow-black">
-            <section className="flex justify-between items-start p-6 border border-border bg-white dark:bg-dark-primary rounded-3xl dark:border dark:border-dark-border">
+        <article className="bg-primary-lightest dark:bg-primary-dark-light rounded-3xl shadow-md/20 shadow-black dark:shadow-md/60 dark:shadow-black">
+            <section className="flex justify-between items-start p-6 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
                 <div className="space-y-2">
                     <div
                         className="skeleton-pulse w-30 h-4 rounded-lg"
