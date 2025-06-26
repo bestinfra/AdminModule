@@ -201,7 +201,7 @@ const defaultProps: Partial<
     Omit<SidebarProps, 'isCollapsed' | 'onThemeToggle'>
 > = {
     logo: {
-        src: '/images/full-bi-logo.svg',
+        src: '/images/bi-blue-logo.svg',
         alt: 'Company Logo',
         collapsedSrc: '/images/changed-logo.svg',
     },
@@ -262,13 +262,13 @@ const Sidebar = ({
                 isSidebarCollapsed ? 'w-20' : 'w-72'
             }`}>
             <nav
-                className={`h-screen flex flex-col justify-between items-center w-full bg-secondary dark:bg-dark-primary border-r border-r-secondary relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
+                className={`h-screen flex flex-col justify-between items-center w-full bg-secondary dark:bg-dark-secondary border-r border-r-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
                     isSidebarCollapsed ? 'w-20' : 'w-72'
                 } ${className}`}
                 aria-label="Main navigation">
                 <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
                     <header
-                        className={`sticky top-0 z-10 dark:bg-dark-secondary h-24 flex justify-center items-center ${
+                        className={`sticky top-0 z-10 dark:bg-dark-primary h-24 flex justify-center border-b border-b-border dark:border-dark-border items-center ${
                             isSidebarCollapsed
                                 ? 'bg-primary px-4'
                                 : 'bg-white px-16'
@@ -276,8 +276,12 @@ const Sidebar = ({
                         <img
                             src={
                                 isSidebarCollapsed
-                                    ? logo?.collapsedSrc || logo?.src
-                                    : logo?.src
+                                    ? (isDarkMode
+                                        ? '/images/bi-white-logo.svg'
+                                        : logo?.collapsedSrc || logo?.src)
+                                    : (isDarkMode
+                                        ? '/images/bi-white-logo.svg'
+                                        : logo?.src)
                             }
                             alt={logo?.alt}
                             className={`md:block ${
@@ -285,7 +289,7 @@ const Sidebar = ({
                             }`}
                         />
                     </header>
-                    <main className="flex p-4 flex-col w-full md:block">
+                    <main className="flex p-4 flex-col w-full md:block dark:bg-dark-secondary">
                         {menus.map((category, categoryIndex) => (
                             <section
                                 key={categoryIndex}
@@ -308,11 +312,11 @@ const Sidebar = ({
                                                                     menuItem.title
                                                                 )
                                                             }
-                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer hover:bg-white  rounded-lg font-semibold w-full text-left ${
+                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
                                                                 location.pathname ===
                                                                 menuItem.link
-                                                                    ? 'text-primary bg-white hover:text-primary'
-                                                                    : 'text-main hover:text-primary dark:text-white dark:hover:bg-dark-secondary dark:hover:text-white'
+                                                                    ? 'text-primary bg-white dark:bg-brand-blue dark:text-white'
+                                                                    : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-dark-secondary dark:hover:text-white'
                                                             }`}
                                                             aria-expanded={
                                                                 expandedMenus[
@@ -448,10 +452,10 @@ const Sidebar = ({
                                                                                                         to={
                                                                                                             nestedItem.link || '#'
                                                                                                         }
-                                                                                                        className={`flex justify-between items-center px-10 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 ${
+                                                                                                        className={`flex justify-between items-center px-10 pr-4 py-2 text-sm font-semibold group transition-colors duration-200 ${
                                                                                                             location.pathname === nestedItem.link
-                                                                                                                ? 'text-primary dark:text-white dark:hover:text-white'
-                                                                                                                : 'text-idle dark:hover:text-white'
+                                                                                                                ? 'text-primary dark:text-white'
+                                                                                                                : 'text-idle hover:text-primary dark:hover:text-white'
                                                                                                         }`}>
                                                                                                         <span className="relative flex items-center">
                                                                                                             <span
@@ -499,10 +503,10 @@ const Sidebar = ({
                                                                                     </span>
                                                                                     {subItem.count && (
                                                                                         <span
-                                                                                            className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand justify-center hover:bg-brand items-center ${
+                                                                                            className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand items-center ${
                                                                                                 location.pathname === subItem.link
-                                                                                                    ? 'bg-brand'
-                                                                                                    : 'bg-primary'
+                                                                                                    ? 'bg-primary dark:bg-brand'
+                                                                                                    : 'bg-success dark:bg-primary'
                                                                                             }`}>
                                                                                             {subItem.count}
                                                                                         </span>
@@ -530,11 +534,11 @@ const Sidebar = ({
                                                                 onLogout();
                                                             }
                                                         }}
-                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group hover:bg-white dark:hover:bg-dark-secondary rounded-lg ${
+                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group rounded-lg ${
                                                             location.pathname ===
                                                             menuItem.link
-                                                                ? 'text-primary bg-white hover:text-primary dark:bg-dark-secondary dark:text-white dark:hover:text-white'
-                                                                : 'text-main hover:text-primary dark:text-white dark:hover:text-white'
+                                                                ? 'text-primary bg-white dark:bg-brand-blue dark:text-white'
+                                                                : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-dark-secondary dark:hover:text-white'
                                                         }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
                                                             <img
@@ -563,8 +567,8 @@ const Sidebar = ({
                                                                         className={`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center group-hover:bg-brand items-center ${
                                                                             location.pathname ===
                                                                             menuItem.link
-                                                                                ? 'bg-brand'
-                                                                                : 'bg-primary'
+                                                                                ? 'bg-primary dark:bg-brand'
+                                                                                : 'bg-success dark:bg-primary'
                                                                         }`}>
                                                                         {
                                                                             menuItem.count
@@ -583,7 +587,7 @@ const Sidebar = ({
                         ))}
                     </main>
                 </div>
-                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4">
+                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-dark-secondary">
                     {!isSidebarCollapsed ? (
                         <>
                             {appDownload?.enabled && (
@@ -607,7 +611,7 @@ const Sidebar = ({
                                             {appDownload.title}
                                         </h3>
                                         <p className="text-white text-sm font-semibold">
-                                            {appDownload.subtitle}
+                                            {""}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -644,7 +648,7 @@ const Sidebar = ({
 
                                 {footer?.showThemeToggle && (
                                     <button
-                                        className="w-10 h-10 border border-light-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
+                                        className="w-10 h-10 border border-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
                                         aria-label="Toggle dark mode"
                                         onClick={toggleTheme}>
                                         <img

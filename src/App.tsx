@@ -1,4 +1,3 @@
-import Ticket from './pages/ticket_module/Ticket';
 import { useEffect, useState } from 'react';
 import type { Column } from './components/global/Table';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -8,7 +7,7 @@ import MainLayout from './components/layout/MainLayout';
 import Card from './components/global/Card';
 import CardSkeleton from './components/skeletons/CardSkeleton';
 import NotFound from './pages/NotFound';
-import { AppProvider } from './context/AppContext';
+import { AppProvider } from './context/AppContext'; 
 import Holder from './components/global/Holder';
 import { BarChart } from './graphs';
 import PagesModule from './pages/Apps_module/PagesModule';
@@ -19,10 +18,13 @@ import DomainHosting from './pages/Apps_module/components/DomainHosting';
 import Modules from './pages/Apps_module/components/Modules';
 import Settings from './pages/Apps_module/Settings';
 import CreateProject from './pages/Apps_module/CreateProject';
+import Button from './components/global/Button';
+import Modal from './components/global/Modal';
 
 interface TableData {
     [key: string]: string | number | boolean | null | undefined;
 }
+
 
 interface TicketData extends TableData {
     id: number;
@@ -61,7 +63,8 @@ interface TicketModuleData {
 
 const App: React.FC = () => {
     const [loading, setLoading] = useState(false);
-    const [ticketData, setTicketData] = useState<TicketData[]>([
+    const [isModalOpen, setIsModalOpen] = useState(false);
+        const [ticketData, setTicketData] = useState<TicketData[]>([
         {
             id: 1,
             ticketNumber: 'TICK-001',
@@ -90,6 +93,98 @@ const App: React.FC = () => {
             createdAt: '2024-03-18',
         },
     ]);
+
+    const formInputs = [
+        {
+            name: 'ticketNumber',
+            type: 'text' as const,
+            label: 'Label1',
+            placeholder: 'Enter Label 1',
+            required: true,
+            validation: {
+                pattern: /^TICK-\d{3}$/,
+                minLength: 8,
+                maxLength: 10
+            }
+        },
+        {
+            name: 'subject',
+            type: 'text' as const,
+            label: 'Label2',
+            placeholder: 'Enter Label 2',
+            required: true,
+            validation: {
+                minLength: 5,
+                maxLength: 100
+            }
+        },
+        {
+            name: 'status',
+            type: 'select' as const,
+            label: 'Label3',
+            required: true, 
+            options: [
+                { value: 'Open', label: 'Open' },
+                { value: 'In Progress', label: 'In Progress' },
+                { value: 'Resolved', label: 'Resolved' },
+                { value: 'Closed', label: 'Closed' }
+            ]
+        },
+        {
+            name: 'priority',
+            type: 'select' as const,
+            label: 'Label4',
+            required: true,
+            options: [
+                { value: 'Low', label: 'Low' },
+                { value: 'Medium', label: 'Medium' },
+                { value: 'High', label: 'High' },
+                { value: 'Critical', label: 'Critical' }
+            ]
+        },
+        {
+            name: 'assignedTo',
+            type: 'text' as const,
+            label: 'Label5',
+            placeholder: 'Enter Label 5',
+            required: true,
+            colSpan: 2  // This will span 2 columns
+        },
+        {
+            name: 'description',
+            type: 'textarea' as const,
+            label: 'Label6',
+                    placeholder: 'Enter Label 6',
+            required: true,
+            validation: {
+                minLength: 10,
+                maxLength: 500
+            },
+            colSpan: 2  // This will span 2 columns
+        },
+        {
+            name:'file',
+            type:'file' as const,
+            label:'Label7',
+            required:true,
+            colSpan: 2  // This will span 2 columns
+        }
+    ];
+
+    const handleFormSubmit = (data: Record<string, any>) => {
+        console.log('Form submitted:', data);
+        // Here you would typically send the data to your backend
+        const newTicket: TicketData = {
+            id: ticketData.length + 1,
+            ticketNumber: data.ticketNumber,
+            subject: data.subject,
+            status: data.status,
+            priority: data.priority,
+            assignedTo: data.assignedTo,
+            createdAt: new Date().toISOString().split('T')[0]
+        };
+        setTicketData(prevData => [...prevData, newTicket]);
+    };
 
     const columns: Column[] = [
         { key: 'ticketNumber', label: 'Ticket Number' },
@@ -208,6 +303,7 @@ const App: React.FC = () => {
             subtitle1: 'My tickets',
             subtitle2: '+1% from last week',
         },
+        
         {
             title: 'Avg Resolution Time',
             value: '2.5 days',
@@ -220,6 +316,7 @@ const App: React.FC = () => {
     ];
 
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
+    const [isToggle, setIsToggle] = useState(true);
     const [chartData] = useState({
         daily: {
             xAxisData: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -328,47 +425,33 @@ const App: React.FC = () => {
                                         icon="icons/units.svg"
                                         showTrend={true}
                                         comparisonValue={10}
-                                        subtitle1="Last 30 days"
+                                        subtitle1="30 Active"
                                         subtitle2="+10% from last month"
                                     />
                                     <div className="h-2"></div>
                                     <CardSkeleton />
                                     <div className="h-2"></div>
-                                    <Holder
-                                        title="Daily Consumption Metrics"
-                                        DateRange="(21 Apr, 2025 - 10 Jun, 2025)"
-                                        availableTimeRanges={[
-                                            'Daily',
-                                            'Monthly',
-                                            'Yearly',
-                                        ]}
-                                        selectedTimeRange={selectedTimeRange}
-                                        handleTimeRangeChange={(range) => {
-                                            setSelectedTimeRange(range);
-                                        }}
-                                        handleDownload={() => {
-                                            /* handle download */
-                                        }}
-                                        loading={true}>
-                                        <BarChart
-                                            timeRange={
-                                                selectedTimeRange as
-                                                    | 'Daily'
-                                                    | 'Monthly'
-                                                    | 'Yearly'
-                                            }
-                                            xAxisData={
-                                                chartData[
-                                                    selectedTimeRange.toLowerCase() as keyof typeof chartData
-                                                ].xAxisData
-                                            }
-                                            seriesData={
-                                                chartData[
-                                                    selectedTimeRange.toLowerCase() as keyof typeof chartData
-                                                ].seriesData
-                                            }
-                                        />
-                                    </Holder>
+                                    
+                                    <div className="h-8"></div>
+                                 
+                                    <div className="h-2"></div>
+                                   <Button  
+                                   label="Open Modal"
+                                   onClick={() => {
+                                    setIsModalOpen(true);
+                                   }}
+                                   />
+                                   <Modal
+                                        isOpen={isModalOpen}
+                                        onClose={() => setIsModalOpen(false)}
+                                        title="Modal Title"
+                                        showConfirmButton={true}
+                                        confirmButtonLabel="Confirm"
+                                        onConfirm={() => console.log('Confirmed')}
+                                        showCloseIcon={true}
+                                        >
+                                            <p>Modal content goes here</p>
+                                    </Modal>
                                     <div className="h-2"></div>
                                     <div className="grid grid-cols-1 gap-4">
                                         <Holder
@@ -429,6 +512,7 @@ const App: React.FC = () => {
                     />
                 </Routes>
             </Router>
+            
         </AppProvider>
     );
 };

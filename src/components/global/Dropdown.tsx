@@ -7,7 +7,6 @@
 // }
 
 // interface DropdownProps {
-//   id: string;
 //   name: string;
 //   value: string | string[];
 //   onChange: (e: { target: { name: string; value: string | string[] } }) => void;
@@ -27,7 +26,6 @@
 // }
 
 // const Dropdown: React.FC<DropdownProps> = ({
-//   id,
 //   name,
 //   value,
 //   onChange,
@@ -116,7 +114,6 @@
 //   const getGroupedOptions = () => {
 //     if (!groupBy) return getFilteredOptions();
 //     return getFilteredOptions().reduce((groups: Record<string, Option[]>, option) => {
-//     //   const group = option[groupBy] || 'Other';
 //       const group = option[groupBy] || '';
 //       if (!groups[group]) groups[group] = [];
 //       groups[group].push(option);
@@ -129,7 +126,7 @@
 //     if (groupBy) {
 //       return Object.entries(grouped).map(([group, groupOptions]) => (
 //         <div key={group}>
-//           <div className="text-xs text-gray-500 font-medium px-2 pt-2">{group}</div>
+//           <div className="text-xs text-gray-500 font-medium px-4 my-1 uppercase tracking-wider ">{group}</div>
 //           {groupOptions.map((option: Option, index: number) => renderOption(option, index))}
 //         </div>
 //       ));
@@ -145,13 +142,9 @@
 //     return (
 //       <div
 //         key={option.value}
-//         // className={`cursor-pointer px-4 py-2 hover:bg-blue-50 ${
-//         //   isSelected ? 'bg-blue-100 font-semibold text-blue-800' : ''
-//         // } ${focusedIndex === index ? 'bg-blue-200' : ''}`}
-//         className={`cursor-pointer px-4 py-2 transition-colors duration-200 ${
-//             isSelected ? 'bg-primary text-white font-semibold' : ''
-//           } ${focusedIndex === index ? 'bg-primary text-white' : 'hover:bg-primary hover:text-white'}`}
-          
+//         className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-sm font-medium mb-1 mx-1
+//           ${isSelected ? 'bg-primary text-white' : ''}
+//           ${focusedIndex === index ? 'bg-primary text-white' : 'hover:bg-primary-blue hover:text-white'}`}
 //         onClick={() => handleSelect(option)}
 //         onMouseEnter={() => setFocusedIndex(index)}
 //       >
@@ -160,7 +153,7 @@
 //             type="checkbox"
 //             readOnly
 //             checked={isSelected}
-//             className="mr-2 accent-blue-600"
+//             className="accent-light w-4 h-4"
 //           />
 //         )}
 //         {option.label}
@@ -187,24 +180,23 @@
 //       onKeyDown={handleKeyDown}
 //       className={`relative w-full ${className}`}
 //     >
-//       {/* Trigger */}
 //       <div
 //         onClick={() => !disabled && setIsOpen(!isOpen)}
 //         tabIndex={0}
-//         className={`flex items-center justify-between border px-4 py-2 rounded-3xl shadow-sm cursor-pointer bg-white ${
-//           disabled ? 'bg-gray-100 text-gray-400' : ''
-//         } ${error ? 'border-red-500' : 'border-gray-300'}`}
+//         className={`w-full flex items-center justify-between border px-4 py-3 rounded-full shadow-sm cursor-pointer bg-white text-sm font-medium
+//           ${disabled ? 'bg-gray-100 text-gray-400' : ''}
+//           ${error ? 'border-red-500' : 'border-gray-300'}`}
 //         role="combobox"
 //         aria-expanded={isOpen}
 //         aria-haspopup="listbox"
-//         aria-controls={`${id}-listbox`}
 //       >
 //         {leftIcon && (
 //           <img src={leftIcon} alt="icon" className="w-5 h-5 mr-2" />
 //         )}
-//         <span className="truncate">{getDisplayValue()}</span>
+//         <span className="truncate flex-1 text-left">{getDisplayValue()}</span>
 //         <svg
-//           className={`ml-2 w-4 h-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+//           className={`ml-2 w-4 h-4 text-g
+//             ray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
 //           fill="none"
 //           stroke="currentColor"
 //           viewBox="0 0 24 24"
@@ -213,31 +205,30 @@
 //         </svg>
 //       </div>
 
-//       {/* Dropdown List */}
 //       {isOpen && (
 //         <div
-//           className="absolute z-10 w-full bg-white mt-1 border border-gray-200 rounded-lg shadow-lg overflow-auto"
+//           className="absolute z-10 w-full bg-white mt-2 border border-gray-200 rounded-2xl shadow-lg overflow-auto"
 //           style={{ maxHeight }}
 //           role="listbox"
-//           id={`${id}-listbox`}
 //         >
 //           {searchable && (
-//             <div className="p-2">
+//             <div className="p-2 border-b border-gray-200">
 //               <input
 //                 ref={searchInputRef}
 //                 type="text"
 //                 value={searchTerm}
 //                 onChange={(e) => setSearchTerm(e.target.value)}
 //                 placeholder="Search..."
-//                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+//                 className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-light text-sm my-2 py-3"
 //               />
 //             </div>
 //           )}
-//           {renderOptions()}
+//           <div className="max-h-60 overflow-y-auto p-1">
+//             {renderOptions()}
+//           </div>
 //         </div>
 //       )}
 
-//       {/* Error message */}
 //       {error && (
 //         <div className="text-sm text-red-600 mt-1">{error}</div>
 //       )}
@@ -246,7 +237,13 @@
 // };
 
 // export default Dropdown;
+
+
 import React, { useState, useRef, useEffect, type KeyboardEvent } from 'react';
+
+// ========================================
+// INTERFACE DEFINITIONS
+// ========================================
 
 interface Option {
   value: string;
@@ -255,7 +252,6 @@ interface Option {
 }
 
 interface DropdownProps {
-  id: string;
   name: string;
   value: string | string[];
   onChange: (e: { target: { name: string; value: string | string[] } }) => void;
@@ -274,8 +270,12 @@ interface DropdownProps {
   leftIcon?: string | null;
 }
 
+// ========================================
+// DROPDOWN COMPONENT TEMPLATE
+// ========================================
+
 const Dropdown: React.FC<DropdownProps> = ({
-  id,
+  // PROPS VARIABLES
   name,
   value,
   onChange,
@@ -293,15 +293,20 @@ const Dropdown: React.FC<DropdownProps> = ({
   groupBy = null,
   leftIcon = null,
 }) => {
+  
+  // STATE VARIABLES
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedValues, setSelectedValues] = useState<string[]>(
     isMultiSelect ? (Array.isArray(value) ? value : []) : []
   );
   const [focusedIndex, setFocusedIndex] = useState(-1);
+  
+  // REF VARIABLES
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  // EFFECTS
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -318,6 +323,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     }
   }, [isOpen, searchable]);
 
+  // FUNCTION VARIABLES
   const handleSelect = (option: Option) => {
     if (isMultiSelect) {
       const newValues = selectedValues.includes(option.value)
@@ -376,7 +382,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     if (groupBy) {
       return Object.entries(grouped).map(([group, groupOptions]) => (
         <div key={group}>
-          <div className="text-xs text-gray-500 font-medium px-4 pt-2 uppercase tracking-wider ">{group}</div>
+          <div className="text-xs text-gray-500 font-medium px-4 uppercase tracking-wider">{group}</div>
           {groupOptions.map((option: Option, index: number) => renderOption(option, index))}
         </div>
       ));
@@ -392,7 +398,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     return (
       <div
         key={option.value}
-        className={`flex items-center gap-3 px-4 py-3 rounded-[1.5rem] cursor-pointer transition duration-200 text-sm font-medium
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-sm font-medium mb-1 mx-1
           ${isSelected ? 'bg-primary text-white' : ''}
           ${focusedIndex === index ? 'bg-primary text-white' : 'hover:bg-primary-blue hover:text-white'}`}
         onClick={() => handleSelect(option)}
@@ -424,6 +430,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     return option?.label || placeholder;
   };
 
+  // RENDER
   return (
     <div
       ref={dropdownRef}
@@ -433,13 +440,12 @@ const Dropdown: React.FC<DropdownProps> = ({
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
         tabIndex={0}
-        className={`flex items-center justify-between border px-4 py-3 rounded-full shadow-sm cursor-pointer bg-white text-sm font-medium
+        className={`w-full flex items-center justify-between border px-4 py-3 rounded-full shadow-sm cursor-pointer bg-white text-sm font-medium
           ${disabled ? 'bg-gray-100 text-gray-400' : ''}
           ${error ? 'border-red-500' : 'border-gray-300'}`}
         role="combobox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
-        aria-controls={`${id}-listbox`}
       >
         {leftIcon && (
           <img src={leftIcon} alt="icon" className="w-5 h-5 mr-2" />
@@ -460,7 +466,6 @@ const Dropdown: React.FC<DropdownProps> = ({
           className="absolute z-10 w-full bg-white mt-2 border border-gray-200 rounded-2xl shadow-lg overflow-auto"
           style={{ maxHeight }}
           role="listbox"
-          id={`${id}-listbox`}
         >
           {searchable && (
             <div className="p-2 border-b border-gray-200">
@@ -470,11 +475,11 @@ const Dropdown: React.FC<DropdownProps> = ({
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-light text-sm my-6 py-5"
+                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-light text-sm my-2 py-3"
               />
             </div>
           )}
-          <div className="max-h-60 overflow-y-auto p-1 space-y-2">
+          <div className="max-h-60 overflow-y-auto p-1">
             {renderOptions()}
           </div>
         </div>
@@ -487,4 +492,4 @@ const Dropdown: React.FC<DropdownProps> = ({
   );
 };
 
-export default Dropdown;
+export default Dropdown; 

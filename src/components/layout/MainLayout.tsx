@@ -35,7 +35,7 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
     };
 
     return (
-        <div className="flex h-screen bg-white">
+        <div className="flex h-screen bg-white ">
             <Sidebar />
             <div className="flex flex-col flex-1">
                 <Header
