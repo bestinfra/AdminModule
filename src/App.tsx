@@ -16,6 +16,7 @@ import Button from './components/global/Button';
 import Modal from './components/global/Modal';
 import AppManagement from './pages/Apps_module/AppManagement';
 
+
 interface TableData {
     [key: string]: string | number | boolean | null | undefined;
 }
@@ -498,14 +499,7 @@ const App: React.FC = () => {
                                 </>
                             }
                         />
-                        <Route path="/apps/pages" element={<PagesModule />} />
-                        <Route path="/apps/media-library" element={<MediaLibrary />} />
-                        <Route path="/apps/applications" element={<Applications />} />
-                        <Route path="/apps/branding" element={<Branding />} />
-                        <Route path="/apps/domain-hosting" element={<DomainHosting />} />
-                        <Route path="/apps/modules" element={<Modules />} />
-                        <Route path="/apps/settings" element={<Settings />} />
-                        <Route path="/apps/create-project" element={<CreateProject />} />
+            
                         <Route path="/apps" element={<AppManagement />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/all-tickets" element={<AllTickets />} />

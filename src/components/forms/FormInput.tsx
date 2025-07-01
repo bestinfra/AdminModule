@@ -11,6 +11,7 @@ interface FormInputProps {
     className?: string;
     icon?: React.ReactNode;
     error?: string;
+    name?: string;
 }
 
 const FormInput: React.FC<FormInputProps> = ({
@@ -23,7 +24,8 @@ const FormInput: React.FC<FormInputProps> = ({
     required = false,
     className = '',
     icon,
-    error
+    error,
+    name
 }) => {
     return (
         <div className={`space-y-1 ${className}`}>
@@ -44,12 +46,16 @@ const FormInput: React.FC<FormInputProps> = ({
                 <input
                     type={type}
                     value={value}
-                    onChange={onChange}
+                    onChange={e => {
+                        console.log('FormInput onChange:', e.target.name, e.target.value);
+                        onChange && onChange(e);
+                    }}
                     placeholder={placeholder}
                     disabled={disabled}
                     required={required}
+                    name={name}
                     className={`
-                        w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+                        w-full px-3 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
                         ${icon ? 'pl-10' : ''}
                         ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
                         ${error ? 'border-red-500' : 'border-gray-300'}

@@ -8,9 +8,10 @@ interface AppBasicsStepProps {
   errors: Record<string, string>;
   onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   onArrayChange: (name: string, value: any) => void;
+  onNext: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange }) => {
+const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
     const [subdomainPreview, setSubdomainPreview] = useState('');
 
     // Auto-generate subdomain from app name
@@ -103,12 +104,13 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
         <div className="max-w-2xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
             <h3 className="text-xl font-bold text-main dark:text-white mb-1">App Basics</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</p>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={onNext}>
                 <FormInput
                     label="App Name"
                     type="text"
                     value={formData.appName}
                     onChange={onInputChange}
+                    name="appName"
                     placeholder="Enter your app name"
                     required
                     error={errors.appName}
@@ -163,6 +165,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     type="text"
                     value={formData.subdomain}
                     onChange={onInputChange}
+                    name="subdomain"
                     placeholder="Enter subdomain"
                     required
                     error={errors.subdomain}
