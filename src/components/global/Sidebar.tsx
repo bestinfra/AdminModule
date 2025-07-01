@@ -69,7 +69,7 @@ const defaultMenus: MenuCategory[] = [
             {
                 title: 'Profile',
                 icon: '/icons/dashboard.svg',
-                link: '/user/profile',
+                link: '/profile',
             },
         ],
     },
@@ -83,7 +83,7 @@ const defaultMenus: MenuCategory[] = [
                 submenu: [
                     {
                         title: 'All Tickets',
-                        link: '/user/tickets/all',
+                        link: '/all-tickets',
                     },
                     {
                         title: 'My Tickets',
