@@ -15,6 +15,7 @@ import Holder from './components/global/Holder';
 import { BarChart } from './graphs';
 import Button from './components/global/Button';
 import Modal from './components/global/Modal';
+import Dashboard from './pages/Dashboard';
 
 interface TableData {
     [key: string]: string | number | boolean | null | undefined;
@@ -412,91 +413,7 @@ const App: React.FC = () => {
                     <Route element={<MainLayout />}>
                         <Route
                             path="/"
-                            element={
-                                <>
-                                    <Card
-                                        title="Ticket Overview"
-                                        value="100"
-                                        icon="icons/units.svg"
-                                        showTrend={true}
-                                        comparisonValue={10}
-                                        subtitle1="30 Active"
-                                        subtitle2="+10% from last month"
-                                    />
-                                    <div className="h-2"></div>
-                                    <CardSkeleton />
-                                    <div className="h-2"></div>
-                                    
-                                    <div className="h-8"></div>
-                                 
-                                    <div className="h-2"></div>
-                                   <Button  
-                                   label="Open Modal"
-                                   onClick={() => {
-                                    setIsModalOpen(true);
-                                   }}
-                                   />
-                                   <div className="h-2"></div>
-                                   <Button  
-                                   label="View Profile Page"
-                                   onClick={() => {
-                                    window.location.href = '/profile';
-                                   }}
-                                   variant="outline"
-                                   />
-                                   <Modal
-                                        isOpen={isModalOpen}
-                                        onClose={() => setIsModalOpen(false)}
-                                        title="Modal Title"
-                                        showConfirmButton={true}
-                                        confirmButtonLabel="Confirm"
-                                        onConfirm={() => console.log('Confirmed')}
-                                        showCloseIcon={true}
-                                        >
-                                            <p>Modal content goes here</p>
-                                    </Modal>
-                                    <div className="h-2"></div>
-                                    <div className="grid grid-cols-1 gap-4">
-                                        <Holder
-                                            title="Daily Consumption Metrics"
-                                            DateRange="(21 Apr, 2025 - 10 Jun, 2025)"
-                                            availableTimeRanges={[
-                                                'Daily',
-                                                'Monthly',
-                                                'Yearly',
-                                            ]}
-                                            selectedTimeRange={
-                                                selectedTimeRange
-                                            }
-                                            handleDownload={() => {
-                                                console.log('Downloading chart data...');
-                                            }}
-                                            loading={loading}
-                                            handleTimeRangeChange={(range) => {
-                                                setSelectedTimeRange(range);
-                                            }}>
-                                            <BarChart
-                                                timeRange={
-                                                    selectedTimeRange as
-                                                        | 'Daily'
-                                                        | 'Monthly'
-                                                        | 'Yearly'
-                                                }
-                                                xAxisData={
-                                                    chartData[
-                                                        selectedTimeRange.toLowerCase() as keyof typeof chartData
-                                                    ].xAxisData
-                                                }
-                                                seriesData={
-                                                    chartData[
-                                                        selectedTimeRange.toLowerCase() as keyof typeof chartData
-                                                    ].seriesData
-                                                }
-                                            />
-                                        </Holder>
-                                    </div>
-                                </>
-                            }
+                            element={<Dashboard />}
                         />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/all-tickets" element={<AllTickets />} />
