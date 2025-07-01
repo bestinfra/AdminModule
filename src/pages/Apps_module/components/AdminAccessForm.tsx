@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
 import LoadingSpinner from '../../../components/global/LoadingSpinner';
+import type { FormInputValue } from '../../../components/forms/types';
 
 export interface AdminAccessFormData {
   adminFirstName: string;
@@ -51,6 +52,16 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
   loading = false,
   onSubmit,
 }) => {
+  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+  const handleFormInputChange = (name: string, value: FormInputValue) => {
+    onInputChange({ target: { name, value: value as string } } as any);
+  };
+
+  const handleFormInputBlur = (name: string, value: FormInputValue) => {
+    // Handle blur if needed
+  };
+
   return (
     <section className="max-w-2xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Admin Access</h2>
@@ -58,80 +69,108 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
       <form className="space-y-6" onSubmit={onSubmit} aria-label="Admin Access Form" autoComplete="off">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
-            label="First Name"
-            type="text"
+            input={{
+              name: 'adminFirstName',
+              type: 'text',
+              label: 'First Name',
+              placeholder: 'Enter first name',
+              required: true
+            }}
             value={formData.adminFirstName}
-            onChange={onInputChange}
-            name="adminFirstName"
-            placeholder="Enter first name"
-            required
             error={errors.adminFirstName}
+            showError={!!errors.adminFirstName}
             disabled={loading}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
           <FormInput
-            label="Last Name"
-            type="text"
+            input={{
+              name: 'adminLastName',
+              type: 'text',
+              label: 'Last Name',
+              placeholder: 'Enter last name',
+              required: true
+            }}
             value={formData.adminLastName}
-            onChange={onInputChange}
-            name="adminLastName"
-            placeholder="Enter last name"
-            required
             error={errors.adminLastName}
+            showError={!!errors.adminLastName}
             disabled={loading}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
-            label="Email Address"
-            type="email"
+            input={{
+              name: 'adminEmail',
+              type: 'email',
+              label: 'Email Address',
+              placeholder: 'Enter email address',
+              required: true
+            }}
             value={formData.adminEmail}
-            onChange={onInputChange}
-            name="adminEmail"
-            placeholder="Enter email address"
-            required
             error={errors.adminEmail}
+            showError={!!errors.adminEmail}
             disabled={loading}
-            aria-describedby="admin-email-help"
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
           <FormInput
-            label="Phone Number"
-            type="tel"
+            input={{
+              name: 'adminPhone',
+              type: 'tel',
+              label: 'Phone Number',
+              placeholder: 'Enter phone number',
+              required: true
+            }}
             value={formData.adminPhone}
-            onChange={onInputChange}
-            name="adminPhone"
-            placeholder="Enter phone number"
-            required
             error={errors.adminPhone}
+            showError={!!errors.adminPhone}
             disabled={loading}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
         </div>
-        <p id="admin-email-help" className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">This will be your admin login email</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">This will be your admin login email</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
-            label="Password"
-            type="password"
+            input={{
+              name: 'adminPassword',
+              type: 'password',
+              label: 'Password',
+              placeholder: 'Enter password',
+              required: true
+            }}
             value={formData.adminPassword}
-            onChange={onInputChange}
-            name="adminPassword"
-            placeholder="Enter password"
-            required
             error={errors.adminPassword}
+            showError={!!errors.adminPassword}
             disabled={loading}
-            aria-describedby="admin-password-help"
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
           <FormInput
-            label="Confirm Password"
-            type="password"
+            input={{
+              name: 'adminConfirmPassword',
+              type: 'password',
+              label: 'Confirm Password',
+              placeholder: 'Confirm password',
+              required: true
+            }}
             value={formData.adminConfirmPassword}
-            onChange={onInputChange}
-            name="adminConfirmPassword"
-            placeholder="Confirm password"
-            required
             error={errors.adminConfirmPassword}
+            showError={!!errors.adminConfirmPassword}
             disabled={loading}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
         </div>
-        <p id="admin-password-help" className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">Password must be at least 8 characters with uppercase, lowercase, number, and special character</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">Password must be at least 8 characters with uppercase, lowercase, number, and special character</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label htmlFor="adminRole" className="block text-sm font-medium text-main dark:text-white mb-1">
@@ -150,13 +189,19 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Super Administrator has full access to all features</p>
           </div>
           <FormInput
-            label="Department"
-            type="text"
+            input={{
+              name: 'adminDepartment',
+              type: 'text',
+              label: 'Department',
+              placeholder: 'Enter department (optional)'
+            }}
             value={formData.adminDepartment}
-            onChange={onInputChange}
-            name="adminDepartment"
-            placeholder="Enter department (optional)"
+            error={undefined}
+            showError={false}
             disabled={loading}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
         </div>
         <div>

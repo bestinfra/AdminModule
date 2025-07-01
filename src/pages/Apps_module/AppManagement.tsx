@@ -101,7 +101,7 @@ const AppManagement: React.FC = () => {
       setAdminAccessErrors((prev) => ({ ...prev, [name]: undefined }));
     }
   };
-  const handleAdminDropdownChange = (e: { target: { name: string; value: string } }) => {
+  const handleAdminDropdownChange = (e: { target: { name: string; value: string | string[] } }) => {
     const { name, value } = e.target;
     setAdminAccessData((prev) => ({ ...prev, [name]: value }));
     if (adminAccessErrors && Object.prototype.hasOwnProperty.call(adminAccessErrors, name)) {

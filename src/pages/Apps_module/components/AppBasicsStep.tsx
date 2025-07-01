@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
+import type { FormInputValue } from '../../../components/forms/types';
 
 interface AppBasicsStepProps {
   formData: any;
@@ -13,6 +14,7 @@ interface AppBasicsStepProps {
 
 const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
     const [subdomainPreview, setSubdomainPreview] = useState('');
+    const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
     // Auto-generate subdomain from app name
     useEffect(() => {
@@ -28,6 +30,14 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
             }
         }
     }, [formData.appName]);
+
+    const handleFormInputChange = (name: string, value: FormInputValue) => {
+        onInputChange({ target: { name, value } } as any);
+    };
+
+    const handleFormInputBlur = (name: string, value: FormInputValue) => {
+        // Handle blur if needed
+    };
 
     const categoryOptions = [
         { value: 'electricity', label: 'Electricity' },
@@ -106,14 +116,20 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
             <p className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</p>
             <form className="space-y-6" onSubmit={onNext}>
                 <FormInput
-                    label="App Name"
-                    type="text"
+                    input={{
+                        name: 'appName',
+                        type: 'text',
+                        label: 'App Name',
+                        placeholder: 'Enter your app name',
+                        required: true
+                    }}
                     value={formData.appName}
-                    onChange={onInputChange}
-                    name="appName"
-                    placeholder="Enter your app name"
-                    required
                     error={errors.appName}
+                    showError={!!errors.appName}
+                    disabled={false}
+                    onInputChange={handleFormInputChange}
+                    onInputBlur={handleFormInputBlur}
+                    fileInputRefs={fileInputRefs}
                 />
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1">
@@ -161,14 +177,20 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     />
                 </div>
                 <FormInput
-                    label="Subdomain"
-                    type="text"
+                    input={{
+                        name: 'subdomain',
+                        type: 'text',
+                        label: 'Subdomain',
+                        placeholder: 'Enter subdomain',
+                        required: true
+                    }}
                     value={formData.subdomain}
-                    onChange={onInputChange}
-                    name="subdomain"
-                    placeholder="Enter subdomain"
-                    required
                     error={errors.subdomain}
+                    showError={!!errors.subdomain}
+                    disabled={false}
+                    onInputChange={handleFormInputChange}
+                    onInputBlur={handleFormInputBlur}
+                    fileInputRefs={fileInputRefs}
                 />
                 <p className="text-xs text-gray-500 mt-1">This will be your app's URL: {subdomainPreview ? `${subdomainPreview}.yourdomain.com` : 'yourdomain.com'}<br/>Only lowercase letters, numbers, and hyphens are allowed</p>
                 <div>

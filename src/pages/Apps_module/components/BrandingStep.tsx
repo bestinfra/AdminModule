@@ -1,7 +1,8 @@
-    import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
+import type { FormInputValue } from '../../../components/forms/types';
 
 interface BrandingStepProps {
   formData: any;
@@ -13,6 +14,15 @@ interface BrandingStepProps {
 const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputChange, onNext }) => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+  const handleFormInputChange = (name: string, value: FormInputValue) => {
+    onInputChange({ target: { name, value } } as any);
+  };
+
+  const handleFormInputBlur = (name: string, value: FormInputValue) => {
+    // Handle blur if needed
+  };
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,22 +89,35 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
       <form className="space-y-6" onSubmit={onNext}>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
-            label="Company Name"
-            type="text"
+            input={{
+              name: 'companyName',
+              type: 'text',
+              label: 'Company Name',
+              placeholder: 'Enter company name',
+              required: true
+            }}
             value={formData.companyName}
-            onChange={onInputChange}
-            name="companyName"
-            placeholder="Enter company name"
-            required
             error={errors.companyName}
+            showError={!!errors.companyName}
+            disabled={false}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
           <FormInput
-            label="Company Website"
-            type="url"
+            input={{
+              name: 'companyWebsite',
+              type: 'url',
+              label: 'Company Website',
+              placeholder: 'https://example.com'
+            }}
             value={formData.companyWebsite}
-            onChange={onInputChange}
-            name="companyWebsite"
-            placeholder="https://example.com"
+            error={undefined}
+            showError={false}
+            disabled={false}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
         </div>
 
@@ -204,20 +227,34 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
-            label="Contact Email"
-            type="email"
+            input={{
+              name: 'contactEmail',
+              type: 'email',
+              label: 'Contact Email',
+              placeholder: 'contact@company.com'
+            }}
             value={formData.contactEmail}
-            onChange={onInputChange}
-            name="contactEmail"
-            placeholder="contact@company.com"
+            error={undefined}
+            showError={false}
+            disabled={false}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
           <FormInput
-            label="Contact Phone"
-            type="tel"
+            input={{
+              name: 'contactPhone',
+              type: 'tel',
+              label: 'Contact Phone',
+              placeholder: '+1-234-567-8900'
+            }}
             value={formData.contactPhone}
-            onChange={onInputChange}
-            name="contactPhone"
-            placeholder="+1-234-567-8900"
+            error={undefined}
+            showError={false}
+            disabled={false}
+            onInputChange={handleFormInputChange}
+            onInputBlur={handleFormInputBlur}
+            fileInputRefs={fileInputRefs}
           />
         </div>
 
