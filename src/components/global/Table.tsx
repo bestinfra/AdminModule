@@ -399,21 +399,21 @@ const Table: React.FC<TableProps> = ({
                         placeholder="Search"
                         value={searchTerm}
                         onChange={handleSearch}
-                        className="w-full h-12 px-4 py-4 bg-white border border-secondary rounded-full font-manrope text-base outline-none mb-4"
+                        className="w-full h-12 px-4 py-4 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border placeholder-dark-border dark:text-white dark:placeholder-white rounded-full font-manrope text-base outline-none mb-4"
                     />
-                    <span className="absolute right-2 top-6 transform -translate-y-1/2 bg-primary rounded-full w-8 h-8 flex justify-center items-center">
-                        <img src="icons/search-icon.svg" alt="search" />
+                    <span className="absolute right-2 top-6 transform -translate-y-1/2 bg-primary-lightest dark:bg-primary-dark rounded-full w-8 h-8 flex justify-center items-center">
+                        <img src="/icons/search-icon.svg" alt="search" />
                     </span>
                 </div>
             )}
 
             <div className="w-full overflow-x-auto">
                 <table
-                    className="w-full rounded-2xl border border-secondary border-separate border-spacing-0 overflow-hidden"
+                    className="w-full rounded-2xl border dark:border-dark-border border-primary-border border-separate border-spacing-0 overflow-hidden"
                     role="grid"
                     aria-label={text || 'Data Table'}>
-                    <thead className="bg-primary-lightest overflow-hidden">
-                        <tr className="font-manrope text-base font-normal w-full">
+                    <thead className="dark:bg-primary-dark-light bg-primary-lightest overflow-hidden">
+                        <tr className="font-manrope text-base font-normal w-full dark:text-white">
                             {columns.map((column) => (
                                 <th
                                     key={column.key}
@@ -505,7 +505,7 @@ const Table: React.FC<TableProps> = ({
                                             {columns.map((column) => (
                                                 <td
                                                     key={column.key}
-                                                    className="px-4 py-3 text-sm font-normal text-secondary-300 border-b border-secondary"
+                                                    className="px-4 py-3 text-sm font-normal dark:text-white border-b border-primary-border dark:border-dark-border"
                                                     data-label={column.label}>
                                                     {column.key === 'sNo'
                                                         ? (currentPage - 1) *
@@ -532,7 +532,7 @@ const Table: React.FC<TableProps> = ({
                                                 onView ||
                                                 onPayment) && (
                                                 <td
-                                                    className="px-4 py-3 text-sm font-normal text-secondary-300 border-b border-primary-200"
+                                                    className="px-4 py-3 text-sm font-normal  border-b border-primary-border dark:border-dark-border"
                                                     data-label="Actions">
                                                     {renderActionButtons(row)}
                                                 </td>
@@ -564,7 +564,7 @@ const Table: React.FC<TableProps> = ({
                                         }
                                         className="text-center">
                                         <div
-                                            className="py-12 text-secondary rounded-2xl text-sm h-8 flex justify-center items-center capitalize"
+                                            className="py-12 text-secondary rounded-2xl text-sm h-8 flex justify-center items-center capitalize dark:text-white"
                                             role="status">
                                             {emptyMessage}
                                         </div>

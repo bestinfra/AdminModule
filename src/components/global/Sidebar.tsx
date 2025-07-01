@@ -6,9 +6,11 @@ import { useApp } from '../../context/AppContext';
 
 interface SubMenuItem {
     title: string;
-    link: string;
+    link?: string;
     icon?: string;
     count?: number;
+    hasSubmenu?: boolean;
+    submenu?: SubMenuItem[];
 }
 
 interface MenuItem {
@@ -112,6 +114,53 @@ const defaultMenus: MenuCategory[] = [
                     {
                         title: 'Monthly Reports',
                         link: '/user/reports/monthly',
+                    },
+                ],
+            },
+            {
+                title: 'Apps',
+                icon: '/icons/dashboard.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Dashboard',
+                        link: '',
+                    },
+                    {
+                        title: 'Pages',
+                        link: '/apps/pages',
+                    },
+                    {
+                        title: 'Media Library',
+                        link: '/apps/media-library',
+                    },
+                    // {
+                    //     title: 'Modules',
+                    //     link: '',
+                    // },
+                    {
+                        title: 'Settings',
+                        link: '/apps/settings',
+                        // icon: '/icons/dashboard.svg',
+                        // hasSubmenu: true,
+                        // submenu: [
+                        //     {
+                        //         title: 'Applications',
+                        //         link: '/apps/applications',
+                        //     },
+                        //     {
+                        //         title: 'Branding',
+                        //         link: '/apps/branding',
+                        //     },
+                        //     {
+                        //         title: 'Domain & Hosting',
+                        //         link: '/apps/domain-hosting',
+                        //     },
+                        //     {
+                        //         title: 'Modules',
+                        //         link: '/apps/modules',
+                        //     },
+                        // ],
                     },
                 ],
             },
