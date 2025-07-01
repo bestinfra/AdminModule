@@ -15,6 +15,7 @@ import Holder from './components/global/Holder';
 import { BarChart } from './graphs';
 import Button from './components/global/Button';
 import Modal from './components/global/Modal';
+import AppManagement from './pages/Apps_module/AppManagement';
 import Dashboard from './pages/Dashboard';
 
 interface TableData {
@@ -415,6 +416,15 @@ const App: React.FC = () => {
                             path="/"
                             element={<Dashboard />}
                         />
+                        <Route path="/apps/pages" element={<PagesModule />} />
+                        <Route path="/apps/media-library" element={<MediaLibrary />} />
+                        <Route path="/apps/applications" element={<Applications />} />
+                        <Route path="/apps/branding" element={<Branding />} />
+                        <Route path="/apps/domain-hosting" element={<DomainHosting />} />
+                        <Route path="/apps/modules" element={<Modules />} />
+                        <Route path="/apps/settings" element={<Settings />} />
+                        <Route path="/apps/create-project" element={<CreateProject />} />
+                        <Route path="/apps" element={<AppManagement />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/all-tickets" element={<AllTickets />} />
                         <Route path="/forms" element={<Forms />} />

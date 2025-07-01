@@ -122,6 +122,58 @@ const defaultMenus: MenuCategory[] = [
                     },
                 ],
             },
+            {
+                title: 'Apps',
+                icon: '/icons/dashboard.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Dashboard',
+                        link: '',
+                    },
+                    {
+                        title: 'Pages',
+                        link: '/apps/pages',
+                    },
+                    {
+                        title: 'Media Library',
+                        link: '/apps/media-library',
+                    },
+                    // {
+                    //     title: 'Modules',
+                    //     link: '',
+                    // },
+                    {
+                        title: 'Settings',
+                        link: '/apps/settings',
+                        // icon: '/icons/dashboard.svg',
+                        // hasSubmenu: true,
+                        // submenu: [
+                        //     {
+                        //         title: 'Applications',
+                        //         link: '/apps/applications',
+                        //     },
+                        //     {
+                        //         title: 'Branding',
+                        //         link: '/apps/branding',
+                        //     },
+                        //     {
+                        //         title: 'Domain & Hosting',
+                        //         link: '/apps/domain-hosting',
+                        //     },
+                        //     {
+                        //         title: 'Modules',
+                        //         link: '/apps/modules',
+                        //     },
+                        // ],
+                    },
+                ],
+            },
+            {
+                title: 'Apps2',
+                icon: '/icons/dashboard.svg',
+                link: '/apps',
+            }
         ],
     },
     {
