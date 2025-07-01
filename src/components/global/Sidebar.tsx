@@ -6,9 +6,11 @@ import { useApp } from '../../context/AppContext';
 
 interface SubMenuItem {
     title: string;
-    link: string;
+    link?: string;
     icon?: string;
     count?: number;
+    hasSubmenu?: boolean;
+    submenu?: SubMenuItem[];
 }
 
 interface MenuItem {
