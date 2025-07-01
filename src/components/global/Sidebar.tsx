@@ -164,6 +164,11 @@ const defaultMenus: MenuCategory[] = [
                     },
                 ],
             },
+            {
+                title: 'Apps2',
+                icon: '/icons/dashboard.svg',
+                link: '/apps',
+            }
         ],
     },
     {
