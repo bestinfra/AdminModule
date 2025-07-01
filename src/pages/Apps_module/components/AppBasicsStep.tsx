@@ -105,13 +105,20 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
             <p className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</p>
             <form className="space-y-6">
                 <FormInput
-                    label="App Name"
-                    type="text"
+                    input={{
+                        name: 'appName',
+                        type: 'text',
+                        label: 'App Name',
+                        placeholder: 'Enter your app name',
+                        required: true
+                    }}
                     value={formData.appName}
-                    onChange={onInputChange}
-                    placeholder="Enter your app name"
-                    required
                     error={errors.appName}
+                    showError={!!errors.appName}
+                    disabled={false}
+                    onInputChange={(name, value) => onInputChange({ target: { name, value } })}
+                    onInputBlur={(name, value) => {}}
+                    fileInputRefs={{ current: {} }}
                 />
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1">
@@ -159,13 +166,20 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     />
                 </div>
                 <FormInput
-                    label="Subdomain"
-                    type="text"
+                    input={{
+                        name: 'subdomain',
+                        type: 'text',
+                        label: 'Subdomain',
+                        placeholder: 'Enter subdomain',
+                        required: true
+                    }}
                     value={formData.subdomain}
-                    onChange={onInputChange}
-                    placeholder="Enter subdomain"
-                    required
                     error={errors.subdomain}
+                    showError={!!errors.subdomain}
+                    disabled={false}
+                    onInputChange={(name, value) => onInputChange({ target: { name, value } })}
+                    onInputBlur={(name, value) => {}}
+                    fileInputRefs={{ current: {} }}
                 />
                 <p className="text-xs text-gray-500 mt-1">This will be your app's URL: {subdomainPreview ? `${subdomainPreview}.yourdomain.com` : 'yourdomain.com'}<br/>Only lowercase letters, numbers, and hyphens are allowed</p>
                 <div>

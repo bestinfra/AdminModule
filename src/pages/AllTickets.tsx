@@ -21,7 +21,7 @@ interface TicketData {
 }
 
 const AllTickets: React.FC = () => {
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
 
     const ticketData: TicketData[] = [

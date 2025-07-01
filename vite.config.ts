@@ -18,6 +18,7 @@ export default defineConfig({
         './PageComponents': './src/components/global/PageComponents.tsx',
         './Profile': './src/pages/Profile.tsx',
         './AllTickets': './src/pages/AllTickets.tsx',
+        './Dashboard': './src/pages/Dashboard.tsx',
       },
       shared: ['react', 'react-dom'],
     }),

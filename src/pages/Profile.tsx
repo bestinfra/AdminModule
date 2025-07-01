@@ -38,7 +38,7 @@ interface ActivityData {
 
 const Profile: React.FC = () => {
     const [isEditing, setIsEditing] = useState(false);
-    const [loading, setLoading] = useState(false);
+    const [loading] = useState(false);
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
     
     const profile: UserProfile = {

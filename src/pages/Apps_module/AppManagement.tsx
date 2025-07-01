@@ -12,7 +12,6 @@ const SidebarContent = () => {
     { label: 'Modules', sub: 'Select feature modules' },
     { label: 'Go-Live', sub: 'Review and configure launch settings' },
   ];
-  const errors: Record<string, string | null> = {};
   const handleBack = () => {};
   const handleNext = () => {};
   return (
@@ -60,35 +59,38 @@ const initialFormData = {
 };
 
 type FormDataType = typeof initialFormData;
-type ErrorsType = Record<keyof FormDataType, string | null>;
+type ErrorsType = Record<string, string>;
 
 const AppManagement: React.FC = () => {
   // Local state for the AppBasicsStep demo
   const [formData, setFormData] = useState<FormDataType>(initialFormData);
-  const [errors, setErrors] = useState<Partial<ErrorsType>>({});
+  const [errors, setErrors] = useState<ErrorsType>({});
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement> | { target: { name: string; value: any } }) => {
+    const { name, value } = e.target;
     let newValue: any = value;
-    if (type === 'checkbox' && 'checked' in e.target) {
+    
+    // Handle checkbox input
+    if ('type' in e.target && e.target.type === 'checkbox' && 'checked' in e.target) {
       newValue = (e.target as HTMLInputElement).checked;
     }
+    
     setFormData((prev) => ({
       ...prev,
       [name]: newValue,
     }));
-    if (errors[name as keyof FormDataType]) {
-      setErrors((prev) => ({ ...prev, [name]: null }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
-  const handleArrayChange = (name: keyof FormDataType, value: any) => {
+  const handleArrayChange = (name: string, value: any) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: null }));
+      setErrors((prev) => ({ ...prev, [name]: '' }));
     }
   };
 
