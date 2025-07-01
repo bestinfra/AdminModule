@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
+import type { FormInputValue } from '../../../components/forms/types';
 
 interface AppBasicsStepProps {
   formData: any;
   errors: Record<string, string>;
   onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   onArrayChange: (name: string, value: any) => void;
+  onNext: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange }) => {
+const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
     const [subdomainPreview, setSubdomainPreview] = useState('');
+    const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
     // Auto-generate subdomain from app name
     useEffect(() => {
@@ -27,6 +30,14 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
             }
         }
     }, [formData.appName]);
+
+    const handleFormInputChange = (name: string, value: FormInputValue) => {
+        onInputChange({ target: { name, value } } as any);
+    };
+
+    const handleFormInputBlur = (name: string, value: FormInputValue) => {
+        // Handle blur if needed
+    };
 
     const categoryOptions = [
         { value: 'electricity', label: 'Electricity' },
@@ -103,7 +114,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
         <div className="max-w-2xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
             <h3 className="text-xl font-bold text-main dark:text-white mb-1">App Basics</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</p>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={onNext}>
                 <FormInput
                     input={{
                         name: 'appName',
@@ -116,9 +127,9 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     error={errors.appName}
                     showError={!!errors.appName}
                     disabled={false}
-                    onInputChange={(name, value) => onInputChange({ target: { name, value } })}
-                    onInputBlur={(name, value) => {}}
-                    fileInputRefs={{ current: {} }}
+                    onInputChange={handleFormInputChange}
+                    onInputBlur={handleFormInputBlur}
+                    fileInputRefs={fileInputRefs}
                 />
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1">
@@ -177,9 +188,9 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     error={errors.subdomain}
                     showError={!!errors.subdomain}
                     disabled={false}
-                    onInputChange={(name, value) => onInputChange({ target: { name, value } })}
-                    onInputBlur={(name, value) => {}}
-                    fileInputRefs={{ current: {} }}
+                    onInputChange={handleFormInputChange}
+                    onInputBlur={handleFormInputBlur}
+                    fileInputRefs={fileInputRefs}
                 />
                 <p className="text-xs text-gray-500 mt-1">This will be your app's URL: {subdomainPreview ? `${subdomainPreview}.yourdomain.com` : 'yourdomain.com'}<br/>Only lowercase letters, numbers, and hyphens are allowed</p>
                 <div>

@@ -1,7 +1,7 @@
 // Form component type definitions
 export interface FormInputConfig {
   name: string;
-  type: 'text' | 'email' | 'password' | 'number' | 'date' | 'checkbox' | 'textarea' | 'select' | 'file';
+  type: 'text' | 'email' | 'password' | 'number' | 'date' | 'checkbox' | 'textarea' | 'select' | 'file' | 'tel' | 'url';
   label: string;
   placeholder?: string;
   required?: boolean;
