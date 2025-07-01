@@ -12,14 +12,6 @@ import NotFound from './pages/NotFound';
 import { AppProvider } from './context/AppContext'; 
 import Holder from './components/global/Holder';
 import { BarChart } from './graphs';
-import PagesModule from './pages/Apps_module/PagesModule';
-import MediaLibrary from './pages/Apps_module/MediaLibrary';
-import Applications from './pages/Apps_module/components/Applications';
-import Branding from './pages/Apps_module/components/Branding';
-import DomainHosting from './pages/Apps_module/components/DomainHosting';
-import Modules from './pages/Apps_module/components/Modules';
-import Settings from './pages/Apps_module/Settings';
-import CreateProject from './pages/Apps_module/CreateProject';
 import Button from './components/global/Button';
 import Modal from './components/global/Modal';
 
@@ -505,14 +497,6 @@ const App: React.FC = () => {
                                 </>
                             }
                         />
-                        <Route path="/apps/pages" element={<PagesModule />} />
-                        <Route path="/apps/media-library" element={<MediaLibrary />} />
-                        <Route path="/apps/applications" element={<Applications />} />
-                        <Route path="/apps/branding" element={<Branding />} />
-                        <Route path="/apps/domain-hosting" element={<DomainHosting />} />
-                        <Route path="/apps/modules" element={<Modules />} />
-                        <Route path="/apps/settings" element={<Settings />} />
-                        <Route path="/apps/create-project" element={<CreateProject />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/all-tickets" element={<AllTickets />} />
                         <Route path="*" element={<NotFound />} />
