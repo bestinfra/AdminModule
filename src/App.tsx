@@ -3,6 +3,8 @@ import type { Column } from './components/global/Table';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PageBuilder from './pages/PageBuilder/PageBuilder';
 import ModuleSelection from './pages/ModuleSelection';
+import Profile from './pages/Profile';
+import AllTickets from './pages/AllTickets';
 import MainLayout from './components/layout/MainLayout';
 import Card from './components/global/Card';
 import CardSkeleton from './components/skeletons/CardSkeleton';
@@ -441,6 +443,14 @@ const App: React.FC = () => {
                                     setIsModalOpen(true);
                                    }}
                                    />
+                                   <div className="h-2"></div>
+                                   <Button  
+                                   label="View Profile Page"
+                                   onClick={() => {
+                                    window.location.href = '/profile';
+                                   }}
+                                   variant="outline"
+                                   />
                                    <Modal
                                         isOpen={isModalOpen}
                                         onClose={() => setIsModalOpen(false)}
@@ -503,6 +513,8 @@ const App: React.FC = () => {
                         <Route path="/apps/modules" element={<Modules />} />
                         <Route path="/apps/settings" element={<Settings />} />
                         <Route path="/apps/create-project" element={<CreateProject />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="/all-tickets" element={<AllTickets />} />
                         <Route path="*" element={<NotFound />} />
                     </Route>
                     <Route path="/page-builder" element={<PageBuilder />} />
