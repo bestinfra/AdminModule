@@ -71,6 +71,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dashboard.svg',
                 link: '/profile',
             },
+            {
+                title: 'Forms',
+                icon: '/icons/dashboard.svg',
+                link: '/forms',
+            },
         ],
     },
     {

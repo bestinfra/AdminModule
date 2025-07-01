@@ -1,412 +1,147 @@
-import React, { useState, useCallback, useRef } from 'react';
+import React, { useState, useCallback, useRef, useMemo, memo } from 'react';
 import Button from '../global/Button';
-
-// Type definitions for form configuration and props
-interface FormInputConfig {
-  name: string;
-  type: 'text' | 'email' | 'password' | 'number' | 'date' | 'checkbox' | 'textarea' | 'select' | 'file';
-  label: string;
-  placeholder?: string;
-  required?: boolean;
-  defaultValue?: any;
-  options?: Array<{ value: string; label: string }>;
-  className?: string;
-  colSpan?: number;
-  icon?: string;
-  description?: string;
-  validation?: {
-    pattern?: RegExp;
-    minLength?: number;
-    maxLength?: number;
-    min?: number;
-    max?: number;
-    custom?: (value: any) => string | null;
-  };
-}
-
-interface FormProps {
-  inputs: FormInputConfig[];
-  onSubmit: (data: Record<string, any>) => void;
-  submitLabel?: string;
-  cancelLabel?: string;
-  className?: string;
-  layout?: 'vertical' | 'horizontal' | 'grid';
-  gridCols?: 1 | 2 | 3 | 4 | 5 | 6;
-  disabled?: boolean;
-  showCancel?: boolean;
-  isLoading?: boolean;
-  onCancel?: () => void;
-  formId?: string;
-  title?: string;
-  subtitle?: string;
-  variant?: 'default' | 'card' | 'minimal';
-}
-
-// Internal state types for form data and validation errors
-interface FormData {
-  [key: string]: any;
-}
-
-interface FormErrors {
-  [key: string]: string;
-}
+import FormInput from './FormInput';
+import { CLASSES } from './constants';
+import type { FormProps, FormInputConfig, FormInputValue } from './types';
+import { getDefaultValue, formatPhone, validateField } from './utils';
 
 const Form: React.FC<FormProps> = ({
-  inputs,
-  onSubmit,
-  submitLabel = 'Submit',
-  cancelLabel = 'Cancel',
-  className = '',
-  layout = 'grid',
-  gridCols = 3,
-  disabled = false,
-  showCancel = false,
-  isLoading = false,
-  onCancel,
-  formId = 'form',
-  title,
-  subtitle,
-  variant = 'default'
+  inputs, onSubmit, submitLabel = 'Submit', cancelLabel = 'Cancel', className = '', layout = 'grid', gridCols = 3,
+  disabled = false, showCancel = false, isLoading = false, onCancel, formId = 'form', title, subtitle, variant = 'default'
 }) => {
-  // Initialize form data with default values based on input types
-  const initialData: FormData = inputs.reduce((acc: FormData, input) => {
-    acc[input.name] = input.defaultValue || 
-      (input.type === 'checkbox' ? false : 
-       input.type === 'file' ? null : '');
-    return acc;
-  }, {});
+  const initialData = useMemo(() => 
+    inputs.reduce((acc: Record<string, FormInputValue>, input) => ({ 
+      ...acc, 
+      [input.name]: getDefaultValue(input.type, input.defaultValue) 
+    }), {}), 
+    [inputs]
+  );
 
-  // Form state management
-  const [formData, setFormData] = useState<FormData>(initialData);
-  const [errors, setErrors] = useState<FormErrors>({});
+  const [formData, setFormData] = useState<Record<string, FormInputValue>>(initialData);
+  const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Set<string>>(new Set());
+  const [submitted, setSubmitted] = useState(false);
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
-  // Field validation function - checks required fields, patterns, lengths, and custom validation
-  const validateField = useCallback((name: string, value: any, config: FormInputConfig): string | null => {
-    // Required field validation
-    if (config.required && (!value || (typeof value === 'string' && value.trim() === ''))) {
-      return `${config.label} is required`;
-    }
-
-    // Skip validation if no value and not required
-    if (!value || !config.validation) {
-      return null;
-    }
-
-    const { validation } = config;
-
-    // Pattern validation using regex
-    if (validation.pattern && !validation.pattern.test(value)) {
-      return `${config.label} format is invalid`;
-    }
-
-    // String length validation
-    if (validation.minLength && value.length < validation.minLength) {
-      return `${config.label} must be at least ${validation.minLength} characters`;
-    }
-    if (validation.maxLength && value.length > validation.maxLength) {
-      return `${config.label} must be no more than ${validation.maxLength} characters`;
-    }
-
-    // Numeric value validation
-    if (validation.min && Number(value) < validation.min) {
-      return `${config.label} must be at least ${validation.min}`;
-    }
-    if (validation.max && Number(value) > validation.max) {
-      return `${config.label} must be no more than ${validation.max}`;
-    }
-
-    // Custom validation function
-    if (validation.custom) {
-      return validation.custom(value);
-    }
-
-    return null;
-  }, []);
-
-  // Input change handler - updates form data and validates if field has been touched
-  const handleInputChange = useCallback((name: string, value: any, config: FormInputConfig) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-    
-    // Only validate if field has been touched (user has interacted with it)
+  const handleInputChange = useCallback((name: string, value: FormInputValue, config: FormInputConfig) => {
+    const formattedValue = (config.name === 'phone' || config.name === 'mobile') && typeof value === 'string' 
+      ? formatPhone(value) 
+      : value;
+    setFormData(prev => ({ ...prev, [name]: formattedValue }));
     if (touched.has(name)) {
-      const error = validateField(name, value, config);
+      const error = validateField(formattedValue, config);
       setErrors(prev => ({ ...prev, [name]: error || '' }));
     }
-  }, [touched, validateField]);
+  }, [touched]);
 
-  // Input blur handler - marks field as touched and validates
-  const handleInputBlur = useCallback((name: string, value: any, config: FormInputConfig) => {
+  const handleInputBlur = useCallback((name: string, value: FormInputValue, config: FormInputConfig) => {
     setTouched(prev => new Set(prev).add(name));
-    const error = validateField(name, value, config);
+    const error = validateField(value, config);
     setErrors(prev => ({ ...prev, [name]: error || '' }));
-  }, [validateField]);
+  }, []);
 
-  // Form submission handler - validates all fields before submitting
   const handleSubmit = useCallback((e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitted(true);
     
-    // Validate all form fields
-    const newErrors: FormErrors = {};
+    const newErrors: Record<string, string> = {};
     let hasErrors = false;
     
     inputs.forEach(input => {
-      const error = validateField(input.name, formData[input.name], input);
-      if (error) {
-        newErrors[input.name] = error;
-        hasErrors = true;
-      }
+      const error = validateField(formData[input.name], input);
+      if (error) { newErrors[input.name] = error; hasErrors = true; }
     });
     
     setErrors(newErrors);
-    
-    // Only submit if no validation errors
-    if (!hasErrors) {
-      onSubmit(formData);
-    }
-  }, [formData, inputs, onSubmit, validateField]);
+    if (!hasErrors) onSubmit(formData);
+  }, [formData, inputs, onSubmit]);
 
-  // Form cancellation handler - resets form state
   const handleCancel = useCallback(() => {
     setFormData(initialData);
     setErrors({});
     setTouched(new Set());
-    if (onCancel) {
-      onCancel();
-    }
+    setSubmitted(false);
+    onCancel?.();
   }, [initialData, onCancel]);
 
-  // Renders individual form input based on type
-  const renderInput = (input: FormInputConfig) => {
-    const { name, type, label, placeholder, required, defaultValue, options, className: inputClassName, colSpan = 1, icon, description } = input;
-    const value = formData[name];
-    const error = errors[name];
-    const showError = error && touched.has(name);
+  const layoutClasses = useMemo(() => {
+    const baseClass = CLASSES.layout[layout];
+    return layout === 'grid' ? `${baseClass} ${CLASSES.cols[gridCols]}` : baseClass;
+  }, [layout, gridCols]);
 
-    // Generate CSS grid span class based on column span
-    const getGridSpanClass = (span: number) => {
-      switch (span) {
-        case 1: return 'col-span-1';
-        case 2: return 'col-span-2';
-        case 3: return 'col-span-3';
-        case 4: return 'col-span-4';
-        case 5: return 'col-span-5';
-        case 6: return 'col-span-6';
-        default: return 'col-span-1';
-      }
-    };
+  const formContainerClasses = `${CLASSES.container[variant]} ${className}`;
 
-    const gridSpanClass = getGridSpanClass(colSpan);
-    
-    // Render different input types with appropriate styling and functionality
-    const renderInputByType = () => {
-      switch (type) {
-        case 'textarea':
-          return (
-            <textarea
-              id={name}
-              name={name}
-              value={value}
-              placeholder={placeholder || label}
-              required={required}
-              disabled={disabled}
-              className={`input textarea ${inputClassName || ''}`}
-              onChange={(e) => handleInputChange(name, e.target.value, input)}
-              onBlur={(e) => handleInputBlur(name, e.target.value, input)}
-            />
-          );
+  const formInputs = useMemo(() => 
+    inputs.map(input => (
+      <FormInput
+        key={input.name}
+        input={input}
+        value={formData[input.name]}
+        error={errors[input.name]}
+        showError={!!(errors[input.name] && (touched.has(input.name) || submitted))}
+        disabled={disabled}
+        onInputChange={handleInputChange}
+        onInputBlur={handleInputBlur}
+        fileInputRefs={fileInputRefs}
+      />
+    )), 
+    [inputs, formData, errors, touched, submitted, disabled, handleInputChange, handleInputBlur]
+  );
 
-        case 'select':
-          return (
-            <div className="relative">
-              <select
-                id={name}
-                name={name}
-                value={value}
-                required={required}
-                disabled={disabled}
-                className={`input select ${inputClassName || ''}`}
-                onChange={(e) => handleInputChange(name, e.target.value, input)}
-                onBlur={(e) => handleInputBlur(name, e.target.value, input)}
-              >
-                <option value="" disabled selected>{placeholder || label}</option>
-                {options?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          );
-
-        case 'file':
-          const setRef = (el: HTMLInputElement | null) => {
-            fileInputRefs.current[name] = el;
-          };
-          return (
-            <div className="relative flex flex-col gap-5">
-              <div className="flex items-center justify-between p-4 border border-gray-200/60 bg-white rounded-xl">
-                <div className="flex items-center space-x-3">
-                  <Button
-                    onClick={() => fileInputRefs.current[name]?.click()}
-                    label="Choose File"
-                  />
-                  <span className="text-sm text-gray-600 truncate max-w-[200px]">
-                    {value?.[0]?.name || 'No file chosen'}
-                  </span>
-                </div>
-                {icon && (
-                  <img src={icon} alt="" className="w-5 h-5 text-gray-400" />
-                )}
-              </div>
-            </div>
-          );
-
-        case 'checkbox':
-          return (
-            <div className="flex items-start space-x-3 p-4 bg-gray-50/50 border-b border-gray-200/60">
-              <input
-                id={name}
-                name={name}
-                type="checkbox"
-                checked={!!value}
-                disabled={disabled}
-                className="input"
-                onChange={(e) => handleInputChange(name, e.target.checked, input)}
-                onBlur={() => handleInputBlur(name, value, input)}
-              />
-              <div className="flex-1">
-                <label htmlFor={name} className="block text-sm font-medium text-gray-900">
-                  {label}
-                </label>
-                {description && (
-                  <p className="text-xs text-gray-500 mt-1">{description}</p>
-                )}
-              </div>
-            </div>
-          );
-
-        default: // text, email, password, number, date
-          return (
-            <div className="relative">
-              <input
-                id={name}
-                name={name}
-                type={type}
-                value={value || ''}
-                placeholder={placeholder || label}
-                required={required}
-                disabled={disabled}
-                className={`input ${icon ? 'pr-12' : ''} ${inputClassName || ''}`}
-                onChange={(e) => handleInputChange(name, e.target.value, input)}
-                onBlur={(e) => handleInputBlur(name, e.target.value, input)}
-              />
-              {icon && (
-                <div className="absolute inset-y-0 right-0 flex items-center pr-4">
-                  <img src={icon} alt="" className="w-5 h-5 text-gray-400" />
-                </div>
-              )}
-            </div>
-          );
-      }
-    };
-
-    return (
-      <div key={name} className={`w-full ${gridSpanClass}`}>
-        <div className="space-y-2 flex flex-col gap-2">
-          {/* Label */}
-          <label htmlFor={name} className="label">
-            {label}
-          </label>
-          
-          {/* Input Field */}
-          <div className="relative ">
-            {renderInputByType()}
-          </div>
-          
-          {/* Description */}
-          {description && !showError && (
-            <p className="text-xs text-gray-500">{description}</p>
-          )}
-        </div>
-        
-      </div>
-    );
-  };
-  
-  // Get the appropriate grid columns class based on gridCols
-  const getGridColsClass = (cols: number) => {
-    switch (cols) {
-      case 1: return 'grid-cols-1';
-      case 2: return 'grid-cols-2';
-      case 3: return 'grid-cols-3';
-      case 4: return 'grid-cols-4';
-      case 5: return 'grid-cols-5';
-      case 6: return 'grid-cols-6';
-      default: return 'grid-cols-3';
-    }
-  };
-
-  const layoutClasses = `grid ${getGridColsClass(gridCols)} gap-6`;
-  
-  // Form container classes based on variant
-  const getFormContainerClasses = () => {
-    switch (variant) {
-      case 'card':
-        return 'bg-white p-8';
-      case 'minimal':
-        return 'bg-transparent p-0';
-      default:
-        return 'bg-gradient-to-br from-slate-50 to-slate-100 p-8';
-    }
-  };
+  // Get all error messages for screen readers
+  const errorMessages = Object.values(errors).filter(Boolean);
+  const hasErrors = errorMessages.length > 0;
 
   return (
-    <div className={`w-full ${getFormContainerClasses()} ${className}`}>
-    <form
-      id={formId}
-      onSubmit={handleSubmit}
-        className="w-full"
-      noValidate
-    >
-        {/* Form Header */}
+    <div className={`w-full ${formContainerClasses}`}>
+      <form 
+        id={formId} 
+        onSubmit={handleSubmit} 
+        className="w-full" 
+        noValidate
+        aria-label={title || 'Form'}
+      >
+        {/* Error summary for screen readers */}
+        {hasErrors && submitted && (
+          <div 
+            className="sr-only"
+            role="alert"
+            aria-live="assertive"
+          >
+            Form has {errorMessages.length} error{errorMessages.length > 1 ? 's' : ''}: {errorMessages.join('. ')}
+          </div>
+        )}
+
         {(title || subtitle) && (
           <div className="mb-8 text-center">
-            {title && (
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
-            )}
-            {subtitle && (
-              <p className="text-gray-600">{subtitle}</p>
-            )}
+            {title && <h2 className="text-2xl font-bold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">{title}</h2>}
+            {subtitle && <p className="text-[var(--color-light)] dark:text-[var(--color-neutral-light)]">{subtitle}</p>}
           </div>
         )}
         
-        {/* Form Fields */}
-      <div className={layoutClasses}>
-        {inputs.map(renderInput)}
-      </div>
-      
-        {/* Form Actions */}
-        <div className="flex items-center justify-end space-x-4 mt-8 pt-6 border-gray-200/60">
+        <div className={layoutClasses}>{formInputs}</div>
+        
+        <div className="flex items-center justify-end space-x-4 mt-8 pt-6 border-t border-[var(--color-primary-border)] dark:border-[var(--color-dark-border)]">
           {showCancel && (
-            <Button
-              onClick={handleCancel}
-              disabled={disabled || isLoading}
-              label={cancelLabel}
+            <Button 
+              onClick={handleCancel} 
+              disabled={disabled || isLoading} 
+              label={cancelLabel} 
               variant="secondary"
+              type="button"
             />
           )}
-          
-          <Button
-            disabled={disabled || isLoading}
-            variant="primary"
+          <Button 
+            type="submit" 
+            disabled={disabled || isLoading} 
+            variant="primary" 
             label={isLoading ? 'Loading...' : submitLabel}
+            aria-describedby={hasErrors ? `${formId}-errors` : undefined}
           />
         </div>
-    </form>
+      </form>
     </div>
   );
 };
 
-export default Form; 
+export default memo(Form); 

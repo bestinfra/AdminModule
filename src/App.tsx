@@ -5,6 +5,7 @@ import PageBuilder from './pages/PageBuilder/PageBuilder';
 import ModuleSelection from './pages/ModuleSelection';
 import Profile from './pages/Profile';
 import AllTickets from './pages/AllTickets';
+import Forms from './pages/Forms';
 import MainLayout from './components/layout/MainLayout';
 import Card from './components/global/Card';
 import CardSkeleton from './components/skeletons/CardSkeleton';
@@ -499,6 +500,7 @@ const App: React.FC = () => {
                         />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/all-tickets" element={<AllTickets />} />
+                        <Route path="/forms" element={<Forms />} />
                         <Route path="*" element={<NotFound />} />
                     </Route>
                     <Route path="/page-builder" element={<PageBuilder />} />
