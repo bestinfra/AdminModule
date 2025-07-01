@@ -2,7 +2,7 @@ import React from 'react';
 import type { CommonInputProps } from '../types';
 
 interface TextInputProps extends CommonInputProps {
-  type: 'text' | 'email' | 'password' | 'number' | 'date';
+  type: 'text' | 'email' | 'password' | 'number' | 'date' | 'tel' | 'url';
   value: string;
   placeholder?: string;
   icon?: string;

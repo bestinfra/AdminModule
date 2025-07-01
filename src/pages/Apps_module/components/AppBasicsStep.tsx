@@ -114,7 +114,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
         <div className="max-w-2xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
             <h3 className="text-xl font-bold text-main dark:text-white mb-1">App Basics</h3>
             <p className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</p>
-            <form className="space-y-6" onSubmit={onNext}>
+            <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
                 <FormInput
                     input={{
                         name: 'appName',
