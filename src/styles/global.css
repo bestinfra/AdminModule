@@ -138,13 +138,27 @@
 
 
     /* Transperent Colors */
-    --color-primary-transparent: rgba(85, 181, 108, 0);
+    --color-primary-transparent: rgba(85, 181, 108, 0); 
 
 
   /* === Utility / Misc === */
   --color-test: rgba(63, 104, 178, 1);                
 
-
+/* Color customs */
+    --color-custom-primary: rgba(32, 45, 89, 1);
+    --color-custom-secondary: rgba(85, 181, 108, 1);
+    --color-custom-warning: rgba(237, 140, 34, 1);
+    --color-custom-danger: rgba(220, 39, 44, 1);
+    --color-custom-accent: rgba(0, 209, 178, 1);
+    --color-custom-neutral: rgba(126, 126, 126, 1);
+    --color-custom-surface: rgba(255, 255, 255, 1);
+    --color-custom-primary-light: rgba(32, 45, 89, 0.8);
+    --color-custom-secondary-light: rgba(85, 181, 108, 0.8);
+    --color-custom-warning-light: rgba(237, 140, 34, 0.8);
+    --color-custom-danger-light: rgba(220, 39, 44, 0.8);
+    --color-custom-accent-light: rgba(0, 209, 178, 0.8);
+    --color-custom-neutral-light: rgba(126, 126, 126, 0.8);
+    --color-custom-surface-light: rgba(255, 255, 255, 0.8);
 
 
 
