@@ -4,7 +4,7 @@ import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import RecentActivities from '../components/global/RecentActivities';
 import Page from '../components/global/Page';
-import { createHeaderComponent, createActionsComponent, commonActions } from '../components/global/PageComponents';
+import { createHeaderComponent, createActionsComponent } from '../components/global/PageComponents';
 
 const Dashboard: React.FC = () => {
     // Sample data for summary cards
@@ -212,7 +212,6 @@ const Dashboard: React.FC = () => {
             component: (
                 <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6">
                     <BarChart
-                        title="Ticket Distribution by Category"
                         data={[120, 200, 150, 80, 70, 110, 130]}
                         xAxisData={[
                             'Technical',
