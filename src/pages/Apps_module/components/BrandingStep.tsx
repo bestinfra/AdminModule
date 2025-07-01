@@ -86,7 +86,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Branding & Customization</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Customize your application's appearance and branding elements</p>
       
-      <form className="space-y-6" onSubmit={onNext}>
+      <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
             input={{

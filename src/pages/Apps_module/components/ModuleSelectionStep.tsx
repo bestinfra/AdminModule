@@ -146,7 +146,7 @@ const ModuleSelectionStep: React.FC<ModuleSelectionStepProps> = ({ formData, err
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Module Selection</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Configure which modules will be enabled for your application</p>
       
-      <form className="space-y-8" onSubmit={onNext}>
+      <form className="space-y-8" onSubmit={onNext} action="#" method="post" noValidate>
         {/* Default Modules Section */}
         <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
           <div className="flex justify-between items-start mb-6 gap-4">

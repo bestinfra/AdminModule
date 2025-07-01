@@ -6,13 +6,14 @@ import BrandingStep from './components/BrandingStep';
 import ModuleSelectionStep from './components/ModuleSelectionStep';
 import GoLiveStep from './components/GoLiveStep';
 import type { AdminAccessFormData, AdminAccessFormErrors } from './components/AdminAccessForm';
+import { generateAppProject } from '../../api/exportModules';
 
 const stepLabels: { label: string; sub: string }[] = [
   { label: 'App Basics', sub: 'Configure your application settings' },
   { label: 'Admin Access', sub: 'Set up administrator account' },
   { label: 'Branding', sub: 'Customize your app appearance' },
   { label: 'Modules', sub: 'Select feature modules' },
-  { label: 'Go-Live', sub: 'Review and configure launch settings' },
+  { label: 'Generate', sub: 'Review and generate React project' },
 ];
 
 const initialAppBasicsData = {
@@ -164,16 +165,26 @@ const AppManagement: React.FC = () => {
         ...moduleData,
       };
       
-      console.log('Submitting app data:', allFormData);
+      console.log('Generating app project with data:', allFormData);
       
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Generate the React project
+      const projectBlob = await generateAppProject(allFormData);
+      
+      // Create download link
+      const url = URL.createObjectURL(projectBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${allFormData.subdomain || allFormData.appName?.toLowerCase().replace(/\s+/g, '-') || 'my-admin-app'}.zip`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
       
       // Handle success
-      alert('App created successfully!');
+      alert('React project generated and downloaded successfully!');
     } catch (error) {
-      console.error('Error creating app:', error);
-      alert('Error creating app. Please try again.');
+      console.error('Error generating app project:', error);
+      alert('Error generating app project. Please try again.');
     } finally {
       setLoading(false);
     }

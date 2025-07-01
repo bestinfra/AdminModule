@@ -66,7 +66,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
     <section className="max-w-2xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Admin Access</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Set up the primary administrator account for your application</p>
-      <form className="space-y-6" onSubmit={onSubmit} aria-label="Admin Access Form" autoComplete="off">
+      <form className="space-y-6" onSubmit={onSubmit} action="#" method="post" noValidate aria-label="Admin Access Form" autoComplete="off">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
             input={{

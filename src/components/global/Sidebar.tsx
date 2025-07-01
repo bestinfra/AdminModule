@@ -397,7 +397,7 @@ const Sidebar = ({
                                                                             {/* Horizontal line for each submenu item */}
                                                                             <span className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-0.5 bg-gray-200"></span>
                                                                             <Link
-                                                                                to={subItem.link}
+                                                                                to={subItem.link || '#'}
                                                                                 className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
                                                                                     location.pathname === subItem.link
                                                                                         ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow'
