@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
+import { useApp } from '../context/AppContext';
 
 interface SeriesData {
     name: string;
@@ -20,13 +21,15 @@ interface BarChartProps {
 const BarChart: React.FC<BarChartProps> = ({
     data = [120, 200, 150, 80, 70, 110, 130],
     xAxisData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    isDarkMode = false,
+    isDarkMode: propIsDarkMode,
     timeRange = 'Daily',
     seriesData = [{ name: 'Data', data }],
     seriesColors = ['#5470c6'],
     showXAxisLabel = false,
     xAxisLabel = '',
 }) => {
+    const { isDarkMode: contextIsDarkMode } = useApp();
+    const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
     const option = {
         tooltip: {
             trigger: 'axis',
@@ -38,7 +41,7 @@ const BarChart: React.FC<BarChartProps> = ({
                 : 'rgba(255, 255, 255, 0.95)',
             borderColor: isDarkMode ? '#424242' : '#E5E5E5',
             borderWidth: 1,
-            borderRadius: 8,
+            borderRadius: 8,    
             padding: [12, 16],
             textStyle: {
                 fontFamily: 'Manrope, sans-serif',
@@ -153,14 +156,18 @@ const BarChart: React.FC<BarChartProps> = ({
             itemStyle: {
                 color: seriesColors[index],
                 borderRadius: 0,
+                opacity: isDarkMode ? 0.8 : 1,
             },
             emphasis: {
                 focus: 'series',
+                itemStyle: {
+                    opacity: 1,
+                },
             },
             showBackground: true,
             backgroundStyle: {
-                color: '#dff4e3',
-                opacity: 0.5,
+                color: isDarkMode ? '#ffffff' : '#dff4e3',
+                opacity: isDarkMode ? 0.1 : 0.5,
             },
         })),
     };

@@ -382,7 +382,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     if (groupBy) {
       return Object.entries(grouped).map(([group, groupOptions]) => (
         <div key={group}>
-          <div className="text-xs text-gray-500 font-medium px-4 uppercase tracking-wider">{group}</div>
+          <div className="text-xs font-medium px-4 uppercase tracking-wider hover:bg-primary-dark hover:text-white">{group}</div>
           {groupOptions.map((option: Option, index: number) => renderOption(option, index))}
         </div>
       ));
@@ -398,9 +398,9 @@ const Dropdown: React.FC<DropdownProps> = ({
     return (
       <div
         key={option.value}
-        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-sm font-medium mb-1 mx-1
-          ${isSelected ? 'bg-primary text-white' : ''}
-          ${focusedIndex === index ? 'bg-primary text-white' : 'hover:bg-primary-blue hover:text-white'}`}
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-sm font-medium mb-1 mx-2 hover:dark:bg-primary hover:dark:text-white hover:bg-primary hover:text-white
+          ${isSelected ? 'dark:bg-primary-dark dark:text-white' : ''}
+          ${focusedIndex === index ? 'dark:bg-primary-dark dark:text-white' : 'hover:bg-primary-dark hover:text-white'}`}
         onClick={() => handleSelect(option)}
         onMouseEnter={() => setFocusedIndex(index)}
       >
@@ -409,7 +409,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             type="checkbox"
             readOnly
             checked={isSelected}
-            className="accent-light w-4 h-4"
+            className="accent-light w-4 h-4 border border-primary-border dark:border-dark-border"
           />
         )}
         {option.label}
@@ -440,7 +440,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
         tabIndex={0}
-        className={`w-full flex items-center justify-between border px-4 py-3 rounded-full shadow-sm cursor-pointer bg-white text-sm font-medium
+        className={`w-full flex items-center justify-between border px-4 py-3 rounded-full shadow-sm cursor-pointer dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border text-sm font-medium
           ${disabled ? 'bg-gray-100 text-gray-400' : ''}
           ${error ? 'border-red-500' : 'border-gray-300'}`}
         role="combobox"
@@ -463,23 +463,23 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       {isOpen && (
         <div
-          className="absolute z-10 w-full bg-white mt-2 border border-gray-200 rounded-2xl shadow-lg overflow-auto"
+          className="absolute z-10 w-full mt-2 dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border rounded-2xl shadow-lg overflow-auto"
           style={{ maxHeight }}
           role="listbox"
         >
           {searchable && (
-            <div className="p-2 border-b border-gray-200">
+            <div className="p-2 border border-primary-border dark:border-dark-border">
               <input
                 ref={searchInputRef}
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search..."
-                className="w-full px-3 py-2 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-light text-sm my-2 py-3"
+                className="w-full px-3 py-2 border border-primary-border dark:border-dark-border rounded-xl text-sm my-2 py-3"
               />
             </div>
           )}
-          <div className="max-h-60 overflow-y-auto p-1">
+          <div className="max-h-60 overflow-y-auto mt-2 mb-1">
             {renderOptions()}
           </div>
         </div>

@@ -45,13 +45,13 @@ const Search:React.FC<SearchProps>=({value,onChange,placeholder='Search',onResul
             value={value}
             onChange={handleSearchChange}
             placeholder={placeholder}
-            className={`w-full py-3 pl-10 pr-4 border rounded-full shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-blue-500 ${errorState ? 'border-red-300':'border-gray-300'} ${disabled ?'bg-gray-100 text-gray-400':''}`}
+            className={`w-full py-3 pl-10 pr-4 border border-primary-border dark:border-dark-border rounded-full shadow-sm text-base dark:text-white placeholder-dark-border dark:placeholder-white focus:outline-none focus:ring-2 dark:focus:ring-blue-500 dark:bg-primary-dark ${errorState ? 'border-red-300':'border-gray-300'} ${disabled ?'bg-gray-100 text-gray-400':''}`}
             disabled={disabled}
             required={required}
             />
 
             {/* Search Icon / spinner*/}
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 dark:text-white">
                 {isSearching ? (
                     <div className="w-4 h-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
                 ):(
@@ -61,21 +61,21 @@ const Search:React.FC<SearchProps>=({value,onChange,placeholder='Search',onResul
             {/*Keyboard shortcut*/}
             {showShortcut && (
                 <div className="absolute top-1/2 right-3 transform -translate-y-1/2 text-xs text-gray-400 hidden sm:flex gap-1 items-center">
-                    <kbd className="bg-gray-100 px-1.5 py-0.5 rounded text-xs">Ctrl</kbd>
+                    <kbd className="bg-primary-lightest dark:bg-primary-dark-light px-1.5 py-0.5 rounded text-xs dark:text-subinfo">Ctrl</kbd>
                 </div>
             )}
 
             {/* Search Results */}
             {results.length > 0 && (
-                <div className="absolute z-10 mt-2 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                <div className="absolute z-10 mt-2 w-full border border-primary-border dark:border-dark-border  rounded-xl shadow-lg max-h-60 overflow-y-auto">
                     {results.map((result)=>(
                         <div 
                         key={result.UID || result.id}
-                        className="px-4 py-2 text-sm hover:bg-blue-100 cursor-pointer"
+                        className="px-4 py-2 text-sm hover:bg-primary-lightest dark:hover:bg-primary-dark-light cursor-pointer"
                         onClick={()=>onResultClick?.(result)}
                         >
-                            <div className="font-medium text-gray-800">{result.UID || result.id}</div>
-                            <div className="text-gray-600">{result.UnitName || result.name}</div>
+                            <div className="dark:text-white">{result.UID || result.id}</div>
+                            <div className="dark:text-white">{result.UnitName || result.name}</div>
                         </div>
                     ))}
                 </div>

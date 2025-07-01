@@ -262,13 +262,13 @@ const Sidebar = ({
                 isSidebarCollapsed ? 'w-20' : 'w-72'
             }`}>
             <nav
-                className={`h-screen flex flex-col justify-between items-center w-full bg-secondary dark:bg-dark-secondary border-r border-r-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
+                className={`h-screen flex flex-col justify-between items-center w-full bg-primary-lightest dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
                     isSidebarCollapsed ? 'w-20' : 'w-72'
                 } ${className}`}
                 aria-label="Main navigation">
                 <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
                     <header
-                        className={`sticky top-0 z-10 dark:bg-dark-primary h-24 flex justify-center border-b border-b-border dark:border-dark-border items-center ${
+                        className={`sticky top-0 z-10 dark:bg-primary-dark h-24 flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${
                             isSidebarCollapsed
                                 ? 'bg-primary px-4'
                                 : 'bg-white px-16'
@@ -289,14 +289,14 @@ const Sidebar = ({
                             }`}
                         />
                     </header>
-                    <main className="flex p-4 flex-col w-full md:block dark:bg-dark-secondary">
+                    <main className="flex p-4 flex-col w-full md:block dark:bg-primary-dark-light">
                         {menus.map((category, categoryIndex) => (
                             <section
                                 key={categoryIndex}
                                 className="flex flex-col w-full"
                                 aria-label={category.category}>
                                 {!isSidebarCollapsed && (
-                                    <h2 className="px-4 py-2 text-sm font-semibold uppercase text-rare ">
+                                    <h2 className="px-4 py-2 text-sm font-semibold uppercase text-neutral-dark  dark:text-white">
                                         {category.category}
                                     </h2>
                                 )}
@@ -315,8 +315,8 @@ const Sidebar = ({
                                                             className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
                                                                 location.pathname ===
                                                                 menuItem.link
-                                                                    ? 'text-primary bg-white dark:bg-brand-blue dark:text-white'
-                                                                    : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-dark-secondary dark:hover:text-white'
+                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white'
+                                                                    : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
                                                             }`}
                                                             aria-expanded={
                                                                 expandedMenus[
@@ -331,11 +331,11 @@ const Sidebar = ({
                                                                         menuItem.icon
                                                                     }
                                                                     alt=""
-                                                                    className={`w-6 h-6 icon-dark-filter ${
+                                                                    className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
                                                                         location.pathname ===
                                                                         menuItem.link
                                                                             ? 'icon-filter'
-                                                                            : ''
+                                                                            : 'group-hover:icon-filter'
                                                                     }`}
                                                                     aria-hidden="true"
                                                                 />
@@ -369,150 +369,33 @@ const Sidebar = ({
                                                         {!isSidebarCollapsed && (
                                                             <ul
                                                                 id={`submenu-${menuItem.title}`}
-                                                                className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
+                                                                className={`relative flex flex-col overflow-hidden transition-all duration-300 ease-in-out pl-0 ${
                                                                     expandedMenus[
-                                                                        menuItem
-                                                                            .title
+                                                                        menuItem.title
                                                                     ]
                                                                         ? 'max-h-[500px] opacity-100'
                                                                         : 'max-h-0 opacity-0'
                                                                 }`}>
+                                                                {/* Vertical line for submenu */}
+                                                                <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200"></span>
                                                                 {menuItem.submenu?.map(
                                                                     (
                                                                         subItem,
                                                                         subIndex
                                                                     ) => (
-                                                                        <li
-                                                                            key={
-                                                                                subIndex
-                                                                            }>
-                                                                            {subItem.hasSubmenu ? (
-                                                                                <div className="relative w-full">
-                                                                                    <button
-                                                                                        onClick={() =>
-                                                                                            toggleSubmenu(
-                                                                                                `${menuItem.title}-${subItem.title}`
-                                                                                            )
-                                                                                        }
-                                                                                        className={`flex justify-between items-center px-7 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 w-full text-left ${
-                                                                                            location.pathname === subItem.link
-                                                                                                ? 'text-primary dark:text-white dark:hover:text-white'
-                                                                                                : 'text-idle dark:hover:text-white'
-                                                                                        }`}
-                                                                                        aria-expanded={
-                                                                                            expandedMenus[
-                                                                                                `${menuItem.title}-${subItem.title}`
-                                                                                            ]
-                                                                                        }
-                                                                                        aria-controls={`submenu-${menuItem.title}-${subItem.title}`}>
-                                                                                        <span className="relative flex items-center">
-                                                                                            <span
-                                                                                                className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                                                                                                    location.pathname === subItem.link
-                                                                                                        ? 'bg-primary dark:bg-white'
-                                                                                                        : 'bg-idle '
-                                                                                                }`}></span>
-                                                                                            {subItem.title}
-                                                                                        </span>
-                                                                                        <span
-                                                                                            className={`transition-transform ${
-                                                                                                expandedMenus[
-                                                                                                    `${menuItem.title}-${subItem.title}`
-                                                                                                ]
-                                                                                                    ? 'rotate-180'
-                                                                                                    : ''
-                                                                                            }`}>
-                                                                                            <img
-                                                                                                src="/icons/arrow-down.svg"
-                                                                                                alt=""
-                                                                                                className="w-3 h-3"
-                                                                                                aria-hidden="true"
-                                                                                            />
-                                                                                        </span>
-                                                                                    </button>
-                                                                                    <ul
-                                                                                        id={`submenu-${menuItem.title}-${subItem.title}`}
-                                                                                        className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
-                                                                                            expandedMenus[
-                                                                                                `${menuItem.title}-${subItem.title}`
-                                                                                            ]
-                                                                                                ? 'max-h-[500px] opacity-100'
-                                                                                                : 'max-h-0 opacity-0'
-                                                                                        }`}>
-                                                                                        {subItem.submenu?.map(
-                                                                                            (
-                                                                                                nestedItem,
-                                                                                                nestedIndex
-                                                                                            ) => (
-                                                                                                <li
-                                                                                                    key={
-                                                                                                        nestedIndex
-                                                                                                    }>
-                                                                                                    <Link
-                                                                                                        to={
-                                                                                                            nestedItem.link || '#'
-                                                                                                        }
-                                                                                                        className={`flex justify-between items-center px-10 pr-4 py-2 text-sm font-semibold group transition-colors duration-200 ${
-                                                                                                            location.pathname === nestedItem.link
-                                                                                                                ? 'text-primary dark:text-white'
-                                                                                                                : 'text-idle hover:text-primary dark:hover:text-white'
-                                                                                                        }`}>
-                                                                                                        <span className="relative flex items-center">
-                                                                                                            <span
-                                                                                                                className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                                                                                                                    location.pathname === nestedItem.link
-                                                                                                                        ? 'bg-primary dark:bg-white'
-                                                                                                                        : 'bg-idle '
-                                                                                                                }`}></span>
-                                                                                                            {nestedItem.title}
-                                                                                                        </span>
-                                                                                                        {nestedItem.count && (
-                                                                                                            <span
-                                                                                                                className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand justify-center hover:bg-brand items-center ${
-                                                                                                                    location.pathname === nestedItem.link
-                                                                                                                        ? 'bg-brand'
-                                                                                                                        : 'bg-primary'
-                                                                                                                }`}>
-                                                                                                                {nestedItem.count}
-                                                                                                            </span>
-                                                                                                        )}
-                                                                                                    </Link>
-                                                                                                </li>
-                                                                                            )
-                                                                                        )}
-                                                                                    </ul>
-                                                                                </div>
-                                                                            ) : (
-                                                                                <Link
-                                                                                    to={
-                                                                                        subItem.link || '#'
-                                                                                    }
-                                                                                    className={`flex justify-between items-center px-7 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 ${
-                                                                                        location.pathname === subItem.link
-                                                                                            ? 'text-primary dark:text-white dark:hover:text-white'
-                                                                                            : 'text-idle dark:hover:text-white'
-                                                                                    }`}>
-                                                                                    <span className="relative flex items-center">
-                                                                                        <span
-                                                                                            className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                                                                                                location.pathname === subItem.link
-                                                                                                    ? 'bg-primary dark:bg-white'
-                                                                                                    : 'bg-idle '
-                                                                                            }`}></span>
-                                                                                        {subItem.title}
-                                                                                    </span>
-                                                                                    {subItem.count && (
-                                                                                        <span
-                                                                                            className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand items-center ${
-                                                                                                location.pathname === subItem.link
-                                                                                                    ? 'bg-primary dark:bg-brand'
-                                                                                                    : 'bg-success dark:bg-primary'
-                                                                                            }`}>
-                                                                                            {subItem.count}
-                                                                                        </span>
-                                                                                    )}
-                                                                                </Link>
-                                                                            )}
+                                                                        <li key={subIndex} className="relative">
+                                                                            {/* Horizontal line for each submenu item */}
+                                                                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-0.5 bg-gray-200"></span>
+                                                                            <Link
+                                                                                to={subItem.link}
+                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
+                                                                                    location.pathname === subItem.link
+                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow'
+                                                                                        : 'text-gray-400 hover:text-primary'
+                                                                                }`}
+                                                                            >
+                                                                                {subItem.title}
+                                                                            </Link>
                                                                         </li>
                                                                     )
                                                                 )}
@@ -537,8 +420,8 @@ const Sidebar = ({
                                                         className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group rounded-lg ${
                                                             location.pathname ===
                                                             menuItem.link
-                                                                ? 'text-primary bg-white dark:bg-brand-blue dark:text-white'
-                                                                : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-dark-secondary dark:hover:text-white'
+                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white'
+                                                                : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
                                                         }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
                                                             <img
@@ -546,7 +429,7 @@ const Sidebar = ({
                                                                     menuItem.icon
                                                                 }
                                                                 alt=""
-                                                                className={`w-6 h-6 icon-dark-filter ${
+                                                                className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
                                                                     location.pathname ===
                                                                     menuItem.link
                                                                         ? 'icon-filter'
@@ -567,8 +450,8 @@ const Sidebar = ({
                                                                         className={`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center group-hover:bg-brand items-center ${
                                                                             location.pathname ===
                                                                             menuItem.link
-                                                                                ? 'bg-primary dark:bg-brand'
-                                                                                : 'bg-success dark:bg-primary'
+                                                                                ? 'bg-primary dark:bg-secondary'
+                                                                                : 'bg-primary dark:bg-secondary'
                                                                         }`}>
                                                                         {
                                                                             menuItem.count
@@ -587,7 +470,7 @@ const Sidebar = ({
                         ))}
                     </main>
                 </div>
-                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-dark-secondary">
+                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
                     {!isSidebarCollapsed ? (
                         <>
                             {appDownload?.enabled && (
@@ -602,7 +485,7 @@ const Sidebar = ({
                                             />
                                         </span>
 
-                                        <span className="bg-brand text-white text-xs font-medium rounded-lg px-2 py-1">
+                                        <span className="bg-secondary text-white text-xs font-medium rounded-lg px-2 py-1">
                                             New
                                         </span>
                                     </div>
@@ -627,7 +510,7 @@ const Sidebar = ({
                                         />
                                         {footer?.showShareButton && (
                                             <button
-                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-secondary"
+                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-primary-lightest"
                                                 aria-label="Share app"
                                                 onClick={onShareClick}>
                                                 <img
@@ -642,13 +525,13 @@ const Sidebar = ({
                                 </section>
                             )}
                             <div className="flex items-center justify-between w-full">
-                                <p className="text-xs text-light">
+                                <p className="text-xs text-light dark:text-subinfo">
                                     {footer?.copyright}
                                 </p>
 
                                 {footer?.showThemeToggle && (
                                     <button
-                                        className="w-10 h-10 border border-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
+                                        className="w-10 h-10 border border-primary-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
                                         aria-label="Toggle dark mode"
                                         onClick={toggleTheme}>
                                         <img

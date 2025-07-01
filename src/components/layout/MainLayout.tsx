@@ -42,7 +42,7 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
                     title={getPageTitle()}
                     onSidebarToggle={toggleSidebar}
                 />
-                <main className="flex-1 p-6 bg-white overflow-auto dark:bg-dark-primary">
+                <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
                     <Outlet />
                 </main>
             </div>

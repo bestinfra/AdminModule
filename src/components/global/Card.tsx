@@ -26,13 +26,13 @@ const Card = ({
     }
 
     return (
-        <article className="rounded-3xl bg-secondary shadow-md/20 shadow-black dark:bg-dark-secondary dark:shadow-md/60 dark:shadow-black">
-            <section className="flex justify-between items-start p-6 border border-border bg-white dark:bg-dark-primary  rounded-3xl dark:border dark:border-dark-border">
+        <article className="rounded-3xl bg-primary-lightest shadow-md/20 shadow-black dark:bg-primary-dark-light dark:shadow-md/60 dark:shadow-black  dark:border dark:border-dark-border  ">
+            <section className="flex justify-between items-start p-6   border border-primary-border bg-white dark:bg-primary-dark  rounded-3xl dark:border dark:border-dark-border">
                 <div className="space-y-2">
                     <h3 className="text-base text-main dark:text-white">
                         {title}
                     </h3>
-                    <p className="text-2xl font-bold text-primary flex items-center gap-2 dark:text-success">
+                    <p className="text-2xl font-bold text-secondary flex items-center gap-2 dark:text-secondary">
                         {value}
                         {showTrend && (
                             <span
@@ -44,7 +44,7 @@ const Card = ({
                                 }
                                 className={
                                     comparisonValue && comparisonValue > 0
-                                        ? 'bg-success rounded-full p-1'
+                                        ? 'bg-secondary rounded-full p-1'
                                         : 'bg-error rounded-full p-1'
                                 }>
                                 <img
@@ -61,19 +61,19 @@ const Card = ({
                     </p>
                 </div>
                 {icon && (
-                    <figure className="p-2 bg-secondary dark:bg-dark-secondary rounded-full w-12 h-12 flex items-center justify-center ">
-                        <img src={icon} alt={`${title} Icon`} className="" />
+                    <figure className="p-2 bg-gradient-primary  dark:bg-dark-secondary rounded-full w-12 h-12 flex items-center justify-center ">
+                        <img src={icon} alt={`${title} Icon`} className="w-5 h-5" />
                     </figure>
                 )}
             </section>
             <footer className="flex justify-between px-6 py-3 space-y-1">
                 {subtitle1 && (
-                    <p className="text-base m-0 font-light text-grey dark:text-accent text-sm">
+                    <p className="text-base m-0 font-light text-main dark:text-subinfo text-sm">
                         {subtitle1}
                     </p>
                 )}
                 {subtitle2 && (
-                    <p className="text-base m-0 font-extralight text-grey dark:text-accent text-sm">
+                        <p className="text-base m-0 font-extralight text-main dark:text-subinfo text-sm">
                         {subtitle2}
                     </p>
                 )}

@@ -29,14 +29,14 @@ const Holder: React.FC<HolderProps> = ({
 }) => {
     return (
         <div
-            className={`w-full transition-[height,opacity,transform] duration-300 ease-in-out flex flex-col border border-secondary-2 dark:border-dark-border rounded-3xl overflow-hidden ${
+            className={`w-full transition-[height,opacity,transform] duration-300 ease-in-out flex flex-col border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden ${
                 className || ''
             }`}
             style={{ height }}>
-            <div className="flex justify-between items-center dark:bg-dark-secondary bg-secondary p-5 ">
-                <h3 className="m-0 text-base font-normal text-primary dark:text-white flex items-center gap-1">
+            <div className="flex justify-between items-center dark:bg-primary-dark-light bg-primary-lightest p-5 ">
+                <h3 className="m-0 text-base font-normal text-main dark:text-white flex items-center gap-1">
                     {title}
-                    <span className="text-light font-normal text-sm dark:text-accent">
+                    <span className="text-subinfo font-normal text-sm dark:text-subinfo">
                         {DateRange}
                     </span>
                 </h3>
@@ -48,7 +48,7 @@ const Holder: React.FC<HolderProps> = ({
                         handleTimeRangeChange={handleTimeRangeChange}
                     />
                     <span
-                        className="cursor-pointer rounded-full bg-white dark:bg-dark-primary w-10 h-10 p-3"
+                        className="cursor-pointer rounded-full bg-white dark:bg-primary-dark w-10 h-10 p-3"
                         onClick={handleDownload}>
                         <img
                             src="icons/download-icon.svg"

@@ -42,10 +42,10 @@ function Header({
     const { isSidebarCollapsed } = useApp();
 
     return (
-        <header className="border-b border-b-secondary-2 dark:border-dark-border dark:bg-dark-primary flex items-center justify-between px-6 py-4 h-24">
+        <header className="border-b border-b-primary-border dark:border-dark-border dark:bg-primary-dark flex items-center justify-between px-6 py-4 h-24">
             <nav className="flex items-center gap-4">
                 <button
-                    className="p-2 bg-secondary dark:bg-dark-secondary w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
+                    className="p-2 bg-primary-lightest dark:bg-dark-secondary w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
                     onClick={onSidebarToggle}
                     aria-label="Toggle sidebar">
                     <img
@@ -69,7 +69,7 @@ function Header({
                 {actions.map((action, index) => (
                     <button
                         key={index}
-                        className={`p-2 w-8 h-8 bg-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center ${
+                        className={`p-2 w-8 h-8 bg-primary-lightest dark:bg-dark-secondary rounded-full flex items-center justify-center ${
                             action.className || ''
                         }`}
                         onClick={action.onClick}
