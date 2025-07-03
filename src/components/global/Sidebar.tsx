@@ -60,27 +60,6 @@ interface SidebarProps {
 
 const defaultMenus: MenuCategory[] = [
     {
-        category: 'GENERAL',
-        items: [
-            {
-                title: 'Dashboard',
-                icon: '/icons/dashboard.svg',
-                link: '/',
-                count: 100,
-            },
-            {
-                title: 'Profile',
-                icon: '/icons/dashboard.svg',
-                link: '/profile',
-            },
-            {
-                title: 'Forms',
-                icon: '/icons/dashboard.svg',
-                link: '/forms',
-            },
-        ],
-    },
-    {
         category: 'MANAGEMENT',
         items: [
             {
@@ -104,73 +83,7 @@ const defaultMenus: MenuCategory[] = [
                 ],
             },
             {
-                title: 'Reports',
-                icon: '/icons/dashboard.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Daily Reports',
-                        link: '/user/reports/daily',
-                    },
-                    {
-                        title: 'Weekly Reports',
-                        link: '/user/reports/weekly',
-                    },
-                    {
-                        title: 'Monthly Reports',
-                        link: '/user/reports/monthly',
-                    },
-                ],
-            },
-            {
                 title: 'Apps',
-                icon: '/icons/dashboard.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Dashboard',
-                        link: '',
-                    },
-                    {
-                        title: 'Pages',
-                        link: '/apps/pages',
-                    },
-                    {
-                        title: 'Media Library',
-                        link: '/apps/media-library',
-                    },
-                    // {
-                    //     title: 'Modules',
-                    //     link: '',
-                    // },
-                    {
-                        title: 'Settings',
-                        link: '/apps/settings',
-                        // icon: '/icons/dashboard.svg',
-                        // hasSubmenu: true,
-                        // submenu: [
-                        //     {
-                        //         title: 'Applications',
-                        //         link: '/apps/applications',
-                        //     },
-                        //     {
-                        //         title: 'Branding',
-                        //         link: '/apps/branding',
-                        //     },
-                        //     {
-                        //         title: 'Domain & Hosting',
-                        //         link: '/apps/domain-hosting',
-                        //     },
-                        //     {
-                        //         title: 'Modules',
-                        //         link: '/apps/modules',
-                        //     },
-                        // ],
-                    },
-                ],
-            },
-            {
-                title: 'Apps2',
                 icon: '/icons/dashboard.svg',
                 link: '/apps',
             }
@@ -179,25 +92,6 @@ const defaultMenus: MenuCategory[] = [
     {
         category: 'SETTINGS',
         items: [
-            {
-                title: 'Settings',
-                icon: '/icons/dashboard.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Account Settings',
-                        link: '/user/settings/account',
-                    },
-                    {
-                        title: 'Preferences',
-                        link: '/user/settings/preferences',
-                    },
-                    {
-                        title: 'Notifications',
-                        link: '/user/settings/notifications',
-                    },
-                ],
-            },
             {
                 title: 'Logout',
                 icon: '/icons/dashboard.svg',

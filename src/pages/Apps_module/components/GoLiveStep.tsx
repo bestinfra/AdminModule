@@ -11,8 +11,8 @@ interface GoLiveStepProps {
 const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false }) => {
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
-      <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Generate React Project</h2>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">Review your app details and generate a downloadable React project</p>
+      <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Complete App Configuration</h2>
+      <p className="text-gray-600 dark:text-gray-300 mb-6">Review your app details and complete the configuration</p>
       
       <div className="space-y-6">
         {/* App Basics Review */}
@@ -104,20 +104,19 @@ const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit,
           <div className="flex items-start gap-3">
             <div className="text-blue-600 dark:text-blue-400 text-lg">ℹ️</div>
             <div>
-              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">What will be generated?</h4>
+              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">Configuration Summary</h4>
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                A complete React project with TypeScript, Vite, Tailwind CSS, and React Router. 
-                The project will include your app configuration, admin details, and selected modules.
-                You can run it immediately with <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">npm install && npm run dev</code>
+                Your app configuration has been completed. All settings, admin details, branding, and module selections have been saved.
+                You can now proceed with your custom implementation or integration.
               </p>
             </div>
           </div>
         </div>
 
-        {/* Generate Project Button */}
+        {/* Complete Configuration Button */}
         <div className="flex justify-center pt-6">
           <Button
-            label={isSubmitting ? 'Generating Project...' : 'Generate React Project'}
+            label={isSubmitting ? 'Completing...' : 'Complete Configuration'}
             variant="primary"
             onClick={onSubmit}
             disabled={isSubmitting}
