@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Page from '../../components/global/Page';
 import AppBasicsStep from './components/AppBasicsStep';
 import AdminAccessForm from './components/AdminAccessForm';
@@ -6,14 +6,14 @@ import BrandingStep from './components/BrandingStep';
 import ModuleSelectionStep from './components/ModuleSelectionStep';
 import GoLiveStep from './components/GoLiveStep';
 import type { AdminAccessFormData, AdminAccessFormErrors } from './components/AdminAccessForm';
-import { generateAppProject } from '../../api/exportModules';
+import { AppCreationAPI } from '../../api/appCreation';
 
 const stepLabels: { label: string; sub: string }[] = [
   { label: 'App Basics', sub: 'Configure your application settings' },
   { label: 'Admin Access', sub: 'Set up administrator account' },
   { label: 'Branding', sub: 'Customize your app appearance' },
   { label: 'Modules', sub: 'Select feature modules' },
-  { label: 'Generate', sub: 'Review and generate React project' },
+  { label: 'Complete', sub: 'Review and complete app configuration' },
 ];
 
 const initialAppBasicsData = {
@@ -72,6 +72,8 @@ const AppManagement: React.FC = () => {
   const [moduleData, setModuleData] = useState<typeof initialModuleData>(initialModuleData);
   const [moduleErrors, setModuleErrors] = useState<Partial<Record<keyof typeof initialModuleData, string>>>({});
   const [loading, setLoading] = useState(false);
+  const [generatedApps, setGeneratedApps] = useState<any[]>([]);
+  const [showGeneratedApps, setShowGeneratedApps] = useState(false);
 
   // Handlers for App Basics Step
   const handleAppBasicsInputChange = (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => {
@@ -153,6 +155,24 @@ const AppManagement: React.FC = () => {
     setCurrentStep(stepIndex + 1); // Convert 0-based to 1-based
   };
 
+  // Load generated apps
+  const loadGeneratedApps = async () => {
+    try {
+      const response = await AppCreationAPI.getGeneratedApps();
+      setGeneratedApps(response.apps);
+    } catch (error) {
+      console.error('Error loading generated apps:', error);
+    }
+  };
+
+  // Toggle generated apps view
+  const toggleGeneratedApps = () => {
+    if (!showGeneratedApps) {
+      loadGeneratedApps();
+    }
+    setShowGeneratedApps(!showGeneratedApps);
+  };
+
   // Final submit handler
   const handleFinalSubmit = async () => {
     setLoading(true);
@@ -165,26 +185,32 @@ const AppManagement: React.FC = () => {
         ...moduleData,
       };
       
-      console.log('Generating app project with data:', allFormData);
+      console.log('Creating app with data:', allFormData);
       
-      // Generate the React project
-      const projectBlob = await generateAppProject(allFormData);
+      // Check if server is running
+      const isServerHealthy = await AppCreationAPI.checkServerHealth();
+      if (!isServerHealthy) {
+        throw new Error('App creation server is not running. Please start the server with: npm run server');
+      }
       
-      // Create download link
-      const url = URL.createObjectURL(projectBlob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `${allFormData.subdomain || allFormData.appName?.toLowerCase().replace(/\s+/g, '-') || 'my-admin-app'}.zip`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      URL.revokeObjectURL(url);
+      // Create the app using the API
+      const result = await AppCreationAPI.createApp(allFormData);
       
       // Handle success
-      alert('React project generated and downloaded successfully!');
+      alert(`✅ ${result.message}\n\nNext steps:\n${result.nextSteps.join('\n')}`);
+      
+      // Refresh generated apps list if it's currently shown
+      if (showGeneratedApps) {
+        await loadGeneratedApps();
+      }
+      
+      // Optional: Reset form or redirect
+      // setCurrentStep(1);
+      // Reset all form data if needed
+      
     } catch (error) {
-      console.error('Error generating app project:', error);
-      alert('Error generating app project. Please try again.');
+      console.error('Error creating app:', error);
+      alert(`❌ Error creating app: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -235,6 +261,33 @@ const AppManagement: React.FC = () => {
           )}
           <button className="btn-outline" type="button" onClick={() => {}}>Save Draft</button>
         </div>
+      </div>
+      
+      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-border">
+        <button 
+          className="w-full btn-outline text-sm" 
+          type="button" 
+          onClick={toggleGeneratedApps}
+        >
+          {showGeneratedApps ? 'Hide' : 'Show'} Generated Apps
+        </button>
+        
+        {showGeneratedApps && (
+          <div className="mt-4 space-y-2">
+            {generatedApps.length === 0 ? (
+              <p className="text-sm text-gray-500 dark:text-gray-400">No apps generated yet</p>
+            ) : (
+              generatedApps.map((app) => (
+                <div key={app.name} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <div className="font-medium text-sm">{app.name}</div>
+                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                    Created: {new Date(app.created).toLocaleDateString()}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
