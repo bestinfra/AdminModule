@@ -111,7 +111,7 @@ export default defineConfig({
 })`,
     
     'tailwind.config.js': `/** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -126,7 +126,7 @@ export default {
   plugins: [],
 }`,
     
-    'postcss.config.js': `export default {
+    'postcss.config.js': `module.exports = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
