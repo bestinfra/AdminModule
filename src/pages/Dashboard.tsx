@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { BarChart, PieChart } from '../graphs';
 import Card from '../components/global/Card';
 import Page from '../components/global/Page';
-import { createHeaderComponent } from '../components/global/PageComponents';
 import Table from '../components/global/Table';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
 

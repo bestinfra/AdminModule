@@ -42,7 +42,7 @@ const ModuleSelectionStep: React.FC<ModuleSelectionStepProps> = ({ formData, err
       if (!isBillsCurrentlyEnabled) {
         // Toggling Bills ON: remove prepaid and postpaid from enabledModules
         const newModules = [
-          ...enabledModules.filter(m => m !== 'prepaid' && m !== 'postpaid'),
+          ...enabledModules.filter((m: string) => m !== 'prepaid' && m !== 'postpaid'),
           'bills'
         ];
         onModuleToggle('bills', newModules);
