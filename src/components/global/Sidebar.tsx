@@ -85,10 +85,30 @@ const defaultMenus: MenuCategory[] = [
                 ],
             },
             {
+                title: 'Bills',
+                icon: '/icons/bill.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Prepaid Transactions',
+                        link: '/bills/prepaid',
+                    },
+                    {
+                        title: 'Postpaid Bills',
+                        link: '/bills/postpaid',
+                    },
+                ],
+            },
+            {
                 title: 'Apps',
                 icon: '/icons/dashboard.svg',
                 link: '/apps',
-            }
+            },
+            {
+                title: 'Consumers',
+                icon: '/icons/customer-service.svg',
+                link: '/consumers',
+            },
         ],
     },
     {
