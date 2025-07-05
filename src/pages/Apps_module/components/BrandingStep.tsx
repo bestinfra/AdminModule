@@ -20,7 +20,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
     onInputChange({ target: { name, value } } as any);
   };
 
-  const handleFormInputBlur = (name: string, value: FormInputValue) => {
+  const handleFormInputBlur = () => {
     // Handle blur if needed
   };
 

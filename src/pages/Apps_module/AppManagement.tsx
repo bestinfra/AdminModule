@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Page from '../../components/global/Page';
 import AppBasicsStep from './components/AppBasicsStep';
 import AdminAccessForm from './components/AdminAccessForm';

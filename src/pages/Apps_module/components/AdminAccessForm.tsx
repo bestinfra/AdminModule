@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
@@ -58,7 +58,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
     onInputChange({ target: { name, value: value as string } } as any);
   };
 
-  const handleFormInputBlur = (name: string, value: FormInputValue) => {
+  const handleFormInputBlur = () => {
     // Handle blur if needed
   };
 

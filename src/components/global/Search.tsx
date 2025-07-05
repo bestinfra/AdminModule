@@ -26,7 +26,7 @@ interface SearchProps {
 const Search:React.FC<SearchProps>=({value,onChange,placeholder='Search',onResultClick,results=[],isLoading=false,showShortcut=true,className='',type='text',disabled=false,required=false,error=null,name='search'})=>{
     const searchInputRef = useRef<HTMLInputElement | null>(null);
     const [isSearching,setIsSearching] = useState(isLoading);
-    const[errorState,setErrorState]=useState<string | null>(error);
+    const[errorState]=useState<string | null>(error);
 
     useEffect(()=> {
         setIsSearching(isLoading);
