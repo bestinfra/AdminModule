@@ -15,6 +15,8 @@ export default defineConfig({
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',
         './context/AppContext': './src/context/AppContext.tsx',
+        './AppProvider': './src/context/AppProvider.tsx',
+        './useApp': './src/context/AppContext.tsx',
         './Ticket': './src/pages/AllTickets.tsx',
       },
       shared: ['react', 'react-dom'],
@@ -26,6 +28,12 @@ export default defineConfig({
     cssCodeSplit: false,
   },
   server: {
+    port: 5173,
+    fs: {
+      allow: ['..'],
+    },
+  },
+  preview: {
     port: 5173,
   },
 })

@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Button from './Button';
 import Cookies from 'js-cookie';
@@ -29,6 +29,8 @@ interface MenuCategory {
 
 interface SidebarProps {
     isCollapsed: boolean;
+    currentPath?: string;
+    onNavigate?: (path: string) => void;
     menus?: MenuCategory[];
     logo?: {
         src: string;
@@ -139,6 +141,8 @@ const defaultProps: Partial<
 };
 
 const Sidebar = ({
+    currentPath,
+    onNavigate,
     menus = defaultMenus,
     logo = defaultProps.logo,
     appDownload = defaultProps.appDownload,
@@ -151,7 +155,16 @@ const Sidebar = ({
     const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
         {}
     );
-    const location = useLocation();
+    
+    // Use currentPath prop if provided, otherwise fallback to useLocation for standalone usage
+    let pathname = currentPath;
+    try {
+        const location = useLocation();
+        if (!pathname) pathname = location.pathname;
+    } catch (error) {
+        // useLocation failed, use currentPath or default to '/'
+        pathname = currentPath || '/';
+    }
 
     const toggleSubmenu = (menuTitle: string) => {
         setExpandedMenus((prev) => ({
@@ -217,7 +230,7 @@ const Sidebar = ({
                                                                 )
                                                             }
                                                             className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
-                                                                location.pathname ===
+                                                                pathname ===
                                                                 menuItem.link
                                                                     ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white'
                                                                     : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
@@ -236,7 +249,7 @@ const Sidebar = ({
                                                                     }
                                                                     alt=""
                                                                     className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
-                                                                        location.pathname ===
+                                                                        pathname ===
                                                                         menuItem.link
                                                                             ? 'icon-filter'
                                                                             : 'group-hover:icon-filter'
@@ -290,16 +303,16 @@ const Sidebar = ({
                                                                         <li key={subIndex} className="relative">
                                                                             {/* Horizontal line for each submenu item */}
                                                                             <span className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-0.5 bg-gray-200"></span>
-                                                                            <Link
-                                                                                to={subItem.link || '#'}
-                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 ${
-                                                                                    location.pathname === subItem.link
+                                                                            <button
+                                                                                onClick={() => subItem.link && onNavigate?.(subItem.link)}
+                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left ${
+                                                                                    pathname === subItem.link
                                                                                         ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow'
                                                                                         : 'text-gray-400 hover:text-primary'
                                                                                 }`}
                                                                             >
                                                                                 {subItem.title}
-                                                                            </Link>
+                                                                            </button>
                                                                         </li>
                                                                     )
                                                                 )}
@@ -307,22 +320,20 @@ const Sidebar = ({
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <Link
-                                                        to={
-                                                            menuItem.link || '#'
-                                                        }
-                                                        onClick={(e) => {
+                                                    <button
+                                                        onClick={() => {
                                                             if (
                                                                 menuItem.title ===
                                                                     'Logout' &&
                                                                 onLogout
                                                             ) {
-                                                                e.preventDefault();
                                                                 onLogout();
+                                                            } else if (menuItem.link) {
+                                                                onNavigate?.(menuItem.link);
                                                             }
                                                         }}
-                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group rounded-lg ${
-                                                            location.pathname ===
+                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group rounded-lg w-full text-left ${
+                                                            pathname ===
                                                             menuItem.link
                                                                 ? 'text-primary bg-white dark:bg-primary dark:text-white'
                                                                 : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
@@ -334,7 +345,7 @@ const Sidebar = ({
                                                                 }
                                                                 alt=""
                                                                 className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
-                                                                    location.pathname ===
+                                                                    pathname ===
                                                                     menuItem.link
                                                                         ? 'icon-filter'
                                                                         : ''
@@ -352,7 +363,7 @@ const Sidebar = ({
                                                                 {menuItem.count && (
                                                                     <span
                                                                         className={`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center group-hover:bg-brand items-center ${
-                                                                            location.pathname ===
+                                                                            pathname ===
                                                                             menuItem.link
                                                                                 ? 'bg-primary dark:bg-secondary'
                                                                                 : 'bg-primary dark:bg-secondary'
@@ -364,7 +375,7 @@ const Sidebar = ({
                                                                 )}
                                                             </div>
                                                         )}
-                                                    </Link>
+                                                    </button>
                                                 )}
                                             </li>
                                         )
