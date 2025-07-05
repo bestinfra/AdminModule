@@ -9,6 +9,9 @@ import NotFound from './pages/NotFound';
 import { AppProvider } from './context/AppContext'; 
 import AppManagement from './pages/Apps_module/AppManagement';
 import Dashboard from './pages/Dashboard';
+import Consumers from './pages/Consumers';
+import BillsPrepaid from './pages/BillsPrepaid';
+import BillsPostpaid from './pages/BillsPostpaid';
 
 const App: React.FC = () => {
 
@@ -25,6 +28,9 @@ const App: React.FC = () => {
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/all-tickets" element={<AllTickets />} />
                         <Route path="/forms" element={<Forms />} />
+                        <Route path="/consumers" element={<Consumers />} />
+                        <Route path="/bills/prepaid" element={<BillsPrepaid />} />
+                        <Route path="/bills/postpaid" element={<BillsPostpaid />} />
                         <Route path="*" element={<NotFound />} />
                     </Route>
                     <Route path="/page-builder" element={<PageBuilder />} />
