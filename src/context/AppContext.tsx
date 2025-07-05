@@ -47,7 +47,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const toggleSidebar = () => {
-        setIsSidebarCollapsed((prev) => !prev);
+        setIsSidebarCollapsed((prev: boolean) => !prev);
     };
 
     return (

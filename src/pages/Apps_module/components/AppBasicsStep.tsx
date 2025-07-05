@@ -35,7 +35,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
         onInputChange({ target: { name, value } } as any);
     };
 
-    const handleFormInputBlur = (name: string, value: FormInputValue) => {
+    const handleFormInputBlur = () => {
         // Handle blur if needed
     };
 

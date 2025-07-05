@@ -64,17 +64,6 @@ const Page: React.FC<PageProps> = ({
         }
     };
 
-    const renderSection = (section: Section): ReactNode => {
-        return (
-            <div
-                key={section.id}
-                className={sectionClassName}
-            >
-                {section.component}
-            </div>
-        );
-    };
-
     const renderContent = () => {
         if (loading) {
             return (
@@ -94,7 +83,14 @@ const Page: React.FC<PageProps> = ({
 
         return (
             <div className={`${getLayoutClasses()} ${containerClassName}`}>
-                {sections.map(renderSection)}
+                {sections.map((section) => (
+                    <div
+                        key={section.id}
+                        className={sectionClassName}
+                    >
+                        {section.component}
+                    </div>
+                ))}
             </div>
         );
     };

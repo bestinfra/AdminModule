@@ -9,7 +9,7 @@ interface MainLayoutProps {
 }
 
 const MainLayout: React.FC<MainLayoutProps> = () => {
-    const { isSidebarCollapsed, toggleSidebar } = useApp();
+    const { toggleSidebar } = useApp();
     const location = useLocation();
 
     // Function to get page title based on current route

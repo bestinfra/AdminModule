@@ -22,7 +22,6 @@ const Row: React.FC<RowProps> = ({
 
     return (
         <div
-            key={component.id}
             onClick={() => onRowClick?.(component)}
             className="mb-6 p-2 min-h-[80px] border-2 border-dashed border-gray-300 rounded-lg cursor-pointer relative hover:border-blue-400 hover:shadow-md transition-all duration-200 bg-white">
             <div

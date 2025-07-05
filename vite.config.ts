@@ -8,16 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
     federation({
-      name: 'ticketing',
+      name: 'AdminModule',
       filename: 'remoteEntry.js',
       exposes: {
-        './Ticket': './src/pages/ticket_module/Ticket.tsx',
-        './ThemeProvider': './src/providers/ThemeProvider.tsx',
-        './useTheme': './src/providers/ThemeProvider.tsx',
-        './Page': './src/components/global/Page.tsx',
-        './PageComponents': './src/components/global/PageComponents.tsx',
-        './Profile': './src/pages/Profile.tsx',
-        './AllTickets': './src/pages/AllTickets.tsx',
         './Dashboard': './src/pages/Dashboard.tsx',
       },
       shared: ['react', 'react-dom'],
