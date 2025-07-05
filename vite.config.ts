@@ -12,6 +12,10 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './Dashboard': './src/pages/Dashboard.tsx',
+        './Sidebar': './src/components/global/Sidebar.tsx',
+        './Header': './src/components/global/Header.tsx',
+        './context/AppContext': './src/context/AppContext.tsx',
+        './Ticket': './src/pages/AllTickets.tsx',
       },
       shared: ['react', 'react-dom'],
     }),
