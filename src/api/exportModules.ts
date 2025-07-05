@@ -322,21 +322,21 @@ import './App.css'
 function App() {
   return (
     <AppProvider>
-      <Router>
+    <Router>
         <div className="flex h-screen bg-white">
-          <Sidebar />
+        <Sidebar />
           <div className="flex flex-col flex-1">
-            <Header />
+          <Header />
             <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                ${modules?.map((module: string) => `
-                <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1)} Module</h1><p className="text-gray-600">This is the ${module} module page.</p></div>} />`).join('') || ''}
-              </Routes>
-            </main>
-          </div>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              ${modules?.map((module: string) => `
+              <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1)} Module</h1><p className="text-gray-600">This is the ${module} module page.</p></div>} />`).join('') || ''}
+            </Routes>
+          </main>
         </div>
-      </Router>
+      </div>
+    </Router>
     </AppProvider>
   )
 }
@@ -472,7 +472,7 @@ const Input = ({
                 </div>
             )}
             <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-lightest dark:bg-primary-dark rounded-full w-8 h-8 flex items-center justify-center">
-                <svg className="h-4.5 w-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </span>
@@ -618,9 +618,9 @@ const Sidebar = () => {
                               ))}
                             </ul>
                           )}
-                        </div>
+      </div>
                       ) : (
-                        <Link
+          <Link
                           to={menuItem.link || '#'}
                           className={\`flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 \${location.pathname === menuItem.link ? 'bg-blue-50 dark:bg-blue-900 border-r-2 border-blue-500' : ''}\`}>
                           <span className="mr-3 text-lg">{menuItem.icon}</span>
@@ -634,7 +634,7 @@ const Sidebar = () => {
                               )}
                             </div>
                           )}
-                        </Link>
+          </Link>
                       )}
                     </li>
                   ))}
@@ -647,6 +647,35 @@ const Sidebar = () => {
         <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
           {!isSidebarCollapsed ? (
             <>
+              <section className="rounded-lg bg-gradient-to-r from-blue-600 to-blue-800 flex flex-col items-center justify-center p-6 gap-4">
+                <div className="flex items-center justify-between w-full">
+                  <span className="w-10 h-10 bg-white rounded-full transition-all duration-300 flex justify-center items-center">
+                    <span className="text-blue-600 text-xl">📱</span>
+                  </span>
+                  <span className="bg-yellow-400 text-gray-800 text-xs font-medium rounded-lg px-2 py-1">
+                    New
+                  </span>
+                </div>
+                <div className="flex flex-col">
+                  <h3 className="text-white text-2xl font-bold">
+                    Mobile App
+                  </h3>
+                  <p className="text-white text-sm font-semibold">
+                    Download our mobile app
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button
+                    className="px-4 py-2 bg-white text-blue-600 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300"
+                    onClick={() => console.log('Download app clicked')}>
+                    Download Now
+                  </button>
+                  <button
+                    className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-gray-100">
+                    <span className="text-blue-600 text-lg">📤</span>
+                  </button>
+                </div>
+              </section>
               <div className="flex items-center justify-between w-full">
                 <p className="text-xs text-light dark:text-subinfo">
                   © 2024 ${companyName || 'Company'}
@@ -663,6 +692,9 @@ const Sidebar = () => {
             </>
           ) : (
             <div className="flex flex-col items-center justify-center py-4 gap-4 w-full">
+              <span className="w-10 h-10 bg-transparent p-2 rounded-full">
+                <span className="text-gray-600 dark:text-gray-400 text-xl">📱</span>
+              </span>
               <button
                 className="w-10 h-10 border border-light-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
                 aria-label="Toggle dark mode"
@@ -754,7 +786,7 @@ const Header = ({
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l3 3m0 0l3-3m-3 3V9" />
           </svg>
         </button>
         <h1 className="text-base dark:text-white">{getPageTitle()}</h1>
