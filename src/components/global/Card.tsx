@@ -4,6 +4,7 @@ interface CardProps {
     icon: string;
     showTrend?: boolean;
     comparisonValue?: number;
+    previousValue?: string; // new prop
     subtitle1?: string;
     subtitle2?: string;
     loading?: boolean;
@@ -17,6 +18,7 @@ const Card = ({
     icon,
     showTrend,
     comparisonValue,
+    previousValue, // new prop
     subtitle1,
     subtitle2,
     loading = false,
@@ -32,7 +34,7 @@ const Card = ({
                     <h3 className="text-base text-main dark:text-white">
                         {title}
                     </h3>
-                    <p className="text-2xl font-bold text-secondary flex items-center gap-2 dark:text-secondary">
+                    <p className="text-2xl font-bold flex items-center gap-2" style={{ color: 'var(--color-primary)' }}>
                         {value}
                         {showTrend && (
                             <span
@@ -59,6 +61,9 @@ const Card = ({
                             </span>
                         )}
                     </p>
+                    {previousValue && (
+                        <p className="text-xs text-gray-400 font-normal -mt-1 mb-1">{previousValue}</p>
+                    )}
                 </div>
                 {icon && (
                     <figure className="p-2 bg-gradient-primary  dark:bg-dark-secondary rounded-full w-12 h-12 flex items-center justify-center ">
