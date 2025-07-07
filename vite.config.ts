@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     federation({
-      name: 'AdminModule',
+      name: 'SuperAdmin',
       filename: 'remoteEntry.js',
       exposes: {
         './Dashboard': './src/pages/Dashboard.tsx',
@@ -34,6 +34,6 @@ export default defineConfig({
     },
   },
   preview: {
-    port: 5173,
+    port: 3000,
   },
 })

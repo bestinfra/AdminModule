@@ -47,8 +47,8 @@ function createAppProject(formData) {
         lint: 'eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0'
       },
       dependencies: {
-        react: '^18.2.0',
-        'react-dom': '^18.2.0',
+        react: '^19.1.0',
+        'react-dom': '^19.1.0',
         'react-router-dom': '^6.8.0',
         '@types/react': '^18.0.28',
         '@types/react-dom': '^18.0.11',

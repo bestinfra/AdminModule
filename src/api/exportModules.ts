@@ -140,8 +140,6 @@ export async function generateAppProject(formData: any): Promise<Blob> {
   const {
     appName,
     subdomain,
-    categories,
-    tariffPlans,
     adminFirstName,
     adminLastName,
     adminEmail,
