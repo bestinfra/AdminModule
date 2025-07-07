@@ -114,6 +114,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/customer-service.svg',
                 link: '/consumers',
             },
+            {
+                title: 'DTR Dashboard',
+                icon: '/icons/dtr.svg',
+                link: '/dtr-dashboard',
+            },
         ],
     },
     {
