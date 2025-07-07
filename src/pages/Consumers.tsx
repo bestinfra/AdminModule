@@ -44,16 +44,10 @@ const menuOptions = [
 ];
 
 const Consumers: React.FC = () => {
-  const [search, setSearch] = useState('');
   const [menuValue, setMenuValue] = useState('');
-  const filtered = consumersData.filter(c =>
-    c.uid.toLowerCase().includes(search.toLowerCase()) ||
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    c.meter.toLowerCase().includes(search.toLowerCase())
-  );
 
   // Add sNo property to each row for serial number
-  const tableData = filtered.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+  const tableData = consumersData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
 
   return (
     <div className="p-6">
