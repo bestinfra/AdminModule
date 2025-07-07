@@ -104,7 +104,7 @@ const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Consumer Statistics */}
                 <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6 flex flex-col gap-4">
-                    <div className="flex justify-between items-center mb-2">
+                    <div className="flex justify-between items-center gap-2">
                         <h2 className="text-lg font-semibold m-0">Consumer Statistics</h2>
                         <div style={{ opacity: 0, pointerEvents: 'none' }}>
                             <TimeRangeSelector
@@ -129,7 +129,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 {/* Consumption & Billing */}
                 <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6 flex flex-col gap-4">
-                    <div className="flex justify-between items-center mb-2">
+                    <div className="flex justify-between items-center gap-2">
                         <h2 className="text-lg font-semibold">Consumption & Billing <span className="text-xs font-normal">(Jul 4, 2025)</span></h2>
                         <TimeRangeSelector
                             availableTimeRanges={billingViewOptions}
@@ -155,8 +155,8 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Metrics */}
-            <div className="mb-4">
-                <div className="flex items-center justify-between mb-2">
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between gap-2">
                     <h2 className="text-lg font-semibold mb-0">Metrics</h2>
                     <TimeRangeSelector
                         availableTimeRanges={metricsTypeOptions}
@@ -166,7 +166,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 {/* CARD CONTAINER */}
                 <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center mb-4 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
+                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
                         <div className="font-medium">Daily Consumption Metrics <span className="text-xs font-normal">(4 May, 2025 - 5 Jul, 2025)</span></div>
                         {/* INNER TOGGLE (Daily/Monthly/Yearly) + REFRESH ICON */}
                         <div className="flex items-center gap-2">
@@ -196,7 +196,7 @@ const Dashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Meter Communication Status */}
                 <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center mb-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
                         <h2 className="text-lg font-semibold">Meter Communication Status</h2>
                         <span className="bg-primary-lightest dark:bg-primary-dark rounded-full p-2">
                             <img src="/icons/refresh.svg" alt="refresh" className="w-5 h-5" />
@@ -213,7 +213,7 @@ const Dashboard: React.FC = () => {
                 </div>
                 {/* Latest Meter Events */}
                 <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2 mb-2 flex items-center justify-between">
+                    <div className="bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2 flex items-center justify-between gap-2">
                         <h2 className="text-lg font-semibold mb-0">Latest Meter Events</h2>
                     </div>
                     <div className="px-6">
