@@ -10,9 +10,9 @@
     "preview": "vite preview",
     "server": "node server.js",
     "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
-    "federation": "npm run build && npm run preview -- --port 5173 --host",
-    "federation:debug": "npm run build && echo 'Build completed, checking files...' && ls -la dist/assets/ && npm run preview -- --port 5173 --host",
-    "federation:simple": "vite build && vite preview --port 5173 --host"
+    "federation": "npm run build && npm run preview -- --port 3000 --host",
+    "federation:debug": "npm run build && echo 'Build completed, checking files...' && ls -la dist/assets/ && npm run preview -- --port 3000 --host",
+    "federation:simple": "vite build && vite preview --port 3000 --host"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
