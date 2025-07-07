@@ -5,7 +5,7 @@ import { useState, useMemo, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import TableSkeleton from '../skeletons/TableSkeleton';
 
-interface TableData {
+export interface TableData {
     [key: string]: string | number | boolean | null | undefined;
 }
 
