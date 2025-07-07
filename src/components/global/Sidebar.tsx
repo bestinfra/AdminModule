@@ -65,8 +65,13 @@ const defaultMenus: MenuCategory[] = [
         category: 'MANAGEMENT',
         items: [
             {
-                title: 'Tickets',
+                title: 'Dashboard',
                 icon: '/icons/dashboard.svg',
+                link: '/',
+            },
+            {
+                title: 'Tickets',
+                icon: '/icons/support-tickets.svg',
                 hasSubmenu: true,
                 submenu: [
                     {
@@ -86,7 +91,7 @@ const defaultMenus: MenuCategory[] = [
             },
             {
                 title: 'Bills',
-                icon: '/icons/bill.svg',
+                icon: '/icons/bills.svg',
                 hasSubmenu: true,
                 submenu: [
                     {
@@ -101,7 +106,7 @@ const defaultMenus: MenuCategory[] = [
             },
             {
                 title: 'Apps',
-                icon: '/icons/dashboard.svg',
+                icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
             {
@@ -116,7 +121,7 @@ const defaultMenus: MenuCategory[] = [
         items: [
             {
                 title: 'Logout',
-                icon: '/icons/dashboard.svg',
+                icon: '/icons/logout.svg',
                 link: '/user/logout',
             },
         ],
