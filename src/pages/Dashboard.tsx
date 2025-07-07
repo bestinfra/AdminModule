@@ -165,7 +165,7 @@ const Dashboard: React.FC = () => {
                     />
                 </div>
                 {/* CARD CONTAINER */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6">
+                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
                     <div className="flex justify-between items-center mb-4 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
                         <div className="font-medium">Daily Consumption Metrics <span className="text-xs font-normal">(4 May, 2025 - 5 Jul, 2025)</span></div>
                         {/* INNER TOGGLE (Daily/Monthly/Yearly) + REFRESH ICON */}
@@ -177,6 +177,7 @@ const Dashboard: React.FC = () => {
                             />
                         </div>
                     </div>
+                    <div className="px-6">
                     {metricsType === 'Graph' ? (
                         <BarChart
                             data={barData}
@@ -187,45 +188,50 @@ const Dashboard: React.FC = () => {
                     ) : (
                         <div className="text-center text-neutral-darker py-10">Table view coming soon...</div>
                     )}
+                    </div>
                 </div>
             </div>
 
             {/* Meter Communication and Events */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Meter Communication Status */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-3 flex flex-col">
+                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
                     <div className="flex justify-between items-center mb-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
                         <h2 className="text-lg font-semibold">Meter Communication Status</h2>
                         <span className="bg-primary-lightest dark:bg-primary-dark rounded-full p-2">
                             <img src="/icons/refresh.svg" alt="refresh" className="w-5 h-5" />
                         </span>
                     </div>
-                    <div className="flex flex-col md:flex-row items-center gap-4">
-                        <PieChart
-                            data={meterStatusData}
-                            title=""
-                        />
+                    <div className="px-6">
+                        <div className="flex flex-col md:flex-row items-center gap-4">
+                            <PieChart
+                                data={meterStatusData}
+                                title=""
+                            />
+                        </div>
                     </div>
                 </div>
                 {/* Latest Meter Events */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6 flex flex-col">
-                    <div className="bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2 mb-2">
+                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
+                    <div className="bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2 mb-2 flex items-center justify-between">
                         <h2 className="text-lg font-semibold mb-0">Latest Meter Events</h2>
                     </div>
-                    <Table
-                        data={meterEvents}
-                        columns={meterEventColumns}
-                        searchable={true}
-                        pagination={true}
-                        initialRowsPerPage={10}
-                        showActions={true}
-                        actions={[{
-                            label: 'View',
-                            icon: '/icons/eye.svg',
-                            onClick: () => {},
-                        }]}
-                        emptyMessage="No meter events found"
-                    />
+                    <div className="px-6">
+                        <Table
+                            data={meterEvents}
+                            columns={meterEventColumns}
+                            searchable={true}
+                            pagination={true}
+                            initialRowsPerPage={10}
+                            showActions={true}
+                            actions={[{
+                                label: 'View',
+                                icon: '/icons/eye.svg',
+                                onClick: () => {},
+                            }]}
+                            emptyMessage="No meter events found"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
