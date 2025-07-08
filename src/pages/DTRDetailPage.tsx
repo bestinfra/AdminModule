@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 
@@ -22,7 +22,8 @@ const mockDTRData = {
 };
 
 const DTRDetailPage = () => {
-  const { id } = useParams();
+  // TODO: Use id to fetch specific DTR data when needed
+  // const { id } = useParams();
   const navigate = useNavigate();
   // TODO: Fetch DTR data by id here (using mock for now)
   const dtr = mockDTRData;

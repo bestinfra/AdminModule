@@ -85,7 +85,7 @@ const DTRDashboard: React.FC = () => {
         { name: 'R-L-P', color: '#9b59b6' },
     ];
     const months = ['May 2025', 'Apr 2025', 'Mar 2025', 'Feb 2025', 'Jan 2025', 'Dec 2024', 'Nov 2024', 'Oct 2024', 'Sept 2024'];
-    const alertSeries = alertTypes.map((type, idx) => ({
+    const alertSeries = alertTypes.map((type) => ({
         name: type.name,
         data: months.map(() => Math.floor(Math.random() * 350)),
     }));

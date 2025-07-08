@@ -12,6 +12,7 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './Dashboard': './src/pages/Dashboard.tsx',
+        './Consumers': './src/pages/Consumers.tsx',
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',
         './context/AppContext': './src/context/AppContext.tsx',

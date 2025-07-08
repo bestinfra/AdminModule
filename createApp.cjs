@@ -80,6 +80,7 @@ function createAppProject(formData) {
         isolatedModules: true,
         noEmit: true,
         jsx: 'react-jsx',
+        jsxImportSource: 'react',
         strict: true,
         noUnusedLocals: true,
         noUnusedParameters: true,
@@ -100,15 +101,31 @@ function createAppProject(formData) {
       include: ['vite.config.ts']
     }, null, 2),
     
-    'vite.config.ts': `import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+    'vite.config.ts': `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import federation from '@originjs/vite-plugin-federation';
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react(),
+    federation({
+      name: '${projectFolderName}',
+      remotes: {
+        SuperAdmin: 'http://localhost:3000/assets/remoteEntry.js',
+      },
+      shared: ['react', 'react-dom'],
+    }),
+  ],
+  build: {
+    modulePreload: false,
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false,
+  },
   server: {
-    port: 3000
-  }
-})`,
+    port: 3001,
+  },
+});`,
     
     'tailwind.config.js': `/** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -194,32 +211,126 @@ body {
   display: none;
 }`,
     
-    'src/App.tsx': `import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Dashboard from './pages/Dashboard';
-import Sidebar from './components/Sidebar';
-import Header from './components/Header';
-import { AppProvider } from './context/AppContext';
+    'src/App.tsx': `
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { lazy, Suspense, ComponentType } from 'react';
+
+// Create safe lazy loading with error handling
+const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
+  return lazy(async () => {
+    try {
+      const module = await importFn();
+      return module;
+    } catch (error) {
+      console.warn('Failed to load remote component:', error);
+      return { default: fallback };
+    }
+  });
+};
+
+// Fallback components
+  const DashboardFallback = () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
+      <p className="text-gray-600">Loading dashboard...</p>
+    </div>
+  );
+
+const ConsumerFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Consumer</h1>
+    <p className="text-gray-600">Loading consumer...</p>
+  </div>
+);
+const SidebarFallback = () => (
+  <div className="w-72 bg-gray-100 h-screen p-4">
+    <div className="text-center">Sidebar Loading...</div>
+  </div>
+);
+
+const HeaderFallback = () => (
+  <div className="h-16 bg-gray-100 border-b flex items-center px-6">
+    <span>Header Loading...</span>
+  </div>
+);
+
+const TicketsFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Tickets</h1>
+    <p className="text-gray-600">Loading tickets...</p>
+  </div>
+);
+
+const AppProviderFallback = ({ children }: { children: React.ReactNode }) => (
+  <div>{children}</div>
+);
+
+// Safe lazy components with fallbacks
+const Dashboard = createSafeLazyComponent(
+  () => import('SuperAdmin/Dashboard'),
+  DashboardFallback
+);
+
+const Consumers = createSafeLazyComponent(
+  () => import('SuperAdmin/Consumers'),
+  ConsumerFallback
+);
+
+const Sidebar = createSafeLazyComponent(
+  () => import('SuperAdmin/Sidebar'),
+  SidebarFallback
+);
+
+const Header = createSafeLazyComponent(
+  () => import('SuperAdmin/Header'),
+  HeaderFallback
+);
+
+const AllTickets = createSafeLazyComponent(
+  () => import('SuperAdmin/Ticket'),
+  TicketsFallback
+);
+    
+// Use local AppProvider instead of federated one
+import { AppProvider, useApp } from './context/AppContext';
+import { FederatedContextProvider } from './components/FederatedWrapper';
+import SidebarWrapper from './components/SidebarWrapper';
+
 import './App.css';
 
-function App() {
+function AppContent() {
+  const contextValue = useApp();
   return (
-    <AppProvider>
+    <FederatedContextProvider value={contextValue}>
       <Router>
         <div className="flex h-screen bg-white">
-          <Sidebar />
+          <SidebarWrapper SidebarComponent={Sidebar} />
           <div className="flex flex-col flex-1">
             <Header />
             <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                ${modules?.map((module) => `
-                <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1)} Module</h1><p className="text-gray-600">This is the ${module} module page.</p></div>} />`).join('') || ''}
-              </Routes>
+                              <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route path="/consumers" element={<Consumers />} />
+                  ${modules?.map((module) => `
+                  <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1)} Module</h1><p className="text-gray-600">This is the ${module} module page.</p></div>} />`).join('') || ''}
+                </Routes>
             </main>
           </div>
         </div>
       </Router>
+    </FederatedContextProvider>
+  );
+}
+
+function App() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
+      <AppProvider>
+        <AppContent />
     </AppProvider>
+    </Suspense>
   );
 }
 
@@ -239,11 +350,14 @@ interface AppContextType {
     toggleSidebar: () => void;
 }
 
-const AppContext = createContext<AppContextType | undefined>(undefined);
+const AppContext = createContext<AppContextType>({
+    isDarkMode: false,
+    isSidebarCollapsed: false,
+    toggleTheme: () => {},
+    toggleSidebar: () => {},
+});
 
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
-    children,
-}) => {
+export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const [isDarkMode, setIsDarkMode] = useState(() => {
         const savedTheme = localStorage.getItem('theme');
         const prefersDark = window.matchMedia(
@@ -279,7 +393,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const toggleSidebar = () => {
-        setIsSidebarCollapsed((prev) => !prev);
+        setIsSidebarCollapsed((prev: boolean) => !prev);
     };
 
     return (
@@ -406,6 +520,16 @@ const Sidebar = () => {
           title: 'Dashboard',
           icon: '📊',
           link: '/',
+        },
+        {
+          title: 'Dashboard',
+          icon: '📊',
+          link: '/dashboard',
+        },
+        {
+          title: 'Consumers',
+          icon: '👥',
+          link: '/consumers',
         },
         ${modules?.map((module) => `{
           title: '${module.charAt(0).toUpperCase() + module.slice(1)}',
@@ -670,55 +794,100 @@ const Header = ({
 
 export default Header;`,
     
-    'src/pages/Dashboard.tsx': `const Dashboard = () => {
-  return (
-    <div className="p-6">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white">Dashboard</h1>
-        <p className="text-gray-600 dark:text-gray-400">Welcome to your ${appName || 'Admin'} application</p>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">App Info</h3>
-          <p className="text-gray-600 dark:text-gray-400">Name: ${appName || 'Not specified'}</p>
-          <p className="text-gray-600 dark:text-gray-400">Subdomain: ${subdomain || 'Not specified'}</p>
-        </div>
-        
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Company</h3>
-          <p className="text-gray-600 dark:text-gray-400">${companyName || 'Not specified'}</p>
-          <p className="text-gray-600 dark:text-gray-400">${companyWebsite || 'No website'}</p>
-        </div>
-        
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Settings</h3>
-          <p className="text-gray-600 dark:text-gray-400">Timezone: ${timezone || 'Not specified'}</p>
-          <p className="text-gray-600 dark:text-gray-400">Currency: ${currency || 'Not specified'}</p>
-        </div>
-        
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-          <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Modules</h3>
-          <p className="text-gray-600 dark:text-gray-400">${modules?.length || 0} modules enabled</p>
-          <p className="text-gray-600 dark:text-gray-400">${modules?.join(', ') || 'None'}</p>
-        </div>
-      </div>
-      
-      <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
-        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          ${modules?.map((module) => `
-          <button className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white">
-            <div className="text-2xl mb-2">📋</div>
-            <div className="font-medium">${module.charAt(0).toUpperCase() + module.slice(1)}</div>
-          </button>`).join('\n          ') || '<p className="text-gray-500 dark:text-gray-400">No modules configured</p>'}
-        </div>
-      </div>
-    </div>
-  )
+'src/components/SidebarWrapper.tsx': `import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+interface SidebarWrapperProps {
+  SidebarComponent: React.ComponentType<any>;
 }
 
-export default Dashboard`,
+const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+  
+  // Pass the location.pathname and navigation function to the federated Sidebar component
+  return (
+    <SidebarComponent 
+      currentPath={location.pathname} 
+      onNavigate={handleNavigate}
+    />
+  );
+};
+
+export default SidebarWrapper; `,
+
+'src/components/FederatedWrapper.tsx': `import React, { createContext, useContext } from 'react';
+
+// Context that matches the SuperAdmin's AppContext interface
+interface FederatedAppContextType {
+    isDarkMode: boolean;
+    isSidebarCollapsed: boolean;
+    toggleTheme: () => void;
+    toggleSidebar: () => void;
+}
+
+const FederatedAppContext = createContext<FederatedAppContextType>({
+    isDarkMode: false,
+    isSidebarCollapsed: false,
+    toggleTheme: () => {},
+    toggleSidebar: () => {},
+});
+
+// Make the context available globally for federated components
+(window as any).__FEDERATED_APP_CONTEXT__ = FederatedAppContext;
+
+export const FederatedContextProvider = ({ 
+    children, 
+    value 
+}: { 
+    children: React.ReactNode;
+    value: FederatedAppContextType;
+}) => {
+    return (
+        <FederatedAppContext.Provider value={value}>
+            {children}
+        </FederatedAppContext.Provider>
+    );
+};
+
+export const useFederatedApp = () => {
+    const context = useContext(FederatedAppContext);
+    if (context === undefined) {
+        throw new Error('useFederatedApp must be used within a FederatedContextProvider');
+    }
+    return context;
+}; `,
+    
+'src/types/federation.d.ts': `
+declare module 'SuperAdmin/Dashboard' {
+  const Dashboard: React.ComponentType<any>;
+  export default Dashboard;
+}
+
+declare module 'SuperAdmin/Consumers' {
+  const Consumers: React.ComponentType<any>;
+  export default Consumers;
+}
+
+declare module 'SuperAdmin/Sidebar' {
+  const Sidebar: React.ComponentType<any>;
+  export default Sidebar;
+}
+
+declare module 'SuperAdmin/Header' {
+  const Header: React.ComponentType<any>;
+  export default Header;
+}
+
+declare module 'SuperAdmin/Ticket' {
+  const Ticket: React.ComponentType<any>;
+  export default Ticket;
+}
+`,
     
     'README.md': `# ${appName || 'Admin App'}
 

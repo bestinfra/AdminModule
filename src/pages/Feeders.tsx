@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Card from '../components/global/Card';
 import BarChart from '../graphs/BarChart';
 import Table from '../components/global/Table';
