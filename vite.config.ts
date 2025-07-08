@@ -26,6 +26,25 @@ export default defineConfig({
     target: 'esnext',
     minify: false,
     cssCodeSplit: false,
+    rollupOptions: {
+      output: {
+        // Ensure CSS is properly bundled
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'global.css') {
+            return 'assets/global.css';
+          }
+          return 'assets/[name]-[hash][extname]';
+        },
+      },
+    },
+  },
+  css: {
+    // Ensure CSS is processed during build
+    postcss: {
+      plugins: [
+        // Tailwind CSS v4 handles this automatically
+      ],
+    },
   },
   server: {
     port: 5173,

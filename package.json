@@ -6,6 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:css": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "build:verify": "npm run build && node scripts/verify-build.js",
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node server.js",
