@@ -115,6 +115,11 @@ const defaultMenus: MenuCategory[] = [
                 link: '/consumers',
             },
             {
+                title: 'Connect/Disconnect',
+                icon: '/icons/meter-bolt.svg',
+                link: '/connect-disconnect',
+            },
+            {
                 title: 'DTR Dashboard',
                 icon: '/icons/dtr.svg',
                 link: '/dtr-dashboard',

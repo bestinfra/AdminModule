@@ -51,6 +51,14 @@ export default defineConfig({
     fs: {
       allow: ['..'],
     },
+    proxy: {
+      '/api': {
+        target: 'https://arcticterntech.in:8443',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '/attSmart')
+      }
+    }
   },
   preview: {
     port: 3000,

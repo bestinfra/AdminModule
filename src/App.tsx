@@ -24,6 +24,7 @@ import DTRLTSideFuseBlown from './pages/DTRLTSideFuseBlown';
 import DTRUnbalancedDTRs from './pages/DTRUnbalancedDTRs';
 import DTRPowerFailureFeeders from './pages/DTRPowerFailureFeeders';
 import DTRHTSideFuseBlown from './pages/DTRHTSideFuseBlown';
+import ConnectDisconnect from './pages/ConnectDisconnect';
 
 const App: React.FC = () => {
 
@@ -41,6 +42,7 @@ const App: React.FC = () => {
                         <Route path="/all-tickets" element={<AllTickets />} />
                         <Route path="/forms" element={<Forms />} />
                         <Route path="/consumers" element={<Consumers />} />
+                        <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
                         <Route path="/bills/prepaid" element={<BillsPrepaid />} />
                         <Route path="/bills/postpaid" element={<BillsPostpaid />} />
                         <Route path="/dtr-dashboard" element={<DTRDashboard />} />
