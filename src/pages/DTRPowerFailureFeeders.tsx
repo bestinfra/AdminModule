@@ -1,4 +1,4 @@
-import React from 'react';
+
 import Table from '../components/global/Table';
 
 const columns = [
