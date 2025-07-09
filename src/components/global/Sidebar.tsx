@@ -70,6 +70,31 @@ const defaultMenus: MenuCategory[] = [
                 link: '/',
             },
             {
+                title: 'DTR Dashboard',
+                icon: '/icons/dtr.svg',
+                link: '/dtr-dashboard',
+            },
+            {
+                title: 'Consumers',
+                icon: '/icons/customer-service.svg',
+                link: '/consumers',
+            },
+            {
+                title: 'Bills',
+                icon: '/icons/bills.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Prepaid Transactions',
+                        link: '/bills/prepaid',
+                    },
+                    {
+                        title: 'Postpaid Bills',
+                        link: '/bills/postpaid',
+                    },
+                ],
+            },
+            {
                 title: 'Tickets',
                 icon: '/icons/support-tickets.svg',
                 hasSubmenu: true,
@@ -90,39 +115,31 @@ const defaultMenus: MenuCategory[] = [
                 ],
             },
             {
-                title: 'Bills',
-                icon: '/icons/bills.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Prepaid Transactions',
-                        link: '/bills/prepaid',
-                    },
-                    {
-                        title: 'Postpaid Bills',
-                        link: '/bills/postpaid',
-                    },
-                ],
-            },
-            {
                 title: 'Apps',
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
+            // --- Asset Management menu item ---
+            // {
+            //     title: 'Asset Management',
+            //     icon: '/icons/apps-icon.svg',
+            //     link: '/asset-management',
+            // },
+            // --- End Asset Management menu item ---
             {
-                title: 'Consumers',
-                icon: '/icons/customer-service.svg',
-                link: '/consumers',
-            },
-            {
-                title: 'Connect/Disconnect',
-                icon: '/icons/meter-bolt.svg',
-                link: '/connect-disconnect',
-            },
-            {
-                title: 'DTR Dashboard',
-                icon: '/icons/dtr.svg',
-                link: '/dtr-dashboard',
+                title: 'Meter Management',
+                icon: '/icons/meter-management.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Data Logger Master',
+                        link: '/meter-management/data-logger-master',
+                    },
+                    {
+                        title: 'Meters List',
+                        link: '/meter-management/meters-list',
+                    },
+                ],
             },
         ],
     },
