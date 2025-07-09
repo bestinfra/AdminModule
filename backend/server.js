@@ -31,8 +31,8 @@ app.post('/api/create-app', async (req, res) => {
       });
     }
 
-    // Import the createAppProject function dynamically
-    const { createAppProject } = await import('./createApp.cjs');
+    // Import the createAppProject function dynamically - fixed path to parent directory
+    const { createAppProject } = await import('../createApp.cjs');
 
     // Create the app project
     const projectPath = createAppProject(formData);
@@ -64,7 +64,8 @@ app.post('/api/create-app', async (req, res) => {
 // Get list of generated apps
 app.get('/api/generated-apps', (req, res) => {
   try {
-    const generatedAppsDir = join(__dirname, 'generated-apps');
+    // Updated path to point to parent directory's generated-apps folder
+    const generatedAppsDir = join(__dirname, '../generated-apps');
     
     if (!fs.existsSync(generatedAppsDir)) {
       return res.json({ apps: [] });
@@ -90,5 +91,5 @@ app.get('/api/generated-apps', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 App creation server running on port ${PORT}`);
-  console.log(`📁 Generated apps will be created in: ${join(__dirname, 'generated-apps')}`);
+  console.log(`📁 Generated apps will be created in: ${join(__dirname, '../generated-apps')}`);
 }); 
