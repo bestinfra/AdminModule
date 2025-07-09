@@ -119,7 +119,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     input={{
                         name: 'appName',
                         type: 'text',
-                        label: 'Sub-App Name',
+                        label: 'App Name',
                         placeholder: 'Enter your app name',
                         required: true
                     }}
