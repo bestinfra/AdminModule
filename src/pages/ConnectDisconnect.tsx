@@ -30,7 +30,7 @@ const columns: Column[] = [
   { 
     key: 'status', 
     label: 'Connection Status',
-    render: (value, row) => (
+    render: (value) => (
       <span
         className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
           value === 'connected'

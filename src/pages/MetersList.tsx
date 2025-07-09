@@ -100,7 +100,6 @@ const MetersList: React.FC = () => {
   const [status, setStatus] = useState('');
   const [type, setType] = useState('');
   const [mapping, setMapping] = useState('');
-  const [search, setSearch] = useState('');
   const navigate = useNavigate();
 
   const actions = [

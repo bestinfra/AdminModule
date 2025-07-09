@@ -89,7 +89,7 @@ const CorsHelper: React.FC<CorsHelperProps> = ({ apiUrl, onClose }) => {
               <div className="p-2 bg-gray-100 dark:bg-gray-700 rounded text-xs font-mono overflow-x-auto">
                 curl -X POST "{apiUrl}/getToken" \<br/>
                 &nbsp;&nbsp;-H "Content-Type: application/json" \<br/>
-                &nbsp;&nbsp;-d '{{"username":"att","password":"att@123"}}'
+                &nbsp;&nbsp;-d '&#123;"username":"att","password":"att@123"&#125;'
               </div>
             </div>
           </div>
