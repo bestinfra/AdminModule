@@ -24,6 +24,10 @@ import DTRLTSideFuseBlown from './pages/DTRLTSideFuseBlown';
 import DTRUnbalancedDTRs from './pages/DTRUnbalancedDTRs';
 import DTRPowerFailureFeeders from './pages/DTRPowerFailureFeeders';
 import DTRHTSideFuseBlown from './pages/DTRHTSideFuseBlown';
+import DataLoggerMaster from './pages/DataLoggerMaster';
+import MetersList from './pages/MetersList';
+import AssetManagement from './pages/AssetManagement';
+import MeterDetails from './pages/MeterDetails';
 import ConnectDisconnect from './pages/ConnectDisconnect';
 
 const App: React.FC = () => {
@@ -38,6 +42,7 @@ const App: React.FC = () => {
                             element={<Dashboard />}
                         />
                         <Route path="/apps" element={<AppManagement />} />
+                        <Route path="/asset-management" element={<AssetManagement />} />
                         <Route path="/profile" element={<Profile />} />
                         <Route path="/all-tickets" element={<AllTickets />} />
                         <Route path="/forms" element={<Forms />} />
@@ -57,6 +62,9 @@ const App: React.FC = () => {
                         <Route path="/dtr-statistics/unbalanced-dtrs" element={<DTRUnbalancedDTRs />} />
                         <Route path="/dtr-statistics/power-failure-feeders" element={<DTRPowerFailureFeeders />} />
                         <Route path="/dtr-statistics/ht-side-fuse-blown" element={<DTRHTSideFuseBlown />} />
+                        <Route path="/meter-management/data-logger-master" element={<DataLoggerMaster />} />
+                        <Route path="/meter-management/meters-list" element={<MetersList />} />
+                        <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                         <Route path="*" element={<NotFound />} />
                     </Route>
                     <Route path="/page-builder" element={<PageBuilder />} />
