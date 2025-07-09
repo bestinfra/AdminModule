@@ -34,12 +34,106 @@ function createAppProject(formData) {
   // Create base directory
   ensureDir(baseDir);
 
+  // Helper to copy all icons and images
+  function copyAllAssets() {
+    // Copy all icons
+    const sourceIconsDir = path.join(__dirname, 'public', 'icons');
+    const destIconsDir = path.join(baseDir, 'public', 'icons');
+    ensureDir(destIconsDir);
+
+    if (fs.existsSync(sourceIconsDir)) {
+      const iconFiles = fs.readdirSync(sourceIconsDir);
+      iconFiles.forEach(iconName => {
+        const sourcePath = path.join(sourceIconsDir, iconName);
+        const destPath = path.join(destIconsDir, iconName);
+        
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+      console.log(`✅ Copied ${iconFiles.length} icons to host app`);
+    }
+
+    // Copy all images
+    const sourceImagesDir = path.join(__dirname, 'public', 'images');
+    const destImagesDir = path.join(baseDir, 'public', 'images');
+    ensureDir(destImagesDir);
+
+    if (fs.existsSync(sourceImagesDir)) {
+      const imageFiles = fs.readdirSync(sourceImagesDir);
+      imageFiles.forEach(imageName => {
+        const sourcePath = path.join(sourceImagesDir, imageName);
+        const destPath = path.join(destImagesDir, imageName);
+        
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+      console.log(`✅ Copied ${imageFiles.length} images to host app`);
+    }
+
+    // Copy fonts directory
+    const sourceFontsDir = path.join(__dirname, 'public', 'fonts');
+    const destFontsDir = path.join(baseDir, 'public', 'fonts');
+    
+    if (fs.existsSync(sourceFontsDir)) {
+      ensureDir(destFontsDir);
+      const fontFiles = fs.readdirSync(sourceFontsDir);
+      fontFiles.forEach(fontName => {
+        const sourcePath = path.join(sourceFontsDir, fontName);
+        const destPath = path.join(destFontsDir, fontName);
+        
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+      console.log(`✅ Copied ${fontFiles.length} font files to host app`);
+    }
+  }
+
+  // Copy all assets (icons, images, fonts)
+  copyAllAssets();
+
+  // Helper to copy all CSS files
+  function copyAllCSS() {
+    const cssDir = path.join(baseDir, 'src', 'styles');
+    ensureDir(cssDir);
+    
+    // Copy all CSS files from src/styles
+    const sourceStylesDir = path.join(__dirname, 'src', 'styles');
+    
+    if (fs.existsSync(sourceStylesDir)) {
+      const cssFiles = fs.readdirSync(sourceStylesDir);
+      cssFiles.forEach(cssFile => {
+        const sourcePath = path.join(sourceStylesDir, cssFile);
+        const destPath = path.join(cssDir, cssFile);
+        
+        if (fs.statSync(sourcePath).isFile() && cssFile.endsWith('.css')) {
+          let cssContent = fs.readFileSync(sourcePath, 'utf8');
+          
+          // Convert Tailwind CSS v4 syntax to v3 syntax for host app
+          cssContent = cssContent.replace(/@import 'tailwindcss';/g, '@tailwind base;\n@tailwind components;\n@tailwind utilities;');
+          
+          // Convert @theme to :root for Tailwind CSS v3 compatibility
+          cssContent = cssContent.replace(/@theme {/g, ':root {');
+          
+          fs.writeFileSync(destPath, cssContent);
+        }
+      });
+      console.log(`✅ Copied ${cssFiles.length} CSS files to host app`);
+    }
+  }
+
+  // Copy all CSS files
+  copyAllCSS();
+
   // Create the React project structure
   const projectStructure = {
     'package.json': JSON.stringify({
       name: projectFolderName,
       version: '0.1.0',
       private: true,
+
       scripts: {
         dev: 'vite',
         build: 'tsc && vite build',
@@ -55,6 +149,7 @@ function createAppProject(formData) {
         typescript: '^4.9.3',
         vite: '^4.1.0',
         '@vitejs/plugin-react': '^3.1.0',
+        '@originjs/vite-plugin-federation': '^1.4.1',
         tailwindcss: '^3.2.7',
         postcss: '^8.4.21',
         autoprefixer: '^10.4.14'
@@ -124,7 +219,11 @@ export default defineConfig({
   },
   server: {
     port: 3001,
+    fs: {
+      allow: ['..'],
+    },
   },
+  publicDir: 'public',
 });`,
     
     'tailwind.config.js': `/** @type {import('tailwindcss').Config} */
@@ -179,6 +278,8 @@ module.exports = {
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
+import './styles/default.css'
+import './styles/global.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
