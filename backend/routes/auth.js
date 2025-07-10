@@ -25,18 +25,12 @@ router.get('/verify-token', authenticateToken, verifyToken);
 router.get('/users', authenticateToken, authorizeRole('admin'), async (req, res) => {
     try {
         // This would get all users (admin only)
-        const User = (await import('../models/User.js')).default;
-        const users = User.getAllUsers();
-        
-        // Remove passwords from response
-        const safeUsers = users.map(user => {
-            const { password, ...userWithoutPassword } = user;
-            return userWithoutPassword;
-        });
+        const UserDB = (await import('../models/UserDB.js')).default;
+        const users = await UserDB.getAllUsers();
 
         res.json({
             success: true,
-            data: { users: safeUsers }
+            data: { users }
         });
     } catch (error) {
         console.error('Get users error:', error);
