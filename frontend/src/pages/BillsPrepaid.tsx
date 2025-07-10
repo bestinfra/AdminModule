@@ -4,6 +4,13 @@ import Button from '../components/global/Button';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
 import Table from '../components/global/Table';
 import type { Column } from '../components/global/Table';
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const cardData = [
   {
@@ -96,45 +103,109 @@ const tableData = [
 const BillsPrepaid: React.FC = () => {
   const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
 
-  return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h1 className="text-2xl font-bold">Prepaid Overview</h1>
-        </div>
-        <div className="flex items-center gap-4">
-          <span className="text-gray-500 text-sm">Last Updated on 05/07/2025, 04:23 pm</span>
-          <Button label="Generate Report" variant="primary" />
-        </div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+  // Header component
+  const headerComponent = createHeaderComponent(
+    'Prepaid Overview',
+    'Monitor prepaid billing and transaction status',
+    'Last Updated on 05/07/2025, 04:23 pm'
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Generate Report', onClick: () => console.log('Generating report...'), variant: 'primary' },
+    { label: 'Export Data', onClick: () => console.log('Exporting data...'), variant: 'outline' },
+    { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
+  ]);
+
+  
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: 'Prepaid Billing ID: PREPAID-001',
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Overview Cards Section
+  const overviewCardsSection: Section = {
+    id: 'overview-cards',
+    component: (
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
         {cardData.map((card, idx) => (
           <Card key={idx} {...card} />
         ))}
       </div>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold">Recharge & Usage(Today)</h2>
-        <TimeRangeSelector
-          availableTimeRanges={['Daily', 'Monthly']}
-          selectedTimeRange={selectedTimeRange}
-          handleTimeRangeChange={setSelectedTimeRange}
-        />
+    )
+  };
+
+  // Recharge & Usage Section
+  const rechargeUsageSection: Section = {
+    id: 'recharge-usage',
+    component: (
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-lg font-semibold">Recharge & Usage(Today)</h2>
+          <TimeRangeSelector
+            availableTimeRanges={['Daily', 'Monthly']}
+            selectedTimeRange={selectedTimeRange}
+            handleTimeRangeChange={setSelectedTimeRange}
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          {rechargeData.map((card, idx) => (
+            <Card key={idx} {...card} />
+          ))}
+        </div>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        {rechargeData.map((card, idx) => (
-          <Card key={idx} {...card} />
-        ))}
-      </div>
+    )
+  };
+
+  // Transactions Table Section
+  const transactionsTableSection: Section = {
+    id: 'transactions-table',
+    component: (
       <div className="mt-8">
         <Table
-          data={tableData}
+          data={tableData.map(row => ({ ...row }))}
           columns={tableColumns}
+          actions={[
+            {
+              label: 'View',
+              icon: '/icons/eye.svg',
+              onClick: (row) => alert(`View ${row.transactionId}`),
+            },
+            {
+              label: 'Download',
+              icon: '/icons/download.svg',
+              onClick: (row) => alert(`Download ${row.transactionId}`),
+            },
+            {
+              label: 'Share',
+              icon: '/icons/share.svg',
+              onClick: (row) => alert(`Share ${row.transactionId}`),
+            },
+          ]}
+          showActions={true}
           pagination
           searchable
           emptyMessage="No transactions found"
         />
       </div>
-    </div>
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[overviewCardsSection, rechargeUsageSection, transactionsTableSection]}
+      header={headerComponent}
+      actions={actionsComponent}
+      footer={footerComponent}
+      sidebarPosition="right"
+      className="p-6"
+      sectionClassName=""
+
+    />
   );
 };
 

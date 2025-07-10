@@ -5,6 +5,13 @@ import Table from '../components/global/Table';
 import type { TableData } from '../components/global/Table';
 import BarChart from '../graphs/BarChart';
 import { useNavigate } from 'react-router-dom';
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -91,8 +98,33 @@ const DTRDashboard: React.FC = () => {
     }));
     const alertColors = alertTypes.map(type => type.color);
 
-    return (
-        <div className="space-y-6 bg-[var(--color-surface)] p-2">
+    // Header component
+    const headerComponent = createHeaderComponent(
+        'DTR Dashboard',
+        'Monitor Distribution Transformer performance and alerts',
+        `Total: ${dtrStats[0].value} DTRs`
+    );
+
+    // Actions component
+    const actionsComponent = createActionsComponent([
+        { label: 'Export Report', onClick: () => console.log('Exporting DTR report...'), variant: 'outline' },
+        { label: 'Add DTR', onClick: () => console.log('Adding new DTR...'), variant: 'primary' },
+        { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
+    ]);
+
+    
+
+    // Footer component
+    const footerComponent = createFooterComponent({
+        id: 'DTR Dashboard ID: DTR-001',
+        version: '2.1.0',
+        supportLink: '#'
+    });
+
+    // DTR Statistics Section
+    const dtrStatsSection: Section = {
+        id: 'dtr-stats',
+        component: (
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                 {/* DTR Statistics */}
                 <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-3 col-span-1 rounded-[var(--radius-2xl)]">
@@ -174,7 +206,13 @@ const DTRDashboard: React.FC = () => {
                     </div>
                 </div>
             </div>
-            {/* DTRs Table */}
+        )
+    };
+
+    // DTRs Table Section
+    const dtrsTableSection: Section = {
+        id: 'dtrs-table',
+        component: (
             <div className="mt-8">
                 <div className="flex items-center justify-between px-0 pt-0 pb-2">
                     <h2 className="text-lg font-semibold mb-0">DTRs</h2>
@@ -193,7 +231,13 @@ const DTRDashboard: React.FC = () => {
                     />
                 </div>
             </div>
-            {/* Latest Alerts Table */}
+        )
+    };
+
+    // Latest Alerts Section
+    const latestAlertsSection: Section = {
+        id: 'latest-alerts',
+        component: (
             <div className="mt-8">
                 <div className="flex items-center justify-between px-0 pt-0 pb-2">
                     <h2 className="text-lg font-semibold mb-0">Latest Alerts</h2>
@@ -210,7 +254,13 @@ const DTRDashboard: React.FC = () => {
                     />
                 </div>
             </div>
-            {/* Statistics Bar Chart */}
+        )
+    };
+
+    // Statistics Chart Section
+    const statisticsChartSection: Section = {
+        id: 'statistics-chart',
+        component: (
             <div className="mt-8">
                 <h2 className="text-lg font-semibold mb-2">Statistics</h2>
                 <div className="gap-2 bg-[var(--color-primary-lightest)] p-4 rounded-[var(--radius-2xl)] flex items-center justify-between">
@@ -233,7 +283,20 @@ const DTRDashboard: React.FC = () => {
                     timeRange={statsRange}
                 />
             </div>
-        </div>
+        )
+    };
+
+    return (
+        <Page
+            layout="single-column"
+            sections={[dtrStatsSection, dtrsTableSection, latestAlertsSection, statisticsChartSection]}
+            header={headerComponent}
+            actions={actionsComponent}
+            footer={footerComponent}
+            sidebarPosition="right"
+            className="space-y-6 bg-[var(--color-surface)] p-2"
+            sectionClassName=""
+        />
     );
 };
 

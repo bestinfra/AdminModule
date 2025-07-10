@@ -4,6 +4,13 @@ import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import Dropdown from '../components/global/Dropdown';
 import Button from '../components/global/Button';
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const meterCards = [
   {
@@ -110,22 +117,46 @@ const MetersList: React.FC = () => {
     },
   ];
 
-  return (
-    <div className="p-2">
-      <div className="flex items-center justify-between mb-4">
-        <div className="text-2xl font-bold">Meters List</div>
-        <Button
-          label="Add Meter"
-          variant="primary"
-          onClick={() => {}}
-        />
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  // Header component
+  const headerComponent = createHeaderComponent(
+    'Meters List',
+    'Manage and monitor all meters in the system',
+    `Total: ${data.length} meters`
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Add Meter', onClick: () => navigate('/meter-management/meters-list/add'), variant: 'primary' },
+    { label: 'Export Meters', onClick: () => console.log('Exporting meters...'), variant: 'outline' },
+    { label: 'Bulk Actions', onClick: () => console.log('Bulk actions...'), variant: 'outline' }
+  ]);
+
+  
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: 'Meters List ID: METERS-001',
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Overview Cards Section
+  const overviewSection: Section = {
+    id: 'overview',
+    component: (
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {meterCards.map((card, idx) => (
           <Card key={idx} {...card} />
         ))}
       </div>
-      <div className="flex flex-col md:flex-row gap-4 mb-4">
+    )
+  };
+
+  // Filters Section
+  const filtersSection: Section = {
+    id: 'filters',
+    component: (
+      <div className="flex flex-col md:flex-row gap-4">
         <Dropdown
           name="status"
           value={status}
@@ -148,20 +179,36 @@ const MetersList: React.FC = () => {
           className="w-full md:w-1/4"
         />
       </div>
-      <div className="mb-4 flex items-center">
-        {/* <input
-          type="text"
-          placeholder="Search"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          className="w-full md:w-1/3 border border-gray-300 rounded-full px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-        <span className="-ml-8">
-          <img src="/icons/search.svg" alt="search" className="w-5 h-5" />
-        </span> */}
-      </div>
-      <Table columns={columns} data={data} actions={actions} pagination={true} searchable={false} showActions={true} />
-    </div>
+    )
+  };
+
+  // Meters Table Section
+  const metersTableSection: Section = {
+    id: 'meters-table',
+    component: (
+      <Table 
+        columns={columns} 
+        data={data} 
+        actions={actions} 
+        pagination={true} 
+        searchable={false} 
+        showActions={true} 
+      />
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[overviewSection, filtersSection, metersTableSection]}
+      header={headerComponent}
+      actions={actionsComponent}
+      footer={footerComponent}
+      sidebarPosition="right"
+      className="p-2"
+      sectionClassName=""
+
+    />
   );
 };
 
