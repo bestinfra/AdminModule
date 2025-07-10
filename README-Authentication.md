@@ -1,6 +1,6 @@
-# AdminModule Authentication System
+# Super Admin Authentication System
 
-This document describes the authentication system implemented for the AdminModule Dashboard.
+This document describes the authentication system implemented for the Super Admin Dashboard.
 
 ## Overview
 
@@ -15,16 +15,16 @@ The authentication system provides secure login/logout functionality with JWT to
 - **Token Persistence**: Automatic token storage and validation
 - **User Profile Management**: View and update user information
 
-## Default Admin User
+## Default Super Admin User
 
-A default admin user is automatically created when the backend starts:
+A default super admin user is automatically created when the backend starts:
 
-- **Username**: `admin`
-- **Email**: `admin@adminmodule.com`
-- **Password**: `admin123`
-- **Role**: `admin`
+- **Username**: `superadmin`
+- **Email**: `superadmin@superadmin.com`
+- **Password**: `superadmin123`
+- **Role**: `superadmin`
 
-💡 **Login Options**: You can login using either the username (`admin`) or email (`admin@adminmodule.com`)
+💡 **Login Options**: You can login using either the username (`superadmin`) or email (`superadmin@superadmin.com`)
 
 ⚠️ **Important**: Please change the default password after first login for security.
 
@@ -46,8 +46,8 @@ A default admin user is automatically created when the backend starts:
 ```json
 POST /api/auth/login
 {
-    "identifier": "admin",
-    "password": "admin123"
+    "identifier": "superadmin",
+    "password": "superadmin123"
 }
 ```
 
@@ -61,9 +61,9 @@ POST /api/auth/login
     "data": {
         "user": {
             "id": 1,
-            "username": "admin",
-            "email": "admin@adminmodule.com",
-            "role": "admin"
+            "username": "superadmin",
+            "email": "superadmin@superadmin.com",
+            "role": "superadmin"
         },
         "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
     }
@@ -150,9 +150,9 @@ frontend/src/
    - Frontend: http://localhost:5173
    - Backend: http://localhost:3001
 
-4. **Login with Default Admin**:
-   - Username: `admin` (or Email: `admin@adminmodule.com`)
-   - Password: `admin123`
+4. **Login with Default Super Admin**:
+   - Username: `superadmin` (or Email: `superadmin@superadmin.com`)
+   - Password: `superadmin123`
 
 ## Environment Variables
 
@@ -166,7 +166,47 @@ JWT_EXPIRES_IN=24h
 
 ## User Data Storage
 
-Currently, user data is stored in a JSON file (`backend/data/users.json`). For production deployment, consider migrating to a proper database like PostgreSQL, MongoDB, or MySQL.
+### PostgreSQL Database (Recommended)
+
+The authentication system now supports PostgreSQL database for production-ready user management:
+
+- **Prisma ORM**: Modern database toolkit for type-safe queries
+- **Auto-migrations**: Database schema management
+- **Connection pooling**: Optimized for production workloads
+- **ACID compliance**: Data integrity and reliability
+
+### Setup PostgreSQL
+
+1. **Install Dependencies**:
+   ```bash
+   cd backend
+   npm install
+   ```
+
+2. **Configure Environment**:
+   Copy and configure environment file:
+   ```bash
+   cp backend/env.example backend/.env
+   # Edit .env with your database credentials
+   ```
+
+3. **Setup Database**:
+   ```bash
+   npm run db:generate  # Generate Prisma client
+   npm run db:push      # Create database schema
+   npm run db:seed      # Create default admin user
+   ```
+
+4. **Migrate from JSON** (if applicable):
+   ```bash
+   npm run db:migrate-from-json
+   ```
+
+See `backend/DATABASE_SETUP.md` for detailed setup instructions.
+
+### Legacy JSON Storage
+
+For development or testing, you can still use JSON file storage (`backend/data/users.json`), but PostgreSQL is recommended for production.
 
 ## Future Enhancements
 

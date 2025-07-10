@@ -4,7 +4,11 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import fs from 'fs';
 import authRoutes from './routes/auth.js';
-import { createDefaultAdmin } from './utils/seedAdmin.js';
+import UserDB from './models/UserDB.js';
+import dotenv from 'dotenv';
+
+// Load environment variables
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -57,13 +61,12 @@ app.post('/api/create-app', async (req, res) => {
       ]
     });
     
-  } catch (error) {
-    console.error('Error creating app:', error);
-    res.status(500).json({
-      error: 'Failed to create app',
-      details: error.message
-    });
-  }
+      } catch (error) {
+        res.status(500).json({
+            error: 'Failed to create app',
+            details: error.message
+        });
+    }
 });
 
 // Get list of generated apps
@@ -86,7 +89,6 @@ app.get('/api/generated-apps', (req, res) => {
     
     res.json({ apps });
   } catch (error) {
-    console.error('Error reading generated apps:', error);
     res.status(500).json({
       error: 'Failed to read generated apps',
       details: error.message
@@ -95,9 +97,14 @@ app.get('/api/generated-apps', (req, res) => {
 });
 
 app.listen(PORT, async () => {
-  console.log(`🚀 AdminModule server running on port ${PORT}`);
-  console.log(`📁 Generated apps will be created in: ${join(__dirname, '../generated-apps')}`);
+  console.log(`AdminModule server running on port ${PORT}`);
+  console.log(`Generated apps will be created in: ${join(__dirname, '../generated-apps')}`);
   
-  // Create default admin user
-  await createDefaultAdmin();
+  // Check database connection
+  const isDbConnected = await UserDB.checkConnection();
+  if (isDbConnected) {
+    console.log('PostgreSQL database ready');
+  } else {
+    console.log('Database connection failed. Please check your DATABASE_URL environment variable.');
+  }
 }); 
