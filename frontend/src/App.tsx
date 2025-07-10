@@ -32,6 +32,11 @@ import MetersList from './pages/MetersList';
 import AssetManagement from './pages/AssetManagement';
 import MeterDetails from './pages/MeterDetails';
 import ConnectDisconnect from './pages/ConnectDisconnect';
+import ConsumerView from './pages/ConsumerView';
+import AddDataLogger from './pages/AddDataLogger';
+import AddMeter from './pages/AddMeter';
+import AddConsumer from './pages/AddConsumer';
+
 
 const App: React.FC = () => {
 
@@ -68,6 +73,8 @@ const App: React.FC = () => {
                             <Route path="/all-tickets" element={<AllTickets />} />
                             <Route path="/forms" element={<Forms />} />
                             <Route path="/consumers" element={<Consumers />} />
+                            <Route path="/consumers/add" element={<AddConsumer />} />
+                            <Route path="/consumers/:uid" element={<ConsumerView />} />
                             <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
                             <Route path="/bills/prepaid" element={<BillsPrepaid />} />
                             <Route path="/bills/postpaid" element={<BillsPostpaid />} />
@@ -84,7 +91,9 @@ const App: React.FC = () => {
                             <Route path="/dtr-statistics/power-failure-feeders" element={<DTRPowerFailureFeeders />} />
                             <Route path="/dtr-statistics/ht-side-fuse-blown" element={<DTRHTSideFuseBlown />} />
                             <Route path="/meter-management/data-logger-master" element={<DataLoggerMaster />} />
+                            <Route path="/meter-management/data-logger-master/add" element={<AddDataLogger />} />
                             <Route path="/meter-management/meters-list" element={<MetersList />} />
+                            <Route path="/meter-management/meters-list/add" element={<AddMeter />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="*" element={<NotFound />} />
                         </Route>

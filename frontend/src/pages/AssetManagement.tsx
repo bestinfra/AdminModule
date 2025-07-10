@@ -1,131 +1,187 @@
-import React from "react";
+import React, { useState } from "react";
 import OrgChart from "../components/global/OrgChart";
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createSidebarStatsComponent,
+    createFooterComponent
+} from '../components/global/PageComponents';
 
-interface ChildNode {
-  name: string;
-  children?: ChildNode[];
-}
-interface LocationNode extends ChildNode {
-  count?: number;
-}
-interface HierarchyGroup {
-  type: string;
-  count: number;
-  children: LocationNode[];
-}
-
-const dummyHierarchy: HierarchyGroup[] = [
+const dummyData = [
   {
-    type: "MAIN LOCATION",
-    count: 2,
+    hierarchy_id: '1',
+    hierarchy_name: 'GMR',
+    hierarchy_type_title: 'Main Location',
+    children: [
+      { hierarchy_id: '2', hierarchy_name: 'Airborne General Store', hierarchy_type_title: 'Meter Location' },
+      { hierarchy_id: '3', hierarchy_name: 'Neo Travels', hierarchy_type_title: 'Meter Location' },
+      { hierarchy_id: '4', hierarchy_name: 'Mobikins', hierarchy_type_title: 'Meter Location' },
+      { hierarchy_id: '5', hierarchy_name: 'Dormitary', hierarchy_type_title: 'Meter Location' },
+      { hierarchy_id: '6', hierarchy_name: '10 MGW - Solar Plant', hierarchy_type_title: 'Meter Location' },
+    ],
+  },
+  {
+    hierarchy_id: '7',
+    hierarchy_name: 'Chennai',
+    hierarchy_type_title: 'Main Location',
     children: [
       {
-        name: "GMR",
-        count: 5,
+        hierarchy_id: '8',
+        hierarchy_name: 'Hyderabad',
+        hierarchy_type_title: 'Main Location',
         children: [
-          { name: "Airborne General Store" },
-          { name: "Neo Travels" },
-          { name: "Mobikins" },
-          { name: "Dormitary" },
-          { name: "10 MGW - Solar Plant" }
-        ]
+          { hierarchy_id: '9', hierarchy_name: 'Hitech City', hierarchy_type_title: 'Meter Location' },
+          { hierarchy_id: '10', hierarchy_name: 'Gachibowli', hierarchy_type_title: 'Meter Location' },
+        ],
       },
+      { hierarchy_id: '11', hierarchy_name: 'Egmore', hierarchy_type_title: 'Meter Location' },
       {
-        name: "Chennai",
-        count: 3,
+        hierarchy_id: '12',
+        hierarchy_name: 'Vizag',
+        hierarchy_type_title: 'Main Location',
         children: [
-          {
-            name: "Hyderabad",
-            children: [
-              { name: "Hitech City" },
-              { name: "Gachibowli" }
-            ]
-          },
-          { name: "Egmore" },
-          {
-            name: "Vizag",
-            children: [
-              { name: "RK Beach" },
-              { name: "Warangal" }
-            ]
-          }
-        ]
-      }
-    ]
-  }
+          { hierarchy_id: '13', hierarchy_name: 'RK Beach', hierarchy_type_title: 'Meter Location' },
+          { hierarchy_id: '14', hierarchy_name: 'Warangal', hierarchy_type_title: 'Meter Location' },
+        ],
+      },
+    ],
+  },
 ];
 
-const SidebarTree: React.FC<{ data: HierarchyGroup[] }> = ({ data }) => (
-  <div className="p-4">
-    <h2 className="font-bold mb-4 text-base">Location Hierarchy</h2>
-    {data.map((group) => (
-      <div key={group.type} className="mb-4">
-        <div className="flex items-center justify-between bg-[#f4f7fa] rounded-lg px-4 py-2 font-bold text-gray-700 mb-2 shadow-sm">
-          <span>{group.type}</span>
+const SidebarTree: React.FC<{ data: any[] }> = ({ data }) => {
+  const [collapsed, setCollapsed] = useState(false);
+  return (
+    <div className="p-4">
+      <h2 className="font-bold mb-4 text-base">Location Hierarchy</h2>
+      <div className="mb-4">
+        <button
+          className="flex items-center justify-between w-full rounded-lg px-4 py-2 font-bold text-gray-700 mb-2 focus:outline-none"
+          style={{ background: "var(--color-primary-lightest)", boxShadow: "none", border: "none" }}
+          onClick={() => setCollapsed((c) => !c)}
+        >
+          <span>MAIN LOCATION</span>
           <span className="bg-blue-900 text-white text-xs font-bold rounded-full px-2 py-0.5">
-            {group.count}
+            {data.length}
           </span>
-        </div>
-        <div className="ml-2">
-          {group.children.map((loc) => (
-            <div key={loc.name} className="mb-2">
-              <div className="flex items-center gap-2 font-semibold text-gray-800">
-                <span>{loc.name}</span>
-                {loc.count && (
-                  <span className="bg-blue-900 text-white text-xs font-bold rounded-full px-2 py-0.5">
-                    {loc.count}
-                  </span>
+          <svg
+            className={`w-4 h-4 ml-2 transition-transform ${collapsed ? '' : 'rotate-180'}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {!collapsed && (
+          <div className="ml-2">
+            {data.map((group) => (
+              <div key={group.hierarchy_id} className="mb-4">
+                <div className="flex items-center gap-2 font-semibold text-gray-800">
+                  <span>{group.hierarchy_name}</span>
+                  {group.children && (
+                    <span className="bg-blue-900 text-white text-xs font-bold rounded-full px-2 py-0.5">
+                      {group.children.length}
+                    </span>
+                  )}
+                </div>
+                {group.children && (
+                  <div className="ml-6 mt-1">
+                    {group.children.map((loc: any) => (
+                      <div key={loc.hierarchy_id} className="text-gray-700 py-0.5 pl-2">
+                        {loc.hierarchy_name}
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
-              {loc.children && (
-                <div className="ml-6 border-l border-gray-200 pl-3 mt-1">
-                  {loc.children.map((child) => (
-                    <div key={child.name} className="text-gray-700 py-0.5 pl-2">
-                      {child.name}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
-    ))}
-  </div>
-);
-
-const AssetManagement = () => {
-  return (
-    <div className="min-h-screen bg-[#f6f8fa]">
-      {/* Header */}
-      <div className="flex items-center justify-between px-8 pt-6 pb-2">
-        <div className="flex items-center gap-2">
-          <button className="flex items-center text-base font-semibold text-gray-700 hover:underline">
-            <span className="mr-1 text-xl">&larr;</span>
-            Back to Dashboard
-          </button>
-          <span className="text-2xl font-bold ml-4">Assets</span>
-        </div>
-        <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-6 rounded-full shadow transition text-lg">
-          Add Asset
-        </button>
-      </div>
-      <div className="flex gap-4 px-5 pb-5">
-        {/* Sidebar */}
-        <div className="w-[320px]">
-          <div className="bg-white rounded-2xl shadow border p-0 mt-2">
-            <SidebarTree data={dummyHierarchy} />
+            ))}
           </div>
-        </div>
-        {/* Main Content */}
-        <div className="flex-1">
-          <div className="bg-white rounded-2xl shadow border h-[80vh] mt-2 flex items-center justify-center">
-            <OrgChart data={dummyHierarchy} />
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
 };
 
-export default AssetManagement; 
+export default function AssetManagement() {
+  // Header component
+  const headerComponent = createHeaderComponent(
+    'Asset Management',
+    'Manage and visualize asset hierarchy and organization structure',
+    '2 main locations, 14 total assets'
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Add Asset', onClick: () => console.log('Adding new asset...'), variant: 'primary' },
+    { label: 'Export Hierarchy', onClick: () => console.log('Exporting hierarchy...'), variant: 'outline' },
+    { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
+  ]);
+
+  // Sidebar stats component
+  const sidebarComponent = createSidebarStatsComponent([
+    {
+      title: 'Total Assets',
+      value: '14',
+      subtitle1: 'Across all locations',
+      subtitle2: '2 main locations',
+      comparisonValue: 0
+    },
+    {
+      title: 'Active Assets',
+      value: '12',
+      subtitle1: 'Operational',
+      subtitle2: '2 inactive',
+      comparisonValue: 0
+    },
+    {
+      title: 'Asset Types',
+      value: '3',
+      subtitle1: 'Main Location, Meter Location',
+      subtitle2: 'Solar Plant',
+      comparisonValue: 0
+    }
+  ]);
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: 'Asset Management ID: ASSET-001',
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Organization Chart Section
+  const orgChartSection: Section = {
+    id: 'org-chart',
+    component: (
+      <div className="flex-1 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl border w-full h-full flex items-center justify-center">
+          <OrgChart />
+        </div>
+      </div>
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[orgChartSection]}
+      header={headerComponent}
+      actions={actionsComponent}
+      sidebar={sidebarComponent}
+      footer={footerComponent}
+      sidebarPosition="left"
+      className="min-h-screen bg-[#f8f9fa]"
+      sidebarClassName="w-[320px] rounded-2xl m-4 flex-shrink-0"
+      sidebar={
+        <div
+          className="w-full h-full"
+          style={{ background: "var(--color-primary-lightest)", boxShadow: "none", border: "none" }}
+        >
+          <SidebarTree data={dummyData} />
+        </div>
+      }
+    />
+  );
+} 
