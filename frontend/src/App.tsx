@@ -7,6 +7,9 @@ import Forms from './pages/Forms';
 import MainLayout from './components/layout/MainLayout';
 import NotFound from './pages/NotFound';
 import { AppProvider } from './context/AppContext'; 
+import { AuthProvider } from './context/AuthContext';
+import ProtectedRoute from './components/auth/ProtectedRoute';
+import Login from './pages/Login';
 import AppManagement from './pages/Apps_module/AppManagement';
 import Dashboard from './pages/Dashboard';
 import Consumers from './pages/Consumers';
@@ -34,47 +37,78 @@ const App: React.FC = () => {
 
     return (
         <AppProvider>
-            <Router>
-                <Routes>
-                    <Route element={<MainLayout />}>
-                        <Route
-                            path="/"
-                            element={<Dashboard />}
+            <AuthProvider>
+                <Router>
+                    <Routes>
+                        {/* Public routes */}
+                        <Route 
+                            path="/login" 
+                            element={
+                                <ProtectedRoute requireAuth={false}>
+                                    <Login />
+                                </ProtectedRoute>
+                            } 
                         />
-                        <Route path="/apps" element={<AppManagement />} />
-                        <Route path="/asset-management" element={<AssetManagement />} />
-                        <Route path="/profile" element={<Profile />} />
-                        <Route path="/all-tickets" element={<AllTickets />} />
-                        <Route path="/forms" element={<Forms />} />
-                        <Route path="/consumers" element={<Consumers />} />
-                        <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
-                        <Route path="/bills/prepaid" element={<BillsPrepaid />} />
-                        <Route path="/bills/postpaid" element={<BillsPostpaid />} />
-                        <Route path="/dtr-dashboard" element={<DTRDashboard />} />
-                        <Route path="/dtr/:id" element={<DTRDetailPage />} />
-                        <Route path="/feeders/:id" element={<Feeders />} />
-                        <Route path="/dtr-statistics/total-dtrs" element={<DTRTotalDTRs />} />
-                        <Route path="/dtr-statistics/total-lt-feeders" element={<DTRTotalLTFeeders />} />
-                        <Route path="/dtr-statistics/total-fuse-blown" element={<DTRTotalFuseBlown />} />
-                        <Route path="/dtr-statistics/overloaded-feeders" element={<DTROverloadedFeeders />} />
-                        <Route path="/dtr-statistics/underloaded-feeders" element={<DTRUnderloadedFeeders />} />
-                        <Route path="/dtr-statistics/lt-side-fuse-blown" element={<DTRLTSideFuseBlown />} />
-                        <Route path="/dtr-statistics/unbalanced-dtrs" element={<DTRUnbalancedDTRs />} />
-                        <Route path="/dtr-statistics/power-failure-feeders" element={<DTRPowerFailureFeeders />} />
-                        <Route path="/dtr-statistics/ht-side-fuse-blown" element={<DTRHTSideFuseBlown />} />
-                        <Route path="/meter-management/data-logger-master" element={<DataLoggerMaster />} />
-                        <Route path="/meter-management/meters-list" element={<MetersList />} />
-                        <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
-                        <Route path="*" element={<NotFound />} />
-                    </Route>
-                    <Route path="/page-builder" element={<PageBuilder />} />
-                    <Route
-                        path="/module-selection"
-                        element={<ModuleSelection />}
-                    />
-                </Routes>
-            </Router>
-            
+                        
+                        {/* Protected routes */}
+                        <Route 
+                            element={
+                                <ProtectedRoute>
+                                    <MainLayout />
+                                </ProtectedRoute>
+                            }
+                        >
+                            <Route
+                                path="/"
+                                element={<Dashboard />}
+                            />
+                            <Route path="/apps" element={<AppManagement />} />
+                            <Route path="/asset-management" element={<AssetManagement />} />
+                            <Route path="/profile" element={<Profile />} />
+                            <Route path="/all-tickets" element={<AllTickets />} />
+                            <Route path="/forms" element={<Forms />} />
+                            <Route path="/consumers" element={<Consumers />} />
+                            <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
+                            <Route path="/bills/prepaid" element={<BillsPrepaid />} />
+                            <Route path="/bills/postpaid" element={<BillsPostpaid />} />
+                            <Route path="/dtr-dashboard" element={<DTRDashboard />} />
+                            <Route path="/dtr/:id" element={<DTRDetailPage />} />
+                            <Route path="/feeders/:id" element={<Feeders />} />
+                            <Route path="/dtr-statistics/total-dtrs" element={<DTRTotalDTRs />} />
+                            <Route path="/dtr-statistics/total-lt-feeders" element={<DTRTotalLTFeeders />} />
+                            <Route path="/dtr-statistics/total-fuse-blown" element={<DTRTotalFuseBlown />} />
+                            <Route path="/dtr-statistics/overloaded-feeders" element={<DTROverloadedFeeders />} />
+                            <Route path="/dtr-statistics/underloaded-feeders" element={<DTRUnderloadedFeeders />} />
+                            <Route path="/dtr-statistics/lt-side-fuse-blown" element={<DTRLTSideFuseBlown />} />
+                            <Route path="/dtr-statistics/unbalanced-dtrs" element={<DTRUnbalancedDTRs />} />
+                            <Route path="/dtr-statistics/power-failure-feeders" element={<DTRPowerFailureFeeders />} />
+                            <Route path="/dtr-statistics/ht-side-fuse-blown" element={<DTRHTSideFuseBlown />} />
+                            <Route path="/meter-management/data-logger-master" element={<DataLoggerMaster />} />
+                            <Route path="/meter-management/meters-list" element={<MetersList />} />
+                            <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
+                            <Route path="*" element={<NotFound />} />
+                        </Route>
+                        
+                        {/* Special routes that don't require layout */}
+                        <Route 
+                            path="/page-builder" 
+                            element={
+                                <ProtectedRoute>
+                                    <PageBuilder />
+                                </ProtectedRoute>
+                            } 
+                        />
+                        <Route
+                            path="/module-selection"
+                            element={
+                                <ProtectedRoute>
+                                    <ModuleSelection />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Routes>
+                </Router>
+            </AuthProvider>
         </AppProvider>
     );
 };

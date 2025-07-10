@@ -1,5 +1,7 @@
 import Input from '../forms/Input';
 import { useApp } from '../../context/AppContext';
+import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
 
 interface HeaderAction {
     icon: string;
@@ -81,15 +83,22 @@ function Header({
                         />
                     </button>
                 ))}
-                <div className="p-2 flex items-center justify-center">
-                    <img
-                        src={secondaryLogo}
-                        alt="User profile"
-                        className="w-10"
-                    />
-                </div>
+                <UserProfile />
             </nav>
         </header>
+    );
+}
+
+// User profile component - just image like before
+function UserProfile() {
+    return (
+        <div className="p-2 flex items-center justify-center">
+            <img
+                src="/images/gmr-logo.png"
+                alt="User profile"
+                className="w-10"
+            />
+        </div>
     );
 }
 
