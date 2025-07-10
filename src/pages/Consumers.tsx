@@ -3,6 +3,7 @@ import Button from '../components/global/Button';
 import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
 import Dropdown from '../components/global/Dropdown';
+import { useNavigate } from 'react-router-dom';
 
 const consumersData = [
   { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17 },
@@ -27,17 +28,6 @@ const columns: Column[] = [
   { key: 'reading', label: 'Current Reading' },
 ];
 
-const actions = [
-  {
-    label: 'View',
-    icon: '/icons/eye.svg',
-    onClick: (row: any) => {
-      // handle view action
-      alert(`View consumer: ${row.uid}`);
-    },
-  },
-];
-
 const menuOptions = [
   { value: 'occupied', label: 'Occupied' },
   { value: 'vacant', label: 'Vacant' },
@@ -45,9 +35,20 @@ const menuOptions = [
 
 const Consumers: React.FC = () => {
   const [menuValue, setMenuValue] = useState('');
+  const navigate = useNavigate();
 
   // Add sNo property to each row for serial number
   const tableData = consumersData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+
+  const actions = [
+    {
+      label: 'View',
+      icon: '/icons/eye.svg',
+      onClick: (row: any) => {
+        navigate(`/consumers/${row.uid}`);
+      },
+    },
+  ];
 
   return (
     <div className="p-6">

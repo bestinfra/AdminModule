@@ -119,13 +119,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
-            // --- Asset Management menu item ---
-            // {
-            //     title: 'Asset Management',
-            //     icon: '/icons/apps-icon.svg',
-            //     link: '/asset-management',
-            // },
-            // --- End Asset Management menu item ---
+            {
+                title: 'Asset Management',
+                icon: '/icons/apps-icon.svg',
+                link: '/asset-management',
+            },
             {
                 title: 'Meter Management',
                 icon: '/icons/meter-management.svg',
