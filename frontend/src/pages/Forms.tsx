@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import Form from '../components/forms/Form';
 import type { FormInputConfig } from '../components/forms/types';
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createSidebarStatsComponent,
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const Forms: React.FC = () => {
     const [formResults, setFormResults] = useState<Record<string, any>>({});
@@ -206,18 +214,56 @@ const Forms: React.FC = () => {
         setFormResults(prev => ({ ...prev, contact: data }));
     };
 
-    return (
-        <div className="space-y-12">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">
-                    Form Components Showcase
-                </h1>
-                <p className="text-[var(--color-light)] dark:text-[var(--color-neutral-light)]">
-                    Explore all available form input types and configurations
-                </p>
-            </div>
+    // Header component
+    const headerComponent = createHeaderComponent(
+        'Form Components Showcase',
+        'Explore all available form input types and configurations',
+        '3 form types available'
+    );
 
-            {/* Basic Form */}
+    // Actions component
+    const actionsComponent = createActionsComponent([
+        { label: 'Export Forms', onClick: () => console.log('Exporting forms...'), variant: 'outline' },
+        { label: 'Documentation', onClick: () => console.log('Opening documentation...'), variant: 'outline' },
+        { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
+    ]);
+
+    // Sidebar stats component
+    const sidebarComponent = createSidebarStatsComponent([
+        {
+            title: 'Form Types',
+            value: '3',
+            subtitle1: 'Basic, Advanced, Contact',
+            subtitle2: 'All input types covered',
+            comparisonValue: 0
+        },
+        {
+            title: 'Input Types',
+            value: '12',
+            subtitle1: 'Different input types',
+            subtitle2: 'Text, email, file, etc.',
+            comparisonValue: 0
+        },
+        {
+            title: 'Validation Rules',
+            value: '8',
+            subtitle1: 'Active validations',
+            subtitle2: 'Pattern, length, range',
+            comparisonValue: 0
+        }
+    ]);
+
+    // Footer component
+    const footerComponent = createFooterComponent({
+        id: 'Forms Showcase ID: FORMS-001',
+        version: '2.1.0',
+        supportLink: '#'
+    });
+
+    // Basic Form Section
+    const basicFormSection: Section = {
+        id: 'basic-form',
+        component: (
             <div>
                 <h2 className="text-xl font-semibold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">
                     Basic Form Inputs
@@ -246,8 +292,13 @@ const Forms: React.FC = () => {
                     </div>
                 )}
             </div>
+        )
+    };
 
-            {/* Advanced Form */}
+    // Advanced Form Section
+    const advancedFormSection: Section = {
+        id: 'advanced-form',
+        component: (
             <div>
                 <h2 className="text-xl font-semibold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">
                     Advanced Form Inputs
@@ -276,8 +327,13 @@ const Forms: React.FC = () => {
                     </div>
                 )}
             </div>
+        )
+    };
 
-            {/* Contact Form */}
+    // Contact Form Section
+    const contactFormSection: Section = {
+        id: 'contact-form',
+        component: (
             <div>
                 <h2 className="text-xl font-semibold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">
                     Contact Form
@@ -306,7 +362,20 @@ const Forms: React.FC = () => {
                     </div>
                 )}
             </div>
-        </div>
+        )
+    };
+
+    return (
+        <Page
+            layout="single-column"
+            sections={[basicFormSection, advancedFormSection, contactFormSection]}
+            header={headerComponent}
+            actions={actionsComponent}
+            sidebar={sidebarComponent}
+            footer={footerComponent}
+            sidebarPosition="right"
+            className="space-y-12"
+        />
     );
 };
 

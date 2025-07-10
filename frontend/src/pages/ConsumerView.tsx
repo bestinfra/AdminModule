@@ -6,6 +6,13 @@ import Card from '../components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
 import Table from '../components/global/Table';
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 // Mock data (should be shared or moved to a common location in real app)
 const consumersData = [
@@ -20,38 +27,33 @@ const ConsumerView: React.FC = () => {
 
   if (!consumer) return <div className="p-6">Consumer not found</div>;
 
-  return (
-    <div className="p-2 flex flex-col gap-8">
-      <div className="flex justify-between items-center gap-2 py-0">
-        <h1 className="text-xl font-bold leading-tight m-0 p-0">{consumer.name}</h1>
-        <div className="flex items-center gap-2">
-          <Button label="Recharge" variant="primary" onClick={() => alert('Recharge')} />
-          <div className="relative flex items-center">
-            <Dropdown
-              name="consumer-view-menu"
-              value={''}
-              onChange={() => alert('Edit')}
-              options={[{ value: 'edit', label: 'Edit' }]}
-              placeholder={''}
-              searchable={false}
-              className="w-10 h-10 min-w-0 min-h-0 p-0 border-none shadow-none bg-transparent flex items-center justify-center consumer-view-dots"
-              leftIcon="/icons/menu-dots.svg"
-            />
-            <style>{`
-              .consumer-view-dots .absolute.z-10 {
-                left: 50% !important;
-                top: 110% !important;
-                right: auto !important;
-                transform: translateX(-50%) !important;
-                min-width: 100px;
-              }
-            `}</style>
-          </div>
-        </div>
-      </div>
-      {/* <div className="flex items-center mb-4">
-        <Button label="Back to Consumers" variant="secondary" onClick={() => navigate(-1)} className="mr-4" />
-      </div> */}
+  // Header component
+  const headerComponent = createHeaderComponent(
+    consumer.name,
+    `Consumer Details - ${consumer.uid}`,
+    `Meter: ${consumer.meter}`
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Recharge', onClick: () => alert('Recharge'), variant: 'primary' },
+    { label: 'Edit Consumer', onClick: () => alert('Edit'), variant: 'outline' },
+    { label: 'Export Data', onClick: () => alert('Export'), variant: 'outline' }
+  ]);
+
+  
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: `Consumer ID: ${consumer.uid}`,
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Consumer Info Section
+  const consumerInfoSection: Section = {
+    id: 'consumer-info',
+    component: (
       <div className="bg-white rounded-lg shadow p-6">
         <div className="grid grid-cols-4 gap-4 mb-4">
           <div>
@@ -90,8 +92,15 @@ const ConsumerView: React.FC = () => {
           </div>
         </div>
       </div>
+    )
+  };
+
+  // Instantaneous Data Section
+  const instantaneousDataSection: Section = {
+    id: 'instantaneous-data',
+    component: (
       <div className="bg-blue-50 rounded-[var(--radius-2xl)] p-6">
-        <div className="flex items-center justify-between  bg-[var(--color-primary-lightest)] rounded-t-lg px-4 py-2">
+        <div className="flex items-center justify-between bg-[var(--color-primary-lightest)] rounded-t-lg px-4 py-2">
           <div className="font-semibold">Instantaneous Data</div>
           <div className="text-sm text-gray-500">Last Comm Date: 10/07/2025 07:00:00</div>
         </div>
@@ -136,7 +145,13 @@ const ConsumerView: React.FC = () => {
           />
         </div>
       </div>
-      {/* Power Analysis Section */}
+    )
+  };
+
+  // Power Analysis Section
+  const powerAnalysisSection: Section = {
+    id: 'power-analysis',
+    component: (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Power Analysis</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -202,7 +217,13 @@ const ConsumerView: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Reports Section */}
+    )
+  };
+
+  // Reports Section
+  const reportsSection: Section = {
+    id: 'reports',
+    component: (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Reports</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -252,7 +273,13 @@ const ConsumerView: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Unit History & Transaction History Section */}
+    )
+  };
+
+  // History Section
+  const historySection: Section = {
+    id: 'history',
+    component: (
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
           <div className="font-semibold text-base">Unit History</div>
@@ -300,7 +327,13 @@ const ConsumerView: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* Events Section */}
+    )
+  };
+
+  // Events Section
+  const eventsSection: Section = {
+    id: 'events',
+    component: (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Events</h2>
         <div className="bg-white rounded-2xl shadow p-6">
@@ -328,8 +361,59 @@ const ConsumerView: React.FC = () => {
           />
         </div>
       </div>
-      
-    </div>
+    )
+  };
+
+  // Connection Activity History Section
+  const connectionActivitySection: Section = {
+    id: 'connection-activity-history',
+    component: (
+      <div className="flex flex-col gap-4">
+        <h2 className="text-lg font-semibold">Connection Activity History</h2>
+        <div className="bg-white rounded-2xl shadow p-6">
+          <Table
+            data={[
+              { sNo: 1, action: 'Connect', performedBy: 'Admin', dateTime: '10/07/2025 09:00:00', remarks: 'Routine connection' },
+              { sNo: 2, action: 'Disconnect', performedBy: 'Operator', dateTime: '12/07/2025 14:30:00', remarks: 'Non-payment' },
+              { sNo: 3, action: 'Connect', performedBy: 'Admin', dateTime: '15/07/2025 10:15:00', remarks: 'Payment received' },
+            ]}
+            columns={[
+              { key: 'sNo', label: 'S.No' },
+              { key: 'action', label: 'Action' },
+              { key: 'performedBy', label: 'Performed By' },
+              { key: 'dateTime', label: 'Date & Time' },
+              { key: 'remarks', label: 'Remarks' },
+            ]}
+            showActions={false}
+            pagination
+            searchable={false}
+            emptyMessage="No connection activity found"
+          />
+        </div>
+      </div>
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[
+        consumerInfoSection, 
+        instantaneousDataSection, 
+        powerAnalysisSection, 
+        reportsSection, 
+        historySection, 
+        eventsSection,
+        connectionActivitySection
+      ]}
+      header={headerComponent}
+      actions={actionsComponent}
+      footer={footerComponent}
+      sidebarPosition="right"
+      className="p-2 flex flex-col gap-8"
+      sectionClassName=""
+
+    />
   );
 };
 

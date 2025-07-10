@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import Card from '../components/global/Card';
 import BarChart from '../graphs/BarChart';
 import Table from '../components/global/Table';
-
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent,
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const feederInfo = {
   name: 'D1F1(32500114)',
@@ -62,8 +68,33 @@ const Feeders = () => {
     }
   }, [location]);
 
-  return (
-    <div className="p-2 flex flex-col gap-6">
+  // Header component
+  const headerComponent = createHeaderComponent(
+    feederInfo.name,
+    `Feeder Details - ${feederInfo.rating}`,
+    `Last Comm: ${feederInfo.lastComm}`
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Download Data', onClick: () => console.log('Downloading feeder data...'), variant: 'outline' },
+    { label: 'Export Report', onClick: () => console.log('Exporting report...'), variant: 'outline' },
+    { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
+  ]);
+
+  
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: `Feeder ID: ${feederInfo.name}`,
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Feeder Information Section
+  const feederInfoSection: Section = {
+    id: 'feeder-info',
+    component: (
       <section className="border border-primary-border rounded-3xl bg-white p-8 flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-main mb-2">Feeder Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-x-12 gap-y-4">
@@ -81,6 +112,13 @@ const Feeders = () => {
           </div>
         </div>
       </section>
+    )
+  };
+
+  // Feeder Statistics Section
+  const feederStatsSection: Section = {
+    id: 'feeder-stats',
+    component: (
       <section className="border border-primary-border rounded-3xl bg-[var(--color-primary-lightest)] p-6 flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <h3 className="text-base font-semibold text-main">Feeder Statistics</h3>
@@ -92,9 +130,15 @@ const Feeders = () => {
           ))}
         </div>
       </section>
-      {/* Metrics Title OUTSIDE the container */}
-      <h2 className="text-lg font-semibold text-main">Metrics</h2>
+    )
+  };
+
+  // Daily Metrics Section
+  const dailyMetricsSection: Section = {
+    id: 'daily-metrics',
+    component: (
       <section className="border border-primary-border rounded-3xl p-0 flex flex-col gap-4">
+        <h2 className="text-lg font-semibold text-main">Metrics</h2>
         <div className="bg-white border border-primary-border rounded-2xl p-0">
           <div className="flex justify-between items-center mb-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-4">
             <span className="text-base font-medium text-main">Daily Consumption Metrics (06 May, 2025 - 06 Jul, 2025)</span>
@@ -112,7 +156,13 @@ const Feeders = () => {
           </div>
         </div>
       </section>
-      {/* Monthly Consumption Metrics Section */}
+    )
+  };
+
+  // Monthly Metrics Section
+  const monthlyMetricsSection: Section = {
+    id: 'monthly-metrics',
+    component: (
       <section className="border border-primary-border rounded-3xl p-0 flex flex-col gap-4 mt-4">
         <div className="bg-white border border-primary-border rounded-2xl p-0">
           <div className="flex justify-between items-center mb-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-4">
@@ -131,28 +181,62 @@ const Feeders = () => {
           </div>
         </div>
       </section>
-      {/* Map Section */}
+    )
+  };
+
+  // Map Section
+  const mapSection: Section = {
+    id: 'map',
+    component: (
       <section className="border border-primary-border rounded-3xl bg-white p-2 mt-4">
         <div className="w-full h-[350px] rounded-2xl overflow-hidden" ref={mapRef} />
       </section>
+    )
+  };
+
+  // Alerts Section
+  const alertsSection: Section = {
+    id: 'alerts',
+    component: (
       <div className="flex flex-col gap-4 p-4 bg-white">
-          <h2 className="text-lg font-semibold">Alerts</h2>
-          <Table
-            columns={[
-              { key: 'alertId', label: 'Alert ID' },
-              { key: 'type', label: 'Type' },
-              { key: 'feederName', label: 'Feeder Name' },
-              { key: 'occuredOn', label: 'Occured On' },
-            ]}
-            data={[]}
-            searchable={true}
-            pagination={true}
-            initialRowsPerPage={5}
-            emptyMessage="No Alerts Found"
-            showActions={false}
-          />
-        </div>
-    </div>
+        <h2 className="text-lg font-semibold">Alerts</h2>
+        <Table
+          columns={[
+            { key: 'alertId', label: 'Alert ID' },
+            { key: 'type', label: 'Type' },
+            { key: 'feederName', label: 'Feeder Name' },
+            { key: 'occuredOn', label: 'Occured On' },
+          ]}
+          data={[]}
+          searchable={true}
+          pagination={true}
+          initialRowsPerPage={5}
+          emptyMessage="No Alerts Found"
+          showActions={false}
+        />
+      </div>
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[
+        feederInfoSection, 
+        feederStatsSection, 
+        dailyMetricsSection, 
+        monthlyMetricsSection, 
+        mapSection, 
+        alertsSection
+      ]}
+      header={headerComponent}
+      actions={actionsComponent}
+      footer={footerComponent}
+      sidebarPosition="right"
+      className="p-2 flex flex-col gap-6"
+      sectionClassName=""
+
+    />
   );
 };
 

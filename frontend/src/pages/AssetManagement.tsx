@@ -1,5 +1,13 @@
 import React, { useState } from "react";
 import OrgChart from "../components/global/OrgChart";
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createSidebarStatsComponent,
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const dummyData = [
   {
@@ -97,21 +105,83 @@ const SidebarTree: React.FC<{ data: any[] }> = ({ data }) => {
 };
 
 export default function AssetManagement() {
-  return (
-    <div className="min-h-screen bg-[#f8f9fa] flex">
-      {/* Sidebar */}
-      <div
-        className="w-[320px] rounded-2xl m-4 flex-shrink-0"
-        style={{ background: "var(--color-primary-lightest)", boxShadow: "none", border: "none" }}
-      >
-        <SidebarTree data={dummyData} />
-      </div>
-      {/* Main Content */}
+  // Header component
+  const headerComponent = createHeaderComponent(
+    'Asset Management',
+    'Manage and visualize asset hierarchy and organization structure',
+    '2 main locations, 14 total assets'
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Add Asset', onClick: () => console.log('Adding new asset...'), variant: 'primary' },
+    { label: 'Export Hierarchy', onClick: () => console.log('Exporting hierarchy...'), variant: 'outline' },
+    { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
+  ]);
+
+  // Sidebar stats component
+  const sidebarComponent = createSidebarStatsComponent([
+    {
+      title: 'Total Assets',
+      value: '14',
+      subtitle1: 'Across all locations',
+      subtitle2: '2 main locations',
+      comparisonValue: 0
+    },
+    {
+      title: 'Active Assets',
+      value: '12',
+      subtitle1: 'Operational',
+      subtitle2: '2 inactive',
+      comparisonValue: 0
+    },
+    {
+      title: 'Asset Types',
+      value: '3',
+      subtitle1: 'Main Location, Meter Location',
+      subtitle2: 'Solar Plant',
+      comparisonValue: 0
+    }
+  ]);
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: 'Asset Management ID: ASSET-001',
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Organization Chart Section
+  const orgChartSection: Section = {
+    id: 'org-chart',
+    component: (
       <div className="flex-1 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl border w-full h-full flex items-center justify-center">
           <OrgChart />
         </div>
       </div>
-    </div>
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[orgChartSection]}
+      header={headerComponent}
+      actions={actionsComponent}
+      sidebar={sidebarComponent}
+      footer={footerComponent}
+      sidebarPosition="left"
+      className="min-h-screen bg-[#f8f9fa]"
+      sidebarClassName="w-[320px] rounded-2xl m-4 flex-shrink-0"
+      sidebar={
+        <div
+          className="w-full h-full"
+          style={{ background: "var(--color-primary-lightest)", boxShadow: "none", border: "none" }}
+        >
+          <SidebarTree data={dummyData} />
+        </div>
+      }
+    />
   );
 } 

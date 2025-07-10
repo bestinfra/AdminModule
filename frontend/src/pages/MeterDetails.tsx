@@ -2,6 +2,14 @@ import React from 'react';
 import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import { useParams } from 'react-router-dom';
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createSidebarStatsComponent,
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const summaryCards = [
   {
@@ -66,17 +74,70 @@ const MeterDetails: React.FC = () => {
   const info = meterInfo.map((item) =>
     item.label === 'Meter SI No.' ? { ...item, value: meterSlNo || '' } : item
   );
-  return (
-    <div className="p-2">
-      <div className="flex items-center mb-4">
-        <div className="text-2xl font-bold ml-4">Meter Details</div>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+
+  // Header component
+  const headerComponent = createHeaderComponent(
+    'Meter Details',
+    `Meter Information - ${meterSlNo}`,
+    'Last updated: 2 hours ago'
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Edit Meter', onClick: () => console.log('Editing meter...'), variant: 'primary' },
+    { label: 'Export Data', onClick: () => console.log('Exporting meter data...'), variant: 'outline' },
+    { label: 'View History', onClick: () => console.log('Viewing history...'), variant: 'outline' }
+  ]);
+
+  // Sidebar stats component
+  const sidebarComponent = createSidebarStatsComponent([
+    {
+      title: 'Current Reading',
+      value: '10535 kWh',
+      subtitle1: 'Last reading: 10376.69 kWh',
+      subtitle2: 'Consumption: 158.31 kWh',
+      comparisonValue: 5
+    },
+    {
+      title: 'Meter Status',
+      value: 'Active',
+      subtitle1: 'Communicating',
+      subtitle2: 'Last comm: 08/07/2025',
+      comparisonValue: 0
+    },
+    {
+      title: 'Meter Type',
+      value: 'Prepaid',
+      subtitle1: 'Phase Type: null',
+      subtitle2: 'Installation: N/A',
+      comparisonValue: 0
+    }
+  ]);
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: `Meter ID: ${meterSlNo}`,
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Summary Cards Section
+  const summaryCardsSection: Section = {
+    id: 'summary-cards',
+    component: (
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {summaryCards.map((card, idx) => (
           <Card key={idx} {...card} />
         ))}
       </div>
-      <div className="bg-white rounded-2xl shadow p-6 mb-6 border border-gray-200">
+    )
+  };
+
+  // Meter Information Section
+  const meterInfoSection: Section = {
+    id: 'meter-info',
+    component: (
+      <div className="bg-white rounded-2xl shadow p-6 border border-gray-200">
         <div className="text-xl font-semibold mb-4">Meter Information</div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {info.map((info, idx) => (
@@ -87,12 +148,32 @@ const MeterDetails: React.FC = () => {
           ))}
         </div>
       </div>
+    )
+  };
+
+  // Meter History Section
+  const meterHistorySection: Section = {
+    id: 'meter-history',
+    component: (
       <div className="bg-white rounded-2xl shadow p-6 border border-gray-200">
         <div className="text-xl font-semibold mb-4">Meter History</div>
         <div className="mb-4 flex items-center"></div>
         <Table columns={historyColumns} data={historyData} pagination={false} searchable={false} />
       </div>
-    </div>
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[summaryCardsSection, meterInfoSection, meterHistorySection]}
+      header={headerComponent}
+      actions={actionsComponent}
+      sidebar={sidebarComponent}
+      footer={footerComponent}
+      sidebarPosition="right"
+      className="p-2"
+    />
   );
 };
 

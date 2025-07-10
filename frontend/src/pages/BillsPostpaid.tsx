@@ -4,6 +4,13 @@ import Button from '../components/global/Button';
 import Table from '../components/global/Table';
 import type { Column } from '../components/global/Table';
 import Dropdown from '../components/global/Dropdown';
+import Page from '../components/global/Page';
+import type { Section } from '../components/global/Page';
+import { 
+    createHeaderComponent, 
+    createActionsComponent, 
+    createFooterComponent
+} from '../components/global/PageComponents';
 
 const cardData = [
   {
@@ -71,20 +78,55 @@ const BillsPostpaid: React.FC = () => {
   const [paymentStatus, setPaymentStatus] = useState('');
   const [search, setSearch] = useState('');
 
-  return (
-    <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-bold">Bills</h1>
-        <Button label="Add Bill" variant="primary" />
-      </div>
+  // Header component
+  const headerComponent = createHeaderComponent(
+    'Bills',
+    'Manage postpaid billing and payment status',
+    '0 bills generated'
+  );
+
+  // Actions component
+  const actionsComponent = createActionsComponent([
+    { label: 'Add Bill', onClick: () => console.log('Adding bill...'), variant: 'primary' },
+    { label: 'Export Bills', onClick: () => console.log('Exporting bills...'), variant: 'outline' },
+    { label: 'Generate Report', onClick: () => console.log('Generating report...'), variant: 'outline' }
+  ]);
+
+  
+
+  // Footer component
+  const footerComponent = createFooterComponent({
+    id: 'Postpaid Billing ID: POSTPAID-001',
+    version: '2.1.0',
+    supportLink: '#'
+  });
+
+  // Overview Cards Section
+  const overviewCardsSection: Section = {
+    id: 'overview-cards',
+    component: (
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         {cardData.slice(0, 4).map((card, idx) => (
           <Card key={idx} {...card} />
         ))}
       </div>
+    )
+  };
+
+  // Realization Rate Section
+  const realizationRateSection: Section = {
+    id: 'realization-rate',
+    component: (
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <Card {...cardData[4]} />
       </div>
+    )
+  };
+
+  // Filters Section
+  const filtersSection: Section = {
+    id: 'filters',
+    component: (
       <div className="flex flex-col md:flex-row md:items-center md:gap-6 gap-4 mb-4">
         <Dropdown
           name="amountRange"
@@ -106,6 +148,13 @@ const BillsPostpaid: React.FC = () => {
           className="w-full md:w-1/3"
         />
       </div>
+    )
+  };
+
+  // Search Section
+  const searchSection: Section = {
+    id: 'search',
+    component: (
       <div className="mb-4">
         <input
           type="text"
@@ -115,6 +164,13 @@ const BillsPostpaid: React.FC = () => {
           className="w-full px-4 py-3 border border-gray-200 rounded-full focus:outline-none"
         />
       </div>
+    )
+  };
+
+  // Bills Table Section
+  const billsTableSection: Section = {
+    id: 'bills-table',
+    component: (
       <Table
         data={tableData}
         columns={tableColumns}
@@ -122,7 +178,21 @@ const BillsPostpaid: React.FC = () => {
         searchable={false}
         emptyMessage="No Bills Found"
       />
-    </div>
+    )
+  };
+
+  return (
+    <Page
+      layout="single-column"
+      sections={[overviewCardsSection, realizationRateSection, filtersSection, searchSection, billsTableSection]}
+      header={headerComponent}
+      actions={actionsComponent}
+      footer={footerComponent}
+      sidebarPosition="right"
+      className="p-6"
+      sectionClassName=""
+
+    />
   );
 };
 
