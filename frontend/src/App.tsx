@@ -32,6 +32,8 @@ import MetersList from './pages/MetersList';
 import AssetManagement from './pages/AssetManagement';
 import MeterDetails from './pages/MeterDetails';
 import ConnectDisconnect from './pages/ConnectDisconnect';
+import ConsumerView from './pages/ConsumerView';
+
 
 const App: React.FC = () => {
 
@@ -68,6 +70,7 @@ const App: React.FC = () => {
                             <Route path="/all-tickets" element={<AllTickets />} />
                             <Route path="/forms" element={<Forms />} />
                             <Route path="/consumers" element={<Consumers />} />
+                            <Route path="/consumers/:uid" element={<ConsumerView />} />
                             <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
                             <Route path="/bills/prepaid" element={<BillsPrepaid />} />
                             <Route path="/bills/postpaid" element={<BillsPostpaid />} />
