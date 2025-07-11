@@ -122,9 +122,9 @@ const Dashboard: React.FC = () => {
     const consumerStatsSection: Section = {
         id: 'consumer-stats',
         component: (
-            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6 flex flex-col gap-4">
+            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
                 <div className="flex justify-between items-center gap-2">
-                    <h2 className="text-lg font-semibold m-0">Consumer Statistics</h2>
+                    <h2 className="text-base font-regular m-0">Consumer Statistics</h2>
                     <div style={{ opacity: 0, pointerEvents: 'none' }}>
                         <TimeRangeSelector
                             availableTimeRanges={billingViewOptions}
@@ -153,9 +153,9 @@ const Dashboard: React.FC = () => {
     const consumptionBillingSection: Section = {
         id: 'consumption-billing',
         component: (
-            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6 flex flex-col gap-4">
+            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
                 <div className="flex justify-between items-center gap-2">
-                    <h2 className="text-lg font-semibold">Consumption & Billing <span className="text-xs font-normal">(Jul 4, 2025)</span></h2>
+                    <h2 className="text-base font-regular">Consumption & Billing <span className="text-base font-regular">(Jul 4, 2025)</span></h2>
                     <TimeRangeSelector
                         availableTimeRanges={billingViewOptions}
                         selectedTimeRange={billingView}

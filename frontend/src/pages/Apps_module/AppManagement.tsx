@@ -180,44 +180,72 @@ const AppManagement: React.FC = () => {
   const handleFinalSubmit = async () => {
     setLoading(true);
     try {
-      // Combine all form data
-      const allFormData = {
-        ...appBasicsData,
-        ...adminAccessData,
-        ...brandingData,
-        ...moduleData,
-      };
-      
-      console.log('Creating app with data:', allFormData);
-      
-      // Check if server is running
-      const isServerHealthy = await AppCreationAPI.checkServerHealth();
-      if (!isServerHealthy) {
-        throw new Error('App creation server is not running. Please start the server with: npm run server');
-      }
-      
-      // Create the app using the API
-      const result = await AppCreationAPI.createApp(allFormData);
-      
-      // Handle success
-      alert(` ${result.message}\n\nNext steps:\n${result.nextSteps.join('\n')}`);
-      
-      // Refresh generated apps list if it's currently shown
-      if (showGeneratedApps) {
-        await loadGeneratedApps();
-      }
-      
-      // Optional: Reset form or redirect
-      // setCurrentStep(1);
-      // Reset all form data if needed
-      
+        // Combine all form data
+        const allFormData = {
+            // App basics
+            appName: appBasicsData.appName,
+            subdomain: appBasicsData.subdomain,
+            country: appBasicsData.country,
+            state: appBasicsData.state,
+            city: appBasicsData.city,
+            categories: appBasicsData.categories,
+
+            // Admin details
+            adminFirstName: adminAccessData.adminFirstName,
+            adminLastName: adminAccessData.adminLastName,
+            adminEmail: adminAccessData.adminEmail,
+            adminPhone: adminAccessData.adminPhone,
+            adminRole: adminAccessData.adminRole,
+            adminDepartment: adminAccessData.adminDepartment,
+            adminAddress: adminAccessData.adminAddress,
+
+            // Branding
+            companyName: brandingData.companyName,
+            companyWebsite: brandingData.companyWebsite,
+            appLogo: brandingData.appLogo,
+            appFavicon: brandingData.appFavicon,
+            primaryColor: brandingData.primaryColor,
+            contactEmail: brandingData.contactEmail,
+            contactPhone: brandingData.contactPhone,
+            timezone: brandingData.timezone,
+            currency: brandingData.currency,
+            enableDarkMode: brandingData.enableDarkMode,
+            enableMultiLanguage: brandingData.enableMultiLanguage,
+
+            // Modules
+            modules: moduleData.modules,
+        };
+        
+        console.log('Submitting form data:', allFormData);
+        
+        // Check if server is running
+        const isServerHealthy = await AppCreationAPI.checkServerHealth();
+        if (!isServerHealthy) {
+            throw new Error('App creation server is not running. Please start the server with: npm run server');
+        }
+        
+        // Create the app using the API
+        const result = await AppCreationAPI.createApp(allFormData);
+        
+        // Handle success
+        alert(`${result.message}\n\nNext steps:\n${result.nextSteps?.join('\n') || ''}`);
+        
+        // Refresh generated apps list if it's currently shown
+        if (showGeneratedApps) {
+            await loadGeneratedApps();
+        }
+        
+        // Optional: Reset form or redirect
+        // setCurrentStep(1);
+        // Reset all form data if needed
+        
     } catch (error) {
       console.error('Error creating app:', error);
       alert(`Error creating app: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   // Step submit handlers
   const handleAppBasicsSubmit = (e: React.FormEvent<HTMLFormElement>) => {

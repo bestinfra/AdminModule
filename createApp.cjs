@@ -41,22 +41,18 @@ function createAppProject(formData) {
     const destIconsDir = path.join(baseDir, 'public', 'icons');
     ensureDir(destIconsDir);
 
-    console.log(`🔍 Checking for icons at: ${sourceIconsDir}`);
     if (fs.existsSync(sourceIconsDir)) {
       const iconFiles = fs.readdirSync(sourceIconsDir);
-      console.log(`📁 Found ${iconFiles.length} icon files`);
       iconFiles.forEach(iconName => {
         const sourcePath = path.join(sourceIconsDir, iconName);
         const destPath = path.join(destIconsDir, iconName);
         
         if (fs.statSync(sourcePath).isFile()) {
           fs.copyFileSync(sourcePath, destPath);
-          console.log(`  ✅ Copied: ${iconName}`);
         }
       });
-      console.log(`✅ Copied ${iconFiles.length} icons to host app`);
     } else {
-      console.log(`❌ Icons directory not found: ${sourceIconsDir}`);
+      console.log(`Icons directory not found: ${sourceIconsDir}`);
     }
 
     // Copy all images
@@ -64,45 +60,37 @@ function createAppProject(formData) {
     const destImagesDir = path.join(baseDir, 'public', 'images');
     ensureDir(destImagesDir);
 
-    console.log(`🔍 Checking for images at: ${sourceImagesDir}`);
     if (fs.existsSync(sourceImagesDir)) {
       const imageFiles = fs.readdirSync(sourceImagesDir);
-      console.log(`📁 Found ${imageFiles.length} image files`);
       imageFiles.forEach(imageName => {
         const sourcePath = path.join(sourceImagesDir, imageName);
         const destPath = path.join(destImagesDir, imageName);
         
         if (fs.statSync(sourcePath).isFile()) {
           fs.copyFileSync(sourcePath, destPath);
-          console.log(`  ✅ Copied: ${imageName}`);
         }
       });
-      console.log(`✅ Copied ${imageFiles.length} images to host app`);
     } else {
-      console.log(`❌ Images directory not found: ${sourceImagesDir}`);
+      console.log(`Images directory not found: ${sourceImagesDir}`);
     }
 
     // Copy fonts directory
     const sourceFontsDir = path.join(__dirname, 'frontend', 'public', 'fonts');
     const destFontsDir = path.join(baseDir, 'public', 'fonts');
     
-    console.log(`🔍 Checking for fonts at: ${sourceFontsDir}`);
     if (fs.existsSync(sourceFontsDir)) {
       ensureDir(destFontsDir);
       const fontFiles = fs.readdirSync(sourceFontsDir);
-      console.log(`📁 Found ${fontFiles.length} font files`);
       fontFiles.forEach(fontName => {
         const sourcePath = path.join(sourceFontsDir, fontName);
         const destPath = path.join(destFontsDir, fontName);
         
         if (fs.statSync(sourcePath).isFile()) {
           fs.copyFileSync(sourcePath, destPath);
-          console.log(`  ✅ Copied: ${fontName}`);
         }
       });
-      console.log(`✅ Copied ${fontFiles.length} font files to host app`);
     } else {
-      console.log(`❌ Fonts directory not found: ${sourceFontsDir}`);
+      console.log(`Fonts directory not found: ${sourceFontsDir}`);
     }
   }
 
@@ -117,10 +105,8 @@ function createAppProject(formData) {
     // Copy all CSS files from src/styles
     const sourceStylesDir = path.join(__dirname, 'frontend', 'src', 'styles');
     
-    console.log(`🔍 Checking for CSS files at: ${sourceStylesDir}`);
     if (fs.existsSync(sourceStylesDir)) {
       const cssFiles = fs.readdirSync(sourceStylesDir);
-      console.log(`📁 Found ${cssFiles.length} CSS files`);
       cssFiles.forEach(cssFile => {
         const sourcePath = path.join(sourceStylesDir, cssFile);
         const destPath = path.join(cssDir, cssFile);
@@ -134,13 +120,11 @@ function createAppProject(formData) {
           // Convert @theme to :root for Tailwind CSS v3 compatibility
           cssContent = cssContent.replace(/@theme {/g, ':root {');
           
-          fs.writeFileSync(destPath, cssContent);
-          console.log(`  ✅ Copied: ${cssFile}`);
+          fs.writeFileSync(destPath, cssContent);   
         }
       });
-      console.log(`✅ Copied ${cssFiles.length} CSS files to host app`);
     } else {
-      console.log(`❌ CSS directory not found: ${sourceStylesDir}`);
+      console.log(`CSS directory not found: ${sourceStylesDir}`);
     }
   }
 
@@ -857,13 +841,13 @@ const Header = ({
     {
       icon: '🔔',
       alt: 'Notifications icon',
-      onClick: () => console.log('Notifications clicked'),
+      onClick: () => {},
       ariaLabel: 'Notifications',
     },
     {
       icon: '⛶',
       alt: 'Full screen icon',
-      onClick: () => console.log('Full screen clicked'),
+      onClick: () => {},
       ariaLabel: 'Toggle full screen',
     },
   ];
@@ -1094,11 +1078,11 @@ Generated on: ${new Date().toLocaleDateString()}
     fs.writeFileSync(fullPath, content);
   });
 
-  console.log(`✅ Project "${projectFolderName}" created successfully at: ${baseDir}`);
-  console.log(`📁 Next steps:`);
+  console.log(`Project "${projectFolderName}" created successfully at: ${baseDir}`);
+  console.log(`Next steps:`);
   console.log(`   1. cd ${baseDir}`);
   console.log(`   2. npm install`);
-  console.log(`   3. npm run dev`);
+  console.log(`   3. npm run dev`); 
   
   return baseDir;
 }
