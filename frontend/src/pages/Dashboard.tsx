@@ -187,23 +187,32 @@ const Dashboard: React.FC = () => {
         component: (
             <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                    <h2 className="text-lg font-semibold mb-0">Metrics</h2>
+                    <h2 className="text-base font-semibold mb-0">Metrics</h2>
                     <TimeRangeSelector
                         availableTimeRanges={metricsTypeOptions}
                         selectedTimeRange={metricsType}
                         handleTimeRangeChange={setMetricsType}
                     />
                 </div>
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
-                        <div className="font-medium">Daily Consumption Metrics <span className="text-xs font-normal">(4 May, 2025 - 5 Jul, 2025)</span></div>
+                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-tl-3xl rounded-tr-3xl px-4 py-3">
+                        <div className="text-base">Daily Consumption Metrics <span className="text-sm font-normal" style={{ color: 'var(--color-neutral)' }}>(4 May, 2025 - 5 Jul, 2025)</span></div>
                         <div className="flex items-center gap-2">
                             <TimeRangeSelector
                                 availableTimeRanges={metricsViewOptions}
                                 selectedTimeRange={metricsView}
                                 handleTimeRangeChange={setMetricsView}
                             />
-                        </div>
+                    <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
+                        <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                        />
+                    </span>
+                    </div>
+                    
+
                     </div>
                     <div className="px-6">
                         {metricsType === 'Graph' ? (
@@ -228,9 +237,16 @@ const Dashboard: React.FC = () => {
         component: (
             <div className="grid grid-cols-10 gap-6">
                 {/* Meter Communication Status - 30% */}
-                <div className="col-span-3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
-                        <h2 className="text-lg font-semibold">Meter Communication Status</h2>
+                <div className="col-span-3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-tl-3xl rounded-tr-3xl px-4 py-4">
+                        <h2 className="text-base font-normal">Meter Communication Status</h2>
+                        <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
+                        <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                        />
+                    </span>
                     </div>
                     <div className="p-6">
                         <PieChart
@@ -243,9 +259,9 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Latest Meter Events */}
-                <div className="col-span-7 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
-                        <h2 className="text-lg font-semibold">Latest Meter Events</h2>
+                <div className="col-span-7 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-tl-3xl rounded-tr-3xl px-4 py-5">
+                        <h2 className="text-base font-normal">Latest Meter Events</h2>
                     </div>
                     <div className="p-4">
                         <Table
