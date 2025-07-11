@@ -271,11 +271,12 @@ const AppManagement: React.FC = () => {
   // Sidebar
   const SidebarContent: React.FC<{ currentStep: number }> = ({ currentStep }) => (
     <div className="flex flex-col gap-6">
-      <div className="createSteps flex flex-row gap-6">
+      
+      <div className="createSteps flex flex-row gap-6 bg-primary-lightest justify-between p-10 rounded-3xl  ">
         {stepLabels.map((step: { label: string; sub: string }, idx: number) => (
           <div
             key={step.label}
-            className={` rounded-lg border transition-all border-gray-200 dark:border-dark-border bg-white dark:bg-primary-dark shadow-sm ${idx === currentStep - 1 ? 'ring-2 ring-primary border-primary' : ''}`}
+            className={`p-5 rounded-lg transition-all dark:border-dark-border bg-white dark:bg-primary-dark ${idx === currentStep - 1 ? 'shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' : ''}`}
           >
             <h2 className={`font-semibold  ${idx === currentStep - 1 ? 'text-primary dark:text-white' : 'text-main dark:text-white'}`}>{step.label}</h2>
             <h3 className="text-md text-gray-500 dark:text-gray-400">{step.sub}</h3>
