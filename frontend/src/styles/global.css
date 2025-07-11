@@ -79,13 +79,13 @@
 
 
     /* new added colors */
-    /* --color-border:rgba(233, 239, 255, 1); 
+    --color-border:rgba(233, 239, 255, 1); 
     --color-dark-border: rgba(9, 27, 59, 1); 
     --color-background-secondary: rgba(245, 248, 252, 1);
     --color-brand-blue: rgba(22, 59, 124, 1);
     --color-grey:rgba(126, 126, 126, 1);
     --color-accent: rgba(71, 97, 137, 1);
-    --color-icon-hover: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)hue-rotate(190deg) brightness(90%) contrast(105%); */
+    --color-icon-hover: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)hue-rotate(190deg) brightness(90%) contrast(105%);
 
     
   /*  Primary Colors  */
@@ -318,7 +318,6 @@ img {
 
     .input:focus {
         outline: none;
-        border-color: var(--color-border);
     }
 
     .input:disabled {

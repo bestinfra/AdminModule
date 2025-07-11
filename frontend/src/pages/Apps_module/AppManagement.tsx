@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Page from '../../components/global/Page';
+import PageHeader from '../../components/global/PageHeader';
 import AppBasicsStep from './components/AppBasicsStep';
 import AdminAccessForm from './components/AdminAccessForm';
 import BrandingStep from './components/BrandingStep';
@@ -62,6 +64,7 @@ const initialModuleData = {
 const initialAdminAccessErrors: AdminAccessFormErrors = {};
 
 const AppManagement: React.FC = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1); // 1-based index
   const [appBasicsData, setAppBasicsData] = useState<typeof initialAppBasicsData>(initialAppBasicsData);
   const [appBasicsErrors, setAppBasicsErrors] = useState<Partial<Record<keyof typeof initialAppBasicsData, string>>>({});
@@ -197,7 +200,7 @@ const AppManagement: React.FC = () => {
       const result = await AppCreationAPI.createApp(allFormData);
       
       // Handle success
-      alert(`✅ ${result.message}\n\nNext steps:\n${result.nextSteps.join('\n')}`);
+      alert(` ${result.message}\n\nNext steps:\n${result.nextSteps.join('\n')}`);
       
       // Refresh generated apps list if it's currently shown
       if (showGeneratedApps) {
@@ -210,7 +213,7 @@ const AppManagement: React.FC = () => {
       
     } catch (error) {
       console.error('Error creating app:', error);
-      alert(`❌ Error creating app: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      alert(`Error creating app: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setLoading(false);
     }
@@ -240,14 +243,14 @@ const AppManagement: React.FC = () => {
   // Sidebar
   const SidebarContent: React.FC<{ currentStep: number }> = ({ currentStep }) => (
     <div className="flex flex-col gap-6">
-      <div className="flex flex-col gap-4">
+      <div className="createSteps flex flex-row gap-6">
         {stepLabels.map((step: { label: string; sub: string }, idx: number) => (
           <div
             key={step.label}
-            className={`p-4 rounded-lg border transition-all border-gray-200 dark:border-dark-border bg-white dark:bg-primary-dark shadow-sm ${idx === currentStep - 1 ? 'ring-2 ring-primary border-primary' : ''}`}
+            className={` rounded-lg border transition-all border-gray-200 dark:border-dark-border bg-white dark:bg-primary-dark shadow-sm ${idx === currentStep - 1 ? 'ring-2 ring-primary border-primary' : ''}`}
           >
-            <div className={`font-semibold ${idx === currentStep - 1 ? 'text-primary dark:text-white' : 'text-main dark:text-white'}`}>{step.label}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">{step.sub}</div>
+            <div className={`font-semibold text-xl ${idx === currentStep - 1 ? 'text-primary dark:text-white' : 'text-main dark:text-white'}`}>{step.label}</div>
+            <div className="text-md text-gray-500 dark:text-gray-400">{step.sub}</div>
           </div>
         ))}
       </div>
@@ -255,14 +258,7 @@ const AppManagement: React.FC = () => {
         {currentStep > 1 && (
           <button className="btn-outline" type="button" onClick={handleBack}>Previous</button>
         )}
-        <div className="flex gap-2">
-          {currentStep < stepLabels.length && (
-            <button className="btn-primary" type="button" onClick={handleNext}>Next</button>
-          )}
-          <button className="btn-outline" type="button" onClick={() => {}}>Save Draft</button>
-        </div>
       </div>
-      
       <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-border">
         <button 
           className="w-full btn-outline text-sm" 
@@ -271,7 +267,6 @@ const AppManagement: React.FC = () => {
         >
           {showGeneratedApps ? 'Hide' : 'Show'} Generated Apps
         </button>
-        
         {showGeneratedApps && (
           <div className="mt-4 space-y-2">
             {generatedApps.length === 0 ? (
@@ -349,6 +344,41 @@ const AppManagement: React.FC = () => {
     );
   }
 
+  // Get header configuration based on current step
+  const getHeaderConfig = () => {
+    const currentStepLabel = stepLabels[currentStep - 1];
+    return {
+      title: currentStepLabel.label,
+      showMenu: currentStep === 5,
+      menuItems: currentStep === 5 ? [
+        { id: 'save', label: 'Save as Template' },
+        { id: 'export', label: 'Export Configuration' },
+        { id: 'reset', label: 'Reset Form', isDestructive: true },
+      ] : [],
+      onMenuItemClick: (itemId: string) => {
+        switch (itemId) {
+          case 'save':
+            console.log('Saving as template');
+            break;
+          case 'export':
+            console.log('Exporting configuration');
+            break;
+          case 'reset':
+            if (confirm('Are you sure you want to reset the form? This will clear all data.')) {
+              setCurrentStep(1);
+              setAppBasicsData(initialAppBasicsData);
+              setAdminAccessData(initialAdminAccessData);
+              setBrandingData(initialBrandingData);
+              setModuleData(initialModuleData);
+            }
+            break;
+        }
+      },
+      onBackClick: () => navigate('/'),
+      backButtonText: 'Dashboard',
+    };
+  };
+
   const sections = [
     {
       id: 'main',
@@ -357,16 +387,20 @@ const AppManagement: React.FC = () => {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-primary-dark-light px-4 py-8 flex flex-col items-center justify-start w-full">
-      <div className="w-full max-w-7xl mx-auto">
+    <main className="min-h-screen  dark:bg-primary-dark-light px-4 py-8 flex flex-col items-center justify-start w-full">
+      <div className="w-full">
+        {/* Page Header */}
+        <div className="mb-6">
+          <PageHeader {...getHeaderConfig()} />
+        </div>
+        
         <Page
           layout="single-column"
           sections={sections}
           sidebar={<SidebarContent currentStep={currentStep} />}
           sidebarPosition="left"
-          className="max-w-7xl mx-auto p-6"
+          className=""
           containerClassName="space-y-6"
-          sectionClassName="border rounded-lg p-6 bg-white shadow-sm"
         />
       </div>
     </main>
