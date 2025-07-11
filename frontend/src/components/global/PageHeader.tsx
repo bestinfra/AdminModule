@@ -129,7 +129,7 @@ const Header: React.FC<HeaderProps> = ({
                         className="flex flex-row items-center gap-2 justify-center rounded-lg cursor-pointer"
                         onClick={onBackClick}
                     >
-                        <span className="flex items-center justify-center w-8 h-5 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer hover:border-2 hover:border-blue-600 transition-all">
+                        <span className="flex items-center justify-center w-8 h-5 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer transition-all">
                             <img 
                                 src="icons/arrow-back.svg" 
                                 alt="back" 
