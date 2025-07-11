@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import UserDB from '../models/UserDB.js';
 
 // JWT Secret (In production, use environment variable)
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
@@ -41,7 +41,7 @@ export const register = async (req, res) => {
         }
 
         // Create user
-        const user = await User.create({
+        const user = await UserDB.create({
             username,
             email,
             password,
@@ -88,9 +88,9 @@ export const login = async (req, res) => {
         }
 
         // Find user by email or username
-        let user = User.findByEmail(identifier);
+        let user = await UserDB.findByEmail(identifier);
         if (!user) {
-            user = User.findByUsername(identifier);
+            user = await UserDB.findByUsername(identifier);
         }
 
         if (!user) {
@@ -101,7 +101,7 @@ export const login = async (req, res) => {
         }
 
         // Validate password
-        const isPasswordValid = await User.validatePassword(password, user.password);
+        const isPasswordValid = await UserDB.validatePassword(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({
                 success: false,
@@ -138,7 +138,7 @@ export const login = async (req, res) => {
 // Get current user profile
 export const getProfile = async (req, res) => {
     try {
-        const user = User.findById(req.user.userId);
+        const user = await UserDB.findById(req.user.userId);
         if (!user) {
             return res.status(404).json({
                 success: false,
@@ -186,7 +186,7 @@ export const updateProfile = async (req, res) => {
             updateData.password = password;
         }
 
-        const user = await User.updateUser(req.user.userId, updateData);
+        const user = await UserDB.updateUser(req.user.userId, updateData);
 
         res.json({
             success: true,
@@ -229,7 +229,7 @@ export const logout = async (req, res) => {
 // Verify token
 export const verifyToken = async (req, res) => {
     try {
-        const user = User.findById(req.user.userId);
+        const user = await UserDB.findById(req.user.userId);
         if (!user) {
             return res.status(404).json({
                 success: false,

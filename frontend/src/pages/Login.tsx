@@ -1,349 +1,198 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Button from '../components/global/Button';
 import Logo from '../components/global/Logo';
 
+const MIN_PASSWORD_LENGTH = 6;
+const INPUT_BASE_CLASSES = "w-full px-4 py-3 bg-gray-50 text-gray-700 border border-gray-200 rounded-md focus:ring-2 focus:ring-blue-500 focus:bg-white focus:border-blue-300 outline-none transition-all placeholder-gray-400 text-sm";
+const INPUT_ERROR_CLASSES = "ring-2 ring-red-500 bg-red-50 border-red-300";
+
+const getErrorMessage = (error: any): string => {
+  if (typeof error === 'string') return error;
+  const message = error?.message?.toLowerCase() || '';
+  
+  if (message.includes('invalid credentials') || message.includes('wrong password') || message.includes('incorrect password')) {
+    return 'Invalid username/email or password. Please check your credentials and try again.';
+  }
+  if (message.includes('user not found') || message.includes('user does not exist')) {
+    return 'No account found with this username/email. Please check your credentials or contact support.';
+  }
+  if (message.includes('too many attempts') || message.includes('rate limit') || message.includes('too many failed')) {
+    return 'Too many login attempts. Please wait a few minutes before trying again.';
+  }
+  if (message.includes('network') || message.includes('connection') || message.includes('connect')) {
+    return 'Unable to connect to the server. Please check your internet connection and try again.';
+  }
+  if (message.includes('timeout') || message.includes('timed out')) {
+    return 'Request timed out. Please try again.';
+  }
+  if (message.includes('server error') || message.includes('internal error') || message.includes('500')) {
+    return 'Server error occurred. Please try again later or contact support if the problem persists.';
+  }
+  return error?.message || 'An unexpected error occurred. Please try again.';
+};
+
 const Login: React.FC = () => {
-    const [isLoginMode, setIsLoginMode] = useState(true);
-    const [formData, setFormData] = useState({
-        username: '',
-        identifier: '',
-        email: '',
-        password: ''
-    });
-    const [errors, setErrors] = useState({
-        username: '',
-        identifier: '',
-        email: '',
-        password: ''
-    });
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [message, setMessage] = useState('');
+  const [formData, setFormData] = useState({
+    identifier: '',
+    password: '',
+    rememberMe: false
+  });
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const { login, register, isAuthenticated, isLoading } = useAuth();
-    const navigate = useNavigate();
+  const { login, isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
 
-    // Redirect if already authenticated
-    useEffect(() => {
-        if (isAuthenticated) {
-            navigate('/');
-        }
-    }, [isAuthenticated, navigate]);
+  useEffect(() => {
+    if (isAuthenticated) navigate('/');
+  }, [isAuthenticated, navigate]);
 
-    // Show loading spinner while checking authentication
-    if (isLoading) {
-        return (
-            <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            </div>
-        );
+  const validateForm = useCallback((): boolean => {
+    const newErrors: { [key: string]: string } = {};
+    if (!formData.identifier.trim()) newErrors.identifier = 'Username or email is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    else if (formData.password.length < MIN_PASSWORD_LENGTH) newErrors.password = `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }, [formData.identifier, formData.password]);
+
+  const getInputClasses = useMemo(() => (hasError: boolean) => 
+    `${INPUT_BASE_CLASSES} ${hasError ? INPUT_ERROR_CLASSES : ''}`, []);
+
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrors({});
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+    try {
+      const result = await login(formData.identifier, formData.password);
+      if (!result.success) setErrors({ submit: getErrorMessage(result.message) });
+    } catch (error) {
+      console.error('Login error:', error);
+      setErrors({ submit: getErrorMessage(error) });
+    } finally {
+      setIsSubmitting(false);
     }
+  }, [formData.identifier, formData.password, login, validateForm]);
 
-    const validateForm = () => {
-        const newErrors = { username: '', identifier: '', email: '', password: '' };
-        let isValid = true;
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    if (errors[name]) setErrors(prev => { const newErrors = { ...prev }; delete newErrors[name]; return newErrors; });
+  }, [errors]);
 
-        // For login mode, validate identifier (username or email)
-        if (isLoginMode) {
-            if (!formData.identifier) {
-                newErrors.identifier = 'Username or email is required';
-                isValid = false;
-            }
-        } else {
-            // For registration mode, validate email and username separately
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!formData.email) {
-                newErrors.email = 'Email is required';
-                isValid = false;
-            } else if (!emailRegex.test(formData.email)) {
-                newErrors.email = 'Please enter a valid email address';
-                isValid = false;
-            }
+  const handleForgotPassword = useCallback(() => {
+    setErrors({ submit: 'Forgot password functionality will be implemented soon.' });
+  }, []);
 
-            if (!formData.username) {
-                newErrors.username = 'Username is required';
-                isValid = false;
-            } else if (formData.username.length < 3) {
-                newErrors.username = 'Username must be at least 3 characters';
-                isValid = false;
-            }
-        }
+  const clearError = useCallback((fieldName: string) => {
+    setErrors(prev => { const newErrors = { ...prev }; delete newErrors[fieldName]; return newErrors; });
+  }, []);
 
-        // Password validation
-        if (!formData.password) {
-            newErrors.password = 'Password is required';
-            isValid = false;
-        } else if (formData.password.length < 6) {
-            newErrors.password = 'Password must be at least 6 characters';
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
-    };
-
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setMessage('');
-
-        if (!validateForm()) {
-            return;
-        }
-
-        setIsSubmitting(true);
-
-        try {
-            let result;
-            if (isLoginMode) {
-                result = await login(formData.identifier, formData.password);
-            } else {
-                result = await register(formData.username, formData.email, formData.password);
-            }
-
-            if (result.success) {
-                setMessage(result.message);
-                // Navigation will be handled by useEffect when isAuthenticated changes
-            } else {
-                setMessage(result.message);
-            }
-        } catch (error) {
-            setMessage('An unexpected error occurred. Please try again.');
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }));
-        
-        // Clear error when user starts typing
-        if (errors[name as keyof typeof errors]) {
-            setErrors(prev => ({
-                ...prev,
-                [name]: ''
-            }));
-        }
-    };
-
-    const toggleMode = () => {
-        setIsLoginMode(!isLoginMode);
-        setFormData({ username: '', identifier: '', email: '', password: '' });
-        setErrors({ username: '', identifier: '', email: '', password: '' });
-        setMessage('');
-    };
-
+  if (isLoading) {
     return (
-        <div className="min-h-screen flex bg-primary-lightest dark:bg-gray-900">
-            {/* Left Side - Branding/Visual */}
-            <div className="hidden lg:flex lg:w-1/2 bg-gradient-primary dark:bg-gradient-to-br dark:from-primary-dark dark:to-primary-dark-light flex-col justify-center items-center p-12 relative overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-700 opacity-90"></div>
-                <div className="relative z-10 text-center text-white">
-                    <div className="mb-8">
-                        <Logo width={180} />
-                    </div>
-                    <h1 className="text-4xl font-bold mb-4">Welcome to AdminModule</h1>
-                    <p className="text-xl opacity-90 mb-8">
-                        Your comprehensive dashboard for managing applications, users, and analytics
-                    </p>
-                    <div className="flex items-center justify-center gap-8 opacity-80">
-                        <div className="flex items-center gap-2">
-                            <img src="/icons/shield.svg" alt="Security" className="w-6 h-6" />
-                            <span className="text-sm">Secure & Reliable</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <img src="/icons/zap.svg" alt="Fast" className="w-6 h-6" />
-                            <span className="text-sm">Lightning Fast</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <img src="/icons/user-gear.svg" alt="Management" className="w-6 h-6" />
-                            <span className="text-sm">Easy Management</span>
-                        </div>
-                    </div>
-                </div>
-                {/* Decorative Elements */}
-                <div className="absolute top-20 right-20 w-32 h-32 rounded-full bg-white/10 backdrop-blur-sm"></div>
-                <div className="absolute bottom-20 left-20 w-24 h-24 rounded-full bg-white/10 backdrop-blur-sm"></div>
-                <div className="absolute top-1/2 left-10 w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm"></div>
-            </div>
-
-            {/* Right Side - Login Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-12">
-                <div className="w-full max-w-md">
-                    {/* Mobile Logo */}
-                    <div className="lg:hidden flex justify-center mb-8">
-                        <Logo width={120} />
-                    </div>
-
-                    {/* Login Card */}
-                    <div className="bg-white dark:bg-primary-dark rounded-3xl shadow-xl dark:shadow-2xl border border-primary-border dark:border-dark-border p-8">
-                        <div className="text-center mb-8">
-                            <h2 className="text-2xl font-bold text-main dark:text-white mb-2">
-                                {isLoginMode ? 'Welcome Back!' : 'Create Account'}
-                            </h2>
-                            <p className="text-gray-600 dark:text-gray-400">
-                                {isLoginMode ? 'Sign in to access your dashboard' : 'Join us and start managing your projects'}
-                            </p>
-                        </div>
-
-                        <form onSubmit={handleSubmit} className="space-y-6">
-                            {!isLoginMode && (
-                                <div>
-                                    <label htmlFor="username" className="block text-sm font-medium text-main dark:text-white mb-2">
-                                        Username
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            id="username"
-                                            name="username"
-                                            type="text"
-                                            autoComplete="username"
-                                            value={formData.username}
-                                            onChange={handleInputChange}
-                                            className={`w-full px-4 py-3 border rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                                                errors.username ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                                            } text-main dark:text-white`}
-                                            placeholder="Enter your username"
-                                        />
-                                        <div className="absolute right-3 top-3">
-                                            <img src="/icons/user-profile.svg" alt="User" className="w-5 h-5 opacity-50" />
-                                        </div>
-                                    </div>
-                                    {errors.username && <p className="mt-1 text-sm text-red-600">{errors.username}</p>}
-                                </div>
-                            )}
-
-                            {isLoginMode ? (
-                                <div>
-                                    <label htmlFor="identifier" className="block text-sm font-medium text-main dark:text-white mb-2">
-                                        Username or Email
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            id="identifier"
-                                            name="identifier"
-                                            type="text"
-                                            autoComplete="username"
-                                            value={formData.identifier}
-                                            onChange={handleInputChange}
-                                            className={`w-full px-4 py-3 border rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                                                errors.identifier ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                                            } text-main dark:text-white`}
-                                            placeholder="Enter your username or email"
-                                        />
-                                        <div className="absolute right-3 top-3">
-                                            <img src="/icons/user-profile.svg" alt="User" className="w-5 h-5 opacity-50" />
-                                        </div>
-                                    </div>
-                                    {errors.identifier && <p className="mt-1 text-sm text-red-600">{errors.identifier}</p>}
-                                </div>
-                            ) : (
-                                <div>
-                                    <label htmlFor="email" className="block text-sm font-medium text-main dark:text-white mb-2">
-                                        Email Address
-                                    </label>
-                                    <div className="relative">
-                                        <input
-                                            id="email"
-                                            name="email"
-                                            type="email"
-                                            autoComplete="email"
-                                            value={formData.email}
-                                            onChange={handleInputChange}
-                                            className={`w-full px-4 py-3 border rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                                                errors.email ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                                            } text-main dark:text-white`}
-                                            placeholder="Enter your email"
-                                        />
-                                        <div className="absolute right-3 top-3">
-                                            <img src="/icons/email.svg" alt="Email" className="w-5 h-5 opacity-50" />
-                                        </div>
-                                    </div>
-                                    {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
-                                </div>
-                            )}
-
-                            <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-main dark:text-white mb-2">
-                                    Password
-                                </label>
-                                <div className="relative">
-                                    <input
-                                        id="password"
-                                        name="password"
-                                        type="password"
-                                        autoComplete={isLoginMode ? 'current-password' : 'new-password'}
-                                        value={formData.password}
-                                        onChange={handleInputChange}
-                                        className={`w-full px-4 py-3 border rounded-xl bg-gray-50 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 ${
-                                            errors.password ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'
-                                        } text-main dark:text-white`}
-                                        placeholder="Enter your password"
-                                    />
-                                    <div className="absolute right-3 top-3">
-                                        <img src="/icons/shield.svg" alt="Password" className="w-5 h-5 opacity-50" />
-                                    </div>
-                                </div>
-                                {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
-                            </div>
-
-                            {message && (
-                                <div className={`p-4 rounded-xl border ${
-                                    message.includes('successful') || message.includes('Login successful') 
-                                        ? 'bg-green-50 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800' 
-                                        : 'bg-red-50 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800'
-                                }`}>
-                                    <div className="flex items-center gap-2">
-                                        <img 
-                                            src={message.includes('successful') ? '/icons/check-circle.svg' : '/icons/warning-icon.svg'} 
-                                            alt="" 
-                                            className="w-5 h-5" 
-                                        />
-                                        {message}
-                                    </div>
-                                </div>
-                            )}
-
-                            <div className="pt-2">
-                                <Button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    variant="primary"
-                                    label={isSubmitting ? 
-                                        (isLoginMode ? 'Signing in...' : 'Creating account...') :
-                                        (isLoginMode ? 'Sign In' : 'Create Account')
-                                    }
-                                />
-                            </div>
-                        </form>
-
-                        <div className="mt-8 text-center">
-                            <p className="text-gray-600 dark:text-gray-400">
-                                {isLoginMode ? "Don't have an account? " : "Already have an account? "}
-                                <button
-                                    type="button"
-                                    onClick={toggleMode}
-                                    className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 transition-colors duration-200"
-                                >
-                                    {isLoginMode ? 'Create one here' : 'Sign in here'}
-                                </button>
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Security Badge */}
-                    <div className="mt-6 flex items-center justify-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                        <img src="/icons/shield.svg" alt="Secure" className="w-4 h-4" />
-                        <span>Secured with industry-standard encryption</span>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
     );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="bg-white rounded-2xl shadow-lg p-8">
+          <div className="flex justify-center mb-8">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center border-2 border-gray-200">
+              <Logo width={40} />
+            </div>
+          </div>
+
+          {Object.entries(errors).map(([field, message]) => 
+            message && (
+              <div key={field} className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                <div className="flex items-start">
+                  <div className="flex-shrink-0">
+                    <svg className="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <div className="ml-3 flex-1">
+                    <p className="text-sm text-red-700">{message}</p>
+                  </div>
+                  <div className="ml-auto pl-3">
+                    <button type="button" onClick={() => clearError(field)} className="inline-flex text-red-400 hover:text-red-600">
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <input
+                id="identifier"
+                name="identifier"
+                type="text"
+                autoComplete="username"
+                value={formData.identifier}
+                onChange={handleInputChange}
+                className={getInputClasses(!!errors.identifier)}
+                placeholder="Username or Email Address"
+                required
+              />
+            </div>
+
+            <div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className={getInputClasses(!!errors.password)}
+                placeholder="Password"
+                required
+              />
+            </div>
+
+            <div className="flex items-center justify-between py-2">
+              <label className="flex items-center">
+                <input
+                  type="checkbox"
+                  name="rememberMe"
+                  checked={formData.rememberMe}
+                  onChange={handleInputChange}
+                  className="w-4 h-4 text-blue-600 bg-white border border-gray-300 rounded focus:ring-blue-500 focus:ring-2"
+                />
+                <span className="ml-2 text-sm text-gray-700">Remember Me</span>
+              </label>
+              <button type="button" onClick={handleForgotPassword} className="text-sm text-blue-600 hover:text-blue-800">
+                Forgot Password?
+              </button>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white py-3 px-4 rounded-lg font-medium hover:from-green-600 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+              >
+                {isSubmitting ? 'Signing in...' : 'Login'}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default Login; 

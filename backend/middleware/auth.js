@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User.js';
+import UserDB from '../models/UserDB.js';
 
 // JWT Secret (should match the one in authController)
 const JWT_SECRET = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production';
@@ -21,7 +21,7 @@ export const authenticateToken = async (req, res, next) => {
         const decoded = jwt.verify(token, JWT_SECRET);
         
         // Check if user exists
-        const user = User.findById(decoded.userId);
+        const user = await UserDB.findById(decoded.userId);
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -88,7 +88,7 @@ export const optionalAuth = async (req, res, next) => {
 
         if (token) {
             const decoded = jwt.verify(token, JWT_SECRET);
-            const user = User.findById(decoded.userId);
+            const user = await UserDB.findById(decoded.userId);
             
             if (user) {
                 req.user = {
