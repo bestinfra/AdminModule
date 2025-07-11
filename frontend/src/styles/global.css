@@ -89,7 +89,7 @@
 
     
   /*  Primary Colors  */
-  --color-primary:rgba(22, 59, 124, 1);              
+  --color-primary:rgba(22, 59, 124, 1);               /* #163b7c  (green)*/
   --color-primary-dark: rgba(4, 19, 40, 1);         
   --color-primary-light: rgba(0, 92, 142, 1);         
   --color-primary-bg: rgba(239, 239, 239, 1);         
@@ -99,10 +99,10 @@
   --color-primary-lightest:rgba(245, 248, 252, 1);     
   --color-primary-dark-light: rgba(6, 21, 45, 1);     
 
-  /* Secondary Colors / Success Colors */
-  --color-secondary: rgba(85, 181, 108, 1);           
-  --color-secondary-light: rgba(187, 225, 196, 1);  
-  --color-positive: rgba(2, 148, 71, 1);             
+  /* Secondary Colors / Success Colors */ 
+  --color-secondary: rgba(85, 181, 108, 1);            /* #55b56c  (green)*/
+  --color-secondary-light: rgba(187, 225, 196, 1);   /* #bbe1c4  (green)*/
+  --color-positive: rgba(2, 148, 71, 1);              /* #029447  (green)*/
 
   /* Warning Colors / Caution Colors */
   --color-warning: rgba(237, 140, 34, 1);             
@@ -159,7 +159,6 @@
     --color-custom-accent-light: rgba(0, 209, 178, 0.8);
     --color-custom-neutral-light: rgba(126, 126, 126, 0.8);
     --color-custom-surface-light: rgba(255, 255, 255, 0.8);
-
 
 
 
@@ -374,5 +373,26 @@ img {
         background: var(--color-gradient-secondary);
     }
 
+}
+
+/* Force input placeholder color to gray-400 and background to white */
+input::placeholder {
+  color: #9ca3af !important; /* Tailwind gray-400 */
+  opacity: 1;
+}
+input {
+  background-color: #fff !important;
+}
+
+/* Remove browser autofill blue/yellow background for input fields */
+input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: #111 !important;
+  caret-color: #111 !important;
+  transition: background-color 5000s ease-in-out 0s;
 }
 

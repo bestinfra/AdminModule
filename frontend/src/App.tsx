@@ -12,6 +12,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
 import AppManagement from './pages/Apps_module/AppManagement';
 import Dashboard from './pages/Dashboard';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import Consumers from './pages/Consumers';
 import BillsPrepaid from './pages/BillsPrepaid';
 import BillsPostpaid from './pages/BillsPostpaid';
@@ -36,7 +37,6 @@ import ConsumerView from './pages/ConsumerView';
 import AddDataLogger from './pages/AddDataLogger';
 import AddMeter from './pages/AddMeter';
 import AddConsumer from './pages/AddConsumer';
-import SuperAdminDashboard from './pages/SuperAdminDashboard';
 
 
 const App: React.FC = () => {
@@ -68,10 +68,7 @@ const App: React.FC = () => {
                                 path="/"
                                 element={<Dashboard />}
                             />
-                            <Route
-                                path="/super-admin-dashboard"
-                                element={<SuperAdminDashboard />}
-                            />
+                            <Route path="/super-admin" element={<SuperAdminDashboard />} />
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/asset-management" element={<AssetManagement />} />
                             <Route path="/profile" element={<Profile />} />
@@ -102,23 +99,10 @@ const App: React.FC = () => {
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="*" element={<NotFound />} />
                         </Route>
-                        
-                        {/* Special routes that don't require layout */}
-                        <Route 
-                            path="/page-builder" 
-                            element={
-                                <ProtectedRoute>
-                                    <PageBuilder />
-                                </ProtectedRoute>
-                            } 
-                        />
+                        <Route path="/page-builder" element={<PageBuilder />} />
                         <Route
                             path="/module-selection"
-                            element={
-                                <ProtectedRoute>
-                                    <ModuleSelection />
-                                </ProtectedRoute>
-                            }
+                            element={<ModuleSelection />}
                         />
                     </Routes>
                 </Router>
