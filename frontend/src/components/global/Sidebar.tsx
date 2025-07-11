@@ -1,6 +1,5 @@
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import Button from './Button';
 import Cookies from 'js-cookie';
 import { useApp } from '../../context/AppContext';
 
@@ -126,13 +125,10 @@ const Sidebar = ({
     onNavigate,
     menus = defaultMenus,
     logo = defaultProps.logo,
-    appDownload = defaultProps.appDownload,
-    footer = defaultProps.footer,
     className = '',
-    onShareClick,
     onLogout = defaultProps.onLogout,
 }: Omit<SidebarProps, 'isCollapsed' | 'onThemeToggle'>) => {
-    const { isDarkMode, isSidebarCollapsed, toggleTheme } = useApp();
+    const { isDarkMode, isSidebarCollapsed } = useApp();
     const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
         {}
     );
