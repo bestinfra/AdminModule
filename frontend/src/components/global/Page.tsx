@@ -46,10 +46,10 @@ const Page: React.FC<PageProps> = ({
     error,
     emptyState,
     containerClassName = '',
-    sectionClassName = 'border rounded p-4 bg-white shadow',
+    sectionClassName = '',
     headerClassName = 'mb-6',
     footerClassName = 'mt-6',
-    sidebarClassName = 'w-64'
+    sidebarClassName = 'w-full'
 }) => {
     const getLayoutClasses = (): string => {
         switch (layout) {
@@ -107,7 +107,7 @@ const Page: React.FC<PageProps> = ({
         );
 
         return (
-            <div className="flex gap-6">
+            <div className="flex flex-col gap-6">
                 {sidebarPosition === 'left' && sidebarElement}
                 <div className="flex-1">
                     {renderContent()}

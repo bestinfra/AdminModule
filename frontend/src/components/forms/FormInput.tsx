@@ -131,9 +131,8 @@ const FormInput: React.FC<FormInputProps> = ({
   return (
     <div className={`w-full ${gridSpanClass}`}>
       <div className="space-y-2 flex flex-col gap-2">
-        <label htmlFor={name} className="label">
+        <label htmlFor={name} className="label text-lg">
           {label}
-          {required && <span className="text-red-500 ml-1" aria-label="required">*</span>}
         </label>
         <div className="relative">{renderInput()}</div>
         

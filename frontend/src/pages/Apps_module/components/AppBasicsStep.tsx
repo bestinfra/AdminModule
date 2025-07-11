@@ -111,8 +111,8 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
     };
 
     return (
-        <div className="max-w-2xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
-            <h3 className="text-xl font-bold text-main dark:text-white mb-1">App Basics</h3>
+        <div className='    '>
+            <h2 className=" font-bold text-main dark:text-white mb-1">App Creation Form</h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</p>
             <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
                 <FormInput
@@ -164,8 +164,8 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     error={errors.city}
                 />
                 <div>
-                    <label className="block text-sm font-medium text-main dark:text-white mb-1">Categories <span className="text-error">*</span></label>
-                    <p className="text-xs text-gray-500 mb-2">Select at least one category that applies to your app</p>
+                    <h2 className="block text-lg font-medium text-main dark:text-white mb-1">Categories</h2>
+                    <h2 className="text-md text-gray-500 mb-2">Select at least one category that applies to your app</h2>
                     <Dropdown
                         name="categories"
                         value={formData.categories}
@@ -178,6 +178,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                 </div>
                 <FormInput
                     input={{
+                        className: 'text-sm',
                         name: 'subdomain',
                         type: 'text',
                         label: 'Subdomain',
@@ -192,10 +193,10 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     onInputBlur={handleFormInputBlur}
                     fileInputRefs={fileInputRefs}
                 />
-                <p className="text-xs text-gray-500 mt-1">This will be your app's URL: {subdomainPreview ? `${subdomainPreview}.yourdomain.com` : 'yourdomain.com'}<br/>Only lowercase letters, numbers, and hyphens are allowed</p>
+                {/* <p className="text-xs text-gray-500 mt-1">This will be your app's URL: {subdomainPreview ? `${subdomainPreview}.yourdomain.com` : 'yourdomain.com'}<br/>Only lowercase letters, numbers, and hyphens are allowed</p> */}
                 <div>
-                    <label className="block text-sm font-medium text-main dark:text-white mb-1">Tariff Plans <span className="text-error">*</span></label>
-                    <p className="text-xs text-gray-500 mb-2">Select the tariff plans your app will support</p>
+                    <h2 className="block text-lg font-medium text-main dark:text-white mb-1">Tariff Plans</h2>
+                    <p className="text-md text-gray-500 mb-2">Select the tariff plans your app will support</p>
                     <Dropdown
                         name="tariffPlans"
                         value={formData.tariffPlans}

@@ -63,7 +63,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
   };
 
   return (
-    <section className="max-w-2xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
+    <section className=" mx-auto bg-white dark:bg-primary-dark">
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Admin Access</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Set up the primary administrator account for your application</p>
       <form className="space-y-6" onSubmit={onSubmit} action="#" method="post" noValidate aria-label="Admin Access Form" autoComplete="off">
@@ -186,7 +186,6 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
               error={errors.adminRole}
               disabled={loading}
             />
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Super Administrator has full access to all features</p>
           </div>
           <FormInput
             input={{
@@ -216,7 +215,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             placeholder="Enter address (optional)"
             disabled={loading}
             rows={4}
-            className="w-full px-4 py-3 border border-gray-300 dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-primary-dark text-main dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-primary-dark-light disabled:cursor-not-allowed"
+            className="w-full px-4 py-3 border border-gray-300 dark:border-dark-border rounded-3xl bg-white dark:bg-primary-dark text-main dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-primary-dark-light disabled:cursor-not-allowed focus:outline-none focus:ring-0 focus:border-gray-300 dark:focus:border-dark-border"
           />
         </div>
         <div className="flex items-center gap-2">
@@ -234,7 +233,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             Send welcome email to admin
           </label>
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Admin will receive login credentials and setup instructions via email</p>
+        {/* <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Admin will receive login credentials and setup instructions via email</p> */}
         <div className="flex justify-end items-center gap-4 mt-6">
           <Button
             label={loading ? 'Saving...' : 'Submit'}

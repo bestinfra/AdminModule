@@ -5,6 +5,7 @@ interface SearchInputProps {
     placeholder?: string;
     className?: string;
     showShortcut?: boolean;
+    label?: string;
 }
 
 const Input = ({
@@ -12,6 +13,7 @@ const Input = ({
     placeholder = 'Search...',
     className = '',
     showShortcut = true,
+    label = '',
 }: SearchInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -29,6 +31,7 @@ const Input = ({
 
     return (
         <div className={`relative ${className}`}>
+            {label && <label className="block text-sm font-medium text-main dark:text-white mb-1">{label}</label>}
             <input
                 ref={inputRef}
                 type="search"
