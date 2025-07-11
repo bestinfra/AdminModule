@@ -3,9 +3,14 @@ const API_BASE_URL = 'http://localhost:3001/api';
 export interface AppCreationResponse {
   success: boolean;
   message: string;
-  projectPath: string;
-  projectFolderName: string;
-  nextSteps: string[];
+  data?: {
+    id: number;
+    name: string;
+    subdomain: string;
+    configuration: any;
+    branding: any;
+    adminSettings: any;
+  };
 }
 
 export interface GeneratedApp {
@@ -21,17 +26,17 @@ export interface GeneratedAppsResponse {
 export class AppCreationAPI {
   static async createApp(formData: any): Promise<AppCreationResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/create-app`, {
+      const response = await fetch(`${API_BASE_URL}/apps`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create app');
+        throw new Error(errorData.message || 'Failed to create app');
       }
 
       return await response.json();
@@ -43,16 +48,16 @@ export class AppCreationAPI {
 
   static async getGeneratedApps(): Promise<GeneratedAppsResponse> {
     try {
-      const response = await fetch(`${API_BASE_URL}/generated-apps`);
+      const response = await fetch(`${API_BASE_URL}/apps`);
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to fetch generated apps');
+        throw new Error(errorData.error || 'Failed to fetch apps');
       }
 
       return await response.json();
     } catch (error) {
-      console.error('Error fetching generated apps:', error);
+      console.error('Error fetching apps:', error);
       throw error;
     }
   }

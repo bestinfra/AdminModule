@@ -10,6 +10,9 @@ export const authenticateToken = async (req, res, next) => {
         const authHeader = req.headers['authorization'];
         const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
+        console.log('Auth header:', authHeader);
+        console.log('Token:', token);
+
         if (!token) {
             return res.status(401).json({
                 success: false,
@@ -19,9 +22,12 @@ export const authenticateToken = async (req, res, next) => {
 
         // Verify token
         const decoded = jwt.verify(token, JWT_SECRET);
+        console.log('Decoded token:', decoded);
         
         // Check if user exists
         const user = await UserDB.findById(decoded.userId);
+        console.log('Found user:', user);
+        
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -37,6 +43,7 @@ export const authenticateToken = async (req, res, next) => {
             role: user.role
         };
 
+        console.log('User info added to request:', req.user);
         next();
     } catch (error) {
         if (error.name === 'JsonWebTokenError') {
@@ -60,8 +67,15 @@ export const authenticateToken = async (req, res, next) => {
 };
 
 // Role-based authorization middleware
-export const authorizeRole = (...roles) => {
+export const authorizeRole = (roles) => {
+    // Ensure roles is an array
+    const allowedRoles = Array.isArray(roles) ? roles : [roles];
+    
     return (req, res, next) => {
+        console.log('Checking role authorization:');
+        console.log('Required roles:', allowedRoles);
+        console.log('User role:', req.user?.role);
+        
         if (!req.user) {
             return res.status(401).json({
                 success: false,
@@ -69,13 +83,15 @@ export const authorizeRole = (...roles) => {
             });
         }
 
-        if (!roles.includes(req.user.role)) {
+        if (!allowedRoles.includes(req.user.role)) {
+            console.log('Role authorization failed');
             return res.status(403).json({
                 success: false,
-                message: 'Insufficient permissions'
+                message: `Access denied. Required role: ${allowedRoles.join(' or ')}`
             });
         }
 
+        console.log('Role authorization successful');
         next();
     };
 };

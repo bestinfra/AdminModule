@@ -18,6 +18,109 @@ model User {
   role      String   @default("user")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  apps      App[]    @relation("AppCreator")
 
   @@map("users")
+}
+
+// Main App model
+model App {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  subdomain   String    @unique
+  description String?
+  isActive    Boolean   @default(true)
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  
+  // Relationships
+  createdBy       User          @relation("AppCreator", fields: [createdById], references: [id])
+  createdById     Int
+  configuration   AppConfig?    @relation("AppConfiguration")
+  branding        AppBranding?  @relation("AppBranding")
+  adminSettings   AdminConfig?  @relation("AppAdminSettings")
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("apps")
+}
+
+// App Configuration
+model AppConfig {
+  id          Int      @id @default(autoincrement())
+  app         App      @relation("AppConfiguration", fields: [appId], references: [id])
+  appId       Int      @unique
+  
+  // Location
+  country     String
+  state       String
+  city        String
+  
+  // Features
+  categories  String[]
+  modules     String[]
+  
+  // Settings
+  timezone    String
+  currency    String
+  
+  // Feature Flags
+  enableDarkMode      Boolean @default(false)
+  enableMultiLanguage Boolean @default(false)
+  
+  // Timestamps
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("app_configs")
+}
+
+// App Branding
+model AppBranding {
+  id              Int      @id @default(autoincrement())
+  app             App      @relation("AppBranding", fields: [appId], references: [id])
+  appId           Int      @unique
+  
+  // Company Info
+  companyName     String
+  companyWebsite  String?
+  
+  // Contact Info
+  contactEmail    String
+  contactPhone    String
+  
+  // Branding Assets
+  appLogo         String?
+  appFavicon      String?
+  primaryColor    String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("app_brandings")
+}
+
+// Admin Configuration
+model AdminConfig {
+  id              Int      @id @default(autoincrement())
+  app             App      @relation("AppAdminSettings", fields: [appId], references: [id])
+  appId           Int      @unique
+  
+  // Admin Details
+  firstName       String
+  lastName        String
+  email           String
+  phone           String
+  role            String
+  department      String?
+  address         String?
+  
+  // Timestamps
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("admin_configs")
 } 
