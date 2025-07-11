@@ -177,7 +177,7 @@ const Dashboard: React.FC = () => {
         component: (
             <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                    <h2 className="text-lg font-semibold mb-0">Metrics</h2>
+                    <h2 className="text-base font-semibold mb-0">Metrics</h2>
                     <TimeRangeSelector
                         availableTimeRanges={metricsTypeOptions}
                         selectedTimeRange={metricsType}
@@ -193,7 +193,16 @@ const Dashboard: React.FC = () => {
                                 selectedTimeRange={metricsView}
                                 handleTimeRangeChange={setMetricsView}
                             />
-                        </div>
+                    <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
+                        <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                        />
+                    </span>
+                    </div>
+                    
+
                     </div>
                     <div className="px-6">
                         {metricsType === 'Graph' ? (
@@ -219,8 +228,15 @@ const Dashboard: React.FC = () => {
             <div className="grid grid-cols-10 gap-6">
                 {/* Meter Communication Status - 30% */}
                 <div className="col-span-3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
-                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
-                        <h2 className="text-lg font-semibold">Meter Communication Status</h2>
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-tl-3xl rounded-tr-3xl px-4 py-4">
+                        <h2 className="text-base font-normal">Meter Communication Status</h2>
+                        <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
+                        <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                        />
+                    </span>
                     </div>
                     <div className="p-6">
                         <PieChart

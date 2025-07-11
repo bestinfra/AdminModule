@@ -51,7 +51,7 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
     return (
         <div
             ref={containerRef}
-            className="inline-flex bg-white dark:bg-primary-dark rounded-3xl p-1 relative overflow-hidden">
+            className="inline-flex bg-white dark:bg-primary-dark rounded-3xl p-1 relative overflow-hidden border border-primary-border">
             <div
                 className="absolute bg-primary-lightest dark:bg-primary-dark-light rounded-3xl"
                 style={{
