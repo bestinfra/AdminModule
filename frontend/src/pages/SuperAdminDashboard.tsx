@@ -124,13 +124,13 @@ const SuperAdminDashboard: React.FC = () => {
         { 
             key: 'status', 
             label: 'Status',
-            render: (value: string | number | boolean | null | undefined) => (
+            render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     value === 'Active' ? 'bg-green-100 text-green-800' :
                     value === 'Maintenance' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-red-100 text-red-800'
                 }`}>
-                    {value}
+                    {String(value)}
                 </span>
             )
         },
@@ -199,14 +199,14 @@ const SuperAdminDashboard: React.FC = () => {
         { 
             key: 'severity', 
             label: 'Severity',
-            render: (value: string | number | boolean | null | undefined) => (
+            render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     value === 'Success' ? 'bg-green-100 text-green-800' :
                     value === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
                     value === 'Info' ? 'bg-blue-100 text-blue-800' :
                     'bg-red-100 text-red-800'
                 }`}>
-                    {value}
+                    {String(value)}
                 </span>
             )
         },
@@ -349,6 +349,10 @@ const SuperAdminDashboard: React.FC = () => {
                         searchable={true}
                         pagination={false}
                         showActions={false}
+                        actions={[
+                            { label: 'View', onClick: (row) => console.log('View:', row), icon: '/icons/view.svg' },
+                            { label: 'Details', onClick: (row) => console.log('Details:', row), icon: '/icons/info.svg' },
+                        ]}
                     />
                 </div>
             </div>
