@@ -44,7 +44,7 @@ const Logo: React.FC<LogoProps> = ({
 
     return isDarkMode
       ? '/images/bi-white-logo.svg'
-      : '/images/bi-blue-logo.svg';
+      : '/images/bi-logo-latest.svg';
   };
 
   return (
@@ -56,8 +56,8 @@ const Logo: React.FC<LogoProps> = ({
         <img
           src={getLogoPath()}
           alt="Logo"
-          width={isCollapsed ? 40 : width}
-          height={isCollapsed ? 40 : undefined}
+          width={isCollapsed ? 120 : width}
+          height={isCollapsed ? 120 : undefined}
           className={`transition-all duration-300 object-contain ${isCollapsed ? 'w-10 h-10' : ''}`}
         />
       </span>
