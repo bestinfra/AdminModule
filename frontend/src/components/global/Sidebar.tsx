@@ -65,92 +65,97 @@ const defaultMenus: MenuCategory[] = [
         category: 'MANAGEMENT',
         items: [
             {
+                title: 'Super Admin Dashboard',
+                icon: '/icons/dashboard.svg',
+                link: '/super-admin-dashboard',
+            },
+            {
                 title: 'Dashboard',
                 icon: '/icons/dashboard.svg',
                 link: '/',
             },
-            {
-                title: 'DTR Dashboard',
-                icon: '/icons/dtr.svg',
-                link: '/dtr-dashboard',
-            },
-            {
-                title: 'Consumers',
-                icon: '/icons/customer-service.svg',
-                link: '/consumers',
-            },
-            {
-                title: 'Bills',
-                icon: '/icons/bills.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Prepaid Transactions',
-                        link: '/bills/prepaid',
-                    },
-                    {
-                        title: 'Postpaid Bills',
-                        link: '/bills/postpaid',
-                    },
-                ],
-            },
-            {
-                title: 'Tickets',
-                icon: '/icons/support-tickets.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'All Tickets',
-                        link: '/all-tickets',
-                    },
-                    {
-                        title: 'My Tickets',
-                        link: '/user/tickets/my',
-                        count: 20,
-                    },
-                    {
-                        title: 'Create Ticket',
-                        link: '/user/tickets/create',
-                    },
-                ],
-            },
+            // {
+            //     title: 'DTR Dashboard',
+            //     icon: '/icons/dtr.svg',
+            //     link: '/dtr-dashboard',
+            // },
+            // {
+            //     title: 'Consumers',
+            //     icon: '/icons/customer-service.svg',
+            //     link: '/consumers',
+            // },
+            // {
+            //     title: 'Bills',
+            //     icon: '/icons/bills.svg',
+            //     hasSubmenu: true,
+            //     submenu: [
+            //         {
+            //             title: 'Prepaid Transactions',
+            //             link: '/bills/prepaid',
+            //         },
+            //         {
+            //             title: 'Postpaid Bills',
+            //             link: '/bills/postpaid',
+            //         },
+            //     ],
+            // },
+            // {
+            //     title: 'Tickets',
+            //     icon: '/icons/support-tickets.svg',
+            //     hasSubmenu: true,
+            //     submenu: [
+            //         {
+            //             title: 'All Tickets',
+            //             link: '/all-tickets',
+            //         },
+            //         {
+            //             title: 'My Tickets',
+            //             link: '/user/tickets/my',
+            //             count: 20,
+            //         },
+            //         {
+            //             title: 'Create Ticket',
+            //             link: '/user/tickets/create',
+            //         },
+            //     ],
+            // },
             {
                 title: 'Apps',
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
-            {
-                title: 'Asset Management',
-                icon: '/icons/apps-icon.svg',
-                link: '/asset-management',
-            },
-            {
-                title: 'Meter Management',
-                icon: '/icons/meter-management.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Data Logger Master',
-                        link: '/meter-management/data-logger-master',
-                    },
-                    {
-                        title: 'Meters List',
-                        link: '/meter-management/meters-list',
-                    },
-                ],
-            },
+            // {
+            //     title: 'Asset Management',
+            //     icon: '/icons/apps-icon.svg',
+            //     link: '/asset-management',
+            // },
+            // {
+            //     title: 'Meter Management',
+            //     icon: '/icons/meter-management.svg',
+            //     hasSubmenu: true,
+            //     submenu: [
+            //         {
+            //             title: 'Data Logger Master',
+            //             link: '/meter-management/data-logger-master',
+            //         },
+            //         {
+            //             title: 'Meters List',
+            //             link: '/meter-management/meters-list',
+            //         },
+            //     ],
+            // },
         ],
     },
-    {
-        category: 'SETTINGS',
-        items: [
-            {
-                title: 'Logout',
-                icon: '/icons/logout.svg',
-                link: '/user/logout',
-            },
-        ],
-    },
+    // {
+    //     category: 'SETTINGS',
+    //     items: [
+    //         {
+    //             title: 'Logout',
+    //             icon: '/icons/logout.svg',
+    //             link: '/user/logout',
+    //         },
+    //     ],
+    // },
 ];
 
 const defaultProps: Partial<
@@ -435,7 +440,7 @@ const Sidebar = ({
                         ))}
                     </main>
                 </div>
-                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
+                {/* <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
                     {!isSidebarCollapsed ? (
                         <>
                             {appDownload?.enabled && (
@@ -542,7 +547,7 @@ const Sidebar = ({
                             )}
                         </div>
                     )}
-                </footer>
+                </footer> */}
             </nav>
         </div>
     );

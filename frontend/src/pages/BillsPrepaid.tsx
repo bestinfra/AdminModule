@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Card from '../components/global/Card';
-import Button from '../components/global/Button';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
 import Table from '../components/global/Table';
 import type { Column } from '../components/global/Table';

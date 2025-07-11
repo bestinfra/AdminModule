@@ -42,7 +42,7 @@ const AddMeter: React.FC = () => {
     navigate(-1);
   };
 
-  const handleSave = (formData: any) => {
+  const handleSave = () => {
     // TODO: Add save logic
     alert('Saved!');
   };

@@ -1,7 +1,5 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import Button from '../components/global/Button';
-import Dropdown from '../components/global/Dropdown';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import Card from '../components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
@@ -22,7 +20,6 @@ const consumersData = [
 
 const ConsumerView: React.FC = () => {
   const { uid } = useParams<{ uid: string }>();
-  const navigate = useNavigate();
   const consumer = consumersData.find(c => c.uid === uid);
 
   if (!consumer) return <div className="p-6">Consumer not found</div>;

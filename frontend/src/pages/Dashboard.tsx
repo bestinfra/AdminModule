@@ -24,14 +24,14 @@ const Dashboard: React.FC = () => {
         {
             title: 'Total Consumers',
             value: '4',
-            icon: '/icons/consumers.svg',
+            icon: '/icons/units.svg',
             subtitle1: '3 Active',
             subtitle2: '1 In-Active',
         },
         {
             title: 'High-Usage Consumers',
             value: '1',
-            icon: '/icons/high-usage.svg',
+            icon: '/icons/heavy-user.svg',
             subtitle1: '189.11 kWh Average Consumption',
             subtitle2: '',
         },
@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
         {
             title: 'Electricity Usage (kWh)',
             value: '181.96',
-            icon: '/icons/usage.svg',
+            icon: '/icons/plug-alt.svg',
             subtitle1: '175.78 kWh',
             subtitle2: 'Jul 3, 2025',
             showTrend: true,
@@ -49,7 +49,7 @@ const Dashboard: React.FC = () => {
         {
             title: 'Electricity Charges',
             value: '₹13,69,438.66',
-            icon: '/icons/charges.svg',
+            icon: '/icons/rupee.svg',
             subtitle1: '₹13,69,324.66',
             subtitle2: 'Jul 3, 2025',
             showTrend: true,
