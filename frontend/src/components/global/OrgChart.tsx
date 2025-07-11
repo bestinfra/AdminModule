@@ -78,7 +78,7 @@ const getNodesAndEdges = (data: OrgChartNode[]): { nodes: Node[]; edges: Edge[] 
     const nodeType = (item.hierarchy_type_title || "main-location").toLowerCase().replace(/\s+/g, '-');
     nodes.push({
       id: `${item.hierarchy_id}`,
-      data: { label: item.hierarchy_name },
+      data: { label: item.hierarchy_name || '' }, // Always provide a label
       position: { x, y },
       sourcePosition: Position.Right,
       targetPosition: Position.Left,
@@ -142,7 +142,7 @@ const OrgChart: React.FC = () => {
   const { nodes, edges } = getNodesAndEdges(dummyData);
 
   return (
-    <div style={{ width: "100%", height: "700px", background: "#fff", borderRadius: "1.5rem", minHeight: 600 }}>
+    <div className="w-full h-[700px] bg-white rounded-2xl min-h-[600px] flex items-center justify-center">
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -158,8 +158,9 @@ const OrgChart: React.FC = () => {
           minZoom: 0.1,
           maxZoom: 2,
         }}
+        proOptions={{ hideAttribution: true }}
       >
-        <Background gap={24} size={1} color="#e5e7eb" />
+        <Background gap={20} size={2} color="#b0b8c1" />
         <Controls position="bottom-left" />
       </ReactFlow>
     </div>

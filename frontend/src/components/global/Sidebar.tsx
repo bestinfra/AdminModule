@@ -139,6 +139,21 @@ const defaultMenus: MenuCategory[] = [
                     },
                 ],
             },
+            {
+                title: 'User Management',
+                icon: '/icons/user-management.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Users',
+                        link: '/user-management/users',
+                    },
+                    {
+                        title: 'Roles',
+                        link: '/user-management/roles',
+                    },
+                ],
+            },
         ],
     },
     {

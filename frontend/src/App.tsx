@@ -36,6 +36,16 @@ import ConsumerView from './pages/ConsumerView';
 import AddDataLogger from './pages/AddDataLogger';
 import AddMeter from './pages/AddMeter';
 import AddConsumer from './pages/AddConsumer';
+import Users from './pages/Users';
+import Roles from './pages/Roles';
+import UserDetails from './pages/UserDetails';
+import ChangePassword from './pages/ChangePassword';
+import Notifications from './pages/Notifications';
+import TwoStepVerification from './pages/TwoStepVerification';
+import AccountStatus from './pages/AccountStatus';
+import AddUser from './pages/AddUser';
+import RolesPermission from './pages/RolesPermission';
+import AddRole from './pages/AddRole';
 
 
 const App: React.FC = () => {
@@ -95,6 +105,16 @@ const App: React.FC = () => {
                             <Route path="/meter-management/meters-list" element={<MetersList />} />
                             <Route path="/meter-management/meters-list/add" element={<AddMeter />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
+                            <Route path="/user-management/users" element={<Users />} />
+                            <Route path="/user-management/roles" element={<Roles />} />
+                            <Route path="/user-management/roles/:roleId/permissions" element={<RolesPermission />} />
+                            <Route path="/user-management/users/:userId" element={<UserDetails />} />
+                            <Route path="/user-management/change-password" element={<ChangePassword />} />
+                            <Route path="/user-management/notifications" element={<Notifications />} />
+                            <Route path="/user-management/two-step-verification" element={<TwoStepVerification />} />
+                            <Route path="/user-management/account-status" element={<AccountStatus />} />
+                            <Route path="/user-management/add-user" element={<AddUser />} />
+                            <Route path="/user-management/add-role" element={<AddRole />} />
                             <Route path="*" element={<NotFound />} />
                         </Route>
                         
