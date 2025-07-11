@@ -37,7 +37,6 @@ import ConsumerView from './pages/ConsumerView';
 import AddDataLogger from './pages/AddDataLogger';
 import AddMeter from './pages/AddMeter';
 import AddConsumer from './pages/AddConsumer';
-import SuperAdminDashboard from './pages/SuperAdminDashboard';
 
 
 const App: React.FC = () => {
