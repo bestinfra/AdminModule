@@ -32,11 +32,21 @@ const RadarChart: React.FC<RadarChartProps> = ({
         title: {
             text: title,
             left: 'center',
+            textStyle: {
+                fontFamily: 'Manrope, sans-serif',
+            },
         },
-        tooltip: {},
+        tooltip: {
+            textStyle: {
+                fontFamily: 'Manrope, sans-serif',
+            },
+        },
         legend: {
             data: data.map((item) => item.name),
             bottom: 0,
+            textStyle: {
+                fontFamily: 'Manrope, sans-serif',
+            },
         },
         radar: {
             indicator: indicator,

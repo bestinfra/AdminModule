@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { BarChart, PieChart, LineChart } from '../graphs';
+import React, { useState } from 'react';
+import { PieChart, LineChart } from '../graphs';
 import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
@@ -13,11 +13,9 @@ import {
 const SuperAdminDashboard: React.FC = () => {
     const [timeRange, setTimeRange] = useState('Monthly');
     const [projectsView, setProjectsView] = useState('All');
-    const [systemView, setSystemView] = useState('Overview');
     
     const timeRangeOptions = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
     const projectsViewOptions = ['All', 'Active', 'Inactive', 'Maintenance'];
-    const systemViewOptions = ['Overview', 'Performance', 'Usage'];
 
     // Host Projects Statistics
     const projectStats = [
@@ -119,13 +117,13 @@ const SuperAdminDashboard: React.FC = () => {
         { 
             key: 'status', 
             label: 'Status',
-            render: (value: string) => (
+            render: (value: string | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     value === 'Active' ? 'bg-green-100 text-green-800' :
                     value === 'Maintenance' ? 'bg-yellow-100 text-yellow-800' :
                     'bg-red-100 text-red-800'
                 }`}>
-                    {value}
+                    {String(value)}
                 </span>
             )
         },
@@ -194,14 +192,14 @@ const SuperAdminDashboard: React.FC = () => {
         { 
             key: 'severity', 
             label: 'Severity',
-            render: (value: string) => (
+            render: (value: string | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     value === 'Success' ? 'bg-green-100 text-green-800' :
                     value === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
                     value === 'Info' ? 'bg-blue-100 text-blue-800' :
                     'bg-red-100 text-red-800'
                 }`}>
-                    {value}
+                    {String(value)}
                 </span>
             )
         },
@@ -279,9 +277,9 @@ const SuperAdminDashboard: React.FC = () => {
                         pagination={true}
                         showActions={true}
                         actions={[
-                            { label: 'Edit', onClick: (row) => console.log('Edit:', row) },
-                            { label: 'View', onClick: (row) => console.log('View:', row) },
-                            { label: 'Settings', onClick: (row) => console.log('Settings:', row) },
+                            { label: 'Edit', onClick: (row) => console.log('Edit:', row), icon: '/icons/edit.svg' },
+                            { label: 'View', onClick: (row) => console.log('View:', row), icon: '/icons/view.svg' },
+                            { label: 'Settings', onClick: (row) => console.log('Settings:', row), icon: '/icons/settings.svg' },
                         ]}
                     />
                 </div>
@@ -318,8 +316,6 @@ const SuperAdminDashboard: React.FC = () => {
                         <LineChart
                             data={userActivityData}
                             xAxisData={userActivityLabels}
-                            height={250}
-                            showXAxisLabel={false}
                         />
                     </div>
                 </div>
@@ -343,6 +339,10 @@ const SuperAdminDashboard: React.FC = () => {
                         searchable={true}
                         pagination={false}
                         showActions={false}
+                        actions={[
+                            { label: 'View', onClick: (row) => console.log('View:', row), icon: '/icons/view.svg' },
+                            { label: 'Details', onClick: (row) => console.log('Details:', row), icon: '/icons/info.svg' },
+                        ]}
                     />
                 </div>
             </div>
