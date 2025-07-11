@@ -70,6 +70,11 @@ const defaultMenus: MenuCategory[] = [
                 link: '/',
             },
             {
+                title: 'Super Admin',
+                icon: '/icons/admin.svg',
+                link: '/super-admin',
+            },
+            {
                 title: 'DTR Dashboard',
                 icon: '/icons/dtr.svg',
                 link: '/dtr-dashboard',

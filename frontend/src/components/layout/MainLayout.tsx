@@ -18,6 +18,8 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
         switch (location.pathname) {
             case '/':
                 return 'Dashboard';
+            case '/super-admin':
+                return 'Super Admin Dashboard';
             case '/apps':
                 return 'Apps Management';
             case '/apps/pages':
