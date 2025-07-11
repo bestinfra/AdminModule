@@ -83,7 +83,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
 
   return (
     <div className="bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
-      <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Branding & Customization</h2>
+      <h2 className="font-bold dark:text-white mb-1">Branding & Customization</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Customize your application's appearance and branding elements</p>
       
       <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
@@ -92,7 +92,6 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             input={{
               name: 'companyName',
               type: 'text',
-              label: 'Company Name',
               placeholder: 'Enter company name',
               required: true
             }}
@@ -108,7 +107,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             input={{
               name: 'companyWebsite',
               type: 'url',
-              label: 'Company Website',
+              // label: 'Company Website',
               placeholder: 'https://example.com'
             }}
             value={formData.companyWebsite}
@@ -123,9 +122,9 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="appLogo" className="block text-sm font-medium text-main dark:text-white mb-1">
+            {/* <label htmlFor="appLogo" className="block text-sm font-medium text-main dark:text-white mb-1">
               App Logo
-            </label>
+            </label> */}
             <input
               type="file"
               id="appLogo"
@@ -143,14 +142,14 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
                 />
               </div>
             )}
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            {/* <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
               Recommended size: 200x100px, PNG or JPG format
-            </p>
+            </p> */}
           </div>
           <div>
-            <label htmlFor="appFavicon" className="block text-sm font-medium text-main dark:text-white mb-1">
+            {/* <label htmlFor="appFavicon" className="block text-sm font-medium text-main dark:text-white mb-1">
               Favicon
-            </label>
+            </label> */}
             <input
               type="file"
               id="appFavicon"
@@ -208,9 +207,9 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
         </div>
 
         <div>
-          <label htmlFor="appDescription" className="block text-sm font-medium text-main dark:text-white mb-1">
+          {/* <label htmlFor="appDescription" className="block text-sm font-medium text-main dark:text-white mb-1">
             App Description
-          </label>
+          </label> */}
           <textarea
             id="appDescription"
             name="appDescription"
@@ -221,16 +220,16 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             className="w-full px-4 py-3 border border-gray-300 dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-primary-dark text-main dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
           />
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">
+        {/* <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">
           This description will appear in app listings and documentation
-        </p>
+        </p> */}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
             input={{
               name: 'contactEmail',
               type: 'email',
-              label: 'Contact Email',
+              // label: 'Contact Email',
               placeholder: 'contact@company.com'
             }}
             value={formData.contactEmail}
@@ -245,7 +244,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             input={{
               name: 'contactPhone',
               type: 'tel',
-              label: 'Contact Phone',
+              // label: 'Contact Phone',
               placeholder: '+1-234-567-8900'
             }}
             value={formData.contactPhone}
@@ -260,9 +259,9 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="timezone" className="block text-sm font-medium text-main dark:text-white mb-1">
+            {/* <label htmlFor="timezone" className="block text-sm font-medium text-main dark:text-white mb-1">
               Timezone <span className="text-error">*</span>
-            </label>
+            </label> */}
             <Dropdown
               name="timezone"
               value={formData.timezone}
@@ -274,9 +273,9 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             />
           </div>
           <div>
-            <label htmlFor="currency" className="block text-sm font-medium text-main dark:text-white mb-1">
+            {/* <label htmlFor="currency" className="block text-sm font-medium text-main dark:text-white mb-1">
               Currency <span className="text-error">*</span>
-            </label>
+            </label> */}
             <Dropdown
               name="currency"
               value={formData.currency}
@@ -305,21 +304,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
               </p>
             </div>
           </div>
-          <div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-primary-dark-light rounded-lg border border-gray-200 dark:border-dark-border">
-            <input
-              type="checkbox"
-              name="enableMultiLanguage"
-              checked={formData.enableMultiLanguage}
-              onChange={onInputChange}
-              className="w-5 h-5 accent-primary border-gray-300 dark:border-dark-border mt-0.5"
-            />
-            <div>
-              <label className="text-sm font-medium text-main dark:text-white">Enable Multi-Language Support</label>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                Support for multiple languages in the application
-              </p>
-            </div>
-          </div>
+         
         </div>
 
         <div className="flex justify-end">

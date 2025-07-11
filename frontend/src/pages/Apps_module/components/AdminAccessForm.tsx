@@ -55,24 +55,24 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   const handleFormInputChange = (name: string, value: FormInputValue) => {
-    onInputChange({ target: { name, value: value as string } } as any);
+    onInputChange({ target: { name, value: value as string } } as React.ChangeEvent<HTMLInputElement>);
   };
 
   const handleFormInputBlur = () => {
-    // Handle blur if needed
+    // Handle blur if neededtext-2xl font-bold text-main dark:text-white mb-1
   };
 
   return (
     <section className=" mx-auto bg-white dark:bg-primary-dark">
-      <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Admin Access</h2>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">Set up the primary administrator account for your application</p>
+      {/* <h2 className=" dark:text-white mb-1">Admin Access</h2>
+      <h3 className="text-gray-600 dark:text-gray-300 mb-6">Set up the primary administrator account for your application</h3> */}
       <form className="space-y-6" onSubmit={onSubmit} action="#" method="post" noValidate aria-label="Admin Access Form" autoComplete="off">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
           <FormInput
             input={{
               name: 'adminFirstName',
               type: 'text',
-              label: 'First Name',
+              label: '',
               placeholder: 'Enter first name',
               required: true
             }}
@@ -88,7 +88,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             input={{
               name: 'adminLastName',
               type: 'text',
-              label: 'Last Name',
+              label: '',
               placeholder: 'Enter last name',
               required: true
             }}
@@ -106,7 +106,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             input={{
               name: 'adminEmail',
               type: 'email',
-              label: 'Email Address',
+              label: '',
               placeholder: 'Enter email address',
               required: true
             }}
@@ -122,7 +122,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             input={{
               name: 'adminPhone',
               type: 'tel',
-              label: 'Phone Number',
+              label: '',
               placeholder: 'Enter phone number',
               required: true
             }}
@@ -135,13 +135,13 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             fileInputRefs={fileInputRefs}
           />
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">This will be your admin login email</p>
+        {/* <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">This will be your admin login email</p> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
             input={{
               name: 'adminPassword',
               type: 'password',
-              label: 'Password',
+              label: '',
               placeholder: 'Enter password',
               required: true
             }}
@@ -157,7 +157,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             input={{
               name: 'adminConfirmPassword',
               type: 'password',
-              label: 'Confirm Password',
+              label: '',
               placeholder: 'Confirm password',
               required: true
             }}
@@ -170,12 +170,12 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             fileInputRefs={fileInputRefs}
           />
         </div>
-        <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">Password must be at least 8 characters with uppercase, lowercase, number, and special character</p>
+        {/* <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">Password must be at least 8 characters with uppercase, lowercase, number, and special character</p> */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <label htmlFor="adminRole" className="block text-sm font-medium text-main dark:text-white mb-1">
+            {/* <label htmlFor="adminRole" className="block text-sm font-medium text-main dark:text-white mb-1">
               Admin Role <span className="text-error">*</span>
-            </label>
+            </label> */}
             <Dropdown
               name="adminRole"
               value={formData.adminRole}
@@ -191,7 +191,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
             input={{
               name: 'adminDepartment',
               type: 'text',
-              label: 'Department',
+              label: '',
               placeholder: 'Enter department (optional)'
             }}
             value={formData.adminDepartment}
