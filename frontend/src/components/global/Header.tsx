@@ -1,7 +1,6 @@
 import Input from '../forms/Input';
 import { useApp } from '../../context/AppContext';
-import { useAuth } from '../../context/AuthContext';
-import { useState } from 'react';
+import Cookies from 'js-cookie';
 
 interface HeaderAction {
     icon: string;
@@ -39,7 +38,6 @@ function Header({
     onSidebarToggle,
     onSearch,
     actions = demoActions,
-    secondaryLogo = '/images/gmr-logo.png',
 }: HeaderProps) {
     const { isSidebarCollapsed } = useApp();
 
@@ -89,16 +87,35 @@ function Header({
     );
 }
 
-// User profile component - just image like before
+// Logout button component
 function UserProfile() {
+    const handleLogout = () => {
+        // Clear all cookies
+        const allCookies = Cookies.get();
+        Object.keys(allCookies).forEach((cookieName) => {
+            Cookies.remove(cookieName);
+        });
+
+        // Clear all storage
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Redirect to logout page
+        window.location.href = '/auth/logout';
+    };
+
     return (
-        <div className="p-2 flex items-center justify-center">
+        <button
+            onClick={handleLogout}
+            className="p-2 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+            aria-label="Logout"
+        >
             <img
-                src="/images/gmr-logo.png"
-                alt="User profile"
-                className="w-10"
+                src="/icons/logout.svg"
+                alt="Logout"
+                className="w-6 h-6 cursor-pointer"
             />
-        </div>
+        </button>
     );
 }
 

@@ -33,7 +33,7 @@ const Input = ({
                 ref={inputRef}
                 type="search"
                 placeholder={placeholder}
-                className="w-full px-4 py-3 rounded-[2.5rem] border border-primary-border px-2 py-1 text-main text-sm font-light bg-white dark:bg-primary-dark rounded dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder:text-primary-dark dark:placeholder:text-main"
+                className="w-full px-4 py-3 rounded-full border border-primary-border text-main text-sm font-light bg-white dark:bg-primary-dark dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder:text-primary-dark dark:placeholder:text-main"
                 aria-label="Search"
                 onChange={(e) => onSearch?.(e.target.value)}
             />

@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Button from '../components/global/Button';
 import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
 import Dropdown from '../components/global/Dropdown';

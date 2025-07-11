@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Card from '../components/global/Card';
-import Button from '../components/global/Button';
 import Table from '../components/global/Table';
 import type { Column } from '../components/global/Table';
 import Dropdown from '../components/global/Dropdown';
