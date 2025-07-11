@@ -113,7 +113,7 @@ function UserProfile() {
             <img
                 src="/icons/logout.svg"
                 alt="Logout"
-                className="w-6 h-6 cursor-pointer"
+                className="cursor-pointer"
             />
         </button>
     );

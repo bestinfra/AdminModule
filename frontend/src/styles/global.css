@@ -161,6 +161,9 @@
     --color-custom-surface-light: rgba(255, 255, 255, 0.8);
 
 
+    /* Shadow colors  */
+    --color-shadow-primary: rgba(220, 228, 239, 1);
+
 
 
 
@@ -195,6 +198,28 @@
 
 .scrollbar-hide::-webkit-scrollbar {
     display: none;
+}
+
+/* Hide vertical scrollbar but keep scroll functionality */
+.hide-scrollbar-y {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.hide-scrollbar-y::-webkit-scrollbar {
+    display: none; /* WebKit browsers */
+}
+
+/* Alternative approach using overflow-y: scroll with hidden scrollbar */
+.scroll-y-hidden {
+    overflow-y: scroll;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+.scroll-y-hidden::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
 }
 
 img {
@@ -354,7 +379,6 @@ img {
     /* Label */
     .label {
         display: block;
-        font-size: 1rem;
         font-weight: 500;
         color: var(--color-main);
     }

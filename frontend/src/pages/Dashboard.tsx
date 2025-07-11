@@ -104,19 +104,9 @@ const Dashboard: React.FC = () => {
         { key: 'eventDesc', label: 'Event Description' },
     ];
 
-    // Header component
-    const headerComponent = createHeaderComponent(
-        'Dashboard',
-        'Monitor system performance and key metrics',
-        'Last updated: 2 minutes ago'
-    );    
 
-    // Footer component
-    const footerComponent = createFooterComponent({
-        id: 'Dashboard ID: DASH-001',
-        version: '2.1.0',
-        supportLink: '#'
-    });
+
+
 
     // Combined Consumer Statistics and Consumption & Billing Section
     const combinedStatsSection: Section = {
@@ -194,8 +184,8 @@ const Dashboard: React.FC = () => {
                         handleTimeRangeChange={setMetricsType}
                     />
                 </div>
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
+                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
                         <div className="font-medium">Daily Consumption Metrics <span className="text-xs font-normal">(4 May, 2025 - 5 Jul, 2025)</span></div>
                         <div className="flex items-center gap-2">
                             <TimeRangeSelector
@@ -228,8 +218,8 @@ const Dashboard: React.FC = () => {
         component: (
             <div className="grid grid-cols-10 gap-6">
                 {/* Meter Communication Status - 30% */}
-                <div className="col-span-3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
+                <div className="col-span-3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
                         <h2 className="text-lg font-semibold">Meter Communication Status</h2>
                     </div>
                     <div className="p-6">
@@ -243,8 +233,8 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Latest Meter Events */}
-                <div className="col-span-7 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
+                <div className="col-span-7 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
                         <h2 className="text-lg font-semibold">Latest Meter Events</h2>
                     </div>
                     <div className="p-4">
@@ -266,10 +256,8 @@ const Dashboard: React.FC = () => {
         <Page
             layout="single-column"
             sections={[combinedStatsSection, metricsSection, meterCommunicationSection]}
-            header={headerComponent}
-            footer={footerComponent}
             sidebarPosition="right"
-            className="space-y-6 bg-[var(--color-surface)] p-4"
+            className="space-y-6 bg-[var(--color-surface)]"
             sectionClassName=""
 
         />

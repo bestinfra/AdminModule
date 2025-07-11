@@ -277,8 +277,8 @@ const AppManagement: React.FC = () => {
             key={step.label}
             className={` rounded-lg border transition-all border-gray-200 dark:border-dark-border bg-white dark:bg-primary-dark shadow-sm ${idx === currentStep - 1 ? 'ring-2 ring-primary border-primary' : ''}`}
           >
-            <div className={`font-semibold text-xl ${idx === currentStep - 1 ? 'text-primary dark:text-white' : 'text-main dark:text-white'}`}>{step.label}</div>
-            <div className="text-md text-gray-500 dark:text-gray-400">{step.sub}</div>
+            <h2 className={`font-semibold  ${idx === currentStep - 1 ? 'text-primary dark:text-white' : 'text-main dark:text-white'}`}>{step.label}</h2>
+            <h3 className="text-md text-gray-500 dark:text-gray-400">{step.sub}</h3>
           </div>
         ))}
       </div>
@@ -415,7 +415,7 @@ const AppManagement: React.FC = () => {
   ];
 
   return (
-    <main className="min-h-screen  dark:bg-primary-dark-light px-4 py-8 flex flex-col items-center justify-start w-full">
+    <main className="min-h-screen  dark:bg-primary-dark-light  flex flex-col items-center justify-start w-full">
       <div className="w-full">
         {/* Page Header */}
         <div className="mb-6">

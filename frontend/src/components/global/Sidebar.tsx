@@ -194,7 +194,7 @@ const Sidebar = ({
                                         {category.category}
                                     </h2>
                                 )}
-                                <ul className="list-none p-0 m-0">
+                                <ul className="list-none p-0 m-0 gap-2 flex flex-col">
                                     {category.items.map(
                                         (menuItem, itemIndex) => (
                                             <li key={itemIndex}>
@@ -209,7 +209,7 @@ const Sidebar = ({
                                                             className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
                                                                 pathname ===
                                                                 menuItem.link
-                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white'
+                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]'
                                                                     : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
                                                             }`}
                                                             aria-expanded={
@@ -309,10 +309,10 @@ const Sidebar = ({
                                                                 onNavigate?.(menuItem.link);
                                                             }
                                                         }}
-                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group rounded-lg w-full text-left ${
+                                                        className={`flex items-center gap-4 py-3 px-4  text-sm cursor-pointer group rounded-lg w-full text-left ${
                                                             pathname ===
                                                             menuItem.link
-                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white'
+                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]'
                                                                 : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
                                                         }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
