@@ -3,6 +3,7 @@ const API_BASE_URL = 'http://localhost:3001/api';
 export interface AppCreationResponse {
   success: boolean;
   message: string;
+  nextSteps?: string[];
   data?: {
     id: number;
     name: string;
