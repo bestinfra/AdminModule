@@ -36,6 +36,7 @@ import ConsumerView from './pages/ConsumerView';
 import AddDataLogger from './pages/AddDataLogger';
 import AddMeter from './pages/AddMeter';
 import AddConsumer from './pages/AddConsumer';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
 
 
 const App: React.FC = () => {
@@ -66,6 +67,10 @@ const App: React.FC = () => {
                             <Route
                                 path="/"
                                 element={<Dashboard />}
+                            />
+                            <Route
+                                path="/super-admin-dashboard"
+                                element={<SuperAdminDashboard />}
                             />
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/asset-management" element={<AssetManagement />} />

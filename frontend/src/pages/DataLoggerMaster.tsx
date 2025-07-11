@@ -1,6 +1,5 @@
 import React from 'react';
 import Table from '../components/global/Table';
-import Button from '../components/global/Button';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
 import { 

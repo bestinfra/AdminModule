@@ -5,7 +5,6 @@ import type { Section } from '../components/global/Page';
 import { 
     createHeaderComponent, 
     createActionsComponent, 
-    createSidebarStatsComponent,
     createFooterComponent
 } from '../components/global/PageComponents';
 
@@ -119,30 +118,7 @@ export default function AssetManagement() {
     { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
   ]);
 
-  // Sidebar stats component
-  const sidebarComponent = createSidebarStatsComponent([
-    {
-      title: 'Total Assets',
-      value: '14',
-      subtitle1: 'Across all locations',
-      subtitle2: '2 main locations',
-      comparisonValue: 0
-    },
-    {
-      title: 'Active Assets',
-      value: '12',
-      subtitle1: 'Operational',
-      subtitle2: '2 inactive',
-      comparisonValue: 0
-    },
-    {
-      title: 'Asset Types',
-      value: '3',
-      subtitle1: 'Main Location, Meter Location',
-      subtitle2: 'Solar Plant',
-      comparisonValue: 0
-    }
-  ]);
+
 
   // Footer component
   const footerComponent = createFooterComponent({
@@ -169,7 +145,6 @@ export default function AssetManagement() {
       sections={[orgChartSection]}
       header={headerComponent}
       actions={actionsComponent}
-      sidebar={sidebarComponent}
       footer={footerComponent}
       sidebarPosition="left"
       className="min-h-screen bg-[#f8f9fa]"
