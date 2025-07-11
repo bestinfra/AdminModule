@@ -118,63 +118,64 @@ const Dashboard: React.FC = () => {
         supportLink: '#'
     });
 
-    // Consumer Statistics Section
-    const consumerStatsSection: Section = {
-        id: 'consumer-stats',
+    // Combined Consumer Statistics and Consumption & Billing Section
+    const combinedStatsSection: Section = {
+        id: 'combined-stats',
         component: (
-            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
-                <div className="flex justify-between items-center gap-2">
-                    <h2 className="text-base font-regular m-0">Consumer Statistics</h2>
-                    <div style={{ opacity: 0, pointerEvents: 'none' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Consumer Statistics */}
+                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
+                    <div className="flex justify-between items-center gap-2">
+                        <h2 className="text-base font-regular m-0">Consumer Statistics</h2>
+                        <div style={{ opacity: 0, pointerEvents: 'none' }}>
+                            <TimeRangeSelector
+                                availableTimeRanges={billingViewOptions}
+                                selectedTimeRange={billingView}
+                                handleTimeRangeChange={() => {}}
+                            />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {consumerStats.map((card, idx) => (
+                            <Card
+                                key={idx}
+                                title={card.title}
+                                value={card.value}
+                                icon={card.icon}
+                                subtitle1={card.subtitle1}
+                                subtitle2={card.subtitle2}
+                                iconStyle={{ filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)'
+ }}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Consumption & Billing */}
+                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
+                    <div className="flex justify-between items-center gap-2">
+                        <h2 className="text-base font-regular">Consumption & Billing <span className="text-base font-regular">(Jul 4, 2025)</span></h2>
                         <TimeRangeSelector
                             availableTimeRanges={billingViewOptions}
                             selectedTimeRange={billingView}
-                            handleTimeRangeChange={() => {}}
+                            handleTimeRangeChange={(v) => setBillingView(v as 'Daily' | 'Monthly')}
                         />
                     </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {consumerStats.map((card, idx) => (
-                        <Card
-                            key={idx}
-                            title={card.title}
-                            value={card.value}
-                            icon={card.icon}
-                            subtitle1={card.subtitle1}
-                            subtitle2={card.subtitle2}
-                        />
-                    ))}
-                </div>
-            </div>
-        )
-    };
-
-    // Consumption & Billing Section
-    const consumptionBillingSection: Section = {
-        id: 'consumption-billing',
-        component: (
-            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
-                <div className="flex justify-between items-center gap-2">
-                    <h2 className="text-base font-regular">Consumption & Billing <span className="text-base font-regular">(Jul 4, 2025)</span></h2>
-                    <TimeRangeSelector
-                        availableTimeRanges={billingViewOptions}
-                        selectedTimeRange={billingView}
-                        handleTimeRangeChange={(v) => setBillingView(v as 'Daily' | 'Monthly')}
-                    />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {billingStats.map((card, idx) => (
-                        <Card
-                            key={idx}
-                            title={card.title}
-                            value={card.value}
-                            icon={card.icon}
-                            subtitle1={card.subtitle1}
-                            subtitle2={card.subtitle2}
-                            showTrend={card.showTrend}
-                            comparisonValue={card.comparisonValue}
-                        />
-                    ))}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {billingStats.map((card, idx) => (
+                            <Card
+                                key={idx}
+                                title={card.title}
+                                value={card.value}
+                                icon={card.icon}
+                                subtitle1={card.subtitle1}
+                                subtitle2={card.subtitle2}
+                                showTrend={card.showTrend}
+                                comparisonValue={card.comparisonValue}
+                                iconStyle={{ filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)' }}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         )
@@ -225,9 +226,9 @@ const Dashboard: React.FC = () => {
     const meterCommunicationSection: Section = {
         id: 'meter-communication',
         component: (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Meter Communication Status */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
+            <div className="grid grid-cols-10 gap-6">
+                {/* Meter Communication Status - 30% */}
+                <div className="col-span-3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
                     <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
                         <h2 className="text-lg font-semibold">Meter Communication Status</h2>
                     </div>
@@ -242,7 +243,7 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Latest Meter Events */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
+                <div className="col-span-7 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
                     <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
                         <h2 className="text-lg font-semibold">Latest Meter Events</h2>
                     </div>
@@ -263,8 +264,8 @@ const Dashboard: React.FC = () => {
 
     return (
         <Page
-            layout="two-column"
-            sections={[consumerStatsSection, consumptionBillingSection, metricsSection, meterCommunicationSection]}
+            layout="single-column"
+            sections={[combinedStatsSection, metricsSection, meterCommunicationSection]}
             header={headerComponent}
             footer={footerComponent}
             sidebarPosition="right"

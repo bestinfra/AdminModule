@@ -107,7 +107,7 @@ function UserProfile() {
     return (
         <button
             onClick={handleLogout}
-            className="p-2 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+            className="p-2 flex bg-primary-lightest dark:bg-dark-secondary rounded-full flex items-center justify-center items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
             aria-label="Logout"
         >
             <img
