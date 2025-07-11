@@ -273,21 +273,49 @@ const AppManagement: React.FC = () => {
     <div className="flex flex-col gap-6">
       
       <div className="createSteps flex flex-row gap-6 bg-primary-lightest justify-between p-10 rounded-3xl  ">
-        {stepLabels.map((step: { label: string; sub: string }, idx: number) => (
-          <div
-            key={step.label}
-            className={`p-5 rounded-lg transition-all dark:border-dark-border bg-white dark:bg-primary-dark flex justify-between items-center gap-4  ${idx === currentStep - 1 ? 'shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' : ''}`}
-          >
-            <div className='flex items-center justify-center min-w-8 h-8 px-2 rounded-full bg-primary text-white text-sm font-semibold'>
-              {idx + 1}
-            </div>
-            <div className='flex flex-col gap-2'>
-            <h2 className={`font-semibold  ${idx === currentStep - 1 ? 'text-primary dark:text-white' : 'text-main dark:text-white'}`}>{step.label}</h2>
-            <h3 className="text-md text-gray-500 dark:text-gray-400">{step.sub}</h3>
-            </div>
+        {stepLabels.map((step: { label: string; sub: string }, idx: number) => {
+          const isActive = idx === currentStep - 1;
+          const isCompleted = idx < currentStep - 1;
           
-          </div>
-        ))}
+          return (
+            <div
+              key={step.label}
+              className={`p-5 rounded-lg transition-all dark:border-dark-border flex justify-between items-center gap-4 ${
+                isActive 
+                  ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' 
+                  : isCompleted 
+                    ? 'bg-green-50 dark:bg-green-900/20 shadow-[0px_5px_5px_-2px_rgba(34,197,94,0.3)]' 
+                    : 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(156,163,175,0.4)]'
+              }`}
+            >
+              <div className={`flex items-center justify-center min-w-8 h-8 px-2 rounded-full text-white text-sm font-semibold ${
+                isActive 
+                  ? 'bg-primary' 
+                  : isCompleted 
+                    ? 'bg-green-500' 
+                    : 'bg-gray-400'
+              }`}>
+                {isCompleted ? '✓' : idx + 1}
+              </div>
+              <div className='flex flex-col gap-2'>
+                <h2 className={`font-semibold ${
+                  isActive 
+                    ? 'text-primary dark:text-white' 
+                    : isCompleted 
+                      ? 'text-green-700 dark:text-green-300' 
+                      : 'text-main dark:text-white'
+                }`}>{step.label}</h2>
+                <h3 className={`text-md ${
+                  isActive 
+                    ? 'text-gray-500 dark:text-gray-400' 
+                    : isCompleted 
+                      ? 'text-green-600 dark:text-green-400' 
+                      : 'text-gray-500 dark:text-gray-400'
+                }`}>{step.sub}</h3>
+              </div>
+            </div>
+          );
+        })}
       </div>
       <div className="flex justify-between items-center gap-4 mt-4">
         {currentStep > 1 && (
