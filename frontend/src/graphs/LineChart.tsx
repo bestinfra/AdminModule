@@ -5,12 +5,14 @@ interface LineChartProps {
     title?: string;
     data?: any[];
     xAxisData?: string[];
+    showXAxisLabel?: boolean;
 }
 
 const LineChart: React.FC<LineChartProps> = ({
     title = 'Line Chart',
     data = [150, 230, 224, 218, 135, 147, 260],
     xAxisData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showXAxisLabel = true,
 }) => {
     const option = {
         title: {
@@ -29,6 +31,9 @@ const LineChart: React.FC<LineChartProps> = ({
         xAxis: {
             type: 'category',
             data: xAxisData,
+            axisLabel: {
+                show: showXAxisLabel
+            }
         },
         yAxis: {
             type: 'value',
@@ -46,7 +51,7 @@ const LineChart: React.FC<LineChartProps> = ({
         <div className="w-full h-full">
             <ReactECharts
                 option={option}
-                style={{ height: '400px', width: '100%' }}
+                style={{ height: '100%', width: '100%' }}
                 opts={{ renderer: 'svg' }}
             />
         </div>

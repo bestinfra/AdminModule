@@ -9,6 +9,13 @@ import {
     createHeaderComponent, 
     createFooterComponent
 } from '../components/global/PageComponents';
+import type { TableData, Column } from '../components/global/Table';
+
+interface TableAction {
+    label: string;
+    onClick: (row: TableData) => void;
+    icon: string;
+}
 
 const SuperAdminDashboard: React.FC = () => {
     const [timeRange, setTimeRange] = useState('Monthly');
@@ -111,13 +118,13 @@ const SuperAdminDashboard: React.FC = () => {
         },
     ];
 
-    const projectColumns = [
+    const projectColumns: Column[] = [
         { key: 'name', label: 'Project Name' },
         { key: 'domain', label: 'Domain' },
         { 
             key: 'status', 
             label: 'Status',
-            render: (value: string | number | boolean | null | undefined) => (
+            render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     value === 'Active' ? 'bg-green-100 text-green-800' :
                     value === 'Maintenance' ? 'bg-yellow-100 text-yellow-800' :
@@ -184,7 +191,7 @@ const SuperAdminDashboard: React.FC = () => {
         },
     ];
 
-    const eventColumns = [
+    const eventColumns: Column[] = [
         { key: 'type', label: 'Type' },
         { key: 'project', label: 'Project' },
         { key: 'message', label: 'Message' },
@@ -192,7 +199,7 @@ const SuperAdminDashboard: React.FC = () => {
         { 
             key: 'severity', 
             label: 'Severity',
-            render: (value: string | number | boolean | null | undefined) => (
+            render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     value === 'Success' ? 'bg-green-100 text-green-800' :
                     value === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
@@ -203,6 +210,12 @@ const SuperAdminDashboard: React.FC = () => {
                 </span>
             )
         },
+    ];
+
+    const tableActions: TableAction[] = [
+        { label: 'Edit', onClick: (row: TableData) => console.log('Edit:', row), icon: '/icons/edit.svg' },
+        { label: 'View', onClick: (row: TableData) => console.log('View:', row), icon: '/icons/view.svg' },
+        { label: 'Settings', onClick: (row: TableData) => console.log('Settings:', row), icon: '/icons/settings.svg' },
     ];
 
     // Header component
@@ -276,11 +289,7 @@ const SuperAdminDashboard: React.FC = () => {
                         searchable={true}
                         pagination={true}
                         showActions={true}
-                        actions={[
-                            { label: 'Edit', onClick: (row) => console.log('Edit:', row), icon: '/icons/edit.svg' },
-                            { label: 'View', onClick: (row) => console.log('View:', row), icon: '/icons/view.svg' },
-                            { label: 'Settings', onClick: (row) => console.log('Settings:', row), icon: '/icons/settings.svg' },
-                        ]}
+                        actions={tableActions}
                     />
                 </div>
             </div>
@@ -312,10 +321,11 @@ const SuperAdminDashboard: React.FC = () => {
                     <div className="bg-gray-50 dark:bg-gray-800 rounded-t-xl px-6 py-4">
                         <h2 className="text-lg font-semibold">User Activity Trends</h2>
                     </div>
-                    <div className="p-6">
+                    <div className="p-6" style={{ height: '250px' }}>
                         <LineChart
                             data={userActivityData}
                             xAxisData={userActivityLabels}
+                            showXAxisLabel={false}
                         />
                     </div>
                 </div>
