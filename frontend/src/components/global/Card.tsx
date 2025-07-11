@@ -30,14 +30,14 @@ const Card = ({
     }
 
     return (
-        <article className="rounded-3xl bg-primary-lightest shadow-md/20 shadow-black dark:bg-primary-dark-light dark:shadow-md/60 dark:shadow-black  dark:border dark:border-dark-border  ">
+        <article className="rounded-3xl bg-primary-lightest shadow-md dark:bg-primary-dark-light dark:shadow-sm dark:border dark:border-dark-border">
             <section className="flex justify-between items-start p-5 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
                 <div className="space-y-2">
                     <h3 className="text-base text-main dark:text-white">
                         {title}
                     </h3>
                     <p
-                        className={`text-xl font-bold flex items-center gap-2 ${onValueClick ? 'cursor-pointer hover:underline' : ''}`}
+                        className={`text-2xl font-bold flex items-center gap-2 ${onValueClick ? 'cursor-pointer hover:underline' : ''}`}
                         style={{ color: 'var(--color-primary)' }}
                         onClick={onValueClick}
                     >
@@ -79,12 +79,12 @@ const Card = ({
             </section>
             <footer className="flex justify-between px-5 py-3 space-y-1">
                 {subtitle1 && (
-                    <p className="text-gray-600 m-0 font-light text-main dark:text-subinfo text-sm">
+                    <p className="text-gray-700 m-0 font-light text-main dark:text-subinfo text-sm">
                         {subtitle1}
                     </p>
                 )}
                 {subtitle2 && (
-                            <p className="text-gray-500 m-0 font-extralight text-main dark:text-subinfo text-sm">
+                            <p className="text-gray-700 m-0 font-light text-main dark:text-subinfo text-sm">
                         {subtitle2}
                     </p>
                 )}
