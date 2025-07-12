@@ -114,22 +114,60 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
             {/* <h2 className="text-main dark:text-white mb-1">App Creation Form</h2>
             <h3 className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</h3> */}
             <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
-                <FormInput
-                    input={{
-                        name: 'appName',
-                        type: 'text',
-                        label: 'App Name',
-                        placeholder: 'Enter your app name',
-                        required: true
-                    }}
-                    value={formData.appName}
-                    error={errors.appName}
-                    showError={!!errors.appName}
-                    disabled={false}
-                    onInputChange={handleFormInputChange}
-                    onInputBlur={handleFormInputBlur}
-                    fileInputRefs={fileInputRefs}
-                />
+                <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1">
+                        <FormInput
+                            input={{
+                                name: 'appName',
+                                type: 'text',
+                                placeholder: 'Enter App Name',
+                                required: true
+                            }}
+                            value={formData.appName}
+                            error={errors.appName}
+                            showError={!!errors.appName}
+                            disabled={false}
+                            onInputChange={handleFormInputChange}
+                            onInputBlur={handleFormInputBlur}
+                            fileInputRefs={fileInputRefs}
+                        />
+                    </div>
+                    <div className="flex-1">
+
+                        <div className="relative flex items-center" style={{height: 'auto'}}>
+                            <input
+                                id="subdomain"
+                                name="subdomain"
+                                type="text"
+                                className={`input w-full pr-36 ${errors.subdomain ? 'border-red-500' : ''} rounded-r-3xl`}
+                                placeholder="Enter Subdomain"
+                                value={formData.subdomain}
+                                onChange={e => handleFormInputChange('subdomain', e.target.value)}
+                                required
+                                autoComplete="off"
+                                aria-invalid={!!errors.subdomain}
+                                aria-describedby={errors.subdomain ? 'subdomain-error' : undefined}
+                            />
+                            {formData.subdomain && (
+                                <a
+                                    href={`https://${formData.subdomain}.bestinfra.org`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="absolute right-36 top-1/2 -translate-y-1/2 text-blue-600 hover:underline flex items-center z-10 text-sm"
+                                >
+                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 3h7m0 0v7m0-7L10 14m-4 0h4v4"/></svg>
+                                    OPEN
+                                </a>
+                            )}
+                            <span
+                                className="absolute right-0 top-0 flex items-center pl-2 pr-4 min-w-[120px] text-[0.95em] text-gray-500 pointer-events-none select-none bg-gray-100 dark:bg-gray-800 border-l border-gray-200 rounded-r-3xl h-full"
+                            >
+                                .bestinfra.org
+                            </span>
+                        </div>
+                        {errors.subdomain && <div id="subdomain-error" className="text-xs text-red-500 mt-1">{errors.subdomain}</div>}
+                    </div>
+                </div>
                 <div className="flex flex-col md:flex-row gap-4">
                     <div className="flex-1">
                         <Dropdown
@@ -137,7 +175,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                             value={formData.country}
                             onChange={handleDropdownChange}
                             options={countryOptions}
-                            placeholder="Select country"
+                            placeholder="Select Country"
                             error={errors.country}
                         />
                     </div>
@@ -147,78 +185,48 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                             value={formData.state}
                             onChange={handleDropdownChange}
                             options={stateOptions[formData.country] || []}
-                            placeholder="Select state"
+                            placeholder="Select State"
                             disabled={!formData.country}
                             error={errors.state}
                         />
                     </div>
-                </div>
-                <Dropdown
-                    name="city"
-                    value={formData.city}
-                    onChange={handleDropdownChange}
-                    options={cityOptions[formData.state] || []}
-                    placeholder="Select city"
-                    disabled={!formData.state}
-                    error={errors.city}
-                />
-                <div>
-                    {/* <h2 className="block  text-main dark:text-white mb-1">Categories</h2>
-                    <h3 className="text-md text-gray-500 mb-2">Select at least one category that applies to your app</h3> */}
-                    <Dropdown
-                        name="categories"
-                        value={formData.categories}
-                        onChange={handleDropdownChange}
-                        options={categoryOptions}
-                        placeholder="Select categories"
-                        isMultiSelect={true}
-                        error={errors.categories}
-                    />
-                </div>
-                <FormInput
-                    input={{
-                        name: 'subdomain',
-                        type: 'text',
-                        label: 'Subdomain',
-                        placeholder: 'Enter subdomain',
-                        required: true
-                    }}
-                    value={formData.subdomain}
-                    error={errors.subdomain}
-                    showError={!!errors.subdomain}
-                    disabled={false}
-                    onInputChange={handleFormInputChange}
-                    onInputBlur={handleFormInputBlur}
-                    fileInputRefs={fileInputRefs}
-                />
-                {/* <p className="text-xs text-gray-500 mt-1">This will be your app's URL: {subdomainPreview ? `${subdomainPreview}.yourdomain.com` : 'yourdomain.com'}<br/>Only lowercase letters, numbers, and hyphens are allowed</p> */}
-                <div>
-                    {/* <h2 className="block text-lg font-medium text-main dark:text-white mb-1">Tariff Plans</h2>
-                    <p className="text-md text-gray-500 mb-2">Select the tariff plans your app will support</p> */}
-                    <Dropdown
-                        name="tariffPlans"
-                        value={formData.tariffPlans}
-                        onChange={handleDropdownChange}
-                        options={tariffPlanOptions}
-                        placeholder="Select tariff plans"
-                        isMultiSelect={true}
-                        error={errors.tariffPlans}
-                    />
-                </div>
-                <div>
-                    <label className="flex items-center gap-2 text-sm font-medium text-main dark:text-white">
-                        <input
-                            type="checkbox"
-                            name="termsAccepted"
-                            checked={formData.termsAccepted}
-                            onChange={onInputChange}
-                            className="w-4 h-4 accent-primary border-gray-300 dark:border-dark-border"
+                    <div className="flex-1">
+                        <Dropdown
+                            name="city"
+                            value={formData.city}
+                            onChange={handleDropdownChange}
+                            options={cityOptions[formData.state] || []}
+                            placeholder="Select City"
+                            disabled={!formData.state}
+                            error={errors.city}
                         />
-                        I accept the Terms & Conditions and Privacy Policy <span className="text-error">*</span>
-                    </label>
-                    {errors.termsAccepted && <span className="text-error text-xs mt-1 block">{errors.termsAccepted}</span>}
-                    <p className="text-xs text-gray-500 mt-2">By checking this box, you agree to our terms of service and privacy policy.</p>
+                    </div>
                 </div>
+                <div className="flex flex-col md:flex-row gap-4">
+                    <div className="flex-1">
+                        <Dropdown
+                            name="categories"
+                            value={formData.categories}
+                            onChange={handleDropdownChange}
+                            options={categoryOptions}
+                            placeholder="Select Categories"
+                            isMultiSelect={true}
+                            error={errors.categories}
+                        />
+                    </div>
+                    <div className="flex-1">
+                        <Dropdown
+                            name="tariffPlans"
+                            value={formData.tariffPlans}
+                            onChange={handleDropdownChange}
+                            options={tariffPlanOptions}
+                            placeholder="Select Tariff Plans"
+                            isMultiSelect={true}
+                            error={errors.tariffPlans}
+                        />
+                    </div>
+                </div>
+
                 <div className="flex justify-end">
                     <Button label="Next" type="submit" variant="primary" />
                 </div>
