@@ -16,91 +16,115 @@ const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit,
       
       <div className="space-y-6">
         {/* App Basics Review */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-main dark:text-white mb-4">App Basics</h3>
-          <div className="space-y-2">
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Name:</span> {formData.appName || 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Location:</span> {formData.city && formData.state && formData.country ? `${formData.city}, ${formData.state}, ${formData.country}` : 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Categories:</span> {(formData.categories || []).length > 0 ? formData.categories.join(', ') : 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Subdomain:</span> {formData.subdomain || 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Tariff Plans:</span> {(formData.tariffPlans || []).length > 0 ? formData.tariffPlans.join(', ') : 'Not specified'}</p>
+        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-main dark:text-white mb-4">App Basics</h3>
+              <div className="space-y-2">
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Name:</span> {formData.appName || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Location:</span> {formData.city && formData.state && formData.country ? `${formData.city}, ${formData.state}, ${formData.country}` : 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Categories:</span> {(formData.categories || []).length > 0 ? formData.categories.join(', ') : 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Subdomain:</span> {formData.subdomain || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Tariff Plans:</span> {(formData.tariffPlans || []).length > 0 ? formData.tariffPlans.join(', ') : 'Not specified'}</p>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => onEditStep(0)} 
+              className="ml-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              title="Edit Basics"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Admin Access Review */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-main dark:text-white mb-4">Admin Access</h3>
-          <div className="space-y-2">
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Name:</span> {formData.adminFirstName && formData.adminLastName ? `${formData.adminFirstName} ${formData.adminLastName}` : 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Email:</span> {formData.adminEmail || 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Phone:</span> {formData.adminPhone || 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Role:</span> {formData.adminRole || 'Not specified'}</p>
+        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-main dark:text-white mb-4">Admin Access</h3>
+              <div className="space-y-2">
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Name:</span> {formData.adminFirstName && formData.adminLastName ? `${formData.adminFirstName} ${formData.adminLastName}` : 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Email:</span> {formData.adminEmail || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Phone:</span> {formData.adminPhone || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Role:</span> {formData.adminRole || 'Not specified'}</p>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => onEditStep(1)} 
+              className="ml-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              title="Edit Admin"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Branding Review */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-main dark:text-white mb-4">Branding</h3>
-          <div className="space-y-2">
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Company:</span> {formData.companyName || 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Website:</span> {formData.companyWebsite || 'Not specified'}</p>
-            <p>
-              <span className="font-medium text-gray-700 dark:text-gray-300">Primary Color:</span> 
-              {formData.primaryColor ? (
-                <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                  <div 
-                    className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
-                    style={{ backgroundColor: formData.primaryColor }}
-                  />
-                  {formData.primaryColor}
-                </span>
-              ) : 'Not specified'}
-            </p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Timezone:</span> {formData.timezone || 'Not specified'}</p>
-            <p><span className="font-medium text-gray-700 dark:text-gray-300">Currency:</span> {formData.currency || 'Not specified'}</p>
+        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-main dark:text-white mb-4">Branding</h3>
+              <div className="space-y-2">
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Company:</span> {formData.companyName || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Website:</span> {formData.companyWebsite || 'Not specified'}</p>
+                <p>
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Primary Color:</span> 
+                  {formData.primaryColor ? (
+                    <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                      <div 
+                        className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                        style={{ backgroundColor: formData.primaryColor }}
+                      />
+                      {formData.primaryColor}
+                    </span>
+                  ) : 'Not specified'}
+                </p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Timezone:</span> {formData.timezone || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Currency:</span> {formData.currency || 'Not specified'}</p>
+              </div>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => onEditStep(2)} 
+              className="ml-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              title="Edit Branding"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
           </div>
         </div>
 
         {/* Modules Review */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
-          <h3 className="text-lg font-semibold text-main dark:text-white mb-4">Modules</h3>
-          <p>{(formData.modules || []).length > 0 ? formData.modules.join(', ') : 'No modules selected'}</p>
-        </div>
-
-        {/* Edit Actions */}
-        <div className="flex flex-wrap gap-3 justify-center">
-          <button 
-            type="button" 
-            onClick={() => onEditStep(0)} 
-            className="px-4 py-2 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
-          >
-            Edit Basics
-          </button>
-          <button 
-            type="button" 
-            onClick={() => onEditStep(1)} 
-            className="px-4 py-2 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
-          >
-            Edit Admin
-          </button>
-          <button 
-            type="button" 
-            onClick={() => onEditStep(2)} 
-            className="px-4 py-2 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
-          >
-            Edit Branding
-          </button>
-          <button 
-            type="button" 
-            onClick={() => onEditStep(3)} 
-            className="px-4 py-2 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
-          >
-            Edit Modules
-          </button>
+        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
+          <div className="flex justify-between items-start">
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-main dark:text-white mb-4">Modules</h3>
+              <p>{(formData.modules || []).length > 0 ? formData.modules.join(', ') : 'No modules selected'}</p>
+            </div>
+            <button 
+              type="button" 
+              onClick={() => onEditStep(3)} 
+              className="ml-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
+              title="Edit Modules"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+            </button>
+          </div>
         </div>
 
         {/* Info Box */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
+        {/* <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
           <div className="flex items-start gap-3">
             <div className="text-blue-600 dark:text-blue-400 text-lg">ℹ️</div>
             <div>
@@ -111,7 +135,7 @@ const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit,
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Complete Configuration Button */}
         <div className="flex justify-center pt-6">

@@ -37,7 +37,6 @@ const Header: React.FC<HeaderProps> = ({
     title,
     buttonsLabel,
     variant,
-    size,
     menuItems = [],
     onMenuItemClick,
     showMenu,
