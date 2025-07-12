@@ -6,13 +6,14 @@ interface GoLiveStepProps {
   onEditStep: (stepIndex: number) => void;
   onSubmit: () => void;
   isSubmitting?: boolean;
+  onInputChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
 }
 
-const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false }) => {
+const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange }) => {
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
-      <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Complete App Configuration</h2>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">Review your app details and complete the configuration</p>
+      <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Terms & Conditions</h2>
+      <p className="text-gray-600 dark:text-gray-300 mb-6">Please review and accept the terms before completing your app configuration</p>
       
       <div className="space-y-6">
         {/* App Basics Review */}
@@ -67,6 +68,24 @@ const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit,
           <p>{(formData.modules || []).length > 0 ? formData.modules.join(', ') : 'No modules selected'}</p>
         </div>
 
+        {/* Terms & Conditions */}
+        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
+          <h3 className="text-lg font-semibold text-main dark:text-white mb-4">Terms & Conditions</h3>
+          <div>
+            <label className="flex items-center gap-2 text-sm font-medium text-main dark:text-white">
+              <input
+                type="checkbox"
+                name="termsAccepted"
+                checked={formData.termsAccepted}
+                onChange={onInputChange}
+                className="w-4 h-4 accent-primary border-gray-300 dark:border-dark-border"
+              />
+              I accept the Terms & Conditions and Privacy Policy <span className="text-error">*</span>
+            </label>
+            <p className="text-xs text-gray-500 mt-2">By checking this box, you agree to our terms of service and privacy policy.</p>
+          </div>
+        </div>
+
         {/* Edit Actions */}
         <div className="flex flex-wrap gap-3 justify-center">
           <button 
@@ -99,19 +118,7 @@ const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit,
           </button>
         </div>
 
-        {/* Info Box */}
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4">
-          <div className="flex items-start gap-3">
-            <div className="text-blue-600 dark:text-blue-400 text-lg">ℹ️</div>
-            <div>
-              <h4 className="font-semibold text-blue-800 dark:text-blue-200 mb-1">Configuration Summary</h4>
-              <p className="text-sm text-blue-700 dark:text-blue-300">
-                Your app configuration has been completed. All settings, admin details, branding, and module selections have been saved.
-                You can now proceed with your custom implementation or integration.
-              </p>
-            </div>
-          </div>
-        </div>
+
 
         {/* Complete Configuration Button */}
         <div className="flex justify-center pt-6">
