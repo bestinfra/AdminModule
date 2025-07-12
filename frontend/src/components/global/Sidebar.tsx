@@ -2,6 +2,7 @@ import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Cookies from 'js-cookie';
 import { useApp } from '../../context/AppContext';
+import '../../styles/custom.css';
 
 interface SubMenuItem {
     title: string;
@@ -156,7 +157,7 @@ const Sidebar = ({
                 isSidebarCollapsed ? 'w-20' : 'w-72'
             }`}>
             <nav
-                className={`h-screen flex flex-col justify-between items-center w-full bg-primary-lightest dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
+                className={`h-screen flex flex-col justify-between items-center w-full bg-background-secondary dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
                     isSidebarCollapsed ? 'w-20' : 'w-72'
                 } ${className}`}
                 aria-label="Main navigation">
@@ -209,7 +210,7 @@ const Sidebar = ({
                                                             className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
                                                                 pathname ===
                                                                 menuItem.link
-                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]'
+                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white custom-shadow'
                                                                     : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
                                                             }`}
                                                             aria-expanded={
@@ -312,7 +313,7 @@ const Sidebar = ({
                                                         className={`flex items-center gap-4 py-3 px-4  text-sm cursor-pointer group rounded-lg w-full text-left ${
                                                             pathname ===
                                                             menuItem.link
-                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]'
+                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white custom-shadow'
                                                                 : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
                                                         }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
