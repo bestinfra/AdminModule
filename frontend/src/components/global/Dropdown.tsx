@@ -450,8 +450,8 @@ const Dropdown: React.FC<DropdownProps> = ({
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
         tabIndex={0}
-        className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border text-base font-medium
-          ${disabled ? 'bg-gray-100 text-gray-400' : ''}
+        className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium
+          ${disabled ? ' text-gray-400' : ''}
           ${error ? 'border-red-500' : 'border-gray-300'}`}
         role="combobox"
         aria-expanded={isOpen}
@@ -460,7 +460,9 @@ const Dropdown: React.FC<DropdownProps> = ({
         {leftIcon && (
           <img src={leftIcon} alt="icon" className="w-5 h-5 mr-2" />
         )}
-        <span className="truncate flex-1 text-left">{getDisplayValue()}</span>
+        <span className="truncate flex-1 text-left text-neutral">
+          {getDisplayValue()}
+        </span>
         <svg
           className={`ml-2 w-4 h-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           fill="none"
