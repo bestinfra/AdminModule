@@ -371,6 +371,30 @@ const ConsumerFallback = () => (
   </div>
 );
 
+const ConsumerViewFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Consumer View</h1>
+    <p className="text-gray-600">Loading consumer view...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote ConsumerView component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
+  </div>
+);
+
+const AllTicketsFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">All Tickets</h1>
+    <p className="text-gray-600">Loading all tickets...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote AllTickets component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
+  </div>
+);
+
 const SidebarFallback = () => (
   <div className="w-72 bg-gray-100 h-screen p-4">
     <div className="text-center">Sidebar Loading...</div>
@@ -392,6 +416,86 @@ const Dashboard = createSafeLazyComponent(
 const Consumers = createSafeLazyComponent(
   () => import('SuperAdmin/Consumers'),
   ConsumerFallback
+);
+
+const ConsumerView = createSafeLazyComponent(
+  () => import('SuperAdmin/ConsumerView'),
+  ConsumerViewFallback
+);
+
+const BillsPrepaid = createSafeLazyComponent(
+  () => import('SuperAdmin/BillsPrepaid'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Bills Prepaid</h1>
+      <p className="text-gray-600">Loading bills prepaid...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote BillsPrepaid component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const BillsPostpaid = createSafeLazyComponent(
+  () => import('SuperAdmin/BillsPostpaid'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Bills Postpaid</h1>
+      <p className="text-gray-600">Loading bills postpaid...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote BillsPostpaid component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const AllTickets = createSafeLazyComponent(
+  () => import('SuperAdmin/Ticket'),
+  AllTicketsFallback
+);
+
+const Transformer = createSafeLazyComponent(
+  () => import('SuperAdmin/Transformer'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">DTR Dashboard</h1>
+      <p className="text-gray-600">Loading DTR dashboard...</p>
+    </div>
+  )
+);
+
+const Assets = createSafeLazyComponent(
+  () => import('SuperAdmin/Assets'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Asset Management</h1>
+      <p className="text-gray-600">Loading asset management...</p>
+    </div>
+  )
+);
+
+const Meters = createSafeLazyComponent(
+  () => import('SuperAdmin/Meters'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Meters List</h1>
+      <p className="text-gray-600">Loading meters list...</p>
+    </div>
+  )
+);
+
+const DataLoggerMaster = createSafeLazyComponent(
+  () => import('SuperAdmin/DataLoggerMaster'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Data Logger Master</h1>
+      <p className="text-gray-600">Loading data logger master...</p>
+    </div>
+  )
 );
 
 // Use federated Sidebar and Header from SuperAdmin app
@@ -434,116 +538,160 @@ function AppContent() {
     checkRemoteApp();
   }, []);
   
-  // Generate menu items dynamically
-  const modules = ${JSON.stringify(modules || [])};
-  const menuItems = [
+// Generate menu items for federated components
+ const menuItems = [
     {
       title: 'Dashboard',
       icon: '/icons/dashboard.svg',
-      link: '/',
+      link: '/dashboard',
     },
     {
       title: 'Consumers',
-      icon: '/icons/user.svg',
+      icon: '/icons/units.svg',
       link: '/consumers',
     },
     {
-      title: 'User Management',
-      icon: '/icons/user-gear.svg',
-      link: '/user-management',
+      title: 'Transformers',
+      icon: '/icons/transformer.svg',
+      link: '/dtr-dashboard',
     },
     {
-      title: 'Role Management',
-      icon: '/icons/roles.svg',
-      link: '/role-management',
+      title: 'Bills',
+      icon: '/icons/bills.svg',
+      hasSubmenu: true,
+      submenu: [
+        {
+          title: 'Prepaid',
+          link: '/bills/prepaid',
+        },
+        {
+          title: 'Postpaid',
+          link: '/bills/postpaid',
+        },
+      ],
     },
-    ...modules.filter((module: string) => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module: string) => ({
-      title: module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' '),
-      icon: '/icons/apps-icon.svg',
-      link: \`/\${module}\`,
-    }))
+    {
+      title: 'Tickets',
+      icon: '/icons/customer-service.svg',
+      link: '/all-tickets',
+    },
   ];
+
+  const menuItems2 = [
+
+    {
+      title: 'Assets',
+      icon: '/icons/workflow-setting-alt.svg',
+      link: '/asset-management',
+    },
+    {
+      title: 'Meters',
+      icon: '/icons/meter-bolt.svg',
+      link: '/meters',
+      hasSubmenu: true,
+      submenu: [
+        {
+          title: 'Data Logger Master',
+          link: '/data-logger-master',
+        },
+        {
+          title: 'Meter List',
+          link: '/meters',
+        },
+      ],
+    },
+    {
+      title: 'Users',
+      icon: '/icons/user-gear.svg',
+      link: '/users',
+      hasSubmenu: true,
+      submenu: [
+        {
+          title: 'Users',
+          link: '/users',
+        },
+        {
+          title: 'Role Management',
+          link: '/meters',
+        },
+      ],
+    },
+  ];
+
+  // const menuItems = [
+  //   {
+  //     title: 'Dashboard',
+  //     icon: '/icons/user-profile.svg',
+  //     link: '/consumers/BI25GMRA001',
+  //   },
+  //   {
+  //     title: 'All Tickets',
+  //     icon: '/icons/support-tickets.svg',
+  //     link: '/all-tickets',
+  //   },
+  // {
+  //     title: 'Bills',
+  //     icon: '/icons/bills.svg',
+  //     hasSubmenu: true,
+  //     submenu: [
+  //       {
+  //         title: 'Prepaid',
+  //         link: '/bills/prepaid',
+  //       },
+  //       {
+  //         title: 'Postpaid',
+  //         link: '/bills/postpaid',
+  //       },
+  //     ],
+  //   },
+  // ]
   
   return (
     <FederatedContextProvider value={contextValue}>
       <div className="flex h-screen bg-white">
-        <Sidebar 
-          currentPath={location.pathname}
-          onNavigate={(path) => navigate(path)}
-          menus={[
-            {
-              category: 'MANAGEMENT',
-              items: menuItems,
-            },
-          ]}
-          logo={{
-            src: '/images/bi-blue-logo.svg',
-            alt: '${appName || 'Admin App'}',
-            collapsedSrc: '/images/changed-logo.svg',
-          }}
-          footer={{
-            copyright: '© 2024 ${companyName || 'Company'}',
-            showThemeToggle: true,
-            showShareButton: false,
-          }}
-        />
+        <Suspense fallback={<SidebarFallback />}>
+          <Sidebar 
+            currentPath={location.pathname}
+            onNavigate={(path:any) => navigate(path)}
+            menus={[
+              {
+                category: 'General',
+                items: menuItems,
+              },
+              {
+                category: 'Admin Settings',
+                items: menuItems2,
+              },
+            ]}
+            logo={{
+              src: '/images/bi-blue-logo.svg',
+              alt: '${appName || 'Admin App'}',
+              collapsedSrc: '/images/changed-logo.svg',
+            }}
+            footer={{
+              copyright: '© 2024 ${companyName || 'Company'}',
+              showThemeToggle: true,
+              showShareButton: false,
+            }}
+          />
+        </Suspense>
         <div className="flex flex-col flex-1">
-          <Header />
+          <Suspense fallback={<HeaderFallback />}>
+            <Header />
+          </Suspense>
           <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
             <Routes>
               <Route path="/" element={<Dashboard />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/consumers" element={<Consumers />} />
-              <Route path="/user-management" element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold mb-4">User Management</h1>
-                  <p className="text-gray-600 mb-4">Manage system users and their permissions.</p>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h3 className="font-semibold text-green-800 mb-2">User Management Module</h3>
-                    <p className="text-sm text-green-700">This module allows you to manage users, roles, and permissions.</p>
-                  </div>
-                </div>
-              } />
-              <Route path="/role-management" element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold mb-4">Role Management</h1>
-                  <p className="text-gray-600 mb-4">Manage user roles and access controls.</p>
-                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                    <h3 className="font-semibold text-purple-800 mb-2">Role Management Module</h3>
-                    <p className="text-sm text-purple-700">This module allows you to create and manage user roles.</p>
-                  </div>
-                </div>
-              } />
-              <Route path="/test" element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold mb-4">Test Route</h1>
-                  <p className="text-gray-600 mb-4">This is a test route to verify routing is working correctly.</p>
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <h3 className="font-semibold text-green-800 mb-2">Routing Test</h3>
-                    <p className="text-sm text-green-700">If you can see this page, routing is working properly!</p>
-                    <p className="text-sm text-green-700">Current time: {new Date().toLocaleString()}</p>
-                  </div>
-                  <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h3 className="font-semibold text-blue-800 mb-2">Debug Info</h3>
-                    <p className="text-sm text-blue-700">Current path: {location.pathname}</p>
-                    <p className="text-sm text-blue-700">Available modules: {JSON.stringify(modules)}</p>
-                    <p className="text-sm text-blue-700">Menu items count: {menuItems.length}</p>
-                  </div>
-                </div>
-              } />
-              {modules.filter((module: string) => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module: string) => (
-                <Route key={module} path={\`/\${module}\`} element={
-                  <div className="p-6">
-                    <h1 className="text-2xl font-bold mb-4">{\`\${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module\`}</h1>
-                    <p className="text-gray-600 mb-4">{\`This is the \${module.replace(/_/g, ' ')} module page.\`}</p>
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <h3 className="font-semibold text-blue-800 mb-2">Module Information</h3>
-                      <p className="text-sm text-blue-700">Module: {module}</p>
-                      <p className="text-sm text-blue-700">Status: Active</p>
-                    </div>
-                  </div>
-                } />
-              ))}
+              <Route path="/consumers/:uid" element={<ConsumerView />} />
+              <Route path="/bills/prepaid" element={<BillsPrepaid />} />
+              <Route path="/bills/postpaid" element={<BillsPostpaid />} />
+              <Route path="/dtr-dashboard" element={<Transformer />} />
+              <Route path="/asset-management" element={<Assets />} />
+              <Route path="/meters" element={<Meters />} />
+              <Route path="/data-logger-master" element={<DataLoggerMaster />} />
+              <Route path="/all-tickets" element={<AllTickets />} />
               <Route path="*" element={
                 <div className="p-6">
                   <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -557,12 +705,14 @@ function AppContent() {
                         <li>• / - Dashboard</li>
                         <li>• /dashboard - Dashboard</li>
                         <li>• /consumers - Consumers</li>
-                        <li>• /user-management - User Management</li>
-                        <li>• /role-management - Role Management</li>
-                        <li>• /test - Test Route</li>
-                        {modules.filter((module: string) => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module: string) => (
-                          <li key={module}>• /{module} - {module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module</li>
-                        ))}
+                        <li>• /consumers/:uid - Consumer View</li>
+                        <li>• /bills/prepaid - Bills Prepaid</li>
+                        <li>• /bills/postpaid - Bills Postpaid</li>
+                        <li>• /dtr-dashboard - DTR Dashboard</li>
+                        <li>• /asset-management - Asset Management</li>
+                        <li>• /meters - Meters List</li>
+                        <li>• /data-logger-master - Data Logger Master</li>
+                        <li>• /all-tickets - All Tickets</li>
                       </ul>
                     </div>
                   </div>
@@ -1072,31 +1222,41 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
     {
       category: 'MANAGEMENT',
       items: [
+        // {
+        //   title: 'Dashboard',
+        //   icon: '/icons/dashboard.svg',
+        //   link: '/',
+        // },
+        // {
+        //   title: 'Consumers',
+        //   icon: '/icons/user.svg',
+        //   link: '/consumers',
+        // },
+        // {
+        //   title: 'User Management',
+        //   icon: '/icons/user-gear.svg',
+        //   link: '/user-management',
+        // },
+        // {
+        //   title: 'Role Management',
+        //   icon: '/icons/roles.svg',
+        //   link: '/role-management',
+        // },
+        // ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `{
+        //   title: '${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')}',
+        //   icon: '/icons/apps-icon.svg',
+        //   link: '/${module}',
+        // }`).join(',\n        ') || ''}
         {
-          title: 'Dashboard',
-          icon: '/icons/dashboard.svg',
-          link: '/',
+          title: 'Consumer View',
+          icon: '/icons/user-profile.svg',
+          link: '/consumerview',
         },
         {
-          title: 'Consumers',
-          icon: '/icons/user.svg',
-          link: '/consumers',
+          title: 'All Tickets',
+          icon: '/icons/support-tickets.svg',
+          link: '/ticket',
         },
-        {
-          title: 'User Management',
-          icon: '/icons/user-gear.svg',
-          link: '/user-management',
-        },
-        {
-          title: 'Role Management',
-          icon: '/icons/roles.svg',
-          link: '/role-management',
-        },
-        ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `{
-          title: '${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')}',
-          icon: '/icons/apps-icon.svg',
-          link: '/${module}',
-        }`).join(',\n        ') || ''}
       ],
     },
   ];
@@ -1182,6 +1342,49 @@ declare module 'SuperAdmin/Ticket' {
   const Ticket: React.ComponentType<any>;
   export default Ticket;
 }
+
+declare module 'SuperAdmin/ConsumerView' {
+  const ConsumerView: React.ComponentType<any>;
+  export default ConsumerView;
+}
+
+declare module 'SuperAdmin/BillsPrepaid' {
+  const BillsPrepaid: React.ComponentType<any>;
+  export default BillsPrepaid;
+}
+
+declare module 'SuperAdmin/BillsPostpaid' { 
+  const BillsPostpaid: React.ComponentType<any>;
+  export default BillsPostpaid;
+}
+
+declare module 'SuperAdmin/Transformer' {
+  const Transformer: React.ComponentType<any>;
+  export default Transformer;
+}
+
+declare module 'SuperAdmin/Assets' {
+  const Assets: React.ComponentType<any>;
+  export default Assets;
+}
+
+declare module 'SuperAdmin/Meters' {
+  const Meters: React.ComponentType<any>;
+  export default Meters;
+}
+declare module 'SuperAdmin/DataLoggerMaster' {
+  const DataLoggerMaster: React.ComponentType<any>;
+  export default DataLoggerMaster;
+}
+// declare module 'SuperAdmin/Users' {
+//   const Users: React.ComponentType<any>;
+//   export default Users;
+// }
+
+// declare module 'SuperAdmin/RoleManagement' {
+//   const RoleManagement: React.ComponentType<any>;
+//   export default RoleManagement;
+// }
 `,
     
     'README.md': `# ${appName || 'Admin App'}

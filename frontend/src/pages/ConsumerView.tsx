@@ -15,14 +15,47 @@ import {
 // Mock data (should be shared or moved to a common location in real app)
 const consumersData = [
   { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17, balance: 0, address: 'GHASL, GMR', mobile: '+91********49', email: '***************@gmail.com', occupancy: 'Occupied' },
-  // ... add other consumers as needed
+  { uid: 'BI25GMRA002', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62, balance: 1250.50, address: 'Airport Road, GMR', mobile: '+91********78', email: 'neo.travels@gmail.com', occupancy: 'Occupied' },
+  { uid: 'BI25GMRA003', name: 'Dormitory', meter: 'A9345418', reading: 1108.34, balance: 450.75, address: 'Campus Area, GMR', mobile: '+91********23', email: 'dormitory.admin@gmail.com', occupancy: 'Occupied' },
+  { uid: 'BI25GMRA004', name: 'Mobikins', meter: 'A9211433', reading: 1271.76, balance: 890.25, address: 'Tech Park, GMR', mobile: '+91********56', email: 'mobikins.tech@gmail.com', occupancy: 'Vacant' },
+  { uid: 'BI25GMRA005', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17, balance: 0, address: 'GHASL, GMR', mobile: '+91********49', email: '***************@gmail.com', occupancy: 'Occupied' },
 ];
 
 const ConsumerView: React.FC = () => {
-  const { uid } = useParams<{ uid: string }>();
+  // Try to get uid from useParams first, then fallback to URL parsing
+  const params = useParams<{ uid: string }>();
+  const uidFromParams = params?.uid;
+  
+  // Fallback: extract uid from URL path if useParams doesn't work
+  const getUidFromUrl = () => {
+    const pathSegments = window.location.pathname.split('/');
+    const uidIndex = pathSegments.findIndex(segment => segment === 'consumers') + 1;
+    return uidIndex > 0 && uidIndex < pathSegments.length ? pathSegments[uidIndex] : null;
+  };
+  
+  const uid = uidFromParams || getUidFromUrl();
   const consumer = consumersData.find(c => c.uid === uid);
 
-  if (!consumer) return <div className="p-6">Consumer not found</div>;
+  // Debug information
+  console.log('ConsumerView: uid from params:', uidFromParams);
+  console.log('ConsumerView: uid from URL fallback:', getUidFromUrl());
+  console.log('ConsumerView: final uid:', uid);
+  console.log('ConsumerView: found consumer:', consumer);
+  console.log('ConsumerView: available consumers:', consumersData.map(c => c.uid));
+
+  if (!consumer) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Consumer not found</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h3 className="font-semibold text-red-800 mb-2">Debug Information:</h3>
+          <p className="text-sm text-red-700 mb-2">UID from URL: <strong>{uid}</strong></p>
+          <p className="text-sm text-red-700 mb-2">Available UIDs: <strong>{consumersData.map(c => c.uid).join(', ')}</strong></p>
+          <p className="text-sm text-red-700">Please check the URL parameter and ensure it matches one of the available consumer UIDs.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Header component
   const headerComponent = createHeaderComponent(
@@ -46,6 +79,26 @@ const ConsumerView: React.FC = () => {
     version: '2.1.0',
     supportLink: '#'
   });
+
+  // Debug Section (only show in development)
+  const debugSection: Section = {
+    id: 'debug-info',
+    component: (
+      <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
+        <h3 className="font-semibold text-yellow-800 mb-2">Debug Information:</h3>
+        <div className="text-sm text-yellow-700 space-y-1">
+          <p><strong>Current URL:</strong> {window.location.href}</p>
+          <p><strong>Pathname:</strong> {window.location.pathname}</p>
+          <p><strong>UID from useParams:</strong> {uidFromParams || 'undefined'}</p>
+          <p><strong>UID from URL fallback:</strong> {getUidFromUrl() || 'undefined'}</p>
+          <p><strong>Final UID:</strong> {uid || 'undefined'}</p>
+          <p><strong>Consumer found:</strong> {consumer ? 'Yes' : 'No'}</p>
+          <p><strong>Consumer name:</strong> {consumer?.name || 'N/A'}</p>
+          <p><strong>Available UIDs:</strong> {consumersData.map(c => c.uid).join(', ')}</p>
+        </div>
+      </div>
+    )
+  };
 
   // Consumer Info Section
   const consumerInfoSection: Section = {
@@ -395,6 +448,7 @@ const ConsumerView: React.FC = () => {
     <Page
       layout="single-column"
       sections={[
+        debugSection,
         consumerInfoSection, 
         instantaneousDataSection, 
         powerAnalysisSection, 
