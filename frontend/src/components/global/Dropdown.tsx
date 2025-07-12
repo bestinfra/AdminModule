@@ -240,6 +240,7 @@
 
 
 import React, { useState, useRef, useEffect, type KeyboardEvent } from 'react';
+import Input from '../forms/Input';
 
 // ========================================
 // INTERFACE DEFINITIONS
@@ -301,7 +302,6 @@ const Dropdown: React.FC<DropdownProps> = ({
   
   // REF VARIABLES
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // EFFECTS
   useEffect(() => {
@@ -315,8 +315,8 @@ const Dropdown: React.FC<DropdownProps> = ({
   }, []);
 
   useEffect(() => {
-    if (isOpen && searchable && searchInputRef.current) {
-      searchInputRef.current.focus();
+    if (isOpen && searchable) {
+      // Focus will be handled by the Input component internally
     }
   }, [isOpen, searchable]);
 
@@ -395,7 +395,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     return (
       <div
         key={option.value}
-        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-sm font-medium mb-1 mx-2 hover:dark:bg-primary hover:dark:text-white hover:bg-primary hover:text-white
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-base font-medium mb-1 mx-2 hover:dark:bg-primary hover:dark:text-white hover:bg-primary hover:text-white
           ${isSelected ? 'dark:bg-primary-dark dark:text-white' : ''}
           ${focusedIndex === index ? 'dark:bg-primary-dark dark:text-white' : 'hover:bg-primary-dark hover:text-white'}`}
         onClick={() => handleSelect(option)}
@@ -406,8 +406,21 @@ const Dropdown: React.FC<DropdownProps> = ({
             type="checkbox"
             readOnly
             checked={isSelected}
-            className="accent-light w-4 h-4 border border-primary-border dark:border-dark-border"
+            className="peer sr-only"
           />
+        )}
+        {isMultiSelect && (
+          <span className={`w-4 h-4 rounded-lg border-2 flex items-center justify-center mr-2 transition ${
+            isSelected 
+              ? 'bg-blue-900 border-blue-900' 
+              : 'border-gray-300 bg-transparent'
+          }`}>
+            {isSelected && (
+              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            )}
+          </span>
         )}
         {option.label}
       </div>
@@ -437,7 +450,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
         tabIndex={0}
-        className={`w-full flex items-center justify-between border px-4 py-3 rounded-full shadow-sm cursor-pointer dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border text-sm font-medium
+        className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border text-base font-medium
           ${disabled ? 'bg-gray-100 text-gray-400' : ''}
           ${error ? 'border-red-500' : 'border-gray-300'}`}
         role="combobox"
@@ -460,23 +473,21 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       {isOpen && (
         <div
-          className="absolute z-10 w-full mt-2 dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border rounded-2xl shadow-lg overflow-auto"
+          className="absolute z-10 w-full mt-2 dark:bg-primary-dark bg-white dark:text-white border border-primary-border dark:border-dark-border rounded-2xl overflow-auto scrollbar-hide"
           style={{ maxHeight }}
           role="listbox"
         >
           {searchable && (
-            <div className="p-2 border border-primary-border dark:border-dark-border">
-              <input
-                ref={searchInputRef}
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+            <div className="p-2  dark:border-dark-border">
+              <Input
+                onSearch={(query) => setSearchTerm(query)}
                 placeholder="Search..."
-                className="w-full px-3 py-2 border border-primary-border dark:border-dark-border rounded-xl text-sm my-2 py-3"
+                showShortcut={false}
+                className="mb-2"
               />
             </div>
           )}
-          <div className="max-h-60 overflow-y-auto mt-2 mb-1">
+          <div className="max-h-60 overflow-y-auto scrollbar-hide mt-2 mb-1">
             {renderOptions()}
           </div>
         </div>

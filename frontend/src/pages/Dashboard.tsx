@@ -104,77 +104,68 @@ const Dashboard: React.FC = () => {
         { key: 'eventDesc', label: 'Event Description' },
     ];
 
-    // Header component
-    const headerComponent = createHeaderComponent(
-        'Dashboard',
-        'Monitor system performance and key metrics',
-        'Last updated: 2 minutes ago'
-    );    
 
-    // Footer component
-    const footerComponent = createFooterComponent({
-        id: 'Dashboard ID: DASH-001',
-        version: '2.1.0',
-        supportLink: '#'
-    });
 
-    // Consumer Statistics Section
-    const consumerStatsSection: Section = {
-        id: 'consumer-stats',
+
+
+    // Combined Consumer Statistics and Consumption & Billing Section
+    const combinedStatsSection: Section = {
+        id: 'combined-stats',
         component: (
-            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
-                <div className="flex justify-between items-center gap-2">
-                    <h2 className="text-base font-regular m-0">Consumer Statistics</h2>
-                    <div style={{ opacity: 0, pointerEvents: 'none' }}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Consumer Statistics */}
+                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
+                    <div className="flex justify-between items-center gap-2">
+                        <h2 className="text-base font-regular m-0">Consumer Statistics</h2>
+                        <div style={{ opacity: 0, pointerEvents: 'none' }}>
+                            <TimeRangeSelector
+                                availableTimeRanges={billingViewOptions}
+                                selectedTimeRange={billingView}
+                                handleTimeRangeChange={() => {}}
+                            />
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {consumerStats.map((card, idx) => (
+                            <Card
+                                key={idx}
+                                title={card.title}
+                                value={card.value}
+                                icon={card.icon}
+                                subtitle1={card.subtitle1}
+                                subtitle2={card.subtitle2}
+                                iconStyle={{ filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)'
+ }}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Consumption & Billing */}
+                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
+                    <div className="flex justify-between items-center gap-2">
+                        <h2 className="text-base font-regular">Consumption & Billing <span className="text-base font-regular">(Jul 4, 2025)</span></h2>
                         <TimeRangeSelector
                             availableTimeRanges={billingViewOptions}
                             selectedTimeRange={billingView}
-                            handleTimeRangeChange={() => {}}
+                            handleTimeRangeChange={(v) => setBillingView(v as 'Daily' | 'Monthly')}
                         />
                     </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {consumerStats.map((card, idx) => (
-                        <Card
-                            key={idx}
-                            title={card.title}
-                            value={card.value}
-                            icon={card.icon}
-                            subtitle1={card.subtitle1}
-                            subtitle2={card.subtitle2}
-                        />
-                    ))}
-                </div>
-            </div>
-        )
-    };
-
-    // Consumption & Billing Section
-    const consumptionBillingSection: Section = {
-        id: 'consumption-billing',
-        component: (
-            <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
-                <div className="flex justify-between items-center gap-2">
-                    <h2 className="text-base font-regular">Consumption & Billing <span className="text-base font-regular">(Jul 4, 2025)</span></h2>
-                    <TimeRangeSelector
-                        availableTimeRanges={billingViewOptions}
-                        selectedTimeRange={billingView}
-                        handleTimeRangeChange={(v) => setBillingView(v as 'Daily' | 'Monthly')}
-                    />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {billingStats.map((card, idx) => (
-                        <Card
-                            key={idx}
-                            title={card.title}
-                            value={card.value}
-                            icon={card.icon}
-                            subtitle1={card.subtitle1}
-                            subtitle2={card.subtitle2}
-                            showTrend={card.showTrend}
-                            comparisonValue={card.comparisonValue}
-                        />
-                    ))}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {billingStats.map((card, idx) => (
+                            <Card
+                                key={idx}
+                                title={card.title}
+                                value={card.value}
+                                icon={card.icon}
+                                subtitle1={card.subtitle1}
+                                subtitle2={card.subtitle2}
+                                showTrend={card.showTrend}
+                                comparisonValue={card.comparisonValue}
+                                iconStyle={{ filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)' }}
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
         )
@@ -186,15 +177,15 @@ const Dashboard: React.FC = () => {
         component: (
             <div className="flex flex-col gap-2">
                 <div className="flex items-center justify-between gap-2">
-                    <h2 className="text-lg font-semibold mb-0">Metrics</h2>
+                    <h2 className="text-base font-semibold mb-0">Metrics</h2>
                     <TimeRangeSelector
                         availableTimeRanges={metricsTypeOptions}
                         selectedTimeRange={metricsType}
                         handleTimeRangeChange={setMetricsType}
                     />
                 </div>
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
+                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
                         <div className="font-medium">Daily Consumption Metrics <span className="text-xs font-normal">(4 May, 2025 - 5 Jul, 2025)</span></div>
                         <div className="flex items-center gap-2">
                             <TimeRangeSelector
@@ -202,7 +193,16 @@ const Dashboard: React.FC = () => {
                                 selectedTimeRange={metricsView}
                                 handleTimeRangeChange={setMetricsView}
                             />
-                        </div>
+                    <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
+                        <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                        />
+                    </span>
+                    </div>
+                    
+
                     </div>
                     <div className="px-6">
                         {metricsType === 'Graph' ? (
@@ -225,11 +225,18 @@ const Dashboard: React.FC = () => {
     const meterCommunicationSection: Section = {
         id: 'meter-communication',
         component: (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Meter Communication Status */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
-                        <h2 className="text-lg font-semibold">Meter Communication Status</h2>
+            <div className="grid grid-cols-10 gap-6">
+                {/* Meter Communication Status - 30% */}
+                <div className="col-span-3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-tl-3xl rounded-tr-3xl px-4 py-4">
+                        <h2 className="text-base font-normal">Meter Communication Status</h2>
+                        <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
+                        <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                        />
+                    </span>
                     </div>
                     <div className="p-6">
                         <PieChart
@@ -242,8 +249,8 @@ const Dashboard: React.FC = () => {
                 </div>
 
                 {/* Latest Meter Events */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-2">
+                <div className="col-span-7 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
+                    <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
                         <h2 className="text-lg font-semibold">Latest Meter Events</h2>
                     </div>
                     <div className="p-4">
@@ -263,12 +270,10 @@ const Dashboard: React.FC = () => {
 
     return (
         <Page
-            layout="two-column"
-            sections={[consumerStatsSection, consumptionBillingSection, metricsSection, meterCommunicationSection]}
-            header={headerComponent}
-            footer={footerComponent}
+            layout="single-column"
+            sections={[combinedStatsSection, metricsSection, meterCommunicationSection]}
             sidebarPosition="right"
-            className="space-y-6 bg-[var(--color-surface)] p-4"
+            className="space-y-6 bg-[var(--color-surface)]"
             sectionClassName=""
 
         />

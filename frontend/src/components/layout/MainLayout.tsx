@@ -62,7 +62,7 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
                     title={getPageTitle()}
                     onSidebarToggle={toggleSidebar}
                 />
-                <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
+                <main className="flex-1 px-6  py-4  bg-white overflow-auto dark:bg-primary-dark hide-scrollbar-y">
                     <Outlet />
                 </main>
             </div>

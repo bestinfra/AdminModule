@@ -18,9 +18,15 @@ const LineChart: React.FC<LineChartProps> = ({
         title: {
             text: title,
             left: 'center',
+            textStyle: {
+                fontFamily: 'Manrope, sans-serif',
+            },
         },
         tooltip: {
             trigger: 'axis',
+            textStyle: {
+                fontFamily: 'Manrope, sans-serif',
+            },
         },
         xAxis: {
             type: 'category',

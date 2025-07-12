@@ -9,6 +9,7 @@ interface CardProps {
     subtitle2?: string;
     loading?: boolean;
     onValueClick?: () => void; // new prop
+    iconStyle?: React.CSSProperties; // new prop for custom icon styling
 }
 
 import CardSkeleton from '../skeletons/CardSkeleton';
@@ -24,6 +25,7 @@ const Card = ({
     subtitle2,
     loading = false,
     onValueClick, // new prop
+    iconStyle, // new prop
 }: CardProps) => {
     if (loading) {
         return <CardSkeleton />;
@@ -73,7 +75,7 @@ const Card = ({
                 </div>
                 {icon && (
                     <figure className="p-2 bg-gradient-primary  dark:bg-dark-secondary rounded-full w-12 h-12 flex items-center justify-center ">
-                        <img src={icon} alt={`${title} Icon`} className="w-5 h-5" />
+                        <img src={icon} alt={`${title} Icon`} className="w-6 h-6" style={iconStyle} />
                     </figure>
                 )}
             </section>
