@@ -20,9 +20,18 @@ function createAppProject(formData) {
     modules
   } = formData;
 
-  // Create the project folder name
-  const projectFolderName = subdomain || appName?.toLowerCase().replace(/\s+/g, '-') || 'my-admin-app';
+  // Create the project folder name - use appName instead of subdomain to avoid special characters
+  const projectFolderName = appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app';
   const baseDir = path.join(__dirname, 'generated-apps', projectFolderName);
+  
+  // Debug logging to see what values we're working with
+  console.log('Debug Info:');
+  console.log('  appName:', appName);
+  console.log('  subdomain:', subdomain);
+  console.log('  projectFolderName:', projectFolderName);
+  console.log('  baseDir:', baseDir);
+  console.log('  modules:', modules);
+  console.log('  filtered modules:', modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)));
 
   // Helper to ensure directory exists
   function ensureDir(dir) {
@@ -134,7 +143,7 @@ function createAppProject(formData) {
   // Create the React project structure
   const projectStructure = {
     'package.json': JSON.stringify({
-      name: projectFolderName,
+      name: appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || projectFolderName,
       version: '0.1.0',
       private: true,
 
@@ -336,19 +345,29 @@ const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentTyp
 };
 
 // Fallback components
-  const DashboardFallback = () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p className="text-gray-600">Loading dashboard...</p>
-    </div>
-  );
+const DashboardFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Dashboard</h1>
+    <p className="text-gray-600">Loading dashboard...</p>
+  </div>
+);
 
 const ConsumerFallback = () => (
   <div className="p-6">
-    <h1 className="text-2xl font-bold">Consumer</h1>
-    <p className="text-gray-600">Loading consumer...</p>
+    <h1 className="text-2xl font-bold">Consumers</h1>
+    <p className="text-gray-600">Loading consumers...</p>
+    <p className="text-sm text-red-500 mt-2">If this persists, check the browser console for errors.</p>
+    <div className="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded">
+      <h3 className="font-semibold text-yellow-800">Debug Info:</h3>
+      <p className="text-sm text-yellow-700">This is the fallback component. The remote Consumers component failed to load.</p>
+      <p className="text-sm text-yellow-700">Check browser console for detailed error information.</p>
+      <p className="text-sm text-yellow-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
   </div>
 );
+
+
+
 const SidebarFallback = () => (
   <div className="w-72 bg-gray-100 h-screen p-4">
     <div className="text-center">Sidebar Loading...</div>
@@ -368,18 +387,34 @@ const TicketsFallback = () => (
   </div>
 );
 
-const AppProviderFallback = ({ children }: { children: React.ReactNode }) => (
-  <div>{children}</div>
-);
-
 // Safe lazy components with fallbacks
 const Dashboard = createSafeLazyComponent(
-  () => import('SuperAdmin/Dashboard'),
+  () => import('SuperAdmin/Dashboard').catch(error => {
+    console.error('Failed to load Dashboard component:', error);
+    return { default: DashboardFallback };
+  }),
   DashboardFallback
 );
 
+// Load Consumers component from remote app
 const Consumers = createSafeLazyComponent(
-  () => import('SuperAdmin/Consumers'),
+  () => {
+    console.log('Attempting to load Consumers component from SuperAdmin...');
+    return import('SuperAdmin/Consumers')
+      .then(module => {
+        console.log('Successfully loaded Consumers component:', module);
+        return module;
+      })
+      .catch(error => {
+        console.error('Failed to load Consumers component:', error);
+        console.error('Error details:', {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
+        });
+        return { default: ConsumerFallback };
+      });
+  },
   ConsumerFallback
 );
 
@@ -407,6 +442,25 @@ import './App.css';
 
 function AppContent() {
   const contextValue = useApp();
+  
+  // Check if remote app is accessible
+  React.useEffect(() => {
+    const checkRemoteApp = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/assets/remoteEntry.js');
+        if (!response.ok) {
+          console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
+        } else {
+          console.log('Remote app is accessible');
+        }
+      } catch (error) {
+        console.error('Failed to check remote app:', error);
+      }
+    };
+    
+    checkRemoteApp();
+  }, []);
+  
   return (
     <FederatedContextProvider value={contextValue}>
       <Router>
@@ -415,13 +469,17 @@ function AppContent() {
           <div className="flex flex-col flex-1">
             <Header />
             <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-                              <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/consumers" element={<Consumers />} />
-                  ${modules?.map((module) => `
-                  <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1)} Module</h1><p className="text-gray-600">This is the ${module} module page.</p></div>} />`).join('') || ''}
-                </Routes>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/consumers" element={<Consumers />} />
+                <Route path="/test-consumers" element={<div className="p-6"><h1 className="text-2xl font-bold">Test Consumers Route</h1><p className="text-gray-600">This is a test route to verify routing is working.</p></div>} />
+                <Route path="/user-management" element={<div className="p-6"><h1 className="text-2xl font-bold">User Management</h1><p className="text-gray-600">Manage system users and their permissions.</p></div>} />
+                <Route path="/role-management" element={<div className="p-6"><h1 className="text-2xl font-bold">Role Management</h1><p className="text-gray-600">Manage user roles and access controls.</p></div>} />
+                ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `
+                <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module</h1><p className="text-gray-600">This is the ${module.replace(/_/g, ' ')} module page.</p></div>} />`).join('') || ''}
+                <Route path="*" element={<div className="p-6"><h1 className="text-2xl font-bold">Page Not Found</h1><p className="text-gray-600">The page you're looking for doesn't exist.</p></div>} />
+              </Routes>
             </main>
           </div>
         </div>
@@ -435,7 +493,7 @@ function App() {
     <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
       <AppProvider>
         <AppContent />
-    </AppProvider>
+      </AppProvider>
     </Suspense>
   );
 }
@@ -626,11 +684,6 @@ const Sidebar = () => {
           title: 'Dashboard',
           icon: '📊',
           link: '/',
-        },
-        {
-          title: 'Dashboard',
-          icon: '📊',
-          link: '/dashboard',
         },
         {
           title: 'Consumers',
@@ -829,9 +882,16 @@ const Header = ({
     
     switch (location.pathname) {
       case '/':
+      case '/dashboard':
         return 'Dashboard';
-      ${modules?.map((module) => `case '/${module}':
-        return '${module.charAt(0).toUpperCase() + module.slice(1)} Module';`).join('\n      ') || ''}
+      case '/consumers':
+        return 'Consumers';
+      case '/user-management':
+        return 'User Management';
+      case '/role-management':
+        return 'Role Management';
+      ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `case '/${module}':
+        return '${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module';`).join('\n      ') || ''}
       default:
         return 'Dashboard';
     }
@@ -899,7 +959,7 @@ const Header = ({
 };
 
 export default Header;`,
-    
+
 'src/components/SidebarWrapper.tsx': `import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -912,14 +972,51 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
   const navigate = useNavigate();
   
   const handleNavigate = (path: string) => {
+    console.log('SidebarWrapper: Navigating to:', path);
+    console.log('SidebarWrapper: Current location before navigation:', location.pathname);
     navigate(path);
   };
   
-  // Pass the location.pathname and navigation function to the federated Sidebar component
+  // Define mandatory menu items for host apps
+  const mandatoryMenus = [
+    {
+      category: 'MANAGEMENT',
+      items: [
+        {
+          title: 'Dashboard',
+          icon: '/icons/dashboard.svg',
+          link: '/',
+        },
+        {
+          title: 'Consumers',
+          icon: '/icons/user.svg',
+          link: '/consumers',
+        },
+        {
+          title: 'User Management',
+          icon: '/icons/user-gear.svg',
+          link: '/user-management',
+        },
+        {
+          title: 'Role Management',
+          icon: '/icons/roles.svg',
+          link: '/role-management',
+        },
+        ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `{
+          title: '${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')}',
+          icon: '/icons/apps-icon.svg',
+          link: '/${module}',
+        }`).join(',\n        ') || ''}
+      ],
+    },
+  ];
+  
+  // Pass the location.pathname, navigation function, and mandatory menus to the federated Sidebar component
   return (
     <SidebarComponent 
       currentPath={location.pathname} 
       onNavigate={handleNavigate}
+      menus={mandatoryMenus}
     />
   );
 };
@@ -967,6 +1064,8 @@ export const useFederatedApp = () => {
     }
     return context;
 }; `,
+    
+
     
 'src/types/federation.d.ts': `
 declare module 'SuperAdmin/Dashboard' {

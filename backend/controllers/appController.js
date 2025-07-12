@@ -176,7 +176,8 @@ export const createApp = async (req, res) => {
 
         } catch (innerError) {
             // If database creation fails, clean up the generated files
-            const projectPath = join(__dirname, '..', '..', 'generated-apps', appName.toLowerCase().replace(/\s+/g, '-'));
+            const projectFolderName = appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app';
+            const projectPath = join(__dirname, '..', '..', 'generated-apps', projectFolderName);
             if (fs.existsSync(projectPath)) {
                 fs.rmSync(projectPath, { recursive: true, force: true });
             }
