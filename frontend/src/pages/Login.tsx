@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Logo from '../components/global/Logo';
 
 const MIN_PASSWORD_LENGTH = 6;
-const INPUT_BASE_CLASSES = "w-full px-4 py-3 border border-gray-200 rounded-full  focus:bg-white  outline-none transition-all text-sm placeholder:text-gray-400";
+const INPUT_BASE_CLASSES = "w-full px-4 py-3 border border-gray-200 rounded-full focus:bg-white outline-none transition-all text-sm placeholder:text-gray-400";
 const INPUT_ERROR_CLASSES = "ring-2 ring-red-500 bg-red-50 border-red-300";
 
 const getErrorMessage = (error: any): string => {
@@ -152,7 +152,7 @@ const Login: React.FC = () => {
                 autoComplete="username"
                 value={formData.identifier}
                 onChange={handleInputChange}
-                className={getInputClasses(!!errors.identifier) + ' bg-white pr-12'}
+                className={getInputClasses(!!errors.identifier) + 'bg-white pr-12'}
                 placeholder="Username or Email Address"
                 required
               />
@@ -215,9 +215,9 @@ const Login: React.FC = () => {
                     </svg>
                   )}
                 </span>
-                <span className="text-lg text-gray-700">Remember Me</span>
+                <span className="text-base text-gray-700">Remember Me</span>
               </label>
-              <button type="button" onClick={handleForgotPassword} className="text-lg text- hover:text- font-medium">
+              <button type="button" onClick={handleForgotPassword} className="text-base text- hover:text- font-medium">
                 Forgot Password?
               </button>
             </div>
