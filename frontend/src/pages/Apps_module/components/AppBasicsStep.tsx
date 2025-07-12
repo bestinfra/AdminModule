@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
@@ -13,7 +13,7 @@ interface AppBasicsStepProps {
 }
 
 const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
-    const [subdomainPreview, setSubdomainPreview] = useState('');
+
     const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
     // Auto-generate subdomain from app name
@@ -24,7 +24,6 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                 .replace(/[^a-z0-9]/g, '-')
                 .replace(/-+/g, '-')
                 .replace(/^-|-$/g, '');
-            setSubdomainPreview(generated);
             if (!formData.subdomain) {
                 onInputChange({ target: { name: 'subdomain', value: generated } });
             }
@@ -119,7 +118,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     input={{
                         name: 'appName',
                         type: 'text',
-                        // label: 'App Name',
+                        label: 'App Name',
                         placeholder: 'Enter your app name',
                         required: true
                     }}
@@ -180,7 +179,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     input={{
                         name: 'subdomain',
                         type: 'text',
-                        // label: 'Subdomain',
+                        label: 'Subdomain',
                         placeholder: 'Enter subdomain',
                         required: true
                     }}

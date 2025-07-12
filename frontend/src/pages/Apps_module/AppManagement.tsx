@@ -9,7 +9,7 @@ import ModuleSelectionStep from './components/ModuleSelectionStep';
 import GoLiveStep from './components/GoLiveStep';
 import type { AdminAccessFormData, AdminAccessFormErrors } from './components/AdminAccessForm';
 import { AppCreationAPI } from '../../api/appCreation';
-import arrowLeft from '/icons/arrow-left.svg?url';
+
 
 const stepLabels: { label: string; sub: string }[] = [
   { label: 'App Basics', sub: 'Configure your application settings' },
@@ -76,8 +76,8 @@ const AppManagement: React.FC = () => {
   const [moduleData, setModuleData] = useState<typeof initialModuleData>(initialModuleData);
   const [moduleErrors, setModuleErrors] = useState<Partial<Record<keyof typeof initialModuleData, string>>>({});
   const [loading, setLoading] = useState(false);
-  const [generatedApps, setGeneratedApps] = useState<any[]>([]);
-  const [showGeneratedApps, setShowGeneratedApps] = useState(false);
+
+
 
   // Handlers for App Basics Step
   const handleAppBasicsInputChange = (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => {
@@ -159,23 +159,9 @@ const AppManagement: React.FC = () => {
     setCurrentStep(stepIndex + 1); // Convert 0-based to 1-based
   };
 
-  // Load generated apps
-  const loadGeneratedApps = async () => {
-    try {
-      const response = await AppCreationAPI.getGeneratedApps();
-      setGeneratedApps(response.apps);
-    } catch (error) {
-      console.error('Error loading generated apps:', error);
-    }
-  };
 
-  // Toggle generated apps view
-  const toggleGeneratedApps = () => {
-    if (!showGeneratedApps) {
-      loadGeneratedApps();
-    }
-    setShowGeneratedApps(!showGeneratedApps);
-  };
+
+
 
   // Final submit handler
   const handleFinalSubmit = async () => {
@@ -231,10 +217,7 @@ const AppManagement: React.FC = () => {
         // Handle success
         alert(`${result.message}\n\nNext steps:\n${result.nextSteps?.join('\n') || ''}`);
         
-        // Refresh generated apps list if it's currently shown
-        if (showGeneratedApps) {
-            await loadGeneratedApps();
-        }
+
         
         // Optional: Reset form or redirect
         // setCurrentStep(1);
