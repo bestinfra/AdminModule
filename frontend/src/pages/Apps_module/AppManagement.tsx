@@ -264,30 +264,34 @@ const AppManagement: React.FC = () => {
           return (
             <div
               key={step.label}
-              className={`p-5 rounded-lg transition-all dark:border-dark-border flex justify-between items-center gap-4 ${
+              className={`p-5 rounded-lg transition-all dark:border-dark-border flex justify-between items-start gap-4 ${
                 isActive 
                   ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' 
                   : isCompleted 
-                    ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(156,163,175,0.4)]' 
-                    : 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(156,163,175,0.4)]'
+                    ? 'bg-white dark:bg-primary-dark'
+                    : 'bg-white dark:bg-primary-dark opacity-60'
               }`}
             >
               <div className={`flex items-center justify-center min-w-8 h-8 px-2 rounded-full text-white text-sm font-semibold ${
                 isActive 
                   ? 'bg-primary' 
                   : isCompleted 
-                    ? 'bg-green-500' 
+                    ? 'bg-secondary' 
                     : 'bg-gray-400'
               }`}>
-                {isCompleted ? '✓' : idx + 1}
+                {isCompleted ? (
+                 <img src={'icons/checkmark.svg'} alt="check" className="w-4 h-4" />
+                ) : (
+                  idx + 1
+                )}
               </div>
               <div className='flex flex-col gap-2'>
-                <h2 className={`font-semibold ${
+                <h2 className={`${
                   isActive 
-                    ? 'text-primary dark:text-white' 
+                    ? 'font-extrabold text-primary dark:text-white' 
                     : isCompleted 
-                      ? 'text-green-700 dark:text-green-300' 
-                      : 'text-main dark:text-white'
+                      ? 'font-semibold text-secondary dark:text-secondary' 
+                      : 'font-semibold text-main dark:text-white'
                 }`}>{step.label}</h2>
                 <h3 className={`text-md ${
                   isActive 
