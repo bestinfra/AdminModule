@@ -142,7 +142,7 @@ const FormInput: React.FC<FormInputProps> = ({
         {description && !showError && (
           <p 
             id={descriptionId}
-            className="text-xs text-gray-500"
+            className="text-sm text-gray-500"
             role="note"
           >
             {description}
@@ -153,7 +153,7 @@ const FormInput: React.FC<FormInputProps> = ({
         {showError && error && (
           <div 
             id={errorId}
-            className="text-xs text-red-500 mt-1"
+            className="text-sm text-red-500 mt-1"
             role="alert"
             aria-live="polite"
           >
