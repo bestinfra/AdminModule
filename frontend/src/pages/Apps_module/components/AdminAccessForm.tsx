@@ -37,12 +37,7 @@ export interface AdminAccessFormProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const roleOptions = [
-  { value: '', label: 'Select admin role' },
-  { value: 'super-admin', label: 'Super Administrator' },
-  { value: 'admin', label: 'Administrator' },
-  { value: 'manager', label: 'Manager' },
-];
+
 
 const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
   formData,
@@ -171,38 +166,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
           />
         </div>
         {/* <p className="text-xs text-gray-500 dark:text-gray-400 -mt-4 mb-2">Password must be at least 8 characters with uppercase, lowercase, number, and special character</p> */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            {/* <label htmlFor="adminRole" className="block text-sm font-medium text-main dark:text-white mb-1">
-              Admin Role <span className="text-error">*</span>
-            </label> */}
-            <Dropdown
-              name="adminRole"
-              value={formData.adminRole}
-              onChange={onDropdownChange}
-              options={roleOptions}
-              placeholder="Select admin role"
-              required
-              error={errors.adminRole}
-              disabled={loading}
-            />
-          </div>
-          <FormInput
-            input={{
-              name: 'adminDepartment',
-              type: 'text',
-              label: '',
-              placeholder: 'Enter department (optional)'
-            }}
-            value={formData.adminDepartment}
-            error={undefined}
-            showError={false}
-            disabled={loading}
-            onInputChange={handleFormInputChange}
-            onInputBlur={handleFormInputBlur}
-            fileInputRefs={fileInputRefs}
-          />
-        </div>
+        
         <div>
           <label htmlFor="adminAddress" className="block text-sm font-medium text-main dark:text-white mb-1">
             Address

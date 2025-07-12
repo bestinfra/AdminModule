@@ -82,7 +82,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
   ];
 
   return (
-    <div className="bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
+    <div className="bg-white dark:bg-primary-dark  ">
       <h2 className="font-bold dark:text-white mb-1">Branding & Customization</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Customize your application's appearance and branding elements</p>
       

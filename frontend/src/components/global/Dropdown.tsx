@@ -395,7 +395,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     return (
       <div
         key={option.value}
-        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-sm font-medium mb-1 mx-2 hover:dark:bg-primary hover:dark:text-white hover:bg-primary hover:text-white
+        className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-base font-medium mb-1 mx-2 hover:dark:bg-primary hover:dark:text-white hover:bg-primary hover:text-white
           ${isSelected ? 'dark:bg-primary-dark dark:text-white' : ''}
           ${focusedIndex === index ? 'dark:bg-primary-dark dark:text-white' : 'hover:bg-primary-dark hover:text-white'}`}
         onClick={() => handleSelect(option)}
@@ -450,7 +450,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <div
         onClick={() => !disabled && setIsOpen(!isOpen)}
         tabIndex={0}
-        className={`w-full flex items-center justify-between border px-4 py-3 rounded-full shadow-sm cursor-pointer dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border text-sm font-medium
+        className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark dark:text-white border border-primary-border dark:border-dark-border text-base font-medium
           ${disabled ? 'bg-gray-100 text-gray-400' : ''}
           ${error ? 'border-red-500' : 'border-gray-300'}`}
         role="combobox"
@@ -473,7 +473,7 @@ const Dropdown: React.FC<DropdownProps> = ({
 
       {isOpen && (
         <div
-          className="absolute z-10 w-full mt-2 dark:bg-primary-dark bg-white dark:text-white border border-primary-border dark:border-dark-border rounded-2xl shadow-lg overflow-auto scrollbar-hide"
+          className="absolute z-10 w-full mt-2 dark:bg-primary-dark bg-white dark:text-white border border-primary-border dark:border-dark-border rounded-2xl overflow-auto scrollbar-hide"
           style={{ maxHeight }}
           role="listbox"
         >
