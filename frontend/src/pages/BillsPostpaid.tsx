@@ -74,7 +74,6 @@ const BillsPostpaid: React.FC = () => {
   const [search, setSearch] = useState('');
 
 
-  // Header component
   const headerComponent = (
     <PageHeader
       title="Bills Postpaid"
