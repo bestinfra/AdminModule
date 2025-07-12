@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
@@ -13,7 +13,7 @@ interface AppBasicsStepProps {
 }
 
 const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
-    const [subdomainPreview, setSubdomainPreview] = useState('');
+
     const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
     // Auto-generate subdomain from app name

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import FormInput from '../../../components/forms/FormInput';
-import Dropdown from '../../../components/global/Dropdown';
+
 import Button from '../../../components/global/Button';
 import LoadingSpinner from '../../../components/global/LoadingSpinner';
 import type { FormInputValue } from '../../../components/forms/types';
@@ -43,7 +43,7 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
   formData,
   errors,
   onInputChange,
-  onDropdownChange,
+
   loading = false,
   onSubmit,
 }) => {

@@ -92,6 +92,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             input={{
               name: 'companyName',
               type: 'text',
+              label: 'Company Name',
               placeholder: 'Enter company name',
               required: true
             }}
@@ -107,7 +108,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             input={{
               name: 'companyWebsite',
               type: 'url',
-              // label: 'Company Website',
+              label: 'Company Website',
               placeholder: 'https://example.com'
             }}
             value={formData.companyWebsite}
@@ -229,7 +230,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             input={{
               name: 'contactEmail',
               type: 'email',
-              // label: 'Contact Email',
+              label: 'Contact Email',
               placeholder: 'contact@company.com'
             }}
             value={formData.contactEmail}
@@ -244,7 +245,7 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
             input={{
               name: 'contactPhone',
               type: 'tel',
-              // label: 'Contact Phone',
+              label: 'Contact Phone',
               placeholder: '+1-234-567-8900'
             }}
             value={formData.contactPhone}

@@ -69,9 +69,9 @@ const defaultMenus: MenuCategory[] = [
                 link: '/super-admin',
             },
             {
-                title: 'Dashboard',
-                icon: '/icons/dashboard.svg',
-                link: '/',
+                title: 'Tickets',
+                icon: '/icons/customer-service.svg',
+                link: '/all-tickets',
             },
             {
                 title: 'Apps',

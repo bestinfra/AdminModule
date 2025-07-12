@@ -5,10 +5,7 @@ import Table from '../components/global/Table';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-     createFooterComponent
-} from '../components/global/PageComponents';
+
 
 const Dashboard: React.FC = () => {
     // State for toggles (UI only, no real interactivity)
