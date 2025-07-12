@@ -24,9 +24,10 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                 .replace(/[^a-z0-9]/g, '-')
                 .replace(/-+/g, '-')
                 .replace(/^-|-$/g, '');
-            setSubdomainPreview(generated);
+            const fullUrl = `https://www.${generated}`;
+            setSubdomainPreview(fullUrl);
             // Always update subdomain when app name changes
-            onInputChange({ target: { name: 'subdomain', value: generated } });
+            onInputChange({ target: { name: 'subdomain', value: fullUrl } });
         }
     }, [formData.appName]);
 
@@ -121,7 +122,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                                 name: 'appName',
                                 type: 'text',
                                 placeholder: 'Enter App Name',
-                                required: true
+                                required: true,
                             }}
                             value={formData.appName}
                             error={errors.appName}
@@ -134,7 +135,7 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     </div>
                     <div className="flex-1">
 
-                        <div className="relative flex items-center" style={{height: 'auto'}}>
+                        <div className="relative flex items-center h-auto">
                             <input
                                 id="subdomain"
                                 name="subdomain"
@@ -150,13 +151,12 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                             />
                             {formData.subdomain && (
                                 <a
-                                    href={`https://${formData.subdomain}.bestinfra.org`}
+                                    href={`${formData.subdomain}.bestinfra.org`}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="absolute right-36 top-1/2 -translate-y-1/2 text-blue-600 hover:underline flex items-center z-10 text-sm"
                                 >
-                                    <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M14 3h7m0 0v7m0-7L10 14m-4 0h4v4"/></svg>
-                                    OPEN
+                                 
                                 </a>
                             )}
                             <span
