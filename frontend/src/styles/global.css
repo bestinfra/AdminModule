@@ -126,7 +126,7 @@
   
   /* Info Colors */
   --color-info:none;
-  --color-subinfo:rgba(71, 97, 137, 1); 
+  --color-subinfo:rgba(71, 97, 137, 1);   /* #476189 */
 
     /* Border Colors */
     --color-primary-border:rgba(233, 239, 255, 1);
@@ -346,7 +346,6 @@ img {
     }
 
     .input:disabled {
-        background-color: var(--color-muted);
         color: var(--color-light);
         cursor: not-allowed;
     }
@@ -400,7 +399,7 @@ img {
 
 /* Force input placeholder color to gray-400 and background to white */
 input::placeholder {
-  color: #9ca3af !important; /* Tailwind gray-400 */
+  color: var(--color-neutral) !important; /* Tailwind  */
   opacity: 1;
 }
 input {
