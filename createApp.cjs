@@ -327,9 +327,11 @@ body {
 }`,
     
     'src/App.tsx': `
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { lazy, Suspense, ComponentType } from 'react';
+import React, { lazy, Suspense, ComponentType, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { AppProvider, useApp } from './context/AppContext';
+import { FederatedContextProvider } from './components/FederatedWrapper';
+import './App.css';
 
 // Create safe lazy loading with error handling
 const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
@@ -349,6 +351,11 @@ const DashboardFallback = () => (
   <div className="p-6">
     <h1 className="text-2xl font-bold">Dashboard</h1>
     <p className="text-gray-600">Loading dashboard...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote Dashboard component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
   </div>
 );
 
@@ -356,17 +363,13 @@ const ConsumerFallback = () => (
   <div className="p-6">
     <h1 className="text-2xl font-bold">Consumers</h1>
     <p className="text-gray-600">Loading consumers...</p>
-    <p className="text-sm text-red-500 mt-2">If this persists, check the browser console for errors.</p>
-    <div className="mt-4 p-4 bg-yellow-100 border border-yellow-400 rounded">
-      <h3 className="font-semibold text-yellow-800">Debug Info:</h3>
-      <p className="text-sm text-yellow-700">This is the fallback component. The remote Consumers component failed to load.</p>
-      <p className="text-sm text-yellow-700">Check browser console for detailed error information.</p>
-      <p className="text-sm text-yellow-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote Consumers component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
     </div>
   </div>
 );
-
-
 
 const SidebarFallback = () => (
   <div className="w-72 bg-gray-100 h-screen p-4">
@@ -380,44 +383,18 @@ const HeaderFallback = () => (
   </div>
 );
 
-const TicketsFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Tickets</h1>
-    <p className="text-gray-600">Loading tickets...</p>
-  </div>
-);
-
-// Safe lazy components with fallbacks
+// Safe lazy components with fallbacks - using federated components from SuperAdmin
 const Dashboard = createSafeLazyComponent(
-  () => import('SuperAdmin/Dashboard').catch(error => {
-    console.error('Failed to load Dashboard component:', error);
-    return { default: DashboardFallback };
-  }),
+  () => import('SuperAdmin/Dashboard'),
   DashboardFallback
 );
 
-// Load Consumers component from remote app
 const Consumers = createSafeLazyComponent(
-  () => {
-    console.log('Attempting to load Consumers component from SuperAdmin...');
-    return import('SuperAdmin/Consumers')
-      .then(module => {
-        console.log('Successfully loaded Consumers component:', module);
-        return module;
-      })
-      .catch(error => {
-        console.error('Failed to load Consumers component:', error);
-        console.error('Error details:', {
-          message: error.message,
-          stack: error.stack,
-          name: error.name
-        });
-        return { default: ConsumerFallback };
-      });
-  },
+  () => import('SuperAdmin/Consumers'),
   ConsumerFallback
 );
 
+// Use federated Sidebar and Header from SuperAdmin app
 const Sidebar = createSafeLazyComponent(
   () => import('SuperAdmin/Sidebar'),
   SidebarFallback
@@ -428,23 +405,19 @@ const Header = createSafeLazyComponent(
   HeaderFallback
 );
 
-const AllTickets = createSafeLazyComponent(
-  () => import('SuperAdmin/Ticket'),
-  TicketsFallback
-);
-    
-// Use local AppProvider instead of federated one
-import { AppProvider, useApp } from './context/AppContext';
-import { FederatedContextProvider } from './components/FederatedWrapper';
-import SidebarWrapper from './components/SidebarWrapper';
-
-import './App.css';
-
 function AppContent() {
   const contextValue = useApp();
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Debug logging for routing
+  useEffect(() => {
+    console.log('Current location:', location.pathname);
+    console.log('Available modules:', ${JSON.stringify(modules || [])});
+  }, [location.pathname]);
   
   // Check if remote app is accessible
-  React.useEffect(() => {
+  useEffect(() => {
     const checkRemoteApp = async () => {
       try {
         const response = await fetch('http://localhost:3000/assets/remoteEntry.js');
@@ -461,40 +434,157 @@ function AppContent() {
     checkRemoteApp();
   }, []);
   
+  // Generate menu items dynamically
+  const modules = ${JSON.stringify(modules || [])};
+  const menuItems = [
+    {
+      title: 'Dashboard',
+      icon: '/icons/dashboard.svg',
+      link: '/',
+    },
+    {
+      title: 'Consumers',
+      icon: '/icons/user.svg',
+      link: '/consumers',
+    },
+    {
+      title: 'User Management',
+      icon: '/icons/user-gear.svg',
+      link: '/user-management',
+    },
+    {
+      title: 'Role Management',
+      icon: '/icons/roles.svg',
+      link: '/role-management',
+    },
+    ...modules.filter((module: string) => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module: string) => ({
+      title: module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' '),
+      icon: '/icons/apps-icon.svg',
+      link: \`/\${module}\`,
+    }))
+  ];
+  
   return (
     <FederatedContextProvider value={contextValue}>
-      <Router>
-        <div className="flex h-screen bg-white">
-          <SidebarWrapper SidebarComponent={Sidebar} />
-          <div className="flex flex-col flex-1">
-            <Header />
-            <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/consumers" element={<Consumers />} />
-                <Route path="/test-consumers" element={<div className="p-6"><h1 className="text-2xl font-bold">Test Consumers Route</h1><p className="text-gray-600">This is a test route to verify routing is working.</p></div>} />
-                <Route path="/user-management" element={<div className="p-6"><h1 className="text-2xl font-bold">User Management</h1><p className="text-gray-600">Manage system users and their permissions.</p></div>} />
-                <Route path="/role-management" element={<div className="p-6"><h1 className="text-2xl font-bold">Role Management</h1><p className="text-gray-600">Manage user roles and access controls.</p></div>} />
-                ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `
-                <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module</h1><p className="text-gray-600">This is the ${module.replace(/_/g, ' ')} module page.</p></div>} />`).join('') || ''}
-                <Route path="*" element={<div className="p-6"><h1 className="text-2xl font-bold">Page Not Found</h1><p className="text-gray-600">The page you're looking for doesn't exist.</p></div>} />
-              </Routes>
-            </main>
-          </div>
+      <div className="flex h-screen bg-white">
+        <Sidebar 
+          currentPath={location.pathname}
+          onNavigate={(path) => navigate(path)}
+          menus={[
+            {
+              category: 'MANAGEMENT',
+              items: menuItems,
+            },
+          ]}
+          logo={{
+            src: '/images/bi-blue-logo.svg',
+            alt: '${appName || 'Admin App'}',
+            collapsedSrc: '/images/changed-logo.svg',
+          }}
+          footer={{
+            copyright: '© 2024 ${companyName || 'Company'}',
+            showThemeToggle: true,
+            showShareButton: false,
+          }}
+        />
+        <div className="flex flex-col flex-1">
+          <Header />
+          <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/consumers" element={<Consumers />} />
+              <Route path="/user-management" element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold mb-4">User Management</h1>
+                  <p className="text-gray-600 mb-4">Manage system users and their permissions.</p>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-green-800 mb-2">User Management Module</h3>
+                    <p className="text-sm text-green-700">This module allows you to manage users, roles, and permissions.</p>
+                  </div>
+                </div>
+              } />
+              <Route path="/role-management" element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold mb-4">Role Management</h1>
+                  <p className="text-gray-600 mb-4">Manage user roles and access controls.</p>
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-purple-800 mb-2">Role Management Module</h3>
+                    <p className="text-sm text-purple-700">This module allows you to create and manage user roles.</p>
+                  </div>
+                </div>
+              } />
+              <Route path="/test" element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold mb-4">Test Route</h1>
+                  <p className="text-gray-600 mb-4">This is a test route to verify routing is working correctly.</p>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-green-800 mb-2">Routing Test</h3>
+                    <p className="text-sm text-green-700">If you can see this page, routing is working properly!</p>
+                    <p className="text-sm text-green-700">Current time: {new Date().toLocaleString()}</p>
+                  </div>
+                  <div className="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-blue-800 mb-2">Debug Info</h3>
+                    <p className="text-sm text-blue-700">Current path: {location.pathname}</p>
+                    <p className="text-sm text-blue-700">Available modules: {JSON.stringify(modules)}</p>
+                    <p className="text-sm text-blue-700">Menu items count: {menuItems.length}</p>
+                  </div>
+                </div>
+              } />
+              {modules.filter((module: string) => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module: string) => (
+                <Route key={module} path={\`/\${module}\`} element={
+                  <div className="p-6">
+                    <h1 className="text-2xl font-bold mb-4">{\`\${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module\`}</h1>
+                    <p className="text-gray-600 mb-4">{\`This is the \${module.replace(/_/g, ' ')} module page.\`}</p>
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                      <h3 className="font-semibold text-blue-800 mb-2">Module Information</h3>
+                      <p className="text-sm text-blue-700">Module: {module}</p>
+                      <p className="text-sm text-blue-700">Status: Active</p>
+                    </div>
+                  </div>
+                } />
+              ))}
+              <Route path="*" element={
+                <div className="p-6">
+                  <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
+                  <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
+                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
+                    <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
+                    <div className="mt-4">
+                      <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
+                      <ul className="text-sm text-red-700 space-y-1">
+                        <li>• / - Dashboard</li>
+                        <li>• /dashboard - Dashboard</li>
+                        <li>• /consumers - Consumers</li>
+                        <li>• /user-management - User Management</li>
+                        <li>• /role-management - Role Management</li>
+                        <li>• /test - Test Route</li>
+                        {modules.filter((module: string) => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module: string) => (
+                          <li key={module}>• /{module} - {module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              } />
+            </Routes>
+          </main>
         </div>
-      </Router>
+      </div>
     </FederatedContextProvider>
   );
 }
 
 function App() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
-      <AppProvider>
-        <AppContent />
-      </AppProvider>
-    </Suspense>
+    <Router>
+      <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
+        <AppProvider>
+          <AppContent />
+        </AppProvider>
+      </Suspense>
+    </Router>
   );
 }
 
@@ -1206,4 +1296,4 @@ if (require.main === module) {
   };
   
   createAppProject(exampleFormData);
-} 
+}

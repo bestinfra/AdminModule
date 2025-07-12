@@ -13,6 +13,7 @@ interface CardProps {
 }
 
 import CardSkeleton from '../skeletons/CardSkeleton';
+import '../../styles/custom.css';
 
 const Card = ({
     title,
@@ -32,7 +33,7 @@ const Card = ({
     }
 
     return (
-        <article className="rounded-3xl bg-primary-lightest shadow-md dark:bg-primary-dark-light dark:shadow-sm dark:border dark:border-dark-border">
+        <article className="rounded-3xl bg-background-secondary custom-shadow">
             <section className="flex justify-between items-start p-5 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
                 <div className="space-y-2">
                     <h3 className="text-base text-main dark:text-white">

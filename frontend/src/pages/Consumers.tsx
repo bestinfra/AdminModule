@@ -41,7 +41,21 @@ const menuOptions = [
 
 const Consumers: React.FC = () => {
   const [menuValue, setMenuValue] = useState('');
-  const navigate = useNavigate();
+  
+  // Safely get navigate function, fallback to console.log if not available
+  let navigate: any;
+  try {
+    navigate = useNavigate();
+  } catch (error) {
+    console.warn('useNavigate not available in federated context, using fallback');
+    navigate = (path: string) => {
+      console.log('Navigation requested to:', path);
+      // Try to use window.location as fallback
+      if (window.location.pathname !== path) {
+        window.location.href = path;
+      }
+    };
+  }
 
   // Add sNo property to each row for serial number
   const tableData = consumersData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
