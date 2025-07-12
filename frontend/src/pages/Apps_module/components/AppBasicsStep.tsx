@@ -25,11 +25,10 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                 .replace(/-+/g, '-')
                 .replace(/^-|-$/g, '');
             const fullUrl = `https://www.${generated}`;
-            setSubdomainPreview(fullUrl);
             // Always update subdomain when app name changes
             onInputChange({ target: { name: 'subdomain', value: fullUrl } });
         }
-    }, [formData.appName]);
+    }, [formData.appName, onInputChange]);
 
     const handleFormInputChange = (name: string, value: FormInputValue) => {
         onInputChange({ target: { name, value } } as any);
