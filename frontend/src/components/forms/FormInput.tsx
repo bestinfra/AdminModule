@@ -131,9 +131,11 @@ const FormInput: React.FC<FormInputProps> = ({
   return (
     <div className={`w-full ${gridSpanClass}`}>
       <div className="space-y-2 flex flex-col gap-2">
-        <label htmlFor={name} className="label text-lg">
-          {label}
-        </label>
+        {label && (
+          <label htmlFor={name} className="label">
+            {label}
+          </label>
+        )}
         <div className="relative">{renderInput()}</div>
         
         {/* Accessible description */}

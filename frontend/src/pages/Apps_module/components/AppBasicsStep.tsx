@@ -112,14 +112,14 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
 
     return (
         <div className='    '>
-            <h2 className=" font-bold text-main dark:text-white mb-1">App Creation Form</h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</p>
+            {/* <h2 className="text-main dark:text-white mb-1">App Creation Form</h2>
+            <h3 className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</h3> */}
             <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
                 <FormInput
                     input={{
                         name: 'appName',
                         type: 'text',
-                        label: 'App Name',
+                        // label: 'App Name',
                         placeholder: 'Enter your app name',
                         required: true
                     }}
@@ -164,8 +164,8 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                     error={errors.city}
                 />
                 <div>
-                    <h2 className="block text-lg font-medium text-main dark:text-white mb-1">Categories</h2>
-                    <h2 className="text-md text-gray-500 mb-2">Select at least one category that applies to your app</h2>
+                    {/* <h2 className="block  text-main dark:text-white mb-1">Categories</h2>
+                    <h3 className="text-md text-gray-500 mb-2">Select at least one category that applies to your app</h3> */}
                     <Dropdown
                         name="categories"
                         value={formData.categories}
@@ -178,10 +178,9 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                 </div>
                 <FormInput
                     input={{
-                        className: 'text-sm',
                         name: 'subdomain',
                         type: 'text',
-                        label: 'Subdomain',
+                        // label: 'Subdomain',
                         placeholder: 'Enter subdomain',
                         required: true
                     }}
@@ -195,8 +194,8 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
                 />
                 {/* <p className="text-xs text-gray-500 mt-1">This will be your app's URL: {subdomainPreview ? `${subdomainPreview}.yourdomain.com` : 'yourdomain.com'}<br/>Only lowercase letters, numbers, and hyphens are allowed</p> */}
                 <div>
-                    <h2 className="block text-lg font-medium text-main dark:text-white mb-1">Tariff Plans</h2>
-                    <p className="text-md text-gray-500 mb-2">Select the tariff plans your app will support</p>
+                    {/* <h2 className="block text-lg font-medium text-main dark:text-white mb-1">Tariff Plans</h2>
+                    <p className="text-md text-gray-500 mb-2">Select the tariff plans your app will support</p> */}
                     <Dropdown
                         name="tariffPlans"
                         value={formData.tariffPlans}

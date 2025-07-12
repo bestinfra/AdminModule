@@ -9,6 +9,7 @@ import ModuleSelectionStep from './components/ModuleSelectionStep';
 import GoLiveStep from './components/GoLiveStep';
 import type { AdminAccessFormData, AdminAccessFormErrors } from './components/AdminAccessForm';
 import { AppCreationAPI } from '../../api/appCreation';
+import arrowLeft from '/icons/arrow-left.svg?url';
 
 const stepLabels: { label: string; sub: string }[] = [
   { label: 'App Basics', sub: 'Configure your application settings' },
@@ -284,7 +285,7 @@ const AppManagement: React.FC = () => {
                 isActive 
                   ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' 
                   : isCompleted 
-                    ? 'bg-green-50 dark:bg-green-900/20 shadow-[0px_5px_5px_-2px_rgba(34,197,94,0.3)]' 
+                    ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(156,163,175,0.4)]' 
                     : 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(156,163,175,0.4)]'
               }`}
             >
@@ -309,7 +310,7 @@ const AppManagement: React.FC = () => {
                   isActive 
                     ? 'text-gray-500 dark:text-gray-400' 
                     : isCompleted 
-                      ? 'text-green-600 dark:text-green-400' 
+                      ? 'text-gray-500 dark:text-gray-400' 
                       : 'text-gray-500 dark:text-gray-400'
                 }`}>{step.sub}</h3>
               </div>
@@ -319,12 +320,15 @@ const AppManagement: React.FC = () => {
       </div>
       <div className="flex justify-between items-center gap-4 mt-4">
         {currentStep > 1 && (
-          <button className="btn-outline" type="button" onClick={handleBack}>Previous</button>
+          <span className="flex items-center gap-2 p-2 px-2 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" onClick={handleBack}>
+            <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-7 h-7  filter dark:invert" />
+            <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+          </span>
         )}
       </div>
-      <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-border">
+      {/* <div className="mt-6 pt-6 border-t border-gray-200 dark:border-dark-border">
         <button 
-          className="w-full btn-outline text-sm" 
+          className="w-full p-3 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark text-gray-700 dark:text-gray-300 font-medium text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
           type="button" 
           onClick={toggleGeneratedApps}
         >
@@ -346,7 +350,7 @@ const AppManagement: React.FC = () => {
             )}
           </div>
         )}
-      </div>
+      </div> */}
     </div>
   );
 
