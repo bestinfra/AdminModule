@@ -7,15 +7,12 @@ import BarChart from '../graphs/BarChart';
 import { useNavigate } from 'react-router-dom';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
     const [view, setView] = useState<'Daily' | 'Monthly'>('Daily');
+
     const dtrStats = [
         { title: 'Total DTRs', value: 29, icon: '/icons/dtr.svg', subtitle1: 'Total Transformer Units' },
         { title: 'Total LT Feeders', value: 33, icon: '/icons/feeder.svg', subtitle1: 'Connected to DTRs' },
@@ -99,27 +96,34 @@ const DTRDashboard: React.FC = () => {
     const alertColors = alertTypes.map(type => type.color);
 
     // Header component
-    const headerComponent = createHeaderComponent(
-        'DTR Dashboard',
-        'Monitor Distribution Transformer performance and alerts',
-        `Total: ${dtrStats[0].value} DTRs`
+    const headerComponent = (
+        <PageHeader
+            title="DTR Dashboard"
+            onBackClick={() => window.history.back()}
+            backButtonText="Back to Dashboard"
+            buttonsLabel="Add DTR"
+            variant="primary"
+            onClick={() => console.log('Adding new DTR...')}
+            showMenu={true}
+            showDropdown={true}
+            menuItems={[
+                { id: 'all', label: 'All DTRs' },
+                { id: 'active', label: 'Active DTRs' },
+                { id: 'inactive', label: 'Inactive DTRs' },
+                { id: 'overloaded', label: 'Overloaded' },
+                { id: 'underloaded', label: 'Underloaded' },
+                { id: 'fuse-blown', label: 'Fuse Blown' },
+                { id: 'unbalanced', label: 'Unbalanced' },
+                { id: 'power-failure', label: 'Power Failure' }
+            ]}
+            onMenuItemClick={(itemId) => {
+                console.log(`Filter by: ${itemId}`);
+                // TODO: Implement filtering logic based on selection
+            }}
+        />
     );
 
-    // Actions component
-    const actionsComponent = createActionsComponent([
-        { label: 'Export Report', onClick: () => console.log('Exporting DTR report...'), variant: 'outline' },
-        { label: 'Add DTR', onClick: () => console.log('Adding new DTR...'), variant: 'primary' },
-        { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
-    ]);
-
     
-
-    // Footer component
-    const footerComponent = createFooterComponent({
-        id: 'DTR Dashboard ID: DTR-001',
-        version: '2.1.0',
-        supportLink: '#'
-    });
 
     // DTR Statistics Section
     const dtrStatsSection: Section = {
@@ -291,10 +295,8 @@ const DTRDashboard: React.FC = () => {
             layout="single-column"
             sections={[dtrStatsSection, dtrsTableSection, latestAlertsSection, statisticsChartSection]}
             header={headerComponent}
-            actions={actionsComponent}
-            footer={footerComponent}
             sidebarPosition="right"
-            className="space-y-6 bg-[var(--color-surface)] p-2"
+            className="space-y-6 bg-[var(--color-surface)]"
             sectionClassName=""
         />
     );

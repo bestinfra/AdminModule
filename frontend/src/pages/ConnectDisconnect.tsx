@@ -4,6 +4,7 @@ import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
 import Modal from '../components/global/Modal';
 import LoadingSpinner from '../components/global/LoadingSpinner';
+import PageHeader from '../components/global/PageHeader';
 import meterConnectionAPI, { MeterConnectionAPI } from '../api/meterConnection';
 
 interface MeterData {
@@ -66,9 +67,10 @@ const ConnectDisconnect: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [debugMode, setDebugMode] = useState(false);
+  const [debugMode] = useState(false);
   const [lastApiResponse, setLastApiResponse] = useState<any>(null);
   const [apiLogs, setApiLogs] = useState<string[]>([]);
+
 
 
   const addApiLog = (message: string) => {
@@ -241,22 +243,31 @@ const ConnectDisconnect: React.FC = () => {
   const tableData = meters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
 
   return (
-    <div className="p-6">
+    <div className="">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Connect / Disconnect Meters</h1>
-        <div className="flex items-center gap-3">
-          <Button
-            label={debugMode ? "Hide Debug" : "Show Debug"}
-            variant="outline"
-            onClick={() => setDebugMode(!debugMode)}
-          />
-          <Button
-            label="Refresh Status"
-            variant="secondary"
-            onClick={refreshAllMeterStatuses}
-            disabled={isLoading}
-          />
-        </div>
+        <PageHeader
+          title="Connect / Disconnect Meters"
+          onBackClick={() => window.history.back()}
+          backButtonText="Back to Dashboard"
+          buttonsLabel="Refresh All"
+          variant="primary"
+          onClick={refreshAllMeterStatuses}
+          showMenu={true}
+          showDropdown={true}
+          menuItems={[
+            { id: 'all', label: 'All Meters' },
+            { id: 'connected', label: 'Connected' },
+            { id: 'disconnected', label: 'Disconnected' },
+            { id: 'prepaid', label: 'Prepaid' },
+            { id: 'postpaid', label: 'Postpaid' },
+            { id: 'single-phase', label: 'Single Phase' },
+            { id: 'three-phase', label: 'Three Phase' }
+          ]}
+          onMenuItemClick={(itemId) => {
+            console.log(`Filter by: ${itemId}`);
+            // TODO: Implement filtering logic based on selection
+          }}
+        />
       </div>
 
       {error && (

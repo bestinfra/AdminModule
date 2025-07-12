@@ -5,11 +5,7 @@ import type { Column } from '../components/global/Table';
 import Dropdown from '../components/global/Dropdown';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 
 const cardData = [
   {
@@ -77,28 +73,46 @@ const BillsPostpaid: React.FC = () => {
   const [paymentStatus, setPaymentStatus] = useState('');
   const [search, setSearch] = useState('');
 
+
   // Header component
-  const headerComponent = createHeaderComponent(
-    'Bills',
-    'Manage postpaid billing and payment status',
-    '0 bills generated'
+  const headerComponent = (
+    <PageHeader
+      title="Bills Postpaid"
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Dashboard"
+      buttonsLabel="Add Bill"
+      variant="primary"
+      onClick={() => console.log('Adding new bill...')}
+      showMenu={true}
+      showDropdown={true}
+      menuItems={[
+        { id: 'all', label: 'All Bills' },
+        { id: 'paid', label: 'Paid' },
+        { id: 'unpaid', label: 'Unpaid' },
+        { id: 'overdue', label: 'Overdue' },
+        { id: 'pending', label: 'Pending' },
+        { id: 'high-amount', label: 'High Amount' },
+        { id: 'low-amount', label: 'Low Amount' }
+      ]}
+      onMenuItemClick={(itemId) => {
+        console.log(`Filter by: ${itemId}`);
+        // Apply filters based on selection
+        if (itemId === 'paid' || itemId === 'unpaid' || itemId === 'overdue') {
+          setPaymentStatus(itemId);
+        } else if (itemId === 'high-amount') {
+          setAmountRange('5000+');
+        } else if (itemId === 'low-amount') {
+          setAmountRange('0-1000');
+        } else if (itemId === 'all') {
+          setPaymentStatus('');
+          setAmountRange('');
+        }
+      }}
+   
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Add Bill', onClick: () => console.log('Adding bill...'), variant: 'primary' },
-    { label: 'Export Bills', onClick: () => console.log('Exporting bills...'), variant: 'outline' },
-    { label: 'Generate Report', onClick: () => console.log('Generating report...'), variant: 'outline' }
-  ]);
-
   
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: 'Postpaid Billing ID: POSTPAID-001',
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // Overview Cards Section
   const overviewCardsSection: Section = {
@@ -185,12 +199,9 @@ const BillsPostpaid: React.FC = () => {
       layout="single-column"
       sections={[overviewCardsSection, realizationRateSection, filtersSection, searchSection, billsTableSection]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
-      className="p-6"
+      className=""
       sectionClassName=""
-
     />
   );
 };

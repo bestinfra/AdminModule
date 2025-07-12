@@ -1,5 +1,6 @@
 
 import Table from '../components/global/Table';
+import PageHeader from '../components/global/PageHeader';
 
 const columns = [
   { key: 'sNo', label: 'S.No' },
@@ -15,9 +16,12 @@ const data = [
 ];
 
 const DTROverloadedFeeders = () => (
-  <div className="p-6 flex flex-col gap-y-4">
-    <button onClick={() => window.history.back()} className="text-blue-600 hover:underline">&larr; Back to Dashboard</button>
-    <h2 className="text-2xl font-bold">Overloaded Feeders</h2>
+  <div className="flex flex-col gap-y-4">
+    <PageHeader
+      title="Overloaded Feeders"
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Dashboard"
+    />
     <Table columns={columns} data={data} searchable pagination initialRowsPerPage={10} emptyMessage="No Overloaded Feeders found" />
   </div>
 );

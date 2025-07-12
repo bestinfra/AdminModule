@@ -130,7 +130,7 @@ const Header: React.FC<HeaderProps> = ({
                     >
                         <span className="flex items-center justify-center w-8 h-5 bg-gray-100 dark:bg-gray-800 rounded-lg cursor-pointer transition-all">
                             <img 
-                                src="icons/arrow-back.svg" 
+                                src="/icons/arrow-back.svg" 
                                 alt="back" 
                                 className="w-4 h-4 filter dark:invert"
                             />
@@ -213,12 +213,13 @@ const Header: React.FC<HeaderProps> = ({
 
                 {showMenu && showDropdown && (
                     <span
-                        className="flex items-center justify-center w-4 h-4 bg-gray-100 dark:bg-gray-800 rounded-lg p-3 shadow-md cursor-pointer"
+                        className="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md cursor-pointer border border-gray-300"
                         ref={dropdownIconRef}
                         onClick={handleMenuClick}
+                        title="Filter Menu"
                     >
                         <img 
-                            src="icons/menu.svg" 
+                            src="/icons/menu-dots.svg" 
                             alt="dropdown" 
                             className="w-4 h-4 filter dark:invert"
                         />

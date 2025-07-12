@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
 import Page from '../components/global/Page';
-import { useNavigate } from 'react-router-dom';
-import {
-  createHeaderComponent,
-  createActionsComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 
 const AddDataLogger: React.FC = () => {
-  const navigate = useNavigate();
   const [form, setForm] = useState({
     dcuModemSlNo: '',
     hardwareVersion: '',
@@ -21,9 +16,7 @@ const AddDataLogger: React.FC = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleCancel = () => {
-    navigate(-1);
-  };
+
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,16 +30,16 @@ const AddDataLogger: React.FC = () => {
     document.getElementById('add-data-logger-form')?.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
   };
 
-  const headerComponent = createHeaderComponent(
-    'Add Data Logger',
-    'Add a new data logger to the system',
-    ''
+  const headerComponent = (
+    <PageHeader
+      title="Add Data Logger"
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Data Loggers"
+      buttonsLabel="Save"
+      variant="primary"
+      onClick={handleSaveButton}
+    />
   );
-
-  const actionsComponent = createActionsComponent([
-    { label: 'Cancel', onClick: handleCancel, variant: 'secondary' },
-    { label: 'Save', onClick: handleSaveButton, variant: 'primary' }
-  ]);
 
   const sections = [
     {
@@ -150,7 +143,6 @@ const AddDataLogger: React.FC = () => {
     <Page
       layout="single-column"
       header={headerComponent}
-      actions={actionsComponent}
       className="p-2"
       sections={sections}
     />

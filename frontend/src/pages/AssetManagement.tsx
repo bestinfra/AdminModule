@@ -147,7 +147,7 @@ export default function AssetManagement() {
       actions={actionsComponent}
       footer={footerComponent}
       sidebarPosition="left"
-      className="min-h-screen bg-[#f8f9fa]"
+      className="min-h-screen"
       sidebarClassName="w-[320px] rounded-2xl m-4 flex-shrink-0"
       sidebar={
         <div

@@ -33,7 +33,7 @@ const Card = ({
     }
 
     return (
-        <article className="rounded-3xl bg-background-secondary custom-shadow">
+        <article className="rounded-3xl bg-background-secondary custom-shadow w-full">
             <section className="flex justify-between items-start p-5 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
                 <div className="space-y-2">
                     <h3 className="text-base text-main dark:text-white">

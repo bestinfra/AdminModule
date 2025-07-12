@@ -5,10 +5,7 @@ import Table from '../components/global/Table';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 import type { TableData, Column } from '../components/global/Table';
 
 interface TableAction {
@@ -20,6 +17,7 @@ interface TableAction {
 const SuperAdminDashboard: React.FC = () => {
     const [timeRange, setTimeRange] = useState('Monthly');
     const [projectsView, setProjectsView] = useState('All');
+
     
     const timeRangeOptions = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
     const projectsViewOptions = ['All', 'Active', 'Inactive', 'Maintenance'];
@@ -219,18 +217,36 @@ const SuperAdminDashboard: React.FC = () => {
     ];
 
     // Header component
-    const headerComponent = createHeaderComponent(
-        'Super Admin Dashboard',
-        'Manage and monitor all host projects and system performance',
-        'Last updated: 30 seconds ago'
+    const headerComponent = (
+        <PageHeader
+            title="Super Admin Dashboard"
+            onBackClick={() => window.history.back()}
+            backButtonText="Back to Dashboard"
+            buttonsLabel="Add Project"
+            variant="primary"
+            onClick={() => console.log('Adding new project...')}
+            showMenu={true}
+            showDropdown={true}
+            menuItems={[
+                { id: 'all', label: 'All Projects' },
+                { id: 'active', label: 'Active' },
+                { id: 'inactive', label: 'Inactive' },
+                { id: 'maintenance', label: 'Maintenance' },
+                { id: 'high-usage', label: 'High Usage' },
+                { id: 'low-usage', label: 'Low Usage' },
+                { id: 'alerts', label: 'With Alerts' },
+                { id: 'healthy', label: 'Healthy Systems' }
+            ]}
+            onMenuItemClick={(itemId) => {
+                console.log(`Filter by: ${itemId}`);
+                // Apply filters based on selection
+                if (itemId === 'active' || itemId === 'inactive' || itemId === 'maintenance' || itemId === 'all') {
+                    setProjectsView(itemId === 'all' ? 'All' : itemId.charAt(0).toUpperCase() + itemId.slice(1));
+                }
+                // TODO: Implement filtering logic for other menu items
+            }}
+        />
     );
-
-    // Footer component
-    const footerComponent = createFooterComponent({
-        id: 'Super Admin Dashboard',
-        version: '1.0.0',
-        supportLink: '#support'
-    });
 
     // Overview Statistics Section
     const overviewSection: Section = {
@@ -276,9 +292,6 @@ const SuperAdminDashboard: React.FC = () => {
                             selectedTimeRange={projectsView}
                             handleTimeRangeChange={setProjectsView}
                         />
-                        <button className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700">
-                            Add Project
-                        </button>
                     </div>
                 </div>
                 <div className="p-6">
@@ -364,7 +377,6 @@ const SuperAdminDashboard: React.FC = () => {
             layout="single-column"
             sections={[overviewSection, hostProjectsSection, analyticsSection, systemEventsSection]}
             header={headerComponent}
-            footer={footerComponent}
             className="space-y-6 bg-gray-50 dark:bg-gray-900 p-4"
         />
     );

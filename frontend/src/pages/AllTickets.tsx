@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import Button from '../components/global/Button';
 import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import Holder from '../components/global/Holder';
+import PageHeader from '../components/global/PageHeader';
 import type { Column } from '../components/global/Table';
 
 interface TicketData {
@@ -23,6 +23,7 @@ interface TicketData {
 const AllTickets: React.FC = () => {
     const [loading] = useState(false);
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
+
 
     const ticketData: TicketData[] = [
         {
@@ -70,75 +71,42 @@ const AllTickets: React.FC = () => {
     ];
 
     const totalTickets = ticketData.length;
-    const openTickets = ticketData.filter(ticket => ticket.status === 'Open').length;
-    const inProgressTickets = ticketData.filter(ticket => ticket.status === 'In Progress').length;
     const resolvedTickets = ticketData.filter(ticket => ticket.status === 'Resolved').length;
 
     const headerComponent = (
-        <div className="flex items-center justify-between">
-            <div>
-                <h1 className="text-3xl font-bold text-gray-900">All Tickets</h1>
-                <p className="text-gray-600 mt-2">Manage and track all support tickets</p>
-            </div>
-            <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-500">Total: {totalTickets} tickets</span>
-            </div>
-        </div>
+        <PageHeader
+            title="All Tickets"
+            onBackClick={() => window.history.back()}
+            backButtonText="Back to Dashboard"
+            buttonsLabel="Create Ticket"
+            variant="primary"
+            onClick={() => console.log('Creating new ticket...')}
+            showMenu={true}
+            showDropdown={true}
+            menuItems={[
+                { id: 'all', label: 'All Tickets' },
+                { id: 'open', label: 'Open' },
+                { id: 'in-progress', label: 'In Progress' },
+                { id: 'resolved', label: 'Resolved' },
+                { id: 'closed', label: 'Closed' },
+                { id: 'high-priority', label: 'High Priority' },
+                { id: 'medium-priority', label: 'Medium Priority' },
+                { id: 'low-priority', label: 'Low Priority' }
+            ]}
+            onMenuItemClick={(itemId) => {
+                console.log(`Filter by: ${itemId}`);
+                // TODO: Implement filtering logic based on selection
+            }}
+        />
     );
 
-    const actionsComponent = (
-        <div className="flex items-center gap-2">
-            <Button
-                label="Create New Ticket"
-                onClick={() => console.log('Creating new ticket...')}
-                variant="primary"
-            />
-            <Button
-                label="Export Tickets"
-                onClick={() => console.log('Exporting tickets...')}
-                variant="outline"
-            />
-        </div>
-    );
-
-    const sidebarComponent = (
-        <div className="space-y-4">
-            <Card
-                title="Open Tickets"
-                value={openTickets.toString()}
-                icon="icons/units.svg"
-                showTrend={true}
-                comparisonValue={5}
-                subtitle1="Active tickets"
-                subtitle2="+5% from last week"
-            />
-            <Card
-                title="In Progress"
-                value={inProgressTickets.toString()}
-                icon="icons/units.svg"
-                showTrend={true}
-                comparisonValue={3}
-                subtitle1="Being worked on"
-                subtitle2="+3% from last week"
-            />
-            <Card
-                title="Resolved"
-                value={resolvedTickets.toString()}
-                icon="icons/units.svg"
-                showTrend={true}
-                comparisonValue={8}
-                subtitle1="This month"
-                subtitle2="+8% from last month"
-            />
-        </div>
-    );
+    
 
     const overviewSection: Section = {
         id: 'overview',
         component: (
-            <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-gray-800">Ticket Overview</h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="">
+                <div className="flex justify-between gap-4">
                     <Card
                         title="Total Tickets"
                         value={totalTickets.toString()}
@@ -166,6 +134,24 @@ const AllTickets: React.FC = () => {
                         subtitle1="This month"
                         subtitle2="+8% from last month"
                     />
+                     <Card
+                        title="Resolution Rate"
+                        value={`${Math.round((resolvedTickets / totalTickets) * 100)}%`}
+                        icon="icons/units.svg"
+                        showTrend={true}
+                        comparisonValue={8}
+                        subtitle1="This month"
+                        subtitle2="+8% from last month"
+                    /> 
+                    <Card
+                        title="Resolution Rate"
+                        value={`${Math.round((resolvedTickets / totalTickets) * 100)}%`}
+                        icon="icons/units.svg"
+                        showTrend={true}
+                        comparisonValue={8}
+                        subtitle1="This month"
+                        subtitle2="+8% from last month"
+                    /> 
                 </div>
             </div>
         )
@@ -208,13 +194,11 @@ const AllTickets: React.FC = () => {
             layout="single-column" 
             sections={sections}
             header={headerComponent}
-            actions={actionsComponent}
-            sidebar={sidebarComponent}
             sidebarPosition="right"
             loading={loading}
-            className="max-w-7xl mx-auto p-6"
+            className=""
             containerClassName="space-y-6"
-            sectionClassName="border rounded-lg p-6 bg-white shadow-sm"
+            sectionClassName=""
         />
     );
 };

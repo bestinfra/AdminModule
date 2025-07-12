@@ -3,11 +3,7 @@ import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 
 const mockDTRData = {
   name: 'TGNP_DTR-03',
@@ -36,27 +32,18 @@ const DTRDetailPage = () => {
   const dtr = mockDTRData;
 
   // Header component
-  const headerComponent = createHeaderComponent(
-    dtr.name,
-    `DTR Details - ${dtr.rating}`,
-    `Location: ${dtr.location.lat}, ${dtr.location.lng}`
+  const headerComponent = (
+    <PageHeader
+      title={dtr.name}
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Dashboard"
+      buttonsLabel="Edit DTR"
+      variant="primary"
+      onClick={() => console.log('Editing DTR...')}
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Edit DTR', onClick: () => console.log('Editing DTR...'), variant: 'primary' },
-    { label: 'Export Data', onClick: () => console.log('Exporting DTR data...'), variant: 'outline' },
-    { label: 'View History', onClick: () => console.log('Viewing history...'), variant: 'outline' }
-  ]);
-
   
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: `DTR ID: ${dtr.name}`,
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // DTR Information Section
   const dtrInfoSection: Section = {
@@ -161,12 +148,9 @@ const DTRDetailPage = () => {
       layout="single-column"
       sections={[dtrInfoSection, dtrStatsSection, feedersSection, alertsSection]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
       className="p-2 flex flex-col gap-6"
       sectionClassName=""
-
     />
   );
 };
