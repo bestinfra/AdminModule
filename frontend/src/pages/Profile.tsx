@@ -233,9 +233,9 @@ const Profile: React.FC = () => {
             sidebarPosition="right"
             footer={footerComponent}
             loading={loading}
-            className="max-w-7xl mx-auto p-6"
+            className="max-w-7xl mx-auto"
             containerClassName="space-y-6"
-            sectionClassName="border rounded-lg p-6 bg-white shadow-sm"
+            sectionClassName="border rounded-lg bg-white shadow-sm"
         />
     );
 };

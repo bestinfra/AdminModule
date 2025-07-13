@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
-import Dropdown from '../components/global/Dropdown';
 import { useNavigate } from 'react-router-dom';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 
 const consumersData = [
   { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17 },
@@ -34,10 +29,7 @@ const columns: Column[] = [
   { key: 'reading', label: 'Current Reading' },
 ];
 
-const menuOptions = [
-  { value: 'occupied', label: 'Occupied' },
-  { value: 'vacant', label: 'Vacant' },
-];
+
 
 const Consumers: React.FC = () => {
   const [menuValue, setMenuValue] = useState('');
@@ -57,8 +49,22 @@ const Consumers: React.FC = () => {
     };
   }
 
-  // Add sNo property to each row for serial number
-  const tableData = consumersData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+  // Add sNo property and filter based on menu selection
+  const getFilteredData = () => {
+    let filteredData = consumersData;
+    
+    if (menuValue === 'occupied') {
+      // Filter to show occupied consumers (using first 80% as occupied)
+      filteredData = consumersData.slice(0, Math.floor(consumersData.length * 0.8));
+    } else if (menuValue === 'vacant') {
+      // Filter to show vacant consumers (using last 20% as vacant)
+      filteredData = consumersData.slice(Math.floor(consumersData.length * 0.8));
+    }
+    
+    return filteredData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+  };
+
+  const tableData = getFilteredData();
 
   const actions = [
     {
@@ -71,56 +77,36 @@ const Consumers: React.FC = () => {
   ];
 
   // Header component
-  const headerComponent = createHeaderComponent(
-    'Consumers',
-    'Manage and monitor all consumers in the system',
-    `Total: ${consumersData.length} consumers`
+  const headerComponent = (
+    <PageHeader
+      title="Consumers"
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Dashboard"
+      buttonsLabel="Add Consumer"
+      variant="primary"
+      onClick={() => navigate('/consumers/add')}
+      showMenu={true}
+      showDropdown={true}
+      menuItems={[
+        { id: 'occupied', label: 'Occupied' },
+        { id: 'vacant', label: 'Vacant' }
+      ]}
+      onMenuItemClick={(itemId) => {
+        console.log(`Filter by: ${itemId}`);
+        setMenuValue(itemId);
+      }}
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Add Consumer', onClick: () => navigate('/consumers/add'), variant: 'primary' },
-    { label: 'Export Consumers', onClick: () => console.log('Exporting consumers...'), variant: 'outline' },
-    { label: 'Bulk Actions', onClick: () => console.log('Bulk actions...'), variant: 'outline' }
-  ]);
+
 
   
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: 'Consumers List ID: CONSUMERS-001',
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // Consumers Table Section
   const consumersTableSection: Section = {
     id: 'consumers-table',
     component: (
       <div className="space-y-4">
-        <div className="flex items-center justify-end">
-          <div className="relative">
-            <Dropdown
-              name="consumer-menu"
-              value={menuValue}
-              onChange={e => setMenuValue(typeof e.target.value === 'string' ? e.target.value : Array.isArray(e.target.value) ? e.target.value[0] : '')}
-              options={menuOptions}
-              placeholder={''}
-              searchable={false}
-              className="w-10 h-10 min-w-0 min-h-0 p-0 border-none shadow-none bg-transparent flex items-center justify-center dropdown-below-trigger"
-              leftIcon="/icons/menu-dots.svg"
-            />
-            <style>{`
-              .dropdown-below-trigger .absolute.z-10 {
-                left: 50% !important;
-                top: 110% !important;
-                right: auto !important;
-                transform: translateX(-50%) !important;
-                min-width: 140px;
-              }
-            `}</style>
-          </div>
-        </div>
         <Table
           data={tableData}
           columns={columns}
@@ -139,10 +125,8 @@ const Consumers: React.FC = () => {
       layout="single-column"
       sections={[consumersTableSection]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
-      className="p-6"
+      className=""
       sectionClassName=""
 
     />

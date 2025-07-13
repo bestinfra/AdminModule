@@ -208,7 +208,7 @@ const AddConsumer: React.FC = () => {
       layout="single-column"
       header={headerComponent}
       actions={actionsComponent}
-      className="p-2"
+      className=""
       sections={sections}
     />
   );

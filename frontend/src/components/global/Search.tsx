@@ -49,9 +49,9 @@ const Search:React.FC<SearchProps>=({value,onChange,placeholder='Search',onResul
             disabled={disabled}
             required={required}
             />
-
+            <div className="absolute inset-y-0 right-0 flex items-center">
             {/* Search Icon / spinner*/}
-            <span className="absolute left-3 top-1/2 transform -translate-y-1/2 dark:text-white">
+            <span className="dark:text-white">
                 {isSearching ? (
                     <div className="w-4 h-4 border-t-transparent border-blue-500 rounded-full animate-spin"></div>
                 ):(
@@ -60,11 +60,11 @@ const Search:React.FC<SearchProps>=({value,onChange,placeholder='Search',onResul
 
             {/*Keyboard shortcut*/}
             {showShortcut && (
-                <div className="absolute top-1/2 right-3 transform -translate-y-1/2 text-xs text-gray-400 hidden sm:flex gap-1 items-center">
+                <div className="text-xs text-gray-400 hidden sm:flex gap-1 items-center">
                     <kbd className="bg-primary-lightest dark:bg-primary-dark-light px-1.5 py-0.5 rounded text-xs dark:text-subinfo">Ctrl</kbd>
                 </div>
             )}
-
+            </div>
             {/* Search Results */}
             {results.length > 0 && (
                 <div className="absolute z-10 mt-2 w-full border border-primary-border dark:border-dark-border  rounded-xl shadow-lg max-h-60 overflow-y-auto">
