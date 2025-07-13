@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Card from '../components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
@@ -21,6 +21,7 @@ const consumersData = [
 const ConsumerView: React.FC = () => {
   // Try to get uid from useParams first, then fallback to URL parsing
   const params = useParams<{ uid: string }>();
+
   const uidFromParams = params?.uid;
   
   // Fallback: extract uid from URL path if useParams doesn't work
@@ -32,6 +33,29 @@ const ConsumerView: React.FC = () => {
   
   const uid = uidFromParams || getUidFromUrl();
   const consumer = consumersData.find(c => c.uid === uid);
+
+  // Menu items for PageHeader
+  const menuItems = [
+    { id: 'refresh', label: 'Refresh Data', icon: '/icons/refresh.svg' },
+    { id: 'export', label: 'Export Data', icon: '/icons/export.svg' },
+    { id: 'settings', label: 'Settings', icon: '/icons/settings.svg' },
+  ];
+
+  // Handler functions
+  const handleMenuItemClick = (itemId: string) => {
+    console.log('Menu item clicked:', itemId);
+    // Add your menu item logic here
+  };
+
+  const handleBackClick = () => {
+    console.log('Back button clicked');
+    // Add your back navigation logic here
+  };
+
+  const handleRefreshClick = () => {
+    console.log('Refresh button clicked');
+    // Add your refresh logic here
+  };
 
   // Debug information
   console.log('ConsumerView: uid from params:', uidFromParams);
@@ -429,6 +453,19 @@ const ConsumerView: React.FC = () => {
             emptyMessage="No connection activity found"
           />
         </div>
+      </div>
+    )
+  };
+
+  // Debug Section
+  const debugSection: Section = {
+    id: 'debug',
+    component: (
+      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+        <h3 className="font-semibold text-gray-800 mb-2">Debug Information:</h3>
+        <p className="text-sm text-gray-600 mb-1">UID from URL: <strong>{uid}</strong></p>
+        <p className="text-sm text-gray-600 mb-1">Consumer found: <strong>{consumer ? 'Yes' : 'No'}</strong></p>
+        <p className="text-sm text-gray-600">Total consumers: <strong>{consumersData.length}</strong></p>
       </div>
     )
   };

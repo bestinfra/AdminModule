@@ -42,34 +42,33 @@ function Header({
     const { isSidebarCollapsed } = useApp();
 
     return (
-        <header className="border-b border-b-primary-border dark:border-dark-border dark:bg-primary-dark flex items-center justify-between px-6 py-4 h-24">
+        <header className="border-b border-b-primary-border dark:border-dark-border dark:bg-primary-dark flex items-center justify-between px-6 py-4">
             <nav className="flex items-center gap-4">
-                <button
-                    className="p-2 bg-primary-lightest dark:bg-dark-secondary w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
+                <figure
+                    className="p-2 bg-gradient-primary  w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
                     onClick={onSidebarToggle}
                     aria-label="Toggle sidebar">
                     <img
                         src="/icons/arrow-left-from-arc.svg"
                         alt="Menu"
-                        className={`h-6 w-6 ${
+                        className={`h-6 w-6 custom-filter ${
                             isSidebarCollapsed ? 'rotate-180' : ''
                         }`}
                     />
-                </button>
+                </figure>
                 <h1 className="text-base dark:text-white">{title}</h1>
             </nav>
-
             <section
                 className="flex-1 max-w-2xl mx-8"
                 aria-label="Search section">
                 <Input onSearch={onSearch} />
             </section>
-
-            <nav className="flex items-center gap-4" aria-label="User actions">
+ {/* User actions */}
+            <nav className="flex items-center gap-4" aria-label="User actions">  
                 {actions.map((action, index) => (
-                    <button
+                    <figure
                         key={index}
-                        className={`p-2 w-8 h-8 bg-primary-lightest dark:bg-dark-secondary rounded-full flex items-center justify-center ${
+                        className={`p-2 w-8 h-8 bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center ${
                             action.className || ''
                         }`}
                         onClick={action.onClick}
@@ -79,7 +78,7 @@ function Header({
                             alt={action.alt}
                             className="h-6 w-6"
                         />
-                    </button>
+                    </figure>
                 ))}
                 <UserProfile />
             </nav>
@@ -105,9 +104,9 @@ function UserProfile() {
     };
 
     return (
-        <button
+        <figure
             onClick={handleLogout}
-            className="p-2 flex bg-primary-lightest dark:bg-dark-secondary rounded-full flex items-center justify-center items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+            className="p-2 flex bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
             aria-label="Logout"
         >
             <img
@@ -115,7 +114,7 @@ function UserProfile() {
                 alt="Logout"
                 className="cursor-pointer"
             />
-        </button>
+        </figure>
     );
 }
 

@@ -378,11 +378,11 @@ const Sidebar = ({
                 aria-label="Main navigation">
                 <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
                     <header
-                        className={`sticky top-0 z-10 dark:bg-primary-dark h-24 flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${
+                        className={` dark:bg-primary-dark flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${
                             isSidebarCollapsed
                                 ? 'bg-primary px-4'
-                                : 'bg-white px-16'
-                        } py-8`}>
+                                : 'bg-white px-10'
+                        } py-6`}>
                         <img
                             src={
                                 isSidebarCollapsed
@@ -395,7 +395,7 @@ const Sidebar = ({
                             }
                             alt={logo?.alt}
                             className={`md:block ${
-                                isSidebarCollapsed ? 'w-8' : ''
+                                isSidebarCollapsed ? 'w-8' : 'w-[170px]'
                             }`}
                         />
                     </header>
