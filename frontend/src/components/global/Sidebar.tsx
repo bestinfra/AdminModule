@@ -234,7 +234,28 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/support-tickets.svg',
                 link: '/all-tickets',
             },
+            {
+                title: 'Ticket View',
+                icon: '/icons/ticket-view.svg',
+                link: '/ticket-view/:ticketId',
+            },
+            {
+                title: 'Add Message',
+                icon: '/icons/ticket-view.svg',
+                link: '/ticket-view/:ticketId/add-message',
+            },
+            {
+                title: 'User Management',
+                icon: '/icons/user-management.svg',
+                link: '/user-management',
+            },
+            {
+                title: 'Role Management',
+                icon: '/icons/role-management.svg',
+                link: '/role-management',
+            },
         ],
+
     },
     {
         category: 'APPS & MODULES',

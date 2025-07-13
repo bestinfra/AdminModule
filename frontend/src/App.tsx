@@ -31,12 +31,15 @@ import DTRHTSideFuseBlown from './pages/DTRHTSideFuseBlown';
 import DataLoggerMaster from './pages/DataLoggerMaster';
 import MetersList from './pages/MetersList';
 import AssetManagement from './pages/AssetManagement';
+import TicketView from './pages/TicketView';
 import MeterDetails from './pages/MeterDetails';
 import ConnectDisconnect from './pages/ConnectDisconnect';
 import ConsumerView from './pages/ConsumerView';
 import AddDataLogger from './pages/AddDataLogger';
 import AddMeter from './pages/AddMeter';
 import AddConsumer from './pages/AddConsumer';
+import UserManagement from './pages/UserManagment';
+import RoleManagement from './pages/RoleManagment';
 
 
 const App: React.FC = () => {
@@ -74,7 +77,7 @@ const App: React.FC = () => {
                             <Route path="/profile" element={<Profile />} />
                             <Route path="/all-tickets" element={<AllTickets />} />
                             <Route path="/forms" element={<Forms />} />
-                            <Route path="/consumers" element={<Consumers />} />
+                            <Route path="/consumers" element={<Consumers />} /> 
                             <Route path="/consumers/add" element={<AddConsumer />} />
                             <Route path="/consumers/:uid" element={<ConsumerView />} />
                             <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
@@ -83,6 +86,7 @@ const App: React.FC = () => {
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/dtr/:id" element={<DTRDetailPage />} />
                             <Route path="/feeders/:id" element={<Feeders />} />
+                            <Route path="/user-management" element={<UserManagement />} />
                             <Route path="/dtr-statistics/total-dtrs" element={<DTRTotalDTRs />} />
                             <Route path="/dtr-statistics/total-lt-feeders" element={<DTRTotalLTFeeders />} />
                             <Route path="/dtr-statistics/total-fuse-blown" element={<DTRTotalFuseBlown />} />
@@ -97,6 +101,9 @@ const App: React.FC = () => {
                             <Route path="/meter-management/meters-list" element={<MetersList />} />
                             <Route path="/meter-management/meters-list/add" element={<AddMeter />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
+                            <Route path="/ticket-view/:ticketId" element={<TicketView />} />
+                            <Route path="/ticket-view/:ticketId/add-message" element={<TicketView />} />
+                            <Route path="/role-management" element={<RoleManagement />} />
                             <Route path="*" element={<NotFound />} />
                         </Route>
                         <Route path="/page-builder" element={<PageBuilder />} />

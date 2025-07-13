@@ -254,9 +254,9 @@ const AppManagement: React.FC = () => {
 
   // Sidebar
   const SidebarContent: React.FC<{ currentStep: number }> = ({ currentStep }) => (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-row gap-6">
       
-      <div className="createSteps flex flex-row gap-6 bg-primary-lightest justify-between p-10 rounded-3xl  ">
+      <div className="createSteps flex flex-col gap-6 bg-primary-lightest justify-between p-10 rounded-3xl  ">
         {stepLabels.map((step: { label: string; sub: string }, idx: number) => {
           const isActive = idx === currentStep - 1;
           const isCompleted = idx < currentStep - 1;
@@ -264,7 +264,7 @@ const AppManagement: React.FC = () => {
           return (
             <div
               key={step.label}
-              className={`p-5 rounded-lg transition-all dark:border-dark-border flex justify-between items-start gap-4 ${
+              className={`p-5 rounded-lg transition-all dark:border-dark-border flex  items-start gap-4 ${
                 isActive 
                   ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' 
                   : isCompleted 

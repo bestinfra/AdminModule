@@ -242,7 +242,7 @@ const DTRDashboard: React.FC = () => {
     const latestAlertsSection: Section = {
         id: 'latest-alerts',
         component: (
-            <div className="mt-8">
+            <div className="">
                 <div className="flex items-center justify-between px-0 pt-0 pb-2">
                     <h2 className="text-lg font-semibold mb-0">Latest Alerts</h2>
                 </div>

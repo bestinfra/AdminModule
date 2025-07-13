@@ -377,7 +377,7 @@ const SuperAdminDashboard: React.FC = () => {
             layout="single-column"
             sections={[overviewSection, hostProjectsSection, analyticsSection, systemEventsSection]}
             header={headerComponent}
-            className="space-y-6 bg-gray-50 dark:bg-gray-900 p-4"
+            className=""
         />
     );
 };

@@ -1,16 +1,13 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import Card from '../components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
 import Table from '../components/global/Table';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
+
 
 // Mock data (should be shared or moved to a common location in real app)
 const consumersData = [
@@ -20,32 +17,60 @@ const consumersData = [
 
 const ConsumerView: React.FC = () => {
   const { uid } = useParams<{ uid: string }>();
+  const navigate = useNavigate();
   const consumer = consumersData.find(c => c.uid === uid);
 
   if (!consumer) return <div className="p-6">Consumer not found</div>;
 
+  // Handle back button click
+  const handleBackClick = () => {
+    navigate('/consumers'); // Navigate back to consumers list
+  };
+
+  // Handle refresh icon click
+  const handleRefreshClick = () => {
+    // Add refresh logic here
+    alert('Refreshing consumer data...');
+  };
+
+  // Menu items for PageHeader
+  const menuItems = [
+    { id: 'edit-consumer', label: 'Edit Consumer' },
+    { id: 'export-data', label: 'Export Data' }
+  ];
+
+  // Handle menu item clicks
+  const handleMenuItemClick = (itemId: string) => {
+    switch (itemId) {
+      case 'edit-consumer':
+        alert('Edit Consumer');
+        break;
+      case 'export-data':
+        alert('Export Data');
+        break;
+      default:
+        break;
+    }
+  };
+
   // Header component
-  const headerComponent = createHeaderComponent(
-    consumer.name,
-    `Consumer Details - ${consumer.uid}`,
-    `Meter: ${consumer.meter}`
+  const headerComponent = (
+    <PageHeader
+      title={consumer.name}
+      menuItems={menuItems}
+      onMenuItemClick={handleMenuItemClick}
+      showMenu={true}
+      showDropdown={true}
+      buttonsLabel="Recharge"
+      variant="primary"
+      onClick={() => alert('Recharge')}
+      onBackClick={handleBackClick}
+      backButtonText="Back to Consumers"
+      onRightImageClick={handleRefreshClick}
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Recharge', onClick: () => alert('Recharge'), variant: 'primary' },
-    { label: 'Edit Consumer', onClick: () => alert('Edit'), variant: 'outline' },
-    { label: 'Export Data', onClick: () => alert('Export'), variant: 'outline' }
-  ]);
 
-  
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: `Consumer ID: ${consumer.uid}`,
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // Consumer Info Section
   const consumerInfoSection: Section = {
@@ -96,7 +121,7 @@ const ConsumerView: React.FC = () => {
   const instantaneousDataSection: Section = {
     id: 'instantaneous-data',
     component: (
-      <div className="bg-blue-50 rounded-[var(--radius-2xl)] p-6">
+      <div className="bg-primary-lightest rounded-[var(--radius-2xl)] p-6">
         <div className="flex items-center justify-between bg-[var(--color-primary-lightest)] rounded-t-lg px-4 py-2">
           <div className="font-semibold">Instantaneous Data</div>
           <div className="text-sm text-gray-500">Last Comm Date: 10/07/2025 07:00:00</div>
@@ -156,9 +181,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
               <div className="font-semibold text-base">Power Distribution</div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Power Distribution')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Distribution')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="flex flex-col md:flex-row items-center justify-between px-6 pb-6 pt-2 gap-4">
               <div className="flex flex-col items-center w-full md:w-2/3">
@@ -196,9 +225,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-[var(--color-primary-lightest)]  rounded-t-3xl">
               <div className="font-semibold text-base">Power Metrics</div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Power Metrics')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Metrics')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="w-full h-64 px-6 pb-6 pt-2">
               <BarChart
@@ -228,9 +261,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
               <div className="font-semibold text-base">Daily Consumption <span className="text-gray-500 font-normal text-sm">(9 May, 2025 - 10 Jul, 2025)</span></div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Daily Consumption')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Daily Consumption')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="w-full h-64 px-6 pb-6 pt-2">
               <BarChart
@@ -252,9 +289,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
               <div className="font-semibold text-base">Monthly Consumption <span className="text-gray-500 font-normal text-sm">(Jul 2024 - Jul 2025)</span></div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Monthly Consumption')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Monthly Consumption')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="w-full h-64 px-6 pb-6 pt-2">
               <BarChart
@@ -333,7 +374,7 @@ const ConsumerView: React.FC = () => {
     component: (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Events</h2>
-        <div className="bg-white rounded-2xl shadow p-6">
+        <div className="bg-white rounded-2xl">
           <Table
             data={Array.from({ length: 46 }, (_, i) => ({
               sNo: i + 1,
@@ -367,7 +408,7 @@ const ConsumerView: React.FC = () => {
     component: (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Connection Activity History</h2>
-        <div className="bg-white rounded-2xl shadow p-6">
+        <div className="bg-white rounded-2xl shadow ">
           <Table
             data={[
               { sNo: 1, action: 'Connect', performedBy: 'Admin', dateTime: '10/07/2025 09:00:00', remarks: 'Routine connection' },
@@ -404,10 +445,8 @@ const ConsumerView: React.FC = () => {
         connectionActivitySection
       ]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
-      className="p-2 flex flex-col gap-8"
+      className=" flex flex-col gap-8"
       sectionClassName=""
 
     />
