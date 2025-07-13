@@ -42,10 +42,10 @@ function Header({
     const { isSidebarCollapsed } = useApp();
 
     return (
-        <header className="border-b border-b-primary-border dark:border-dark-border dark:bg-primary-dark flex items-center justify-between px-6 py-4">
+        <header className="border-b border-primary-border flex items-center justify-between px-6 py-4">
             <nav className="flex items-center gap-4">
                 <figure
-                    className="p-2 bg-gradient-primary  w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
+                    className="p-2 bg-stat-icon-gradient  w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
                     onClick={onSidebarToggle}
                     aria-label="Toggle sidebar">
                     <img

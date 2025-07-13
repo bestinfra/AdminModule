@@ -4,3 +4,6 @@
 .custom-filter{
     filter: brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%);
 }
+.bg-stat-icon-gradient {
+    background-image: var(--color-stat-icon-gradient);
+}

@@ -33,9 +33,9 @@ const Card = ({
     }
 
     return (
-        <article className="rounded-3xl bg-background-secondary custom-shadow w-full">
+        <article className="rounded-3xl custom-shadow w-full">
             <section className="flex justify-between items-start p-5 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
-                <div className="space-y-2">
+                <div className="flex flex-col gap-4">
                     <h3 className="text-base text-main dark:text-white">
                         {title}
                     </h3>
@@ -75,19 +75,19 @@ const Card = ({
                     )}
                 </div>
                 {icon && (
-                    <figure className="p-2 bg-gradient-primary  dark:bg-dark-secondary rounded-full w-12 h-12 flex items-center justify-center ">
+                    <figure className="p-2 bg-stat-icon-gradient rounded-full w-12 h-12 flex items-center justify-center ">
                         <img src={icon} alt={`${title} Icon`} className="w-6 h-6" style={iconStyle} />
                     </figure>
                 )}
             </section>
             <footer className="flex justify-between px-5 py-3 space-y-1">
                 {subtitle1 && (
-                    <p className="text-gray-700 m-0 font-light text-main dark:text-subinfo text-sm">
+                    <p className="text-text-secondary font-normal text-sm">
                         {subtitle1}
                     </p>
                 )}
                 {subtitle2 && (
-                            <p className="text-gray-700 m-0 font-light text-main dark:text-subinfo text-sm">
+                    <p className="text-text-secondary font-normal text-sm">
                         {subtitle2}
                     </p>
                 )}

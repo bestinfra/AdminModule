@@ -168,53 +168,47 @@ const Dashboard: React.FC = () => {
         )
     };
 
+    // Helper function to handle download functionality
+    const handleDownload = (timeRange: string, viewType: string) => {
+        console.log(`Download ${timeRange} ${viewType} data`);
+        // Add actual download logic here
+    };
+
+    // Helper function to handle time range changes
+    const handleTimeRangeChange = (range: string) => {
+        setMetricsView(range);
+        console.log(`Time range changed to: ${range}`);
+    };
+
+    // Helper function to handle view type changes
+    const handleViewTypeChange = (viewType: string) => {
+        setMetricsType(viewType);
+        console.log(`View type changed to: ${viewType}`);
+    };
+
     // Metrics Section
     const metricsSection: Section = {
         id: 'metrics',
         component: (
-            <div className="flex flex-col gap-2">
-                <div className="flex items-center justify-between gap-2">
-                    <h2 className="text-base font-semibold mb-0">Metrics</h2>
-                    <TimeRangeSelector
-                        availableTimeRanges={metricsTypeOptions}
-                        selectedTimeRange={metricsType}
-                        handleTimeRangeChange={setMetricsType}
-                    />
-                </div>
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
-                    <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
-                        <div className="font-medium">Daily Consumption Metrics <span className="text-xs font-normal">(4 May, 2025 - 5 Jul, 2025)</span></div>
-                        <div className="flex items-center gap-2">
-                            <TimeRangeSelector
-                                availableTimeRanges={metricsViewOptions}
-                                selectedTimeRange={metricsView}
-                                handleTimeRangeChange={setMetricsView}
-                            />
-                    <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
-                        <img
-                            alt="Download chart"
-                            src="icons/download-icon.svg"
-                            className="w-4 h-4 [filter:var(--icon-color)]"
-                        />
-                    </span>
-                    </div>
-                    
-
-                    </div>
-                    <div className="px-6">
-                        {metricsType === 'Graph' ? (
-                            <BarChart
-                                data={barData}
-                                xAxisData={barLabels}
-                                showXAxisLabel={true}
-                                xAxisLabel="kVAh"
-                            />
-                        ) : (
-                            <div className="text-center text-neutral-darker py-10">Table view coming soon...</div>
-                        )}
-                    </div>
-                </div>
-            </div>
+            <BarChart
+                data={barData}
+                xAxisData={barLabels}
+                showXAxisLabel={true}
+                xAxisLabel="kVAh"
+                showHeader={true}
+                headerTitle="Consumption Metrics"
+                dateRange="4 May, 2025 - 5 Jul, 2025"
+                availableTimeRanges={metricsViewOptions}
+                initialTimeRange={metricsView}
+                onTimeRangeChange={handleTimeRangeChange}
+                onDownload={handleDownload}
+                showDownloadButton={true}
+                showViewToggle={true}
+                viewToggleOptions={metricsTypeOptions}
+                initialViewType={metricsType}
+                onViewTypeChange={handleViewTypeChange}
+                timeRange={metricsView as 'Daily' | 'Monthly' | 'Yearly'}
+            />
         )
     };
 
