@@ -106,12 +106,15 @@ function createAppProject(formData) {
   // Copy all assets (icons, images, fonts)
   copyAllAssets();
 
-  // Helper to copy all CSS files
-  function copyAllCSS() {
+  // Helper to sync CSS files using the new sync utility
+  function syncCSSFiles() {
     const cssDir = path.join(baseDir, 'src', 'styles');
     ensureDir(cssDir);
     
-    // Copy all CSS files from src/styles
+    // Import the sync utility
+    const { syncCSSToApp, transformCSSForGeneratedApp } = require('./scripts/sync-css.js');
+    
+    // Use the sync utility to copy and transform CSS files
     const sourceStylesDir = path.join(__dirname, 'frontend', 'src', 'styles');
     
     if (fs.existsSync(sourceStylesDir)) {
@@ -123,13 +126,11 @@ function createAppProject(formData) {
         if (fs.statSync(sourcePath).isFile() && cssFile.endsWith('.css')) {
           let cssContent = fs.readFileSync(sourcePath, 'utf8');
           
-          // Convert Tailwind CSS v4 syntax to v3 syntax for host app
-          cssContent = cssContent.replace(/@import 'tailwindcss';/g, '@tailwind base;\n@tailwind components;\n@tailwind utilities;');
+          // Use the transformCSSForGeneratedApp function for consistency
+          const transformedContent = transformCSSForGeneratedApp(cssContent);
           
-          // Convert @theme to :root for Tailwind CSS v3 compatibility
-          cssContent = cssContent.replace(/@theme {/g, ':root {');
-          
-          fs.writeFileSync(destPath, cssContent);   
+          fs.writeFileSync(destPath, transformedContent);   
+          console.log(`✅ Synced ${cssFile} to ${projectFolderName}`);
         }
       });
     } else {
@@ -137,8 +138,8 @@ function createAppProject(formData) {
     }
   }
 
-  // Copy all CSS files
-  copyAllCSS();
+  // Sync all CSS files using the new sync utility
+  syncCSSFiles();
 
   // Create the React project structure
   const projectStructure = {
@@ -331,6 +332,7 @@ import React, { lazy, Suspense, ComponentType, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { FederatedContextProvider } from './components/FederatedWrapper';
+import CSSLoader from './components/CSSLoader';
 import './App.css';
 
 // Create safe lazy loading with error handling
@@ -731,6 +733,7 @@ function App() {
     <Router>
       <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
         <AppProvider>
+          <CSSLoader />
           <AppContent />
         </AppProvider>
       </Suspense>
@@ -1273,7 +1276,7 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
 
 export default SidebarWrapper; `,
 
-'src/components/FederatedWrapper.tsx': `import React, { createContext, useContext } from 'react';
+    'src/components/FederatedWrapper.tsx': `import React, { createContext, useContext } from 'react';
 
 // Context that matches the SuperAdmin's AppContext interface
 interface FederatedAppContextType {
@@ -1314,6 +1317,69 @@ export const useFederatedApp = () => {
     }
     return context;
 }; `,
+
+    'src/components/CSSLoader.tsx': `import React, { useEffect, useState } from 'react';
+
+interface CSSLoaderProps {
+  cssFiles?: string[];
+  fallbackEnabled?: boolean;
+}
+
+const CSSLoader: React.FC<CSSLoaderProps> = ({ 
+  cssFiles = ['global.css', 'default.css', 'custom.css'], 
+  fallbackEnabled = true 
+}) => {
+  const [loadedCSS, setLoadedCSS] = useState<string[]>([]);
+  const [failedCSS, setFailedCSS] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadCSSFromHost = async () => {
+      for (const cssFile of cssFiles) {
+        try {
+          // Try to load CSS from the host app via federation
+          const response = await fetch(\`http://localhost:3000/assets/\${cssFile}\`);
+          
+          if (response.ok) {
+            const cssContent = await response.text();
+            
+            // Create a style element and add the CSS
+            const styleElement = document.createElement('style');
+            styleElement.id = \`federated-\${cssFile}\`;
+            styleElement.textContent = cssContent;
+            
+            // Remove any existing style with the same ID
+            const existingStyle = document.getElementById(\`federated-\${cssFile}\`);
+            if (existingStyle) {
+              existingStyle.remove();
+            }
+            
+            document.head.appendChild(styleElement);
+            setLoadedCSS(prev => [...prev, cssFile]);
+            
+            console.log(\`✅ Loaded federated CSS: \${cssFile}\`);
+          } else {
+            throw new Error(\`Failed to load \${cssFile}: \${response.status}\`);
+          }
+        } catch (error) {
+          console.warn(\`⚠️ Failed to load federated CSS \${cssFile}:\`, error);
+          setFailedCSS(prev => [...prev, cssFile]);
+          
+          // If fallback is enabled, continue using local CSS
+          if (fallbackEnabled) {
+            console.log(\`🔄 Using local CSS fallback for \${cssFile}\`);
+          }
+        }
+      }
+    };
+
+    loadCSSFromHost();
+  }, [cssFiles, fallbackEnabled]);
+
+  // This component doesn't render anything visual
+  return null;
+};
+
+export default CSSLoader;`,
     
 
     
@@ -1474,7 +1540,12 @@ Generated on: ${new Date().toLocaleDateString()}
   console.log(`Next steps:`);
   console.log(`   1. cd ${baseDir}`);
   console.log(`   2. npm install`);
-  console.log(`   3. npm run dev`); 
+  console.log(`   3. npm run dev`);
+  console.log(`\n🎨 CSS Sync Instructions:`);
+  console.log(`   • CSS files are already synced during creation`);
+  console.log(`   • To sync CSS changes later, run: npm run css-sync`);
+  console.log(`   • To watch for CSS changes, run: npm run css-sync-watch`);
+  console.log(`   • To sync to specific app: npm run css-sync-app ${projectFolderName}`); 
   
   return baseDir;
 }
