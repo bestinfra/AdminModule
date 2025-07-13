@@ -36,6 +36,10 @@ export default defineConfig({
         './PageHeader': './src/components/global/PageHeader.tsx',
         './Meters': './src/pages/MetersList.tsx',
         './DataLoggerMaster': './src/pages/DataLoggerMaster.tsx',
+        // CSS Files exposed for federation
+        './styles/global.css': './src/styles/global.css',
+        './styles/default.css': './src/styles/default.css',
+        './styles/custom.css': './src/styles/custom.css',
         // './Users': './src/pages/Users.tsx',
         // './RoleManagement': './src/pages/RoleManagement.tsx',
       },
