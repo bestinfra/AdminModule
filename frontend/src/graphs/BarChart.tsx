@@ -22,7 +22,7 @@ interface BarChartProps {
   ariaLabel?: string;
   title?: string;
   description?: string;
-  // Enhanced props for complete functionality
+  // Header functionality props
   showHeader?: boolean;
   headerTitle?: string;
   dateRange?: string;
@@ -31,14 +31,6 @@ interface BarChartProps {
   onTimeRangeChange?: (range: string) => void;
   onDownload?: (timeRange: string, viewType: string) => void;
   showDownloadButton?: boolean;
-  showViewToggle?: boolean;
-  viewToggleOptions?: string[];
-  initialViewType?: string;
-  onViewTypeChange?: (viewType: string) => void;
-  // Table view props
-  showTableView?: boolean;
-  tableData?: any[];
-  tableColumns?: any[];
 }
 
 const BarChart: React.FC<BarChartProps> = React.memo(({
@@ -55,7 +47,7 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   ariaLabel = 'Bar chart',
   title,
   description,
-  // Enhanced props with defaults
+  // Header functionality props with defaults
   showHeader = false,
   headerTitle = 'Metrics',
   dateRange = '',
@@ -64,20 +56,12 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   onTimeRangeChange = () => {},
   onDownload = () => {},
   showDownloadButton = true,
-  showViewToggle = false,
-  viewToggleOptions = ['Graph', 'Table'],
-  initialViewType = 'Graph',
-  onViewTypeChange = () => {},
-  showTableView = false,
-  tableData = [],
-  tableColumns = [],
 }) => {
   const { isDarkMode: contextIsDarkMode } = useApp();
   const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
 
-  // Internal state for time range and view type
+  // Internal state for time range
   const [selectedTimeRange, setSelectedTimeRange] = useState(initialTimeRange);
-  const [selectedViewType, setSelectedViewType] = useState(initialViewType);
 
   // Helper function to get dynamic title based on selected time range
   const getDynamicTitle = useCallback((timeRange: string) => {
@@ -92,16 +76,10 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
     onTimeRangeChange(range);
   }, [onTimeRangeChange]);
 
-  // Handle view type change
-  const handleViewTypeChange = useCallback((viewType: string) => {
-    setSelectedViewType(viewType);
-    onViewTypeChange(viewType);
-  }, [onViewTypeChange]);
-
   // Handle download
   const handleDownload = useCallback(() => {
-    onDownload(selectedTimeRange, selectedViewType);
-  }, [onDownload, selectedTimeRange, selectedViewType]);
+    onDownload(selectedTimeRange, 'Graph');
+  }, [onDownload, selectedTimeRange]);
 
   const getAxisColor = useCallback((lightVar: string, darkVar: string) =>
     isDarkMode ? `var(${darkVar})` : `var(${lightVar})`, [isDarkMode]);
@@ -168,10 +146,10 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
         color: getAxisColor('--color-neutral-darker', '--color-surface'),
       },
     },
-    grid: { left: '0%', right: '0.1%', bottom: '0%', top: '13%', containLabel: true },
-    xAxis: {
-      type: 'category',
-      data: xAxisData,
+    grid: { left: '0%', right: '0.1%', bottom: '0%', top: '3%', containLabel: true },
+          xAxis: {
+        type: 'category',
+        data: xAxisData,
       axisLabel: {
         fontSize: '0.75rem',
         color: getAxisColor('--color-neutral-dark', '--color-surface'),
@@ -243,18 +221,7 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
     </div>
   );
 
-  // Table content component
-  const tableContent = (
-    <div className="px-6 py-10">
-      <div className="text-center text-neutral-darker dark:text-surface">
-        {showTableView && tableData.length > 0 ? (
-          <div>Table implementation goes here</div>
-        ) : (
-          'Table view coming soon...'
-        )}
-      </div>
-    </div>
-  );
+
 
   // If no header, return simple chart
   if (!showHeader) {
@@ -262,58 +229,43 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   }
 
   return (
-    <div className="flex flex-col gap-2">
-      {/* View Type Toggle (Graph/Table) */}
-      {showViewToggle && (
-        <div className="flex items-center justify-between gap-2">
-          <h2 className="text-base font-semibold mb-0">Metrics</h2>
+    <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+      {/* Header Section */}
+      <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] dark:bg-primary-dark-light rounded-t-3xl p-4">
+        <div className="font-medium text-neutral-darker dark:text-surface font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          {getDynamicTitle(selectedTimeRange)}
+          {dateRange && (
+            <span className="text-xs font-normal text-neutral-dark dark:text-surface ml-1 font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+              ({dateRange})
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
           <TimeRangeSelector
-            availableTimeRanges={viewToggleOptions}
-            selectedTimeRange={selectedViewType}
-            handleTimeRangeChange={handleViewTypeChange}
+            availableTimeRanges={availableTimeRanges}
+            selectedTimeRange={selectedTimeRange}
+            handleTimeRangeChange={handleTimeRangeChange}
           />
+          {showDownloadButton && (
+            <span 
+              className="cursor-pointer w-8 h-8 rounded-full bg-white dark:bg-primary-dark flex justify-center items-center border border-primary-border dark:border-dark-border hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
+              onClick={() => handleDownload()}
+              role="button"
+              aria-label="Download chart"
+            >
+              <img
+                alt="Download chart"
+                src="/icons/download-icon.svg"
+                className="w-4 h-4 [filter:var(--icon-color)]"
+              />
+            </span>
+          )}
         </div>
-      )}
-
-      {/* Main Chart Container */}
-      <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
-        {/* Header Section */}
-        <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] dark:bg-primary-dark-light rounded-t-3xl p-4">
-          <div className="font-medium text-neutral-darker dark:text-surface">
-            {getDynamicTitle(selectedTimeRange)}
-            {dateRange && (
-              <span className="text-xs font-normal text-neutral-dark dark:text-surface ml-1">
-                ({dateRange})
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-2">
-            <TimeRangeSelector
-              availableTimeRanges={availableTimeRanges}
-              selectedTimeRange={selectedTimeRange}
-              handleTimeRangeChange={handleTimeRangeChange}
-            />
-            {showDownloadButton && (
-              <span 
-                className="cursor-pointer w-8 h-8 rounded-full bg-white dark:bg-primary-dark flex justify-center items-center border border-primary-border dark:border-dark-border hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
-                onClick={() => handleDownload()}
-                role="button"
-                aria-label="Download chart"
-              >
-                <img
-                  alt="Download chart"
-                  src="/icons/download-icon.svg"
-                  className="w-4 h-4 [filter:var(--icon-color)]"
-                />
-              </span>
-            )}
-          </div>
-        </div>
-        
-        {/* Content Section */}
-        <div className="px-6">
-          {selectedViewType === 'Graph' ? chartContent : tableContent}
-        </div>
+      </div>
+      
+      {/* Content Section */}
+      <div className="px-4 py-4">
+        {chartContent}
       </div>
     </div>
   );
