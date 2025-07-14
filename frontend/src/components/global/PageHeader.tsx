@@ -152,7 +152,7 @@ const Header: React.FC<HeaderProps> = ({
                 )}
                 {unitName && (
                     <div className="flex flex-col gap-2">
-                        <h1 className="text-xl font-black text-gray-900 dark:text-white m-0">
+                        <h1 className="text-base font-semibold text-gray-900 dark:text-white m-0">
                             {editMode ? (
                                 <input
                                     type="text"
