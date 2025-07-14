@@ -4,14 +4,14 @@ import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
 import type { FormInputValue } from '../../../components/forms/types';
 
-interface BrandingStepProps {
+interface BrandPersonalizationProps {
   formData: any;
   errors: Record<string, string>;
   onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   onNext: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputChange, onNext }) => {
+const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, errors, onInputChange, onNext }) => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
@@ -316,4 +316,4 @@ const BrandingStep: React.FC<BrandingStepProps> = ({ formData, errors, onInputCh
   );
 };
 
-export default BrandingStep; 
+export default BrandPersonalization; 

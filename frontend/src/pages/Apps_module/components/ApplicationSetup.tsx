@@ -4,7 +4,7 @@ import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
 import type { FormInputValue } from '../../../components/forms/types';
 
-interface AppBasicsStepProps {
+interface ApplicationSetupProps {
   formData: any;
   errors: Record<string, string>;
   onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
@@ -12,7 +12,7 @@ interface AppBasicsStepProps {
   onNext: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
+const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
 
     const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -235,4 +235,4 @@ const AppBasicsStep: React.FC<AppBasicsStepProps> = ({ formData, errors, onInput
     );
 };
 
-export default AppBasicsStep; 
+export default ApplicationSetup; 

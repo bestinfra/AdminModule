@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../../../components/global/Button';
 
-interface GoLiveStepProps {
+interface FinalizeAndDeployProps {
   formData: any;
   onEditStep: (stepIndex: number) => void;
   onSubmit: () => void;
@@ -9,7 +9,7 @@ interface GoLiveStepProps {
   onInputChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
 }
 
-const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange }) => {
+const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange }) => {
   return (
     <div className="max-w-4xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Terms & Conditions</h2>
@@ -160,4 +160,4 @@ const GoLiveStep: React.FC<GoLiveStepProps> = ({ formData, onEditStep, onSubmit,
   );
 };
 
-export default GoLiveStep; 
+export default FinalizeAndDeploy; 

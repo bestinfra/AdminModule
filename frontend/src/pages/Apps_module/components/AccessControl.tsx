@@ -5,7 +5,7 @@ import Button from '../../../components/global/Button';
 import LoadingSpinner from '../../../components/global/LoadingSpinner';
 import type { FormInputValue } from '../../../components/forms/types';
 
-export interface AdminAccessFormData {
+export interface AccessControlData {
   adminFirstName: string;
   adminLastName: string;
   adminEmail: string;
@@ -18,7 +18,7 @@ export interface AdminAccessFormData {
   sendWelcomeEmail: boolean;
 }
 
-export interface AdminAccessFormErrors {
+export interface AccessControlErrors {
   adminFirstName?: string;
   adminLastName?: string;
   adminEmail?: string;
@@ -28,9 +28,9 @@ export interface AdminAccessFormErrors {
   adminRole?: string;
 }
 
-export interface AdminAccessFormProps {
-  formData: AdminAccessFormData;
-  errors: AdminAccessFormErrors;
+export interface AccessControlProps {
+  formData: AccessControlData;
+  errors: AccessControlErrors;
   onInputChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => void;
   onDropdownChange: (e: { target: { name: string; value: string | string[] } }) => void;
   loading?: boolean;
@@ -39,7 +39,7 @@ export interface AdminAccessFormProps {
 
 
 
-const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
+const AccessControl: React.FC<AccessControlProps> = ({
   formData,
   errors,
   onInputChange,
@@ -212,4 +212,4 @@ const AdminAccessForm: React.FC<AdminAccessFormProps> = ({
   );
 };
 
-export default AdminAccessForm; 
+export default AccessControl; 
