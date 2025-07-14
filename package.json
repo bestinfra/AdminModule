@@ -25,9 +25,8 @@
   "author": "Admin Module Team",
   "license": "MIT",
   "dependencies": {
-    "chokidar": "^3.5.3",
-    "concurrently": "^8.2.2",
-    "zod": "^4.0.5"
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"

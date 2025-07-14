@@ -236,7 +236,7 @@ const Step1: React.FC<Step1Props> = ({
             {/* Step 2 Fields - Asset/Property Details */}
             <div className="space-y-6">
                 <h2 className="text-xl font-semibold text-gray-900">Asset/Property Details</h2>
-                
+                zppp
                 {/* Meter Search */}
                 <div className="space-y-4">
                     <div className="relative">

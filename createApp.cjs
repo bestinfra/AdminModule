@@ -223,7 +223,7 @@ export default defineConfig({
       remotes: {
         SuperAdmin: 'http://localhost:3000/assets/remoteEntry.js',
       },
-      shared: ['react', 'react-dom'],
+      shared: ['react', 'react-dom', 'react-router', 'react-router-dom'],
     }),
   ],
   build: {
@@ -252,7 +252,7 @@ module.exports = {
       colors: {
         primary: '${primaryColor || '#3B82F6'}',
         'primary-lightest': '#F0F9FF',
-        'primary-border': '#E5E7EB',
+        'primary-border': 'var(--color-primary-border)',
         'dark-border': '#374151',
         'primary-dark': '#1F2937',
         'primary-dark-light': '#374151',

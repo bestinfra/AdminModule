@@ -52,7 +52,11 @@
 }
 
 * {
-    font-family: 'Manrope';
+    font-family: 'Manrope', sans-serif !important;
+}
+
+body {
+    font-family: 'Manrope', sans-serif !important;
 }
 
 @theme {
@@ -419,6 +423,11 @@ img {
     .bg-gradient-secondary {
         background: var(--color-gradient-secondary);
     }
+
+/* Font utilities */
+.font-manrope {
+    font-family: 'Manrope', sans-serif !important;
+}
 
 /* Force input placeholder color to gray-400 and background to white */
 /* input::placeholder {
