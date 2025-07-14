@@ -252,7 +252,7 @@ module.exports = {
       colors: {
         primary: '${primaryColor || '#3B82F6'}',
         'primary-lightest': '#F0F9FF',
-        'primary-border': 'var(--color-primary-border)',
+        'primary-border': 'rgb(233, 239, 255)',
         'dark-border': '#374151',
         'primary-dark': '#1F2937',
         'primary-dark-light': '#374151',
