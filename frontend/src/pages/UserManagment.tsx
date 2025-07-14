@@ -249,30 +249,6 @@ const UserManagement: React.FC = () => {
                 setErrorType(null);
                 setErrorDetails(null);
 
-                // Commented out API call - using dummy data instead
-                /*
-                const response: ApiResponse<User> = await apiClient.get(
-                    `/roles?page=${page}&limit=${limit}`
-                );
-
-                if (!response.data) {
-                    throw new Error('No data received from server');
-                }
-
-                setUsers(response.data || []);
-                setTotalCount(response.pagination?.total || 0);
-                setPagination({
-                    currentPage: response.pagination?.page || 1,
-                    limit: response.pagination?.limit || 10,
-                    totalPages: response.pagination?.totalPages || 1,
-                    totalCount: response.pagination?.total || 0,
-                    hasNextPage:
-                        (response.pagination?.page || 1) <
-                        (response.pagination?.totalPages || 1),
-                    hasPrevPage: (response.pagination?.page || 1) > 1,
-                });
-                */
-
                 // Simulate API delay
                 await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -304,31 +280,13 @@ const UserManagement: React.FC = () => {
                 setTableLoading(false);
             }
         },
-        [tableLoading, pagination.currentPage, pagination.limit]
+        [tableLoading] // Remove pagination dependencies to prevent infinite loops
     );
 
-    const fetchStats = async () => {
+    const fetchStats = useCallback(async () => {
         try {
             setStatsLoading(true);
             
-            // Commented out API call - using dummy data instead
-            /*
-            const response = await apiClient.get('/usersStats');
-            const data = response.data;
-
-            setStats({
-                totalUsers: data.total_users || 0,
-                activeUsers: data.active_users || 0,
-                inactiveUsers: data.inactive_users || 0,
-                total_accountants: data.total_accountants || 0,
-                total_moderators: data.total_moderators || 0,
-                total_admins: data.total_admins || 0,
-                total_roles: data.total_roles || 0,
-                totalRevenue: data.total_revenue || 0,
-                averageRevenue: data.average_revenue || 0,
-            });
-            */
-
             // Simulate API delay
             await new Promise(resolve => setTimeout(resolve, 300));
 
@@ -341,22 +299,17 @@ const UserManagement: React.FC = () => {
         } finally {
             setStatsLoading(false);
         }
-    };
+    }, []); // Empty dependency array
 
     // Event Handlers
-    const handleEdit = (user: User) => {
+    const handleEdit = useCallback((user: User) => {
         navigate('/admin/users/add', { state: { user, isEdit: true } });
-    };
+    }, [navigate]);
 
-    const handleDelete = async (user: User) => {
+    const handleDelete = useCallback(async (user: User) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
                 setLoading(true);
-                
-                // Commented out API call - using dummy data instead
-                /*
-                await apiClient.delete(`/users/${user.USER_ID}`);
-                */
                 
                 // Simulate API delay
                 await new Promise(resolve => setTimeout(resolve, 500));
@@ -373,31 +326,25 @@ const UserManagement: React.FC = () => {
                 setLoading(false);
             }
         }
-    };
+    }, []);
 
-    const handleView = (user: User, tab = 'basic') => {
+    const handleView = useCallback((user: User, tab = 'basic') => {
         navigate(`/admin/users/${user.USER_ID}`, { state: { user, tab } });
-    };
+    }, [navigate]);
 
-    // Effects
+    // Effects - Fixed to prevent infinite loops
     useEffect(() => {
         fetchStats();
-    }, [searchParams]);
+    }, []); // Only run once on mount
 
     useEffect(() => {
         const page = parseInt(searchParams.get('page') || '1');
         const limit = parseInt(searchParams.get('limit') || '10');
-
-        const controller = new AbortController();
         fetchUsers(page, limit);
+    }, [searchParams]); // Only depend on searchParams, not fetchUsers
 
-        return () => {
-            controller.abort();
-        };
-    }, [searchParams, fetchUsers]);
-
-    // Table columns
-    const columns: Column[] = [
+    // Table columns - Memoized to prevent unnecessary re-renders
+    const columns: Column[] = React.useMemo(() => [
         {
             key: 'name',
             label: 'Full Name',
@@ -435,7 +382,7 @@ const UserManagement: React.FC = () => {
             render: (value: string | number | boolean | null | undefined) => 
                 value ? formatDateSlash(value as string) : '-',
         },
-    ];
+    ], []); // Empty dependency array since formatDateSlash is stable
 
     // Error component
 
@@ -443,8 +390,8 @@ const UserManagement: React.FC = () => {
     // Loading skeleton for stats
 
 
-    // Header component
-    const headerComponent = (
+    // Header component - Memoized to prevent unnecessary re-renders
+    const headerComponent = React.useMemo(() => (
         <PageHeader
             title="User Management"
             onBackClick={() => navigate('/admin')}
@@ -453,102 +400,10 @@ const UserManagement: React.FC = () => {
             variant="primary"
             onClick={() => navigate('/admin/users/add')}
         />
-    );
+    ), [navigate]);
 
-    // Page sections (commented out)
-    const sections: Section[] = [
-        // {
-        //     id: 'header',
-        //     component: (
-        //         <div className="flex items-center justify-between mb-6">
-        //             <div>
-        //                 <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-        //                 <p className="text-gray-600 mt-1">Manage and monitor all users in the system</p>
-        //             </div>
-        //             <div className="flex items-center gap-2">
-        //                 <Button
-        //                     label="Add User"
-        //                     onClick={() => navigate('/admin/users/add')}
-        //                     variant="primary"
-        //                 />
-        //                 <Button
-        //                     label="Back"
-        //                     onClick={() => navigate('/admin')}
-        //                     variant="outline"
-        //                 />
-        //             </div>
-        //         </div>
-        //     ),
-        // },
-        // {
-        //     id: 'error',
-        //     component: error ? (
-        //         <ErrorDisplay
-        //             error={error}
-        //             title={error}
-        //             message={errorDetails}
-        //             onClose={() => {
-        //                 setError(null);
-        //                 setErrorType(null);
-        //                 setErrorDetails(null);
-        //             }}
-        //             type={errorType || 'fetch'}
-        //         />
-        //     ) : null,
-        // },
-        // {
-        //     id: 'stats',
-        //     component: (
-        //         <div className="mb-6">
-        //             {statsLoading ? (
-        //                 <StatsSkeleton />
-        //             ) : (
-        //                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-        //                     <Card
-        //                         title="Total Users"
-        //                         value={stats.totalUsers.toString()}
-        //                         icon="/icons/total-users.svg"
-        //                         showTrend={false}
-        //                         subtitle1={`${stats.activeUsers} Active Users`}
-        //                         subtitle2={`${stats.inactiveUsers} Inactive Users`}
-        //                     />
-        //                     <Card
-        //                         title="Total Admins"
-        //                         value={stats.total_admins.toString()}
-        //                         icon="/icons/admin.svg"
-        //                         showTrend={false}
-        //                         subtitle1="This Month"
-        //                         subtitle2=""
-        //                     />
-        //                     <Card
-        //                         title="Total Accountants"
-        //                         value={stats.total_accountants.toString()}
-        //                         icon="/icons/accountant.svg"
-        //                         showTrend={false}
-        //                         subtitle1="This Month"
-        //                         subtitle2=""
-        //                     />
-        //                     <Card
-        //                         title="Total Moderators"
-        //                         value={stats.total_moderators.toString()}
-        //                         icon="/icons/moderator.svg"
-        //                         showTrend={false}
-        //                         subtitle1={`${stats.activeUsers} Active Users`}
-        //                         subtitle2=""
-        //                     />
-        //                     <Card
-        //                         title="Total Roles"
-        //                         value={stats.total_roles.toString()}
-        //                         icon="/icons/roles.svg"
-        //                         showTrend={false}
-        //                         subtitle1={`${stats.activeUsers} Active Users`}
-        //                         subtitle2=""
-        //                     />
-        //                 </div>
-        //             )}
-        //         </div>
-        //     ),
-        // },
+    // Page sections - Memoized to prevent unnecessary re-renders
+    const sections: Section[] = React.useMemo(() => [
         {
             id: 'table',
             component: (
@@ -575,7 +430,7 @@ const UserManagement: React.FC = () => {
                 </div>
             ),
         },
-    ];
+    ], [users, columns, tableLoading, error, handleView, handleEdit, handleDelete, pagination, handlePageChange]);
 
     return (
         <Page
