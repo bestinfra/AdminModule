@@ -56,6 +56,13 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   onTimeRangeChange = () => {},
   onDownload = () => {},
   showDownloadButton = true,
+  showViewToggle = false,
+  viewToggleOptions = ['Graph', 'Table'],
+  initialViewType = 'Graph',
+  onViewTypeChange = () => {},
+  showTableView = false,
+  tableData = [],
+  // tableColumns = [],
 }) => {
   const { isDarkMode: contextIsDarkMode } = useApp();
   const isDarkMode = propIsDarkMode ?? contextIsDarkMode;

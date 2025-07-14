@@ -16,7 +16,7 @@ import {
 } from './renderers';
 
 const FormInput: React.FC<FormInputProps> = ({ 
-  input, value, error, showError, disabled, onInputChange, onInputBlur, fileInputRefs 
+  input, value, showError, disabled, onInputChange, onInputBlur, fileInputRefs 
 }) => {
   const { name, type, label, placeholder, required, options, className: inputClassName, colSpan = 1, icon, description } = input;
   
@@ -150,7 +150,7 @@ const FormInput: React.FC<FormInputProps> = ({
         )}
         
         {/* Accessible error message */}
-        {showError && error && (
+        {/* {showError && error && (
           <div 
             id={errorId}
             className="text-sm text-red-500 mt-1"
@@ -160,7 +160,7 @@ const FormInput: React.FC<FormInputProps> = ({
             <span className="sr-only">Error: </span>
             {error}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

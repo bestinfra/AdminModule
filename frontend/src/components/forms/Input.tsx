@@ -37,7 +37,7 @@ const Input = ({
                     ref={inputRef}
                     type="search"
                     placeholder={placeholder}
-                    className="w-full text-primary-dark  px-4 py-3 pr-32 rounded-full border border-primary-border text-main text-sm font-light bg-white dark:bg-primary-dark dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder:text-primary-dark dark:placeholder:text-main"
+                    className="w-full text-primary-dark px-4 py-3 pr-32 rounded-full border border-primary-border text-main text-sm font-light bg-white dark:bg-primary-dark dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder-black placeholder:font-normal dark:placeholder:text-main dark:placeholder:font-light"
                     aria-label="Search"
                     onChange={(e) => onSearch?.(e.target.value)}
                 />
