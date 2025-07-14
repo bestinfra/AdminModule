@@ -1,4 +1,6 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+// @ts-ignore: If axios types are missing, install with: npm install axios @types/axios
+import axios from 'axios';
 import FormInput from '../../../components/forms/FormInput';
 import Dropdown from '../../../components/global/Dropdown';
 import Button from '../../../components/global/Button';
@@ -15,6 +17,62 @@ interface ApplicationSetupProps {
 const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
 
     const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+
+    // Dynamic location data states
+    const [countryOptions, setCountryOptions] = useState<{ value: string; label: string }[]>([]);
+    const [stateOptions, setStateOptions] = useState<{ value: string; label: string }[]>([]);
+    const [cityOptions, setCityOptions] = useState<{ value: string; label: string }[]>([]);
+
+    // Fetch countries on mount
+    useEffect(() => {
+        axios.get('https://countriesnow.space/api/v0.1/countries/positions')
+            .then((res: any) => {
+                if (res.data && res.data.data) {
+                    setCountryOptions(res.data.data.map((c: any) => ({ value: c.name, label: c.name })));
+                }
+            })
+            .catch(() => setCountryOptions([]));
+    }, []);
+
+    // Fetch states when country changes
+    useEffect(() => {
+        if (formData.country) {
+            axios.post('https://countriesnow.space/api/v0.1/countries/states', {
+                country: formData.country
+            })
+                .then((res: any) => {
+                    if (res.data && res.data.data && res.data.data.states) {
+                        setStateOptions(res.data.data.states.map((s: any) => ({ value: s.name, label: s.name })));
+                    } else {
+                        setStateOptions([]);
+                    }
+                })
+                .catch(() => setStateOptions([]));
+        } else {
+            setStateOptions([]);
+        }
+        setCityOptions([]);
+    }, [formData.country]);
+
+    // Fetch cities when state changes
+    useEffect(() => {
+        if (formData.country && formData.state) {
+            axios.post('https://countriesnow.space/api/v0.1/countries/state/cities', {
+                country: formData.country,
+                state: formData.state
+            })
+                .then((res: any) => {
+                    if (res.data && res.data.data) {
+                        setCityOptions(res.data.data.map((city: string) => ({ value: city, label: city })));
+                    } else {
+                        setCityOptions([]);
+                    }
+                })
+                .catch(() => setCityOptions([]));
+        } else {
+            setCityOptions([]);
+        }
+    }, [formData.country, formData.state]);
 
     // Auto-generate subdomain from app name
     useEffect(() => {
@@ -102,43 +160,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
         { value: 'solar-bidirectional', label: 'Solar Bidirectional' },
         { value: 'amr-ami-enabled', label: 'AMR/AMI-Enabled' },
     ];
-
-    const countryOptions = [
-        { value: 'india', label: 'India' },
-        { value: 'uae', label: 'United Arab Emirates' },
-        { value: 'usa', label: 'United States' },
-        { value: 'uk', label: 'United Kingdom' },
-        { value: 'canada', label: 'Canada' },
-        { value: 'australia', label: 'Australia' },
-    ];
-
-    const stateOptions: Record<string, { value: string; label: string }[]> = {
-        india: [
-            { value: 'maharashtra', label: 'Maharashtra' },
-            { value: 'karnataka', label: 'Karnataka' },
-            { value: 'tamil-nadu', label: 'Tamil Nadu' },
-            { value: 'delhi', label: 'Delhi' },
-            { value: 'gujarat', label: 'Gujarat' },
-        ],
-        uae: [
-            { value: 'dubai', label: 'Dubai' },
-            { value: 'abu-dhabi', label: 'Abu Dhabi' },
-            { value: 'sharjah', label: 'Sharjah' },
-            { value: 'ajman', label: 'Ajman' },
-        ],
-    };
-
-    const cityOptions: Record<string, { value: string; label: string }[]> = {
-        'maharashtra': [
-            { value: 'mumbai', label: 'Mumbai' },
-            { value: 'pune', label: 'Pune' },
-            { value: 'nagpur', label: 'Nagpur' },
-        ],
-        'dubai': [
-            { value: 'dubai-city', label: 'Dubai City' },
-            { value: 'jebel-ali', label: 'Jebel Ali' },
-        ],
-    };
 
     // Unified Dropdown handler
     const handleDropdownChange = (e: { target: { name: string; value: string | string[] } }) => {
@@ -232,7 +253,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         name="state"
                                         value={formData.state}
                                         onChange={handleDropdownChange}
-                                        options={stateOptions[formData.country] || []}
+                                        options={stateOptions}
                                         placeholder="Select State"
                                         disabled={!formData.country}
                                         error={errors.state}
@@ -243,7 +264,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         name="city"
                                         value={formData.city}
                                         onChange={handleDropdownChange}
-                                        options={cityOptions[formData.state] || []}
+                                        options={cityOptions}
                                         placeholder="Select City"
                                         disabled={!formData.state}
                                         error={errors.city}
