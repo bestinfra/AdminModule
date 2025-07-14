@@ -32,6 +32,8 @@ export default defineConfig({
         './TimeRangeSelector': './src/components/global/TimeRangeSelector.tsx',
         './Transformer': './src/pages/DTRDashboard.tsx',
         './Assets': './src/pages/AssetManagement.tsx',
+        './OrgChart': './src/components/global/OrgChart.tsx',
+        './PageHeader': './src/components/global/PageHeader.tsx',
         './Meters': './src/pages/MetersList.tsx',
         './DataLoggerMaster': './src/pages/DataLoggerMaster.tsx',
         // CSS Files exposed for federation
@@ -41,7 +43,7 @@ export default defineConfig({
         // './Users': './src/pages/Users.tsx',
         // './RoleManagement': './src/pages/RoleManagement.tsx',
       },
-      shared: ['react', 'react-dom'],
+      shared: ['react', 'react-dom', 'reactflow', 'react-router-dom', 'echarts-for-react'],
     }),
   ],
   build: {

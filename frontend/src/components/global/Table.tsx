@@ -4,7 +4,55 @@ import debounce from 'lodash/debounce';
 import { useState, useMemo, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import TableSkeleton from '../skeletons/TableSkeleton';
+import { useNavigate } from 'react-router-dom';
 
+/**
+ * Table Component with Search and Actions
+ * 
+ * Sample Data for Testing:
+ * 
+ * const sampleData = [
+ *   {
+ *     sNo: 1,
+ *     unitId: 'UNIT001',
+ *     unitName: 'Airborne General Store',
+ *     unitType: 'Commercial',
+ *     sez: 'GMR SEZ',
+ *     status: 'Active',
+ *     meterNumber: 'A9211434',
+ *     initialReading: '0.00',
+ *     balance: '₹1,250.50',
+ *     possessionDate: '2024-01-15',
+ *     mobileNumber: '+91 98765 43210',
+ *     emailAddress: 'airborne@example.com'
+ *   },
+ *   {
+ *     sNo: 2,
+ *     unitId: 'UNIT002',
+ *     unitName: 'Neo Travels',
+ *     unitType: 'Commercial',
+ *     sez: 'GMR SEZ',
+ *     status: 'Active',
+ *     meterNumber: 'A9345417',
+ *     initialReading: '0.00',
+ *     balance: '₹890.25',
+ *     possessionDate: '2024-02-20',
+ *     mobileNumber: '+91 98765 43211',
+ *     emailAddress: 'neo@example.com'
+ *   }
+ * ];
+ * 
+ * Usage Example:
+ * 
+ * <Table
+ *   data={sampleData}
+ *   searchable={true}
+ *   showActions={true}
+ *   onView={(row) => console.log('View:', row)}
+ *   onEdit={(row) => console.log('Edit:', row)}
+ *   onDelete={(row) => console.log('Delete:', row)}
+ * />
+ */
 export interface TableData {
     [key: string]: string | number | boolean | null | undefined;
 }
@@ -103,7 +151,7 @@ const Table: React.FC<TableProps> = ({
     showSkeletonActionButtons = true,
     onSearch,
     text,
-    showActions = false,
+    showActions = true,
     rowWrapper = null,
 }) => {
     const [sortConfig, setSortConfig] = useState<{
@@ -236,6 +284,24 @@ const Table: React.FC<TableProps> = ({
         }
     };
 
+    const navigate = useNavigate();
+
+    // Default view handler if none provided
+    const defaultViewHandler = (row: TableData) => {
+        console.log('View row:', row);
+        
+        // Try to get a unique identifier from the row
+        const uid = row.uid || row.unitId || row.id || row.meterNumber;
+        
+        if (uid) {
+            // Navigate to ConsumerView page with the UID
+            navigate(`/consumers/${uid}`);
+        } else {
+            // Fallback to alert if no UID found
+            alert(`Viewing: ${JSON.stringify(row, null, 2)}`);
+        }
+    };
+
     const renderActionButtons = (row: TableData) => {
         if (actions && showActions) {
             return (
@@ -260,30 +326,32 @@ const Table: React.FC<TableProps> = ({
             );
         }
 
-        if (onView || onPayment || onEdit || onDelete) {
+        // Always show view icon if showActions is true
+        if (showActions) {
             return (
                 <div className="flex items-center gap-4">
-                    {onView && (
-                        <span
-                            className="cursor-pointer"
-                            onClick={(e) => handleActionClick(e, onView, row)}
-                            title="View">
-                            <img
-                                src="icons/eye.svg"
-                                alt="View"
-                                className="w-4 h-4"
-                            />
-                        </span>
-                    )}
+                    <span
+                        className="cursor-pointer hover:bg-blue-50 p-1 rounded"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            (onView || defaultViewHandler)(row);
+                        }}
+                        title="View">
+                        <img
+                            src="/icons/eye.svg"
+                            alt="View"
+                            className="w-4 h-4"
+                        />
+                    </span>
                     {onPayment && (
                         <span
-                            className="cursor-pointer"
+                            className="cursor-pointer hover:bg-green-50 p-1 rounded"
                             onClick={(e) =>
                                 handleActionClick(e, onPayment, row)
                             }
                             title="Payment">
                             <img
-                                src="icons/payment.svg"
+                                src="/icons/payment.svg"
                                 alt="Payment"
                                 className="w-4 h-4"
                             />
@@ -291,11 +359,11 @@ const Table: React.FC<TableProps> = ({
                     )}
                     {onEdit && (
                         <span
-                            className="cursor-pointer"
+                            className="cursor-pointer hover:bg-yellow-50 p-1 rounded"
                             onClick={(e) => handleActionClick(e, onEdit, row)}
                             title="Edit">
                             <img
-                                src="icons/user-pen.svg"
+                                src="/icons/user-pen.svg"
                                 alt="Edit"
                                 className="w-4 h-4"
                             />
@@ -303,11 +371,11 @@ const Table: React.FC<TableProps> = ({
                     )}
                     {onDelete && (
                         <span
-                            className="cursor-pointer"
+                            className="cursor-pointer hover:bg-red-50 p-1 rounded"
                             onClick={(e) => handleActionClick(e, onDelete, row)}
                             title="Delete">
                             <img
-                                src="icons/delete.svg"
+                                src="/icons/delete.svg"
                                 alt="Delete"
                                 className="w-4 h-4"
                             />

@@ -10,7 +10,7 @@
 import React from "react";
 import ReactFlow, { Position, Background, Controls } from "reactflow";
 import type { Node, Edge } from "reactflow";
-import "reactflow/dist/style.css";
+// import "reactflow/dist/style.css"; // Commented out for Module Federation compatibility
 
 interface OrgChartNode {
   hierarchy_id: string;

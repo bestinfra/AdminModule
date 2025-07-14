@@ -249,9 +249,9 @@ const Dashboard: React.FC = () => {
                             data={meterEvents}
                             columns={meterEventColumns}
                             loading={false}
-                            searchable={false}
+                            searchable={true}
                             pagination={false}
-                            showActions={false}
+                            showActions={true}
                         />
                     </div>
                 </div>
