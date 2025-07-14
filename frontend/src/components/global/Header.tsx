@@ -1,6 +1,7 @@
 import Input from '../forms/Input';
 import { useApp } from '../../context/AppContext';
 import Cookies from 'js-cookie';
+import { useState } from 'react';
 
 interface HeaderAction {
     icon: string;
@@ -18,28 +19,42 @@ interface HeaderProps {
     secondaryLogo?: string;
 }
 
-const demoActions: HeaderAction[] = [
-    {
-        icon: '/icons/tax-alt.svg',
-        alt: 'Notifications icon',
-        onClick: () => console.log('Notifications clicked'),
-        ariaLabel: 'Notifications',
-    },
-    {
-        icon: '/icons/full-screen.svg',
-        alt: 'Full screen icon',
-        onClick: () => console.log('Full screen clicked'),
-        ariaLabel: 'Toggle full screen',
-    },
-];
-
 function Header({
     title,
     onSidebarToggle,
     onSearch,
-    actions = demoActions,
+    actions,
 }: HeaderProps) {
     const { isSidebarCollapsed } = useApp();
+    const [isFullScreen, setIsFullScreen] = useState(false);
+
+    const toggleFullScreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            setIsFullScreen(true);
+            console.log('Full screen',isFullScreen);
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                setIsFullScreen(false);
+            }
+        }
+    };
+
+    const demoActions: HeaderAction[] = [
+        {
+            icon: '/icons/tax-alt.svg',
+            alt: 'Notifications icon',
+            onClick: () => console.log('Notifications clicked'),
+            ariaLabel: 'Notifications',
+        },
+        {
+            icon: '/icons/full-screen.svg',
+            alt: 'Full screen icon',
+            onClick: toggleFullScreen,
+            ariaLabel: 'Toggle full screen',
+        },
+    ];
 
     return (
         <header className="border-b border-primary-border flex items-center justify-between px-6 py-4">
@@ -56,7 +71,7 @@ function Header({
                         }`}
                     />
                 </figure>
-                <h1 className="text-base dark:text-white">{title}</h1>
+                <h1 className="text-base text-primary-dark dark:text-white">{title}</h1>
             </nav>
             <section
                 className="flex-1 max-w-2xl mx-8"
@@ -65,10 +80,10 @@ function Header({
             </section>
  {/* User actions */}
             <nav className="flex items-center gap-4" aria-label="User actions">  
-                {actions.map((action, index) => (
+                {(actions || demoActions).map((action, index) => (
                     <figure
                         key={index}
-                        className={`p-2 w-8 h-8 bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center ${
+                        className={`p-2 w-8 h-8 bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center cursor-pointer ${
                             action.className || ''
                         }`}
                         onClick={action.onClick}

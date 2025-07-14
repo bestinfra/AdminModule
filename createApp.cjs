@@ -252,7 +252,7 @@ module.exports = {
       colors: {
         primary: '${primaryColor || '#3B82F6'}',
         'primary-lightest': '#F0F9FF',
-        'primary-border': 'var(--color-primary-border)',
+        'primary-border': 'rgb(233, 239, 255)',
         'dark-border': '#374151',
         'primary-dark': '#1F2937',
         'primary-dark-light': '#374151',
@@ -516,6 +516,33 @@ function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
   
+  // Function to get page title based on current route
+  const getPageTitle = () => {
+    switch (location.pathname) {
+      case '/':
+      case '/dashboard':
+        return 'Dashboard';
+      case '/consumers':
+        return 'Consumers';
+      case '/bills/prepaid':
+        return 'Prepaid Bills';
+      case '/bills/postpaid':
+        return 'Postpaid Bills';
+      case '/all-tickets':
+        return 'All Tickets';
+      case '/dtr-dashboard':
+        return 'DTR Dashboard';
+      case '/asset-management':
+        return 'Asset Management';
+      case '/meters':
+        return 'Meters';
+      case '/data-logger-master':
+        return 'Data Logger Master';
+      default:
+        return 'Dashboard';
+    }
+  };
+  
   // Debug logging for routing
   useEffect(() => {
     console.log('Current location:', location.pathname);
@@ -679,7 +706,7 @@ function AppContent() {
         </Suspense>
         <div className="flex flex-col flex-1">
           <Suspense fallback={<HeaderFallback />}>
-            <Header />
+            <Header title={getPageTitle()} />
           </Suspense>
           <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
             <Routes>
