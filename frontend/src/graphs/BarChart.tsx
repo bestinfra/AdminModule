@@ -70,7 +70,7 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   onViewTypeChange = () => {},
   showTableView = false,
   tableData = [],
-  tableColumns = [],
+  // tableColumns = [],
 }) => {
   const { isDarkMode: contextIsDarkMode } = useApp();
   const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
