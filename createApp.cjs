@@ -425,6 +425,36 @@ const ConsumerView = createSafeLazyComponent(
   ConsumerViewFallback
 );
 
+const Users = createSafeLazyComponent(
+  () => import('SuperAdmin/Users'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Users</h1>
+      <p className="text-gray-600">Loading users...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote Users component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const RoleManagement = createSafeLazyComponent(
+  () => import('SuperAdmin/RoleManagement'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Role Management</h1>
+      <p className="text-gray-600">Loading role management...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote RoleManagement component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
 const BillsPrepaid = createSafeLazyComponent(
   () => import('SuperAdmin/BillsPrepaid'),
   () => (
@@ -524,6 +554,10 @@ function AppContent() {
         return 'Dashboard';
       case '/consumers':
         return 'Consumers';
+      case '/users':
+        return 'Users';
+      case '/role-management':
+        return 'Role Management';
       case '/bills/prepaid':
         return 'Prepaid Bills';
       case '/bills/postpaid':
@@ -631,17 +665,19 @@ function AppContent() {
     },
     {
       title: 'Users',
-      icon: '/icons/user-gear.svg',
+      icon: '/icons/user.svg',
       link: '/users',
       hasSubmenu: true,
       submenu: [
         {
           title: 'Users',
+          icon: '/icons/user-gear.svg',
           link: '/users',
         },
         {
           title: 'Role Management',
-          link: '/meters',
+          icon: '/icons/roles.svg',
+          link: '/role-management',
         },
       ],
     },
@@ -714,6 +750,8 @@ function AppContent() {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/consumers" element={<Consumers />} />
               <Route path="/consumers/:uid" element={<ConsumerView />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/role-management" element={<RoleManagement />} />
               <Route path="/bills/prepaid" element={<BillsPrepaid />} />
               <Route path="/bills/postpaid" element={<BillsPostpaid />} />
               <Route path="/dtr-dashboard" element={<Transformer />} />
@@ -721,6 +759,8 @@ function AppContent() {
               <Route path="/meters" element={<Meters />} />
               <Route path="/data-logger-master" element={<DataLoggerMaster />} />
               <Route path="/all-tickets" element={<AllTickets />} />
+              <Route path="/tickets/:filter" element={<AllTickets />} />
+              <Route path="/ticket-view" element={<TicketView />} />
               <Route path="*" element={
                 <div className="p-6">
                   <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -1469,15 +1509,80 @@ declare module 'SuperAdmin/DataLoggerMaster' {
   const DataLoggerMaster: React.ComponentType<any>;
   export default DataLoggerMaster;
 }
-// declare module 'SuperAdmin/Users' {
-//   const Users: React.ComponentType<any>;
-//   export default Users;
-// }
 
-// declare module 'SuperAdmin/RoleManagement' {
-//   const RoleManagement: React.ComponentType<any>;
-//   export default RoleManagement;
-// }
+declare module 'SuperAdmin/Users' {
+  const Users: React.ComponentType<any>;
+  export default Users;
+}
+
+declare module 'SuperAdmin/RoleManagement' {
+  const RoleManagement: React.ComponentType<any>;
+  export default RoleManagement;
+}
+
+declare module 'SuperAdmin/TicketView' {
+  const TicketView: React.ComponentType<any>;
+  export default TicketView;
+}
+
+declare module 'SuperAdmin/Page' {
+  const Page: React.ComponentType<any>;
+  export default Page;
+}
+
+declare module 'SuperAdmin/Table' {
+  const Table: React.ComponentType<any>;
+  export default Table;
+}
+
+declare module 'SuperAdmin/Dropdown' {
+  const Dropdown: React.ComponentType<any>;
+  export default Dropdown;
+}
+
+declare module 'SuperAdmin/Card' {
+  const Card: React.ComponentType<any>;
+  export default Card;
+}
+
+declare module 'SuperAdmin/PieChart' {
+  const PieChart: React.ComponentType<any>;
+  export default PieChart;
+}
+
+declare module 'SuperAdmin/BarChart' {
+  const BarChart: React.ComponentType<any>;
+  export default BarChart;
+}
+
+declare module 'SuperAdmin/TimeRangeSelector' {
+  const TimeRangeSelector: React.ComponentType<any>;
+  export default TimeRangeSelector;
+}
+
+declare module 'SuperAdmin/PageHeader' {
+  const PageHeader: React.ComponentType<any>;
+  export default PageHeader;
+}
+
+declare module 'SuperAdmin/OrgChart' {
+  const OrgChart: React.ComponentType<any>;
+  export default OrgChart;
+}
+
+declare module 'SuperAdmin/context/AppContext' {
+  export const useApp: () => any;
+  export const AppProvider: React.ComponentType<any>;
+}
+
+declare module 'SuperAdmin/AppProvider' {
+  const AppProvider: React.ComponentType<any>;
+  export default AppProvider;
+}
+
+declare module 'SuperAdmin/useApp' {
+  export const useApp: () => any;
+}
 `,
     
     'README.md': `# ${appName || 'Admin App'}
