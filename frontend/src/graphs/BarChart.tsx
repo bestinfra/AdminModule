@@ -31,6 +31,13 @@ interface BarChartProps {
   onTimeRangeChange?: (range: string) => void;
   onDownload?: (timeRange: string, viewType: string) => void;
   showDownloadButton?: boolean;
+  // View toggle functionality props
+  showViewToggle?: boolean;
+  viewToggleOptions?: string[];
+  initialViewType?: string;
+  onViewTypeChange?: (viewType: string) => void;
+  showTableView?: boolean;
+  tableData?: any[];
 }
 
 const BarChart: React.FC<BarChartProps> = React.memo(({
@@ -56,19 +63,20 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   onTimeRangeChange = () => {},
   onDownload = () => {},
   showDownloadButton = true,
+  // View toggle functionality props
   showViewToggle = false,
   viewToggleOptions = ['Graph', 'Table'],
   initialViewType = 'Graph',
   onViewTypeChange = () => {},
   showTableView = false,
-  tableData = [],
-  // tableColumns = [],
+  // tableData = [],
 }) => {
   const { isDarkMode: contextIsDarkMode } = useApp();
   const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
 
-  // Internal state for time range
+  // Internal state for time range and view type
   const [selectedTimeRange, setSelectedTimeRange] = useState(initialTimeRange);
+  const [currentViewType, setCurrentViewType] = useState(initialViewType);
 
   // Helper function to get dynamic title based on selected time range
   const getDynamicTitle = useCallback((timeRange: string) => {
@@ -83,10 +91,16 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
     onTimeRangeChange(range);
   }, [onTimeRangeChange]);
 
+  // Handle view type change
+  const handleViewTypeChange = useCallback((viewType: string) => {
+    setCurrentViewType(viewType);
+    onViewTypeChange(viewType);
+  }, [onViewTypeChange]);
+
   // Handle download
   const handleDownload = useCallback(() => {
-    onDownload(selectedTimeRange, 'Graph');
-  }, [onDownload, selectedTimeRange]);
+    onDownload(selectedTimeRange, currentViewType);
+  }, [onDownload, selectedTimeRange, currentViewType]);
 
   const getAxisColor = useCallback((lightVar: string, darkVar: string) =>
     isDarkMode ? `var(${darkVar})` : `var(${lightVar})`, [isDarkMode]);
@@ -219,12 +233,41 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
     <div className="w-full h-full" role="img" aria-label={ariaLabel}>
       {title && <span className="sr-only">{title}</span>}
       {description && <span className="sr-only">{description}</span>}
-      <ReactECharts
-        option={option}
-        className="w-full"
-        style={{ height: typeof height === 'number' ? `${height}px` : height }}
-        opts={{ renderer: 'svg' }}
-      />
+      {showTableView && currentViewType === 'Table' ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-primary-border dark:border-dark-border">
+                <th className="text-left py-2 px-3 text-neutral-dark dark:text-surface font-medium">Date</th>
+                {seriesData.map((series) => (
+                  <th key={series.name} className="text-right py-2 px-3 text-neutral-dark dark:text-surface font-medium">
+                    {series.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {xAxisData.map((date, index) => (
+                <tr key={date} className="border-b border-primary-border dark:border-dark-border hover:bg-gray-50 dark:hover:bg-primary-dark-light">
+                  <td className="py-2 px-3 text-neutral-dark dark:text-surface">{date}</td>
+                  {seriesData.map((series) => (
+                    <td key={series.name} className="text-right py-2 px-3 text-neutral-dark dark:text-surface">
+                      {series.data[index]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <ReactECharts
+          option={option}
+          className="w-full"
+          style={{ height: typeof height === 'number' ? `${height}px` : height }}
+          opts={{ renderer: 'svg' }}
+        />
+      )}
     </div>
   );
 
@@ -248,6 +291,23 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
           )}
         </div>
         <div className="flex items-center gap-2">
+          {showViewToggle && (
+            <div className="flex items-center gap-1 bg-white dark:bg-primary-dark rounded-lg border border-primary-border dark:border-dark-border p-1">
+              {viewToggleOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => handleViewTypeChange(option)}
+                  className={`px-3 py-1 text-xs rounded-md transition-colors ${
+                    currentViewType === option
+                      ? 'bg-primary text-white'
+                      : 'text-neutral-dark dark:text-surface hover:bg-gray-100 dark:hover:bg-primary-dark-light'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
           <TimeRangeSelector
             availableTimeRanges={availableTimeRanges}
             selectedTimeRange={selectedTimeRange}
