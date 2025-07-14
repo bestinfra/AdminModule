@@ -434,11 +434,11 @@ const AllTickets: React.FC = () => {
     };
 
     const sections: Section[] = [
-        overviewSection,
+        // overviewSection,
         ticketsTableSection,
         recentActivitySection
     ];
-    const sections: Section[] = [ticketsTableSection];
+    // const sections: Section[] = [ticketsTableSection];
 
     return (
         <Page 
