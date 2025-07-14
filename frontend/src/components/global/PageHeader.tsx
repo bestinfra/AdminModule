@@ -211,6 +211,7 @@ const Header: React.FC<HeaderProps> = ({
                         label={buttonsLabel}
                         variant={variant}
                         onClick={onClick}
+                        
                     />
                 )}
 
@@ -237,6 +238,8 @@ const Header: React.FC<HeaderProps> = ({
                         top: editMenuPosition.y,
                     }}
                     ref={editMenuRef}
+
+                    
                 >
                     {menuItems.map((item) => (
                         <div
