@@ -5,6 +5,7 @@ import { useState, useMemo, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import TableSkeleton from '../skeletons/TableSkeleton';
 import { useNavigate } from 'react-router-dom';
+import TimeRangeSelector from './TimeRangeSelector';
 
 /**
  * Table Component with Search and Actions
@@ -103,11 +104,22 @@ interface TableProps {
     onSearch?: (value: string) => void;
     text?: string;
     showActions?: boolean;
+    selectable?: boolean;
+    selectedRows?: string[];
+    onSelectionChange?: (selectedIds: string[]) => void;
     rowWrapper?: React.ComponentType<{
         row: TableData;
         index: number;
         children: ReactNode;
     }>;
+    // Title functionality props
+    showHeader?: boolean;
+    headerTitle?: string;
+    dateRange?: string;
+    // Time range selector props
+    availableTimeRanges?: string[];
+    selectedTimeRange?: string;
+    onTimeRangeChange?: (range: string) => void;
 }
 
 interface DefaultRowWrapperProps {
@@ -152,7 +164,18 @@ const Table: React.FC<TableProps> = ({
     onSearch,
     text,
     showActions = true,
+    selectable = false,
+    selectedRows = [],
+    onSelectionChange,
     rowWrapper = null,
+    // Title functionality props with defaults
+    showHeader = false,
+    headerTitle = 'Data Table',
+    dateRange = '',
+    // Time range selector props with defaults
+    availableTimeRanges = ['Daily', 'Monthly', 'Yearly'],
+    selectedTimeRange = 'Daily',
+    onTimeRangeChange = () => {},
 }) => {
     const [sortConfig, setSortConfig] = useState<{
         key: string | null;
@@ -458,7 +481,37 @@ const Table: React.FC<TableProps> = ({
         }
     };
 
-    return (
+    // Selection handlers
+    const handleRowSelection = (rowId: string, isSelected: boolean) => {
+        if (!onSelectionChange) return;
+        
+        const newSelectedRows = isSelected
+            ? [...selectedRows, rowId]
+            : selectedRows.filter(id => id !== rowId);
+        
+        onSelectionChange(newSelectedRows);
+    };
+
+    const handleSelectAll = (isSelected: boolean) => {
+        if (!onSelectionChange) return;
+        
+        const newSelectedRows = isSelected
+            ? paginatedData.map(row => String(row.id || row.meterNo || row.unitId || row.ticketNumber || ''))
+            : [];
+        
+        onSelectionChange(newSelectedRows);
+    };
+
+    const isAllSelected = paginatedData.length > 0 && paginatedData.every(row => 
+        selectedRows.includes(String(row.id || row.meterNo || row.unitId || row.ticketNumber || ''))
+    );
+
+    const isIndeterminate = paginatedData.some(row => 
+        selectedRows.includes(String(row.id || row.meterNo || row.unitId || row.ticketNumber || ''))
+    ) && !isAllSelected;
+
+    // Table content component
+    const tableContent = (
         <div className="w-full">
             {searchable && (
                 <div className="relative mb-4">
@@ -480,8 +533,23 @@ const Table: React.FC<TableProps> = ({
                     className="w-full rounded-2xl border dark:border-dark-border border-primary-border border-separate border-spacing-0 overflow-hidden"
                     role="grid"
                     aria-label={text || 'Data Table'}>
-                    <thead className="dark:bg-primary-dark-light bg-primary-lightest overflow-hidden">
+                    <thead className="dark:bg-primary-dark-light bg-background-secondary overflow-hidden">
                         <tr className="font-manrope text-base font-normal w-full dark:text-white">
+                            {selectable && (
+                                <th
+                                    scope="col"
+                                    className="px-4 py-3 text-left font-normal w-12 relative flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        checked={isAllSelected}
+                                        ref={(input) => {
+                                            if (input) input.indeterminate = isIndeterminate;
+                                        }}
+                                        onChange={(e) => handleSelectAll(e.target.checked)}
+                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                    />
+                                </th>
+                            )}
                             {columns.map((column) => (
                                 <th
                                     key={column.key}
@@ -501,25 +569,21 @@ const Table: React.FC<TableProps> = ({
                                     {sortable &&
                                         sortConfig.key === column.key && (
                                             <span
-                                                className="ml-2"
+                                                className="ml-2 inline-flex items-center"
                                                 aria-hidden="true">
                                                 {sortConfig.direction ===
-                                                'asc' ? (
-                                                    <span className="ml-2">
-                                                        <img
-                                                            src="icons/arrow-up.svg"
-                                                            alt="ascending"
-                                                            className="w-3 h-3"
-                                                        />
-                                                    </span>
+                                                'asc' ? (   
+                                                    <img
+                                                        src="icons/arrow-up.svg"
+                                                        alt="ascending"
+                                                        className="w-3 h-3"
+                                                    />
                                                 ) : (
-                                                    <span className="ml-2">
-                                                        <img
-                                                            src="icons/arrow-down.svg"
-                                                            alt="descending"
-                                                            className="w-3 h-3"
-                                                        />
-                                                    </span>
+                                                    <img
+                                                        src="icons/arrow-down.svg"
+                                                        alt="descending"
+                                                        className="w-3 h-3"
+                                                    />
                                                 )}
                                             </span>
                                         )}
@@ -570,6 +634,18 @@ const Table: React.FC<TableProps> = ({
                                             tabIndex={
                                                 onRowClick ? 0 : undefined
                                             }>
+                                            {selectable && (
+                                                <td
+                                                    className="px-4 py-3 text-sm font-normal border-b border-primary-border dark:border-dark-border"
+                                                    onClick={(e) => e.stopPropagation()}>
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={selectedRows.includes(String(row.id || row.meterNo || row.unitId || row.ticketNumber || ''))}
+                                                        onChange={(e) => handleRowSelection(String(row.id || row.meterNo || row.unitId || row.ticketNumber || ''), e.target.checked)}
+                                                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                                                    />
+                                                </td>
+                                            )}
                                             {columns.map((column) => (
                                                 <td
                                                     key={column.key}
@@ -781,6 +857,40 @@ const Table: React.FC<TableProps> = ({
             )}
         </div>
     );
+
+    // If no header, return simple table
+    if (!showHeader) {
+        return tableContent;
+    }
+
+    // Return table with header
+    return (
+        <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            {/* Header Section */}
+            <div className="flex justify-between items-center gap-4 bg-background-secondary dark:bg-primary-dark-light rounded-t-3xl p-4">
+                <div className="font-medium text-neutral-darker dark:text-surface font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+                    {headerTitle}
+                    {dateRange && (
+                        <span className="text-xs font-normal text-neutral-dark dark:text-surface ml-1 font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+                            ({dateRange})
+                        </span>
+                    )}
+                </div>
+                <div className="flex items-center gap-2">
+                  <TimeRangeSelector
+                    availableTimeRanges={availableTimeRanges}
+                    selectedTimeRange={selectedTimeRange}
+                    handleTimeRangeChange={onTimeRangeChange}
+                  />
+                </div>
+            </div>
+            
+            {/* Content Section */}
+            <div className="px-4 py-4">
+                {tableContent}
+            </div>
+        </div>
+    );
 };
 
 Table.propTypes = {
@@ -823,6 +933,14 @@ Table.propTypes = {
     showActions: PropTypes.bool,
     rowWrapper: PropTypes.func,
     text: PropTypes.string,
+    // Title functionality props
+    showHeader: PropTypes.bool,
+    headerTitle: PropTypes.string,
+    dateRange: PropTypes.string,
+    // Time range selector props
+    availableTimeRanges: PropTypes.arrayOf(PropTypes.string),
+    selectedTimeRange: PropTypes.string,
+    onTimeRangeChange: PropTypes.func,
 };
 
 export default Table;
