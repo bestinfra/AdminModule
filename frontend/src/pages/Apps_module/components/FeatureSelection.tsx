@@ -1,7 +1,7 @@
 import React from 'react';
 import Button from '../../../components/global/Button';
 
-interface ModuleSelectionStepProps {
+interface FeatureSelectionProps {
   formData: any;
   errors: Record<string, string>;
   onModuleToggle: (moduleKey: string, newModules?: string[]) => void;
@@ -33,7 +33,7 @@ const moduleConfig = {
   ]
 };
 
-const ModuleSelectionStep: React.FC<ModuleSelectionStepProps> = ({ formData, errors, onModuleToggle, onNext }) => {
+const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, onModuleToggle, onNext }) => {
   const enabledModules = formData.modules || ['dashboard', 'consumer', 'user_management_default', 'role_management'];
 
   const handleModuleToggle = (moduleKey: string) => {
@@ -196,4 +196,4 @@ const ModuleSelectionStep: React.FC<ModuleSelectionStepProps> = ({ formData, err
   );
 };
 
-export default ModuleSelectionStep; 
+export default FeatureSelection; 
