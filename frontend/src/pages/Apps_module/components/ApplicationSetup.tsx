@@ -5,11 +5,11 @@ import Button from '../../../components/global/Button';
 import type { FormInputValue } from '../../../components/forms/types';
 
 interface ApplicationSetupProps {
-  formData: any;
-  errors: Record<string, string>;
-  onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
-  onArrayChange: (name: string, value: any) => void;
-  onNext: (e: React.FormEvent<HTMLFormElement>) => void;
+    formData: any;
+    errors: Record<string, string>;
+    onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
+    onArrayChange: (name: string, value: any) => void;
+    onNext: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
@@ -38,21 +38,69 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
         // Handle blur if needed
     };
 
-    const categoryOptions = [
-        { value: 'electricity', label: 'Electricity' },
-        { value: 'dg', label: 'DG (Diesel Generator)' },
-        { value: 'solar', label: 'Solar' },
-        { value: 'gas', label: 'Gas' },
-        { value: 'water', label: 'Water' },
+    const applicationCategoryOptions = [
+        { value: 'smart-metering', label: 'Smart Metering' },
+        { value: 'solar-epc', label: 'Solar EPC' },
+        { value: 'substation-td', label: 'Substation & T&D' },
+        { value: 'billing-amr', label: 'Billing & AMR' },
+        { value: 'mdms-integration', label: 'MDMS Integration' },
+        { value: 'energy-audit', label: 'Energy Audit' },
+        { value: 'infrastructure-om', label: 'Infrastructure O&M' },
+        { value: 'ev-charging', label: 'EV Charging' },
+        { value: 'data-logger', label: 'Data Logger' },
+    ];
+
+    const projectTypeOptions = [
+        { value: 'pilot', label: 'Pilot' },
+        { value: 'full-scale-rollout', label: 'Full-Scale Rollout' },
+        { value: 'demo', label: 'Demo' },
+        { value: 'research-prototype', label: 'Research/Prototype' },
+        { value: 'migration-upgrade', label: 'Migration/Upgrade' },
+        { value: 'amc-only', label: 'AMC Only' },
+    ];
+
+    const clientTypeOptions = [
+        { value: 'discom', label: 'DISCOM' },
+        { value: 'state-government', label: 'State Government' },
+        { value: 'central-government', label: 'Central Government' },
+        { value: 'private-industry', label: 'Private Industry' },
+        { value: 'utility-board', label: 'Utility Board' },
+        { value: 'smart-city-authority', label: 'Smart City Authority' },
+    ];
+
+    const ownershipTypeOptions = [
+        { value: 'state-owned', label: 'State-Owned' },
+        { value: 'central-government', label: 'Central Government' },
+        { value: 'ppp', label: 'Public-Private Partnership (PPP)' },
+        { value: 'private-utility', label: 'Private Utility' },
     ];
 
     const tariffPlanOptions = [
-        { value: 'residential', label: 'Residential' },
-        { value: 'commercial', label: 'Commercial' },
-        { value: 'industrial', label: 'Industrial' },
+        { value: 'domestic-lt', label: 'Domestic – LT' },
+        { value: 'commercial-lt', label: 'Commercial – LT' },
+        { value: 'industrial-ht', label: 'Industrial – HT' },
         { value: 'agricultural', label: 'Agricultural' },
+        { value: 'net-metering', label: 'Net Metering' },
+        { value: 'prepaid', label: 'Prepaid' },
+        { value: 'tod', label: 'Time-of-Day (ToD)' },
+        { value: 'custom-tariff', label: 'Custom Tariff' },
+    ];
+
+    const billingModeOptions = [
         { value: 'prepaid', label: 'Prepaid' },
         { value: 'postpaid', label: 'Postpaid' },
+        { value: 'hybrid', label: 'Hybrid' },
+    ];
+
+    const meteringTypeOptions = [
+        { value: 'single-phase', label: 'Single Phase' },
+        { value: 'three-phase', label: 'Three Phase' },
+        { value: 'lt-ct', label: 'LT CT' },
+        { value: 'ht-ct-pt', label: 'HT CT/PT' },
+        { value: 'net-meter', label: 'Net Meter' },
+        { value: 'smart-meter', label: 'Smart Meter' },
+        { value: 'solar-bidirectional', label: 'Solar Bidirectional' },
+        { value: 'amr-ami-enabled', label: 'AMR/AMI-Enabled' },
     ];
 
     const countryOptions = [
@@ -95,7 +143,8 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     // Unified Dropdown handler
     const handleDropdownChange = (e: { target: { name: string; value: string | string[] } }) => {
         // Multi-select fields
-        if (e.target.name === 'categories' || e.target.name === 'tariffPlans') {
+        if (e.target.name === 'applicationCategory' || e.target.name === 'tariffPlans' ||
+            e.target.name === 'meteringType') {
             onArrayChange(e.target.name, e.target.value);
         } else if (e.target.name === 'country') {
             onInputChange(e);
@@ -110,127 +159,220 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     };
 
     return (
-        <div className='    '>
-            {/* <h2 className="text-main dark:text-white mb-1">App Creation Form</h2>
-            <h3 className="text-gray-600 dark:text-gray-300 mb-6">Configure your application settings and basic information</h3> */}
-            <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
-                <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-1">
-                        <FormInput
-                            input={{
-                                name: 'appName',
-                                type: 'text',
-                                label: 'App Name',
-                                placeholder: 'Enter App Name',
-                                required: true,
-                            }}
-                            value={formData.appName}
-                            error={errors.appName}
-                            showError={!!errors.appName}
-                            disabled={false}
-                            onInputChange={handleFormInputChange}
-                            onInputBlur={handleFormInputBlur}
-                            fileInputRefs={fileInputRefs}
-                        />
+        <div className="mx-auto">
+            <div className="bg-white rounded-xl border border-primary-border p-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
+                    <div className="">
+                        <h2 className="text-base font-semibold text-primary">Application Setup</h2>
                     </div>
-                    <div className="flex-1">
 
-                        <div className="relative flex items-center h-auto">
-                            <input
-                                id="subdomain"
-                                name="subdomain"
-                                type="text"
-                                className={`input w-full pr-36 ${errors.subdomain ? 'border-red-500' : ''} rounded-r-3xl`}
-                                placeholder="Enter Subdomain"
-                                value={formData.subdomain}
-                                onChange={e => handleFormInputChange('subdomain', e.target.value)}
-                                required
-                                autoComplete="off"
-                                aria-invalid={!!errors.subdomain}
-                                aria-describedby={errors.subdomain ? 'subdomain-error' : undefined}
-                            />
-                            {formData.subdomain && (
-                                <a
-                                    href={`${formData.subdomain}.bestinfra.org`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="absolute right-36 top-1/2 -translate-y-1/2 text-blue-600 hover:underline flex items-center z-10 text-sm"
-                                >
-                                 
-                                </a>
-                            )}
-                            <span
-                                className="absolute right-0 top-0 flex items-center pl-2 pr-4 min-w-[120px] text-[0.95em] text-gray-500 pointer-events-none select-none bg-gray-100 dark:bg-gray-800 border-l border-gray-200 rounded-r-3xl h-full"
-                            >
-                                .bestinfra.org
-                            </span>
+                    <form className="flex flex-col gap-4" onSubmit={onNext} action="#" method="post" noValidate>
+                        {/* Basic Information Section */}
+                        <div className="">
+
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <FormInput
+                                        input={{
+                                            name: 'appName',
+                                            type: 'text',
+                                            label: '',
+                                            placeholder: 'Enter your application name',
+                                            required: true,
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                        }}
+                                        value={formData.appName}
+                                        error={errors.appName}
+                                        showError={!!errors.appName}
+                                        disabled={false}
+                                        onInputChange={handleFormInputChange}
+                                        onInputBlur={handleFormInputBlur}
+                                        fileInputRefs={fileInputRefs}
+                                    />
+                                </div>
+
+                                <div>
+                                    <FormInput
+                                        input={{
+                                            name: 'subdomain',
+                                            type: 'text',
+                                            label: '',
+                                            placeholder: 'Enter subdomain',
+                                            required: true,
+                                        }}
+                                        value={formData.subdomain}
+                                        error={errors.subdomain}
+                                        showError={!!errors.subdomain}
+                                        disabled={false}
+                                        onInputChange={handleFormInputChange}
+                                        onInputBlur={handleFormInputBlur}
+                                        fileInputRefs={fileInputRefs}
+                                    />
+                                </div>
+                            </div>
                         </div>
-                        {errors.subdomain && <div id="subdomain-error" className="text-xs text-red-500 mt-1">{errors.subdomain}</div>}
-                    </div>
-                </div>
-                <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-1">
-                        <Dropdown
-                            name="country"
-                            value={formData.country}
-                            onChange={handleDropdownChange}
-                            options={countryOptions}
-                            placeholder="Select Country"
-                            error={errors.country}
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <Dropdown
-                            name="state"
-                            value={formData.state}
-                            onChange={handleDropdownChange}
-                            options={stateOptions[formData.country] || []}
-                            placeholder="Select State"
-                            disabled={!formData.country}
-                            error={errors.state}
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <Dropdown
-                            name="city"
-                            value={formData.city}
-                            onChange={handleDropdownChange}
-                            options={cityOptions[formData.state] || []}
-                            placeholder="Select City"
-                            disabled={!formData.state}
-                            error={errors.city}
-                        />
-                    </div>
-                </div>
-                <div className="flex flex-col md:flex-row gap-4">
-                    <div className="flex-1">
-                        <Dropdown
-                            name="categories"
-                            value={formData.categories}
-                            onChange={handleDropdownChange}
-                            options={categoryOptions}
-                            placeholder="Select Categories"
-                            isMultiSelect={true}
-                            error={errors.categories}
-                        />
-                    </div>
-                    <div className="flex-1">
-                        <Dropdown
-                            name="tariffPlans"
-                            value={formData.tariffPlans}
-                            onChange={handleDropdownChange}
-                            options={tariffPlanOptions}
-                            placeholder="Select Tariff Plans"
-                            isMultiSelect={true}
-                            error={errors.tariffPlans}
-                        />
-                    </div>
-                </div>
 
-                <div className="flex justify-end">
-                    <Button label="Next" type="submit" variant="primary" />
+                        {/* Location Information Section */}
+                        <div className="">
+
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                <div>
+                                    <Dropdown
+                                        name="country"
+                                        value={formData.country}
+                                        onChange={handleDropdownChange}
+                                        options={countryOptions}
+                                        placeholder="Select Country"
+                                        error={errors.country}
+                                    />
+                                </div>
+                                <div>
+                                    <Dropdown
+                                        name="state"
+                                        value={formData.state}
+                                        onChange={handleDropdownChange}
+                                        options={stateOptions[formData.country] || []}
+                                        placeholder="Select State"
+                                        disabled={!formData.country}
+                                        error={errors.state}
+                                    />
+                                </div>
+                                <div>
+                                    <Dropdown
+                                        name="city"
+                                        value={formData.city}
+                                        onChange={handleDropdownChange}
+                                        options={cityOptions[formData.state] || []}
+                                        placeholder="Select City"
+                                        disabled={!formData.state}
+                                        error={errors.city}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Project Configuration Section */}
+                        <div className="">
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <Dropdown
+                                        name="applicationCategory"
+                                        value={formData.applicationCategory}
+                                        onChange={handleDropdownChange}
+                                        options={applicationCategoryOptions}
+                                        placeholder="Select Application Category"
+                                        isMultiSelect={true}
+                                        error={errors.applicationCategory}
+                                    />
+                                </div>
+                                <div>
+                                    <Dropdown
+                                        name="projectType"
+                                        value={formData.projectType}
+                                        onChange={handleDropdownChange}
+                                        options={projectTypeOptions}
+                                        placeholder="Select Project Type"
+                                        error={errors.projectType}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Client & Ownership Information Section */}
+                        <div className="">
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <Dropdown
+                                        name="clientType"
+                                        value={formData.clientType}
+                                        onChange={handleDropdownChange}
+                                        options={clientTypeOptions}
+                                        placeholder="Select Client Type"
+                                        error={errors.clientType}
+                                    />
+                                </div>
+                                <div>
+                                    <Dropdown
+                                        name="ownershipType"
+                                        value={formData.ownershipType}
+                                        onChange={handleDropdownChange}
+                                        options={ownershipTypeOptions}
+                                        placeholder="Select Ownership Type"
+                                        error={errors.ownershipType}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Billing & Metering Configuration Section */}
+                        <div className="">
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <Dropdown
+                                        name="tariffPlans"
+                                        value={formData.tariffPlans}
+                                        onChange={handleDropdownChange}
+                                        options={tariffPlanOptions}
+                                        placeholder="Select Tariff Plans"
+                                        isMultiSelect={true}
+                                        error={errors.tariffPlans}
+                                    />
+                                </div>
+                                <div>
+                                    <Dropdown
+                                        name="billingMode"
+                                        value={formData.billingMode}
+                                        onChange={handleDropdownChange}
+                                        options={billingModeOptions}
+                                        placeholder="Select Billing Mode"
+                                        error={errors.billingMode}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="">
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                <div>
+                                    <Dropdown
+                                        name="meteringType"
+                                        value={formData.meteringType}
+                                        onChange={handleDropdownChange}
+                                        options={meteringTypeOptions}
+                                        placeholder="Select Metering Type"
+                                        isMultiSelect={true}
+                                        error={errors.meteringType}
+                                    />
+                                </div>
+                                <div>
+                                    {/* Reserved for future fields */}
+                                </div>
+                            </div>
+
+                        </div>
+
+
+                        {/* Submit Button */}
+                        <div className="flex justify-end pt-6">
+                            <Button
+                                label="Next Step"
+                                type="submit"
+                                variant="primary"
+                            />
+                        </div>
+                    </form>
                 </div>
-            </form>
+                <div className="col-span-1 bg-primary-lightest rounded-xl p-4">
+                    <div className="">
+                        <h2 className="text-base font-semibold text-primary">Remarks</h2>
+                    </div>
+                </div>
+            </div>
+
         </div>
     );
 };

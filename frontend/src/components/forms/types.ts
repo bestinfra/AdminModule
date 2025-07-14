@@ -2,7 +2,7 @@
 export interface FormInputConfig {
   name: string;
   type: 'text' | 'email' | 'password' | 'number' | 'date' | 'checkbox' | 'textarea' | 'select' | 'file' | 'tel' | 'url';
-  label: string;
+  label?: string;
   placeholder?: string;
   required?: boolean;
   defaultValue?: FormInputValue;
