@@ -33,14 +33,14 @@ const Card = ({
     }
 
     return (
-        <article className="rounded-3xl custom-shadow w-full">
+        <article className="rounded-3xl custom-shadow w-full h-full min-h-[140px]">
             <section className="flex justify-between items-start p-5 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
                 <div className="flex flex-col gap-4">
                     <h3 className="text-base text-main dark:text-white">
                         {title}
                     </h3>
                     <p
-                        className={`text-2xl font-bold flex items-center gap-2 ${onValueClick ? 'cursor-pointer hover:underline' : ''}`}
+                        className={`text-2xl font-bold flex items-center gap-2 ${onValueClick ? 'cursor-pointer hover:text-blue-600 transition-colors duration-200' : ''}`}
                         style={{ color: 'var(--color-primary)' }}
                         onClick={onValueClick}
                     >

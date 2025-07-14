@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
 import Card from '../components/global/Card';
@@ -23,6 +23,45 @@ interface TicketData {
 const AllTickets: React.FC = () => {
     const [loading] = useState(false);
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
+
+    // Ensure layout is properly initialized
+    useEffect(() => {
+        // Force a reflow to ensure grid layout is properly applied
+        const gridElement = document.querySelector('.grid');
+        if (gridElement) {
+            gridElement.scrollTop = gridElement.scrollTop;
+        }
+    }, []);
+
+    // Handler for Total Tickets card click
+    const handleTotalTicketsClick = () => {
+        console.log('Total Tickets clicked!');
+        window.location.href = '/tickets-filtered?filter=all';
+    };
+
+    // Handler for High Priority tickets card click
+    const handleHighPriorityClick = () => {
+        console.log('High Priority clicked!');
+        window.location.href = '/tickets-filtered?filter=high-priority';
+    };
+
+    // Handler for Open tickets card click
+    const handleOpenTicketsClick = () => {
+        console.log('Open Tickets clicked!');
+        window.location.href = '/tickets-filtered?filter=open';
+    };
+
+    // Handler for In Progress tickets card click
+    const handleInProgressClick = () => {
+        console.log('In Progress clicked!');
+        window.location.href = '/tickets-filtered?filter=in-progress';
+    };
+
+    // Handler for Closed tickets card click
+    const handleClosedTicketsClick = () => {
+        console.log('Closed Tickets clicked!');
+        window.location.href = '/tickets-filtered?filter=closed';
+    };
 
 
     const ticketData: TicketData[] = [
@@ -105,8 +144,8 @@ const AllTickets: React.FC = () => {
     const overviewSection: Section = {
         id: 'overview',
         component: (
-            <div className="">
-                <div className="flex justify-between gap-4">
+            <div className="w-full">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 min-h-0 w-full auto-rows-fr" style={{ gridTemplateRows: '1fr' }}>
                     <Card
                         title="Total Tickets"
                         value={totalTickets.toString()}
@@ -115,6 +154,7 @@ const AllTickets: React.FC = () => {
                         comparisonValue={12}
                         subtitle1="All time"
                         subtitle2="+12% from last month"
+                        onValueClick={handleTotalTicketsClick}
                     />
                     <Card
                         title="High Priority"
@@ -124,34 +164,38 @@ const AllTickets: React.FC = () => {
                         comparisonValue={2}
                         subtitle1="Urgent tickets"
                         subtitle2="+2% from last week"
+                        onValueClick={handleHighPriorityClick}
                     />
                     <Card
-                        title="Resolution Rate"
-                        value={`${Math.round((resolvedTickets / totalTickets) * 100)}%`}
+                        title="Open Tickets"
+                        value={ticketData.filter(t => t.status === 'Open').length.toString()}
                         icon="icons/units.svg"
                         showTrend={true}
                         comparisonValue={8}
                         subtitle1="This month"
                         subtitle2="+8% from last month"
+                        onValueClick={handleOpenTicketsClick}
                     />
-                     <Card
-                        title="Resolution Rate"
-                        value={`${Math.round((resolvedTickets / totalTickets) * 100)}%`}
-                        icon="icons/units.svg"
-                        showTrend={true}
-                        comparisonValue={8}
-                        subtitle1="This month"
-                        subtitle2="+8% from last month"
-                    /> 
                     <Card
-                        title="Resolution Rate"
-                        value={`${Math.round((resolvedTickets / totalTickets) * 100)}%`}
+                        title="In Progress Tickets"
+                        value={ticketData.filter(t => t.status === 'In Progress').length.toString()}
                         icon="icons/units.svg"
                         showTrend={true}
                         comparisonValue={8}
                         subtitle1="This month"
                         subtitle2="+8% from last month"
-                    /> 
+                        onValueClick={handleInProgressClick}
+                    />
+                    <Card
+                        title="Closed Tickets"
+                        value={ticketData.filter(t => t.status === 'Resolved' || t.status === 'Closed').length.toString()}
+                        icon="icons/units.svg"
+                        showTrend={true}
+                        comparisonValue={8}
+                        subtitle1="This month"
+                        subtitle2="+8% from last month"
+                        onValueClick={handleClosedTicketsClick}
+                    />
                 </div>
             </div>
         )
@@ -196,9 +240,9 @@ const AllTickets: React.FC = () => {
             header={headerComponent}
             sidebarPosition="right"
             loading={loading}
-            className=""
-            containerClassName="space-y-6"
-            sectionClassName=""
+            className="w-full"
+            containerClassName="space-y-6 w-full"
+            sectionClassName="w-full"
         />
     );
 };
