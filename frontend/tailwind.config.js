@@ -9,6 +9,10 @@ export default {
         extend: {
             colors: {
                 'primary-border': 'var(--color-primary-border)',
+            },
+            fontFamily: {
+                'sans': ['Manrope', 'sans-serif'],
+                'manrope': ['Manrope', 'sans-serif']
             }
         }
     },

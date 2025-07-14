@@ -110,7 +110,7 @@ const Login: React.FC = () => {
       <div className="w-full max-w-md">
           <div className="bg-white rounded-3xl border border-blue-100 shadow-md p-8 flex flex-col gap-4 ">
           <div className="flex justify-center">
-            <div className="bg-gradient-primary p-4 rounded-full rotate-180 flex items-center justify-center w-[160px] h-[160px]">
+            <div className="bg-stat-icon-gradient p-4 rounded-full rotate-180 flex items-center justify-center w-[160px] h-[160px]">
               <div className="bg-white rounded-full flex items-center justify-center w-[120px] h-[120px] shadow-md border border-gray-200 p-2 rotate-180">
                 <div className="transition-transform duration-300 hover:scale-105 flex items-center justify-center w-[100px] h-[100px]">
                   <Logo width={56} />
