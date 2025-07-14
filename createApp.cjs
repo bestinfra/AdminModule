@@ -91,19 +91,22 @@ function createAppProject(formData) {
     const sourceFontsDir = path.join(__dirname, 'frontend', 'public', 'fonts');
     const destFontsDir = path.join(frontendDir, 'public', 'fonts');
     
-    if (fs.existsSync(sourceFontsDir)) {
-      ensureDir(destFontsDir);
-      const fontFiles = fs.readdirSync(sourceFontsDir);
-      fontFiles.forEach(fontName => {
-        const sourcePath = path.join(sourceFontsDir, fontName);
-        const destPath = path.join(destFontsDir, fontName);
-        
+    // Ensure Manrope font subdirectory exists in destination
+    const sourceManropeDir = path.join(sourceFontsDir, 'Manrope');
+    const destManropeDir = path.join(destFontsDir, 'Manrope');
+    if (fs.existsSync(sourceManropeDir)) {
+      ensureDir(destManropeDir);
+      const manropeFiles = fs.readdirSync(sourceManropeDir);
+      manropeFiles.forEach(fontName => {
+        const sourcePath = path.join(sourceManropeDir, fontName);
+        const destPath = path.join(destManropeDir, fontName);
         if (fs.statSync(sourcePath).isFile()) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
+      console.log(`Copied Manrope fonts to ${destManropeDir}`);
     } else {
-      console.log(`Fonts directory not found: ${sourceFontsDir}`);
+      console.log(`Manrope fonts directory not found: ${sourceManropeDir}`);
     }
   }
 
@@ -1666,7 +1669,15 @@ DATABASE_URL=postgresql://postgres:password@localhost:5432/your_db_name_here?sch
   // Create prisma directory and schema.prisma
   const prismaDir = path.join(backendDir, 'prisma');
   ensureDir(prismaDir);
-  const schemaContent = `// Example Prisma schema
+  
+  // Copy db_schema.txt as schema.prisma if it exists, otherwise use example schema
+  const dbSchemaPath = path.join(__dirname, '..', 'AdminModule', 'db_schema.txt');
+  const targetSchemaPath = path.join(prismaDir, 'schema.prisma');
+  if (fs.existsSync(dbSchemaPath)) {
+    fs.copyFileSync(dbSchemaPath, targetSchemaPath);
+    console.log('Copied db_schema.txt to', targetSchemaPath);
+  } else {
+    const schemaContent = `// Example Prisma schema
 // Replace this with your actual schema
 
 generator client {
@@ -1679,18 +1690,15 @@ datasource db {
 }
 
 // Example model
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 model User {
   id    Int    @id @default(autoincrement())
   email String @unique
   name  String
 }
 `;
-  fs.writeFileSync(path.join(prismaDir, 'schema.prisma'), schemaContent);
+    fs.writeFileSync(targetSchemaPath, schemaContent);
+    console.log('Wrote example schema.prisma to', targetSchemaPath);
+  }
 
   // Add Prisma usage comment to server.js
   const serverPath = path.join(backendDir, 'server.js');
