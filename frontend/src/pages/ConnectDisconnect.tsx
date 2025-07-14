@@ -82,7 +82,6 @@ const ConnectDisconnect: React.FC = () => {
   const [apiLogs, setApiLogs] = useState<string[]>([]);
   const [selectedMeters, setSelectedMeters] = useState<string[]>([]);
   const [bulkActionType, setBulkActionType] = useState<'connect' | 'disconnect' | null>(null);
-  const [viewType, setViewType] = useState('Table');
 
 
 
@@ -567,7 +566,6 @@ const ConnectDisconnect: React.FC = () => {
                       disabled={actionLoading}
                     />
                   </div>
-                  
                   <span className="text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900 px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
                   </span>
@@ -593,9 +591,6 @@ const ConnectDisconnect: React.FC = () => {
           </div>
         </div>
       )}
-
-      
-
       {/* Meter Table */}
       <div className="mb-8">
        <div className="mb-6">
@@ -616,10 +611,6 @@ const ConnectDisconnect: React.FC = () => {
         showHeader={true}
         headerTitle="Meter Connection Status"
         dateRange="Jan 2024 - Dec 2024"
-        showViewToggle={true}
-        viewToggleOptions={['Table', 'Grid']}
-        initialViewType="Table"
-        onViewTypeChange={setViewType}
       />
       </div>
 
