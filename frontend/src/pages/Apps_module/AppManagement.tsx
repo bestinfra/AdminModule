@@ -114,14 +114,14 @@ const AppManagement: React.FC = () => {
 
   return (
     <main className="min-h-screen dark:bg-primary-dark-light flex flex-col items-center justify-start w-full">
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-4">
         {/* Page Header */}
-        <div className="mb-4">
+        <div className="">
           <PageHeader {...getHeaderConfig()} />
         </div>
         
         {/* Step Navigation */}
-        <div className="mb-6">
+        <div className="">
           <StepNavigation currentStep={currentStep} onBack={handleBack} />
         </div>
         
