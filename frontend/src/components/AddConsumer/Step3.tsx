@@ -55,7 +55,6 @@ interface Step3Props {
     selectedUtilities: string[];
     sharedMeter: boolean;
     sharedConsumers?: SharedConsumer[];
-    gps: string;
     accountNumber: string;
     onBack: () => void;
     onSubmit: (e: React.FormEvent) => void;
@@ -67,7 +66,6 @@ const Step3: React.FC<Step3Props> = ({
     selectedUtilities,
     sharedMeter,
     sharedConsumers,
-    gps,
     accountNumber,
     onBack,
     onSubmit,
@@ -89,11 +87,6 @@ const Step3: React.FC<Step3Props> = ({
                 {key}
             </span>
         );
-    };
-
-    const handleFormSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSubmit(e);
     };
 
     return (

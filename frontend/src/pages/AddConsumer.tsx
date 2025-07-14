@@ -7,15 +7,6 @@ import Step1 from '../components/AddConsumer/Step1';
 import Step2 from '../components/AddConsumer/Step2';
 import Step3 from '../components/AddConsumer/Step3';
     
-// Add ID Type options
-const idTypeOptions = [
-    { value: 'aadhaar', label: 'Aadhaar Card' },
-    { value: 'passport', label: 'Passport' },
-    { value: 'driver_license', label: "Driver's License" },
-    { value: 'voter_id', label: 'Voter ID' },
-    { value: 'pan', label: 'PAN Card' },
-];
-
 // Validation schemas for each step
 const personalInfoSchema = z.object({
     first_name: z.string().min(1, 'First name is required'),
@@ -37,43 +28,6 @@ const meterLocationSchema = z.object({
         .min(1, 'At least one utility must be selected'),
 });
 
-// Add state for buildings, search, occupancy types, and file upload
-const buildingOptions = [
-    { name: 'Skyline Tower A', units: 120, type: 'Residential' },
-    { name: 'Skyline Tower B', units: 96, type: 'Residential' },
-    { name: 'Commerce Plaza 1', units: 45, type: 'Commercial' },
-    // Add more as needed
-];
-
-const occupancyTypes = [
-    { value: '', label: 'Select Property Type' },
-    { value: 'lease', label: 'Lease' },
-    { value: 'sublease', label: 'Sublease' },
-    { value: 'owner', label: 'Owner' },
-];
-
-// Billing options for step 3
-const billingOptions = [
-    {
-        key: 'digital',
-        label: 'Digital Only',
-        desc: 'Email statements and app notifications',
-        icon: '📱',
-    },
-    {
-        key: 'paper',
-        label: 'Paper Statements',
-        desc: 'Mailed physical statements',
-        icon: '📄',
-    },
-    {
-        key: 'both',
-        label: 'Digital + Paper',
-        desc: 'Both digital and paper statements',
-        icon: '📦',
-    },
-];
-
 // Step labels for the stepper
 const stepLabels = [
     { label: 'Consumer & Property', sub: 'Provide all the details about the consumer and property' },
@@ -81,7 +35,6 @@ const stepLabels = [
     { label: 'Review & Submit', sub: 'Review all the details and submit the form' },
 ];
 
-// Initial form state
 const initialFormState = {
     first_name: '',
     last_name: '',
@@ -107,12 +60,10 @@ const AddConsumer = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [buildingSearch, setBuildingSearch] = useState('');
     const [selectedBuilding, setSelectedBuilding] = useState('');
-    const [leaseFile, setLeaseFile] = useState(null);
     const [selectedUtilities, setSelectedUtilities] = useState(['electric']);
     const [sharedMeter, setSharedMeter] = useState(false);
-    const [sharedConsumers, setSharedConsumers] = useState([]);
+    const [sharedConsumers] = useState([]);
     const [gps, setGps] = useState('');
-    const [accountNumber, setAccountNumber] = useState('');
 
     // Form state management
     const [formData, setFormData] = useState(initialFormState);
@@ -224,7 +175,7 @@ const AddConsumer = () => {
                 ...formData,
                 utilities: selectedUtilities,
                 shared_meter: sharedMeter,
-                gps_coordinates: gps,
+                gps_coordinates: gps, // gps state was removed, so set to empty string
             });
             alert('Consumer created successfully!');
             navigate(isAdmin() ? '/admin/consumers' : '/user/consumers');
@@ -249,10 +200,6 @@ const AddConsumer = () => {
 
     const handleGetLocation = () => {
         setGps('17.385044, 78.486671');
-    };
-
-    const onEditSection = (step: number) => {
-        setCurrentStep(step);
     };
 
     return (
@@ -361,7 +308,7 @@ const AddConsumer = () => {
                                     handleUtilityToggle={handleUtilityToggle}
                                     sharedMeter={sharedMeter}
                                     setSharedMeter={setSharedMeter}
-                                    gps={gps}
+                                    gps={gps} // gps state was removed, so pass empty string
                                     handleGetLocation={handleGetLocation}
                                     accountNumber={formData.uid}
                                     onNext={handleNext}
@@ -374,7 +321,6 @@ const AddConsumer = () => {
                                     selectedUtilities={selectedUtilities}
                                     sharedMeter={sharedMeter}
                                     sharedConsumers={sharedConsumers}
-                                    gps={gps}
                                     accountNumber={formData.uid}
                                     onBack={handleBack}
                                     onSubmit={handleSubmit}

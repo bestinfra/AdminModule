@@ -127,36 +127,6 @@ const Step1: React.FC<Step1Props> = ({
         return /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value);
     };
 
-    // Function to format Aadhar number
-    const formatAadhar = (value: string): string => {
-        const digits = value.replace(/\D/g, '');
-        return digits.replace(/(\d{4})(?=\d)/g, '$1 ').substring(0, 14);
-    };
-
-    // Function to format PAN number
-    const formatPAN = (value: string): string => {
-        return value.toUpperCase().replace(/\s/g, '');
-    };
-
-    // Handle ID number input with formatting
-    const handleIdNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { value } = e.target;
-        let formattedValue = value;
-
-        if (formData.id_type === 'aadhar') {
-            formattedValue = formatAadhar(value);
-        } else if (formData.id_type === 'pan') {
-            formattedValue = formatPAN(value);
-        }
-
-        handleInputChange({
-            target: {
-                name: 'id_number',
-                value: formattedValue
-            }
-        } as React.ChangeEvent<HTMLInputElement>);
-    };
-
     // Validate ID number based on type
     const validateIdNumber = (value: string, type: string): boolean => {
         if (!value) return false;
@@ -221,10 +191,6 @@ const Step1: React.FC<Step1Props> = ({
         handleInputChange(syntheticEvent);
     };
 
-    const handleFormInputBlur = (name: string, value: any) => {
-        setFieldFocus(name, false);
-    };
-
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 md:p-8 space-y-8">
             {/* Error Summary */}
@@ -260,7 +226,7 @@ const Step1: React.FC<Step1Props> = ({
                             showError={!!errors[input.name]}
                             disabled={!isFieldEnabled(input.name)}
                             onInputChange={handleFormInputChange}
-                            onInputBlur={handleFormInputBlur}
+                            onInputBlur={() => setFieldFocus(input.name, false)}
                             fileInputRefs={fileInputRefs}
                         />
                     ))}

@@ -16,7 +16,7 @@ import {
 } from './renderers';
 
 const FormInput: React.FC<FormInputProps> = ({ 
-  input, value, error, showError, disabled, onInputChange, onInputBlur, fileInputRefs 
+  input, value, showError, disabled, onInputChange, onInputBlur, fileInputRefs 
 }) => {
   const { name, type, label, placeholder, required, options, className: inputClassName, colSpan = 1, icon, description } = input;
   
