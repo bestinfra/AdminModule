@@ -6,6 +6,7 @@ interface MenuItem {
     id: string;
     label: string;
     isDestructive?: boolean;
+    link?: string;
 }
 
 interface HeaderProps {
@@ -75,9 +76,11 @@ const Header: React.FC<HeaderProps> = ({
         }
     };
 
-    const handleMenuItemClick = (itemId: string) => {
-        if (onMenuItemClick) {
-            onMenuItemClick(itemId);
+    const handleMenuItemClickWithLink = (item: MenuItem) => {
+        if (item.link) {
+            window.location.href = item.link;
+        } else if (onMenuItemClick) {
+            onMenuItemClick(item.id);
         }
         setShowEditMenu(false);
     };
@@ -239,7 +242,7 @@ const Header: React.FC<HeaderProps> = ({
                         <div
                             key={item.id}
                             className="px-5 py-3 text-sm cursor-pointer flex items-center gap-3 hover:bg-blue-600 hover:text-white rounded-lg active:bg-blue-600 active:text-white"
-                            onClick={() => handleMenuItemClick(item.id)}
+                            onClick={() => handleMenuItemClickWithLink(item)}
                         >
                             {item.label}
                         </div>
@@ -262,6 +265,7 @@ Header.propTypes = {
             id: PropTypes.string.isRequired,
             label: PropTypes.string.isRequired,
             isDestructive: PropTypes.bool,
+            link: PropTypes.string,
         })
     ),
     onMenuItemClick: PropTypes.func,

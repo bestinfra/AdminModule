@@ -235,7 +235,8 @@ const SuperAdminDashboard: React.FC = () => {
                 { id: 'high-usage', label: 'High Usage' },
                 { id: 'low-usage', label: 'Low Usage' },
                 { id: 'alerts', label: 'With Alerts' },
-                { id: 'healthy', label: 'Healthy Systems' }
+                { id: 'healthy', label: 'Healthy Systems' },
+                { id: 'create-project', label: 'Create Project', link: '/apps'}
             ]}
             onMenuItemClick={(itemId) => {
                 console.log(`Filter by: ${itemId}`);
