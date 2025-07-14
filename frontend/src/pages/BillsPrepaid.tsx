@@ -71,11 +71,11 @@ const rechargeData = [
     subtitle2: '0 sent Today',
   },
   {
-    title: 'Auto Disconnects Triggered',
-    value: '0',
+    title: 'Auto Triggered Disconnects',
+    value: '4',
     icon: '/icons/disconnect.svg',
-    previousValue: 'vs. Yesterday Yesterday',
-    subtitle2: '0 Consumer Today',
+    previousValue: 'vs. 2 Yesterday',
+    subtitle2: '4 Consumers Today',
   },
 ];
 
