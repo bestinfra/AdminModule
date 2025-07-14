@@ -36,6 +36,22 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
                 return 'Modules';
             case '/all-tickets':
                 return 'All Tickets';
+            case '/tickets-filtered':
+                // Get the filter from URL to show appropriate title
+                const urlParams = new URLSearchParams(window.location.search);
+                const filter = urlParams.get('filter');
+                switch (filter) {
+                    case 'high-priority':
+                        return 'High Priority Tickets';
+                    case 'open':
+                        return 'Open Tickets';
+                    case 'in-progress':
+                        return 'In Progress Tickets';
+                    case 'closed':
+                        return 'Closed Tickets';
+                    default:
+                        return 'All Tickets';
+                }
             case '/consumers':
                 return 'Consumers';
             case '/bills/prepaid':
