@@ -132,10 +132,10 @@ const AddConsumer = () => {
                     return false;
             }
             return true;
-        } catch (error) {
+        } catch (error: unknown) {
             if (error instanceof z.ZodError) {
                 const newErrors: Record<string, string> = {};
-                error.issues.forEach((issue) => {
+                error.issues.forEach((issue: z.ZodIssue) => {
                     if (issue.path[0]) {
                         newErrors[issue.path[0].toString()] = issue.message;
                     }

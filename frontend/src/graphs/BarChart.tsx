@@ -31,6 +31,7 @@ interface BarChartProps {
   onTimeRangeChange?: (range: string) => void;
   onDownload?: (timeRange: string, viewType: string) => void;
   showDownloadButton?: boolean;
+
   // View toggle functionality props
   showViewToggle?: boolean;
   viewToggleOptions?: string[];
@@ -63,13 +64,13 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   onTimeRangeChange = () => {},
   onDownload = () => {},
   showDownloadButton = true,
-  // View toggle functionality props
   showViewToggle = false,
   viewToggleOptions = ['Graph', 'Table'],
   initialViewType = 'Graph',
   onViewTypeChange = () => {},
   showTableView = false,
-  // tableData = [],
+  tableData = [],
+  // tableColumns = [],
 }) => {
   const { isDarkMode: contextIsDarkMode } = useApp();
   const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
