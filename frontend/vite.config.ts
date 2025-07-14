@@ -11,6 +11,7 @@ export default defineConfig({
       name: 'SuperAdmin',
       filename: 'remoteEntry.js',
       exposes: {
+        './Login': './src/pages/SubLogin.tsx',
         './Dashboard': './src/pages/Dashboard.tsx',
         './Consumers': './src/pages/Consumers.tsx',
         './Sidebar': './src/components/global/Sidebar.tsx',

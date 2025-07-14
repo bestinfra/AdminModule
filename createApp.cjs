@@ -43,11 +43,15 @@ function createAppProject(formData) {
   // Create base directory
   ensureDir(baseDir);
 
+  // Set up frontend directory
+  const frontendDir = path.join(baseDir, 'frontend');
+  ensureDir(frontendDir);
+
   // Helper to copy all icons and images
   function copyAllAssets() {
     // Copy all icons
     const sourceIconsDir = path.join(__dirname, 'frontend', 'public', 'icons');
-    const destIconsDir = path.join(baseDir, 'public', 'icons');
+    const destIconsDir = path.join(frontendDir, 'public', 'icons');
     ensureDir(destIconsDir);
 
     if (fs.existsSync(sourceIconsDir)) {
@@ -66,7 +70,7 @@ function createAppProject(formData) {
 
     // Copy all images
     const sourceImagesDir = path.join(__dirname, 'frontend', 'public', 'images');
-    const destImagesDir = path.join(baseDir, 'public', 'images');
+    const destImagesDir = path.join(frontendDir, 'public', 'images');
     ensureDir(destImagesDir);
 
     if (fs.existsSync(sourceImagesDir)) {
@@ -85,21 +89,24 @@ function createAppProject(formData) {
 
     // Copy fonts directory
     const sourceFontsDir = path.join(__dirname, 'frontend', 'public', 'fonts');
-    const destFontsDir = path.join(baseDir, 'public', 'fonts');
+    const destFontsDir = path.join(frontendDir, 'public', 'fonts');
     
-    if (fs.existsSync(sourceFontsDir)) {
-      ensureDir(destFontsDir);
-      const fontFiles = fs.readdirSync(sourceFontsDir);
-      fontFiles.forEach(fontName => {
-        const sourcePath = path.join(sourceFontsDir, fontName);
-        const destPath = path.join(destFontsDir, fontName);
-        
+    // Ensure Manrope font subdirectory exists in destination
+    const sourceManropeDir = path.join(sourceFontsDir, 'Manrope');
+    const destManropeDir = path.join(destFontsDir, 'Manrope');
+    if (fs.existsSync(sourceManropeDir)) {
+      ensureDir(destManropeDir);
+      const manropeFiles = fs.readdirSync(sourceManropeDir);
+      manropeFiles.forEach(fontName => {
+        const sourcePath = path.join(sourceManropeDir, fontName);
+        const destPath = path.join(destManropeDir, fontName);
         if (fs.statSync(sourcePath).isFile()) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
+      console.log(`Copied Manrope fonts to ${destManropeDir}`);
     } else {
-      console.log(`Fonts directory not found: ${sourceFontsDir}`);
+      console.log(`Manrope fonts directory not found: ${sourceManropeDir}`);
     }
   }
 
@@ -108,7 +115,7 @@ function createAppProject(formData) {
 
   // Helper to sync CSS files using the new sync utility
   function syncCSSFiles() {
-    const cssDir = path.join(baseDir, 'src', 'styles');
+    const cssDir = path.join(frontendDir, 'src', 'styles');
     ensureDir(cssDir);
     
     // Import the sync utility
@@ -233,7 +240,7 @@ export default defineConfig({
     cssCodeSplit: false,
   },
   server: {
-    port: 3001,
+    port: 1700,
     fs: {
       allow: ['..'],
     },
@@ -329,7 +336,7 @@ body {
     
     'src/App.tsx': `
 import React, { lazy, Suspense, ComponentType, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { FederatedContextProvider } from './components/FederatedWrapper';
 import CSSLoader from './components/CSSLoader';
@@ -356,6 +363,18 @@ const DashboardFallback = () => (
     <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
       <h3 className="font-semibold text-blue-800">Debug Info:</h3>
       <p className="text-sm text-blue-700">This is the fallback component. The remote Dashboard component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
+  </div>
+);
+
+const SubLoginFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Login</h1>
+    <p className="text-gray-600">Loading login page...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote Login component failed to load.</p>
       <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
     </div>
   </div>
@@ -413,6 +432,11 @@ const HeaderFallback = () => (
 const Dashboard = createSafeLazyComponent(
   () => import('SuperAdmin/Dashboard'),
   DashboardFallback
+);
+
+const SubLogin = createSafeLazyComponent(
+  () => import('SuperAdmin/Login'),
+  SubLoginFallback
 );
 
 const Consumers = createSafeLazyComponent(
@@ -540,6 +564,15 @@ const Header = createSafeLazyComponent(
   () => import('SuperAdmin/Header'),
   HeaderFallback
 );
+
+function RequireAuth({ children }) {
+  const isLoggedIn = !!localStorage.getItem('token');
+  const location = useLocation();
+  if (!isLoggedIn) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  return children;
+}
 
 function AppContent() {
   const contextValue = useApp();
@@ -713,84 +746,92 @@ function AppContent() {
   
   return (
     <FederatedContextProvider value={contextValue}>
-      <div className="flex h-screen bg-white">
-        <Suspense fallback={<SidebarFallback />}>
-          <Sidebar 
-            currentPath={location.pathname}
-            onNavigate={(path:any) => navigate(path)}
-            menus={[
-              {
-                category: 'General',
-                items: menuItems,
-              },
-              {
-                category: 'Admin Settings',
-                items: menuItems2,
-              },
-            ]}
-            logo={{
-              src: '/images/bi-blue-logo.svg',
-              alt: '${appName || 'Admin App'}',
-              collapsedSrc: '/images/changed-logo.svg',
-            }}
-            footer={{
-              copyright: '© 2024 ${companyName || 'Company'}',
-              showThemeToggle: true,
-              showShareButton: false,
-            }}
-          />
-        </Suspense>
-        <div className="flex flex-col flex-1">
-          <Suspense fallback={<HeaderFallback />}>
-            <Header title={getPageTitle()} />
-          </Suspense>
-          <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-            <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/consumers" element={<Consumers />} />
-              <Route path="/consumers/:uid" element={<ConsumerView />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/role-management" element={<RoleManagement />} />
-              <Route path="/bills/prepaid" element={<BillsPrepaid />} />
-              <Route path="/bills/postpaid" element={<BillsPostpaid />} />
-              <Route path="/dtr-dashboard" element={<Transformer />} />
-              <Route path="/asset-management" element={<Assets />} />
-              <Route path="/meters" element={<Meters />} />
-              <Route path="/data-logger-master" element={<DataLoggerMaster />} />
-              <Route path="/all-tickets" element={<AllTickets />} />
-              <Route path="/tickets/:filter" element={<AllTickets />} />
-              <Route path="/ticket-view" element={<TicketView />} />
-              <Route path="*" element={
-                <div className="p-6">
-                  <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
-                  <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
-                  <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                    <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
-                    <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
-                    <div className="mt-4">
-                      <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
-                      <ul className="text-sm text-red-700 space-y-1">
-                        <li>• / - Dashboard</li>
-                        <li>• /dashboard - Dashboard</li>
-                        <li>• /consumers - Consumers</li>
-                        <li>• /consumers/:uid - Consumer View</li>
-                        <li>• /bills/prepaid - Bills Prepaid</li>
-                        <li>• /bills/postpaid - Bills Postpaid</li>
-                        <li>• /dtr-dashboard - DTR Dashboard</li>
-                        <li>• /asset-management - Asset Management</li>
-                        <li>• /meters - Meters List</li>
-                        <li>• /data-logger-master - Data Logger Master</li>
-                        <li>• /all-tickets - All Tickets</li>
-                      </ul>
-                    </div>
-                  </div>
+      <Routes>
+        <Route path="/login" element={<SubLogin />} />
+        <Route
+          path="*"
+          element={
+            <RequireAuth>
+              <div className="flex h-screen bg-white">
+                {/* Sidebar and Header only for authenticated users */}
+                <Suspense fallback={<SidebarFallback />}>
+                  <Sidebar 
+                    currentPath={location.pathname}
+                    onNavigate={(path:any) => navigate(path)}
+                    menus={[
+                      {
+                        category: 'General',
+                        items: menuItems,
+                      },
+                      {
+                        category: 'Admin Settings',
+                        items: menuItems2,
+                      },
+                    ]}
+                    logo={{
+                      src: '/images/bi-blue-logo.svg',
+                      alt: '${appName || 'Admin App'}',
+                      collapsedSrc: '/images/changed-logo.svg',
+                    }}
+                    footer={{
+                      copyright: '© 2024 ${companyName || 'Company'}',
+                      showThemeToggle: true,
+                      showShareButton: false,
+                    }}
+                  />
+                </Suspense>
+                <div className="flex flex-col flex-1">
+                  <Suspense fallback={<HeaderFallback />}>
+                    <Header title={getPageTitle()} />
+                  </Suspense>
+                  <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
+                    {/* All protected routes here */}
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/consumers" element={<Consumers />} />
+                      <Route path="/consumers/:uid" element={<ConsumerView />} />
+                      <Route path="/bills/prepaid" element={<BillsPrepaid />} />
+                      <Route path="/bills/postpaid" element={<BillsPostpaid />} />
+                      <Route path="/dtr-dashboard" element={<Transformer />} />
+                      <Route path="/asset-management" element={<Assets />} />
+                      <Route path="/meters" element={<Meters />} />
+                      <Route path="/data-logger-master" element={<DataLoggerMaster />} />
+                      <Route path="/all-tickets" element={<AllTickets />} />
+                      <Route path="*" element={
+                        <div className="p-6">
+                          <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
+                          <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
+                            <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
+                            <div className="mt-4">
+                              <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
+                              <ul className="text-sm text-red-700 space-y-1">
+                                <li>/ - Dashboard</li>
+                                <li>/dashboard - Dashboard</li>
+                                <li>/consumers - Consumers</li>
+                                <li>/consumers/:uid - Consumer View</li>
+                                <li>/bills/prepaid - Bills Prepaid</li>
+                                <li>/bills/postpaid - Bills Postpaid</li>
+                                <li>/dtr-dashboard - DTR Dashboard</li>
+                                <li>/asset-management - Asset Management</li>
+                                <li>/meters - Meters List</li>
+                                <li>/data-logger-master - Data Logger Master</li>
+                                <li>/all-tickets - All Tickets</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      } />
+                    </Routes>
+                  </main>
                 </div>
-              } />
-            </Routes>
-          </main>
-        </div>
-      </div>
+              </div>
+            </RequireAuth>
+          }
+        />
+      </Routes>
     </FederatedContextProvider>
   );
 }
@@ -1656,9 +1697,128 @@ Generated on: ${new Date().toLocaleDateString()}
 `
   };
 
+  // --- BACKEND SCAFFOLDING START ---
+  // Backend template files
+  const backendFiles = {
+    'package.json': JSON.stringify({
+      name: `${projectFolderName}-backend`,
+      version: '1.0.0',
+      main: 'server.js',
+      scripts: {
+        start: 'node server.js'
+      },
+      dependencies: {
+        express: "^4.18.2",
+        dotenv: "^16.0.3"
+      }
+    }, null, 2),
+
+    'server.js': `
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+app.use(express.json());
+
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+// Add your routes here
+
+app.listen(PORT, () => console.log('Backend running on port ' + PORT));
+`,
+
+    'routes/index.js': `\nconst express = require('express');\nconst router = express.Router();\n\n// Define your routes here\n\nmodule.exports = router;\n`
+  };
+
+  // Create backend directory
+  const backendDir = path.join(baseDir, 'backend');
+  ensureDir(backendDir);
+  ensureDir(path.join(backendDir, 'routes'));
+
+  // Write backend files
+  Object.entries(backendFiles).forEach(([filePath, content]) => {
+    const fullPath = path.join(backendDir, filePath);
+    ensureDir(path.dirname(fullPath));
+    fs.writeFileSync(fullPath, content.trimStart());
+  });
+
+  // Add .env example file for backend
+  const envExampleContent = `# Example environment file for backend
+NODE_ENV=development
+PORT=4000
+
+JWT_EXPIRES_IN=4h
+
+DATABASE_URL=postgresql://postgres:password@localhost:5432/your_db_name_here?schema=public
+`;
+  fs.writeFileSync(path.join(backendDir, '.env'), envExampleContent);
+  // --- BACKEND SCAFFOLDING END ---
+
+  // --- PRISMA SUPPORT START ---
+  // Update backend package.json for Prisma
+  const backendPkgPath = path.join(backendDir, 'package.json');
+  if (fs.existsSync(backendPkgPath)) {
+    const backendPkg = JSON.parse(fs.readFileSync(backendPkgPath, 'utf8'));
+    backendPkg.dependencies = backendPkg.dependencies || {};
+    backendPkg.devDependencies = backendPkg.devDependencies || {};
+    backendPkg.dependencies['@prisma/client'] = '^5.12.0';
+    backendPkg.devDependencies['prisma'] = '^5.12.0';
+    fs.writeFileSync(backendPkgPath, JSON.stringify(backendPkg, null, 2));
+  }
+
+  // Create prisma directory and schema.prisma
+  const prismaDir = path.join(backendDir, 'prisma');
+  ensureDir(prismaDir);
+  
+  // Copy db_schema.txt as schema.prisma if it exists, otherwise use example schema
+  const dbSchemaPath = path.join(__dirname, '..', 'AdminModule', 'db_schema.txt');
+  const targetSchemaPath = path.join(prismaDir, 'schema.prisma');
+  if (fs.existsSync(dbSchemaPath)) {
+    fs.copyFileSync(dbSchemaPath, targetSchemaPath);
+    console.log('Copied db_schema.txt to', targetSchemaPath);
+  } else {
+    const schemaContent = `// Example Prisma schema
+// Replace this with your actual schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Example model
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+}
+`;
+    fs.writeFileSync(targetSchemaPath, schemaContent);
+    console.log('Wrote example schema.prisma to', targetSchemaPath);
+  }
+
+  // Add Prisma usage comment to server.js
+  const serverPath = path.join(backendDir, 'server.js');
+  if (fs.existsSync(serverPath)) {
+    let serverContent = fs.readFileSync(serverPath, 'utf8');
+    if (!serverContent.includes('PrismaClient')) {
+      serverContent = `// To use Prisma:
+// const { PrismaClient } = require('@prisma/client');
+// const prisma = new PrismaClient();
+
+` + serverContent;
+      fs.writeFileSync(serverPath, serverContent);
+    }
+  }
+  // --- PRISMA SUPPORT END ---
+
   // Create directories and write files
   Object.entries(projectStructure).forEach(([filePath, content]) => {
-    const fullPath = path.join(baseDir, filePath);
+    const fullPath = path.join(frontendDir, filePath);
     const dir = path.dirname(fullPath);
     
     // Ensure directory exists

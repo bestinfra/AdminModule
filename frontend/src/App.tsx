@@ -40,6 +40,7 @@ import AddMeter from './pages/AddMeter';
 import AddConsumer from './pages/AddConsumer';
 import UserManagement from './pages/UserManagment';
 import RoleManagement from './pages/RoleManagment';
+import TicketsFilteredView from './pages/TicketsFilteredView';
 
 
 const App: React.FC = () => {
@@ -75,6 +76,7 @@ const App: React.FC = () => {
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/asset-management" element={<AssetManagement />} />
                             <Route path="/profile" element={<Profile />} />
+                            <Route path="/tickets-filtered" element={<TicketsFilteredView />} />
                             <Route path="/forms" element={<Forms />} />
                             <Route path="/consumers" element={<Consumers />} /> 
                             <Route path="/consumers/add" element={<AddConsumer />} />

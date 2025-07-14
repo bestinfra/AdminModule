@@ -8,8 +8,8 @@ import {
 import type {
   AppBasicsData,
   AppBasicsErrors,
-  AdminAccessFormData,
-  AdminAccessFormErrors,
+  AccessControlData,
+  AccessControlErrors,
   BrandingData,
   BrandingErrors,
   ModuleData,
@@ -24,8 +24,8 @@ export const useStepState = () => {
   const [appBasicsData, setAppBasicsData] = useState<AppBasicsData>(INITIAL_APP_BASICS_DATA);
   const [appBasicsErrors, setAppBasicsErrors] = useState<AppBasicsErrors>({});
   
-  const [adminAccessData, setAdminAccessData] = useState<AdminAccessFormData>(INITIAL_ADMIN_ACCESS_DATA);
-  const [adminAccessErrors, setAdminAccessErrors] = useState<AdminAccessFormErrors>({});
+  const [adminAccessData, setAdminAccessData] = useState<AccessControlData>(INITIAL_ADMIN_ACCESS_DATA);
+  const [adminAccessErrors, setAdminAccessErrors] = useState<AccessControlErrors>({});
   
   const [brandingData, setBrandingData] = useState<BrandingData>(INITIAL_BRANDING_DATA);
   const [brandingErrors, setBrandingErrors] = useState<BrandingErrors>({});

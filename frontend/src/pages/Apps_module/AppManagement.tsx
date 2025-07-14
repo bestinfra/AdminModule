@@ -1,11 +1,11 @@
 import React from 'react';
 import Page from '../../components/global/Page';
 import PageHeader from '../../components/global/PageHeader';
-import AppBasicsStep from './components/AppBasicsStep';
-import AdminAccessForm from './components/AdminAccessForm';
-import BrandingStep from './components/BrandingStep';
-import ModuleSelectionStep from './components/ModuleSelectionStep';
-import GoLiveStep from './components/GoLiveStep';
+import ApplicationSetup from './components/ApplicationSetup';
+import AccessControl from './components/AccessControl';
+import BrandPersonalization from './components/BrandPersonalization';
+import FeatureSelection from './components/FeatureSelection';
+import FinalizeAndDeploy from './components/FinalizeAndDeploy';
 import StepNavigation from './components/StepNavigation';
 import { useStepState } from './hooks/useStepState';
 import { useStepNavigation } from './hooks/useStepNavigation';
@@ -49,7 +49,7 @@ const AppManagement: React.FC = () => {
     switch (currentStep) {
       case 1:
         return (
-          <AppBasicsStep
+          <ApplicationSetup
             formData={appBasicsData}
             errors={appBasicsErrors}
             onInputChange={handleAppBasicsInputChange}
@@ -59,7 +59,7 @@ const AppManagement: React.FC = () => {
         );
       case 2:
         return (
-          <AdminAccessForm
+          <AccessControl
             formData={adminAccessData}
             errors={adminAccessErrors}
             onInputChange={handleAdminInputChange}
@@ -70,7 +70,7 @@ const AppManagement: React.FC = () => {
         );
       case 3:
         return (
-          <BrandingStep
+          <BrandPersonalization
             formData={brandingData}
             errors={brandingErrors}
             onInputChange={handleBrandingInputChange}
@@ -79,7 +79,7 @@ const AppManagement: React.FC = () => {
         );
       case 4:
         return (
-          <ModuleSelectionStep
+          <FeatureSelection
             formData={moduleData}
             errors={moduleErrors}
             onModuleToggle={handleModuleToggle}
@@ -88,7 +88,7 @@ const AppManagement: React.FC = () => {
         );
       case 5:
         return (
-          <GoLiveStep
+          <FinalizeAndDeploy
             formData={{
               ...appBasicsData,
               ...adminAccessData,
@@ -114,14 +114,14 @@ const AppManagement: React.FC = () => {
 
   return (
     <main className="min-h-screen dark:bg-primary-dark-light flex flex-col items-center justify-start w-full">
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-4">
         {/* Page Header */}
-        <div className="mb-4">
+        <div className="">
           <PageHeader {...getHeaderConfig()} />
         </div>
         
         {/* Step Navigation */}
-        <div className="mb-6">
+        <div className="">
           <StepNavigation currentStep={currentStep} onBack={handleBack} />
         </div>
         

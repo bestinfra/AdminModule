@@ -8,7 +8,7 @@ interface StepNavigationProps {
 
 const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, onBack }) => {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col">
       <div className="createSteps bg-primary-lightest p-4 rounded-2xl">
         <div className="flex items-center justify-between gap-4">
           {STEP_LABELS.map((step: { label: string; sub: string }, idx: number) => {
@@ -73,7 +73,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, onBack }) 
         </div>
       </div>
       
-      <div className="flex justify-between items-center gap-4 mt-4">
+      <div className="flex justify-between items-center gap-4">
         {currentStep > 1 && (
           <span 
             className="flex items-center gap-2 p-2 px-2 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 

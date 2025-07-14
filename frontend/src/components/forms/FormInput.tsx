@@ -59,7 +59,7 @@ const FormInput: React.FC<FormInputProps> = ({
     name,
     required,
     disabled,
-    className: `input ${inputClassName || ''} ${showError ? 'border-red-500' : ''}`,
+    className: `w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border-primary-border dark:border-dark-border text-base font-medium ${showError ? 'border-red-500' : 'border-gray-300'} ${inputClassName || ''}`,
     onChange: (event: FormInputEvent) => {
       const extractedValue = extractValueFromEvent(event);
       onInputChange(name, extractedValue, input);
@@ -110,7 +110,7 @@ const FormInput: React.FC<FormInputProps> = ({
           <CheckboxInput
             {...commonProps}
             value={value as boolean}
-            label={label}
+            label={label || ''}
             description={description}
           />
         );

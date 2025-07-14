@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
@@ -31,6 +31,45 @@ const AllTickets: React.FC = () => {
     
     // Get filter from URL params, default to 'all'
     const activeFilter = (filter as FilterType) || 'all';
+    // Ensure layout is properly initialized
+    useEffect(() => {
+        // Force a reflow to ensure grid layout is properly applied
+        const gridElement = document.querySelector('.grid');
+        if (gridElement) {
+            gridElement.scrollTop = gridElement.scrollTop;
+        }
+    }, []);
+
+    // Handler for Total Tickets card click
+    const handleTotalTicketsClick = () => {
+        console.log('Total Tickets clicked!');
+        window.location.href = '/tickets-filtered?filter=all';
+    };
+
+    // Handler for High Priority tickets card click
+    const handleHighPriorityClick = () => {
+        console.log('High Priority clicked!');
+        window.location.href = '/tickets-filtered?filter=high-priority';
+    };
+
+    // Handler for Open tickets card click
+    const handleOpenTicketsClick = () => {
+        console.log('Open Tickets clicked!');
+        window.location.href = '/tickets-filtered?filter=open';
+    };
+
+    // Handler for In Progress tickets card click
+    const handleInProgressClick = () => {
+        console.log('In Progress clicked!');
+        window.location.href = '/tickets-filtered?filter=in-progress';
+    };
+
+    // Handler for Closed tickets card click
+    const handleClosedTicketsClick = () => {
+        console.log('Closed Tickets clicked!');
+        window.location.href = '/tickets-filtered?filter=closed';
+    };
+
 
     const ticketData: TicketData[] = [
         {
@@ -333,6 +372,72 @@ const AllTickets: React.FC = () => {
         )
     };
 
+    const recentActivitySection: Section = {
+        id: 'recent-activity',
+        component: (
+            <div className="mb-8">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                    Recent Ticket Activity
+                </h3>
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                    <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                        <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Latest Operations</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400">Last 24 hours</span>
+                        </div>
+                    </div>
+                    <div className="p-4">
+                        <div className="space-y-3">
+                            <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                <div className="p-2 bg-blue-500 rounded-lg">
+                                    <img src="/icons/tickets.svg" alt="" className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-medium text-gray-900 dark:text-white">Ticket TICK-001 Created</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">2 minutes ago</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">System Access Issue - High Priority</p>
+                                </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                                <div className="p-2 bg-yellow-500 rounded-lg">
+                                    <img src="/icons/clock.svg" alt="" className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-medium text-gray-900 dark:text-white">Ticket TICK-002 Updated</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">15 minutes ago</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Status changed to In Progress</p>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                                <div className="p-2 bg-green-500 rounded-lg">
+                                    <img src="/icons/check-circle.svg" alt="" className="w-4 h-4 text-white" />
+                                </div>
+                                <div className="flex-1">
+                                    <div className="flex items-center justify-between">
+                                        <span className="font-medium text-gray-900 dark:text-white">Ticket TICK-003 Resolved</span>
+                                        <span className="text-xs text-gray-500 dark:text-gray-400">1 hour ago</span>
+                                    </div>
+                                    <p className="text-sm text-gray-600 dark:text-gray-400">Software Update completed successfully</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        )
+    };
+
+    const sections: Section[] = [
+        overviewSection,
+        ticketsTableSection,
+        recentActivitySection
+    ];
     const sections: Section[] = [ticketsTableSection];
 
     return (
@@ -342,9 +447,9 @@ const AllTickets: React.FC = () => {
             header={headerComponent}
             sidebarPosition="right"
             loading={loading}
-            className=""
-            containerClassName="space-y-6"
-            sectionClassName=""
+            className="w-full"
+            containerClassName="space-y-6 w-full"
+            sectionClassName="w-full"
         />
     );
 };
