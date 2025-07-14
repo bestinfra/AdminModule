@@ -12,11 +12,11 @@ import { AppCreationAPI } from '../../api/appCreation';
 
 
 const stepLabels: { label: string; sub: string }[] = [
-  { label: 'App Basics', sub: 'Configure your application settings' },
-  { label: 'Admin Access', sub: 'Set up administrator account' },
-  { label: 'Branding', sub: 'Customize your app appearance' },
-  { label: 'Modules', sub: 'Select feature modules' },
-  { label: 'Complete', sub: 'Review and complete app configuration' },
+  { label: 'Application Setup', sub: 'Define your settings and preferences' },
+  { label: 'Access Control', sub: 'Establish admin roles and secure access' },
+  { label: 'Brand Personalization', sub: 'Apply your identity and visual themes' },
+  { label: 'Feature Selection', sub: 'Choose modules to your operations' },
+  { label: 'Finalize & Deploy', sub: 'Review configuration and go live confidently' },
 ];
 
 const initialAppBasicsData = {
@@ -254,56 +254,70 @@ const AppManagement: React.FC = () => {
 
   // Sidebar
   const SidebarContent: React.FC<{ currentStep: number }> = ({ currentStep }) => (
-    <div className="flex flex-row gap-6">
+    <div className="flex flex-col gap-6">
       
-      <div className="createSteps flex flex-col gap-6 bg-primary-lightest justify-between p-10 rounded-3xl  ">
-        {stepLabels.map((step: { label: string; sub: string }, idx: number) => {
-          const isActive = idx === currentStep - 1;
-          const isCompleted = idx < currentStep - 1;
-          
-          return (
-            <div
-              key={step.label}
-              className={`p-5 rounded-lg transition-all dark:border-dark-border flex  items-start gap-4 ${
-                isActive 
-                  ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' 
-                  : isCompleted 
-                    ? 'bg-white dark:bg-primary-dark'
-                    : 'bg-white dark:bg-primary-dark opacity-60'
-              }`}
-            >
-              <div className={`flex items-center justify-center min-w-8 h-8 px-2 rounded-full text-white text-sm font-semibold ${
-                isActive 
-                  ? 'bg-primary' 
-                  : isCompleted 
-                    ? 'bg-secondary' 
-                    : 'bg-gray-400'
-              }`}>
-                {isCompleted ? (
-                 <img src={'icons/checkmark.svg'} alt="check" className="w-4 h-4" />
-                ) : (
-                  idx + 1
+      <div className="createSteps bg-primary-lightest p-4 rounded-2xl">
+        <div className="flex items-center justify-between gap-4">
+          {stepLabels.map((step: { label: string; sub: string }, idx: number) => {
+            const isActive = idx === currentStep - 1;
+            const isCompleted = idx < currentStep - 1;
+            
+            return (
+              <React.Fragment key={step.label}>
+                <div className="flex flex-col items-center gap-3 flex-1">
+                  <div
+                    className={`p-4 rounded-lg transition-all dark:border-dark-border flex flex-row items-start gap-4 w-full ${
+                      isActive 
+                        ? 'bg-white dark:bg-primary-dark shadow-[0px_5px_5px_-2px_rgba(220,228,239,1)]' 
+                        : isCompleted 
+                          ? 'bg-white dark:bg-primary-dark'
+                          : 'bg-white dark:bg-primary-dark opacity-60'
+                    }`}
+                  >
+                    <div className={`flex items-center justify-center min-w-8 h-8 px-2 rounded-full text-white text-sm font-semibold ${
+                      isActive 
+                        ? 'bg-primary' 
+                        : isCompleted 
+                          ? 'bg-secondary' 
+                          : 'bg-gray-400'
+                    }`}>
+                      {isCompleted ? (
+                       <img src={'icons/checkmark.svg'} alt="check" className="w-4 h-4" />
+                      ) : (
+                        idx + 1
+                      )}
+                    </div>
+                    <div className='flex flex-col gap-1 text-left'>
+                      <h2 className={`text-base font-semibold ${
+                        isActive 
+                          ? 'font-extrabold text-primary dark:text-white' 
+                          : isCompleted 
+                            ? 'font-semibold text-secondary dark:text-secondary' 
+                            : 'font-semibold text-main dark:text-white'
+                      }`}>{step.label}</h2>
+                      <h3 className={`text-base ${
+                        isActive 
+                          ? 'text-gray-500 dark:text-gray-400' 
+                          : isCompleted 
+                            ? 'text-gray-500 dark:text-gray-400' 
+                            : 'text-gray-500 dark:text-gray-400'
+                      }`}>{step.sub}</h3>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Connector line between steps */}
+                {idx < stepLabels.length - 1 && (
+                  <div className="flex items-center justify-center pt-4">
+                    <div className={`h-0.5 w-8 ${
+                      isCompleted ? 'bg-secondary' : 'bg-gray-300 dark:bg-gray-600'
+                    }`}></div>
+                  </div>
                 )}
-              </div>
-              <div className='flex flex-col gap-2'>
-                <h2 className={`${
-                  isActive 
-                    ? 'font-extrabold text-primary dark:text-white' 
-                    : isCompleted 
-                      ? 'font-semibold text-secondary dark:text-secondary' 
-                      : 'font-semibold text-main dark:text-white'
-                }`}>{step.label}</h2>
-                <h3 className={`text-md ${
-                  isActive 
-                    ? 'text-gray-500 dark:text-gray-400' 
-                    : isCompleted 
-                      ? 'text-gray-500 dark:text-gray-400' 
-                      : 'text-gray-500 dark:text-gray-400'
-                }`}>{step.sub}</h3>
-              </div>
-            </div>
-          );
-        })}
+              </React.Fragment>
+            );
+          })}
+        </div>
       </div>
       <div className="flex justify-between items-center gap-4 mt-4">
         {currentStep > 1 && (
@@ -444,15 +458,18 @@ const AppManagement: React.FC = () => {
     <main className="min-h-screen  dark:bg-primary-dark-light  flex flex-col items-center justify-start w-full">
       <div className="w-full">
         {/* Page Header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <PageHeader {...getHeaderConfig()} />
+        </div>
+        
+        {/* Horizontal Progress Bar */}
+        <div className="mb-6">
+          <SidebarContent currentStep={currentStep} />
         </div>
         
         <Page
           layout="single-column"
           sections={sections}
-          sidebar={<SidebarContent currentStep={currentStep} />}
-          sidebarPosition="left"
           className=""
           containerClassName="space-y-6"
         />
