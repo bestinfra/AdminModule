@@ -110,7 +110,6 @@ const AllTickets: React.FC = () => {
     ];
 
     const totalTickets = ticketData.length;
-    const resolvedTickets = ticketData.filter(ticket => ticket.status === 'Resolved').length;
 
     const headerComponent = (
         <PageHeader

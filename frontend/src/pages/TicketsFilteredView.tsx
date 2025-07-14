@@ -22,7 +22,6 @@ interface TicketData {
 const TicketsFilteredView: React.FC = () => {
     const [loading] = useState(false);
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
-    const [filter, setFilter] = useState('all');
     const [filteredData, setFilteredData] = useState<TicketData[]>([]);
     const [pageTitle, setPageTitle] = useState('All Tickets');
 
@@ -144,7 +143,6 @@ const TicketsFilteredView: React.FC = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.search);
         const filterParam = urlParams.get('filter') || 'all';
-        setFilter(filterParam);
 
         let filtered: TicketData[];
         let title: string;
