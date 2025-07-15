@@ -182,7 +182,6 @@ const LocationSidebar: React.FC = () => {
                 <button
                   className="focus:outline-none"
                   onClick={() => toggleCollapse(nodeKey)}
-                  style={{ background: 'none', border: 'none', padding: 0 }}
                 >
                   <svg
                     className={`w-4 h-4 mr-1 transition-transform ${collapsed[nodeKey] ? '' : 'rotate-90'}`}
