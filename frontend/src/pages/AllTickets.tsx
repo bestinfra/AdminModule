@@ -40,35 +40,7 @@ const AllTickets: React.FC = () => {
         }
     }, []);
 
-    // Handler for Total Tickets card click
-    const handleTotalTicketsClick = () => {
-        console.log('Total Tickets clicked!');
-        window.location.href = '/tickets-filtered?filter=all';
-    };
 
-    // Handler for High Priority tickets card click
-    const handleHighPriorityClick = () => {
-        console.log('High Priority clicked!');
-        window.location.href = '/tickets-filtered?filter=high-priority';
-    };
-
-    // Handler for Open tickets card click
-    const handleOpenTicketsClick = () => {
-        console.log('Open Tickets clicked!');
-        window.location.href = '/tickets-filtered?filter=open';
-    };
-
-    // Handler for In Progress tickets card click
-    const handleInProgressClick = () => {
-        console.log('In Progress clicked!');
-        window.location.href = '/tickets-filtered?filter=in-progress';
-    };
-
-    // Handler for Closed tickets card click
-    const handleClosedTicketsClick = () => {
-        console.log('Closed Tickets clicked!');
-        window.location.href = '/tickets-filtered?filter=closed';
-    };
 
 
     const ticketData: TicketData[] = [
@@ -290,7 +262,7 @@ const AllTickets: React.FC = () => {
                         showActions={true}
                         // onEdit={(row) => console.log('Edit ticket:', row)}
                         onDelete={(row) => console.log('Delete ticket:', row)}
-                        onView={(row) => navigate('/ticket-view')}
+                        onView={() => navigate('/ticket-view')}
                     />
                 </Holder>
             )
@@ -303,7 +275,7 @@ const AllTickets: React.FC = () => {
                 backButtonText="Back to Dashboard"
                 buttonsLabel="Create Ticket"
                 variant="primary"
-                onClick={() => console.log('Creating new ticket...')}
+                onClick={() => navigate('/create-ticket')}
                 showMenu={false}
                 showDropdown={false}
             />
@@ -331,7 +303,7 @@ const AllTickets: React.FC = () => {
             backButtonText="Back to Tickets Overview"
             buttonsLabel="Create Ticket"
             variant="primary"
-            onClick={() => console.log('Creating new ticket...')}
+            onClick={() => navigate('/create-ticket')}
             showMenu={true}
             showDropdown={true}
             menuItems={[
@@ -366,7 +338,7 @@ const AllTickets: React.FC = () => {
                     showActions={true}
                     // onEdit={(row) => console.log('Edit ticket:', row)}
                     onDelete={(row) => console.log('Delete ticket:', row)}
-                    onView={(row) => navigate('/ticket-view')}
+                    onView={() => navigate('/ticket-view')}
                 />
             </Holder>
         )

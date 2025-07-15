@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
 import PageHeader from '../components/global/PageHeader';
@@ -23,7 +23,8 @@ const columns: Column[] = [
 
 const Consumers: React.FC = () => {
   const [menuValue, setMenuValue] = useState('');
-  const [searchParams] = useSearchParams();
+  const params = useParams();
+  const location = useLocation();
   
   // Safely get navigate function, fallback to console.log if not available
   let navigate: any;
@@ -40,17 +41,26 @@ const Consumers: React.FC = () => {
     };
   }
 
-  // Check for filter parameter from URL
+  // Check for filter parameter from route
   useEffect(() => {
-    const filterParam = searchParams.get('filter');
-    if (filterParam === 'high-usage') {
+    console.log('Current pathname:', location.pathname);
+    console.log('Params uid:', params.uid);
+    
+    if (location.pathname === '/consumers/high-usage') {
+      console.log('Setting filter to high-usage');
       setMenuValue('high-usage');
+    } else if (params.uid && params.uid !== 'high-usage') {
+      // This is a regular consumer view, not a filter
+      console.log('This is a consumer view for UID:', params.uid);
     }
-  }, [searchParams]);
+  }, [location.pathname, params.uid]);
 
   // Add sNo property and filter based on menu selection
   const getFilteredData = () => {
     let filteredData = consumersData;
+    
+    console.log('Current menuValue:', menuValue);
+    console.log('Total consumers before filtering:', consumersData.length);
     
     if (menuValue === 'occupied') {
       // Filter to show occupied consumers (using first 80% as occupied)
@@ -61,8 +71,10 @@ const Consumers: React.FC = () => {
     } else if (menuValue === 'high-usage') {
       // Filter to show high usage consumers (reading > 1000)
       filteredData = consumersData.filter(consumer => consumer.reading > 1000);
+      console.log('High usage consumers found:', filteredData.length);
     }
     
+    console.log('Filtered data length:', filteredData.length);
     return filteredData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
   };
 
