@@ -76,6 +76,12 @@ const App: React.FC = () => {
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/asset-management" element={<AssetManagement />} />
                             <Route path="/profile" element={<Profile />} />
+                            <Route path="/profile/basic-info" element={<Profile />} />
+                            <Route path="/profile/password" element={<Profile />} />
+                            <Route path="/profile/activity-log" element={<Profile />} />
+                            <Route path="/profile/notifications" element={<Profile />} />
+                            <Route path="/profile/two-factor" element={<Profile />} />
+                            <Route path="/profile/account-status" element={<Profile />} />
                             <Route path="/all-tickets" element={<AllTickets />} />
                             <Route path="/tickets-filtered" element={<TicketsFilteredView />} />
                             <Route path="/forms" element={<Forms />} />

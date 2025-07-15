@@ -79,6 +79,7 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dtr.svg',
                 link: '/dtr-dashboard',
             },
+            
         ],
     },
     {
@@ -294,6 +295,33 @@ const defaultMenus: MenuCategory[] = [
                 title: 'Profile',
                 icon: '/icons/user-profile.svg',
                 link: '/profile',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Basic Information',
+                        link: '/profile/basic-info',
+                    },
+                    {
+                        title: 'Password',
+                        link: '/profile/password',
+                    },
+                    {
+                        title: 'Activity Log',
+                        link: '/profile/activity-log',
+                    },
+                    {
+                        title: 'Notifications',
+                        link: '/profile/notifications',
+                    },
+                    {
+                        title: 'Two-Factor Auth',
+                        link: '/profile/two-factor',
+                    },
+                    {
+                        title: 'Account Status',
+                        link: '/profile/account-status',
+                    },
+                ],
             },
         ],
     },
