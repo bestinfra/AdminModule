@@ -84,7 +84,7 @@ body {
     --color-dark-border: rgba(9, 27, 59, 1);
     --color-background-secondary: rgba(245, 248, 252, 1);
     --color-brand-blue: rgba(22, 59, 124, 1);
-    --color-grey: rgba(126, 126, 126, 1);
+    --color-grey: rgba(126, 126, 126, 1);                                              /* #7e7e7e */
     --color-accent: rgba(71, 97, 137, 1);
     --color-icon-hover: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)hue-rotate(190deg) brightness(90%) contrast(105%);
 

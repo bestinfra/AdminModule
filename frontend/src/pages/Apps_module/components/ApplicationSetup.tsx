@@ -20,9 +20,14 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
     const [isGettingLocation, setIsGettingLocation] = useState(false);
+    const [locationLocked, setLocationLocked] = useState(false);
 
     // Dynamic location data states
     const [countryOptions, setCountryOptions] = useState<{ value: string; label: string }[]>([]);
+
+    // Unified loading state and debounce ref for location lookups
+    const [locationLoading, setLocationLoading] = useState<'none' | 'city' | 'state'>('none');
+    const locationDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
     // Fetch countries on mount
     useEffect(() => {
@@ -64,6 +69,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                 if (address.city || address.town || address.village) {
                                     onInputChange({ target: { name: 'city', value: address.city || address.town || address.village } });
                                 }
+                                setLocationLocked(true);
                             }
                         })
                         .catch(error => {
@@ -130,11 +136,59 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
         }
     }, [formData.appName]);
 
+    // Fetch state/country from city
+    const fetchStateCountryFromCity = async (city: string) => {
+        if (!city) return;
+        setLocationLoading('city');
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json&addressdetails=1&limit=1`);
+            const data = await response.json();
+            if (data && data.length > 0 && data[0].address) {
+                const address = data[0].address;
+                if (address.state) {
+                    onInputChange({ target: { name: 'state', value: address.state } });
+                }
+                if (address.country) {
+                    onInputChange({ target: { name: 'country', value: address.country } });
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching state/country from city:', error);
+        } finally {
+            setLocationLoading('none');
+        }
+    };
+
+    // Fetch country from state
+    const fetchCountryFromState = async (state: string) => {
+        if (!state) return;
+        setLocationLoading('state');
+        try {
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?state=${encodeURIComponent(state)}&format=json&addressdetails=1&limit=1`);
+            const data = await response.json();
+            if (data && data.length > 0 && data[0].address && data[0].address.country) {
+                onInputChange({ target: { name: 'country', value: data[0].address.country } });
+            }
+        } catch (error) {
+            console.error('Error fetching country from state:', error);
+        } finally {
+            setLocationLoading('none');
+        }
+    };
+
     const handleFormInputChange = (name: string, value: FormInputValue) => {
         onInputChange({ target: { name, value } } as any);
-        // Clear submitted state when user starts editing
-        if (hasSubmitted) {
-            setHasSubmitted(false);
+        if (hasSubmitted) setHasSubmitted(false);
+        // Debounced location lookups
+        if (locationDebounceRef.current) clearTimeout(locationDebounceRef.current);
+        if (name === 'city' && typeof value === 'string' && value.trim() !== '') {
+            locationDebounceRef.current = setTimeout(() => {
+                fetchStateCountryFromCity(value.trim());
+            }, 500);
+        } else if (name === 'state' && typeof value === 'string' && value.trim() !== '' && (!formData.city || formData.city.trim() === '')) {
+            locationDebounceRef.current = setTimeout(() => {
+                fetchCountryFromState(value.trim());
+            }, 500);
         }
     };
 
@@ -350,7 +404,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         value={formData.addressLine}
                                         error={allErrors.addressLine}
                                         showError={!!allErrors.addressLine}
-                                        disabled={false}
+                                        disabled={locationLocked}
                                         onInputChange={handleFormInputChange}
                                         onInputBlur={handleFormInputBlur}
                                         fileInputRefs={fileInputRefs}
@@ -369,7 +423,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         value={formData.city}
                                         error={allErrors.city}
                                         showError={!!allErrors.city}
-                                        disabled={false}
+                                        disabled={locationLocked}
                                         onInputChange={handleFormInputChange}
                                         onInputBlur={handleFormInputBlur}
                                         fileInputRefs={fileInputRefs}
@@ -391,7 +445,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         value={formData.state}
                                         error={allErrors.state}
                                         showError={!!allErrors.state}
-                                        disabled={false}
+                                        disabled={locationLocked}
                                         onInputChange={handleFormInputChange}
                                         onInputBlur={handleFormInputBlur}
                                         fileInputRefs={fileInputRefs}
@@ -405,6 +459,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         options={countryOptions}
                                         placeholder="Select Country"
                                         error={allErrors.country}
+                                        disabled={locationLocked}
                                     />
                                 </div>
                             </div>
