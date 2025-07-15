@@ -45,7 +45,7 @@ const ChangePassword: React.FC = () => {
   const [next, setNext] = useState('');
   const [confirm, setConfirm] = useState('');
 
-  const getRequirementStatus = (test: (v: string) => boolean) => test(next);
+
 
   const content = (
     <div className="flex flex-col md:flex-row gap-8 w-full max-w-5xl">

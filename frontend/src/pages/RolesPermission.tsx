@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const permissionsData = [
   {
@@ -37,7 +37,7 @@ const permissionsData = [
 
 const RolesPermission: React.FC = () => {
   const navigate = useNavigate();
-  const { roleId } = useParams();
+
 
   return (
     <div className="w-full max-w-7xl flex flex-col gap-6 p-0">
