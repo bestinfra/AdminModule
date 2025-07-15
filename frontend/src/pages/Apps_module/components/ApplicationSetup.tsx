@@ -111,28 +111,10 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                 .replace(/[^a-z0-9]/g, '-')
                 .replace(/-+/g, '-')
                 .replace(/^-|-$/g, '');
-            
-            // Ensure the generated subdomain is not empty and has valid characters
-            if (generated && generated.length > 0) {
-                const fullUrl = `https://www.${generated}.bestinfra.app`;
-                
-                // Only update if the current subdomain is different from what we would generate
-                if (formData.subdomain !== fullUrl) {
-                    onInputChange({ target: { name: 'subdomain', value: fullUrl } });
-                }
-            } else {
-                // If generated subdomain is empty, clear the subdomain field
-                if (formData.subdomain !== '') {
-                    onInputChange({ target: { name: 'subdomain', value: '' } });
-                }
-            }
-            prevAppNameRef.current = formData.appName;
-        } else if (!formData.appName && prevAppNameRef.current !== '') {
-            // Only clear if subdomain is not already empty
-            if (formData.subdomain !== '') {
-                onInputChange({ target: { name: 'subdomain', value: '' } });
-            }
-            prevAppNameRef.current = '';
+            const fullUrl = `https://www.${generated}.bestinfra.app`;
+            onInputChange({ target: { name: 'subdomain', value: fullUrl } });
+        } else {
+            onInputChange({ target: { name: 'subdomain', value: '' } });
         }
     }, [formData.appName]);
 

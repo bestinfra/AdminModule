@@ -96,7 +96,7 @@ export const validateApplicationSetup = (formData: any): { isValid: boolean; err
   if (!formData.subdomain?.trim()) {
     errors.subdomain = 'Subdomain is required';
   } else if (!/^https:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/.test(formData.subdomain)) {
-    errors.subdomain = 'Subdomain must be a valid URL starting with https://www. and ending with .bestinfra.app';
+    errors.subdomain = 'Subdomain must be a valid URL like https://www.<name>.bestinfra.app';
   }
 
   if (!formData.addressLine?.trim()) {
