@@ -33,7 +33,21 @@ const meterData: MeterData[] = [
   { id: '8', meterNo: 'D4567890', uid: 'BI25GMRA008', consumerName: 'Emily Davis', location: '78, Lake View Apartments', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 67.23, lastUpdate: '2024-01-14', lastCommunication: '2024-01-14 16:20:00', phase: 'Single Phase', type: 'postpaid' },
   { id: '9', meterNo: 'E2345678', uid: 'BI25GMRA009', consumerName: 'David Brown', location: '45, Riverside Colony', status: 'connected', communicationStatus: 'communicating', lastReading: 156.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 13:30:00', phase: 'Single Phase', type: 'prepaid' },
   { id: '10', meterNo: 'F8901234', uid: 'BI25GMRA010', consumerName: 'Lisa Anderson', location: '12, Hill Top Residency', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 98.34, lastUpdate: '2024-01-13', lastCommunication: '2024-01-13 08:45:00', phase: 'Three Phase', type: 'postpaid' },
-  
+  { id: '11', meterNo: 'G5678901', uid: 'BI25GMRA011', consumerName: 'Robert Wilson', location: '34, Sunshine Apartments', status: 'connected', communicationStatus: 'communicating', lastReading: 445.67, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 15:20:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '12', meterNo: 'H2345678', uid: 'BI25GMRA012', consumerName: 'Jennifer Lee', location: '67, Green Meadows', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 223.45, lastUpdate: '2024-01-13', lastCommunication: '2024-01-13 12:30:00', phase: 'Three Phase', type: 'postpaid' },
+  { id: '13', meterNo: 'I8901234', uid: 'BI25GMRA013', consumerName: 'Michael Chen', location: '89, Riverside Drive', status: 'connected', communicationStatus: 'communicating', lastReading: 789.12, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 17:45:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '14', meterNo: 'J4567890', uid: 'BI25GMRA014', consumerName: 'Amanda Taylor', location: '123, Oak Street', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 156.78, lastUpdate: '2024-01-14', lastCommunication: '2024-01-14 09:15:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '15', meterNo: 'K1234567', uid: 'BI25GMRA015', consumerName: 'Christopher Brown', location: '456, Pine Avenue', status: 'connected', communicationStatus: 'communicating', lastReading: 567.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 14:30:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '16', meterNo: 'L7890123', uid: 'BI25GMRA016', consumerName: 'Jessica Garcia', location: '789, Maple Lane', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 334.56, lastUpdate: '2024-01-12', lastCommunication: '2024-01-12 11:20:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '17', meterNo: 'M3456789', uid: 'BI25GMRA017', consumerName: 'Daniel Martinez', location: '321, Cedar Road', status: 'connected', communicationStatus: 'communicating', lastReading: 678.90, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 16:10:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '18', meterNo: 'N9012345', uid: 'BI25GMRA018', consumerName: 'Ashley Rodriguez', location: '654, Birch Street', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 445.67, lastUpdate: '2024-01-11', lastCommunication: '2024-01-11 13:45:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '19', meterNo: 'O5678901', uid: 'BI25GMRA019', consumerName: 'Matthew Thompson', location: '987, Elm Court', status: 'connected', communicationStatus: 'communicating', lastReading: 789.01, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 18:20:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '20', meterNo: 'P2345678', uid: 'BI25GMRA020', consumerName: 'Nicole White', location: '147, Willow Way', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 223.45, lastUpdate: '2024-01-10', lastCommunication: '2024-01-10 10:30:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '21', meterNo: 'Q8901234', uid: 'BI25GMRA021', consumerName: 'Kevin Johnson', location: '258, Spruce Drive', status: 'connected', communicationStatus: 'communicating', lastReading: 456.78, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 19:15:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '22', meterNo: 'R4567890', uid: 'BI25GMRA022', consumerName: 'Stephanie Davis', location: '369, Aspen Lane', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 345.67, lastUpdate: '2024-01-09', lastCommunication: '2024-01-09 14:20:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '23', meterNo: 'S1234567', uid: 'BI25GMRA023', consumerName: 'Ryan Miller', location: '741, Poplar Road', status: 'connected', communicationStatus: 'communicating', lastReading: 567.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 20:30:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '24', meterNo: 'T7890123', uid: 'BI25GMRA024', consumerName: 'Lauren Anderson', location: '852, Sycamore Street', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 234.56, lastUpdate: '2024-01-08', lastCommunication: '2024-01-08 16:45:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '25', meterNo: 'U3456789', uid: 'BI25GMRA025', consumerName: 'Brandon Wilson', location: '963, Magnolia Court', status: 'connected', communicationStatus: 'communicating', lastReading: 678.90, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 21:10:00', phase: 'Three Phase', type: 'prepaid' },
 ];
 
 
@@ -324,32 +338,6 @@ const ConnectDisconnect: React.FC = () => {
     setBulkActionType(null);
   }, []);
 
-  // Update bulk action type based on selected meters
-  React.useEffect(() => {
-    if (selectedMeters.length === 0) {
-      setBulkActionType(null);
-      return;
-    }
-
-    const selectedMeterData = meters.filter((m) =>
-      selectedMeters.includes(m.id)
-    );
-    const allDisconnected = selectedMeterData.every(
-      (m) => m.status === "disconnected"
-    );
-    const allConnected = selectedMeterData.every(
-      (m) => m.status === "connected"
-    );
-
-    if (allDisconnected) {
-      setBulkActionType("connect");
-    } else if (allConnected) {
-      setBulkActionType("disconnect");
-    } else {
-      setBulkActionType(null);
-    }
-  }, [selectedMeters, meters]);
-
   const actions = [
     {
       label: 'View Consumer',
@@ -402,6 +390,38 @@ const ConnectDisconnect: React.FC = () => {
 
   // Add sNo property to each row for serial number
   const tableData = filteredMeters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+
+  // Update bulk action type based on selected meters
+  React.useEffect(() => {
+    if (selectedMeters.length === 0) {
+      setBulkActionType(null);
+      return;
+    }
+
+    const selectedMeterData = filteredMeters.filter((m) =>
+      selectedMeters.includes(m.id)
+    );
+    
+    if (selectedMeterData.length === 0) {
+      setBulkActionType(null);
+      return;
+    }
+
+    const allOnline = selectedMeterData.every(
+      (m) => m.communicationStatus === "communicating"
+    );
+    const allOffline = selectedMeterData.every(
+      (m) => m.communicationStatus === "non-communicating"
+    );
+
+    if (allOffline) {
+      setBulkActionType("connect");
+    } else if (allOnline) {
+      setBulkActionType("disconnect");
+    } else {
+      setBulkActionType(null);
+    }
+  }, [selectedMeters, filteredMeters]);
 
   // Define columns for the meter data
   const columns = [
@@ -651,7 +671,7 @@ const ConnectDisconnect: React.FC = () => {
 
           <Card
             title="Auto Triggered Disconnects"
-            value={`${meters.filter(m => m.status === 'connected').length}/${meters.length}`}
+            value={`${meters.filter(m => m.status === 'connected').length}`}
             icon="/icons/meter-bolt.svg"
             loading={isLoading}
             onValueClick={() => {
@@ -687,12 +707,13 @@ const ConnectDisconnect: React.FC = () => {
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Bulk Connect Meters
                 </h3>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-center gap-3">
                   <Button
                     label="Connect Selected"
                     variant="primary"
                     onClick={() => handleBulkAction("connect")}
                     disabled={actionLoading}
+                    className="w-full max-w-xs"
                   />
                   <span className="text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
@@ -701,16 +722,18 @@ const ConnectDisconnect: React.FC = () => {
               </div>
             )}
             {bulkActionType === "disconnect" && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg ">
-                <div className="flex items-center justify-between">
-                  <div className="flex">
-                    <Button
-                      label="Disconnect Selected"
-                      variant="danger"
-                      onClick={() => handleBulkAction("disconnect")}
-                      disabled={actionLoading}
-                    />
-                  </div>
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Bulk Disconnect Meters
+                </h3>
+                <div className="flex flex-col items-center gap-3">
+                  <Button
+                    label="Disconnect Selected"
+                    variant="danger"
+                    onClick={() => handleBulkAction("disconnect")}
+                    disabled={actionLoading}
+                    className="w-full max-w-xs"
+                  />
                   <span className="text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900 px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
                   </span>
@@ -718,18 +741,22 @@ const ConnectDisconnect: React.FC = () => {
               </div>
             )}
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-3">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Refresh All Meters
+              </h3>
+              <div className="flex flex-col items-center gap-3">
+                <Button
+                  label="Refresh All"
+                  variant="primary"
+                  onClick={refreshAllMeterStatuses}
+                  disabled={isLoading}
+                  className="w-full max-w-xs"
+                />
                 <span className="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
                   Real-time
                 </span>
               </div>
-              <Button
-                label="Refresh All"
-                variant="primary"
-                onClick={refreshAllMeterStatuses}
-                disabled={isLoading}
-              />
             </div>
           </div>
         </div>
@@ -743,10 +770,25 @@ const ConnectDisconnect: React.FC = () => {
         actions={actions}
         showActions
         searchable
-        pagination
+        pagination={true}
+        rowsPerPageOptions={[5, 10, 15, 25]}
+        initialRowsPerPage={10}
         selectable={true}
         selectedRows={selectedMeters}
-        onSelectionChange={setSelectedMeters}
+        onSelectionChange={(selectedIds) => {
+          // Handle "Select All" from pagination - if all current page items are selected, select all filtered items
+          const currentPageIds = tableData.map(row => row.id);
+          const allCurrentPageSelected = currentPageIds.every(id => selectedIds.includes(id));
+          
+          if (allCurrentPageSelected && selectedIds.length === currentPageIds.length) {
+            // Select all filtered meters
+            const allFilteredIds = filteredMeters.map(meter => meter.id);
+            setSelectedMeters(allFilteredIds);
+          } else {
+            // Normal selection
+            setSelectedMeters(selectedIds);
+          }
+        }}
         emptyMessage="No meters found"
         showHeader={true}
         headerTitle="Meter Connection Status"
