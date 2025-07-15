@@ -7,7 +7,6 @@ import Table from '../components/global/Table';
 import Holder from '../components/global/Holder';
 import PageHeader from '../components/global/PageHeader';
 import type { Column } from '../components/global/Table';
-import Input from '../components/forms/Input';
 
 interface TicketData {
     id: number;
@@ -41,35 +40,35 @@ const AllTickets: React.FC = () => {
         }
     }, []);
 
-    // Handler for Total Tickets card click
-    const handleTotalTicketsClick = () => {
-        console.log('Total Tickets clicked!');
-        window.location.href = '/tickets-filtered?filter=all';
-    };
+    // // Handler for Total Tickets card click
+    // const handleTotalTicketsClick = () => {
+    //     console.log('Total Tickets clicked!');
+    //     window.location.href = '/tickets-filtered?filter=all';
+    // };
 
-    // Handler for High Priority tickets card click
-    const handleHighPriorityClick = () => {
-        console.log('High Priority clicked!');
-        window.location.href = '/tickets-filtered?filter=high-priority';
-    };
+    // // Handler for High Priority tickets card click
+    // const handleHighPriorityClick = () => {
+    //     console.log('High Priority clicked!');
+    //     window.location.href = '/tickets-filtered?filter=high-priority';
+    // };
 
-    // Handler for Open tickets card click
-    const handleOpenTicketsClick = () => {
-        console.log('Open Tickets clicked!');
-        window.location.href = '/tickets-filtered?filter=open';
-    };
+    // // Handler for Open tickets card click
+    // const handleOpenTicketsClick = () => {
+    //     console.log('Open Tickets clicked!');
+    //     window.location.href = '/tickets-filtered?filter=open';
+    // };
 
-    // Handler for In Progress tickets card click
-    const handleInProgressClick = () => {
-        console.log('In Progress clicked!');
-        window.location.href = '/tickets-filtered?filter=in-progress';
-    };
+    // // Handler for In Progress tickets card click
+    // const handleInProgressClick = () => {
+    //     console.log('In Progress clicked!');
+    //     window.location.href = '/tickets-filtered?filter=in-progress';
+    // };
 
-    // Handler for Closed tickets card click
-    const handleClosedTicketsClick = () => {
-        console.log('Closed Tickets clicked!');
-        window.location.href = '/tickets-filtered?filter=closed';
-    };
+    // // Handler for Closed tickets card click
+    // const handleClosedTicketsClick = () => {
+    //     console.log('Closed Tickets clicked!');
+    //     window.location.href = '/tickets-filtered?filter=closed';
+    // };
 
 
     const ticketData: TicketData[] = [
@@ -291,7 +290,7 @@ const AllTickets: React.FC = () => {
                         showActions={true}
                         // onEdit={(row) => console.log('Edit ticket:', row)}
                         onDelete={(row) => console.log('Delete ticket:', row)}
-                        onView={(row) => navigate('/ticket-view')}
+                        // onView={(row) => navigate('/ticket-view')}
                     />
                 </Holder>
             )
@@ -367,7 +366,7 @@ const AllTickets: React.FC = () => {
                     showActions={true}
                     // onEdit={(row) => console.log('Edit ticket:', row)}
                     onDelete={(row) => console.log('Delete ticket:', row)}
-                    onView={(row) => navigate('/ticket-view')}
+                    // onView={(row) => navigate('/ticket-view')}
                 />
             </Holder>
         )
