@@ -13,6 +13,18 @@ const RemarksPanel: React.FC<RemarksPanelProps> = ({
   validationErrors, 
   remarks 
 }) => {
+  // Helper function to extract icon and text from remark
+  const parseRemark = (remark: string) => {
+    if (remark.includes('⚠️')) {
+      return { icon: '⚠️', text: remark.replace('⚠️', '').trim() };
+    } else if (remark.includes('💡')) {
+      return { icon: '💡', text: remark.replace('💡', '').trim() };
+    } else if (remark.includes('✓')) {
+      return { icon: '✓', text: remark.replace('✓', '').trim() };
+    }
+    return { icon: null, text: remark };
+  };
+
   return (
     <div className="col-span-1 bg-primary-lightest rounded-xl p-4">
       <div className="flex flex-col gap-4">
@@ -35,27 +47,40 @@ const RemarksPanel: React.FC<RemarksPanelProps> = ({
         <div className="space-y-2 max-h-96 overflow-y-auto">
           {remarks.length > 0 ? (
             remarks.map((remark, index) => {
-              const isWarning = remark.includes('⚠️');
-              const isTip = remark.includes('💡');
-              const isSuccess = remark.includes('✓');
+              const { icon, text } = parseRemark(remark);
+              const isWarning = icon === '⚠️';
+              const isTip = icon === '💡';
+              const isSuccess = icon === '✓';
               
               let borderColor = 'border-green-500';
               let bgColor = 'bg-green-50';
+              let iconColor = 'text-green-600';
               
               if (isWarning) {
                 borderColor = 'border-yellow-500';
                 bgColor = 'bg-yellow-50';
+                iconColor = 'text-yellow-600';
               } else if (isTip) {
                 borderColor = 'border-blue-500';
                 bgColor = 'bg-blue-50';
+                iconColor = 'text-blue-600';
               } else if (isSuccess) {
                 borderColor = 'border-green-500';
                 bgColor = 'bg-green-50';
+                iconColor = 'text-green-600';
               }
               
               return (
-                <div key={index} className={`text-sm text-gray-700 p-2 ${bgColor} rounded ${borderColor}`}>
-                  <span dangerouslySetInnerHTML={{ __html: remark }} />
+                <div key={index} className={`text-sm text-gray-700 p-3 ${bgColor} rounded ${borderColor} flex items-start gap-3`}>
+                  {icon && (
+                    <span className={`text-lg flex-shrink-0 ${iconColor}`}>
+                      {icon}
+                    </span>
+                  )}
+                  <span 
+                    className="flex-1"
+                    dangerouslySetInnerHTML={{ __html: text }} 
+                  />
                 </div>
               );
             })
