@@ -178,7 +178,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             name: 'appName',
                                             type: 'text',
                                             label: '',
-                                            placeholder: 'Enter your application name',
+                                            placeholder: 'Enter your Application Name',
                                             required: true,
                                             className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
                                         }}
@@ -198,7 +198,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             name: 'subdomain',
                                             type: 'text',
                                             label: '',
-                                            placeholder: 'Enter subdomain',
+                                            placeholder: 'Enter Sub Domain',
                                             required: true,
                                         }}
                                         value={formData.subdomain}
@@ -216,26 +216,24 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                         {/* Location Information Section */}
                         <div className="">
 
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <Dropdown
-                                        name="country"
-                                        value={formData.country}
-                                        onChange={handleDropdownChange}
-                                        options={countryOptions}
-                                        placeholder="Select Country"
-                                        error={errors.country}
-                                    />
-                                </div>
-                                <div>
-                                    <Dropdown
-                                        name="state"
-                                        value={formData.state}
-                                        onChange={handleDropdownChange}
-                                        options={stateOptions[formData.country] || []}
-                                        placeholder="Select State"
-                                        disabled={!formData.country}
-                                        error={errors.state}
+                                    <FormInput
+                                        input={{
+                                            name: 'addressLine',
+                                            type: 'text',
+                                            label: '',
+                                            placeholder: 'Enter Address Line',
+                                            required: true,
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                        }}
+                                        value={formData.addressLine}
+                                        error={errors.addressLine}
+                                        showError={!!errors.addressLine}
+                                        disabled={false}
+                                        onInputChange={handleFormInputChange}
+                                        onInputBlur={handleFormInputBlur}
+                                        fileInputRefs={fileInputRefs}
                                     />
                                 </div>
                                 <div>
@@ -250,6 +248,31 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                     />
                                 </div>
                             </div>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                <div>
+                                    <Dropdown
+                                        name="state"
+                                        value={formData.state}
+                                        onChange={handleDropdownChange}
+                                        options={stateOptions[formData.country] || []}
+                                        placeholder="Select State"
+                                        disabled={!formData.country}
+                                        error={errors.state}
+                                    />
+                                </div>
+                                <div>
+                                    <Dropdown
+                                        name="country"
+                                        value={formData.country}
+                                        onChange={handleDropdownChange}
+                                        options={countryOptions}
+                                        placeholder="Select Country"
+                                        error={errors.country}
+                                    />
+                                </div>
+                            </div>
+                        
                         </div>
 
                         {/* Project Configuration Section */}
@@ -357,7 +380,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
 
 
                         {/* Submit Button */}
-                        <div className="flex justify-end pt-6">
+                        <div className="flex justify-end">
                             <Button
                                 label="Next Step"
                                 type="submit"
