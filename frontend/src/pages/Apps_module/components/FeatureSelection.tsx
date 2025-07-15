@@ -8,6 +8,8 @@ interface FeatureSelectionProps {
   errors: Record<string, string>;
   onModuleToggle: (moduleKey: string, newModules?: string[]) => void;
   onNext: (e: React.FormEvent<HTMLFormElement>) => void;
+  currentStep?: number;
+  onBack?: () => void;
 }
 
 // Module configuration with default and optional modules
@@ -35,7 +37,7 @@ const moduleConfig = {
   ]
 };
 
-const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, onModuleToggle, onNext }) => {
+const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, onModuleToggle, onNext, currentStep = 1, onBack }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const enabledModules = formData.modules || ['dashboard', 'consumer', 'user_management_default', 'role_management'];
 
@@ -211,8 +213,19 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           )}
         </div>
 
-        <div className="flex justify-end">
-          <Button label="Next" type="submit" variant="primary" />
+        <div className="flex justify-between items-center">
+          {currentStep > 1 && (
+            <span 
+              className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+              onClick={onBack}
+            >
+              <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
+              <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+            </span>
+          )}
+          <div className="ml-auto">
+            <Button label="Next" type="submit" variant="primary" />
+          </div>
         </div>
       </form>
         </div>
