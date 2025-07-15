@@ -61,15 +61,14 @@ const ConnectDisconnect: React.FC = () => {
 
   const timeRangeLabels = {
     'Daily': 'All',
-    'Monthly': 'Pre Paid ', 
-    'Yearly': 'Post Paid'
+    'Monthly': 'Online', 
+    'Yearly': 'Offline'
   };
 
   // Handle time range change
   const handleTimeRangeChange = (range: string) => {
     setSelectedTimeRange(range);
     console.log('Time range changed to:', range);
-    
   };
 
   // Handle route parameters for initial filtering
@@ -360,11 +359,6 @@ const ConnectDisconnect: React.FC = () => {
       },
     },
     {
-      label: "Refresh Status",
-      icon: "/icons/refresh.svg",
-      onClick: (row: any) => refreshMeterStatus(row.meterNo),
-    },
-    {
       label: "Connect",
       icon: "/icons/connect.svg",
       onClick: (row: any) => handleConnect(row as MeterData),
@@ -378,16 +372,30 @@ const ConnectDisconnect: React.FC = () => {
     },
   ];
 
-  // Filter meters based on communication status
+  // Filter meters based on communication status and time range
   const filteredMeters = meters.filter(meter => {
-    console.log(`Checking meter ${meter.consumerName}: status=${meter.communicationStatus}, filter=${communicationFilter}`);
-    if (communicationFilter === 'all') return true;
-    const matches = meter.communicationStatus === communicationFilter;
-    console.log(`Meter ${meter.consumerName} matches filter: ${matches}`);
+    // First filter by communication status
+    let communicationMatches = true;
+    if (communicationFilter !== 'all') {
+      communicationMatches = meter.communicationStatus === communicationFilter;
+    }
+    
+    // Then filter by time range (communication status)
+    let timeRangeMatches = true;
+    if (selectedTimeRange === 'Monthly') { // Online
+      timeRangeMatches = meter.communicationStatus === 'communicating';
+    } else if (selectedTimeRange === 'Yearly') { // Offline
+      timeRangeMatches = meter.communicationStatus === 'non-communicating';
+    }
+    // For 'Daily' (All), timeRangeMatches remains true
+    
+    const matches = communicationMatches && timeRangeMatches;
+    console.log(`Meter ${meter.consumerName}: communication=${communicationMatches}, timeRange=${timeRangeMatches}, final=${matches}`);
     return matches;
   });
 
-  console.log('Current filter:', communicationFilter);
+  console.log('Current communication filter:', communicationFilter);
+  console.log('Current time range filter:', selectedTimeRange);
   console.log('Total meters:', meters.length);
   console.log('Filtered meters:', filteredMeters.length);
   console.log('Filtered meter names:', filteredMeters.map(m => m.consumerName));
@@ -402,12 +410,31 @@ const ConnectDisconnect: React.FC = () => {
     { key: 'uid', label: 'UID' },
     { key: 'consumerName', label: 'Consumer Name' },
     { key: 'location', label: 'Location' },
-    { key: 'status', label: 'Status' },
-    { key: 'communicationStatus', label: 'Communication' },
-    { key: 'lastReading', label: 'Last Reading' },
+    { 
+      key: 'communicationStatus', 
+      label: 'Communication',
+      render: (value: string | number | boolean | null | undefined) => {
+        const isCommunicating = value === 'communicating';
+        return (
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${
+              isCommunicating 
+                ? 'bg-green-500 animate-pulse' 
+                : 'bg-red-500'
+            }`}></div>
+            <span className={`text-sm font-medium ${
+              isCommunicating 
+                ? 'text-green-700 dark:text-green-400' 
+                : 'text-red-700 dark:text-red-400'
+            }`}>
+              {isCommunicating ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        );
+      }
+    },
     { key: 'lastUpdate', label: 'Last Update' },
     { key: 'lastCommunication', label: 'Last Communication' },
-    { key: 'phase', label: 'Phase' },
     { key: 'type', label: 'Type' },
   ];
 
