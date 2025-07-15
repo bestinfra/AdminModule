@@ -29,9 +29,14 @@ async function main() {
                 username: 'superadmin',
                 email: 'superadmin@superadmin.com',
                 password: hashedPassword,
-                role: 'superadmin'
+                role: 'SUPER_ADMIN'
             }
         });
+
+        console.log('✅ Super admin user created successfully');
+        console.log('👤 Username: superadmin');
+        console.log('📧 Email: superadmin@superadmin.com');
+        console.log('🔑 Password: superadmin123');
 
     } catch (error) {
         console.error('Error seeding database:', error);

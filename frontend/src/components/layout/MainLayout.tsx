@@ -18,6 +18,8 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
         switch (location.pathname) {
             case '/':
                 return 'Dashboard';
+            case '/super-admin':
+                return 'Super Admin Dashboard';
             case '/apps':
                 return 'Apps Management';
             case '/apps/pages':
@@ -34,8 +36,28 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
                 return 'Modules';
             case '/all-tickets':
                 return 'All Tickets';
+            case '/tickets-filtered':
+                // Get the filter from URL to show appropriate title
+                const urlParams = new URLSearchParams(window.location.search);
+                const filter = urlParams.get('filter');
+                switch (filter) {
+                    case 'high-priority':
+                        return 'High Priority Tickets';
+                    case 'open':
+                        return 'Open Tickets';
+                    case 'in-progress':
+                        return 'In Progress Tickets';
+                    case 'closed':
+                        return 'Closed Tickets';
+                    default:
+                        return 'All Tickets';
+                }
             case '/consumers':
                 return 'Consumers';
+            case '/users':
+                return 'Users';
+            case '/role-management':
+                return 'Role Management';
             case '/bills/prepaid':
                 return 'Prepaid Bills';
             case '/bills/postpaid':
@@ -60,7 +82,7 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
                     title={getPageTitle()}
                     onSidebarToggle={toggleSidebar}
                 />
-                <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
+                <main className="flex-1 px-6  py-4  bg-white overflow-auto dark:bg-primary-dark hide-scrollbar-y">
                     <Outlet />
                 </main>
             </div>

@@ -1,6 +1,6 @@
 import Input from '../forms/Input';
 import { useApp } from '../../context/AppContext';
-import { useAuth } from '../../context/AuthContext';
+import Cookies from 'js-cookie';
 import { useState } from 'react';
 
 interface HeaderAction {
@@ -19,59 +19,71 @@ interface HeaderProps {
     secondaryLogo?: string;
 }
 
-const demoActions: HeaderAction[] = [
-    {
-        icon: '/icons/tax-alt.svg',
-        alt: 'Notifications icon',
-        onClick: () => console.log('Notifications clicked'),
-        ariaLabel: 'Notifications',
-    },
-    {
-        icon: '/icons/full-screen.svg',
-        alt: 'Full screen icon',
-        onClick: () => console.log('Full screen clicked'),
-        ariaLabel: 'Toggle full screen',
-    },
-];
-
 function Header({
     title,
     onSidebarToggle,
     onSearch,
-    actions = demoActions,
-    secondaryLogo = '/images/gmr-logo.png',
+    actions,
 }: HeaderProps) {
     const { isSidebarCollapsed } = useApp();
+    const [isFullScreen, setIsFullScreen] = useState(false);
+
+    const toggleFullScreen = () => {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen();
+            setIsFullScreen(true);
+            console.log('Full screen',isFullScreen);
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+                setIsFullScreen(false);
+            }
+        }
+    };
+
+    const demoActions: HeaderAction[] = [
+        {
+            icon: '/icons/tax-alt.svg',
+            alt: 'Notifications icon',
+            onClick: () => console.log('Notifications clicked'),
+            ariaLabel: 'Notifications',
+        },
+        {
+            icon: '/icons/full-screen.svg',
+            alt: 'Full screen icon',
+            onClick: toggleFullScreen,
+            ariaLabel: 'Toggle full screen',
+        },
+    ];
 
     return (
-        <header className="border-b border-b-primary-border dark:border-dark-border dark:bg-primary-dark flex items-center justify-between px-6 py-4 h-24">
+        <header className="border-b border-primary-border flex items-center justify-between px-6 py-4">
             <nav className="flex items-center gap-4">
-                <button
-                    className="p-2 bg-primary-lightest dark:bg-dark-secondary w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
+                <figure
+                    className="p-2 bg-stat-icon-gradient  w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
                     onClick={onSidebarToggle}
                     aria-label="Toggle sidebar">
                     <img
                         src="/icons/arrow-left-from-arc.svg"
                         alt="Menu"
-                        className={`h-6 w-6 ${
+                        className={`h-6 w-6 custom-filter ${
                             isSidebarCollapsed ? 'rotate-180' : ''
                         }`}
                     />
-                </button>
-                <h1 className="text-base dark:text-white">{title}</h1>
+                </figure>
+                <h1 className="text-base text-primary-dark dark:text-white">{title}</h1>
             </nav>
-
             <section
                 className="flex-1 max-w-2xl mx-8"
                 aria-label="Search section">
                 <Input onSearch={onSearch} />
             </section>
-
-            <nav className="flex items-center gap-4" aria-label="User actions">
-                {actions.map((action, index) => (
-                    <button
+ {/* User actions */}
+            <nav className="flex items-center gap-4" aria-label="User actions">  
+                {(actions || demoActions).map((action, index) => (
+                    <figure
                         key={index}
-                        className={`p-2 w-8 h-8 bg-primary-lightest dark:bg-dark-secondary rounded-full flex items-center justify-center ${
+                        className={`p-2 w-8 h-8 bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center cursor-pointer ${
                             action.className || ''
                         }`}
                         onClick={action.onClick}
@@ -81,7 +93,7 @@ function Header({
                             alt={action.alt}
                             className="h-6 w-6"
                         />
-                    </button>
+                    </figure>
                 ))}
                 <UserProfile />
             </nav>
@@ -89,16 +101,35 @@ function Header({
     );
 }
 
-// User profile component - just image like before
+// Logout button component
 function UserProfile() {
+    const handleLogout = () => {
+        // Clear all cookies
+        const allCookies = Cookies.get();
+        Object.keys(allCookies).forEach((cookieName) => {
+            Cookies.remove(cookieName);
+        });
+
+        // Clear all storage
+        localStorage.clear();
+        sessionStorage.clear();
+        
+        // Redirect to logout page
+        window.location.href = '/auth/logout';
+    };
+
     return (
-        <div className="p-2 flex items-center justify-center">
+        <figure
+            onClick={handleLogout}
+            className="p-2 flex bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200"
+            aria-label="Logout"
+        >
             <img
-                src="/images/gmr-logo.png"
-                alt="User profile"
-                className="w-10"
+                src="/icons/logout.svg"
+                alt="Logout"
+                className="cursor-pointer"
             />
-        </div>
+        </figure>
     );
 }
 

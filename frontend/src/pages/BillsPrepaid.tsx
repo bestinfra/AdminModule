@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import Card from '../components/global/Card';
-import Button from '../components/global/Button';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
 import Table from '../components/global/Table';
 import type { Column } from '../components/global/Table';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 
 const cardData = [
   {
@@ -76,11 +71,11 @@ const rechargeData = [
     subtitle2: '0 sent Today',
   },
   {
-    title: 'Auto Disconnects Triggered',
-    value: '0',
+    title: 'Auto Triggered Disconnects',
+    value: '4',
     icon: '/icons/disconnect.svg',
-    previousValue: 'vs. Yesterday Yesterday',
-    subtitle2: '0 Consumer Today',
+    previousValue: 'vs. 2 Yesterday',
+    subtitle2: '4 Consumers Today',
   },
 ];
 
@@ -103,28 +98,35 @@ const tableData = [
 const BillsPrepaid: React.FC = () => {
   const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
 
+
   // Header component
-  const headerComponent = createHeaderComponent(
-    'Prepaid Overview',
-    'Monitor prepaid billing and transaction status',
-    'Last Updated on 05/07/2025, 04:23 pm'
+  const headerComponent = (
+    <PageHeader
+      title="Prepaid Overview"
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Dashboard"
+      buttonsLabel="Generate Report"
+      variant="primary"
+      onClick={() => console.log('Generating prepaid report...')}
+      showMenu={true}
+      showDropdown={true}
+      menuItems={[
+        { id: 'all', label: 'All Transactions' },
+        { id: 'success', label: 'Success' },
+        { id: 'failed', label: 'Failed' },
+        { id: 'pending', label: 'Pending' },
+        { id: 'low-balance', label: 'Low Balance' },
+        { id: 'recharge', label: 'Recharge' },
+        { id: 'consumption', label: 'Consumption' }
+      ]}
+      onMenuItemClick={(itemId) => {
+        console.log(`Filter by: ${itemId}`);
+        // TODO: Implement filtering logic based on selection
+      }}
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Generate Report', onClick: () => console.log('Generating report...'), variant: 'primary' },
-    { label: 'Export Data', onClick: () => console.log('Exporting data...'), variant: 'outline' },
-    { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
-  ]);
-
   
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: 'Prepaid Billing ID: PREPAID-001',
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // Overview Cards Section
   const overviewCardsSection: Section = {
@@ -199,12 +201,9 @@ const BillsPrepaid: React.FC = () => {
       layout="single-column"
       sections={[overviewCardsSection, rechargeUsageSection, transactionsTableSection]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
-      className="p-6"
+      className=""
       sectionClassName=""
-
     />
   );
 };

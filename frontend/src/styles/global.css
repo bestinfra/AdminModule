@@ -52,7 +52,11 @@
 }
 
 * {
-    font-family: 'Manrope';
+    font-family: 'Manrope', sans-serif !important;
+}
+
+body {
+    font-family: 'Manrope', sans-serif !important;
 }
 
 @theme {
@@ -66,7 +70,6 @@
     --color-secondary-2: rgba(233, 239, 255, 1);
     --color-dark-border: rgba(75, 85, 99, 1);
 
-
     --color-idle: rgba(204, 204, 204, 1);
     --color-success: rgba(46, 213, 115, 1);
     --color-warning: rgba(255, 171, 0, 1);
@@ -76,75 +79,81 @@
     --color-danger: rgba(255, 71, 87, 1); */
     /* --color-brand: rgba(85, 181, 108, 1);   */
 
-
-
     /* new added colors */
-    /* --color-border:rgba(233, 239, 255, 1); 
-    --color-dark-border: rgba(9, 27, 59, 1); 
+    --color-border: rgba(233, 239, 255, 1);
+    --color-dark-border: rgba(9, 27, 59, 1);
     --color-background-secondary: rgba(245, 248, 252, 1);
     --color-brand-blue: rgba(22, 59, 124, 1);
-    --color-grey:rgba(126, 126, 126, 1);
+    --color-grey: rgba(126, 126, 126, 1);
     --color-accent: rgba(71, 97, 137, 1);
-    --color-icon-hover: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)hue-rotate(190deg) brightness(90%) contrast(105%); */
+    --color-icon-hover: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)hue-rotate(190deg) brightness(90%) contrast(105%);
 
-    
-  /*  Primary Colors  */
-  --color-primary:rgba(22, 59, 124, 1);              
-  --color-primary-dark: rgba(4, 19, 40, 1);         
-  --color-primary-light: rgba(0, 92, 142, 1);         
-  --color-primary-bg: rgba(239, 239, 239, 1);         
-  --color-primary-deep: rgba(32, 45, 89, 1);          
-  --color-primary-deep-light: rgba(32, 45, 89, 0.05); 
-  --color-primary-bg-light: rgba(220, 231, 236, 1);   
-  --color-primary-lightest:rgba(245, 248, 252, 1);     
-  --color-primary-dark-light: rgba(6, 21, 45, 1);     
+    --color-text-primary: rgba(38, 38, 38, 1);
+    --color-text-secondary: rgba(126, 126, 126, 1);
+    --color-text-tertiary: rgba(71, 97, 137, 1);
+    --color-text-quaternary: rgba(9, 27, 59, 1);
 
-  /* Secondary Colors / Success Colors */
-  --color-secondary: rgba(85, 181, 108, 1);           
-  --color-secondary-light: rgba(187, 225, 196, 1);  
-  --color-positive: rgba(2, 148, 71, 1);             
+    /*  Primary Colors  */
+    --color-primary: rgba(22, 59, 124, 1);    /* #163b7c  (blue)*/
+    --color-primary-dark: rgba(4, 19, 40, 1);
+    --color-primary-light: rgba(0, 92, 142, 1);
+    --color-primary-bg: rgba(239, 239, 239, 1);
+    --color-primary-deep: rgba(32, 45, 89, 1);
+    --color-primary-deep-light: rgba(32, 45, 89, 0.05);
+    --color-primary-bg-light: rgba(220, 231, 236, 1);
+    --color-primary-lightest: rgba(245, 248, 252, 1);
+    --color-primary-dark-light: rgba(6, 21, 45, 1);
 
-  /* Warning Colors / Caution Colors */
-  --color-warning: rgba(237, 140, 34, 1);             
-  --color-warning-alt: rgba(255, 209, 8, 1);          
+    /* Secondary Colors / Success Colors */
+    --color-secondary: rgba(85, 181, 108, 1);
+    /* #55b56c  (green)*/
+    --color-secondary-light: rgba(187, 225, 196, 1);
+    /* #bbe1c4  (green)*/
+    --color-positive: rgba(2, 148, 71, 1);
+    /* #029447  (green)*/
 
-  /* Danger Colors / Error Colors */
-  --color-danger: rgba(220, 39, 44, 1);               
-  --color-danger-alt: rgba(255, 124, 92, 1);          
-  --color-danger-light: rgba(255, 124, 92, 0.05);     
+    /* Warning Colors / Caution Colors */
+    --color-warning: rgba(237, 140, 34, 1);
+    --color-warning-alt: rgba(255, 209, 8, 1);
 
-  /* Accent Colors / Info Colors */
-  --color-accent: rgba(0, 209, 178, 1);               
-  --color-accent-light: rgba(0, 209, 178, 0.05);      
+    /* Danger Colors / Error Colors */
+    --color-danger: rgba(220, 39, 44, 1);
+    --color-danger-alt: rgba(255, 124, 92, 1);
+    --color-danger-light: rgba(255, 124, 92, 0.05);
 
-  /* Neutral Colors / Greys */
-  --color-neutral: rgba(126, 126, 126, 1);            
-  --color-neutral-dark: rgba(60, 60, 60, 1);          
-  --color-neutral-darker: rgba(38, 38, 38, 1);        
-  --color-neutral-light: rgba(174, 189, 209, 1);      
-  --color-surface: rgba(255, 255, 255, 1);            
-  
-  /* Info Colors */
-  --color-info:none;
-  --color-subinfo:rgba(71, 97, 137, 1); 
+    /* Accent Colors / Info Colors */
+    --color-accent: rgba(0, 209, 178, 1);
+    --color-accent-light: rgba(0, 209, 178, 0.05);
+
+    /* Neutral Colors / Greys */
+    --color-neutral: rgba(126, 126, 126, 1);
+    --color-neutral-dark: rgba(60, 60, 60, 1);
+    --color-neutral-darker: rgba(38, 38, 38, 1);
+    --color-neutral-light: rgba(174, 189, 209, 1);
+    --color-surface: rgba(255, 255, 255, 1);
+
+    /* Info Colors */
+    --color-info: none;
+    --color-subinfo: rgba(71, 97, 137, 1);
+    /* #476189 */
 
     /* Border Colors */
-    --color-primary-border:rgba(233, 239, 255, 1);
+    --color-primary-border: rgb(233, 239, 255);
     --color-dark-border: rgba(9, 27, 59, 1);
 
     /* Gradient Colors */
-    --color-gradient-primary: linear-gradient(0deg, var(--color-secondary-light), var(--color-primary-transparent));
-    --color-gradient-secondary: linear-gradient(0deg, var(--color-primary), var(--color-primary-transparent));
+    --color-gradient-primary: linear-gradient(135deg, var(--color-primary), var(--color-primary-light));
+    --color-gradient-secondary: linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light));
 
 
     /* Transperent Colors */
-    --color-primary-transparent: rgba(85, 181, 108, 0); 
+    --color-primary-transparent: rgba(85, 181, 108, 0);
 
 
-  /* === Utility / Misc === */
-  --color-test: rgba(63, 104, 178, 1);                
+    /* === Utility / Misc === */
+    --color-test: rgba(63, 104, 178, 1);
 
-/* Color customs */
+    /* Color customs */
     --color-custom-primary: rgba(32, 45, 89, 1);
     --color-custom-secondary: rgba(85, 181, 108, 1);
     --color-custom-warning: rgba(237, 140, 34, 1);
@@ -161,10 +170,12 @@
     --color-custom-surface-light: rgba(255, 255, 255, 0.8);
 
 
+    /* Shadow colors  */
+    --color-shadow-primary: rgba(220, 228, 239, 1);
+    --color-shadow-secondary: rgba(220, 228, 239, 1);
 
-
-
-
+    /* Icon Colors */    
+    --color-stat-icon-gradient: linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0));
 
 }
 
@@ -172,9 +183,11 @@
     0% {
         opacity: 1;
     }
+
     50% {
         opacity: 0.5;
     }
+
     100% {
         opacity: 1;
     }
@@ -198,27 +211,51 @@
     display: none;
 }
 
+/* Hide vertical scrollbar but keep scroll functionality */
+.hide-scrollbar-y {
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+}
+
+.hide-scrollbar-y::-webkit-scrollbar {
+    display: none;
+    /* WebKit browsers */
+}
+
+/* Alternative approach using overflow-y: scroll with hidden scrollbar */
+.scroll-y-hidden {
+    overflow-y: scroll;
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* Internet Explorer 10+ */
+}
+
+.scroll-y-hidden::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
 img {
     user-select: none;
     -webkit-user-drag: none;
 }
 
 .icon-filter {
-    filter: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)
-        hue-rotate(190deg) brightness(90%) contrast(105%);
+    filter: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%) hue-rotate(190deg) brightness(90%) contrast(105%);
 }
 
 .group:hover .group-hover\:icon-filter {
-    filter: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)
-        hue-rotate(190deg) brightness(90%) contrast(105%);
+    filter: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%) hue-rotate(190deg) brightness(90%) contrast(105%);
 }
 
 .dark .icon-dark-filter {
-    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%)
-        hue-rotate(0deg) brightness(100%) contrast(100%);
+    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(100%) contrast(100%);
 }
 
-@layer components {
+/* @layer components {
     
     .button {
         font-family: 'Manrope', sans-serif;
@@ -291,82 +328,95 @@ img {
         transition: all var(--ease-in-out) 0.3s;
     } */
 
-    /* .button.secondary:hover {
+/* .button.secondary:hover {
         background-color: var(--color-primary-50);
         color: var(--color-secondary);
         border: 0.125rem solid var(--color-secondary);
         transition: all var(--ease-in-out) 0.3s;
     } */
 
-    /* .button.outline:hover {
+/* .button.outline:hover {
         background-color: var(--color-primary);
         color: var(--color-primary-50);
         border: 0.125rem solid var(--color-primary);
         transition: all var(--ease-in-out) 0.3s;
     } */
-     /* Input Fields */
-     .input {
-        width: 100%;
-        padding: 0.8rem 1rem;
-        font-size: 1rem;
-        border-radius: 1.5rem;
+/* Input Fields */
+/* .input {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    transition: all 0.2s ease;
+}
 
-        border: 1px solid var(--color-border);
-        background-color: white;
-        color: var(--color-main);
-        transition: all 0.2s ease;
-    }
+.input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
 
-    .input:focus {
-        outline: none;
-        border-color: var(--color-border);
-    }
+.input:disabled {
+    color: #9ca3af;
+    background-color: #f9fafb;
+    cursor: not-allowed;
+}
 
-    .input:disabled {
-        background-color: var(--color-muted);
-        color: var(--color-light);
-        cursor: not-allowed;
-    }
+.dark .input {
+    background-color: #1f2937;
+    color: white;
+    border-color: #374151;
+}
 
-    .dark .input {
-        background-color: var(--color-dark-primary);
-        color: white;   
-    }
+.dark .input:focus {
+    border-color: #3b82f6;
+}
 
-    .dark .input:focus {
-        border-color: var(--color-border);
-    }
+/* Textarea */
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+} */
 
-    /* Textarea */
-    .textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
+/* Select */
+.select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg fill='gray' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+}
 
-    /* Select */
-    .select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg fill='gray' viewBox='0 0 24 24'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 0.75rem center;
-        background-size: 1rem;
-        padding-right: 2.5rem;
-    }
+/* Label */
+.label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+}
 
-    /* Label */
-    .label {
+.dark .label {
+    color: #e5e7eb;
+}
+
+/* Label */
+/* .label {
         display: block;
-        font-size: 1rem;
         font-weight: 500;
         color: var(--color-main);
     }
 
     .dark .label {
         color: white;
-    }   
+    }    */
 
-    /* Gradient Background Classes */
-    .bg-gradient-primary {
+/* Gradient Background Classes */
+.bg-gradient-primary {
         background: var(--color-gradient-primary);
     }
     
@@ -374,5 +424,28 @@ img {
         background: var(--color-gradient-secondary);
     }
 
+/* Font utilities */
+.font-manrope {
+    font-family: 'Manrope', sans-serif !important;
 }
 
+/* Force input placeholder color to gray-400 and background to white */
+/* input::placeholder {
+  color: var(--color-neutral) !important; 
+  opacity: 1;
+}
+input {
+  background-color: #fff !important;
+}  */
+
+/* Remove browser autofill blue/yellow background for input fields */
+/* input:-webkit-autofill,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: #111 !important;
+  caret-color: #111 !important;
+  transition: background-color 5000s ease-in-out 0s;
+} */

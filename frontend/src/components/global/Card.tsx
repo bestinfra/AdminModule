@@ -9,9 +9,11 @@ interface CardProps {
     subtitle2?: string;
     loading?: boolean;
     onValueClick?: () => void; // new prop
+    iconStyle?: React.CSSProperties; // new prop for custom icon styling
 }
 
 import CardSkeleton from '../skeletons/CardSkeleton';
+import '../../styles/custom.css';
 
 const Card = ({
     title,
@@ -24,20 +26,21 @@ const Card = ({
     subtitle2,
     loading = false,
     onValueClick, // new prop
+    iconStyle, // new prop
 }: CardProps) => {
     if (loading) {
         return <CardSkeleton />;
     }
 
     return (
-        <article className="rounded-3xl bg-primary-lightest shadow-md/20 shadow-black dark:bg-primary-dark-light dark:shadow-md/60 dark:shadow-black  dark:border dark:border-dark-border  ">
+        <article className="rounded-3xl custom-shadow w-full h-full min-h-[140px]">
             <section className="flex justify-between items-start p-5 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
-                <div className="space-y-2">
+                <div className="flex flex-col gap-4">
                     <h3 className="text-base text-main dark:text-white">
                         {title}
                     </h3>
                     <p
-                        className={`text-xl font-bold flex items-center gap-2 ${onValueClick ? 'cursor-pointer hover:underline' : ''}`}
+                        className={`text-2xl font-bold flex items-center gap-2 ${onValueClick ? 'cursor-pointer hover:text-blue-600 transition-colors duration-200' : ''}`}
                         style={{ color: 'var(--color-primary)' }}
                         onClick={onValueClick}
                     >
@@ -72,19 +75,19 @@ const Card = ({
                     )}
                 </div>
                 {icon && (
-                    <figure className="p-2 bg-gradient-primary  dark:bg-dark-secondary rounded-full w-12 h-12 flex items-center justify-center ">
-                        <img src={icon} alt={`${title} Icon`} className="w-5 h-5" />
+                    <figure className="p-2 bg-stat-icon-gradient rounded-full w-12 h-12 flex items-center justify-center ">
+                        <img src={icon} alt={`${title} Icon`} className="w-6 h-6" style={iconStyle} />
                     </figure>
                 )}
             </section>
             <footer className="flex justify-between px-5 py-3 space-y-1">
                 {subtitle1 && (
-                    <p className="text-gray-600 m-0 font-light text-main dark:text-subinfo text-sm">
+                    <p className="text-text-secondary font-normal text-sm">
                         {subtitle1}
                     </p>
                 )}
                 {subtitle2 && (
-                            <p className="text-gray-500 m-0 font-extralight text-main dark:text-subinfo text-sm">
+                    <p className="text-text-secondary font-normal text-sm">
                         {subtitle2}
                     </p>
                 )}

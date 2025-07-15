@@ -4,6 +4,8 @@ import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
 import Modal from '../components/global/Modal';
 import LoadingSpinner from '../components/global/LoadingSpinner';
+import PageHeader from '../components/global/PageHeader';
+import Card from '../components/global/Card';
 import meterConnectionAPI, { MeterConnectionAPI } from '../api/meterConnection';
 
 interface MeterData {
@@ -19,7 +21,16 @@ interface MeterData {
 }
 
 const meterData: MeterData[] = [
-  { id: '1', meterNo: 'A9345717', consumerName: 'Testing', location: '1007, Block B, Asian Sun City', status: 'disconnected', lastReading: 145.17, lastUpdate: '2024-01-15', phase: 'Single Phase', type: 'prepaid' },
+  { id: '1', meterNo: 'A9345717', consumerName: 'John Smith', location: '1007, Block B, Asian Sun City', status: 'disconnected', lastReading: 145.17, lastUpdate: '2024-01-15', phase: 'Single Phase', type: 'prepaid' },
+  { id: '2', meterNo: 'B1234567', consumerName: 'Sarah Johnson', location: '205, Tower A, Downtown Plaza', status: 'connected', lastReading: 89.45, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
+  { id: '3', meterNo: 'C7890123', consumerName: 'Mike Wilson', location: '15, Green Valley Society', status: 'connected', lastReading: 234.78, lastUpdate: '2024-01-16', phase: 'Three Phase', type: 'prepaid' },
+  { id: '4', meterNo: 'D4567890', consumerName: 'Emily Davis', location: '78, Lake View Apartments', status: 'disconnected', lastReading: 67.23, lastUpdate: '2024-01-14', phase: 'Single Phase', type: 'postpaid' },
+  { id: '5', meterNo: 'E2345678', consumerName: 'David Brown', location: '45, Riverside Colony', status: 'connected', lastReading: 156.89, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'prepaid' },
+  { id: '6', meterNo: 'F8901234', consumerName: 'Lisa Anderson', location: '12, Hill Top Residency', status: 'disconnected', lastReading: 98.34, lastUpdate: '2024-01-13', phase: 'Three Phase', type: 'postpaid' },
+  { id: '7', meterNo: 'G5678901', consumerName: 'Robert Taylor', location: '89, Central Park View', status: 'connected', lastReading: 178.92, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'prepaid' },
+  { id: '8', meterNo: 'H3456789', consumerName: 'Jennifer White', location: '34, Sunshine Heights', status: 'connected', lastReading: 123.45, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
+  { id: '9', meterNo: 'I9012345', consumerName: 'Michael Clark', location: '67, Ocean View Towers', status: 'disconnected', lastReading: 87.65, lastUpdate: '2024-01-12', phase: 'Three Phase', type: 'prepaid' },
+  { id: '10', meterNo: 'J6789012', consumerName: 'Amanda Lee', location: '23, Garden City Complex', status: 'connected', lastReading: 145.67, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
 ];
 
 const columns: Column[] = [
@@ -66,9 +77,12 @@ const ConnectDisconnect: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
-  const [debugMode, setDebugMode] = useState(false);
+  const [debugMode] = useState(false);
   const [lastApiResponse, setLastApiResponse] = useState<any>(null);
   const [apiLogs, setApiLogs] = useState<string[]>([]);
+  const [selectedMeters, setSelectedMeters] = useState<string[]>([]);
+  const [bulkActionType, setBulkActionType] = useState<'connect' | 'disconnect' | null>(null);
+
 
 
   const addApiLog = (message: string) => {
@@ -217,6 +231,73 @@ const ConnectDisconnect: React.FC = () => {
     }
   };
 
+
+
+  const handleBulkAction = async (action: 'connect' | 'disconnect') => {
+    if (selectedMeters.length === 0) return;
+    
+    setActionLoading(true);
+    setError(null);
+    
+    try {
+      const selectedMeterData = meters.filter(m => selectedMeters.includes(m.id));
+      const actionPromises = selectedMeterData.map(async (meter) => {
+        try {
+          if (action === 'connect') {
+            await meterConnectionAPI.connectMeter(meter.meterNo, 'Bulk connect operation');
+          } else {
+            await meterConnectionAPI.disconnectMeter(meter.meterNo, 'Bulk disconnect operation');
+          }
+          return { ...meter, status: (action === 'connect' ? 'connected' : 'disconnected') as 'connected' | 'disconnected' };
+        } catch (error) {
+          console.error(`Error in bulk ${action} for meter ${meter.meterNo}:`, error);
+          return meter;
+        }
+      });
+      
+      const updatedMeters = await Promise.all(actionPromises);
+      setMeters(prev => prev.map(meter => {
+        const updated = updatedMeters.find(um => um.id === meter.id);
+        return updated || meter;
+      }));
+      
+      setSelectedMeters([]);
+      setBulkActionType(null);
+      
+    } catch (error) {
+      console.error(`Error in bulk ${action}:`, error);
+      setError(`Failed to ${action} selected meters`);
+    } finally {
+      setActionLoading(false);
+    }
+  };
+
+  // Reset selection state when component mounts or when navigating back
+  React.useEffect(() => {
+    setSelectedMeters([]);
+    setBulkActionType(null);
+  }, []);
+
+  // Update bulk action type based on selected meters
+  React.useEffect(() => {
+    if (selectedMeters.length === 0) {
+      setBulkActionType(null);
+      return;
+    }
+    
+    const selectedMeterData = meters.filter(m => selectedMeters.includes(m.id));
+    const allDisconnected = selectedMeterData.every(m => m.status === 'disconnected');
+    const allConnected = selectedMeterData.every(m => m.status === 'connected');
+    
+    if (allDisconnected) {
+      setBulkActionType('connect');
+    } else if (allConnected) {
+      setBulkActionType('disconnect');
+    } else {
+      setBulkActionType(null);
+    }
+  }, [selectedMeters, meters]);
+
   const actions = [
     {
       label: 'Refresh Status',
@@ -241,22 +322,32 @@ const ConnectDisconnect: React.FC = () => {
   const tableData = meters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
 
   return (
-    <div className="p-6">
+    <div className="">
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Connect / Disconnect Meters</h1>
-        <div className="flex items-center gap-3">
-          <Button
-            label={debugMode ? "Hide Debug" : "Show Debug"}
-            variant="outline"
-            onClick={() => setDebugMode(!debugMode)}
-          />
-          <Button
-            label="Refresh Status"
-            variant="secondary"
-            onClick={refreshAllMeterStatuses}
-            disabled={isLoading}
-          />
-        </div>
+        <PageHeader
+          title="Connect / Disconnect Meters"
+          onBackClick={() => window.history.back()}
+          backButtonText="Back to Dashboard"
+          buttonsLabel="Refresh All"
+          variant="primary"
+          onClick={refreshAllMeterStatuses}
+          showMenu={true}
+          showDropdown={true}
+          menuItems={[
+            { id: 'export-csv', label: 'Export CSV' },
+            { id: 'recent-activity', label: 'Recent Activity' }
+          ]}
+                      onMenuItemClick={(itemId) => {
+              console.log(`Filter by: ${itemId}`);
+              if (itemId === 'export-csv') {
+                console.log('Export CSV action');
+              } else if (itemId === 'recent-activity') {
+                // Navigate to TicketsFilteredView page to show history
+                window.location.href = '/tickets-filtered?filter=all';
+              }
+              // TODO: Implement filtering logic based on selection
+            }}
+        />
       </div>
 
       {error && (
@@ -376,46 +467,134 @@ const ConnectDisconnect: React.FC = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Available for Control</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">{meters.length}</p>
-            </div>
-            <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-              <img src="/icons/meter-bolt.svg" alt="" className="w-6 h-6" />
-            </div>
-          </div>
-        </div>
+      {/* Enhanced Overview Section */}
+      <div className="mb-8">
+         
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Connected Meters</p>
-              <p className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {meters.filter(m => m.status === 'connected').length}
-              </p>
-            </div>
-            <div className="p-2 bg-green-100 dark:bg-green-900 rounded-lg">
-              <img src="/icons/connect.svg" alt="" className="w-6 h-6" />
-            </div>
-          </div>
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <Card
+            title="Total Meters"
+            value={meters.length}
+            icon="/icons/meter-bolt.svg"
+            loading={isLoading}
+            onValueClick={() => refreshAllMeterStatuses()}
+            subtitle1="Prepaid"
+            subtitle2="Postpaid"
+          />
+          
+          <Card
+            title={`Prepaid`}
+            value={meters.filter(m => m.type === 'prepaid').length}
+            icon="/icons/prepaid.svg"
+            loading={isLoading}
+            onValueClick={() => {
+              console.log('Filtering to show prepaid meters');
+            }}
+            subtitle1={`${meters.filter(m => m.type === 'prepaid' && m.status === 'connected').length} Connected`}
+            subtitle2={`${meters.filter(m => m.type === 'prepaid' && m.status === 'disconnected').length} Disconnected`}
+          />
+          
+          <Card
+            title={`Postpaid`}
+            value={meters.filter(m => m.type === 'postpaid').length}
+            icon="/icons/bills.svg"
+            loading={isLoading}
+            onValueClick={() => {
+              console.log('Filtering to show postpaid meters');
+            }}
+            subtitle1={`${meters.filter(m => m.type === 'postpaid' && m.status === 'connected').length} Connected`}
+            subtitle2={`${meters.filter(m => m.type === 'postpaid' && m.status === 'disconnected').length} Disconnected`}
+          />
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Disconnected Meters</p>
-              <p className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {meters.filter(m => m.status === 'disconnected').length}
-              </p>
+          <Card
+            title="Auto Triggered Disconnects"
+            value="4"
+            icon="/icons/disconnect.svg"
+            loading={isLoading}
+            onValueClick={() => {
+              console.log('Showing auto disconnect details');
+            }}
+            subtitle1=" 2 Yesterday"
+            subtitle2="4 Consumers Today"
+          />
+        </div>
             </div>
-            <div className="p-2 bg-red-100 dark:bg-red-900 rounded-lg">
-              <img src="/icons/disconnect.svg" alt="" className="w-6 h-6" />
+
+            {/* Quick Actions Section - Only show when meters are selected */}
+      {selectedMeters.length > 0 && (
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Quick Actions
+            </h3>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-500 dark:text-gray-400">Last updated:</span>
+              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                {new Date().toLocaleTimeString()}
+              </span>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            {bulkActionType === 'connect' && (  
+              <div className="bg-white flex flex-col gap-4 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                  Bulk Connect Meters
+                </h3>
+                <div className="flex items-center justify-between">
+                  <Button
+                    label="Connect Selected"
+                    variant="primary"
+                    onClick={() => handleBulkAction('connect')}
+                    disabled={actionLoading}
+                  />
+                  <span className="text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
+                    {selectedMeters.length} Selected
+                  </span>
+                </div>
+              </div>
+            )}
+            {bulkActionType === 'disconnect' && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg ">
+                <div className="flex items-center justify-between">
+                  <div className='flex'>  
+                  
+                    <Button
+                      label="Disconnect Selected"
+                      variant="danger"
+                      onClick={() => handleBulkAction('disconnect')}
+                      disabled={actionLoading}
+                    />
+                  </div>
+                  <span className="text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900 px-2 py-1 rounded-full">
+                    {selectedMeters.length} Selected
+                  </span>
+          </div>
+             
+               
+              </div>
+            )}
+
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
+                  Real-time
+                </span>
+            </div>
+              <Button
+                label="Refresh All"
+                variant="primary"
+                onClick={refreshAllMeterStatuses}
+                disabled={isLoading}
+              />
             </div>
           </div>
         </div>
+      )}
+      {/* Meter Table */}
+      <div className="mb-8">
+       <div className="mb-6">
+         
       </div>
 
       <Table
@@ -425,8 +604,17 @@ const ConnectDisconnect: React.FC = () => {
         showActions
         searchable
         pagination
+        selectable={true}
+        selectedRows={selectedMeters}
+        onSelectionChange={setSelectedMeters}
         emptyMessage="No meters found"
+        showHeader={true}
+        headerTitle="Meter Connection Status"
+        dateRange="Jan 2024 - Dec 2024"
       />
+      </div>
+
+
 
       <Modal
         isOpen={isModalOpen}

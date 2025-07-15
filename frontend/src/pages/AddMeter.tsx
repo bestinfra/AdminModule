@@ -42,7 +42,7 @@ const AddMeter: React.FC = () => {
     navigate(-1);
   };
 
-  const handleSave = (formData: any) => {
+  const handleSave = () => {
     // TODO: Add save logic
     alert('Saved!');
   };
@@ -57,7 +57,7 @@ const AddMeter: React.FC = () => {
     <Page
       layout="single-column"
       header={headerComponent}
-      className="p-2"
+      className=""
       sections={[{
         id: 'add-meter-form',
         component: (

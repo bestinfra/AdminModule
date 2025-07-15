@@ -5,7 +5,17 @@ export default {
         './src/**/*.{js,ts,jsx,tsx}',
         './src/**/*.css'
     ],
-    // Ensure CSS is processed during build
+    theme: {
+        extend: {
+            colors: {
+                'primary-border': 'var(--color-primary-border)',
+            },
+            fontFamily: {
+                'sans': ['Manrope', 'sans-serif'],
+                'manrope': ['Manrope', 'sans-serif']
+            }
+        }
+    },
     experimental: {
         optimizeUniversalDefaults: true
     }

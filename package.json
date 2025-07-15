@@ -1,0 +1,37 @@
+{
+  "name": "admin-module",
+  "version": "1.0.0",
+  "description": "Admin Module with Federation and CSS Sync",
+  "main": "createApp.cjs",
+  "scripts": {
+    "create-app": "node createApp.cjs",
+    "css-sync": "node scripts/sync-css.js sync",
+    "css-sync-watch": "node scripts/sync-css.js watch",
+    "css-sync-app": "node scripts/sync-css.js sync",
+    "dev": "concurrently \"npm run css-sync-watch\" \"cd frontend && npm run dev\"",
+    "dev-frontend": "cd frontend && npm run dev",
+    "dev-backend": "cd backend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "build-backend": "cd backend && npm run build",
+    "install-all": "cd frontend && npm install && cd ../backend && npm install"
+  },
+  "keywords": [
+    "admin",
+    "module",
+    "federation",
+    "react",
+    "vite"
+  ],
+  "author": "Admin Module Team",
+  "license": "MIT",
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "concurrently": "^8.2.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

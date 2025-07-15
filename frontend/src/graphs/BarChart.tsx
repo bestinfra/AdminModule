@@ -1,10 +1,13 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useApp } from '../context/AppContext';
+import TimeRangeSelector from '../components/global/TimeRangeSelector';
+
 interface SeriesData {
   name: string;
   data: number[];
 }
+
 interface BarChartProps {
   data?: number[];
   xAxisData?: string[];
@@ -19,7 +22,24 @@ interface BarChartProps {
   ariaLabel?: string;
   title?: string;
   description?: string;
+  // Header functionality props
+  showHeader?: boolean;
+  headerTitle?: string;
+  dateRange?: string;
+  availableTimeRanges?: string[];
+  initialTimeRange?: string;
+  onTimeRangeChange?: (range: string) => void;
+  onDownload?: (timeRange: string, viewType: string) => void;
+  showDownloadButton?: boolean;
+
+  // View toggle functionality props
+  showViewToggle?: boolean;
+  viewToggleOptions?: string[];
+  initialViewType?: string;
+  onViewTypeChange?: (viewType: string) => void;
+  showTableView?: boolean;
 }
+
 const BarChart: React.FC<BarChartProps> = React.memo(({
   data = [120, 200, 150, 80, 70, 110, 130],
   xAxisData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
@@ -34,18 +54,65 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
   ariaLabel = 'Bar chart',
   title,
   description,
+  // Header functionality props with defaults
+  showHeader = false,
+  headerTitle = 'Metrics',
+  dateRange = '',
+  availableTimeRanges = ['Daily', 'Monthly', 'Yearly'],
+  initialTimeRange = 'Daily',
+  onTimeRangeChange = () => {},
+  onDownload = () => {},
+  showDownloadButton = true,
+  showViewToggle = false,
+  viewToggleOptions = ['Graph', 'Table'],
+  initialViewType = 'Graph',
+  onViewTypeChange = () => {},
+  showTableView = false,
+  // tableColumns = [],
 }) => {
   const { isDarkMode: contextIsDarkMode } = useApp();
   const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
+
+  // Internal state for time range and view type
+  const [selectedTimeRange, setSelectedTimeRange] = useState(initialTimeRange);
+  const [currentViewType, setCurrentViewType] = useState(initialViewType);
+
+  // Helper function to get dynamic title based on selected time range
+  const getDynamicTitle = useCallback((timeRange: string) => {
+    return headerTitle.includes('Metrics') 
+      ? `${timeRange} ${headerTitle}` 
+      : `${timeRange} ${headerTitle}`;
+  }, [headerTitle]);
+
+  // Handle time range change
+  const handleTimeRangeChange = useCallback((range: string) => {
+    setSelectedTimeRange(range);
+    onTimeRangeChange(range);
+  }, [onTimeRangeChange]);
+
+  // Handle view type change
+  const handleViewTypeChange = useCallback((viewType: string) => {
+    setCurrentViewType(viewType);
+    onViewTypeChange(viewType);
+  }, [onViewTypeChange]);
+
+  // Handle download
+  const handleDownload = useCallback(() => {
+    onDownload(selectedTimeRange, currentViewType);
+  }, [onDownload, selectedTimeRange, currentViewType]);
+
   const getAxisColor = useCallback((lightVar: string, darkVar: string) =>
     isDarkMode ? `var(${darkVar})` : `var(${lightVar})`, [isDarkMode]);
+
   const defaultColors = [
     'var(--color-primary)', 'var(--color-secondary)', 'var(--color-accent)',
     'var(--color-warning)', 'var(--color-danger)', 'var(--color-neutral)',
     'var(--color-primary-light)', 'var(--color-secondary-light)',
     'var(--color-warning-alt)', 'var(--color-danger-alt)',
   ];
+
   const colors = seriesColors.length ? seriesColors : defaultColors;
+
   const formatTooltip = useCallback((
     params: Array<{
       axisValue: string;
@@ -66,6 +133,7 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
       ),
     ].join('');
   }, []);
+
   const option = useMemo(() => ({
     tooltip: {
       trigger: 'axis',
@@ -98,10 +166,10 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
         color: getAxisColor('--color-neutral-darker', '--color-surface'),
       },
     },
-    grid: { left: '0%', right: '0.1%', bottom: '0%', top: '13%', containLabel: true },
-    xAxis: {
-      type: 'category',
-      data: xAxisData,
+    grid: { left: '0%', right: '0.1%', bottom: '0%', top: '3%', containLabel: true },
+          xAxis: {
+        type: 'category',
+        data: xAxisData,
       axisLabel: {
         fontSize: '0.75rem',
         color: getAxisColor('--color-neutral-dark', '--color-surface'),
@@ -158,17 +226,115 @@ const BarChart: React.FC<BarChartProps> = React.memo(({
     colors, xAxisData, seriesData, showXAxisLabel, xAxisLabel, timeRange,
     showLegendInteractions, isDarkMode, getAxisColor, formatTooltip,
   ]);
-  return (
+
+  // Chart content component
+  const chartContent = (
     <div className="w-full h-full" role="img" aria-label={ariaLabel}>
       {title && <span className="sr-only">{title}</span>}
       {description && <span className="sr-only">{description}</span>}
-      <ReactECharts
-        option={option}
-        className="w-full"
-        style={{ height: typeof height === 'number' ? `${height}px` : height }}
-        opts={{ renderer: 'svg' }}
-      />
+      {showTableView && currentViewType === 'Table' ? (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-primary-border dark:border-dark-border">
+                <th className="text-left py-2 px-3 text-neutral-dark dark:text-surface font-medium">Date</th>
+                {seriesData.map((series) => (
+                  <th key={series.name} className="text-right py-2 px-3 text-neutral-dark dark:text-surface font-medium">
+                    {series.name}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {xAxisData.map((date, index) => (
+                <tr key={date} className="border-b border-primary-border dark:border-dark-border hover:bg-gray-50 dark:hover:bg-primary-dark-light">
+                  <td className="py-2 px-3 text-neutral-dark dark:text-surface">{date}</td>
+                  {seriesData.map((series) => (
+                    <td key={series.name} className="text-right py-2 px-3 text-neutral-dark dark:text-surface">
+                      {series.data[index]}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <ReactECharts
+          option={option}
+          className="w-full"
+          style={{ height: typeof height === 'number' ? `${height}px` : height }}
+          opts={{ renderer: 'svg' }}
+        />
+      )}
+    </div>
+  );
+
+
+
+  // If no header, return simple chart
+  if (!showHeader) {
+    return chartContent;
+  }
+
+  return (
+    <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+      {/* Header Section */}
+      <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] dark:bg-primary-dark-light rounded-t-3xl p-4">
+        <div className="font-medium text-neutral-darker dark:text-surface font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          {getDynamicTitle(selectedTimeRange)}
+          {dateRange && (
+            <span className="text-xs font-normal text-neutral-dark dark:text-surface ml-1 font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+              ({dateRange})
+            </span>
+          )}
+        </div>
+        <div className="flex items-center gap-2">
+          {showViewToggle && (
+            <div className="flex items-center gap-1 bg-white dark:bg-primary-dark rounded-lg border border-primary-border dark:border-dark-border p-1">
+              {viewToggleOptions.map((option) => (
+                <button
+                  key={option}
+                  onClick={() => handleViewTypeChange(option)}
+                  className={`px-3 py-1 text-xs rounded-md transition-colors ${
+                    currentViewType === option
+                      ? 'bg-primary text-white'
+                      : 'text-neutral-dark dark:text-surface hover:bg-gray-100 dark:hover:bg-primary-dark-light'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          )}
+          <TimeRangeSelector
+            availableTimeRanges={availableTimeRanges}
+            selectedTimeRange={selectedTimeRange}
+            handleTimeRangeChange={handleTimeRangeChange}
+          />
+          {showDownloadButton && (
+            <span 
+              className="cursor-pointer w-8 h-8 rounded-full bg-white dark:bg-primary-dark flex justify-center items-center border border-primary-border dark:border-dark-border hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
+              onClick={() => handleDownload()}
+              role="button"
+              aria-label="Download chart"
+            >
+              <img
+                alt="Download chart"
+                src="/icons/download-icon.svg"
+                className="w-4 h-4 [filter:var(--icon-color)]"
+              />
+            </span>
+          )}
+        </div>
+      </div>
+      
+      {/* Content Section */}
+      <div className="px-4 py-4">
+        {chartContent}
+      </div>
     </div>
   );
 });
+
 export default BarChart;

@@ -20,9 +20,18 @@ function createAppProject(formData) {
     modules
   } = formData;
 
-  // Create the project folder name
-  const projectFolderName = subdomain || appName?.toLowerCase().replace(/\s+/g, '-') || 'my-admin-app';
+  // Create the project folder name - use appName instead of subdomain to avoid special characters
+  const projectFolderName = appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app';
   const baseDir = path.join(__dirname, 'generated-apps', projectFolderName);
+  
+  // Debug logging to see what values we're working with
+  console.log('Debug Info:');
+  console.log('  appName:', appName);
+  console.log('  subdomain:', subdomain);
+  console.log('  projectFolderName:', projectFolderName);
+  console.log('  baseDir:', baseDir);
+  console.log('  modules:', modules);
+  console.log('  filtered modules:', modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)));
 
   // Helper to ensure directory exists
   function ensureDir(dir) {
@@ -34,11 +43,15 @@ function createAppProject(formData) {
   // Create base directory
   ensureDir(baseDir);
 
+  // Set up frontend directory
+  const frontendDir = path.join(baseDir, 'frontend');
+  ensureDir(frontendDir);
+
   // Helper to copy all icons and images
   function copyAllAssets() {
     // Copy all icons
-    const sourceIconsDir = path.join(__dirname, 'public', 'icons');
-    const destIconsDir = path.join(baseDir, 'public', 'icons');
+    const sourceIconsDir = path.join(__dirname, 'frontend', 'public', 'icons');
+    const destIconsDir = path.join(frontendDir, 'public', 'icons');
     ensureDir(destIconsDir);
 
     if (fs.existsSync(sourceIconsDir)) {
@@ -51,12 +64,13 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-      console.log(`✅ Copied ${iconFiles.length} icons to host app`);
+    } else {
+      console.log(`Icons directory not found: ${sourceIconsDir}`);
     }
 
     // Copy all images
-    const sourceImagesDir = path.join(__dirname, 'public', 'images');
-    const destImagesDir = path.join(baseDir, 'public', 'images');
+    const sourceImagesDir = path.join(__dirname, 'frontend', 'public', 'images');
+    const destImagesDir = path.join(frontendDir, 'public', 'images');
     ensureDir(destImagesDir);
 
     if (fs.existsSync(sourceImagesDir)) {
@@ -69,38 +83,46 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-      console.log(`✅ Copied ${imageFiles.length} images to host app`);
+    } else {
+      console.log(`Images directory not found: ${sourceImagesDir}`);
     }
 
     // Copy fonts directory
-    const sourceFontsDir = path.join(__dirname, 'public', 'fonts');
-    const destFontsDir = path.join(baseDir, 'public', 'fonts');
+    const sourceFontsDir = path.join(__dirname, 'frontend', 'public', 'fonts');
+    const destFontsDir = path.join(frontendDir, 'public', 'fonts');
     
-    if (fs.existsSync(sourceFontsDir)) {
-      ensureDir(destFontsDir);
-      const fontFiles = fs.readdirSync(sourceFontsDir);
-      fontFiles.forEach(fontName => {
-        const sourcePath = path.join(sourceFontsDir, fontName);
-        const destPath = path.join(destFontsDir, fontName);
-        
+    // Ensure Manrope font subdirectory exists in destination
+    const sourceManropeDir = path.join(sourceFontsDir, 'Manrope');
+    const destManropeDir = path.join(destFontsDir, 'Manrope');
+    if (fs.existsSync(sourceManropeDir)) {
+      ensureDir(destManropeDir);
+      const manropeFiles = fs.readdirSync(sourceManropeDir);
+      manropeFiles.forEach(fontName => {
+        const sourcePath = path.join(sourceManropeDir, fontName);
+        const destPath = path.join(destManropeDir, fontName);
         if (fs.statSync(sourcePath).isFile()) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-      console.log(`✅ Copied ${fontFiles.length} font files to host app`);
+      console.log(`Copied Manrope fonts to ${destManropeDir}`);
+    } else {
+      console.log(`Manrope fonts directory not found: ${sourceManropeDir}`);
     }
   }
 
   // Copy all assets (icons, images, fonts)
   copyAllAssets();
 
-  // Helper to copy all CSS files
-  function copyAllCSS() {
-    const cssDir = path.join(baseDir, 'src', 'styles');
+  // Helper to sync CSS files using the new sync utility
+  function syncCSSFiles() {
+    const cssDir = path.join(frontendDir, 'src', 'styles');
     ensureDir(cssDir);
     
-    // Copy all CSS files from src/styles
-    const sourceStylesDir = path.join(__dirname, 'src', 'styles');
+    // Import the sync utility
+    const { syncCSSToApp, transformCSSForGeneratedApp } = require('./scripts/sync-css.js');
+    
+    // Use the sync utility to copy and transform CSS files
+    const sourceStylesDir = path.join(__dirname, 'frontend', 'src', 'styles');
     
     if (fs.existsSync(sourceStylesDir)) {
       const cssFiles = fs.readdirSync(sourceStylesDir);
@@ -111,26 +133,25 @@ function createAppProject(formData) {
         if (fs.statSync(sourcePath).isFile() && cssFile.endsWith('.css')) {
           let cssContent = fs.readFileSync(sourcePath, 'utf8');
           
-          // Convert Tailwind CSS v4 syntax to v3 syntax for host app
-          cssContent = cssContent.replace(/@import 'tailwindcss';/g, '@tailwind base;\n@tailwind components;\n@tailwind utilities;');
+          // Use the transformCSSForGeneratedApp function for consistency
+          const transformedContent = transformCSSForGeneratedApp(cssContent);
           
-          // Convert @theme to :root for Tailwind CSS v3 compatibility
-          cssContent = cssContent.replace(/@theme {/g, ':root {');
-          
-          fs.writeFileSync(destPath, cssContent);
+          fs.writeFileSync(destPath, transformedContent);   
+          console.log(`✅ Synced ${cssFile} to ${projectFolderName}`);
         }
       });
-      console.log(`✅ Copied ${cssFiles.length} CSS files to host app`);
+    } else {
+      console.log(`CSS directory not found: ${sourceStylesDir}`);
     }
   }
 
-  // Copy all CSS files
-  copyAllCSS();
+  // Sync all CSS files using the new sync utility
+  syncCSSFiles();
 
   // Create the React project structure
   const projectStructure = {
     'package.json': JSON.stringify({
-      name: projectFolderName,
+      name: appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || projectFolderName,
       version: '0.1.0',
       private: true,
 
@@ -144,6 +165,7 @@ function createAppProject(formData) {
         react: '^19.1.0',
         'react-dom': '^19.1.0',
         'react-router-dom': '^6.8.0',
+        'js-cookie': '^3.0.5',
         '@types/react': '^18.0.28',
         '@types/react-dom': '^18.0.11',
         typescript: '^4.9.3',
@@ -208,7 +230,7 @@ export default defineConfig({
       remotes: {
         SuperAdmin: 'http://localhost:3000/assets/remoteEntry.js',
       },
-      shared: ['react', 'react-dom'],
+      shared: ['react', 'react-dom', 'react-router', 'react-router-dom'],
     }),
   ],
   build: {
@@ -218,7 +240,7 @@ export default defineConfig({
     cssCodeSplit: false,
   },
   server: {
-    port: 3001,
+    port: 1700,
     fs: {
       allow: ['..'],
     },
@@ -237,7 +259,7 @@ module.exports = {
       colors: {
         primary: '${primaryColor || '#3B82F6'}',
         'primary-lightest': '#F0F9FF',
-        'primary-border': '#E5E7EB',
+        'primary-border': 'rgb(233, 239, 255)',
         'dark-border': '#374151',
         'primary-dark': '#1F2937',
         'primary-dark-light': '#374151',
@@ -292,7 +314,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Manrope, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 }
@@ -313,9 +335,12 @@ body {
 }`,
     
     'src/App.tsx': `
-
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { lazy, Suspense, ComponentType } from 'react';
+import React, { lazy, Suspense, ComponentType, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
+import { AppProvider, useApp } from './context/AppContext';
+import { FederatedContextProvider } from './components/FederatedWrapper';
+import CSSLoader from './components/CSSLoader';
+import './App.css';
 
 // Create safe lazy loading with error handling
 const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
@@ -331,19 +356,66 @@ const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentTyp
 };
 
 // Fallback components
-  const DashboardFallback = () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <p className="text-gray-600">Loading dashboard...</p>
+const DashboardFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Dashboard</h1>
+    <p className="text-gray-600">Loading dashboard...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote Dashboard component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
     </div>
-  );
+  </div>
+);
+
+const SubLoginFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Login</h1>
+    <p className="text-gray-600">Loading login page...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote Login component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
+  </div>
+);
 
 const ConsumerFallback = () => (
   <div className="p-6">
-    <h1 className="text-2xl font-bold">Consumer</h1>
-    <p className="text-gray-600">Loading consumer...</p>
+    <h1 className="text-2xl font-bold">Consumers</h1>
+    <p className="text-gray-600">Loading consumers...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote Consumers component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
   </div>
 );
+
+const ConsumerViewFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Consumer View</h1>
+    <p className="text-gray-600">Loading consumer view...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote ConsumerView component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
+  </div>
+);
+
+const AllTicketsFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">All Tickets</h1>
+    <p className="text-gray-600">Loading all tickets...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote AllTickets component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
+  </div>
+);
+
 const SidebarFallback = () => (
   <div className="w-72 bg-gray-100 h-screen p-4">
     <div className="text-center">Sidebar Loading...</div>
@@ -356,21 +428,15 @@ const HeaderFallback = () => (
   </div>
 );
 
-const TicketsFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Tickets</h1>
-    <p className="text-gray-600">Loading tickets...</p>
-  </div>
-);
-
-const AppProviderFallback = ({ children }: { children: React.ReactNode }) => (
-  <div>{children}</div>
-);
-
-// Safe lazy components with fallbacks
+// Safe lazy components with fallbacks - using federated components from SuperAdmin
 const Dashboard = createSafeLazyComponent(
   () => import('SuperAdmin/Dashboard'),
   DashboardFallback
+);
+
+const SubLogin = createSafeLazyComponent(
+  () => import('SuperAdmin/Login'),
+  SubLoginFallback
 );
 
 const Consumers = createSafeLazyComponent(
@@ -378,6 +444,117 @@ const Consumers = createSafeLazyComponent(
   ConsumerFallback
 );
 
+const ConsumerView = createSafeLazyComponent(
+  () => import('SuperAdmin/ConsumerView'),
+  ConsumerViewFallback
+);
+
+const Users = createSafeLazyComponent(
+  () => import('SuperAdmin/Users'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Users</h1>
+      <p className="text-gray-600">Loading users...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote Users component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const RoleManagement = createSafeLazyComponent(
+  () => import('SuperAdmin/RoleManagement'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Role Management</h1>
+      <p className="text-gray-600">Loading role management...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote RoleManagement component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const BillsPrepaid = createSafeLazyComponent(
+  () => import('SuperAdmin/BillsPrepaid'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Bills Prepaid</h1>
+      <p className="text-gray-600">Loading bills prepaid...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote BillsPrepaid component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const BillsPostpaid = createSafeLazyComponent(
+  () => import('SuperAdmin/BillsPostpaid'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Bills Postpaid</h1>
+      <p className="text-gray-600">Loading bills postpaid...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote BillsPostpaid component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const AllTickets = createSafeLazyComponent(
+  () => import('SuperAdmin/Ticket'),
+  AllTicketsFallback
+);
+
+const Transformer = createSafeLazyComponent(
+  () => import('SuperAdmin/Transformer'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">DTR Dashboard</h1>
+      <p className="text-gray-600">Loading DTR dashboard...</p>
+    </div>
+  )
+);
+
+const Assets = createSafeLazyComponent(
+  () => import('SuperAdmin/Assets'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Asset Management</h1>
+      <p className="text-gray-600">Loading asset management...</p>
+    </div>
+  )
+);
+
+const Meters = createSafeLazyComponent(
+  () => import('SuperAdmin/Meters'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Meters List</h1>
+      <p className="text-gray-600">Loading meters list...</p>
+    </div>
+  )
+);
+
+const DataLoggerMaster = createSafeLazyComponent(
+  () => import('SuperAdmin/DataLoggerMaster'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Data Logger Master</h1>
+      <p className="text-gray-600">Loading data logger master...</p>
+    </div>
+  )
+);
+
+// Use federated Sidebar and Header from SuperAdmin app
 const Sidebar = createSafeLazyComponent(
   () => import('SuperAdmin/Sidebar'),
   SidebarFallback
@@ -388,50 +565,287 @@ const Header = createSafeLazyComponent(
   HeaderFallback
 );
 
-const AllTickets = createSafeLazyComponent(
-  () => import('SuperAdmin/Ticket'),
-  TicketsFallback
-);
-    
-// Use local AppProvider instead of federated one
-import { AppProvider, useApp } from './context/AppContext';
-import { FederatedContextProvider } from './components/FederatedWrapper';
-import SidebarWrapper from './components/SidebarWrapper';
-
-import './App.css';
+function RequireAuth({ children }) {
+  const isLoggedIn = !!localStorage.getItem('token');
+  const location = useLocation();
+  if (!isLoggedIn) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  return children;
+}
 
 function AppContent() {
   const contextValue = useApp();
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Function to get page title based on current route
+  const getPageTitle = () => {
+    switch (location.pathname) {
+      case '/':
+      case '/dashboard':
+        return 'Dashboard';
+      case '/consumers':
+        return 'Consumers';
+      case '/users':
+        return 'Users';
+      case '/role-management':
+        return 'Role Management';
+      case '/bills/prepaid':
+        return 'Prepaid Bills';
+      case '/bills/postpaid':
+        return 'Postpaid Bills';
+      case '/all-tickets':
+        return 'All Tickets';
+      case '/dtr-dashboard':
+        return 'DTR Dashboard';
+      case '/asset-management':
+        return 'Asset Management';
+      case '/meters':
+        return 'Meters';
+      case '/data-logger-master':
+        return 'Data Logger Master';
+      default:
+        return 'Dashboard';
+    }
+  };
+  
+  // Debug logging for routing
+  useEffect(() => {
+    console.log('Current location:', location.pathname);
+    console.log('Available modules:', ${JSON.stringify(modules || [])});
+  }, [location.pathname]);
+  
+  // Check if remote app is accessible
+  useEffect(() => {
+    const checkRemoteApp = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/assets/remoteEntry.js');
+        if (!response.ok) {
+          console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
+        } else {
+          console.log('Remote app is accessible');
+        }
+      } catch (error) {
+        console.error('Failed to check remote app:', error);
+      }
+    };
+    
+    checkRemoteApp();
+  }, []);
+  
+// Generate menu items for federated components
+ const menuItems = [
+    {
+      title: 'Dashboard',
+      icon: '/icons/dashboard.svg',
+      link: '/dashboard',
+    },
+    {
+      title: 'Consumers',
+      icon: '/icons/units.svg',
+      link: '/consumers',
+    },
+    {
+      title: 'Transformers',
+      icon: '/icons/transformer.svg',
+      link: '/dtr-dashboard',
+    },
+    {
+      title: 'Bills',
+      icon: '/icons/bills.svg',
+      hasSubmenu: true,
+      submenu: [
+        {
+          title: 'Prepaid',
+          link: '/bills/prepaid',
+        },
+        {
+          title: 'Postpaid',
+          link: '/bills/postpaid',
+        },
+      ],
+    },
+    {
+      title: 'Tickets',
+      icon: '/icons/customer-service.svg',
+      link: '/all-tickets',
+    },
+  ];
+
+  const menuItems2 = [
+
+    {
+      title: 'Assets',
+      icon: '/icons/workflow-setting-alt.svg',
+      link: '/asset-management',
+    },
+    {
+      title: 'Meters',
+      icon: '/icons/meter-bolt.svg',
+      link: '/meters',
+      hasSubmenu: true,
+      submenu: [
+        {
+          title: 'Data Logger Master',
+          link: '/data-logger-master',
+        },
+        {
+          title: 'Meter List',
+          link: '/meters',
+        },
+      ],
+    },
+    {
+      title: 'Users',
+      icon: '/icons/user.svg',
+      link: '/users',
+      hasSubmenu: true,
+      submenu: [
+        {
+          title: 'Users',
+          icon: '/icons/user-gear.svg',
+          link: '/users',
+        },
+        {
+          title: 'Role Management',
+          icon: '/icons/roles.svg',
+          link: '/role-management',
+        },
+      ],
+    },
+  ];
+
+  // const menuItems = [
+  //   {
+  //     title: 'Dashboard',
+  //     icon: '/icons/user-profile.svg',
+  //     link: '/consumers/BI25GMRA001',
+  //   },
+  //   {
+  //     title: 'All Tickets',
+  //     icon: '/icons/support-tickets.svg',
+  //     link: '/all-tickets',
+  //   },
+  // {
+  //     title: 'Bills',
+  //     icon: '/icons/bills.svg',
+  //     hasSubmenu: true,
+  //     submenu: [
+  //       {
+  //         title: 'Prepaid',
+  //         link: '/bills/prepaid',
+  //       },
+  //       {
+  //         title: 'Postpaid',
+  //         link: '/bills/postpaid',
+  //       },
+  //     ],
+  //   },
+  // ]
+  
   return (
     <FederatedContextProvider value={contextValue}>
-      <Router>
-        <div className="flex h-screen bg-white">
-          <SidebarWrapper SidebarComponent={Sidebar} />
-          <div className="flex flex-col flex-1">
-            <Header />
-            <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-                              <Routes>
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/dashboard" element={<Dashboard />} />
-                  <Route path="/consumers" element={<Consumers />} />
-                  ${modules?.map((module) => `
-                  <Route path="/${module}" element={<div className="p-6"><h1 className="text-2xl font-bold">${module.charAt(0).toUpperCase() + module.slice(1)} Module</h1><p className="text-gray-600">This is the ${module} module page.</p></div>} />`).join('') || ''}
-                </Routes>
-            </main>
-          </div>
-        </div>
-      </Router>
+      <Routes>
+        <Route path="/login" element={<SubLogin />} />
+        <Route
+          path="*"
+          element={
+            <RequireAuth>
+              <div className="flex h-screen bg-white">
+                {/* Sidebar and Header only for authenticated users */}
+                <Suspense fallback={<SidebarFallback />}>
+                  <Sidebar 
+                    currentPath={location.pathname}
+                    onNavigate={(path:any) => navigate(path)}
+                    menus={[
+                      {
+                        category: 'General',
+                        items: menuItems,
+                      },
+                      {
+                        category: 'Admin Settings',
+                        items: menuItems2,
+                      },
+                    ]}
+                    logo={{
+                      src: '/images/bi-blue-logo.svg',
+                      alt: '${appName || 'Admin App'}',
+                      collapsedSrc: '/images/changed-logo.svg',
+                    }}
+                    footer={{
+                      copyright: '© 2024 ${companyName || 'Company'}',
+                      showThemeToggle: true,
+                      showShareButton: false,
+                    }}
+                  />
+                </Suspense>
+                <div className="flex flex-col flex-1">
+                  <Suspense fallback={<HeaderFallback />}>
+                    <Header title={getPageTitle()} />
+                  </Suspense>
+                  <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
+                    {/* All protected routes here */}
+                    <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      <Route path="/consumers" element={<Consumers />} />
+                      <Route path="/consumers/:uid" element={<ConsumerView />} />
+                      <Route path="/bills/prepaid" element={<BillsPrepaid />} />
+                      <Route path="/bills/postpaid" element={<BillsPostpaid />} />
+                      <Route path="/dtr-dashboard" element={<Transformer />} />
+                      <Route path="/asset-management" element={<Assets />} />
+                      <Route path="/meters" element={<Meters />} />
+                      <Route path="/data-logger-master" element={<DataLoggerMaster />} />
+                      <Route path="/all-tickets" element={<AllTickets />} />
+                      <Route path="*" element={
+                        <div className="p-6">
+                          <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
+                          <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
+                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                            <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
+                            <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
+                            <div className="mt-4">
+                              <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
+                              <ul className="text-sm text-red-700 space-y-1">
+                                <li>/ - Dashboard</li>
+                                <li>/dashboard - Dashboard</li>
+                                <li>/consumers - Consumers</li>
+                                <li>/consumers/:uid - Consumer View</li>
+                                <li>/bills/prepaid - Bills Prepaid</li>
+                                <li>/bills/postpaid - Bills Postpaid</li>
+                                <li>/dtr-dashboard - DTR Dashboard</li>
+                                <li>/asset-management - Asset Management</li>
+                                <li>/meters - Meters List</li>
+                                <li>/data-logger-master - Data Logger Master</li>
+                                <li>/all-tickets - All Tickets</li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      } />
+                    </Routes>
+                  </main>
+                </div>
+              </div>
+            </RequireAuth>
+          }
+        />
+      </Routes>
     </FederatedContextProvider>
   );
 }
 
 function App() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
-      <AppProvider>
-        <AppContent />
-    </AppProvider>
-    </Suspense>
+    <Router>
+      <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
+        <AppProvider>
+          <CSSLoader />
+          <AppContent />
+        </AppProvider>
+      </Suspense>
+    </Router>
   );
 }
 
@@ -621,11 +1035,6 @@ const Sidebar = () => {
           title: 'Dashboard',
           icon: '📊',
           link: '/',
-        },
-        {
-          title: 'Dashboard',
-          icon: '📊',
-          link: '/dashboard',
         },
         {
           title: 'Consumers',
@@ -824,9 +1233,16 @@ const Header = ({
     
     switch (location.pathname) {
       case '/':
+      case '/dashboard':
         return 'Dashboard';
-      ${modules?.map((module) => `case '/${module}':
-        return '${module.charAt(0).toUpperCase() + module.slice(1)} Module';`).join('\n      ') || ''}
+      case '/consumers':
+        return 'Consumers';
+      case '/user-management':
+        return 'User Management';
+      case '/role-management':
+        return 'Role Management';
+      ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `case '/${module}':
+        return '${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')} Module';`).join('\n      ') || ''}
       default:
         return 'Dashboard';
     }
@@ -836,13 +1252,13 @@ const Header = ({
     {
       icon: '🔔',
       alt: 'Notifications icon',
-      onClick: () => console.log('Notifications clicked'),
+      onClick: () => {},
       ariaLabel: 'Notifications',
     },
     {
       icon: '⛶',
       alt: 'Full screen icon',
-      onClick: () => console.log('Full screen clicked'),
+      onClick: () => {},
       ariaLabel: 'Toggle full screen',
     },
   ];
@@ -894,7 +1310,7 @@ const Header = ({
 };
 
 export default Header;`,
-    
+
 'src/components/SidebarWrapper.tsx': `import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -907,21 +1323,68 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
   const navigate = useNavigate();
   
   const handleNavigate = (path: string) => {
+    console.log('SidebarWrapper: Navigating to:', path);
+    console.log('SidebarWrapper: Current location before navigation:', location.pathname);
     navigate(path);
   };
   
-  // Pass the location.pathname and navigation function to the federated Sidebar component
+  // Define mandatory menu items for host apps
+  const mandatoryMenus = [
+    {
+      category: 'MANAGEMENT',
+      items: [
+        // {
+        //   title: 'Dashboard',
+        //   icon: '/icons/dashboard.svg',
+        //   link: '/',
+        // },
+        // {
+        //   title: 'Consumers',
+        //   icon: '/icons/user.svg',
+        //   link: '/consumers',
+        // },
+        // {
+        //   title: 'User Management',
+        //   icon: '/icons/user-gear.svg',
+        //   link: '/user-management',
+        // },
+        // {
+        //   title: 'Role Management',
+        //   icon: '/icons/roles.svg',
+        //   link: '/role-management',
+        // },
+        // ${modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)).map((module) => `{
+        //   title: '${module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')}',
+        //   icon: '/icons/apps-icon.svg',
+        //   link: '/${module}',
+        // }`).join(',\n        ') || ''}
+        {
+          title: 'Consumer View',
+          icon: '/icons/user-profile.svg',
+          link: '/consumerview',
+        },
+        {
+          title: 'All Tickets',
+          icon: '/icons/support-tickets.svg',
+          link: '/ticket',
+        },
+      ],
+    },
+  ];
+  
+  // Pass the location.pathname, navigation function, and mandatory menus to the federated Sidebar component
   return (
     <SidebarComponent 
       currentPath={location.pathname} 
       onNavigate={handleNavigate}
+      menus={mandatoryMenus}
     />
   );
 };
 
 export default SidebarWrapper; `,
 
-'src/components/FederatedWrapper.tsx': `import React, { createContext, useContext } from 'react';
+    'src/components/FederatedWrapper.tsx': `import React, { createContext, useContext } from 'react';
 
 // Context that matches the SuperAdmin's AppContext interface
 interface FederatedAppContextType {
@@ -962,6 +1425,71 @@ export const useFederatedApp = () => {
     }
     return context;
 }; `,
+
+    'src/components/CSSLoader.tsx': `import React, { useEffect, useState } from 'react';
+
+interface CSSLoaderProps {
+  cssFiles?: string[];
+  fallbackEnabled?: boolean;
+}
+
+const CSSLoader: React.FC<CSSLoaderProps> = ({ 
+  cssFiles = ['global.css', 'default.css', 'custom.css'], 
+  fallbackEnabled = true 
+}) => {
+  const [loadedCSS, setLoadedCSS] = useState<string[]>([]);
+  const [failedCSS, setFailedCSS] = useState<string[]>([]);
+
+  useEffect(() => {
+    const loadCSSFromHost = async () => {
+      for (const cssFile of cssFiles) {
+        try {
+          // Try to load CSS from the host app via federation
+          const response = await fetch(\`http://localhost:3000/assets/\${cssFile}\`);
+          
+          if (response.ok) {
+            const cssContent = await response.text();
+            
+            // Create a style element and add the CSS
+            const styleElement = document.createElement('style');
+            styleElement.id = \`federated-\${cssFile}\`;
+            styleElement.textContent = cssContent;
+            
+            // Remove any existing style with the same ID
+            const existingStyle = document.getElementById(\`federated-\${cssFile}\`);
+            if (existingStyle) {
+              existingStyle.remove();
+            }
+            
+            document.head.appendChild(styleElement);
+            setLoadedCSS(prev => [...prev, cssFile]);
+            
+            console.log(\`✅ Loaded federated CSS: \${cssFile}\`);
+          } else {
+            throw new Error(\`Failed to load \${cssFile}: \${response.status}\`);
+          }
+        } catch (error) {
+          console.warn(\`⚠️ Failed to load federated CSS \${cssFile}:\`, error);
+          setFailedCSS(prev => [...prev, cssFile]);
+          
+          // If fallback is enabled, continue using local CSS
+          if (fallbackEnabled) {
+            console.log(\`🔄 Using local CSS fallback for \${cssFile}\`);
+          }
+        }
+      }
+    };
+
+    loadCSSFromHost();
+  }, [cssFiles, fallbackEnabled]);
+
+  // This component doesn't render anything visual
+  return null;
+};
+
+export default CSSLoader;`,
+    
+
     
 'src/types/federation.d.ts': `
 declare module 'SuperAdmin/Dashboard' {
@@ -987,6 +1515,114 @@ declare module 'SuperAdmin/Header' {
 declare module 'SuperAdmin/Ticket' {
   const Ticket: React.ComponentType<any>;
   export default Ticket;
+}
+
+declare module 'SuperAdmin/ConsumerView' {
+  const ConsumerView: React.ComponentType<any>;
+  export default ConsumerView;
+}
+
+declare module 'SuperAdmin/BillsPrepaid' {
+  const BillsPrepaid: React.ComponentType<any>;
+  export default BillsPrepaid;
+}
+
+declare module 'SuperAdmin/BillsPostpaid' { 
+  const BillsPostpaid: React.ComponentType<any>;
+  export default BillsPostpaid;
+}
+
+declare module 'SuperAdmin/Transformer' {
+  const Transformer: React.ComponentType<any>;
+  export default Transformer;
+}
+
+declare module 'SuperAdmin/Assets' {
+  const Assets: React.ComponentType<any>;
+  export default Assets;
+}
+
+declare module 'SuperAdmin/Meters' {
+  const Meters: React.ComponentType<any>;
+  export default Meters;
+}
+declare module 'SuperAdmin/DataLoggerMaster' {
+  const DataLoggerMaster: React.ComponentType<any>;
+  export default DataLoggerMaster;
+}
+
+declare module 'SuperAdmin/Users' {
+  const Users: React.ComponentType<any>;
+  export default Users;
+}
+
+declare module 'SuperAdmin/RoleManagement' {
+  const RoleManagement: React.ComponentType<any>;
+  export default RoleManagement;
+}
+
+declare module 'SuperAdmin/TicketView' {
+  const TicketView: React.ComponentType<any>;
+  export default TicketView;
+}
+
+declare module 'SuperAdmin/Page' {
+  const Page: React.ComponentType<any>;
+  export default Page;
+}
+
+declare module 'SuperAdmin/Table' {
+  const Table: React.ComponentType<any>;
+  export default Table;
+}
+
+declare module 'SuperAdmin/Dropdown' {
+  const Dropdown: React.ComponentType<any>;
+  export default Dropdown;
+}
+
+declare module 'SuperAdmin/Card' {
+  const Card: React.ComponentType<any>;
+  export default Card;
+}
+
+declare module 'SuperAdmin/PieChart' {
+  const PieChart: React.ComponentType<any>;
+  export default PieChart;
+}
+
+declare module 'SuperAdmin/BarChart' {
+  const BarChart: React.ComponentType<any>;
+  export default BarChart;
+}
+
+declare module 'SuperAdmin/TimeRangeSelector' {
+  const TimeRangeSelector: React.ComponentType<any>;
+  export default TimeRangeSelector;
+}
+
+declare module 'SuperAdmin/PageHeader' {
+  const PageHeader: React.ComponentType<any>;
+  export default PageHeader;
+}
+
+declare module 'SuperAdmin/OrgChart' {
+  const OrgChart: React.ComponentType<any>;
+  export default OrgChart;
+}
+
+declare module 'SuperAdmin/context/AppContext' {
+  export const useApp: () => any;
+  export const AppProvider: React.ComponentType<any>;
+}
+
+declare module 'SuperAdmin/AppProvider' {
+  const AppProvider: React.ComponentType<any>;
+  export default AppProvider;
+}
+
+declare module 'SuperAdmin/useApp' {
+  export const useApp: () => any;
 }
 `,
     
@@ -1061,9 +1697,128 @@ Generated on: ${new Date().toLocaleDateString()}
 `
   };
 
+  // --- BACKEND SCAFFOLDING START ---
+  // Backend template files
+  const backendFiles = {
+    'package.json': JSON.stringify({
+      name: `${projectFolderName}-backend`,
+      version: '1.0.0',
+      main: 'server.js',
+      scripts: {
+        start: 'node server.js'
+      },
+      dependencies: {
+        express: "^4.18.2",
+        dotenv: "^16.0.3"
+      }
+    }, null, 2),
+
+    'server.js': `
+require('dotenv').config();
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 4000;
+
+app.use(express.json());
+
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+// Add your routes here
+
+app.listen(PORT, () => console.log('Backend running on port ' + PORT));
+`,
+
+    'routes/index.js': `\nconst express = require('express');\nconst router = express.Router();\n\n// Define your routes here\n\nmodule.exports = router;\n`
+  };
+
+  // Create backend directory
+  const backendDir = path.join(baseDir, 'backend');
+  ensureDir(backendDir);
+  ensureDir(path.join(backendDir, 'routes'));
+
+  // Write backend files
+  Object.entries(backendFiles).forEach(([filePath, content]) => {
+    const fullPath = path.join(backendDir, filePath);
+    ensureDir(path.dirname(fullPath));
+    fs.writeFileSync(fullPath, content.trimStart());
+  });
+
+  // Add .env example file for backend
+  const envExampleContent = `# Example environment file for backend
+NODE_ENV=development
+PORT=4000
+
+JWT_EXPIRES_IN=4h
+
+DATABASE_URL=postgresql://postgres:password@localhost:5432/your_db_name_here?schema=public
+`;
+  fs.writeFileSync(path.join(backendDir, '.env'), envExampleContent);
+  // --- BACKEND SCAFFOLDING END ---
+
+  // --- PRISMA SUPPORT START ---
+  // Update backend package.json for Prisma
+  const backendPkgPath = path.join(backendDir, 'package.json');
+  if (fs.existsSync(backendPkgPath)) {
+    const backendPkg = JSON.parse(fs.readFileSync(backendPkgPath, 'utf8'));
+    backendPkg.dependencies = backendPkg.dependencies || {};
+    backendPkg.devDependencies = backendPkg.devDependencies || {};
+    backendPkg.dependencies['@prisma/client'] = '^5.12.0';
+    backendPkg.devDependencies['prisma'] = '^5.12.0';
+    fs.writeFileSync(backendPkgPath, JSON.stringify(backendPkg, null, 2));
+  }
+
+  // Create prisma directory and schema.prisma
+  const prismaDir = path.join(backendDir, 'prisma');
+  ensureDir(prismaDir);
+  
+  // Copy db_schema.txt as schema.prisma if it exists, otherwise use example schema
+  const dbSchemaPath = path.join(__dirname, '..', 'AdminModule', 'db_schema.txt');
+  const targetSchemaPath = path.join(prismaDir, 'schema.prisma');
+  if (fs.existsSync(dbSchemaPath)) {
+    fs.copyFileSync(dbSchemaPath, targetSchemaPath);
+    console.log('Copied db_schema.txt to', targetSchemaPath);
+  } else {
+    const schemaContent = `// Example Prisma schema
+// Replace this with your actual schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Example model
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+}
+`;
+    fs.writeFileSync(targetSchemaPath, schemaContent);
+    console.log('Wrote example schema.prisma to', targetSchemaPath);
+  }
+
+  // Add Prisma usage comment to server.js
+  const serverPath = path.join(backendDir, 'server.js');
+  if (fs.existsSync(serverPath)) {
+    let serverContent = fs.readFileSync(serverPath, 'utf8');
+    if (!serverContent.includes('PrismaClient')) {
+      serverContent = `// To use Prisma:
+// const { PrismaClient } = require('@prisma/client');
+// const prisma = new PrismaClient();
+
+` + serverContent;
+      fs.writeFileSync(serverPath, serverContent);
+    }
+  }
+  // --- PRISMA SUPPORT END ---
+
   // Create directories and write files
   Object.entries(projectStructure).forEach(([filePath, content]) => {
-    const fullPath = path.join(baseDir, filePath);
+    const fullPath = path.join(frontendDir, filePath);
     const dir = path.dirname(fullPath);
     
     // Ensure directory exists
@@ -1073,11 +1828,16 @@ Generated on: ${new Date().toLocaleDateString()}
     fs.writeFileSync(fullPath, content);
   });
 
-  console.log(`✅ Project "${projectFolderName}" created successfully at: ${baseDir}`);
-  console.log(`📁 Next steps:`);
+  console.log(`Project "${projectFolderName}" created successfully at: ${baseDir}`);
+  console.log(`Next steps:`);
   console.log(`   1. cd ${baseDir}`);
   console.log(`   2. npm install`);
   console.log(`   3. npm run dev`);
+  console.log(`\n🎨 CSS Sync Instructions:`);
+  console.log(`   • CSS files are already synced during creation`);
+  console.log(`   • To sync CSS changes later, run: npm run css-sync`);
+  console.log(`   • To watch for CSS changes, run: npm run css-sync-watch`);
+  console.log(`   • To sync to specific app: npm run css-sync-app ${projectFolderName}`); 
   
   return baseDir;
 }
@@ -1102,4 +1862,4 @@ if (require.main === module) {
   };
   
   createAppProject(exampleFormData);
-} 
+}

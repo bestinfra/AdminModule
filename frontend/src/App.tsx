@@ -12,6 +12,7 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
 import AppManagement from './pages/Apps_module/AppManagement';
 import Dashboard from './pages/Dashboard';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import Consumers from './pages/Consumers';
 import BillsPrepaid from './pages/BillsPrepaid';
 import BillsPostpaid from './pages/BillsPostpaid';
@@ -30,6 +31,7 @@ import DTRHTSideFuseBlown from './pages/DTRHTSideFuseBlown';
 import DataLoggerMaster from './pages/DataLoggerMaster';
 import MetersList from './pages/MetersList';
 import AssetManagement from './pages/AssetManagement';
+import TicketView from './pages/TicketView';
 import MeterDetails from './pages/MeterDetails';
 import ConnectDisconnect from './pages/ConnectDisconnect';
 import ConsumerView from './pages/ConsumerView';
@@ -46,6 +48,9 @@ import AccountStatus from './pages/AccountStatus';
 import AddUser from './pages/AddUser';
 import RolesPermission from './pages/RolesPermission';
 import AddRole from './pages/AddRole';
+import UserManagement from './pages/UserManagment';
+import RoleManagement from './pages/RoleManagment';
+import TicketsFilteredView from './pages/TicketsFilteredView';
 
 
 const App: React.FC = () => {
@@ -77,12 +82,13 @@ const App: React.FC = () => {
                                 path="/"
                                 element={<Dashboard />}
                             />
+                            <Route path="/super-admin" element={<SuperAdminDashboard />} />
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/asset-management" element={<AssetManagement />} />
                             <Route path="/profile" element={<Profile />} />
-                            <Route path="/all-tickets" element={<AllTickets />} />
+                            <Route path="/tickets-filtered" element={<TicketsFilteredView />} />
                             <Route path="/forms" element={<Forms />} />
-                            <Route path="/consumers" element={<Consumers />} />
+                            <Route path="/consumers" element={<Consumers />} /> 
                             <Route path="/consumers/add" element={<AddConsumer />} />
                             <Route path="/consumers/:uid" element={<ConsumerView />} />
                             <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
@@ -91,6 +97,8 @@ const App: React.FC = () => {
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/dtr/:id" element={<DTRDetailPage />} />
                             <Route path="/feeders/:id" element={<Feeders />} />
+                            <Route path="/user-management" element={<UserManagement />} />
+                            <Route path="/role-management" element={<RoleManagement />} />
                             <Route path="/dtr-statistics/total-dtrs" element={<DTRTotalDTRs />} />
                             <Route path="/dtr-statistics/total-lt-feeders" element={<DTRTotalLTFeeders />} />
                             <Route path="/dtr-statistics/total-fuse-blown" element={<DTRTotalFuseBlown />} />
@@ -115,25 +123,19 @@ const App: React.FC = () => {
                             <Route path="/user-management/account-status" element={<AccountStatus />} />
                             <Route path="/user-management/add-user" element={<AddUser />} />
                             <Route path="/user-management/add-role" element={<AddRole />} />
+                            <Route path="/all-tickets" element={<AllTickets />} />
+                            <Route path="/tickets/:filter" element={<AllTickets />} />
+                            {/* <Route path="/tickets/view/:id" element={<TicketView />} /> */}
+                            <Route path="/ticket-view" element={<TicketView />} />
+                            {/* <Route path="/ticket-view/:ticketId" element={<TicketView />} /> */}
+                            {/* <Route path="/ticket-view/:ticketId/add-message" element={<TicketView />} /> */}
+                            <Route path="/role-management" element={<RoleManagement />} />
                             <Route path="*" element={<NotFound />} />
                         </Route>
-                        
-                        {/* Special routes that don't require layout */}
-                        <Route 
-                            path="/page-builder" 
-                            element={
-                                <ProtectedRoute>
-                                    <PageBuilder />
-                                </ProtectedRoute>
-                            } 
-                        />
+                        <Route path="/page-builder" element={<PageBuilder />} />
                         <Route
                             path="/module-selection"
-                            element={
-                                <ProtectedRoute>
-                                    <ModuleSelection />
-                                </ProtectedRoute>
-                            }
+                            element={<ModuleSelection />}
                         />
                     </Routes>
                 </Router>

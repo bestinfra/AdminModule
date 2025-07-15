@@ -50,6 +50,7 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
                 color: getAxisColor('--color-neutral-darker', '--color-surface'),
                 fontSize: 16,
                 fontWeight: 600,
+                fontFamily: 'Manrope, sans-serif',
             },
         },
         tooltip: {
@@ -73,6 +74,7 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
             textStyle: {
                 color: getAxisColor('--color-neutral-darker', '--color-surface'),
                 fontSize: '0.85rem',
+                fontFamily: 'Manrope, sans-serif',
             },
             itemGap: 8,
             itemWidth: 12,
@@ -89,6 +91,7 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
                 show: true,
                 color: getAxisColor('--color-neutral-darker', '--color-surface'),
                 fontSize: 12,
+                fontFamily: 'Manrope, sans-serif',
                 formatter: '{b}: {d}%',
             },
             labelLine: {
@@ -106,7 +109,12 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
                     shadowBlur: 15, shadowOffsetX: 0, shadowOffsetY: 0,
                     shadowColor: 'var(--color-accent)40', scale: true, scaleSize: 5,
                 },
-                label: { show: true, fontSize: 14, fontWeight: 'bold' },
+                label: { 
+                    show: true, 
+                    fontSize: 14, 
+                    fontWeight: 'bold',
+                    fontFamily: 'Manrope, sans-serif',
+                },
             },
         }],
         animation: enableAnimation,

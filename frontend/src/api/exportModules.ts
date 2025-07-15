@@ -239,7 +239,7 @@ export default {
       colors: {
         primary: '${primaryColor || '#3B82F6'}',
         'primary-lightest': '#F0F9FF',
-        'primary-border': '#E5E7EB',
+        'primary-border': 'var(--color-primary-border)',
         'dark-border': '#374151',
         'primary-dark': '#1F2937',
         'primary-dark-light': '#374151',
@@ -292,9 +292,14 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: Manrope, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+  
+  /* CSS Variables for Tailwind colors */
+  --color-primary-border: rgb(233, 239, 255);
+  --color-primary-custom: rgb(233, 239, 255);
+  --color-dark-border: rgba(9, 27, 59, 1);
 }
 
 body {

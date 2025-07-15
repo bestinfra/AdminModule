@@ -1,54 +1,101 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import Button from '../components/global/Button';
-import Dropdown from '../components/global/Dropdown';
+import React from 'react';
+import { useParams } from 'react-router-dom';
 import Card from '../components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
 import Table from '../components/global/Table';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
+
 
 // Mock data (should be shared or moved to a common location in real app)
 const consumersData = [
   { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17, balance: 0, address: 'GHASL, GMR', mobile: '+91********49', email: '***************@gmail.com', occupancy: 'Occupied' },
-  // ... add other consumers as needed
+  { uid: 'BI25GMRA002', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62, balance: 1250.50, address: 'Airport Road, GMR', mobile: '+91********78', email: 'neo.travels@gmail.com', occupancy: 'Occupied' },
+  { uid: 'BI25GMRA003', name: 'Dormitory', meter: 'A9345418', reading: 1108.34, balance: 450.75, address: 'Campus Area, GMR', mobile: '+91********23', email: 'dormitory.admin@gmail.com', occupancy: 'Occupied' },
+  { uid: 'BI25GMRA004', name: 'Mobikins', meter: 'A9211433', reading: 1271.76, balance: 890.25, address: 'Tech Park, GMR', mobile: '+91********56', email: 'mobikins.tech@gmail.com', occupancy: 'Vacant' },
+  { uid: 'BI25GMRA005', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17, balance: 0, address: 'GHASL, GMR', mobile: '+91********49', email: '***************@gmail.com', occupancy: 'Occupied' },
 ];
 
 const ConsumerView: React.FC = () => {
-  const { uid } = useParams<{ uid: string }>();
-  const navigate = useNavigate();
+  // Try to get uid from useParams first, then fallback to URL parsing
+  const params = useParams<{ uid: string }>();
+
+  const uidFromParams = params?.uid;
+  
+  // Fallback: extract uid from URL path if useParams doesn't work
+  const getUidFromUrl = () => {
+    const pathSegments = window.location.pathname.split('/');
+    const uidIndex = pathSegments.findIndex(segment => segment === 'consumers') + 1;
+    return uidIndex > 0 && uidIndex < pathSegments.length ? pathSegments[uidIndex] : null;
+  };
+  
+  const uid = uidFromParams || getUidFromUrl();
   const consumer = consumersData.find(c => c.uid === uid);
 
-  if (!consumer) return <div className="p-6">Consumer not found</div>;
+  // Menu items for PageHeader
+  const menuItems = [
+    { id: 'refresh', label: 'Refresh Data', icon: '/icons/refresh.svg' },
+    { id: 'export', label: 'Export Data', icon: '/icons/export.svg' },
+    { id: 'settings', label: 'Settings', icon: '/icons/settings.svg' },
+  ];
+
+  // Handler functions
+  const handleMenuItemClick = (itemId: string) => {
+    console.log('Menu item clicked:', itemId);
+    // Add your menu item logic here
+  };
+
+  const handleBackClick = () => {
+    console.log('Back button clicked');
+    // Add your back navigation logic here
+  };
+
+  const handleRefreshClick = () => {
+    console.log('Refresh button clicked');
+    // Add your refresh logic here
+  };
+
+  // Debug information
+  console.log('ConsumerView: uid from params:', uidFromParams);
+  console.log('ConsumerView: uid from URL fallback:', getUidFromUrl());
+  console.log('ConsumerView: final uid:', uid);
+  console.log('ConsumerView: found consumer:', consumer);
+  console.log('ConsumerView: available consumers:', consumersData.map(c => c.uid));
+
+  if (!consumer) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Consumer not found</h1>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <h3 className="font-semibold text-red-800 mb-2">Debug Information:</h3>
+          <p className="text-sm text-red-700 mb-2">UID from URL: <strong>{uid}</strong></p>
+          <p className="text-sm text-red-700 mb-2">Available UIDs: <strong>{consumersData.map(c => c.uid).join(', ')}</strong></p>
+          <p className="text-sm text-red-700">Please check the URL parameter and ensure it matches one of the available consumer UIDs.</p>
+        </div>
+      </div>
+    );
+  }
 
   // Header component
-  const headerComponent = createHeaderComponent(
-    consumer.name,
-    `Consumer Details - ${consumer.uid}`,
-    `Meter: ${consumer.meter}`
+  const headerComponent = (
+    <PageHeader
+      title={consumer.name}
+      menuItems={menuItems}
+      onMenuItemClick={handleMenuItemClick}
+      showMenu={true}
+      showDropdown={true}
+      buttonsLabel="Recharge"
+      variant="primary"
+      onClick={() => alert('Recharge')}
+      onBackClick={handleBackClick}
+      backButtonText="Back to Consumers"
+      onRightImageClick={handleRefreshClick}
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Recharge', onClick: () => alert('Recharge'), variant: 'primary' },
-    { label: 'Edit Consumer', onClick: () => alert('Edit'), variant: 'outline' },
-    { label: 'Export Data', onClick: () => alert('Export'), variant: 'outline' }
-  ]);
 
-  
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: `Consumer ID: ${consumer.uid}`,
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // Consumer Info Section
   const consumerInfoSection: Section = {
@@ -99,7 +146,7 @@ const ConsumerView: React.FC = () => {
   const instantaneousDataSection: Section = {
     id: 'instantaneous-data',
     component: (
-      <div className="bg-blue-50 rounded-[var(--radius-2xl)] p-6">
+      <div className="bg-primary-lightest rounded-[var(--radius-2xl)] p-6">
         <div className="flex items-center justify-between bg-[var(--color-primary-lightest)] rounded-t-lg px-4 py-2">
           <div className="font-semibold">Instantaneous Data</div>
           <div className="text-sm text-gray-500">Last Comm Date: 10/07/2025 07:00:00</div>
@@ -159,9 +206,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
               <div className="font-semibold text-base">Power Distribution</div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Power Distribution')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Distribution')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="flex flex-col md:flex-row items-center justify-between px-6 pb-6 pt-2 gap-4">
               <div className="flex flex-col items-center w-full md:w-2/3">
@@ -199,9 +250,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-[var(--color-primary-lightest)]  rounded-t-3xl">
               <div className="font-semibold text-base">Power Metrics</div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Power Metrics')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Metrics')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="w-full h-64 px-6 pb-6 pt-2">
               <BarChart
@@ -231,9 +286,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
               <div className="font-semibold text-base">Daily Consumption <span className="text-gray-500 font-normal text-sm">(9 May, 2025 - 10 Jul, 2025)</span></div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Daily Consumption')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Daily Consumption')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="w-full h-64 px-6 pb-6 pt-2">
               <BarChart
@@ -255,9 +314,13 @@ const ConsumerView: React.FC = () => {
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
               <div className="font-semibold text-base">Monthly Consumption <span className="text-gray-500 font-normal text-sm">(Jul 2024 - Jul 2025)</span></div>
-              <button className="w-8 h-8 flex items-center justify-center bg-transparent hover:bg-blue-200 rounded-full transition" onClick={() => alert('Download Monthly Consumption')}> 
-                <img src="/icons/download.svg" alt="Download" className="w-5 h-5" />
-              </button>
+              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Monthly Consumption')}>
+                <img
+                  alt="Download chart"
+                  src="icons/download-icon.svg"
+                  className="w-4 h-4 [filter:var(--icon-color)]"
+                />
+              </span>
             </div>
             <div className="w-full h-64 px-6 pb-6 pt-2">
               <BarChart
@@ -336,7 +399,7 @@ const ConsumerView: React.FC = () => {
     component: (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Events</h2>
-        <div className="bg-white rounded-2xl shadow p-6">
+        <div className="bg-white rounded-2xl">
           <Table
             data={Array.from({ length: 46 }, (_, i) => ({
               sNo: i + 1,
@@ -370,7 +433,7 @@ const ConsumerView: React.FC = () => {
     component: (
       <div className="flex flex-col gap-4">
         <h2 className="text-lg font-semibold">Connection Activity History</h2>
-        <div className="bg-white rounded-2xl shadow p-6">
+        <div className="bg-white rounded-2xl shadow ">
           <Table
             data={[
               { sNo: 1, action: 'Connect', performedBy: 'Admin', dateTime: '10/07/2025 09:00:00', remarks: 'Routine connection' },
@@ -394,10 +457,24 @@ const ConsumerView: React.FC = () => {
     )
   };
 
+  // Debug Section
+  const debugSection: Section = {
+    id: 'debug',
+    component: (
+      <div className="bg-gray-50 rounded-lg p-4 mb-4">
+        <h3 className="font-semibold text-gray-800 mb-2">Debug Information:</h3>
+        <p className="text-sm text-gray-600 mb-1">UID from URL: <strong>{uid}</strong></p>
+        <p className="text-sm text-gray-600 mb-1">Consumer found: <strong>{consumer ? 'Yes' : 'No'}</strong></p>
+        <p className="text-sm text-gray-600">Total consumers: <strong>{consumersData.length}</strong></p>
+      </div>
+    )
+  };
+
   return (
     <Page
       layout="single-column"
       sections={[
+        debugSection,
         consumerInfoSection, 
         instantaneousDataSection, 
         powerAnalysisSection, 
@@ -407,10 +484,8 @@ const ConsumerView: React.FC = () => {
         connectionActivitySection
       ]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
-      className="p-2 flex flex-col gap-8"
+      className=" flex flex-col gap-8"
       sectionClassName=""
 
     />

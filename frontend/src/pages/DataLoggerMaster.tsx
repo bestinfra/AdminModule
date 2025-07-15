@@ -1,13 +1,8 @@
 import React from 'react';
 import Table from '../components/global/Table';
-import Button from '../components/global/Button';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 import { useNavigate } from 'react-router-dom';
 
 const columns = [
@@ -44,29 +39,36 @@ const actions = [
 ];
 
 const DataLoggerMaster: React.FC = () => {
+
   const navigate = useNavigate();
+  
   // Header component
-  const headerComponent = createHeaderComponent(
-    'Data Loggers List',
-    'Manage and monitor all data loggers in the system',
-    `Total: ${data.length} data loggers`
+  const headerComponent = (
+    <PageHeader
+      title="Data Loggers List"
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Dashboard"
+      buttonsLabel="Add Data Logger"
+      variant="primary"
+      onClick={() => navigate('/meter-management/data-logger-master/add')}
+      showMenu={true}
+      showDropdown={true}
+      menuItems={[
+        { id: 'all', label: 'All Data Loggers' },
+        { id: 'active', label: 'Active' },
+        { id: 'inactive', label: 'Inactive' },
+        { id: 'online', label: 'Online' },
+        { id: 'offline', label: 'Offline' },
+        { id: 'maintenance', label: 'Maintenance' }
+      ]}
+      onMenuItemClick={(itemId) => {
+        console.log(`Filter by: ${itemId}`);
+        // TODO: Implement filtering logic based on selection
+      }}
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Add Data Logger', onClick: () => navigate('/meter-management/data-logger-master/add'), variant: 'primary' },
-    { label: 'Export Data', onClick: () => console.log('Exporting data...'), variant: 'outline' },
-    { label: 'Bulk Actions', onClick: () => console.log('Bulk actions...'), variant: 'outline' }
-  ]);
-
   
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: 'Data Logger Master ID: DATALOGGER-001',
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // Data Loggers Table Section
   const dataLoggersTableSection: Section = {
@@ -87,12 +89,9 @@ const DataLoggerMaster: React.FC = () => {
       layout="single-column"
       sections={[dataLoggersTableSection]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
-      className="p-2"
+      className=""
       sectionClassName=""
-
     />
   );
 };

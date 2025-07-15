@@ -1,8 +1,8 @@
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
-import Button from './Button';
 import Cookies from 'js-cookie';
 import { useApp } from '../../context/AppContext';
+import '../../styles/custom.css';
 
 interface SubMenuItem {
     title: string;
@@ -62,7 +62,7 @@ interface SidebarProps {
 
 const defaultMenus: MenuCategory[] = [
     {
-        category: 'MANAGEMENT',
+        category: 'DASHBOARD',
         items: [
             {
                 title: 'Dashboard',
@@ -70,74 +70,215 @@ const defaultMenus: MenuCategory[] = [
                 link: '/',
             },
             {
+                title: 'Super Admin Dashboard',
+                icon: '/icons/admin.svg',
+                link: '/super-admin',
+            },
+            {
                 title: 'DTR Dashboard',
                 icon: '/icons/dtr.svg',
                 link: '/dtr-dashboard',
             },
+        ],
+    },
+    {
+        category: 'CONSUMER MANAGEMENT',
+        items: [
             {
                 title: 'Consumers',
-                icon: '/icons/customer-service.svg',
+                icon: '/icons/user.svg',
                 link: '/consumers',
             },
             {
-                title: 'Bills',
+                title: 'Add Consumer',
+                icon: '/icons/user-add.svg',
+                link: '/consumers/add',
+            },
+            {
+                title: 'Consumer View',
+                icon: '/icons/user-profile.svg',
+                link: '/consumers',
+            },
+        ],
+    },
+    {
+        category: 'METER MANAGEMENT',
+        items: [
+            {
+                title: 'Meters List',
+                icon: '/icons/meter.svg',
+                link: '/meter-management/meters-list',
+            },
+            {
+                title: 'Add Meter',
+                icon: '/icons/meter-bolt.svg',
+                link: '/meter-management/meters-list/add',
+            },
+            {
+                title: 'Meter Details',
+                icon: '/icons/meter-make.svg',
+                link: '/meter-details',
+            },
+            {
+                title: 'Data Logger Master',
+                icon: '/icons/database.svg',
+                link: '/meter-management/data-logger-master',
+            },
+            {
+                title: 'Add Data Logger',
+                icon: '/icons/server.svg',
+                link: '/meter-management/data-logger-master/add',
+            },
+        ],
+    },
+    {
+        category: 'BILLING',
+        items: [
+            {
+                title: 'Bills Postpaid',
                 icon: '/icons/bills.svg',
+                link: '/bills/postpaid',
+            },
+            {
+                title: 'Bills Prepaid',
+                icon: '/icons/bills2.svg',
+                link: '/bills/prepaid',
+            },
+        ],
+    },
+    {
+        category: 'DTR MANAGEMENT',
+        items: [
+            {
+                title: 'DTR Overview',
+                icon: '/icons/dtr.svg',
+                link: '/dtr-dashboard',
                 hasSubmenu: true,
                 submenu: [
                     {
-                        title: 'Prepaid Transactions',
-                        link: '/bills/prepaid',
+                        title: 'DTR Detail Page',
+                        link: '/dtr',
                     },
                     {
-                        title: 'Postpaid Bills',
-                        link: '/bills/postpaid',
+                        title: 'Total DTRs',
+                        link: '/dtr-statistics/total-dtrs',
+                    },
+                    {
+                        title: 'Total Fuse Blown',
+                        link: '/dtr-statistics/total-fuse-blown',
+                    },
+                    {
+                        title: 'Total LT Feeders',
+                        link: '/dtr-statistics/total-lt-feeders',
                     },
                 ],
             },
             {
-                title: 'Tickets',
+                title: 'DTR Issues',
+                icon: '/icons/alert-triggered.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'HT Side Fuse Blown',
+                        link: '/dtr-statistics/ht-side-fuse-blown',
+                    },
+                    {
+                        title: 'LT Side Fuse Blown',
+                        link: '/dtr-statistics/lt-side-fuse-blown',
+                    },
+                    {
+                        title: 'Overloaded Feeders',
+                        link: '/dtr-statistics/overloaded-feeders',
+                    },
+                    {
+                        title: 'Underloaded Feeders',
+                        link: '/dtr-statistics/underloaded-feeders',
+                    },
+                    {
+                        title: 'Unbalanced DTRs',
+                        link: '/dtr-statistics/unbalanced-dtrs',
+                    },
+                    {
+                        title: 'Power Failure Feeders',
+                        link: '/dtr-statistics/power-failure-feeders',
+                    },
+                ],
+            },
+            {
+                title: 'Feeders',
+                icon: '/icons/feeder.svg',
+                link: '/feeders',
+            },
+        ],
+    },
+    {
+        category: 'ASSET MANAGEMENT',
+        items: [
+            {
+                title: 'Asset Management',
+                icon: '/icons/workflow-setting-alt.svg',
+                link: '/asset-management',
+            },
+            {
+                title: 'Connect/Disconnect',
+                icon: '/icons/connect.svg',
+                link: '/connect-disconnect',
+            },
+        ],
+    },
+    {
+        category: 'TICKETS & SUPPORT',
+        items: [
+            {
+                title: 'All Tickets',
                 icon: '/icons/support-tickets.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'All Tickets',
-                        link: '/all-tickets',
-                    },
-                    {
-                        title: 'My Tickets',
-                        link: '/user/tickets/my',
-                        count: 20,
-                    },
-                    {
-                        title: 'Create Ticket',
-                        link: '/user/tickets/create',
-                    },
-                ],
+                link: '/all-tickets',
             },
             {
-                title: 'Apps',
+                title: 'Ticket View',
+                icon: '/icons/ticket-view.svg',
+                link: '/ticket-view/:ticketId',
+            },
+            {
+                title: 'Add Message',
+                icon: '/icons/ticket-view.svg',
+                link: '/ticket-view/:ticketId/add-message',
+            },
+            {
+                title: 'User Management',
+                icon: '/icons/user-management.svg',
+                link: '/user-management',
+            },
+            {
+                title: 'Role Management',
+                icon: '/icons/role-management.svg',
+                link: '/role-management',
+            },
+        ],
+
+    },
+    {
+        category: 'APPS & MODULES',
+        items: [
+            {
+                title: 'App Management',
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
             {
-                title: 'Asset Management',
-                icon: '/icons/apps-icon.svg',
-                link: '/asset-management',
+                title: 'Module Selection',
+                icon: '/icons/collection.svg',
+                link: '/module-selection',
             },
+        ],
+    },
+    {
+        category: 'PAGE BUILDER',
+        items: [
             {
-                title: 'Meter Management',
-                icon: '/icons/meter-management.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Data Logger Master',
-                        link: '/meter-management/data-logger-master',
-                    },
-                    {
-                        title: 'Meters List',
-                        link: '/meter-management/meters-list',
-                    },
-                ],
+                title: 'Page Builder',
+                icon: '/icons/workflow-setting-alt.svg',
+                link: '/page-builder',
             },
             {
                 title: 'User Management',
@@ -160,9 +301,14 @@ const defaultMenus: MenuCategory[] = [
         category: 'SETTINGS',
         items: [
             {
-                title: 'Logout',
-                icon: '/icons/logout.svg',
-                link: '/user/logout',
+                title: 'Forms',
+                icon: '/icons/clipboard-user.svg',
+                link: '/forms',
+            },
+            {
+                title: 'Profile',
+                icon: '/icons/user-profile.svg',
+                link: '/profile',
             },
         ],
     },
@@ -210,13 +356,10 @@ const Sidebar = ({
     onNavigate,
     menus = defaultMenus,
     logo = defaultProps.logo,
-    appDownload = defaultProps.appDownload,
-    footer = defaultProps.footer,
     className = '',
-    onShareClick,
     onLogout = defaultProps.onLogout,
 }: Omit<SidebarProps, 'isCollapsed' | 'onThemeToggle'>) => {
-    const { isDarkMode, isSidebarCollapsed, toggleTheme } = useApp();
+    const { isDarkMode, isSidebarCollapsed } = useApp();
     const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
         {}
     );
@@ -244,17 +387,17 @@ const Sidebar = ({
                 isSidebarCollapsed ? 'w-20' : 'w-72'
             }`}>
             <nav
-                className={`h-screen flex flex-col justify-between items-center w-full bg-primary-lightest dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
+                className={`h-screen flex flex-col justify-between items-center w-full bg-background-secondary dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
                     isSidebarCollapsed ? 'w-20' : 'w-72'
                 } ${className}`}
                 aria-label="Main navigation">
                 <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
                     <header
-                        className={`sticky top-0 z-10 dark:bg-primary-dark h-24 flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${
+                        className={` dark:bg-primary-dark flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${
                             isSidebarCollapsed
                                 ? 'bg-primary px-4'
-                                : 'bg-white px-16'
-                        } py-8`}>
+                                : 'bg-white px-10'
+                        } py-6`}>
                         <img
                             src={
                                 isSidebarCollapsed
@@ -267,7 +410,7 @@ const Sidebar = ({
                             }
                             alt={logo?.alt}
                             className={`md:block ${
-                                isSidebarCollapsed ? 'w-8' : ''
+                                isSidebarCollapsed ? 'w-8' : 'w-[170px]'
                             }`}
                         />
                     </header>
@@ -282,7 +425,7 @@ const Sidebar = ({
                                         {category.category}
                                     </h2>
                                 )}
-                                <ul className="list-none p-0 m-0">
+                                <ul className="list-none p-0 m-0 gap-2 flex flex-col">
                                     {category.items.map(
                                         (menuItem, itemIndex) => (
                                             <li key={itemIndex}>
@@ -297,7 +440,7 @@ const Sidebar = ({
                                                             className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
                                                                 pathname ===
                                                                 menuItem.link
-                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white'
+                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white custom-shadow'
                                                                     : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
                                                             }`}
                                                             aria-expanded={
@@ -397,10 +540,10 @@ const Sidebar = ({
                                                                 onNavigate?.(menuItem.link);
                                                             }
                                                         }}
-                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group rounded-lg w-full text-left ${
+                                                        className={`flex items-center gap-4 py-3 px-4  text-sm cursor-pointer group rounded-lg w-full text-left ${
                                                             pathname ===
                                                             menuItem.link
-                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white'
+                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white custom-shadow'
                                                                 : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
                                                         }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
@@ -450,7 +593,7 @@ const Sidebar = ({
                         ))}
                     </main>
                 </div>
-                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
+                {/* <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
                     {!isSidebarCollapsed ? (
                         <>
                             {appDownload?.enabled && (
@@ -557,7 +700,7 @@ const Sidebar = ({
                             )}
                         </div>
                     )}
-                </footer>
+                </footer> */}
             </nav>
         </div>
     );

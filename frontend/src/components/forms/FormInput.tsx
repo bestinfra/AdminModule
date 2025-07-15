@@ -16,7 +16,7 @@ import {
 } from './renderers';
 
 const FormInput: React.FC<FormInputProps> = ({ 
-  input, value, error, showError, disabled, onInputChange, onInputBlur, fileInputRefs 
+  input, value, showError, disabled, onInputChange, onInputBlur, fileInputRefs 
 }) => {
   const { name, type, label, placeholder, required, options, className: inputClassName, colSpan = 1, icon, description } = input;
   
@@ -59,7 +59,7 @@ const FormInput: React.FC<FormInputProps> = ({
     name,
     required,
     disabled,
-    className: `input ${inputClassName || ''} ${showError ? 'border-red-500' : ''}`,
+    className: `w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border-primary-border dark:border-dark-border text-base font-medium ${showError ? 'border-red-500' : 'border-gray-300'} ${inputClassName || ''}`,
     onChange: (event: FormInputEvent) => {
       const extractedValue = extractValueFromEvent(event);
       onInputChange(name, extractedValue, input);
@@ -110,7 +110,7 @@ const FormInput: React.FC<FormInputProps> = ({
           <CheckboxInput
             {...commonProps}
             value={value as boolean}
-            label={label}
+            label={label || ''}
             description={description}
           />
         );
@@ -131,17 +131,18 @@ const FormInput: React.FC<FormInputProps> = ({
   return (
     <div className={`w-full ${gridSpanClass}`}>
       <div className="space-y-2 flex flex-col gap-2">
-        <label htmlFor={name} className="label">
-          {label}
-          {required && <span className="text-red-500 ml-1" aria-label="required">*</span>}
-        </label>
+        {label && (
+          <label htmlFor={name} className="label">
+            {label}
+          </label>
+        )}
         <div className="relative">{renderInput()}</div>
         
         {/* Accessible description */}
         {description && !showError && (
           <p 
             id={descriptionId}
-            className="text-xs text-gray-500"
+            className="text-sm text-gray-500"
             role="note"
           >
             {description}
@@ -149,17 +150,17 @@ const FormInput: React.FC<FormInputProps> = ({
         )}
         
         {/* Accessible error message */}
-        {showError && error && (
+        {/* {showError && error && (
           <div 
             id={errorId}
-            className="text-xs text-red-500 mt-1"
+            className="text-sm text-red-500 mt-1"
             role="alert"
             aria-live="polite"
           >
             <span className="sr-only">Error: </span>
             {error}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

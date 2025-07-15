@@ -22,6 +22,7 @@ export const authenticateToken = async (req, res, next) => {
         
         // Check if user exists
         const user = await UserDB.findById(decoded.userId);
+        
         if (!user) {
             return res.status(401).json({
                 success: false,
@@ -60,7 +61,10 @@ export const authenticateToken = async (req, res, next) => {
 };
 
 // Role-based authorization middleware
-export const authorizeRole = (...roles) => {
+export const authorizeRole = (roles) => {
+    // Ensure roles is an array
+    const allowedRoles = Array.isArray(roles) ? roles : [roles];
+    
     return (req, res, next) => {
         if (!req.user) {
             return res.status(401).json({
@@ -69,10 +73,10 @@ export const authorizeRole = (...roles) => {
             });
         }
 
-        if (!roles.includes(req.user.role)) {
+        if (!allowedRoles.includes(req.user.role)) {
             return res.status(403).json({
                 success: false,
-                message: 'Insufficient permissions'
+                message: `Access denied. Required role: ${allowedRoles.join(' or ')}`
             });
         }
 

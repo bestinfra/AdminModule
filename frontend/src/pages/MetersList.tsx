@@ -3,14 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import Dropdown from '../components/global/Dropdown';
-import Button from '../components/global/Button';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createFooterComponent
-} from '../components/global/PageComponents';
+import PageHeader from '../components/global/PageHeader';
 
 const meterCards = [
   {
@@ -107,6 +102,7 @@ const MetersList: React.FC = () => {
   const [status, setStatus] = useState('');
   const [type, setType] = useState('');
   const [mapping, setMapping] = useState('');
+
   const navigate = useNavigate();
 
   const actions = [
@@ -118,27 +114,45 @@ const MetersList: React.FC = () => {
   ];
 
   // Header component
-  const headerComponent = createHeaderComponent(
-    'Meters List',
-    'Manage and monitor all meters in the system',
-    `Total: ${data.length} meters`
+  const headerComponent = (
+    <PageHeader
+      title="Meters List"
+      onBackClick={() => window.history.back()}
+      backButtonText="Back to Dashboard"
+      buttonsLabel="Add Meter"
+      variant="primary"
+      onClick={() => navigate('/meter-management/meters-list/add')}
+      showMenu={true}
+      showDropdown={true}
+      menuItems={[
+        { id: 'all', label: 'All Meters' },
+        { id: 'active', label: 'Active' },
+        { id: 'inactive', label: 'Inactive' },
+        { id: 'prepaid', label: 'Prepaid' },
+        { id: 'postpaid', label: 'Postpaid' },
+        { id: 'mapped', label: 'Mapped' },
+        { id: 'unmapped', label: 'Unmapped' }
+      ]}
+      onMenuItemClick={(itemId) => {
+        console.log(`Filter by: ${itemId}`);
+        // Apply filters based on selection
+        if (itemId === 'active' || itemId === 'inactive') {
+          setStatus(itemId);
+        } else if (itemId === 'prepaid' || itemId === 'postpaid') {
+          setType(itemId);
+        } else if (itemId === 'mapped' || itemId === 'unmapped') {
+          setMapping(itemId);
+        } else if (itemId === 'all') {
+          setStatus('');
+          setType('');
+          setMapping('');
+        }
+      }}
+     
+    />
   );
 
-  // Actions component
-  const actionsComponent = createActionsComponent([
-    { label: 'Add Meter', onClick: () => navigate('/meter-management/meters-list/add'), variant: 'primary' },
-    { label: 'Export Meters', onClick: () => console.log('Exporting meters...'), variant: 'outline' },
-    { label: 'Bulk Actions', onClick: () => console.log('Bulk actions...'), variant: 'outline' }
-  ]);
-
   
-
-  // Footer component
-  const footerComponent = createFooterComponent({
-    id: 'Meters List ID: METERS-001',
-    version: '2.1.0',
-    supportLink: '#'
-  });
 
   // Overview Cards Section
   const overviewSection: Section = {
@@ -202,12 +216,9 @@ const MetersList: React.FC = () => {
       layout="single-column"
       sections={[overviewSection, filtersSection, metersTableSection]}
       header={headerComponent}
-      actions={actionsComponent}
-      footer={footerComponent}
       sidebarPosition="right"
-      className="p-2"
+      className=""
       sectionClassName=""
-
     />
   );
 };
