@@ -138,6 +138,7 @@ const TicketsFilteredView: React.FC = () => {
             department: 'IT'
         }
     ];
+    
 
     // Filter data based on URL parameter
     useEffect(() => {

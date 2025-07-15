@@ -123,11 +123,11 @@ const Modal: React.FC<ModalProps> = ({
               role="document"
             >
               {(title || showCloseIcon) && (
-                <header className="flex items-center justify-between px-6 py-4  border-b  border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-t-xl ">
+                <header className="flex items-center justify-between p-6  border-b  border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-t-xl ">
                   {title && (
                     <h2
                       id={`${uniqueModalId}-title`}
-                      className="text-lg font-semibold text-main dark:text-white"
+                      className="text-lg font-semibold text-main dark:text-white text-grey"
                     >
                       {title}
                     </h2>

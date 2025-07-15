@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/global/Button';
-import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
 import Modal from '../components/global/Modal';
 import LoadingSpinner from '../components/global/LoadingSpinner';
 import PageHeader from '../components/global/PageHeader';
 import Card from '../components/global/Card';
 import meterConnectionAPI, { MeterConnectionAPI } from '../api/meterConnection';
-
 interface MeterData {
   id: string;
   meterNo: string;
   uid: string;
-  consumerName: string;
+  consumerName: string; 
   location: string;
   status: 'connected' | 'disconnected';
   communicationStatus: 'communicating' | 'non-communicating';
@@ -21,7 +19,7 @@ interface MeterData {
   lastUpdate: string;
   lastCommunication: string;
   phase: string;
-  type: 'prepaid' | 'postpaid';
+  type: "prepaid" | "postpaid";
 }
 
 const meterData: MeterData[] = [
@@ -35,63 +33,10 @@ const meterData: MeterData[] = [
   { id: '8', meterNo: 'D4567890', uid: 'BI25GMRA008', consumerName: 'Emily Davis', location: '78, Lake View Apartments', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 67.23, lastUpdate: '2024-01-14', lastCommunication: '2024-01-14 16:20:00', phase: 'Single Phase', type: 'postpaid' },
   { id: '9', meterNo: 'E2345678', uid: 'BI25GMRA009', consumerName: 'David Brown', location: '45, Riverside Colony', status: 'connected', communicationStatus: 'communicating', lastReading: 156.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 13:30:00', phase: 'Single Phase', type: 'prepaid' },
   { id: '10', meterNo: 'F8901234', uid: 'BI25GMRA010', consumerName: 'Lisa Anderson', location: '12, Hill Top Residency', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 98.34, lastUpdate: '2024-01-13', lastCommunication: '2024-01-13 08:45:00', phase: 'Three Phase', type: 'postpaid' },
+  
 ];
 
-const columns: Column[] = [
-  { key: 'sNo', label: 'S.No' },
-  { key: 'meterNo', label: 'Meter No' },
-  { key: 'uid', label: 'UID' },
-  { key: 'consumerName', label: 'Consumer Name' },
-  { key: 'location', label: 'Location' },
-  { 
-    key: 'status', 
-    label: 'Connection Status',
-    render: (value) => (
-      <span
-        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-          value === 'connected'
-            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-        }`}>
-        <div
-          className={`w-2 h-2 rounded-full mr-2 ${
-            value === 'connected' ? 'bg-green-500' : 'bg-red-500'
-          }`}></div>
-        {value === 'connected' ? 'CONNECTED' : 'DISCONNECTED'}
-      </span>
-    )
-  },
-  { 
-    key: 'communicationStatus', 
-    label: 'Communication Status',
-    render: (value) => (
-      <span
-        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-          value === 'communicating'
-            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-        }`}>
-        <div
-          className={`w-2 h-2 rounded-full mr-2 ${
-            value === 'communicating' ? 'bg-green-500' : 'bg-red-500'
-          }`}></div>
-        {value === 'communicating' ? 'COMMUNICATING' : 'NON-COMMUNICATING'}
-      </span>
-    )
-  },
-  { key: 'lastReading', label: 'Last Reading (kWh)' },
-  { key: 'lastCommunication', label: 'Last Communication' },
-  { key: 'lastUpdate', label: 'Last Status Update' },
-  { 
-    key: 'type', 
-    label: 'Meter Type',
-    render: (value) => (
-      <span className="capitalize font-medium text-gray-600 dark:text-gray-300">
-        {value}
-      </span>
-    )
-  },
-];
+
 
 const ConnectDisconnect: React.FC = () => {
   const params = useParams<{ filter?: string }>();
@@ -99,8 +44,10 @@ const ConnectDisconnect: React.FC = () => {
   const [meters, setMeters] = useState<MeterData[]>(meterData);
   const [selectedMeter, setSelectedMeter] = useState<MeterData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionType, setActionType] = useState<'connect' | 'disconnect'>('connect');
-  const [reason, setReason] = useState('');
+  const [actionType, setActionType] = useState<"connect" | "disconnect">(
+    "connect"
+  );
+  const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
@@ -108,7 +55,6 @@ const ConnectDisconnect: React.FC = () => {
   const [lastApiResponse, setLastApiResponse] = useState<any>(null);
   const [apiLogs, setApiLogs] = useState<string[]>([]);
   const [selectedMeters, setSelectedMeters] = useState<string[]>([]);
-  const [bulkActionType, setBulkActionType] = useState<'connect' | 'disconnect' | null>(null);
   const [communicationFilter, setCommunicationFilter] = useState<'all' | 'communicating' | 'non-communicating'>('all');
 
   // Handle route parameters for initial filtering
@@ -126,31 +72,36 @@ const ConnectDisconnect: React.FC = () => {
   }, [params.filter]);
 
 
+  const [bulkActionType, setBulkActionType] = useState<
+    "connect" | "disconnect" | null
+  >(null);
 
   const addApiLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setApiLogs(prev => [...prev.slice(-9), `[${timestamp}] ${message}`]);
+    setApiLogs((prev) => [...prev.slice(-9), `[${timestamp}] ${message}`]);
   };
 
   const testApiConnectivity = async () => {
-    setIsLoading(true);    
-    try {      
-      const testMeter = 'TEST_CONNECTIVITY';
+    setIsLoading(true);
+    try {
+      const testMeter = "TEST_CONNECTIVITY";
       await meterConnectionAPI.getMeterStatus(testMeter);
-      
-      addApiLog('API connectivity test successful!');
-      
+
+      addApiLog("API connectivity test successful!");
     } catch (error) {
-      console.error('API connectivity test failed:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+      console.error("API connectivity test failed:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+
       // Check if it's a 404/403 error (meter not found) vs network error
-      if (errorMessage.includes('404') || errorMessage.includes('403')) {
-        addApiLog('Connectivity test successful - API server is reachable');
-              } else if (error instanceof TypeError && errorMessage.includes('fetch')) {
-          addApiLog('This looks like a network/CORS issue');
-          addApiLog('Possible causes: 1) CORS not enabled 2) API server down 3) Network firewall');
-        } else {
+      if (errorMessage.includes("404") || errorMessage.includes("403")) {
+        addApiLog("Connectivity test successful - API server is reachable");
+      } else if (error instanceof TypeError && errorMessage.includes("fetch")) {
+        addApiLog("This looks like a network/CORS issue");
+        addApiLog(
+          "Possible causes: 1) CORS not enabled 2) API server down 3) Network firewall"
+        );
+      } else {
         addApiLog(`Connectivity test failed: ${errorMessage}`);
       }
     } finally {
@@ -160,59 +111,76 @@ const ConnectDisconnect: React.FC = () => {
 
   const handleConnect = (meter: MeterData) => {
     setSelectedMeter(meter);
-    setActionType('connect');
+    setActionType("connect");
     setIsModalOpen(true);
   };
 
   const handleDisconnect = (meter: MeterData) => {
     setSelectedMeter(meter);
-    setActionType('disconnect');
+    setActionType("disconnect");
     setIsModalOpen(true);
   };
 
   const confirmAction = async () => {
     if (!selectedMeter || !reason.trim()) {
-      setError('Please provide a reason for this action');
+      setError("Please provide a reason for this action");
       return;
     }
 
     setActionLoading(true);
     setError(null);
-    addApiLog(`Starting ${actionType} operation for meter ${selectedMeter.meterNo}`);
+    addApiLog(
+      `Starting ${actionType} operation for meter ${selectedMeter.meterNo}`
+    );
 
     try {
       let response;
-      
-      if (actionType === 'connect') {
+
+      if (actionType === "connect") {
         addApiLog(`Calling connectMeter API for ${selectedMeter.meterNo}`);
-        response = await meterConnectionAPI.connectMeter(selectedMeter.meterNo, reason);
+        response = await meterConnectionAPI.connectMeter(
+          selectedMeter.meterNo,
+          reason
+        );
       } else {
         addApiLog(`Calling disconnectMeter API for ${selectedMeter.meterNo}`);
-        response = await meterConnectionAPI.disconnectMeter(selectedMeter.meterNo, reason);
+        response = await meterConnectionAPI.disconnectMeter(
+          selectedMeter.meterNo,
+          reason
+        );
       }
 
       setLastApiResponse(response);
-      addApiLog(`API call successful! Transaction ID: ${response.transactionId}`);
-      console.log('API Response:', response);
+      addApiLog(
+        `API call successful! Transaction ID: ${response.transactionId}`
+      );
+      console.log("API Response:", response);
 
       // Update the meter status in the local state
-      const updatedMeters = meters.map(meter =>
+      const updatedMeters = meters.map((meter) =>
         meter.id === selectedMeter.id
-          ? { ...meter, status: (actionType === 'connect' ? 'connected' : 'disconnected') as 'connected' | 'disconnected' }
+          ? {
+              ...meter,
+              status: (actionType === "connect"
+                ? "connected"
+                : "disconnected") as "connected" | "disconnected",
+            }
           : meter
       );
 
       setMeters(updatedMeters);
       setIsModalOpen(false);
       setSelectedMeter(null);
-      setReason('');
-      
+      setReason("");
+
       // Show success message
-      alert(`Meter ${selectedMeter.meterNo} ${actionType}ed successfully!\nTransaction ID: ${response.transactionId}\nMessage: ${response.message}`);
-      
+      alert(
+        `Meter ${selectedMeter.meterNo} ${actionType}ed successfully!\nTransaction ID: ${response.transactionId}\nMessage: ${response.message}`
+      );
     } catch (error) {
-      console.error('Error performing action:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error("Error performing action:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       addApiLog(`API call failed: ${errorMessage}`);
       setError(`Failed to ${actionType} meter: ${errorMessage}`);
     } finally {
@@ -224,88 +192,110 @@ const ConnectDisconnect: React.FC = () => {
     addApiLog(`Refreshing status for meter ${meterNo}`);
     try {
       const statusResponse = await meterConnectionAPI.getMeterStatus(meterNo);
-      const parsedStatus = MeterConnectionAPI.parseConnectionStatus(statusResponse.isConnected);
-      
-      setLastApiResponse(statusResponse);
-      addApiLog(`Status refresh successful for ${meterNo}: ${parsedStatus} (API: ${statusResponse.isConnected})`);
-      
-      // Update the meter status in the local state
-      const updatedMeters = meters.map(meter =>
-        meter.meterNo === meterNo
-          ? { ...meter, status: parsedStatus }
-          : meter
+      const parsedStatus = MeterConnectionAPI.parseConnectionStatus(
+        statusResponse.isConnected
       );
-      
+
+      setLastApiResponse(statusResponse);
+      addApiLog(
+        `Status refresh successful for ${meterNo}: ${parsedStatus} (API: ${statusResponse.isConnected})`
+      );
+
+      // Update the meter status in the local state
+      const updatedMeters = meters.map((meter) =>
+        meter.meterNo === meterNo ? { ...meter, status: parsedStatus } : meter
+      );
+
       setMeters(updatedMeters);
-      
     } catch (error) {
-      console.error('Error refreshing meter status:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error("Error refreshing meter status:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       addApiLog(`Status refresh failed for ${meterNo}: ${errorMessage}`);
-      setError(`Failed to refresh status for meter ${meterNo}: ${errorMessage}`);
+      setError(
+        `Failed to refresh status for meter ${meterNo}: ${errorMessage}`
+      );
     }
   };
 
   const refreshAllMeterStatuses = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const refreshPromises = meters.map(async (meter) => {
         try {
-          const statusResponse = await meterConnectionAPI.getMeterStatus(meter.meterNo);
-          const parsedStatus = MeterConnectionAPI.parseConnectionStatus(statusResponse.isConnected);
+          const statusResponse = await meterConnectionAPI.getMeterStatus(
+            meter.meterNo
+          );
+          const parsedStatus = MeterConnectionAPI.parseConnectionStatus(
+            statusResponse.isConnected
+          );
           return { ...meter, status: parsedStatus };
         } catch (error) {
           console.error(`Error refreshing meter ${meter.meterNo}:`, error);
-          return { ...meter, status: 'disconnected' as const };
+          return { ...meter, status: "disconnected" as const };
         }
       });
-      
+
       const updatedMeters = await Promise.all(refreshPromises);
       setMeters(updatedMeters);
-      
     } catch (error) {
-      console.error('Error refreshing all meter statuses:', error);
-      setError('Failed to refresh meter statuses');
+      console.error("Error refreshing all meter statuses:", error);
+      setError("Failed to refresh meter statuses");
     } finally {
       setIsLoading(false);
     }
   };
 
-
-
-  const handleBulkAction = async (action: 'connect' | 'disconnect') => {
+  const handleBulkAction = async (action: "connect" | "disconnect") => {
     if (selectedMeters.length === 0) return;
-    
+
     setActionLoading(true);
     setError(null);
-    
+
     try {
-      const selectedMeterData = meters.filter(m => selectedMeters.includes(m.id));
+      const selectedMeterData = meters.filter((m) =>
+        selectedMeters.includes(m.id)
+      );
       const actionPromises = selectedMeterData.map(async (meter) => {
         try {
-          if (action === 'connect') {
-            await meterConnectionAPI.connectMeter(meter.meterNo, 'Bulk connect operation');
+          if (action === "connect") {
+            await meterConnectionAPI.connectMeter(
+              meter.meterNo,
+              "Bulk connect operation"
+            );
           } else {
-            await meterConnectionAPI.disconnectMeter(meter.meterNo, 'Bulk disconnect operation');
+            await meterConnectionAPI.disconnectMeter(
+              meter.meterNo,
+              "Bulk disconnect operation"
+            );
           }
-          return { ...meter, status: (action === 'connect' ? 'connected' : 'disconnected') as 'connected' | 'disconnected' };
+          return {
+            ...meter,
+            status: (action === "connect" ? "connected" : "disconnected") as
+              | "connected"
+              | "disconnected",
+          };
         } catch (error) {
-          console.error(`Error in bulk ${action} for meter ${meter.meterNo}:`, error);
+          console.error(
+            `Error in bulk ${action} for meter ${meter.meterNo}:`,
+            error
+          );
           return meter;
         }
       });
-      
+
       const updatedMeters = await Promise.all(actionPromises);
-      setMeters(prev => prev.map(meter => {
-        const updated = updatedMeters.find(um => um.id === meter.id);
-        return updated || meter;
-      }));
-      
+      setMeters((prev) =>
+        prev.map((meter) => {
+          const updated = updatedMeters.find((um) => um.id === meter.id);
+          return updated || meter;
+        })
+      );
+
       setSelectedMeters([]);
       setBulkActionType(null);
-      
     } catch (error) {
       console.error(`Error in bulk ${action}:`, error);
       setError(`Failed to ${action} selected meters`);
@@ -326,15 +316,21 @@ const ConnectDisconnect: React.FC = () => {
       setBulkActionType(null);
       return;
     }
-    
-    const selectedMeterData = meters.filter(m => selectedMeters.includes(m.id));
-    const allDisconnected = selectedMeterData.every(m => m.status === 'disconnected');
-    const allConnected = selectedMeterData.every(m => m.status === 'connected');
-    
+
+    const selectedMeterData = meters.filter((m) =>
+      selectedMeters.includes(m.id)
+    );
+    const allDisconnected = selectedMeterData.every(
+      (m) => m.status === "disconnected"
+    );
+    const allConnected = selectedMeterData.every(
+      (m) => m.status === "connected"
+    );
+
     if (allDisconnected) {
-      setBulkActionType('connect');
+      setBulkActionType("connect");
     } else if (allConnected) {
-      setBulkActionType('disconnect');
+      setBulkActionType("disconnect");
     } else {
       setBulkActionType(null);
     }
@@ -349,21 +345,21 @@ const ConnectDisconnect: React.FC = () => {
       },
     },
     {
-      label: 'Refresh Status',
-      icon: '/icons/refresh.svg',
+      label: "Refresh Status",
+      icon: "/icons/refresh.svg",
       onClick: (row: any) => refreshMeterStatus(row.meterNo),
     },
     {
-      label: 'Connect',
-      icon: '/icons/connect.svg',
+      label: "Connect",
+      icon: "/icons/connect.svg",
       onClick: (row: any) => handleConnect(row as MeterData),
-      condition: (row: any) => row.status === 'disconnected',
+      condition: (row: any) => row.status === "disconnected",
     },
     {
-      label: 'Disconnect',
-      icon: '/icons/disconnect.svg',
+      label: "Disconnect",
+      icon: "/icons/disconnect.svg",
       onClick: (row: any) => handleDisconnect(row as MeterData),
-      condition: (row: any) => row.status === 'connected',
+      condition: (row: any) => row.status === "connected",
     },
   ];
 
@@ -397,19 +393,19 @@ const ConnectDisconnect: React.FC = () => {
           showMenu={true}
           showDropdown={true}
           menuItems={[
-            { id: 'export-csv', label: 'Export CSV' },
-            { id: 'recent-activity', label: 'Recent Activity' }
+            { id: "export-csv", label: "Export CSV" },
+            { id: "recent-activity", label: "Recent Activity" },
           ]}
-                      onMenuItemClick={(itemId) => {
-              console.log(`Filter by: ${itemId}`);
-              if (itemId === 'export-csv') {
-                console.log('Export CSV action');
-              } else if (itemId === 'recent-activity') {
-                // Navigate to TicketsFilteredView page to show history
-                window.location.href = '/tickets-filtered?filter=all';
-              }
-              // TODO: Implement filtering logic based on selection
-            }}
+          onMenuItemClick={(itemId) => {
+            console.log(`Filter by: ${itemId}`);
+            if (itemId === "export-csv") {
+              console.log("Export CSV action");
+            } else if (itemId === "recent-activity") {
+              // Navigate to TicketsFilteredView page to show history
+              window.location.href = "/tickets-filtered?filter=all";
+            }
+            // TODO: Implement filtering logic based on selection
+          }}
         />
       </div>
 
@@ -421,7 +417,8 @@ const ConnectDisconnect: React.FC = () => {
             </div>
             <button
               onClick={() => setError(null)}
-              className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100">
+              className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100"
+            >
               ×
             </button>
           </div>
@@ -438,7 +435,7 @@ const ConnectDisconnect: React.FC = () => {
       {debugMode && (
         <div className="mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-4">🔧 Debug Panel</h3>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <h4 className="font-medium mb-2">API Logs</h4>
@@ -447,17 +444,20 @@ const ConnectDisconnect: React.FC = () => {
                   <div className="text-gray-500">No API calls yet...</div>
                 ) : (
                   apiLogs.map((log, index) => (
-                    <div key={index} className="mb-1">{log}</div>
+                    <div key={index} className="mb-1">
+                      {log}
+                    </div>
                   ))
                 )}
               </div>
               <button
                 onClick={() => setApiLogs([])}
-                className="mt-2 text-sm text-blue-600 hover:text-blue-800">
+                className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+              >
                 Clear Logs
               </button>
             </div>
-            
+
             <div>
               <h4 className="font-medium mb-2">Last API Response</h4>
               <div className="bg-black text-yellow-400 p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
@@ -469,60 +469,71 @@ const ConnectDisconnect: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           <div className="mt-4">
             <h4 className="font-medium mb-3">API Tests</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-               <Button
-                 label="Test Connectivity"
-                 variant="outline"
-                 onClick={testApiConnectivity}
-                 disabled={isLoading}
-               />
-               <Button
-                 label="Test Get Status"
-                 variant="outline"
-                 onClick={() => refreshMeterStatus('A9345717')}
-                 disabled={isLoading}
-               />
-               <Button
-                 label="Test Connect"
-                 variant="success"
-                 onClick={() => {
-                   const meter = meters.find(m => m.meterNo === 'A9345717');
-                   if (meter) {
-                     setSelectedMeter(meter);
-                     setActionType('connect');
-                     setReason('Debug test connection');
-                     setIsModalOpen(true);
-                   }
-                 }}
-                 disabled={isLoading}
-               />
-               <Button
-                 label="Test Disconnect"
-                 variant="danger"
-                 onClick={() => {
-                   const meter = meters.find(m => m.meterNo === 'A9345717');
-                   if (meter) {
-                     setSelectedMeter(meter);
-                     setActionType('disconnect');
-                     setReason('Debug test disconnection');
-                     setIsModalOpen(true);
-                   }
-                 }}
-                 disabled={isLoading}
-               />
+              <Button
+                label="Test Connectivity"
+                variant="outline"
+                onClick={testApiConnectivity}
+                disabled={isLoading}
+              />
+              <Button
+                label="Test Get Status"
+                variant="outline"
+                onClick={() => refreshMeterStatus("A9345717")}
+                disabled={isLoading}
+              />
+              <Button
+                label="Test Connect"
+                variant="success"
+                onClick={() => {
+                  const meter = meters.find((m) => m.meterNo === "A9345717");
+                  if (meter) {
+                    setSelectedMeter(meter);
+                    setActionType("connect");
+                    setReason("Debug test connection");
+                    setIsModalOpen(true);
+                  }
+                }}
+                disabled={isLoading}
+              />
+              <Button
+                label="Test Disconnect"
+                variant="danger"
+                onClick={() => {
+                  const meter = meters.find((m) => m.meterNo === "A9345717");
+                  if (meter) {
+                    setSelectedMeter(meter);
+                    setActionType("disconnect");
+                    setReason("Debug test disconnection");
+                    setIsModalOpen(true);
+                  }
+                }}
+                disabled={isLoading}
+              />
+            </div>
 
-             </div>
-            
             <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 rounded-md">
-              <h5 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">🔍 Troubleshooting Tips</h5>
+              <h5 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+                🔍 Troubleshooting Tips
+              </h5>
               <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                <li>• If you see "Failed to fetch", it's likely a CORS or network issue</li>
-                <li>• Check browser console (F12) for detailed error messages</li>
-                <li>• Ensure API server is running at: https://arcticterntech.in:8443</li>
-                <li>• Try "Test Connectivity" first to verify basic connection</li>
+                <li>
+                  • If you see "Failed to fetch", it's likely a CORS or network
+                  issue
+                </li>
+                <li>
+                  • Check browser console (F12) for detailed error messages
+                </li>
+                <li>
+                  • Ensure API server is running at:
+                  https://arcticterntech.in:8443
+                </li>
+                <li>
+                  • Try "Test Connectivity" first to verify basic connection
+                </li>
                 <li>• Check your network firewall/proxy settings</li>
               </ul>
             </div>
@@ -532,8 +543,6 @@ const ConnectDisconnect: React.FC = () => {
 
       {/* Enhanced Overview Section */}
       <div className="mb-8">
-         
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card
             title="Total Meters"
@@ -543,25 +552,43 @@ const ConnectDisconnect: React.FC = () => {
             onValueClick={() => refreshAllMeterStatuses()}
             subtitle1="Active meters in system"
           />
-          
+
           <Card
             title="Communicating"
             value={meters.filter(m => m.communicationStatus === 'communicating').length}
             icon="/icons/connect.svg"
             loading={isLoading}
             onValueClick={() => navigate('/connect-disconnect/communicating')}
-            subtitle1="Meters with active communication"
-            subtitle2="Green status"
+            
+            subtitle1={`${
+              meters.filter(
+                (m) => m.type === "prepaid" && m.status === "connected"
+              ).length
+            } Connected`}
+            subtitle2={`${
+              meters.filter(
+                (m) => m.type === "prepaid" && m.status === "disconnected"
+              ).length
+            } Disconnected`}
           />
-          
+
           <Card
             title="Non-Communicating"
             value={meters.filter(m => m.communicationStatus === 'non-communicating').length}
             icon="/icons/disconnect.svg"
             loading={isLoading}
             onValueClick={() => navigate('/connect-disconnect/non-communicating')}
-            subtitle1="Meters without communication"
-            subtitle2="Red status"
+            
+            subtitle1={`${
+              meters.filter(
+                (m) => m.type === "postpaid" && m.status === "connected"
+              ).length
+            } Connected`}
+            subtitle2={`${
+              meters.filter(
+                (m) => m.type === "postpaid" && m.status === "disconnected"
+              ).length
+            } Disconnected`}
           />
 
           <Card
@@ -571,14 +598,15 @@ const ConnectDisconnect: React.FC = () => {
             loading={isLoading}
             onValueClick={() => {
               console.log('Showing connection status details');
+              console.log("Showing auto disconnect details");
             }}
             subtitle1={`${meters.filter(m => m.status === 'connected').length} Connected`}
             subtitle2={`${meters.filter(m => m.status === 'disconnected').length} Disconnected`}
           />
         </div>
-            </div>
+      </div>
 
-            {/* Quick Actions Section - Only show when meters are selected */}
+      {/* Quick Actions Section - Only show when meters are selected */}
       {selectedMeters.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -586,7 +614,9 @@ const ConnectDisconnect: React.FC = () => {
               Quick Actions
             </h3>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Last updated:</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                Last updated:
+              </span>
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                 {new Date().toLocaleTimeString()}
               </span>
@@ -594,7 +624,7 @@ const ConnectDisconnect: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {bulkActionType === 'connect' && (  
+            {bulkActionType === "connect" && (
               <div className="bg-white flex flex-col gap-4 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Bulk Connect Meters
@@ -603,7 +633,7 @@ const ConnectDisconnect: React.FC = () => {
                   <Button
                     label="Connect Selected"
                     variant="primary"
-                    onClick={() => handleBulkAction('connect')}
+                    onClick={() => handleBulkAction("connect")}
                     disabled={actionLoading}
                   />
                   <span className="text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
@@ -612,24 +642,21 @@ const ConnectDisconnect: React.FC = () => {
                 </div>
               </div>
             )}
-            {bulkActionType === 'disconnect' && (
+            {bulkActionType === "disconnect" && (
               <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg ">
                 <div className="flex items-center justify-between">
-                  <div className='flex'>  
-                  
+                  <div className="flex">
                     <Button
                       label="Disconnect Selected"
                       variant="danger"
-                      onClick={() => handleBulkAction('disconnect')}
+                      onClick={() => handleBulkAction("disconnect")}
                       disabled={actionLoading}
                     />
                   </div>
                   <span className="text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900 px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
                   </span>
-          </div>
-             
-               
+                </div>
               </div>
             )}
 
@@ -638,7 +665,7 @@ const ConnectDisconnect: React.FC = () => {
                 <span className="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
                   Real-time
                 </span>
-            </div>
+              </div>
               <Button
                 label="Refresh All"
                 variant="primary"
@@ -651,36 +678,9 @@ const ConnectDisconnect: React.FC = () => {
       )}
       {/* Meter Table */}
       <div className="mb-8">
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-              Meter Communication Status
-              {communicationFilter !== 'all' && (
-                <span className="ml-2 text-sm font-normal text-gray-600 dark:text-gray-400">
-                  (Filtered: {communicationFilter === 'communicating' ? 'Communicating' : 'Non-Communicating'})
-                </span>
-              )}
-              <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
-                Current Filter: {communicationFilter} | Route: {params.filter || 'none'}
-              </div>
-            </h3>
-            {communicationFilter !== 'all' && (
-              <Button
-                label="Clear Filter"
-                variant="outline"
-                onClick={() => navigate('/connect-disconnect')}
-                className="text-sm"
-              />
-            )}
-          </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">
-            Showing {tableData.length} of {meters.length} meters
-          </div>
-        </div>
-
+       
         <Table
         data={tableData}
-        columns={columns}
         actions={actions}
         showActions
         searchable
@@ -693,45 +693,63 @@ const ConnectDisconnect: React.FC = () => {
         headerTitle="Meter Connection Status"
         dateRange="Jan 2024 - Dec 2024"
       />
+        <div className="mb-6"></div>
+      
       </div>
-
-
-
       <Modal
+        size="lg"
         isOpen={isModalOpen}
         onClose={() => {
           if (!actionLoading) {
             setIsModalOpen(false);
             setError(null);
-            setReason('');
+            setReason("");
           }
         }}
-        title={`${actionType === 'connect' ? 'Connect Meter' : 'Disconnect Meter'}`}>
-        <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold mb-2 text-gray-800 dark:text-gray-200">
-              {actionType === 'connect' ? 'Connecting Meter' : 'Disconnecting Meter'}
-            </h3>
-            <div className="grid grid-cols-2 gap-2 text-sm">
+        title={`${
+          actionType === "connect" ? "Connect Meter" : "Disconnect Meter"
+        }`}
+
+      >
+        <div className="flex flex-col gap-8">
+          <div className="">
+          
+            <div className="grid grid-cols-2 gap-2 text-sm space-x-4">
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Meter No:</span>
-                <span className="ml-2 font-medium">{selectedMeter?.meterNo}</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Meter No:
+                </span>
+                <span className="ml-2 font-medium">
+                  {selectedMeter?.meterNo}
+                </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Consumer:</span>
-                <span className="ml-2 font-medium">{selectedMeter?.consumerName}</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Consumer:
+                </span>
+                <span className="ml-2 font-medium">
+                  {selectedMeter?.consumerName}
+                </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Location:</span>
-                <span className="ml-2 font-medium">{selectedMeter?.location}</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Location:
+                </span>
+                <span className="ml-2 font-medium">
+                  {selectedMeter?.location}
+                </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Current Status:</span>
-                <span className={`ml-2 font-medium ${
-                  selectedMeter?.status === 'connected' 
-                    ? 'text-green-600' 
-                    : 'text-red-600'
-                }`}>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Status:
+                </span>
+                <span
+                  className={`ml-2 font-medium ${
+                    selectedMeter?.status === "connected"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
                   {selectedMeter?.status}
                 </span>
               </div>
@@ -745,19 +763,25 @@ const ConnectDisconnect: React.FC = () => {
           )}
 
           <div>
-            <label htmlFor="reason" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Reason for {actionType === 'connect' ? 'Connection' : 'Disconnection'} *
+            <label
+              htmlFor="reason"
+              className="block text-lg font-medium text-grey dark:text-gray-300 mb-2"
+            >
+              Reason for{" "}
+              {actionType === "connect" ? "Connection" : "Disconnection"} 
             </label>
-            <textarea
-              id="reason"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              placeholder={`Enter reason for ${actionType === 'connect' ? 'connecting' : 'disconnecting'} this meter...`}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-              rows={3}
-              disabled={actionLoading}
-              required
-            />
+              <textarea
+                id="reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder={`Enter reason for ${
+                  actionType === "connect" ? "connecting" : "disconnecting"
+                } this meter...`}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+                rows={3}
+                disabled={actionLoading}
+                required
+              />
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
@@ -767,17 +791,21 @@ const ConnectDisconnect: React.FC = () => {
               onClick={() => {
                 setIsModalOpen(false);
                 setError(null);
-                setReason('');
+                setReason("");
               }}
               disabled={actionLoading}
             />
             <Button
               label={
-                actionLoading 
-                  ? `${actionType === 'connect' ? 'Connecting' : 'Disconnecting'}...` 
-                  : `${actionType === 'connect' ? 'Connect' : 'Disconnect'} Meter`
+                actionLoading
+                  ? `${
+                      actionType === "connect" ? "Connecting" : "Disconnecting"
+                    }...`
+                  : `${
+                      actionType === "connect" ? "Connect" : "Disconnect"
+                    } Meter`
               }
-              variant={actionType === 'connect' ? 'primary' : 'danger'}
+              variant={actionType === "connect" ? "primary" : "danger"}
               onClick={confirmAction}
               disabled={actionLoading || !reason.trim()}
             />
@@ -788,4 +816,4 @@ const ConnectDisconnect: React.FC = () => {
   );
 };
 
-export default ConnectDisconnect; 
+export default ConnectDisconnect;
