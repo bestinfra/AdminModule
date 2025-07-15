@@ -41,6 +41,7 @@ import AddConsumer from './pages/AddConsumer';
 import UserManagement from './pages/UserManagment';
 import RoleManagement from './pages/RoleManagment';
 import TicketsFilteredView from './pages/TicketsFilteredView';
+import CreateTicket from './pages/CreateTicket';
 
 
 const App: React.FC = () => {
@@ -79,8 +80,10 @@ const App: React.FC = () => {
                             <Route path="/tickets-filtered" element={<TicketsFilteredView />} />
                             <Route path="/forms" element={<Forms />} />
                             <Route path="/consumers" element={<Consumers />} /> 
+                            <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
                             <Route path="/consumers/:uid" element={<ConsumerView />} />
+                            <Route path="/connect-disconnect/:filter" element={<ConnectDisconnect />} />
                             <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
                             <Route path="/bills/prepaid" element={<BillsPrepaid />} />
                             <Route path="/bills/postpaid" element={<BillsPostpaid />} />
@@ -105,6 +108,7 @@ const App: React.FC = () => {
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/all-tickets" element={<AllTickets />} />
                             <Route path="/tickets/:filter" element={<AllTickets />} />
+                            <Route path="/create-ticket" element={<CreateTicket />} />
                             {/* <Route path="/tickets/view/:id" element={<TicketView />} /> */}
                             <Route path="/ticket-view" element={<TicketView />} />
                             {/* <Route path="/ticket-view/:ticketId" element={<TicketView />} /> */}

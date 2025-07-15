@@ -12,6 +12,7 @@ interface PieChartProps {
     description?: string;
     enableAnimation?: boolean;
     showNoDataMessage?: boolean;
+    onClick?: (segmentName?: string) => void;
 }
 
 const PieChart: React.FC<PieChartProps> = React.memo(({
@@ -30,6 +31,7 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
     description,
     enableAnimation = process.env.NODE_ENV === 'production',
     showNoDataMessage = true,
+    onClick,
 }) => {
     const { isDarkMode: contextIsDarkMode } = useApp();
     const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
@@ -142,6 +144,13 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
                 className="w-full"
                 style={{ height: typeof height === 'number' ? `${height}px` : height }}
                 opts={{ renderer: 'svg' }}
+                onEvents={{
+                    click: (params: any) => {
+                        if (onClick) {
+                            onClick(params.name);
+                        }
+                    }
+                }}
             />
         </div>
     );

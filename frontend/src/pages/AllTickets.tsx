@@ -7,6 +7,7 @@ import Table from '../components/global/Table';
 import Holder from '../components/global/Holder';
 import PageHeader from '../components/global/PageHeader';
 import type { Column } from '../components/global/Table';
+import Input from '../components/forms/Input';
 
 interface TicketData {
     id: number;
@@ -303,7 +304,7 @@ const AllTickets: React.FC = () => {
                 backButtonText="Back to Dashboard"
                 buttonsLabel="Create Ticket"
                 variant="primary"
-                onClick={() => console.log('Creating new ticket...')}
+                onClick={() => navigate('/create-ticket')}
                 showMenu={false}
                 showDropdown={false}
             />
@@ -331,7 +332,7 @@ const AllTickets: React.FC = () => {
             backButtonText="Back to Tickets Overview"
             buttonsLabel="Create Ticket"
             variant="primary"
-            onClick={() => console.log('Creating new ticket...')}
+            onClick={() => navigate('/create-ticket')}
             showMenu={true}
             showDropdown={true}
             menuItems={[

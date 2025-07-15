@@ -114,7 +114,7 @@ const Dashboard: React.FC = () => {
     };
 
     const handleHighUsageConsumersClick = () => {
-        navigate('/consumers?filter=high-usage');
+        navigate('/consumers/high-usage');
     };
 
     // Helper functions to generate data based on time range
@@ -343,6 +343,15 @@ const Dashboard: React.FC = () => {
                     height={200}
                     showNoDataMessage={false}
                     title={''}
+                    onClick={(segmentName?: string) => {
+                        if (segmentName === 'Communicating') {
+                            navigate('/connect-disconnect/communicating');
+                        } else if (segmentName === 'Non-Communicating') {
+                            navigate('/connect-disconnect/non-communicating');
+                        } else {
+                            navigate('/connect-disconnect');
+                        }
+                    }}
                 />
             </div>
         </div>
@@ -358,9 +367,16 @@ const Dashboard: React.FC = () => {
                     data={METER_EVENTS}
                     columns={METER_EVENT_COLUMNS}
                     loading={false}
-                    searchable={false}
+                    searchable={true}
                     pagination={false}
-                    showActions={false}
+                    showActions={true}
+                    actions={[{
+                        label: 'View',
+                        icon: '/icons/eye.svg',
+                        onClick: (row: any) => {
+                            navigate(`/consumers/${row.uid}`);
+                        }
+                    }]}
                 />
             </div>
         </div>
