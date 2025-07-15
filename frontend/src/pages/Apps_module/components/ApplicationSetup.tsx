@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 // @ts-ignore: If axios types are missing, install with: npm install axios @types/axios
 import axios from 'axios';
-import FormInput from '../../../components/forms/FormInput';
-import Dropdown from '../../../components/global/Dropdown';
-import Button from '../../../components/global/Button';
-import type { FormInputValue } from '../../../components/forms/types';
+import FormInput from '@components/forms/FormInput'; 
+import Dropdown from '@components/global/Dropdown';
+import Button from '@components/global/Button';
+import type { FormInputValue } from '@components/forms/types';
 import { validateApplicationSetup } from '../utils';
 
 interface ApplicationSetupProps {

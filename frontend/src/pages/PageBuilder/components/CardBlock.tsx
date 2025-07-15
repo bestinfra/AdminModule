@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ComponentType } from '../types';
-import Card from '../../../components/global/Card';
+import Card from '@components/global/Card'; 
 
 interface CardBlockProps {
     component: ComponentType;

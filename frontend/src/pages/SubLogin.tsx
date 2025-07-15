@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
 
 const SubLogin: React.FC = () => {
   const [email, setEmail] = useState('');

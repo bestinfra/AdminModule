@@ -1,9 +1,9 @@
 import React, { useRef } from 'react';
-import FormInput from '../../../components/forms/FormInput';
+import FormInput from '@components/forms/FormInput';
 
-import Button from '../../../components/global/Button';
-import LoadingSpinner from '../../../components/global/LoadingSpinner';
-import type { FormInputValue } from '../../../components/forms/types';
+import Button from '@components/global/Button';
+import LoadingSpinner from '@components/global/LoadingSpinner';
+import type { FormInputValue } from '@components/forms/types';
 
 export interface AccessControlData {
   adminFirstName: string;

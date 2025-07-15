@@ -2,15 +2,15 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 
 // Components
-import Page from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
-import Table from '../components/global/Table';
+import Page from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
+import Table from '@components/global/Table';
 
 // Context
 
 // Types
-import type { Section } from '../components/global/Page';
-import type { TableData, Column } from '../components/global/Table';
+import type { Section } from '@components/global/Page';
+import type { TableData, Column } from '@components/global/Table';
 
 // Interfaces
 interface UserStats {

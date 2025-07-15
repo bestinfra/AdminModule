@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import Form from '../components/forms/Form';
-import type { FormInputConfig } from '../components/forms/types';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
+import Form from '@components/forms/Form';
+import type { FormInputConfig } from '@components/forms/types';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
 import { 
     createHeaderComponent, 
     createActionsComponent, 
     createSidebarStatsComponent,
     createFooterComponent
-} from '../components/global/PageComponents';
+} from '@components/global/PageComponents';
 
 const Forms: React.FC = () => {
     const [formResults, setFormResults] = useState<Record<string, any>>({});

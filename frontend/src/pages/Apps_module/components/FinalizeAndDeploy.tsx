@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '../../../components/global/Button';
+import Button from '@components/global/Button';
 
 interface FinalizeAndDeployProps {
   formData: any;

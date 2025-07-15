@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import OrgChart from "../components/global/OrgChart";
-import Modal from '../components/global/Modal';
-import Button from '../components/global/Button';
+import OrgChart from '@components/global/OrgChart';
+import Modal from '@components/global/Modal';
+import Button from '@components/global/Button';
 
 const dummyData = [
   {

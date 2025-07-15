@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import Button from '../components/global/Button';
+import Button from '@components/global/Button';
 
 interface NotificationSetting {
     id: string;
