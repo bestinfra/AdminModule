@@ -228,14 +228,6 @@ const SuperAdminDashboard: React.FC = () => {
             showMenu={true}
             showDropdown={true}
             menuItems={[
-                { id: 'all', label: 'All Projects' },
-                { id: 'active', label: 'Active' },
-                { id: 'inactive', label: 'Inactive' },
-                { id: 'maintenance', label: 'Maintenance' },
-                { id: 'high-usage', label: 'High Usage' },
-                { id: 'low-usage', label: 'Low Usage' },
-                { id: 'alerts', label: 'With Alerts' },
-                { id: 'healthy', label: 'Healthy Systems' },
                 { id: 'create-project', label: 'Create Project', link: '/apps'}
             ]}
             onMenuItemClick={(itemId) => {

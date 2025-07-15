@@ -76,13 +76,6 @@ const App: React.FC = () => {
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/asset-management" element={<AssetManagement />} />
                             <Route path="/profile" element={<Profile />} />
-                            <Route path="/profile/basic-info" element={<Profile />} />
-                            <Route path="/profile/password" element={<Profile />} />
-                            <Route path="/profile/activity-log" element={<Profile />} />
-                            <Route path="/profile/notifications" element={<Profile />} />
-                            <Route path="/profile/two-factor" element={<Profile />} />
-                            <Route path="/profile/account-status" element={<Profile />} />
-                            <Route path="/all-tickets" element={<AllTickets />} />
                             <Route path="/tickets-filtered" element={<TicketsFilteredView />} />
                             <Route path="/forms" element={<Forms />} />
                             <Route path="/consumers" element={<Consumers />} /> 
@@ -95,6 +88,7 @@ const App: React.FC = () => {
                             <Route path="/dtr/:id" element={<DTRDetailPage />} />
                             <Route path="/feeders/:id" element={<Feeders />} />
                             <Route path="/user-management" element={<UserManagement />} />
+                            <Route path="/role-management" element={<RoleManagement />} />
                             <Route path="/dtr-statistics/total-dtrs" element={<DTRTotalDTRs />} />
                             <Route path="/dtr-statistics/total-lt-feeders" element={<DTRTotalLTFeeders />} />
                             <Route path="/dtr-statistics/total-fuse-blown" element={<DTRTotalFuseBlown />} />
@@ -109,8 +103,12 @@ const App: React.FC = () => {
                             <Route path="/meter-management/meters-list" element={<MetersList />} />
                             <Route path="/meter-management/meters-list/add" element={<AddMeter />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
-                            <Route path="/ticket-view/:ticketId" element={<TicketView />} />
-                            <Route path="/ticket-view/:ticketId/add-message" element={<TicketView />} />
+                            <Route path="/all-tickets" element={<AllTickets />} />
+                            <Route path="/tickets/:filter" element={<AllTickets />} />
+                            {/* <Route path="/tickets/view/:id" element={<TicketView />} /> */}
+                            <Route path="/ticket-view" element={<TicketView />} />
+                            {/* <Route path="/ticket-view/:ticketId" element={<TicketView />} /> */}
+                            {/* <Route path="/ticket-view/:ticketId/add-message" element={<TicketView />} /> */}
                             <Route path="/role-management" element={<RoleManagement />} />
                             <Route path="*" element={<NotFound />} />
                         </Route>

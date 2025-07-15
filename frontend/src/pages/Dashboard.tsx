@@ -4,6 +4,7 @@ import Card from '../components/global/Card';
 import Table from '../components/global/Table';
 import TimeRangeSelector from '../components/global/TimeRangeSelector';
 import type { Section } from '../components/global/Page';
+import { useNavigate } from 'react-router-dom';
 
 // Constants
 const METRICS_TYPE_OPTIONS = ['Graph', 'Table'];
@@ -105,6 +106,16 @@ const Dashboard: React.FC = () => {
     const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>('Daily');
     const [metricsType, setMetricsType] = useState('Graph');
     const [metricsView, setMetricsView] = useState('Daily');
+    const navigate = useNavigate();
+
+    // Navigation handlers for cards
+    const handleTotalConsumersClick = () => {
+        navigate('/consumers');
+    };
+
+    const handleHighUsageConsumersClick = () => {
+        navigate('/consumers?filter=high-usage');
+    };
 
     // Helper functions to generate data based on time range
     const generateXAxisLabels = (timeRange: string) => {
@@ -211,6 +222,7 @@ const Dashboard: React.FC = () => {
                         subtitle1={card.subtitle1}
                         subtitle2={card.subtitle2}
                         iconStyle={ICON_FILTER_STYLE}
+                        onValueClick={idx === 0 ? handleTotalConsumersClick : handleHighUsageConsumersClick}
                     />
                 ))}
             </div>

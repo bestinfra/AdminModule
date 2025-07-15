@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Page from '../components/global/Page';
 import type { Section } from '../components/global/Page';
 import PageHeader from '../components/global/PageHeader';
@@ -11,14 +11,6 @@ const consumersData = [
   { uid: 'BI25GMRA002', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62 },
   { uid: 'BI25GMRA003', name: 'Dormitory', meter: 'A9345418', reading: 1108.34 },
   { uid: 'BI25GMRA004', name: 'Mobikins', meter: 'A9211433', reading: 1271.76 },
-  { uid: 'BI25GMRA005', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17 },
-//   { uid: 'BI25GMRA006', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62 },
-//   { uid: 'BI25GMRA007', name: 'Dormitory', meter: 'A9345418', reading: 1108.34 },
-//   { uid: 'BI25GMRA008', name: 'Mobikins', meter: 'A9211433', reading: 1271.76 },
-//   { uid: 'BI25GMRA009', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17 },
-//   { uid: 'BI25GMRA0010', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62 },
-//   { uid: 'BI25GMRA0011', name: 'Dormitory', meter: 'A9345418', reading: 1108.34 },
-//   { uid: 'BI25GMRA0012', name: 'Mobikins', meter: 'A9211433', reading: 1271.76 },
 ];
 
 const columns: Column[] = [
@@ -29,10 +21,9 @@ const columns: Column[] = [
   { key: 'reading', label: 'Current Reading' },
 ];
 
-
-
 const Consumers: React.FC = () => {
   const [menuValue, setMenuValue] = useState('');
+  const [searchParams] = useSearchParams();
   
   // Safely get navigate function, fallback to console.log if not available
   let navigate: any;
@@ -49,6 +40,14 @@ const Consumers: React.FC = () => {
     };
   }
 
+  // Check for filter parameter from URL
+  useEffect(() => {
+    const filterParam = searchParams.get('filter');
+    if (filterParam === 'high-usage') {
+      setMenuValue('high-usage');
+    }
+  }, [searchParams]);
+
   // Add sNo property and filter based on menu selection
   const getFilteredData = () => {
     let filteredData = consumersData;
@@ -59,6 +58,9 @@ const Consumers: React.FC = () => {
     } else if (menuValue === 'vacant') {
       // Filter to show vacant consumers (using last 20% as vacant)
       filteredData = consumersData.slice(Math.floor(consumersData.length * 0.8));
+    } else if (menuValue === 'high-usage') {
+      // Filter to show high usage consumers (reading > 1000)
+      filteredData = consumersData.filter(consumer => consumer.reading > 1000);
     }
     
     return filteredData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
@@ -79,7 +81,8 @@ const Consumers: React.FC = () => {
   // Header component
   const headerComponent = (
     <PageHeader
-      title="Consumers"
+      title={menuValue === 'high-usage' ? 'High Usage Consumers' : 'Consumers'}
+      subtitle={menuValue === 'high-usage' ? undefined : undefined}
       onBackClick={() => window.history.back()}
       backButtonText="Back to Dashboard"
       buttonsLabel="Add Consumer"
@@ -89,7 +92,8 @@ const Consumers: React.FC = () => {
       showDropdown={true}
       menuItems={[
         { id: 'occupied', label: 'Occupied' },
-        { id: 'vacant', label: 'Vacant' }
+        { id: 'vacant', label: 'Vacant' },
+        { id: 'high-usage', label: 'High Usage' }
       ]}
       onMenuItemClick={(itemId) => {
         console.log(`Filter by: ${itemId}`);
