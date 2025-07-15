@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
-    variant?: 'primary' | 'secondary' | 'outline' | 'primarysmall' | 'success' | 'danger' | 'warning' | 'test' | 'asset';
+    variant?: 'primary' | 'secondary' | 'outline' | 'outlineSecondary' | 'primarysmall' | 'success' | 'danger' | 'warning' | 'test' | 'asset';
     size?: 'small' | 'medium' | 'large';
     loading?: boolean;
     children?: React.ReactNode;
@@ -115,12 +115,21 @@ const Button = React.memo<ButtonProps>(({
             'text-[var(--black)]',
         ],
         test: [
-            'bg-[var(--white)]',
+            'bg-[var(--background-secondary)]',
             'text-[var(--brand-green)]',
             'border-[var(--white)]',
             'hover:bg-[var(--brand-green)]',
             'hover:text-[var(--white)]',
             'hover:border-[var(--brand-green)]',
+        ],
+        outlineSecondary: [
+            'bg-[var(--color-background-secondary)]',
+            'text-gray-700',
+            'border-primary-border',
+            'hover:primary-border',
+            'hover:text-gray-800',
+            'hover:border-primary-border',
+            
         ],
         asset: [
             'bg-[var(--asset-color)]',
