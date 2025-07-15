@@ -1,6 +1,31 @@
 const fs = require('fs');
 const path = require('path');
 
+// Function to copy pages directory recursively
+function copyPagesDirectory(sourcePagesDir, destPagesDir) {
+  // Ensure the destination directory exists
+  if (!fs.existsSync(destPagesDir)) {
+    fs.mkdirSync(destPagesDir, { recursive: true });
+  }
+
+  // Read all files and directories in the source
+  const items = fs.readdirSync(sourcePagesDir);
+
+  items.forEach(item => {
+    const sourcePath = path.join(sourcePagesDir, item);
+    const destPath = path.join(destPagesDir, item);
+
+    if (fs.statSync(sourcePath).isDirectory()) {
+      // If it's a directory, recursively copy it
+      copyPagesDirectory(sourcePath, destPath);
+    } else {
+      // If it's a file, copy it
+      fs.copyFileSync(sourcePath, destPath);
+      console.log(`Copied page: ${item}`);
+    }
+  });
+}
+
 // Function to create app project in generated-apps folder
 function createAppProject(formData) {
   const {
@@ -24,15 +49,6 @@ function createAppProject(formData) {
   const projectFolderName = appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app';
   const baseDir = path.join(__dirname, 'generated-apps', projectFolderName);
   
-  // Debug logging to see what values we're working with
-  console.log('Debug Info:');
-  console.log('  appName:', appName);
-  console.log('  subdomain:', subdomain);
-  console.log('  projectFolderName:', projectFolderName);
-  console.log('  baseDir:', baseDir);
-  console.log('  modules:', modules);
-  console.log('  filtered modules:', modules?.filter(module => !['dashboard', 'consumers', 'user_management_default', 'role_management'].includes(module)));
-
   // Helper to ensure directory exists
   function ensureDir(dir) {
     if (!fs.existsSync(dir)) {
@@ -46,6 +62,16 @@ function createAppProject(formData) {
   // Set up frontend directory
   const frontendDir = path.join(baseDir, 'frontend');
   ensureDir(frontendDir);
+
+  // Copy pages directory
+  const sourcePagesDir = path.join(__dirname, 'frontend', 'src', 'pages');
+  const destPagesDir = path.join(frontendDir, 'src', 'pages');
+  if (fs.existsSync(sourcePagesDir)) {
+    copyPagesDirectory(sourcePagesDir, destPagesDir);
+    console.log('Copied all pages to generated app');
+  } else {
+    console.log('Pages directory not found:', sourcePagesDir);
+  }
 
   // Helper to copy all icons and images
   function copyAllAssets() {
@@ -137,7 +163,7 @@ function createAppProject(formData) {
           const transformedContent = transformCSSForGeneratedApp(cssContent);
           
           fs.writeFileSync(destPath, transformedContent);   
-          console.log(`✅ Synced ${cssFile} to ${projectFolderName}`);
+          console.log(`Synced ${cssFile} to ${projectFolderName}`);
         }
       });
     } else {
@@ -1464,17 +1490,17 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
             document.head.appendChild(styleElement);
             setLoadedCSS(prev => [...prev, cssFile]);
             
-            console.log(\`✅ Loaded federated CSS: \${cssFile}\`);
+            console.log(\`Loaded federated CSS: \${cssFile}\`);
           } else {
             throw new Error(\`Failed to load \${cssFile}: \${response.status}\`);
           }
         } catch (error) {
-          console.warn(\`⚠️ Failed to load federated CSS \${cssFile}:\`, error);
+          console.warn(\`Failed to load federated CSS \${cssFile}:\`, error);
           setFailedCSS(prev => [...prev, cssFile]);
           
           // If fallback is enabled, continue using local CSS
           if (fallbackEnabled) {
-            console.log(\`🔄 Using local CSS fallback for \${cssFile}\`);
+            console.log(\`Using local CSS fallback for \${cssFile}\`);
           }
         }
       }
@@ -1833,7 +1859,7 @@ model User {
   console.log(`   1. cd ${baseDir}`);
   console.log(`   2. npm install`);
   console.log(`   3. npm run dev`);
-  console.log(`\n🎨 CSS Sync Instructions:`);
+  console.log(`\nCSS Sync Instructions:`);
   console.log(`   • CSS files are already synced during creation`);
   console.log(`   • To sync CSS changes later, run: npm run css-sync`);
   console.log(`   • To watch for CSS changes, run: npm run css-sync-watch`);
