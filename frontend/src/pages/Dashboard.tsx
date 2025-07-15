@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { BarChart, PieChart } from '../graphs';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 
 // Constants

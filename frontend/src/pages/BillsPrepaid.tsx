@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Card from '../components/global/Card';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
-import Table from '../components/global/Table';
-import type { Column } from '../components/global/Table';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Card from '@components/global/Card';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import Table from '@components/global/Table';
+import type { Column } from '@components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const cardData = [
   {

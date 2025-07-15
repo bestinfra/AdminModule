@@ -1,242 +1,196 @@
-import React, { useState } from 'react';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import Button from '../components/global/Button';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import Holder from '../components/global/Holder';
-import type { Column } from '../components/global/Table';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
-    createSidebarStatsComponent,
-    createFooterComponent,
-    commonActions,
-    commonHeaders
-} from '../components/global/PageComponents';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import Button from '@components/global/Button';
+import BasicInformationTab from './BasicInformationTab';
+import PasswordTab from './PasswordTab';
+import ActivityLogTab from './ActivityLogTab';
+import NotificationsTab from './NotificationTab';
+import TwoStepVerificationTab from './TwoStepVerificationTab';
+import AccountStatusTab from './AccountStatusTab';
 
-interface UserProfile {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phone: string;
-    location: string;
-    role: string;
-    department: string;
-    avatar: string;
-    bio: string;
+interface TabItem {
+    id: string;
+    label: string;
+    path: string;
+    icon: string;
 }
 
-interface ActivityData {
-    id: number;
-    action: string;
-    time: string;
-    type: string;
-    status: string;
-    [key: string]: string | number | boolean | null | undefined;
+// Interface for profile tabs that expect user data
+interface ProfileUser {
+    USER_ID?: string;
+    id?: number;
+    email?: string;
+    name?: string;
+    phone?: string;
+    role_title?: string;
+    client_name?: string;
+    last_active?: string;
+    created_at?: string;
 }
 
 const Profile: React.FC = () => {
-    const [isEditing, setIsEditing] = useState(false);
-    const [loading] = useState(false);
-    const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
-    
-    const profile: UserProfile = {
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@company.com',
-        phone: '+1 (555) 123-4567',
-        location: 'New York, NY',
-        role: 'Senior Developer',
-        department: 'Engineering',
-        avatar: 'https://via.placeholder.com/150',
-        bio: 'Experienced software developer with expertise in React, TypeScript, and modern web technologies.'
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { user: authUser } = useAuth();
+    const [activeTab, setActiveTab] = useState('basic-info');
+    const [sidebarOpen, setSidebarOpen] = useState(true);
+
+    // Map AuthContext user to ProfileUser interface
+    const mapUserToProfile = (authUser: any): ProfileUser => {
+        if (!authUser) return {};
+        
+        return {
+            USER_ID: authUser.id?.toString(),
+            id: authUser.id,
+            email: authUser.email,
+            name: authUser.username,
+            phone: undefined,
+            role_title: authUser.role,
+            client_name: undefined,
+            last_active: undefined,
+            created_at: undefined
+        };
     };
 
-    // Activity data for table
-    const activityData: ActivityData[] = [
-        { id: 1, action: 'Updated profile information', time: '2 hours ago', type: 'profile', status: 'Completed' },
-        { id: 2, action: 'Changed password', time: '1 day ago', type: 'security', status: 'Completed' },
-        { id: 3, action: 'Logged in from new device', time: '3 days ago', type: 'login', status: 'Completed' },
-        { id: 4, action: 'Updated notification preferences', time: '1 week ago', type: 'settings', status: 'Completed' }
-    ];
+    const profileUser = mapUserToProfile(authUser);
 
-    const activityColumns: Column[] = [
-        { key: 'action', label: 'Action' },
-        { key: 'time', label: 'Time' },
-        { key: 'type', label: 'Type' },
-        { key: 'status', label: 'Status' }
-    ];
-
-    // Using reusable components
-    const headerComponent = createHeaderComponent(
-        commonHeaders.profile.title,
-        commonHeaders.profile.subtitle,
-        commonHeaders.profile.metadata
-    );
-
-    const actionsComponent = createActionsComponent(commonActions.profile);
-
-    const sidebarComponent = createSidebarStatsComponent([
+    const tabs: TabItem[] = [
         {
-            title: 'Profile Stats',
-            value: '24',
-            subtitle1: 'Tickets Created',
-            subtitle2: '+12% from last month',
-            comparisonValue: 12
+            id: 'basic-info',
+            label: 'Basic Information',
+            path: '/profile/basic-info',
+            icon: '/icons/user-profile.svg'
         },
         {
-            title: 'Response Time',
-            value: '2.3h',
-            subtitle1: 'Average',
-            subtitle2: '-0.5h from last week',
-            comparisonValue: -0.5
+            id: 'password',
+            label: 'Change Password',
+            path: '/profile/password',
+            icon: '/icons/shield.svg'
         },
         {
-            title: 'Resolution Rate',
-            value: '85%',
-            subtitle1: 'This month',
-            subtitle2: '+5% from last month',
-            comparisonValue: 5
+            id: 'activity-log',
+            label: 'Activities',
+            path: '/profile/activity-log',
+            icon: '/icons/transactions.svg'
+        },
+        {
+            id: 'notifications',
+            label: 'Notifications',
+            path: '/profile/notifications',
+            icon: '/icons/mailbox.svg'
+        },
+        {
+            id: 'two-factor',
+            label: 'Two-step Verification',
+            path: '/profile/two-factor',
+            icon: '/icons/shield.svg'
+        },
+        {
+            id: 'account-status',
+            label: 'Account Status',
+            path: '/profile/account-status',
+            icon: '/icons/user-gear.svg'
         }
-    ]);
-
-    const footerComponent = createFooterComponent({
-        id: `Profile ID: PRO-${profile.firstName.toUpperCase()}-001`,
-        version: '2.1.0',
-        supportLink: '#'
-    });
-
-    // Personal Info Section using existing components
-    const personalInfoSection: Section = {
-        id: 'personal-info',
-        component: (
-            <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-semibold text-gray-800">Personal Information</h2>
-                    <Button
-                        label={isEditing ? "Save" : "Edit"}
-                        onClick={() => setIsEditing(!isEditing)}
-                        variant={isEditing ? "success" : "primary"}
-                    />
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Card
-                        title="Full Name"
-                        value={`${profile.firstName} ${profile.lastName}`}
-                        icon="icons/units.svg"
-                        subtitle1="Display Name"
-                        subtitle2="As shown to others"
-                    />
-                    <Card
-                        title="Email"
-                        value={profile.email}
-                        icon="icons/units.svg"
-                        subtitle1="Primary Email"
-                        subtitle2="Used for notifications"
-                    />
-                    <Card
-                        title="Phone"
-                        value={profile.phone}
-                        icon="icons/units.svg"
-                        subtitle1="Contact Number"
-                        subtitle2="For urgent communications"
-                    />
-                    <Card
-                        title="Location"
-                        value={profile.location}
-                        icon="icons/units.svg"
-                        subtitle1="Current Location"
-                        subtitle2="For timezone settings"
-                    />
-                </div>
-            </div>
-        )
-    };
-
-    // Activity Section using existing Table component
-    const activitySection: Section = {
-        id: 'activity',
-        component: (
-            <Holder
-                title="Recent Activity"
-                DateRange="(Last 30 days)"
-                availableTimeRanges={['Daily', 'Weekly', 'Monthly']}
-                selectedTimeRange={selectedTimeRange}
-                handleTimeRangeChange={setSelectedTimeRange}
-                handleDownload={() => console.log('Downloading activity...')}
-                loading={loading}
-            >
-                <Table
-                    data={activityData}
-                    columns={activityColumns}
-                    loading={loading}
-                    searchable={true}
-                    pagination={true}
-                    showActions={true}
-                    onEdit={(row) => console.log('Edit activity:', row)}
-                    onDelete={(row) => console.log('Delete activity:', row)}
-                    onView={(row) => console.log('View activity:', row)}
-                />
-            </Holder>
-        )
-    };
-
-    // Settings Section using existing Card components
-    const settingsSection: Section = {
-        id: 'settings',
-        component: (
-            <div className="space-y-4">
-                <h2 className="text-xl font-semibold text-gray-800">Account Settings</h2>
-                
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card
-                        title="Email Notifications"
-                        value="Enabled"
-                        icon="icons/units.svg"
-                        subtitle1="Receive updates"
-                        subtitle2="About your account"
-                    />
-                    <Card
-                        title="Two-Factor Auth"
-                        value="Disabled"
-                        icon="icons/units.svg"
-                        subtitle1="Security feature"
-                        subtitle2="Add extra protection"
-                    />
-                    <Card
-                        title="Privacy Settings"
-                        value="Public"
-                        icon="icons/units.svg"
-                        subtitle1="Profile visibility"
-                        subtitle2="Who can see your profile"
-                    />
-                </div>
-            </div>
-        )
-    };
-
-    const sections: Section[] = [
-        personalInfoSection,
-        activitySection,
-        settingsSection
     ];
+
+    useEffect(() => {
+        // Determine active tab based on current path
+        const currentPath = location.pathname;
+        const matchingTab = tabs.find(tab => tab.path === currentPath);
+        
+        if (matchingTab) {
+            setActiveTab(matchingTab.id);
+        } else if (currentPath === '/profile') {
+            // Default to basic info if just /profile
+            setActiveTab('basic-info');
+            navigate('/profile/basic-info', { replace: true });
+        }
+    }, [location.pathname, navigate]);
+
+    const handleTabChange = (tabId: string) => {
+        const tab = tabs.find(t => t.id === tabId);
+        if (tab) {
+            setActiveTab(tabId);
+            navigate(tab.path);
+        }
+    };
+
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'basic-info':
+                return <BasicInformationTab user={profileUser} />;
+            case 'password':
+                return <PasswordTab user={profileUser} />;
+            case 'activity-log':
+                return <ActivityLogTab user={profileUser} />;
+            case 'notifications':
+                return <NotificationsTab />;
+            case 'two-factor':
+                return <TwoStepVerificationTab user={profileUser} />;
+            case 'account-status':
+                return <AccountStatusTab user={profileUser} />;
+            default:
+                return <BasicInformationTab user={profileUser} />;
+        }
+    };
+
+    const toggleSidebar = () => {
+        setSidebarOpen(!sidebarOpen);
+    };
 
     return (
-        <Page 
-            layout="single-column" 
-            sections={sections}
-            header={headerComponent}
-            actions={actionsComponent}
-            sidebar={sidebarComponent}
-            sidebarPosition="right"
-            footer={footerComponent}
-            loading={loading}
-            className="max-w-7xl mx-auto"
-            containerClassName="space-y-6"
-            sectionClassName="border rounded-lg bg-white shadow-sm"
-        />
+        <div className="min-h-screen dark:bg-primary-dark-light relative">
+            {/* Sidebar Toggle Button */}
+            <Button 
+                label=""
+                variant="outline"
+                size="small"
+                onClick={toggleSidebar}
+                className="hidden md:hidden absolute top-0 left-0 z-10"
+                icon={
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M3 12h18M3 6h18M3 18h18"/>
+                    </svg>
+                }
+            />
+
+            <div className="flex gap-10">
+                {/* Sidebar */}
+                <aside className={`w-70 flex-shrink-0 bg-primary-lightest border border-primary-border dark:bg-primary-dark rounded-lg dark:border-dark-border transition-transform duration-300 ease-in-out ${
+                    !sidebarOpen ? 'transform -translate-x-full' : ''
+                } md:translate-x-0`}>
+                    <ul className="p-4 space-y-2">
+                        {tabs.map((tab) => (
+                            <li key={tab.id} className="text-sm">
+                                <button
+                                    onClick={() => handleTabChange(tab.id)}
+                                    className={`w-full text-left flex items-center gap-3 p-4 rounded-lg transition-all duration-200 ${
+                                        activeTab === tab.id 
+                                            ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-white font-semibold shadow-sm' 
+                                            : 'text-text-secondary hover:text-text-primary hover:bg-gray-50 dark:text-text-secondary dark:hover:text-white dark:hover:bg-primary-dark-light'
+                                    }`}
+                                >
+                                    <img
+                                        src={tab.icon}
+                                        alt=""
+                                        className="w-4 h-4"
+                                        aria-hidden="true"
+                                    />
+                                    {tab.label}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </aside>
+                {/* Main Content */}
+                <main className="flex-1 ">
+                    <div className="bg-white dark:bg-primary-dark rounded-lgbg-white dark:bg-primary-dark rounded-lg    dark:border-dark-border">
+                        {renderTabContent()}
+                    </div>
+                </main>
+            </div>
+        </div>
     );
 };
 

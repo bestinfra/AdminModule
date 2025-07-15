@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { z } from 'zod';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import Header from '../components/global/PageHeader';
-import Step1 from '../components/AddConsumer/Step1';
-import Step2 from '../components/AddConsumer/Step2';
-import Step3 from '../components/AddConsumer/Step3';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import Header from '@components/global/PageHeader';
+import Step1 from '@components/AddConsumer/Step1';
+import Step2 from '@components/AddConsumer/Step2';
+import Step3 from '@components/AddConsumer/Step3';
     
 // Validation schemas for each step
 const personalInfoSchema = z.object({

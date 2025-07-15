@@ -147,7 +147,7 @@ export const validateApplicationSetup = (formData: any): { isValid: boolean; err
   if (
     formData.appName &&
     formData.subdomain &&
-    /^http:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/.test(formData.subdomain)
+    /^https:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/.test(formData.subdomain)
   ) {
     remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Subdomain configured: ${formData.subdomain}`);
   }
@@ -215,6 +215,274 @@ export const validateApplicationSetup = (formData: any): { isValid: boolean; err
 
   if (formData.meteringType?.length > 4) {
     remarks.push('⚠️ Multiple metering types selected - verify hardware compatibility');
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    remarks
+  };
+};
+
+/**
+ * Validates Access Control form data
+ */
+export const validateAccessControl = (formData: any): { isValid: boolean; errors: Record<string, string>; remarks: string[] } => {
+  const errors: Record<string, string> = {};
+  const remarks: string[] = [];
+
+  // Required field validations
+  if (!formData.adminFirstName?.trim()) {
+    errors.adminFirstName = 'First name is required';
+  } else if (formData.adminFirstName.length < 2) {
+    errors.adminFirstName = 'First name must be at least 2 characters long';
+  }
+
+  if (!formData.adminLastName?.trim()) {
+    errors.adminLastName = 'Last name is required';
+  } else if (formData.adminLastName.length < 2) {
+    errors.adminLastName = 'Last name must be at least 2 characters long';
+  }
+
+  if (!formData.adminEmail?.trim()) {
+    errors.adminEmail = 'Email is required';
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.adminEmail)) {
+    errors.adminEmail = 'Please enter a valid email address';
+  }
+
+  if (!formData.adminPhone?.trim()) {
+    errors.adminPhone = 'Phone number is required';
+  } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(formData.adminPhone.replace(/\s/g, ''))) {
+    errors.adminPhone = 'Please enter a valid phone number';
+  }
+
+  if (!formData.adminPassword?.trim()) {
+    errors.adminPassword = 'Password is required';
+  } else if (formData.adminPassword.length < 8) {
+    errors.adminPassword = 'Password must be at least 8 characters long';
+  } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.adminPassword)) {
+    errors.adminPassword = 'Password must contain uppercase, lowercase, number, and special character';
+  }
+
+  if (!formData.adminConfirmPassword?.trim()) {
+    errors.adminConfirmPassword = 'Please confirm your password';
+  } else if (formData.adminPassword !== formData.adminConfirmPassword) {
+    errors.adminConfirmPassword = 'Passwords do not match';
+  }
+
+  // Generate remarks based on form data
+  if (formData.adminFirstName && formData.adminLastName) {
+    remarks.push(`✓ Admin name configured: ${formData.adminFirstName} ${formData.adminLastName}`);
+  }
+
+  if (formData.adminEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.adminEmail)) {
+    remarks.push(`✓ Admin email configured: ${formData.adminEmail}`);
+  }
+
+  if (formData.adminPhone && /^[\+]?[1-9][\d]{0,15}$/.test(formData.adminPhone.replace(/\s/g, ''))) {
+    remarks.push(`✓ Admin phone configured: ${formData.adminPhone}`);
+  }
+
+  if (formData.adminPassword && formData.adminPassword.length >= 8) {
+    remarks.push('✓ Password meets security requirements');
+  }
+
+  if (formData.adminPassword === formData.adminConfirmPassword && formData.adminPassword) {
+    remarks.push('✓ Password confirmation matches');
+  }
+
+  if (formData.adminAddress?.trim()) {
+    remarks.push('✓ Admin address provided');
+  }
+
+  if (formData.sendWelcomeEmail) {
+    remarks.push('💡 Welcome email will be sent to admin upon account creation');
+  } else {
+    remarks.push('⚠️ Welcome email is disabled - admin will need to set password manually');
+  }
+
+  // Additional helpful remarks
+  if (formData.adminEmail?.includes('admin') || formData.adminEmail?.includes('administrator')) {
+    remarks.push('💡 Consider using a personal email for admin account for better security');
+  }
+
+  if (formData.adminPassword && formData.adminPassword.length > 12) {
+    remarks.push('💡 Strong password detected - good security practice');
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    remarks
+  };
+};
+
+/**
+ * Validates Brand Personalization form data
+ */
+export const validateBrandPersonalization = (formData: any): { isValid: boolean; errors: Record<string, string>; remarks: string[] } => {
+  const errors: Record<string, string> = {};
+  const remarks: string[] = [];
+
+  // Required field validations
+  if (!formData.companyName?.trim()) {
+    errors.companyName = 'Company name is required';
+  } else if (formData.companyName.length < 2) {
+    errors.companyName = 'Company name must be at least 2 characters long';
+  }
+
+  if (formData.companyWebsite && !/^https?:\/\/.+/.test(formData.companyWebsite)) {
+    errors.companyWebsite = 'Please enter a valid website URL starting with http:// or https://';
+  }
+
+  if (!formData.primaryColor) {
+    errors.primaryColor = 'Primary color is required';
+  }
+
+  if (formData.contactEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
+    errors.contactEmail = 'Please enter a valid contact email address';
+  }
+
+  if (formData.contactPhone && !/^[\+]?[1-9][\d]{0,15}$/.test(formData.contactPhone.replace(/\s/g, ''))) {
+    errors.contactPhone = 'Please enter a valid contact phone number';
+  }
+
+  // Generate remarks based on form data
+  if (formData.companyName && formData.companyName.length >= 2) {
+    remarks.push(`✓ Company name configured: ${formData.companyName}`);
+  }
+
+  if (formData.companyWebsite && /^https?:\/\/.+/.test(formData.companyWebsite)) {
+    remarks.push(`✓ Company website configured: ${formData.companyWebsite}`);
+  }
+
+  if (formData.primaryColor) {
+    remarks.push(`✓ Primary color selected: ${formData.primaryColor}`);
+  }
+
+  if (formData.appLogo) {
+    remarks.push('✓ App logo uploaded');
+  } else {
+    remarks.push('💡 Consider uploading a logo for better brand recognition');
+  }
+
+  if (formData.appFavicon) {
+    remarks.push('✓ Favicon uploaded');
+  } else {
+    remarks.push('💡 Consider uploading a favicon for browser tab identification');
+  }
+
+  if (formData.appDescription?.trim()) {
+    remarks.push('✓ App description provided');
+  } else {
+    remarks.push('💡 Consider adding an app description for better user understanding');
+  }
+
+  if (formData.contactEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.contactEmail)) {
+    remarks.push(`✓ Contact email configured: ${formData.contactEmail}`);
+  }
+
+  if (formData.contactPhone && /^[\+]?[1-9][\d]{0,15}$/.test(formData.contactPhone.replace(/\s/g, ''))) {
+    remarks.push(`✓ Contact phone configured: ${formData.contactPhone}`);
+  }
+
+  if (formData.timezone) {
+    remarks.push(`✓ Timezone configured: ${formData.timezone}`);
+  } else {
+    remarks.push('💡 Consider setting a timezone for accurate time-based features');
+  }
+
+  if (formData.currency) {
+    remarks.push(`✓ Currency configured: ${formData.currency}`);
+  } else {
+    remarks.push('💡 Consider setting a currency for billing and financial features');
+  }
+
+  // Additional helpful remarks
+  if (formData.enableDarkMode) {
+    remarks.push('💡 Dark mode enabled - users can switch between light and dark themes');
+  }
+
+  if (formData.enableMultiLanguage) {
+    remarks.push('💡 Multi-language support enabled - consider adding language packs');
+  }
+
+  if (formData.primaryColor === '#0066cc') {
+    remarks.push('💡 Default blue color selected - consider customizing for brand identity');
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors,
+    remarks
+  };
+};
+
+/**
+ * Validates Feature Selection form data
+ */
+export const validateFeatureSelection = (formData: any): { isValid: boolean; errors: Record<string, string>; remarks: string[] } => {
+  const errors: Record<string, string> = {};
+  const remarks: string[] = [];
+
+  // Required field validations
+  if (!formData.modules || formData.modules.length === 0) {
+    errors.modules = 'At least one module must be selected';
+  }
+
+  // Check for required default modules
+  const requiredModules = ['dashboard', 'consumer', 'user_management_default', 'role_management'];
+  const missingRequired = requiredModules.filter(module => !formData.modules?.includes(module));
+  
+  if (missingRequired.length > 0) {
+    errors.modules = `Required modules missing: ${missingRequired.join(', ')}`;
+  }
+
+  // Generate remarks based on form data
+  if (formData.modules && formData.modules.length > 0) {
+    remarks.push(`✓ ${formData.modules.length} module(s) selected`);
+  }
+
+  // Check for specific module combinations
+  if (formData.modules?.includes('bills')) {
+    if (formData.modules?.includes('prepaid') || formData.modules?.includes('postpaid')) {
+      remarks.push('✓ Billing system with specific billing types configured');
+    } else {
+      remarks.push('💡 Billing module selected - consider enabling prepaid or postpaid billing');
+    }
+  }
+
+  if (formData.modules?.includes('tickets')) {
+    remarks.push('✓ Support ticketing system enabled');
+  }
+
+  if (formData.modules?.includes('asset_management')) {
+    remarks.push('✓ Asset management system enabled');
+  }
+
+  if (formData.modules?.includes('meter_management')) {
+    remarks.push('✓ Meter management system enabled');
+  }
+
+  if (formData.modules?.includes('user_management_optional')) {
+    remarks.push('✓ Advanced user management features enabled');
+  }
+
+  // Additional helpful remarks
+  const optionalModules = formData.modules?.filter((m: string) => 
+    !requiredModules.includes(m) && m !== 'prepaid' && m !== 'postpaid'
+  ) || [];
+
+  if (optionalModules.length > 3) {
+    remarks.push('💡 Multiple optional modules selected - ensure adequate system resources');
+  }
+
+  if (formData.modules?.includes('prepaid') && formData.modules?.includes('postpaid')) {
+    remarks.push('💡 Both prepaid and postpaid billing enabled - hybrid billing system');
+  }
+
+  if (formData.modules?.includes('asset_management') && formData.modules?.includes('meter_management')) {
+    remarks.push('💡 Asset and meter management enabled - comprehensive infrastructure monitoring');
   }
 
   return {

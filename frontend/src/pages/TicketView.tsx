@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // Components
-import Page from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
-import Button from '../components/global/Button';
+import Page from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
+import Button from '@components/global/Button';
 
 // Context
 import { useAuth } from '../context/AuthContext';
 
 // Types
-import type { Section } from '../components/global/Page';
+import type { Section } from '@components/global/Page';
 
 // API Base URL
 

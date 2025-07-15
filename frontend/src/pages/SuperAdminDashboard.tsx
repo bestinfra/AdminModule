@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { PieChart, LineChart } from '../graphs';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
-import type { TableData, Column } from '../components/global/Table';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
+import type { TableData, Column } from '@components/global/Table';
 
 interface TableAction {
     label: string;
@@ -228,14 +228,6 @@ const SuperAdminDashboard: React.FC = () => {
             showMenu={true}
             showDropdown={true}
             menuItems={[
-                { id: 'all', label: 'All Projects' },
-                { id: 'active', label: 'Active' },
-                { id: 'inactive', label: 'Inactive' },
-                { id: 'maintenance', label: 'Maintenance' },
-                { id: 'high-usage', label: 'High Usage' },
-                { id: 'low-usage', label: 'Low Usage' },
-                { id: 'alerts', label: 'With Alerts' },
-                { id: 'healthy', label: 'Healthy Systems' },
                 { id: 'create-project', label: 'Create Project', link: '/apps'}
             ]}
             onMenuItemClick={(itemId) => {

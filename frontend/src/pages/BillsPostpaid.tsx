@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import type { Column } from '../components/global/Table';
-import Dropdown from '../components/global/Dropdown';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import type { Column } from '@components/global/Table';
+import Dropdown from '@components/global/Dropdown';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const cardData = [
   {
@@ -14,7 +14,7 @@ const cardData = [
     icon: '/icons/total-recharge-collection.svg',
     subtitle2: '0 Total Bills Generated',
   },
-  {
+  { 
     title: 'Outstanding Amount',
     value: '₹0.00',
     icon: '/icons/wallet.svg',

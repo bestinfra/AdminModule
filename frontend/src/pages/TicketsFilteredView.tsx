@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import Table from '../components/global/Table';
-import Holder from '../components/global/Holder';
-import PageHeader from '../components/global/PageHeader';
-import type { Column } from '../components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import Table from '@components/global/Table';
+import Holder from '@components/global/Holder';
+import PageHeader from '@components/global/PageHeader';
+import type { Column } from '@components/global/Table';
 
 interface TicketData {
     id: number;
@@ -138,6 +138,7 @@ const TicketsFilteredView: React.FC = () => {
             department: 'IT'
         }
     ];
+    
 
     // Filter data based on URL parameter
     useEffect(() => {

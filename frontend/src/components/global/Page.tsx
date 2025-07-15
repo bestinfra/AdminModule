@@ -54,7 +54,7 @@ const Page: React.FC<PageProps> = ({
     const getLayoutClasses = (): string => {
         switch (layout) {
             case 'single-column':
-                return 'flex flex-col gap-2  ';
+                return 'flex flex-col gap-2  px-6';
             case 'two-column':
                 return 'grid grid-cols-1 md:grid-cols-2 gap-4';
             case 'grid':

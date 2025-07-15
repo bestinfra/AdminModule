@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import type { Column } from '../components/global/Table';
-import Table from '../components/global/Table';
+import type { Column } from '@components/global/Table';
+import Table from '@components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const consumersData = [
   { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17 },

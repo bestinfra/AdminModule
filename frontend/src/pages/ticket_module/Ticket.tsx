@@ -1,6 +1,6 @@
-import Card from '../../components/global/Card';
-import Table from '../../components/global/Table';
-import type { Column } from '../../components/global/Table';
+import Card from '@components/global/Card'; 
+import Table from '@components/global/Table';
+import type { Column } from '@components/global/Table';
 
 interface TableData {
     [key: string]: string | number | boolean | null | undefined;

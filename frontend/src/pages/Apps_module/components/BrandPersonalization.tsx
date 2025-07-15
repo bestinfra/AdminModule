@@ -1,28 +1,40 @@
 import React, { useState, useRef } from 'react';
-import FormInput from '../../../components/forms/FormInput';
-import Dropdown from '../../../components/global/Dropdown';
-import Button from '../../../components/global/Button';
-import type { FormInputValue } from '../../../components/forms/types';
+import FormInput from '@components/forms/FormInput';
+import Dropdown from '@components/global/Dropdown';
+import Button from '@components/global/Button';
+import type { FormInputValue } from '@components/forms/types';
 
 interface BrandPersonalizationProps {
   formData: any;
   errors: Record<string, string>;
   onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   onNext: (e: React.FormEvent<HTMLFormElement>) => void;
+  currentStep?: number;
+  onBack?: () => void;
 }
 
-const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, errors, onInputChange, onNext }) => {
+const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, errors, onInputChange, onNext, currentStep = 1, onBack }) => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   const handleFormInputChange = (name: string, value: FormInputValue) => {
     onInputChange({ target: { name, value } } as any);
+    if (hasSubmitted) setHasSubmitted(false);
   };
 
   const handleFormInputBlur = () => {
     // Handle blur if needed
   };
+
+  // Validate form data and generate remarks
+  const { isValid, errors: validationErrors, remarks } = useMemo(() => {
+    return validateBrandPersonalization(formData);
+  }, [formData]);
+
+  // Only show validation errors if form has been submitted
+  const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
 
   const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -82,11 +94,23 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
   ];
 
   return (
-    <div className="bg-white dark:bg-primary-dark  ">
-      <h2 className="font-bold dark:text-white mb-1">Branding & Customization</h2>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">Customize your application's appearance and branding elements</p>
-      
-      <form className="space-y-6" onSubmit={onNext} action="#" method="post" noValidate>
+    <div className="mx-auto">
+      <div className="bg-white rounded-xl border border-primary-border p-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
+          <div className="">
+            <h2 className="text-base font-semibold text-primary">Branding & Customization</h2>
+            <p className="text-base text-gray-600 mt-2">Customize your application's appearance and branding elements</p>
+          </div>
+          
+          <form className="space-y-6" onSubmit={(e) => {
+            e.preventDefault();
+            setHasSubmitted(true);
+            
+            // Only proceed if validation passes
+            if (isValid) {
+              onNext(e);
+            }
+          }} action="#" method="post" noValidate>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
             input={{
@@ -97,8 +121,8 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
               required: true
             }}
             value={formData.companyName}
-            error={errors.companyName}
-            showError={!!errors.companyName}
+            error={allErrors.companyName}
+            showError={!!allErrors.companyName}
             disabled={false}
             onInputChange={handleFormInputChange}
             onInputBlur={handleFormInputBlur}
@@ -204,7 +228,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
               </label>
             ))}
           </div>
-          {errors.primaryColor && <span className="text-error text-xs mt-1 block">{errors.primaryColor}</span>}
+          {allErrors.primaryColor && <span className="text-error text-xs mt-1 block">{allErrors.primaryColor}</span>}
         </div>
 
         <div>
@@ -270,7 +294,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
               options={timezoneOptions}
               placeholder="Select timezone"
               required
-              error={errors.timezone}
+              error={allErrors.timezone}
             />
           </div>
           <div>
@@ -284,7 +308,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
               options={currencyOptions}
               placeholder="Select currency"
               required
-              error={errors.currency}
+              error={allErrors.currency}
             />
           </div>
         </div>
@@ -308,10 +332,29 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
          
         </div>
 
-        <div className="flex justify-end">
-          <Button label="Next" type="submit" variant="primary" />
+        <div className="flex justify-between items-center">
+          {currentStep > 1 && (
+            <span 
+              className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+              onClick={onBack}
+            >
+              <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
+              <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+            </span>
+          )}
+          <div className="ml-auto">
+            <Button label="Next" type="submit" variant="primary" />
+          </div>
         </div>
       </form>
+        </div>
+        <RemarksPanel
+          hasSubmitted={hasSubmitted}
+          isValid={isValid}
+          validationErrors={validationErrors}
+          remarks={remarks}
+        />
+      </div>
     </div>
   );
 };

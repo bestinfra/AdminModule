@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Components
-import Page from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
-import Table from '../components/global/Table';
-import Button from '../components/global/Button';
+import Page from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
+import Table from '@components/global/Table';
+import Button from '@components/global/Button';
 
 // Context
 
 // Types
-import type { Section } from '../components/global/Page';
-import type { TableData, Column } from '../components/global/Table';
+import type { Section } from '@components/global/Page';
+import type { TableData, Column } from '@components/global/Table';
 
 // Interfaces
 interface Role extends TableData {

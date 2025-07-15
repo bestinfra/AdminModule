@@ -1,6 +1,5 @@
-
-import Table from '../components/global/Table';
-import PageHeader from '../components/global/PageHeader';
+import Table from '@components/global/Table';
+import PageHeader from '@components/global/PageHeader';
 
 const columns = [
   { key: 'sNo', label: 'S.No' },
