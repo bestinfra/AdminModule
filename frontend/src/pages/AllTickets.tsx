@@ -1,12 +1,12 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import Holder from '../components/global/Holder';
-import PageHeader from '../components/global/PageHeader';
-import type { Column } from '../components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import Holder from '@components/global/Holder';
+import PageHeader from '@components/global/PageHeader';
+import type { Column } from '@components/global/Table';
 
 interface TicketData {
     id: number;
@@ -261,7 +261,7 @@ const AllTickets: React.FC = () => {
                         pagination={true}
                         showActions={true}
                         // onEdit={(row) => console.log('Edit ticket:', row)}
-                        onDelete={(row) => console.log('Delete ticket:', row)}
+                        onDelete={(row: any) => console.log('Delete ticket:', row)}
                         onView={() => navigate('/ticket-view')}
                     />
                 </Holder>
@@ -313,7 +313,7 @@ const AllTickets: React.FC = () => {
                 { id: 'resolved', label: 'Resolved' },
                 { id: 'closed', label: 'Closed' }
             ]}
-            onMenuItemClick={(itemId) => handleFilterChange(itemId as FilterType)}
+            onMenuItemClick={(itemId: string) => handleFilterChange(itemId as FilterType)}
         />
     );
 
@@ -337,7 +337,7 @@ const AllTickets: React.FC = () => {
                     pagination={true}
                     showActions={true}
                     // onEdit={(row) => console.log('Edit ticket:', row)}
-                    onDelete={(row) => console.log('Delete ticket:', row)}
+                    onDelete={(row: any) => console.log('Delete ticket:', row)}
                     onView={() => navigate('/ticket-view')}
                 />
             </Holder>
