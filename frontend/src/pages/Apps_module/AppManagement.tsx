@@ -55,6 +55,8 @@ const AppManagement: React.FC = () => {
             onInputChange={handleAppBasicsInputChange}
             onArrayChange={handleAppBasicsArrayChange}
             onNext={handleAppBasicsSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 2:
@@ -66,6 +68,8 @@ const AppManagement: React.FC = () => {
             onDropdownChange={handleAdminDropdownChange}
             loading={loading}
             onSubmit={handleAdminSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 3:
@@ -75,6 +79,8 @@ const AppManagement: React.FC = () => {
             errors={brandingErrors}
             onInputChange={handleBrandingInputChange}
             onNext={handleBrandingSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 4:
@@ -84,6 +90,8 @@ const AppManagement: React.FC = () => {
             errors={moduleErrors}
             onModuleToggle={handleModuleToggle}
             onNext={handleModuleSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 5:
@@ -98,6 +106,8 @@ const AppManagement: React.FC = () => {
             onEditStep={handleEditStep}
             onSubmit={handleFinalSubmit}
             isSubmitting={loading}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       default:

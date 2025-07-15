@@ -35,6 +35,8 @@ export interface AccessControlProps {
   onDropdownChange: (e: { target: { name: string; value: string | string[] } }) => void;
   loading?: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  currentStep?: number;
+  onBack?: () => void;
 }
 
 
@@ -43,25 +45,49 @@ const AccessControl: React.FC<AccessControlProps> = ({
   formData,
   errors,
   onInputChange,
-
   loading = false,
   onSubmit,
+  currentStep = 1,
+  onBack,
 }) => {
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+  const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const handleFormInputChange = (name: string, value: FormInputValue) => {
     onInputChange({ target: { name, value: value as string } } as React.ChangeEvent<HTMLInputElement>);
+    if (hasSubmitted) setHasSubmitted(false);
   };
 
   const handleFormInputBlur = () => {
-    // Handle blur if neededtext-2xl font-bold text-main dark:text-white mb-1
+    // Handle blur if needed
   };
 
+  // Validate form data and generate remarks
+  const { isValid, errors: validationErrors, remarks } = useMemo(() => {
+    return validateAccessControl(formData);
+  }, [formData]);
+
+  // Only show validation errors if form has been submitted
+  const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
+
   return (
-    <section className=" mx-auto bg-white dark:bg-primary-dark">
-      {/* <h2 className=" dark:text-white mb-1">Admin Access</h2>
-      <h3 className="text-gray-600 dark:text-gray-300 mb-6">Set up the primary administrator account for your application</h3> */}
-      <form className="space-y-6" onSubmit={onSubmit} action="#" method="post" noValidate aria-label="Admin Access Form" autoComplete="off">
+    <div className="mx-auto">
+      <div className="bg-white rounded-xl border border-primary-border p-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
+          <div className="">
+            <h2 className="text-base font-semibold text-primary">Admin Access</h2>
+            <p className="text-base text-gray-600 mt-2">Set up the primary administrator account for your application</p>
+          </div>
+          
+          <form className="space-y-6" onSubmit={(e) => {
+            e.preventDefault();
+            setHasSubmitted(true);
+            
+            // Only proceed if validation passes
+            if (isValid) {
+              onSubmit(e);
+            }
+          }} action="#" method="post" noValidate aria-label="Admin Access Form" autoComplete="off">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6"> 
           <FormInput
             input={{
@@ -72,8 +98,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
               required: true
             }}
             value={formData.adminFirstName}
-            error={errors.adminFirstName}
-            showError={!!errors.adminFirstName}
+            error={allErrors.adminFirstName}
+            showError={!!allErrors.adminFirstName}
             disabled={loading}
             onInputChange={handleFormInputChange}
             onInputBlur={handleFormInputBlur}
@@ -88,8 +114,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
               required: true
             }}
             value={formData.adminLastName}
-            error={errors.adminLastName}
-            showError={!!errors.adminLastName}
+            error={allErrors.adminLastName}
+            showError={!!allErrors.adminLastName}
             disabled={loading}
             onInputChange={handleFormInputChange}
             onInputBlur={handleFormInputBlur}
@@ -106,8 +132,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
               required: true
             }}
             value={formData.adminEmail}
-            error={errors.adminEmail}
-            showError={!!errors.adminEmail}
+            error={allErrors.adminEmail}
+            showError={!!allErrors.adminEmail}
             disabled={loading}
             onInputChange={handleFormInputChange}
             onInputBlur={handleFormInputBlur}
@@ -122,8 +148,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
               required: true
             }}
             value={formData.adminPhone}
-            error={errors.adminPhone}
-            showError={!!errors.adminPhone}
+            error={allErrors.adminPhone}
+            showError={!!allErrors.adminPhone}
             disabled={loading}
             onInputChange={handleFormInputChange}
             onInputBlur={handleFormInputBlur}
@@ -141,8 +167,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
               required: true
             }}
             value={formData.adminPassword}
-            error={errors.adminPassword}
-            showError={!!errors.adminPassword}
+            error={allErrors.adminPassword}
+            showError={!!allErrors.adminPassword}
             disabled={loading}
             onInputChange={handleFormInputChange}
             onInputBlur={handleFormInputBlur}
@@ -157,8 +183,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
               required: true
             }}
             value={formData.adminConfirmPassword}
-            error={errors.adminConfirmPassword}
-            showError={!!errors.adminConfirmPassword}
+            error={allErrors.adminConfirmPassword}
+            showError={!!allErrors.adminConfirmPassword}
             disabled={loading}
             onInputChange={handleFormInputChange}
             onInputBlur={handleFormInputBlur}
@@ -198,17 +224,36 @@ const AccessControl: React.FC<AccessControlProps> = ({
           </label>
         </div>
         {/* <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Admin will receive login credentials and setup instructions via email</p> */}
-        <div className="flex justify-end items-center gap-4 mt-6">
-          <Button
-            label={loading ? 'Saving...' : 'Submit'}
-            type="submit"
-            variant="primary"
-            disabled={loading}
-          />
-          {loading && <LoadingSpinner className="w-6 h-6" />}
+          <div className="flex justify-between items-center gap-4 mt-6">
+          {currentStep > 1 && (
+            <span 
+              className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+              onClick={onBack}
+            >
+              <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
+              <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+            </span>
+          )}
+          <div className="ml-auto flex items-center gap-4">
+            <Button
+              label={loading ? 'Saving...' : 'Submit'}
+              type="submit"
+              variant="primary"
+              disabled={loading}
+            />
+            {loading && <LoadingSpinner className="w-6 h-6" />}
+          </div>
         </div>
       </form>
-    </section>
+        </div>
+        <RemarksPanel
+          hasSubmitted={hasSubmitted}
+          isValid={isValid}
+          validationErrors={validationErrors}
+          remarks={remarks}
+        />
+      </div>
+    </div>
   );
 };
 

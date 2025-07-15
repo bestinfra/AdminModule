@@ -56,6 +56,21 @@ const ConnectDisconnect: React.FC = () => {
   const [apiLogs, setApiLogs] = useState<string[]>([]);
   const [selectedMeters, setSelectedMeters] = useState<string[]>([]);
   const [communicationFilter, setCommunicationFilter] = useState<'all' | 'communicating' | 'non-communicating'>('all');
+  const [selectedTimeRange, setSelectedTimeRange] = useState<string>('Daily');
+
+
+  const timeRangeLabels = {
+    'Daily': 'All',
+    'Monthly': 'Pre Paid ', 
+    'Yearly': 'Post Paid'
+  };
+
+  // Handle time range change
+  const handleTimeRangeChange = (range: string) => {
+    setSelectedTimeRange(range);
+    console.log('Time range changed to:', range);
+    
+  };
 
   // Handle route parameters for initial filtering
   useEffect(() => {
@@ -380,6 +395,22 @@ const ConnectDisconnect: React.FC = () => {
   // Add sNo property to each row for serial number
   const tableData = filteredMeters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
 
+  // Define columns for the meter data
+  const columns = [
+    { key: 'sNo', label: 'S.No' },
+    { key: 'meterNo', label: 'Meter No' },
+    { key: 'uid', label: 'UID' },
+    { key: 'consumerName', label: 'Consumer Name' },
+    { key: 'location', label: 'Location' },
+    { key: 'status', label: 'Status' },
+    { key: 'communicationStatus', label: 'Communication' },
+    { key: 'lastReading', label: 'Last Reading' },
+    { key: 'lastUpdate', label: 'Last Update' },
+    { key: 'lastCommunication', label: 'Last Communication' },
+    { key: 'phase', label: 'Phase' },
+    { key: 'type', label: 'Type' },
+  ];
+
   return (
     <div className="">
       <div className="flex items-center justify-between mb-6">
@@ -592,7 +623,7 @@ const ConnectDisconnect: React.FC = () => {
           />
 
           <Card
-            title="Connection Status"
+            title="Auto Triggered Disconnects"
             value={`${meters.filter(m => m.status === 'connected').length}/${meters.length}`}
             icon="/icons/meter-bolt.svg"
             loading={isLoading}
@@ -681,6 +712,7 @@ const ConnectDisconnect: React.FC = () => {
        
         <Table
         data={tableData}
+        columns={columns}
         actions={actions}
         showActions
         searchable
@@ -692,6 +724,9 @@ const ConnectDisconnect: React.FC = () => {
         showHeader={true}
         headerTitle="Meter Connection Status"
         dateRange="Jan 2024 - Dec 2024"
+        selectedTimeRange={selectedTimeRange}
+        onTimeRangeChange={handleTimeRangeChange}
+        timeRangeLabels={timeRangeLabels}
       />
         <div className="mb-6"></div>
       
