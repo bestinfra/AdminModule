@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/global/Button';
 import type { Column } from '../components/global/Table';
 import Table from '../components/global/Table';
@@ -11,31 +12,35 @@ import meterConnectionAPI, { MeterConnectionAPI } from '../api/meterConnection';
 interface MeterData {
   id: string;
   meterNo: string;
+  uid: string;
   consumerName: string;
   location: string;
   status: 'connected' | 'disconnected';
+  communicationStatus: 'communicating' | 'non-communicating';
   lastReading: number;
   lastUpdate: string;
+  lastCommunication: string;
   phase: string;
   type: 'prepaid' | 'postpaid';
 }
 
 const meterData: MeterData[] = [
-  { id: '1', meterNo: 'A9345717', consumerName: 'John Smith', location: '1007, Block B, Asian Sun City', status: 'disconnected', lastReading: 145.17, lastUpdate: '2024-01-15', phase: 'Single Phase', type: 'prepaid' },
-  { id: '2', meterNo: 'B1234567', consumerName: 'Sarah Johnson', location: '205, Tower A, Downtown Plaza', status: 'connected', lastReading: 89.45, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
-  { id: '3', meterNo: 'C7890123', consumerName: 'Mike Wilson', location: '15, Green Valley Society', status: 'connected', lastReading: 234.78, lastUpdate: '2024-01-16', phase: 'Three Phase', type: 'prepaid' },
-  { id: '4', meterNo: 'D4567890', consumerName: 'Emily Davis', location: '78, Lake View Apartments', status: 'disconnected', lastReading: 67.23, lastUpdate: '2024-01-14', phase: 'Single Phase', type: 'postpaid' },
-  { id: '5', meterNo: 'E2345678', consumerName: 'David Brown', location: '45, Riverside Colony', status: 'connected', lastReading: 156.89, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'prepaid' },
-  { id: '6', meterNo: 'F8901234', consumerName: 'Lisa Anderson', location: '12, Hill Top Residency', status: 'disconnected', lastReading: 98.34, lastUpdate: '2024-01-13', phase: 'Three Phase', type: 'postpaid' },
-  { id: '7', meterNo: 'G5678901', consumerName: 'Robert Taylor', location: '89, Central Park View', status: 'connected', lastReading: 178.92, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'prepaid' },
-  { id: '8', meterNo: 'H3456789', consumerName: 'Jennifer White', location: '34, Sunshine Heights', status: 'connected', lastReading: 123.45, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
-  { id: '9', meterNo: 'I9012345', consumerName: 'Michael Clark', location: '67, Ocean View Towers', status: 'disconnected', lastReading: 87.65, lastUpdate: '2024-01-12', phase: 'Three Phase', type: 'prepaid' },
-  { id: '10', meterNo: 'J6789012', consumerName: 'Amanda Lee', location: '23, Garden City Complex', status: 'connected', lastReading: 145.67, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
+  { id: '1', meterNo: 'A9211433', uid: 'BI25GMRA004', consumerName: 'Mobikins', location: 'Tech Park, GMR', status: 'connected', communicationStatus: 'communicating', lastReading: 1271.76, lastUpdate: '2025-07-06', lastCommunication: '2025-07-06 16:12:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '2', meterNo: 'A9345417', uid: 'BI25GMRA002', consumerName: 'Neo Travels', location: 'Airport Road, GMR', status: 'connected', communicationStatus: 'communicating', lastReading: 10157.62, lastUpdate: '2025-07-06', lastCommunication: '2025-07-06 16:47:00', phase: 'Three Phase', type: 'postpaid' },
+  { id: '3', meterNo: 'A9345418', uid: 'BI25GMRA003', consumerName: 'Dormitory', location: 'Campus Area, GMR', status: 'connected', communicationStatus: 'communicating', lastReading: 1108.34, lastUpdate: '2025-07-06', lastCommunication: '2025-07-06 12:19:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '4', meterNo: 'A9211434', uid: 'BI25GMRA001', consumerName: 'Airborne General Store', location: 'GHASL, GMR', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 145.17, lastUpdate: '2025-07-05', lastCommunication: '2025-07-05 10:30:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '5', meterNo: 'A9345717', uid: 'BI25GMRA005', consumerName: 'John Smith', location: '1007, Block B, Asian Sun City', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 145.17, lastUpdate: '2024-01-15', lastCommunication: '2024-01-15 14:30:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '6', meterNo: 'B1234567', uid: 'BI25GMRA006', consumerName: 'Sarah Johnson', location: '205, Tower A, Downtown Plaza', status: 'connected', communicationStatus: 'communicating', lastReading: 89.45, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 09:15:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '7', meterNo: 'C7890123', uid: 'BI25GMRA007', consumerName: 'Mike Wilson', location: '15, Green Valley Society', status: 'connected', communicationStatus: 'communicating', lastReading: 234.78, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 11:45:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '8', meterNo: 'D4567890', uid: 'BI25GMRA008', consumerName: 'Emily Davis', location: '78, Lake View Apartments', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 67.23, lastUpdate: '2024-01-14', lastCommunication: '2024-01-14 16:20:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '9', meterNo: 'E2345678', uid: 'BI25GMRA009', consumerName: 'David Brown', location: '45, Riverside Colony', status: 'connected', communicationStatus: 'communicating', lastReading: 156.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 13:30:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '10', meterNo: 'F8901234', uid: 'BI25GMRA010', consumerName: 'Lisa Anderson', location: '12, Hill Top Residency', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 98.34, lastUpdate: '2024-01-13', lastCommunication: '2024-01-13 08:45:00', phase: 'Three Phase', type: 'postpaid' },
 ];
 
 const columns: Column[] = [
   { key: 'sNo', label: 'S.No' },
   { key: 'meterNo', label: 'Meter No' },
+  { key: 'uid', label: 'UID' },
   { key: 'consumerName', label: 'Consumer Name' },
   { key: 'location', label: 'Location' },
   { 
@@ -56,6 +61,26 @@ const columns: Column[] = [
       </span>
     )
   },
+  { 
+    key: 'communicationStatus', 
+    label: 'Communication Status',
+    render: (value) => (
+      <span
+        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+          value === 'communicating'
+            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+        }`}>
+        <div
+          className={`w-2 h-2 rounded-full mr-2 ${
+            value === 'communicating' ? 'bg-green-500' : 'bg-red-500'
+          }`}></div>
+        {value === 'communicating' ? 'COMMUNICATING' : 'NON-COMMUNICATING'}
+      </span>
+    )
+  },
+  { key: 'lastReading', label: 'Last Reading (kWh)' },
+  { key: 'lastCommunication', label: 'Last Communication' },
   { key: 'lastUpdate', label: 'Last Status Update' },
   { 
     key: 'type', 
@@ -69,6 +94,8 @@ const columns: Column[] = [
 ];
 
 const ConnectDisconnect: React.FC = () => {
+  const params = useParams<{ filter?: string }>();
+  const navigate = useNavigate();
   const [meters, setMeters] = useState<MeterData[]>(meterData);
   const [selectedMeter, setSelectedMeter] = useState<MeterData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -82,6 +109,21 @@ const ConnectDisconnect: React.FC = () => {
   const [apiLogs, setApiLogs] = useState<string[]>([]);
   const [selectedMeters, setSelectedMeters] = useState<string[]>([]);
   const [bulkActionType, setBulkActionType] = useState<'connect' | 'disconnect' | null>(null);
+  const [communicationFilter, setCommunicationFilter] = useState<'all' | 'communicating' | 'non-communicating'>('all');
+
+  // Handle route parameters for initial filtering
+  useEffect(() => {
+    const filterParam = params.filter;
+    console.log('Route filter parameter:', filterParam);
+    
+    if (filterParam === 'communicating' || filterParam === 'non-communicating') {
+      console.log('Setting filter to:', filterParam);
+      setCommunicationFilter(filterParam);
+    } else {
+      console.log('No filter or invalid filter, setting to all');
+      setCommunicationFilter('all');
+    }
+  }, [params.filter]);
 
 
 
@@ -300,6 +342,13 @@ const ConnectDisconnect: React.FC = () => {
 
   const actions = [
     {
+      label: 'View Consumer',
+      icon: '/icons/eye.svg',
+      onClick: (row: any) => {
+        navigate(`/consumers/${row.uid}`);
+      },
+    },
+    {
       label: 'Refresh Status',
       icon: '/icons/refresh.svg',
       onClick: (row: any) => refreshMeterStatus(row.meterNo),
@@ -318,8 +367,22 @@ const ConnectDisconnect: React.FC = () => {
     },
   ];
 
+  // Filter meters based on communication status
+  const filteredMeters = meters.filter(meter => {
+    console.log(`Checking meter ${meter.consumerName}: status=${meter.communicationStatus}, filter=${communicationFilter}`);
+    if (communicationFilter === 'all') return true;
+    const matches = meter.communicationStatus === communicationFilter;
+    console.log(`Meter ${meter.consumerName} matches filter: ${matches}`);
+    return matches;
+  });
+
+  console.log('Current filter:', communicationFilter);
+  console.log('Total meters:', meters.length);
+  console.log('Filtered meters:', filteredMeters.length);
+  console.log('Filtered meter names:', filteredMeters.map(m => m.consumerName));
+
   // Add sNo property to each row for serial number
-  const tableData = meters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+  const tableData = filteredMeters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
 
   return (
     <div className="">
@@ -478,44 +541,39 @@ const ConnectDisconnect: React.FC = () => {
             icon="/icons/meter-bolt.svg"
             loading={isLoading}
             onValueClick={() => refreshAllMeterStatuses()}
-            subtitle1="Prepaid"
-            subtitle2="Postpaid"
+            subtitle1="Active meters in system"
           />
           
           <Card
-            title={`Prepaid`}
-            value={meters.filter(m => m.type === 'prepaid').length}
-            icon="/icons/prepaid.svg"
+            title="Communicating"
+            value={meters.filter(m => m.communicationStatus === 'communicating').length}
+            icon="/icons/connect.svg"
             loading={isLoading}
-            onValueClick={() => {
-              console.log('Filtering to show prepaid meters');
-            }}
-            subtitle1={`${meters.filter(m => m.type === 'prepaid' && m.status === 'connected').length} Connected`}
-            subtitle2={`${meters.filter(m => m.type === 'prepaid' && m.status === 'disconnected').length} Disconnected`}
+            onValueClick={() => navigate('/connect-disconnect/communicating')}
+            subtitle1="Meters with active communication"
+            subtitle2="Green status"
           />
           
           <Card
-            title={`Postpaid`}
-            value={meters.filter(m => m.type === 'postpaid').length}
-            icon="/icons/bills.svg"
+            title="Non-Communicating"
+            value={meters.filter(m => m.communicationStatus === 'non-communicating').length}
+            icon="/icons/disconnect.svg"
             loading={isLoading}
-            onValueClick={() => {
-              console.log('Filtering to show postpaid meters');
-            }}
-            subtitle1={`${meters.filter(m => m.type === 'postpaid' && m.status === 'connected').length} Connected`}
-            subtitle2={`${meters.filter(m => m.type === 'postpaid' && m.status === 'disconnected').length} Disconnected`}
+            onValueClick={() => navigate('/connect-disconnect/non-communicating')}
+            subtitle1="Meters without communication"
+            subtitle2="Red status"
           />
 
           <Card
-            title="Auto Triggered Disconnects"
-            value="4"
-            icon="/icons/disconnect.svg"
+            title="Connection Status"
+            value={`${meters.filter(m => m.status === 'connected').length}/${meters.length}`}
+            icon="/icons/meter-bolt.svg"
             loading={isLoading}
             onValueClick={() => {
-              console.log('Showing auto disconnect details');
+              console.log('Showing connection status details');
             }}
-            subtitle1=" 2 Yesterday"
-            subtitle2="4 Consumers Today"
+            subtitle1={`${meters.filter(m => m.status === 'connected').length} Connected`}
+            subtitle2={`${meters.filter(m => m.status === 'disconnected').length} Disconnected`}
           />
         </div>
             </div>
@@ -593,11 +651,34 @@ const ConnectDisconnect: React.FC = () => {
       )}
       {/* Meter Table */}
       <div className="mb-8">
-       <div className="mb-6">
-         
-      </div>
+        <div className="mb-6 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Meter Communication Status
+              {communicationFilter !== 'all' && (
+                <span className="ml-2 text-sm font-normal text-gray-600 dark:text-gray-400">
+                  (Filtered: {communicationFilter === 'communicating' ? 'Communicating' : 'Non-Communicating'})
+                </span>
+              )}
+              <div className="text-xs text-blue-600 dark:text-blue-400 mt-1">
+                Current Filter: {communicationFilter} | Route: {params.filter || 'none'}
+              </div>
+            </h3>
+            {communicationFilter !== 'all' && (
+              <Button
+                label="Clear Filter"
+                variant="outline"
+                onClick={() => navigate('/connect-disconnect')}
+                className="text-sm"
+              />
+            )}
+          </div>
+          <div className="text-sm text-gray-600 dark:text-gray-400">
+            Showing {tableData.length} of {meters.length} meters
+          </div>
+        </div>
 
-      <Table
+        <Table
         data={tableData}
         columns={columns}
         actions={actions}
