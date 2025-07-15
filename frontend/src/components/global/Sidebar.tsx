@@ -280,21 +280,21 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/workflow-setting-alt.svg',
                 link: '/page-builder',
             },
-            {
-                title: 'User Management',
-                icon: '/icons/user-management.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Users',
-                        link: '/user-management/users',
-                    },
-                    {
-                        title: 'Roles',
-                        link: '/user-management/roles',
-                    },
-                ],
-            },
+            // {
+            //     title: 'User Management',
+            //     icon: '/icons/user-management.svg',
+            //     hasSubmenu: true,
+            //     submenu: [
+            //         {
+            //             title: 'Users',
+            //             link: '/user-management/users',
+            //         },
+            //         {
+            //             title: 'Roles',
+            //             link: '/user-management/roles',
+            //         },
+            //     ],
+            // },
         ],
     },
     {
