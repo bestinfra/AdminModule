@@ -14,7 +14,7 @@ const cardData = [
     icon: '/icons/total-recharge-collection.svg',
     subtitle2: '0 Total Bills Generated',
   },
-  {
+  { 
     title: 'Outstanding Amount',
     value: '₹0.00',
     icon: '/icons/wallet.svg',

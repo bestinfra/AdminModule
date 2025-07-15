@@ -93,8 +93,19 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     };
 
     // Auto-generate subdomain from app name
+    const prevAppNameRef = useRef<string>('');
+    const isInitialMount = useRef(true);
+    
     useEffect(() => {
-        if (formData.appName) {
+        // Skip on initial mount to avoid setting subdomain when component first loads
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            prevAppNameRef.current = formData.appName || '';
+            return;
+        }
+        
+        // Only update if app name has actually changed and is different from previous
+        if (formData.appName && formData.appName !== prevAppNameRef.current) {
             const generated = formData.appName
                 .toLowerCase()
                 .replace(/[^a-z0-9]/g, '-')
@@ -105,7 +116,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
         } else {
             onInputChange({ target: { name: 'subdomain', value: '' } });
         }
-    }, [formData.appName, onInputChange]);
+    }, [formData.appName]);
 
     // Fetch state/country from city
     const fetchStateCountryFromCity = async (city: string) => {
@@ -169,8 +180,29 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
 
     // Validate form data and generate remarks
     const { isValid, errors: validationErrors, remarks } = useMemo(() => {
+        //  subdomain issues
+        if (formData.subdomain) {
+            console.log('Subdomain validation debug:', {
+                subdomain: formData.subdomain,
+                isValid: /^https:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/.test(formData.subdomain),
+                regex: /^https:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/
+            });
+        }
         return validateApplicationSetup(formData);
-    }, [formData]);
+    }, [
+        formData.appName,
+        formData.subdomain,
+        formData.addressLine,
+        formData.country,
+        formData.state,
+        formData.city,
+        formData.applicationCategory,
+        formData.projectType,
+        formData.ownershipType,
+        formData.tariffPlans,
+        formData.billingMode,
+        formData.meteringType
+    ]);
 
     // Only show validation errors if form has been submitted
     const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
