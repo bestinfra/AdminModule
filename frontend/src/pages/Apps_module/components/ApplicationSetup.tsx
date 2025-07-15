@@ -100,7 +100,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                 .replace(/[^a-z0-9]/g, '-')
                 .replace(/-+/g, '-')
                 .replace(/^-|-$/g, '');
-            const fullUrl = `http://www.${generated}.bestinfra.app`;
+            const fullUrl = `https://www.${generated}.bestinfra.app`;
             onInputChange({ target: { name: 'subdomain', value: fullUrl } });
         } else {
             onInputChange({ target: { name: 'subdomain', value: '' } });
