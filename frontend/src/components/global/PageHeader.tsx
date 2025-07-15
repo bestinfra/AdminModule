@@ -11,6 +11,7 @@ interface MenuItem {
 
 interface HeaderProps {
     title: string;
+    subtitle?: string;
     buttonsLabel?: string;
     variant?: 'primary' | 'secondary' | 'outline' | 'primarysmall' | 'success' | 'danger' | 'warning';
     size?: string;
@@ -36,6 +37,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({
     title,
+    subtitle,
     buttonsLabel,
     variant,
     menuItems = [],
@@ -177,6 +179,11 @@ const Header: React.FC<HeaderProps> = ({
                 <h1 className="text-xl font-black text-gray-900 dark:text-white m-0">
                     {title}
                 </h1>
+                {subtitle && (
+                    <p className="text-sm text-gray-600 dark:text-gray-400 m-0">
+                        {subtitle}
+                    </p>
+                )}
             </div>
 
             <div className={`flex items-center gap-4 header-right ${
@@ -211,6 +218,7 @@ const Header: React.FC<HeaderProps> = ({
                         label={buttonsLabel}
                         variant={variant}
                         onClick={onClick}
+                        
                     />
                 )}
 
@@ -237,6 +245,8 @@ const Header: React.FC<HeaderProps> = ({
                         top: editMenuPosition.y,
                     }}
                     ref={editMenuRef}
+
+                    
                 >
                     {menuItems.map((item) => (
                         <div

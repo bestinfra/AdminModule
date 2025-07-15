@@ -91,19 +91,22 @@ function createAppProject(formData) {
     const sourceFontsDir = path.join(__dirname, 'frontend', 'public', 'fonts');
     const destFontsDir = path.join(frontendDir, 'public', 'fonts');
     
-    if (fs.existsSync(sourceFontsDir)) {
-      ensureDir(destFontsDir);
-      const fontFiles = fs.readdirSync(sourceFontsDir);
-      fontFiles.forEach(fontName => {
-        const sourcePath = path.join(sourceFontsDir, fontName);
-        const destPath = path.join(destFontsDir, fontName);
-        
+    // Ensure Manrope font subdirectory exists in destination
+    const sourceManropeDir = path.join(sourceFontsDir, 'Manrope');
+    const destManropeDir = path.join(destFontsDir, 'Manrope');
+    if (fs.existsSync(sourceManropeDir)) {
+      ensureDir(destManropeDir);
+      const manropeFiles = fs.readdirSync(sourceManropeDir);
+      manropeFiles.forEach(fontName => {
+        const sourcePath = path.join(sourceManropeDir, fontName);
+        const destPath = path.join(destManropeDir, fontName);
         if (fs.statSync(sourcePath).isFile()) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
+      console.log(`Copied Manrope fonts to ${destManropeDir}`);
     } else {
-      console.log(`Fonts directory not found: ${sourceFontsDir}`);
+      console.log(`Manrope fonts directory not found: ${sourceManropeDir}`);
     }
   }
 
@@ -446,6 +449,36 @@ const ConsumerView = createSafeLazyComponent(
   ConsumerViewFallback
 );
 
+const Users = createSafeLazyComponent(
+  () => import('SuperAdmin/Users'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Users</h1>
+      <p className="text-gray-600">Loading users...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote Users component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const RoleManagement = createSafeLazyComponent(
+  () => import('SuperAdmin/RoleManagement'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Role Management</h1>
+      <p className="text-gray-600">Loading role management...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote RoleManagement component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
 const BillsPrepaid = createSafeLazyComponent(
   () => import('SuperAdmin/BillsPrepaid'),
   () => (
@@ -554,6 +587,10 @@ function AppContent() {
         return 'Dashboard';
       case '/consumers':
         return 'Consumers';
+      case '/users':
+        return 'Users';
+      case '/role-management':
+        return 'Role Management';
       case '/bills/prepaid':
         return 'Prepaid Bills';
       case '/bills/postpaid':
@@ -661,17 +698,19 @@ function AppContent() {
     },
     {
       title: 'Users',
-      icon: '/icons/user-gear.svg',
+      icon: '/icons/user.svg',
       link: '/users',
       hasSubmenu: true,
       submenu: [
         {
           title: 'Users',
+          icon: '/icons/user-gear.svg',
           link: '/users',
         },
         {
           title: 'Role Management',
-          link: '/meters',
+          icon: '/icons/roles.svg',
+          link: '/role-management',
         },
       ],
     },
@@ -1511,15 +1550,80 @@ declare module 'SuperAdmin/DataLoggerMaster' {
   const DataLoggerMaster: React.ComponentType<any>;
   export default DataLoggerMaster;
 }
-// declare module 'SuperAdmin/Users' {
-//   const Users: React.ComponentType<any>;
-//   export default Users;
-// }
 
-// declare module 'SuperAdmin/RoleManagement' {
-//   const RoleManagement: React.ComponentType<any>;
-//   export default RoleManagement;
-// }
+declare module 'SuperAdmin/Users' {
+  const Users: React.ComponentType<any>;
+  export default Users;
+}
+
+declare module 'SuperAdmin/RoleManagement' {
+  const RoleManagement: React.ComponentType<any>;
+  export default RoleManagement;
+}
+
+declare module 'SuperAdmin/TicketView' {
+  const TicketView: React.ComponentType<any>;
+  export default TicketView;
+}
+
+declare module 'SuperAdmin/Page' {
+  const Page: React.ComponentType<any>;
+  export default Page;
+}
+
+declare module 'SuperAdmin/Table' {
+  const Table: React.ComponentType<any>;
+  export default Table;
+}
+
+declare module 'SuperAdmin/Dropdown' {
+  const Dropdown: React.ComponentType<any>;
+  export default Dropdown;
+}
+
+declare module 'SuperAdmin/Card' {
+  const Card: React.ComponentType<any>;
+  export default Card;
+}
+
+declare module 'SuperAdmin/PieChart' {
+  const PieChart: React.ComponentType<any>;
+  export default PieChart;
+}
+
+declare module 'SuperAdmin/BarChart' {
+  const BarChart: React.ComponentType<any>;
+  export default BarChart;
+}
+
+declare module 'SuperAdmin/TimeRangeSelector' {
+  const TimeRangeSelector: React.ComponentType<any>;
+  export default TimeRangeSelector;
+}
+
+declare module 'SuperAdmin/PageHeader' {
+  const PageHeader: React.ComponentType<any>;
+  export default PageHeader;
+}
+
+declare module 'SuperAdmin/OrgChart' {
+  const OrgChart: React.ComponentType<any>;
+  export default OrgChart;
+}
+
+declare module 'SuperAdmin/context/AppContext' {
+  export const useApp: () => any;
+  export const AppProvider: React.ComponentType<any>;
+}
+
+declare module 'SuperAdmin/AppProvider' {
+  const AppProvider: React.ComponentType<any>;
+  export default AppProvider;
+}
+
+declare module 'SuperAdmin/useApp' {
+  export const useApp: () => any;
+}
 `,
     
     'README.md': `# ${appName || 'Admin App'}
@@ -1666,7 +1770,15 @@ DATABASE_URL=postgresql://postgres:password@localhost:5432/your_db_name_here?sch
   // Create prisma directory and schema.prisma
   const prismaDir = path.join(backendDir, 'prisma');
   ensureDir(prismaDir);
-  const schemaContent = `// Example Prisma schema
+  
+  // Copy db_schema.txt as schema.prisma if it exists, otherwise use example schema
+  const dbSchemaPath = path.join(__dirname, '..', 'AdminModule', 'db_schema.txt');
+  const targetSchemaPath = path.join(prismaDir, 'schema.prisma');
+  if (fs.existsSync(dbSchemaPath)) {
+    fs.copyFileSync(dbSchemaPath, targetSchemaPath);
+    console.log('Copied db_schema.txt to', targetSchemaPath);
+  } else {
+    const schemaContent = `// Example Prisma schema
 // Replace this with your actual schema
 
 generator client {
@@ -1679,18 +1791,15 @@ datasource db {
 }
 
 // Example model
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 model User {
   id    Int    @id @default(autoincrement())
   email String @unique
   name  String
 }
 `;
-  fs.writeFileSync(path.join(prismaDir, 'schema.prisma'), schemaContent);
+    fs.writeFileSync(targetSchemaPath, schemaContent);
+    console.log('Wrote example schema.prisma to', targetSchemaPath);
+  }
 
   // Add Prisma usage comment to server.js
   const serverPath = path.join(backendDir, 'server.js');
