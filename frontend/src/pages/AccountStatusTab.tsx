@@ -11,7 +11,7 @@
         user: User | null;
     }
 
-    const AccountStatusTab: React.FC<AccountStatusTabProps> = ({ user }) => {
+    const AccountStatusTab: React.FC<AccountStatusTabProps> = ({ user: _user }) => {
         const [checked, setChecked] = useState(false);
         const [isLoading, setIsLoading] = useState(false);
         const [error, setError] = useState<string | null>(null);

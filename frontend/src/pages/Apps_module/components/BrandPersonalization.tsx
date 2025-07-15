@@ -1,8 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import FormInput from '@components/forms/FormInput';
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
 import type { FormInputValue } from '@components/forms/types';
+import { validateBrandPersonalization } from '../utils';
+import RemarksPanel from './RemarksPanel';
 
 interface BrandPersonalizationProps {
   formData: any;

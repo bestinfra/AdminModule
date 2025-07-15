@@ -31,7 +31,7 @@ interface Pagination {
     hasPrevPage: boolean;
 }
 
-const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ user }) => {
+const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ user: _user }) => {
     const [activities, setActivities] = useState<Activity[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

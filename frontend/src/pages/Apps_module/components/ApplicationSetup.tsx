@@ -6,6 +6,7 @@ import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
 import type { FormInputValue } from '@components/forms/types';
 import { validateApplicationSetup } from '../utils';
+import RemarksPanel from './RemarksPanel';
 
 interface ApplicationSetupProps {
     formData: any;
