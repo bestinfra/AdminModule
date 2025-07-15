@@ -128,8 +128,8 @@ const Button = React.memo<ButtonProps>(({
             'border-primary-border',
             'hover:primary-border',
             'hover:text-gray-800',
+            'hover:bg-[var(--color-background-secondary-hover)]',
             'hover:border-primary-border',
-            
         ],
         asset: [
             'bg-[var(--asset-color)]',

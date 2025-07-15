@@ -196,7 +196,7 @@ function NotificationBell() {
                 <>
                     {/* Backdrop */}
                     <div
-                        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+                        className="fixed inset-0 bg-opacity-50 z-40 backdrop-blur-sm"
                         onClick={() => setIsOpen(false)}
                     />
                     {/* Side panel */}

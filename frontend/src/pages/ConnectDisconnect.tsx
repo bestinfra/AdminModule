@@ -632,7 +632,7 @@ const ConnectDisconnect: React.FC = () => {
           />
 
           <Card
-            title="Communicating"
+            title="Pre Paid"
             value={meters.filter(m => m.communicationStatus === 'communicating').length}
             icon="/icons/connect.svg"
             loading={isLoading}
@@ -651,7 +651,7 @@ const ConnectDisconnect: React.FC = () => {
           />
 
           <Card
-            title="Non-Communicating"
+              title="Post Paid"
             value={meters.filter(m => m.communicationStatus === 'non-communicating').length}
             icon="/icons/disconnect.svg"
             loading={isLoading}
