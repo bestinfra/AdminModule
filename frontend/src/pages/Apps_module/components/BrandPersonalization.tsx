@@ -11,9 +11,11 @@ interface BrandPersonalizationProps {
   errors: Record<string, string>;
   onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   onNext: (e: React.FormEvent<HTMLFormElement>) => void;
+  currentStep?: number;
+  onBack?: () => void;
 }
 
-const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, errors, onInputChange, onNext }) => {
+const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, errors, onInputChange, onNext, currentStep = 1, onBack }) => {
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -332,8 +334,19 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
          
         </div>
 
-        <div className="flex justify-end">
-          <Button label="Next" type="submit" variant="primary" />
+        <div className="flex justify-between items-center">
+          {currentStep > 1 && (
+            <span 
+              className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+              onClick={onBack}
+            >
+              <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
+              <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+            </span>
+          )}
+          <div className="ml-auto">
+            <Button label="Next" type="submit" variant="primary" />
+          </div>
         </div>
       </form>
         </div>

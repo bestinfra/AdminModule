@@ -120,6 +120,7 @@ interface TableProps {
     availableTimeRanges?: string[];
     selectedTimeRange?: string;
     onTimeRangeChange?: (range: string) => void;
+    timeRangeLabels?: Record<string, string>; // New prop for customizable time range labels
 }
 
 interface DefaultRowWrapperProps {
@@ -176,6 +177,7 @@ const Table: React.FC<TableProps> = ({
     availableTimeRanges = ['Daily', 'Monthly', 'Yearly'],
     selectedTimeRange = 'Daily',
     onTimeRangeChange = () => {},
+    timeRangeLabels = {}, // New prop for customizable time range labels
 }) => {
     const [sortConfig, setSortConfig] = useState<{
         key: string | null;
@@ -881,6 +883,7 @@ const Table: React.FC<TableProps> = ({
                     availableTimeRanges={availableTimeRanges}
                     selectedTimeRange={selectedTimeRange}
                     handleTimeRangeChange={onTimeRangeChange}
+                    timeRangeLabels={timeRangeLabels}
                   />
                 </div>
             </div>
@@ -941,6 +944,7 @@ Table.propTypes = {
     availableTimeRanges: PropTypes.arrayOf(PropTypes.string),
     selectedTimeRange: PropTypes.string,
     onTimeRangeChange: PropTypes.func,
+    timeRangeLabels: PropTypes.object, // New prop for customizable time range labels
 };
 
 export default Table;

@@ -36,6 +36,8 @@ export interface AccessControlProps {
   onDropdownChange: (e: { target: { name: string; value: string | string[] } }) => void;
   loading?: boolean;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  currentStep?: number;
+  onBack?: () => void;
 }
 
 
@@ -46,6 +48,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
   onInputChange,
   loading = false,
   onSubmit,
+  currentStep = 1,
+  onBack,
 }) => {
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -221,14 +225,25 @@ const AccessControl: React.FC<AccessControlProps> = ({
           </label>
         </div>
         {/* <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Admin will receive login credentials and setup instructions via email</p> */}
-        <div className="flex justify-end items-center gap-4 mt-6">
-          <Button
-            label={loading ? 'Saving...' : 'Submit'}
-            type="submit"
-            variant="primary"
-            disabled={loading}
-          />
-          {loading && <LoadingSpinner className="w-6 h-6" />}
+          <div className="flex justify-between items-center gap-4 mt-6">
+          {currentStep > 1 && (
+            <span 
+              className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+              onClick={onBack}
+            >
+              <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
+              <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+            </span>
+          )}
+          <div className="ml-auto flex items-center gap-4">
+            <Button
+              label={loading ? 'Saving...' : 'Submit'}
+              type="submit"
+              variant="primary"
+              disabled={loading}
+            />
+            {loading && <LoadingSpinner className="w-6 h-6" />}
+          </div>
         </div>
       </form>
         </div>

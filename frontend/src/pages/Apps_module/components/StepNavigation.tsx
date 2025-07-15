@@ -74,15 +74,7 @@ const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, onBack }) 
       </div>
       
       <div className="flex justify-between items-center gap-4">
-        {currentStep > 1 && (
-          <span 
-            className="flex items-center gap-2 p-2 px-2 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
-            onClick={onBack}
-          >
-            <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-7 h-7 filter dark:invert" />
-            <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
-          </span>
-        )}
+     
       </div>
     </div>
   );

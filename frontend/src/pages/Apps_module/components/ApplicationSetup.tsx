@@ -14,9 +14,11 @@ interface ApplicationSetupProps {
     onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
     onArrayChange: (name: string, value: any) => void;
     onNext: (e: React.FormEvent<HTMLFormElement>) => void;
+    currentStep?: number;
+    onBack?: () => void;
 }
 
-const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
+const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, onInputChange, onArrayChange, onNext, currentStep = 1, onBack }) => {
 
     const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -530,12 +532,23 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
 
 
                         {/* Submit Button */}
-                        <div className="flex justify-end">
-                            <Button
-                                label="Next Step"
-                                type="submit"
-                                variant="primary"
-                            />
+                        <div className="flex justify-between items-center">
+                            {currentStep > 1 && (
+                                <span 
+                                    className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+                                    onClick={onBack}
+                                >
+                                    <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
+                                    <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+                                </span>
+                            )}
+                            <div className="ml-auto">
+                                <Button
+                                    label="Next Step"
+                                    type="submit"
+                                    variant="primary"
+                                />
+                            </div>
                         </div>
                     </form>
                 </div>
