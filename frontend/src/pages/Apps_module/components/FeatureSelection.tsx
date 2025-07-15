@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 import Button from '../../../components/global/Button';
+import RemarksPanel from './RemarksPanel';
+import { validateFeatureSelection } from '../utils';
 
 interface FeatureSelectionProps {
   formData: any;
@@ -34,7 +36,16 @@ const moduleConfig = {
 };
 
 const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, onModuleToggle, onNext }) => {
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const enabledModules = formData.modules || ['dashboard', 'consumer', 'user_management_default', 'role_management'];
+
+  // Validate form data and generate remarks
+  const { isValid, errors: validationErrors, remarks } = useMemo(() => {
+    return validateFeatureSelection(formData);
+  }, [formData]);
+
+  // Only show validation errors if form has been submitted
+  const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
 
   const handleModuleToggle = (moduleKey: string) => {
     if (moduleKey === 'bills') {
@@ -142,11 +153,23 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
   };
 
   return (
-    <div className="max-w-4xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
-      <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Module Selection</h2>
-      <p className="text-gray-600 dark:text-gray-300 mb-6">Configure which modules will be enabled for your application</p>
-      
-      <form className="space-y-8" onSubmit={onNext} action="#" method="post" noValidate>
+    <div className="mx-auto">
+      <div className="bg-white rounded-xl border border-primary-border p-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
+        <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
+          <div className="">
+            <h2 className="text-base font-semibold text-primary">Module Selection</h2>
+            <p className="text-base text-gray-600 mt-2">Configure which modules will be enabled for your application</p>
+          </div>
+          
+          <form className="space-y-8" onSubmit={(e) => {
+            e.preventDefault();
+            setHasSubmitted(true);
+            
+            // Only proceed if validation passes
+            if (isValid) {
+              onNext(e);
+            }
+          }} action="#" method="post" noValidate>
         {/* Default Modules Section */}
         <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
           <div className="flex justify-between items-start mb-6 gap-4">
@@ -181,9 +204,9 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ transition: 'all 0.3s' }}>
             {gridModules.map(renderModuleItem)}
           </div>
-          {errors.modules && (
+          {allErrors.modules && (
             <div className="text-error text-sm font-medium mt-4 p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
-              {errors.modules}
+              {allErrors.modules}
             </div>
           )}
         </div>
@@ -192,6 +215,14 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           <Button label="Next" type="submit" variant="primary" />
         </div>
       </form>
+        </div>
+        <RemarksPanel
+          hasSubmitted={hasSubmitted}
+          isValid={isValid}
+          validationErrors={validationErrors}
+          remarks={remarks}
+        />
+      </div>
     </div>
   );
 };
