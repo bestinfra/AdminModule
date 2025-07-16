@@ -15,11 +15,11 @@ interface TableAction {
 }
 
 const SuperAdminDashboard: React.FC = () => {
-    const [timeRange, setTimeRange] = useState('Monthly');
+    // const [timeRange, setTimeRange] = useState('Monthly');
     const [projectsView, setProjectsView] = useState('All');
 
     
-    const timeRangeOptions = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
+    // const timeRangeOptions = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
     const projectsViewOptions = ['All', 'Active', 'Inactive', 'Maintenance'];
 
     // Host Projects Statistics

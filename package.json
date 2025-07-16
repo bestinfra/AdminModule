@@ -5,10 +5,7 @@
   "main": "createApp.cjs",
   "scripts": {
     "create-app": "node createApp.cjs",
-    "css-sync": "node scripts/sync-css.js sync",
-    "css-sync-watch": "node scripts/sync-css.js watch",
-    "css-sync-app": "node scripts/sync-css.js sync",
-    "dev": "concurrently \"npm run css-sync-watch\" \"cd frontend && npm run dev\"",
+    "dev": "cd frontend && npm run dev",
     "dev-frontend": "cd frontend && npm run dev",
     "dev-backend": "cd backend && npm run dev",
     "build": "cd frontend && npm run build",

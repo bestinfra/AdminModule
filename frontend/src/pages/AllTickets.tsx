@@ -21,14 +21,19 @@ interface TicketData {
     [key: string]: string | number | boolean | null | undefined;
 }
 
-type FilterType = 'all' | 'high-priority' | 'in-progress' | 'resolved' | 'closed';
+type FilterType =
+    | 'all'
+    | 'high-priority'
+    | 'in-progress'
+    | 'resolved'
+    | 'closed';
 
 const AllTickets: React.FC = () => {
     const navigate = useNavigate();
     const { filter } = useParams<{ filter?: string }>();
     const [loading] = useState(false);
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
-    
+
     // Get filter from URL params, default to 'all'
     const activeFilter = (filter as FilterType) || 'all';
     // Ensure layout is properly initialized
@@ -53,7 +58,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'John Doe',
             createdAt: '2024-03-20',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 2,
@@ -64,7 +69,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Jane Smith',
             createdAt: '2024-03-19',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 3,
@@ -75,7 +80,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Mike Johnson',
             createdAt: '2024-03-18',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 4,
@@ -86,7 +91,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Sarah Wilson',
             createdAt: '2024-03-17',
             category: 'Billing',
-            department: 'Finance'
+            department: 'Finance',
         },
         {
             id: 5,
@@ -97,7 +102,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Tom Anderson',
             createdAt: '2024-03-21',
             category: 'Infrastructure',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 6,
@@ -108,21 +113,29 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Lisa Chen',
             createdAt: '2024-03-16',
             category: 'Security',
-            department: 'IT'
-        }
+            department: 'IT',
+        },
     ];
 
     // Filter tickets based on active filter
     const filteredTickets = useMemo(() => {
         switch (activeFilter) {
             case 'high-priority':
-                return ticketData.filter(ticket => ticket.priority === 'High');
+                return ticketData.filter(
+                    (ticket) => ticket.priority === 'High'
+                );
             case 'in-progress':
-                return ticketData.filter(ticket => ticket.status === 'In Progress');
+                return ticketData.filter(
+                    (ticket) => ticket.status === 'In Progress'
+                );
             case 'resolved':
-                return ticketData.filter(ticket => ticket.status === 'Resolved');
+                return ticketData.filter(
+                    (ticket) => ticket.status === 'Resolved'
+                );
             case 'closed':
-                return ticketData.filter(ticket => ticket.status === 'Closed');
+                return ticketData.filter(
+                    (ticket) => ticket.status === 'Closed'
+                );
             default:
                 return ticketData;
         }
@@ -131,17 +144,23 @@ const AllTickets: React.FC = () => {
     // Calculate statistics
     const stats = useMemo(() => {
         const total = ticketData.length;
-        const highPriority = ticketData.filter(t => t.priority === 'High').length;
-        const inProgress = ticketData.filter(t => t.status === 'In Progress').length;
-        const resolved = ticketData.filter(t => t.status === 'Resolved').length;
-        const closed = ticketData.filter(t => t.status === 'Closed').length;
+        const highPriority = ticketData.filter(
+            (t) => t.priority === 'High'
+        ).length;
+        const inProgress = ticketData.filter(
+            (t) => t.status === 'In Progress'
+        ).length;
+        const resolved = ticketData.filter(
+            (t) => t.status === 'Resolved'
+        ).length;
+        const closed = ticketData.filter((t) => t.status === 'Closed').length;
 
         return {
             total,
             highPriority,
             inProgress,
             resolved,
-            closed
+            closed,
         };
     }, [ticketData]);
 
@@ -151,16 +170,22 @@ const AllTickets: React.FC = () => {
         { key: 'status', label: 'Status' },
         { key: 'priority', label: 'Priority' },
         { key: 'assignedTo', label: 'Assigned To' },
-        { key: 'createdAt', label: 'Created At' }
+        { key: 'createdAt', label: 'Created At' },
     ];
 
-    const handleCardClick = useCallback((filter: FilterType) => {
-        navigate(`/tickets/${filter}`);
-    }, [navigate]);
+    const handleCardClick = useCallback(
+        (filter: FilterType) => {
+            navigate(`/tickets/${filter}`);
+        },
+        [navigate]
+    );
 
-    const handleFilterChange = useCallback((filter: FilterType) => {
-        navigate(`/tickets/${filter}`);
-    }, [navigate]);
+    const handleFilterChange = useCallback(
+        (filter: FilterType) => {
+            navigate(`/tickets/${filter}`);
+        },
+        [navigate]
+    );
 
     const handleBackToCards = useCallback(() => {
         navigate('/tickets');
@@ -238,7 +263,7 @@ const AllTickets: React.FC = () => {
                         onValueClick={() => handleCardClick('closed')}
                     />
                 </div>
-            )
+            ),
         };
 
         const ticketsTableSection: Section = {
@@ -251,8 +276,7 @@ const AllTickets: React.FC = () => {
                     selectedTimeRange={selectedTimeRange}
                     handleTimeRangeChange={setSelectedTimeRange}
                     handleDownload={() => console.log('Downloading tickets...')}
-                    loading={loading}
-                >
+                    loading={loading}>
                     <Table
                         data={ticketData}
                         columns={columns}
@@ -265,7 +289,7 @@ const AllTickets: React.FC = () => {
                         onView={() => navigate('/ticket-view')}
                     />
                 </Holder>
-            )
+            ),
         };
 
         const mainHeaderComponent = (
@@ -282,8 +306,8 @@ const AllTickets: React.FC = () => {
         );
 
         return (
-            <Page 
-                layout="single-column" 
+            <Page
+                layout="single-column"
                 sections={[overviewSection, ticketsTableSection]}
                 header={mainHeaderComponent}
                 sidebarPosition="right"
@@ -311,7 +335,7 @@ const AllTickets: React.FC = () => {
                 { id: 'high-priority', label: 'High Priority' },
                 { id: 'in-progress', label: 'In Progress' },
                 { id: 'resolved', label: 'Resolved' },
-                { id: 'closed', label: 'Closed' }
+                { id: 'closed', label: 'Closed' },
             ]}
             onMenuItemClick={(itemId: string) => handleFilterChange(itemId as FilterType)}
         />
@@ -327,8 +351,7 @@ const AllTickets: React.FC = () => {
                 selectedTimeRange={selectedTimeRange}
                 handleTimeRangeChange={setSelectedTimeRange}
                 handleDownload={() => console.log('Downloading tickets...')}
-                loading={loading}
-            >
+                loading={loading}>
                 <Table
                     data={filteredTickets}
                     columns={columns}
@@ -341,7 +364,7 @@ const AllTickets: React.FC = () => {
                     onView={() => navigate('/ticket-view')}
                 />
             </Holder>
-        )
+        ),
     };
 
     const recentActivitySection: Section = {
@@ -402,19 +425,19 @@ const AllTickets: React.FC = () => {
                     </div>
                 </div>
             </div>
-        )
+        ),
     };
 
     const sections: Section[] = [
         // overviewSection,
         ticketsTableSection,
-        recentActivitySection
+        recentActivitySection,
     ];
     // const sections: Section[] = [ticketsTableSection];
 
     return (
-        <Page 
-            layout="single-column" 
+        <Page
+            layout="single-column"
             sections={sections}
             header={headerComponent}
             sidebarPosition="right"
@@ -426,4 +449,4 @@ const AllTickets: React.FC = () => {
     );
 };
 
-export default AllTickets; 
+export default AllTickets;
