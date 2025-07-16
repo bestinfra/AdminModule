@@ -38,6 +38,7 @@ export const combineFormData = (stepData: StepData): AllFormData => {
     appLogo: stepData.branding.appLogo,
     appFavicon: stepData.branding.appFavicon,
     primaryColor: stepData.branding.primaryColor,
+    secondaryColor: stepData.branding.secondaryColor,
     appDescription: stepData.branding.appDescription,
     contactEmail: stepData.branding.contactEmail,
     contactPhone: stepData.branding.contactPhone,
