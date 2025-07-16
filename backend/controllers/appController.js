@@ -44,6 +44,7 @@ export const createApp = async (req, res) => {
             appLogo,
             appFavicon,
             primaryColor,
+            secondaryColor,
             contactEmail,
             contactPhone,
         } = req.body;
@@ -153,6 +154,7 @@ export const createApp = async (req, res) => {
                         appLogo,
                         appFavicon,
                         primaryColor,
+                        secondaryColor,
                         contactEmail: contactEmail || adminEmail || '',
                         contactPhone: contactPhone || adminPhone || '',
                     }
@@ -304,6 +306,7 @@ export const updateApp = async (req, res) => {
             appLogo,
             appFavicon,
             primaryColor,
+            secondaryColor,
             contactEmail,
             contactPhone,
         } = req.body;
@@ -364,6 +367,7 @@ export const updateApp = async (req, res) => {
                         appLogo,
                         appFavicon,
                         primaryColor,
+                        secondaryColor,
                         contactEmail,
                         contactPhone,
                     }
