@@ -124,9 +124,9 @@ const SuperAdminDashboard: React.FC = () => {
             label: 'Status',
             render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    value === 'Active' ? 'bg-green-100 text-green-800' :
-                    value === 'Maintenance' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-red-100 text-red-800'
+                    value === 'Active' ? 'bg-secondary-light text-secondary' :
+                    value === 'Maintenance' ? 'bg-warning-alt text-warning' :
+                    'bg-danger-light text-danger'
                 }`}>
                     {String(value)}
                 </span>
@@ -199,10 +199,10 @@ const SuperAdminDashboard: React.FC = () => {
             label: 'Severity',
             render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
                 <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    value === 'Success' ? 'bg-green-100 text-green-800' :
-                    value === 'Warning' ? 'bg-yellow-100 text-yellow-800' :
-                    value === 'Info' ? 'bg-blue-100 text-blue-800' :
-                    'bg-red-100 text-red-800'
+                    value === 'Success' ? 'bg-secondary-light text-secondary' :
+                    value === 'Warning' ? 'bg-warning-alt text-warning' :
+                    value === 'Info' ? 'bg-accent-light text-accent' :
+                    'bg-danger-light text-danger'
                 }`}>
                     {String(value)}
                 </span>
@@ -245,22 +245,22 @@ const SuperAdminDashboard: React.FC = () => {
     const overviewSection: Section = {
         id: 'overview-stats',
         component: (
-            <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl p-6">
-                <div className="flex justify-between items-center gap-2 mb-6">
+            <div className="bg-white dark:bg-primary-dark dark:border-dark-border rounded-xl">
+                {/* <div className="flex justify-between items-center gap-2 mb-6">
                     <h2 className="text-lg font-semibold">System Overview</h2>
                     <TimeRangeSelector
                         availableTimeRanges={timeRangeOptions}
                         selectedTimeRange={timeRange}
                         handleTimeRangeChange={setTimeRange}
                     />
-                </div>
+                </div> */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {projectStats.map((card, idx) => (
                         <Card
                             key={idx}
                             title={card.title}
                             value={card.value}
-                            icon={card.icon}
+                            icon={card.icon}    
                             subtitle1={card.subtitle1}
                             subtitle2={card.subtitle2}
                             showTrend={card.showTrend}
@@ -277,7 +277,7 @@ const SuperAdminDashboard: React.FC = () => {
         id: 'host-projects',
         component: (
             <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                <div className="flex justify-between items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-t-xl px-6 py-4">
+                <div className="flex justify-between items-center gap-2 bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
                     <h2 className="text-lg font-semibold">Host Projects</h2>
                     <div className="flex items-center gap-2">
                         <TimeRangeSelector
@@ -309,7 +309,7 @@ const SuperAdminDashboard: React.FC = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 {/* Project Status Distribution */}
                 <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-t-xl px-6 py-4">
+                    <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
                         <h2 className="text-lg font-semibold">Project Status Distribution</h2>
                     </div>
                     <div className="p-6">
@@ -324,7 +324,7 @@ const SuperAdminDashboard: React.FC = () => {
 
                 {/* User Activity Trends */}
                 <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-t-xl px-6 py-4">
+                    <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
                         <h2 className="text-lg font-semibold">User Activity Trends</h2>
                     </div>
                     <div className="p-6" style={{ height: '250px' }}>
@@ -344,7 +344,7 @@ const SuperAdminDashboard: React.FC = () => {
         id: 'system-events',
         component: (
             <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                <div className="bg-gray-50 dark:bg-gray-800 rounded-t-xl px-6 py-4">
+                <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
                     <h2 className="text-lg font-semibold">Recent System Events</h2>
                 </div>
                 <div className="p-6">

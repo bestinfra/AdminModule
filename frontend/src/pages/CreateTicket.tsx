@@ -364,12 +364,12 @@ const CreateTicket: React.FC = () => {
                                         rows={4}
                                         className={`w-full px-4 py-3.5 rounded-xl border text-base font-medium resize-none ${
                                             errors.description 
-                                                ? 'border-red-500 focus:border-red-500' 
+                                                ? 'border-danger focus:border-danger' 
                                                 : 'border-primary-border dark:border-dark-border focus:border-primary'
                                         } dark:bg-primary-dark text-neutral-darker dark:text-surface placeholder-neutral-dark dark:placeholder-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent`}
                                     />
                                     {errors.description && (
-                                        <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                                        <p className="text-danger text-sm mt-1">{errors.description}</p>
                                     )}
                                 </div>
                             </div>
@@ -389,11 +389,11 @@ const CreateTicket: React.FC = () => {
                                         />
                                         <label
                                             htmlFor="file-upload"
-                                            className="px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+                                            className="px-4 py-2 border border-neutral-light rounded-lg cursor-pointer hover:bg-primary-lightest transition-colors"
                                         >
                                             Choose Files
                                         </label>
-                                        <span className="text-sm text-gray-500">
+                                        <span className="text-sm text-neutral">
                                             {formData.attachments.length > 0 
                                                 ? `${formData.attachments.length} file(s) selected`
                                                 : 'No file chosen'

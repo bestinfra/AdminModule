@@ -140,7 +140,7 @@ const Roles: React.FC = () => {
         component: (
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                 {/* Role Statistics */}
-                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-3 col-span-1 rounded-[var(--radius-2xl)]">
+                <div className="bg-primary-lightest dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-3 col-span-1 rounded-2xl">
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-lg font-semibold m-0">Role Statistics</h2>
                         <div className="flex items-center gap-2" style={{ opacity: 0, pointerEvents: 'none' }}>
@@ -194,7 +194,7 @@ const Roles: React.FC = () => {
                     </div>
                 </div>
                 {/* Permission Statistics */}
-                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-2 col-span-1 rounded-[var(--radius-2xl)]">
+                <div className="bg-primary-lightest dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-2 col-span-1 rounded-2xl">
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-lg font-semibold">Permission Statistics</h2>
                         <TimeRangeSelector
@@ -273,7 +273,7 @@ const Roles: React.FC = () => {
         component: (
             <div className="mt-8">
                 <h2 className="text-lg font-semibold mb-2">Statistics</h2>
-                <div className="gap-2 bg-[var(--color-primary-lightest)] p-4 rounded-[var(--radius-2xl)] flex items-center justify-between">
+                <div className="gap-2 bg-primary-lightest p-4 rounded-2xl flex items-center justify-between">
                     <div className="font-semibold">Role Usage Statistics <span className="text-sm font-normal">(Last 12 Months)</span></div>
                     <div className="flex items-center gap-2">
                         <TimeRangeSelector
@@ -303,7 +303,7 @@ const Roles: React.FC = () => {
             header={headerComponent}
             actions={actionsComponent}
             footer={footerComponent}
-            className="space-y-6 bg-[var(--color-surface)] p-2"
+            className="space-y-6 bg-surface p-2"
             sectionClassName=""
         />
     );

@@ -171,14 +171,14 @@ const NotificationsTab = () => {
 
     return (
         <div className="bg-white rounded-lg ">
-            <div className="border border-gray-200 rounded-lg overflow-hidden">
-                <div className="flex bg-white border-b border-gray-200 overflow-x-auto">
+            <div className="border border-neutral-light rounded-lg overflow-hidden">
+                <div className="flex bg-white border-b border-neutral-light overflow-x-auto">
                     {settings.map((setting, idx) => (
                         <div
                             key={setting.type}
                             className={`px-6 py-4 cursor-pointer font-medium whitespace-nowrap transition-all duration-300 ${
                                 activeTab === idx 
-                                    ? 'color-primary border-b-2 border-blue-500' 
+                                    ? 'color-primary border-b-2 border-primary' 
                                     : 'color-text-secondary hover:color-primary'
                             }`}
                             onClick={() => setActiveTab(idx)}>
@@ -194,7 +194,7 @@ const NotificationsTab = () => {
                             hasOverflow ? 'has-overflow' : ''
                         }`}>
                         {hasOverflow && (
-                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-blue-500 rounded opacity-0 animate-pulse has-overflow:opacity-100"></div>
+                            <div className="absolute right-2 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-primary rounded opacity-0 animate-pulse has-overflow:opacity-100"></div>
                         )}
                         {settings[activeTab]?.points?.map((point, idx) => (
                             <div key={idx} className="color-text-secondary text-sm leading-relaxed flex items-center gap-3">
@@ -207,16 +207,16 @@ const NotificationsTab = () => {
                     <table className="w-full border-collapse">
                         <thead>
                             <tr>
-                                <th className="p-4 text-left font-semibold color-text-primary border-b border-gray-200">Notification Type</th>
-                                <th className="p-4 text-left font-semibold color-text-primary border-b border-gray-200">Email</th>
-                                <th className="p-4 text-left font-semibold color-text-primary border-b border-gray-200">SMS</th>
-                                <th className="p-4 text-left font-semibold color-text-primary border-b border-gray-200">App</th>
+                                <th className="p-4 text-left font-semibold color-text-primary border-b border-neutral-light">Notification Type</th>
+                                <th className="p-4 text-left font-semibold color-text-primary border-b border-neutral-light">Email</th>
+                                <th className="p-4 text-left font-semibold color-text-primary border-b border-neutral-light">SMS</th>
+                                <th className="p-4 text-left font-semibold color-text-primary border-b border-neutral-light">App</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td className="p-4 border-b border-gray-200">{settings[activeTab]?.type}</td>
-                                <td className="p-4 border-b border-gray-200">
+                                <td className="p-4 border-b border-neutral-light">{settings[activeTab]?.type}</td>
+                                <td className="p-4 border-b border-neutral-light">
                                     <input
                                         type="checkbox"
                                         className="w-5 h-5 cursor-pointer"
@@ -224,7 +224,7 @@ const NotificationsTab = () => {
                                         onChange={() => handleCheckbox(activeTab, 'email')}
                                     />
                                 </td>
-                                <td className="p-4 border-b border-gray-200">
+                                <td className="p-4 border-b border-neutral-light">
                                     <input
                                         type="checkbox"
                                         className="w-5 h-5 cursor-pointer"
@@ -232,7 +232,7 @@ const NotificationsTab = () => {
                                         onChange={() => handleCheckbox(activeTab, 'browser')}
                                     />
                                 </td>
-                                <td className="p-4 border-b border-gray-200">
+                                <td className="p-4 border-b border-neutral-light">
                                     <input
                                         type="checkbox"
                                         className="w-5 h-5 cursor-pointer"

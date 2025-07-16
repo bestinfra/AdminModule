@@ -110,7 +110,7 @@ const PasswordTab: React.FC<PasswordTabProps> = ({ user: _user }) => {
                                 value={currentPassword}
                                 onChange={e => setCurrentPassword(e.target.value)}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                 disabled={isLoading}
                             />
                         </div>
@@ -121,7 +121,7 @@ const PasswordTab: React.FC<PasswordTabProps> = ({ user: _user }) => {
                                 value={newPassword}
                                 onChange={e => setNewPassword(e.target.value)}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                 disabled={isLoading}
                             />
                         </div>
@@ -132,7 +132,7 @@ const PasswordTab: React.FC<PasswordTabProps> = ({ user: _user }) => {
                                 value={confirmPassword}
                                 onChange={e => setConfirmPassword(e.target.value)}
                                 required
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="w-full px-3 py-2 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                                 disabled={isLoading}
                             />
                             {confirmPassword && (
@@ -142,11 +142,11 @@ const PasswordTab: React.FC<PasswordTabProps> = ({ user: _user }) => {
                             )}
                         </div>
                         {error && (
-                            <div className="color-danger p-3 bg-red-50 rounded-lg">
+                            <div className="color-danger p-3 bg-danger-light rounded-lg">
                                 {error}
                             </div>
                         )}
-                        {success && <div className="color-positive p-3 bg-green-50 rounded-lg">{success}</div>}
+                        {success && <div className="color-positive p-3 bg-secondary-light rounded-lg">{success}</div>}
                         <div className="flex gap-4">
                             <Button 
                                 label={isLoading ? "Updating..." : "Save Changes"}
@@ -170,7 +170,7 @@ const PasswordTab: React.FC<PasswordTabProps> = ({ user: _user }) => {
                         </div>
                     </div>
                     <div className="flex flex-col flex-1">
-                        <div className="bg-white rounded-lg p-4 border border-gray-200">
+                        <div className="bg-white rounded-lg p-4 border border-neutral-light">
                             <div className="font-semibold color-text-primary mb-2">
                                 Password requirements:
                             </div>

@@ -13,14 +13,14 @@ const userSidebarMenu = [
 const SidebarMenu = ({ selected = 2 }) => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col gap-2 p-4 bg-[#f7fafd] rounded-2xl min-h-[500px] w-full">
+    <div className="flex flex-col gap-2 p-4 bg-primary-lightest rounded-2xl min-h-[500px] w-full">
       {userSidebarMenu.map((item, idx) => (
         <button
           key={item.title}
           className={`text-left px-4 py-3 rounded-xl font-medium text-[16px] transition-all ${
             idx === selected
               ? 'bg-white shadow text-primary'
-              : 'text-[#1a3353] hover:bg-white hover:shadow'
+              : 'text-neutral-darker hover:bg-white hover:shadow'
           }`}
           style={{ outline: 'none', border: 'none' }}
           onClick={() => item.path && item.path !== '#' && navigate(item.path)}
@@ -55,8 +55,8 @@ const Notifications: React.FC = () => {
               key={tab}
               className={`flex-1 text-lg font-semibold py-3 px-2 border-b-2 transition-colors duration-200 ${
                 idx === activeTab
-                  ? 'border-[#163977] text-[#163977] bg-white'
-                  : 'border-transparent text-gray-400 bg-transparent'
+                  ? 'border-primary text-primary bg-white'
+                  : 'border-transparent text-neutral bg-transparent'
               }`}
               onClick={() => setActiveTab(idx)}
             >
@@ -66,7 +66,7 @@ const Notifications: React.FC = () => {
         </div>
         {/* Tab content */}
         <div className="p-6">
-          <ul className="list-disc pl-6 mb-4 text-gray-500">
+          <ul className="list-disc pl-6 mb-4 text-neutral">
             <li>Account status</li>
             <li>Ticket Status Updates</li>
           </ul>
@@ -80,14 +80,14 @@ const Notifications: React.FC = () => {
             <div className="text-center">Account Updates</div>
             {notificationTypes.map((type) => (
               <div key={type} className="flex justify-center">
-                <input type="checkbox" checked={true} readOnly className="w-5 h-5 accent-[#163977] rounded" />
+                <input type="checkbox" checked={true} readOnly className="w-5 h-5 accent-primary rounded" />
               </div>
             ))}
           </div>
         </div>
         <div className="flex gap-4 mt-6">
-          <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-10 rounded-full text-lg">Save Changes</button>
-          <button className="bg-[#163977] hover:bg-blue-900 text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
+          <button className="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-10 rounded-full text-lg">Save Changes</button>
+          <button className="bg-primary hover:bg-primary-light text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
         </div>
       </div>
     </div>

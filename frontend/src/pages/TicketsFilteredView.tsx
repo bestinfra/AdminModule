@@ -246,18 +246,18 @@ const TicketsFilteredView: React.FC = () => {
             <div className="bg-white rounded-lg shadow p-4 mb-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-text-primary">
                             {pageTitle}
                         </h3>
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-text-secondary">
                             Showing {filteredData.length} of {ticketData.length} total tickets
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-2xl font-bold text-blue-600">
+                        <p className="text-2xl font-bold text-primary">
                             {filteredData.length}
                         </p>
-                        <p className="text-sm text-gray-500">tickets</p>
+                        <p className="text-sm text-neutral">tickets</p>
                     </div>
                 </div>
             </div>

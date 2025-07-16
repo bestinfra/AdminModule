@@ -265,10 +265,10 @@ const Forms: React.FC = () => {
         id: 'basic-form',
         component: (
             <div>
-                <h2 className="text-xl font-semibold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">
+                <h2 className="text-xl font-semibold text-text-primary dark:text-surface mb-2">
                     Basic Form Inputs
                 </h2>
-                <p className="text-[var(--color-light)] dark:text-[var(--color-neutral-light)] mb-4">
+                <p className="text-text-secondary dark:text-neutral-light mb-4">
                     Common form inputs with validation
                 </p>
                 <Form
@@ -284,9 +284,9 @@ const Forms: React.FC = () => {
                     subtitle="Please fill in your basic details"
                 />
                 {formResults.basic && (
-                    <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                        <h3 className="font-semibold text-green-800 dark:text-green-200 mb-2">Form Results:</h3>
-                        <pre className="text-sm text-green-700 dark:text-green-300 overflow-auto">
+                    <div className="mt-4 p-4 bg-secondary-light rounded-lg">
+                        <h3 className="font-semibold text-positive mb-2">Form Results:</h3>
+                        <pre className="text-sm text-positive overflow-auto">
                             {JSON.stringify(formResults.basic, null, 2)}
                         </pre>
                     </div>
@@ -300,10 +300,10 @@ const Forms: React.FC = () => {
         id: 'advanced-form',
         component: (
             <div>
-                <h2 className="text-xl font-semibold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">
+                <h2 className="text-xl font-semibold text-text-primary dark:text-surface mb-2">
                     Advanced Form Inputs
                 </h2>
-                <p className="text-[var(--color-light)] dark:text-[var(--color-neutral-light)] mb-4">
+                <p className="text-text-secondary dark:text-neutral-light mb-4">
                     Complex inputs with file uploads, checkboxes, and multi-column layout
                 </p>
                 <Form
@@ -319,9 +319,9 @@ const Forms: React.FC = () => {
                     subtitle="Complete your profile information"
                 />
                 {formResults.advanced && (
-                    <div className="mt-4 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                        <h3 className="font-semibold text-blue-800 dark:text-blue-200 mb-2">Form Results:</h3>
-                        <pre className="text-sm text-blue-700 dark:text-blue-300 overflow-auto">
+                    <div className="mt-4 p-4 bg-primary-lightest rounded-lg">
+                        <h3 className="font-semibold text-primary mb-2">Form Results:</h3>
+                        <pre className="text-sm text-primary overflow-auto">
                             {JSON.stringify(formResults.advanced, null, 2)}
                         </pre>
                     </div>
@@ -335,10 +335,10 @@ const Forms: React.FC = () => {
         id: 'contact-form',
         component: (
             <div>
-                <h2 className="text-xl font-semibold text-[var(--color-main)] dark:text-[var(--color-surface)] mb-2">
+                <h2 className="text-xl font-semibold text-text-primary dark:text-surface mb-2">
                     Contact Form
                 </h2>
-                <p className="text-[var(--color-light)] dark:text-[var(--color-neutral-light)] mb-4">
+                <p className="text-text-secondary dark:text-neutral-light mb-4">
                     A complete contact form with all input types
                 </p>
                 <Form
@@ -354,9 +354,9 @@ const Forms: React.FC = () => {
                     subtitle="We'd love to hear from you"
                 />
                 {formResults.contact && (
-                    <div className="mt-4 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
-                        <h3 className="font-semibold text-purple-800 dark:text-purple-200 mb-2">Form Results:</h3>
-                        <pre className="text-sm text-purple-700 dark:text-purple-300 overflow-auto">
+                    <div className="mt-4 p-4 bg-accent-light rounded-lg">
+                        <h3 className="font-semibold text-accent mb-2">Form Results:</h3>
+                        <pre className="text-sm text-accent overflow-auto">
                             {JSON.stringify(formResults.contact, null, 2)}
                         </pre>
                     </div>

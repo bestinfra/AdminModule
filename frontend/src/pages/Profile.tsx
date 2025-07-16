@@ -168,7 +168,7 @@ const Profile: React.FC = () => {
                                     className={`w-full text-left flex items-center gap-3 p-4 rounded-lg transition-all duration-200 ${
                                         activeTab === tab.id 
                                             ? 'bg-primary/10 text-primary dark:bg-primary/20 dark:text-white font-semibold shadow-sm' 
-                                            : 'text-text-secondary hover:text-text-primary hover:bg-gray-50 dark:text-text-secondary dark:hover:text-white dark:hover:bg-primary-dark-light'
+                                            : 'text-text-secondary hover:text-text-primary hover:bg-primary-lightest dark:text-text-secondary dark:hover:text-white dark:hover:bg-primary-dark-light'
                                     }`}
                                 >
                                     <img

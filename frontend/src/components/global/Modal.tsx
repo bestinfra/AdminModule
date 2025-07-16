@@ -135,7 +135,7 @@ const Modal: React.FC<ModalProps> = ({
                   {showCloseIcon && (
                     <span
                       onClick={onClose}
-                      className="w-8 h-8 rounded-full bg-background-primary dark:bg-dark-secondary flex justify-center items-center relative transition-colors duration-300 cursor-pointer"
+                      className="w-8 h-8 rounded-full bg-background-secondary dark:bg-dark-secondary flex justify-center items-center relative transition-colors duration-300 cursor-pointer"
                       aria-label="Close modal"
                     >
                       <img

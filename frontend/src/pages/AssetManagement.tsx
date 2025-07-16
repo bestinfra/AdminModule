@@ -212,7 +212,7 @@ const LocationSidebar: React.FC = () => {
   );
 
   return (
-    <div className="w-full h-full bg-[#f7fafd] rounded-2xl shadow p-4 flex flex-col" style={{ height: 900, minWidth: 300 }}>
+    <div className="w-full h-full bg-primary-lightest rounded-2xl shadow p-4 flex flex-col" style={{ height: 900, minWidth: 300 }}>
       <div className="font-bold text-base mb-4">Location Hierarchy</div>
       <div>
         <button

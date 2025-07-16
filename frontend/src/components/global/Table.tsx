@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import Button from './Button';
+import Dropdown from './Dropdown';
 import debounce from 'lodash/debounce';
 import { useState, useMemo, useEffect } from 'react';
 import type { ReactNode } from 'react';
@@ -745,22 +746,23 @@ const Table: React.FC<TableProps> = ({
                         : data.length > rowsPerPage) && (
                         <div className="pt-4 font-manrope flex justify-between items-center">
                             <div className="flex items-center gap-5">
-                                <select
-                                    value={
-                                        serverPagination
-                                            ? serverPagination.limit
-                                            : rowsPerPage
-                                    }
-                                    onChange={handleRowsPerPageChange}
-                                    className="border border-primary-200 text-center text-sm text-secondary-300 px-3 py-2 rounded-full h-9">
-                                    {rowsPerPageOptions.map((option) => (
-                                        <option
-                                            key={option}
-                                            value={String(option)}>
-                                            {`${option} Per Page`}
-                                        </option>
-                                    ))}
-                                </select>
+                                <div className="w-32">
+                                    <Dropdown
+                                        name="rowsPerPage"
+                                        value={String(serverPagination ? serverPagination.limit : rowsPerPage)}
+                                        onChange={(e) => {
+                                            const newLimit = Number(e.target.value);
+                                            handlePageChangeInternal(1, newLimit);
+                                        }}
+                                        options={rowsPerPageOptions.map(option => ({
+                                            value: String(option),
+                                            label: `${option} Per Page`
+                                        }))}
+                                        placeholder="Select rows"
+                                        searchable={false}
+                                        className="text-sm whitespace-nowrap"
+                                    />
+                                </div>
                                 {showCustomInput && (
                                     <input
                                         type="number"
@@ -773,7 +775,7 @@ const Table: React.FC<TableProps> = ({
                                         }
                                         placeholder="Enter number"
                                         min="1"
-                                        className="border border-primary-200 rounded-lg px-3 py-2"
+                                        className="bg-white dark:bg-gray-800 border border-primary-border dark:border-gray-600 text-sm text-gray-700 dark:text-gray-200 px-3 py-2 rounded-full h-9 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 font-manrope"
                                     />
                                 )}
                                 <span className="whitespace-nowrap text-sm font-normal text-[var(--color-secondary-300)] font-manrope">
@@ -784,7 +786,10 @@ const Table: React.FC<TableProps> = ({
                                 </span>
                             </div>
                             <div className="flex items-center gap-4">
-                                <button
+                                <Button
+                                    label="Previous"
+                                    variant="outlineSecondary"
+                                    size="small"
                                     onClick={() =>
                                         handlePageChangeInternal(
                                             serverPagination
@@ -798,17 +803,18 @@ const Table: React.FC<TableProps> = ({
                                             ? !serverPagination.hasPrevPage
                                             : currentPage === 1
                                     }
-                                    className="px-4 py-2 border border-primary-200 rounded-full bg-white cursor-pointer hover:bg-primary hover:text-secondary-50 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed font-manrope">
-                                    Previous
-                                </button>
-                                <span className="text-sm">
+                                />
+                                <span className="text-sm font-manrope text-[var(--color-secondary-300)]">
                                     Page{' '}
                                     {serverPagination
                                         ? serverPagination.currentPage
                                         : currentPage}{' '}
                                     of {totalPages}
                                 </span>
-                                <button
+                                <Button
+                                    label="Next"
+                                    variant="outlineSecondary"
+                                    size="small"
                                     onClick={() =>
                                         handlePageChangeInternal(
                                             serverPagination
@@ -822,9 +828,7 @@ const Table: React.FC<TableProps> = ({
                                             ? !serverPagination.hasNextPage
                                             : currentPage === totalPages
                                     }
-                                    className="px-4 py-2 border border-primary-200 rounded-full bg-white cursor-pointer hover:bg-primary hover:text-secondary-50 hover:border-primary disabled:opacity-50 disabled:cursor-not-allowed font-manrope">
-                                    Next
-                                </button>
+                                />
                             </div>
                         </div>
                     )

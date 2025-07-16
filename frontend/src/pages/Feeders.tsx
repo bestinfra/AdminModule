@@ -119,10 +119,10 @@ const Feeders = () => {
   const feederStatsSection: Section = {
     id: 'feeder-stats',
     component: (
-      <section className="border border-primary-border rounded-3xl bg-[var(--color-primary-lightest)] p-6 flex flex-col gap-4">
+      <section className="border border-primary-border rounded-3xl bg-primary-lightest p-6 flex flex-col gap-4">
         <div className="flex justify-between items-center">
           <h3 className="text-base font-semibold text-main">Feeder Statistics</h3>
-          <span className="text-sm text-gray-500">Last Comm: {feederInfo.lastComm}</span>
+          <span className="text-sm text-neutral">Last Comm: {feederInfo.lastComm}</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
           {stats.map((stat, idx) => (
@@ -140,9 +140,9 @@ const Feeders = () => {
       <section className="border border-primary-border rounded-3xl p-0 flex flex-col gap-4">
         <h2 className="text-lg font-semibold text-main">Metrics</h2>
         <div className="bg-white border border-primary-border rounded-2xl p-0">
-          <div className="flex justify-between items-center mb-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-4">
+          <div className="flex justify-between items-center mb-2 bg-primary-lightest rounded-lg px-4 py-4">
             <span className="text-base font-medium text-main">Daily Consumption Metrics (06 May, 2025 - 06 Jul, 2025)</span>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--color-primary-lightest)] hover:bg-[var(--color-primary)]">
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-primary">
               <img src="/icons/download-app.svg" alt="Download" className="w-5 h-5" />
             </button>
           </div>
@@ -165,9 +165,9 @@ const Feeders = () => {
     component: (
       <section className="border border-primary-border rounded-3xl p-0 flex flex-col gap-4 mt-4">
         <div className="bg-white border border-primary-border rounded-2xl p-0">
-          <div className="flex justify-between items-center mb-2 bg-[var(--color-primary-lightest)] rounded-lg px-4 py-4">
-            <span className="text-base font-medium text-main">Monthly Consumption Metrics <span className="text-xs text-gray-500">(Jul 2024 - Jul 2025)</span></span>
-            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-[var(--color-primary-lightest)] hover:bg-[var(--color-primary)]">
+          <div className="flex justify-between items-center mb-2 bg-primary-lightest rounded-lg px-4 py-4">
+            <span className="text-base font-medium text-main">Monthly Consumption Metrics <span className="text-xs text-neutral">(Jul 2024 - Jul 2025)</span></span>
+            <button className="w-8 h-8 flex items-center justify-center rounded-full bg-primary">
               <img src="/icons/options.svg" alt="Options" className="w-5 h-5" />
             </button>
           </div>

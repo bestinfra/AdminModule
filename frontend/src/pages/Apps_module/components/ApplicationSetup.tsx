@@ -284,7 +284,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                 <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
                     <div className="">
                         <h2 className="text-base font-semibold text-primary">Application Setup</h2>
-                        <p className="text-base text-gray-600 mt-2">Configure your application's basic information, location details, project specifications, and billing preferences to get started.</p>
+                        <p className="text-base text-neutral mt-2">Configure your application's basic information, location details, project specifications, and billing preferences to get started.</p>
                     </div>
 
                     <form className="flex flex-col gap-4" onSubmit={(e) => {
@@ -311,7 +311,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter your Application Name',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.appName}
                                         error={allErrors.appName}
@@ -378,7 +378,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter Address Line',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.addressLine}
                                         error={allErrors.addressLine}
@@ -397,7 +397,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter City',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.city}
                                         error={allErrors.city}
@@ -419,7 +419,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter State/Province',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.state}
                                         error={allErrors.state}
@@ -529,11 +529,11 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                         <div className="flex justify-between items-center">
                             {currentStep > 1 && (
                                 <span 
-                                    className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
+                                    className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-primary-lightest dark:hover:bg-primary-dark-light transition-colors" 
                                     onClick={onBack}
                                 >
                                     <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
-                                    <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
+                                    <span className="text-neutral dark:text-neutral-light font-medium">Previous</span>
                                 </span>
                             )}
                             <div className="ml-auto">
