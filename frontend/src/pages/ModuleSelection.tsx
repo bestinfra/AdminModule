@@ -84,10 +84,10 @@ const ModuleSelection: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-primary-lightest">
             <div className="container mx-auto px-4 py-8">
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-gray-800">
+                    <h1 className="text-3xl font-bold text-text-primary">
                         Select Modules to Export
                     </h1>
                     <div className="relative">
@@ -96,9 +96,9 @@ const ModuleSelection: React.FC = () => {
                             placeholder="Search modules..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
-                            className="pl-10 pr-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent w-64"
+                            className="pl-10 pr-4 py-2 rounded-lg border border-neutral-light focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent w-64"
                         />
-                        <FaSearch className="absolute left-3 top-3 text-gray-400" />
+                        <FaSearch className="absolute left-3 top-3 text-neutral" />
                     </div>
                 </div>
 
@@ -106,9 +106,9 @@ const ModuleSelection: React.FC = () => {
                     {filteredModules.map((module) => (
                         <div
                             key={module.id}
-                            className={`bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100 ${
+                            className={`bg-surface rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-primary-border ${
                                 selectedModules.has(module.id)
-                                    ? 'ring-2 ring-blue-500'
+                                    ? 'ring-2 ring-primary'
                                     : ''
                             }`}>
                             <div className="p-6">
@@ -119,7 +119,7 @@ const ModuleSelection: React.FC = () => {
                                     </div>
                                     <div className="flex-1">
                                         <div className="flex items-center justify-between">
-                                            <h2 className="text-xl font-semibold text-gray-800">
+                                            <h2 className="text-xl font-semibold text-text-primary">
                                                 {module.name}
                                             </h2>
                                             <input
@@ -133,10 +133,10 @@ const ModuleSelection: React.FC = () => {
                                                         module.id
                                                     )
                                                 }
-                                                className="h-5 w-5 text-blue-600 rounded focus:ring-blue-500"
+                                                className="h-5 w-5 text-primary rounded focus:ring-primary"
                                             />
                                         </div>
-                                        <p className="text-gray-600 mt-1">
+                                        <p className="text-text-secondary mt-1">
                                             {module.description}
                                         </p>
                                     </div>
@@ -147,14 +147,14 @@ const ModuleSelection: React.FC = () => {
                                         {module.pages.map((page) => (
                                             <div
                                                 key={page.id}
-                                                className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                                                className="flex items-center justify-between p-3 bg-primary-lightest rounded-lg hover:bg-primary-bg transition-colors duration-200">
                                                 <div className="flex items-center space-x-3">
-                                                    <page.icon className="w-5 h-5 text-gray-500" />
+                                                    <page.icon className="w-5 h-5 text-neutral" />
                                                     <div>
-                                                        <span className="font-medium text-gray-800">
+                                                        <span className="font-medium text-text-primary">
                                                             {page.name}
                                                         </span>
-                                                        <p className="text-sm text-gray-500">
+                                                        <p className="text-sm text-neutral">
                                                             {page.description}
                                                         </p>
                                                     </div>
@@ -170,7 +170,7 @@ const ModuleSelection: React.FC = () => {
                                                             page.id
                                                         )
                                                     }
-                                                    className="h-4 w-4 text-blue-600 rounded focus:ring-blue-500"
+                                                    className="h-4 w-4 text-primary rounded focus:ring-primary"
                                                 />
                                             </div>
                                         ))}
@@ -185,7 +185,7 @@ const ModuleSelection: React.FC = () => {
                     <button
                         onClick={handleExport}
                         disabled={selectedModules.size === 0 || isExporting}
-                        className="inline-flex items-center px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors duration-200">
+                        className="inline-flex items-center px-6 py-3 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary disabled:bg-neutral disabled:cursor-not-allowed transition-colors duration-200">
                         <FaDownload className="mr-2" />
                         {isExporting
                             ? 'Exporting...'

@@ -258,7 +258,7 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
                             <input
                                 key={idx}
                                 id={`emailOTP${idx}`}
-                                className="w-12 h-12 text-center text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-12 h-12 text-center text-lg border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
                                 maxLength={1}
                                 value={digit}
                                 onChange={e => handleEmailOTPChange(idx, e.target.value)}
@@ -312,11 +312,11 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
                         <img
                             src={qrCodeUrl}
                             alt="QR Code for Google Authenticator"
-                            className="max-w-xs h-auto rounded-lg border border-gray-200"
+                            className="max-w-xs h-auto rounded-lg border border-neutral-light"
                         />
                     </div>
                     {secretKey && (
-                        <div className="flex flex-col gap-2 items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+                        <div className="flex flex-col gap-2 items-center p-4 bg-primary-lightest rounded-lg border border-neutral-light">
                             <span className="font-semibold color-text-primary">Manual Entry Key:</span>
                             <span className="font-mono">{secretKey}</span>
                         </div>
@@ -335,7 +335,7 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
                                 onChange={handleTOTPChange}
                                 placeholder="Enter 6-digit code"
                                 maxLength={6}
-                                className="text-center text-lg tracking-wider p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-xs mx-auto"
+                                className="text-center text-lg tracking-wider p-3 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary max-w-xs mx-auto"
                             />
                         </div>
                         <div className="flex gap-4">
@@ -387,7 +387,7 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
                                 onChange={handleTOTPChange}
                                 placeholder="Enter 6-digit code"
                                 maxLength={6}
-                                className="text-center text-lg tracking-wider p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 max-w-xs mx-auto"
+                                className="text-center text-lg tracking-wider p-3 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary max-w-xs mx-auto"
                             />
                         </div>
                         <div className="flex gap-4">
