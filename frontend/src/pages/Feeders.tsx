@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import Card from '../components/global/Card';
+import Card from '@components/global/Card';
 import BarChart from '../graphs/BarChart';
-import Table from '../components/global/Table';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
+import Table from '@components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
 import { 
     createHeaderComponent, 
     createActionsComponent,
     createFooterComponent
-} from '../components/global/PageComponents';
+} from '@components/global/PageComponents';
 
 const feederInfo = {
   name: 'D1F1(32500114)',

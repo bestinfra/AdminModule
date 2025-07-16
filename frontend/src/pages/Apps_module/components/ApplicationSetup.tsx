@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 // @ts-ignore: If axios types are missing, install with: npm install axios @types/axios
 import axios from 'axios';
-import FormInput from '../../../components/forms/FormInput';
-import Dropdown from '../../../components/global/Dropdown';
-import Button from '../../../components/global/Button';
-import RemarksPanel from './RemarksPanel';
-import type { FormInputValue } from '../../../components/forms/types';
+import FormInput from '@components/forms/FormInput'; 
+import Dropdown from '@components/global/Dropdown';
+import Button from '@components/global/Button';
+import type { FormInputValue } from '@components/forms/types';
 import { validateApplicationSetup } from '../utils';
+import RemarksPanel from './RemarksPanel';
 
 interface ApplicationSetupProps {
     formData: any;
@@ -29,7 +29,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     const [countryOptions, setCountryOptions] = useState<{ value: string; label: string }[]>([]);
 
     // Unified loading state and debounce ref for location lookups
-    const [locationLoading, setLocationLoading] = useState<'none' | 'city' | 'state'>('none');
+
     const locationDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
     // Fetch countries on mount
@@ -124,7 +124,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     // Fetch state/country from city
     const fetchStateCountryFromCity = async (city: string) => {
         if (!city) return;
-        setLocationLoading('city');
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json&addressdetails=1&limit=1`);
             const data = await response.json();
@@ -139,15 +138,12 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
             }
         } catch (error) {
             console.error('Error fetching state/country from city:', error);
-        } finally {
-            setLocationLoading('none');
         }
     };
 
     // Fetch country from state
     const fetchCountryFromState = async (state: string) => {
         if (!state) return;
-        setLocationLoading('state');
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?state=${encodeURIComponent(state)}&format=json&addressdetails=1&limit=1`);
             const data = await response.json();
@@ -156,8 +152,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
             }
         } catch (error) {
             console.error('Error fetching country from state:', error);
-        } finally {
-            setLocationLoading('none');
         }
     };
 

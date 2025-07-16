@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import Button from '../components/global/Button';
+import Button from '@components/global/Button';
 
 interface NotificationSetting {
     id: string;
@@ -15,7 +15,7 @@ const NotificationsTab = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [settings, setSettings] = useState<NotificationSetting[]>([]);
-    const [dropdown, setDropdown] = useState('');
+    // const [dropdown, setDropdown] = useState('');
     const [hasOverflow, setHasOverflow] = useState(false);
     const notificationPointsRef = useRef<HTMLDivElement>(null);
 

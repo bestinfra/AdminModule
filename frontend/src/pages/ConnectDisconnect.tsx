@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Button from '../components/global/Button';
-import Table from '../components/global/Table';
-import Modal from '../components/global/Modal';
-import LoadingSpinner from '../components/global/LoadingSpinner';
-import PageHeader from '../components/global/PageHeader';
-import Card from '../components/global/Card';
+import Button from '@components/global/Button';
+import Table from '@components/global/Table';
+import Modal from '@components/global/Modal';
+import LoadingSpinner from '@components/global/LoadingSpinner';
+import PageHeader from '@components/global/PageHeader';
+import Card from '@components/global/Card';
 import meterConnectionAPI, { MeterConnectionAPI } from '../api/meterConnection';
 interface MeterData {
   id: string;

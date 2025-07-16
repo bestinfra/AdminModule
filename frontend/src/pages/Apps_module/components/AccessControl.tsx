@@ -1,10 +1,11 @@
 import React, { useRef, useState, useMemo } from 'react';
-import FormInput from '../../../components/forms/FormInput';
-import Button from '../../../components/global/Button';
-import LoadingSpinner from '../../../components/global/LoadingSpinner';
-import RemarksPanel from './RemarksPanel';
-import type { FormInputValue } from '../../../components/forms/types';
+import FormInput from '@components/forms/FormInput';
+
+import Button from '@components/global/Button';
+import LoadingSpinner from '@components/global/LoadingSpinner';
+import type { FormInputValue } from '@components/forms/types';
 import { validateAccessControl } from '../utils';
+import RemarksPanel from './RemarksPanel';
 
 export interface AccessControlData {
   adminFirstName: string;

@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import Button from '../../../components/global/Button';
-import RemarksPanel from './RemarksPanel';
+import Button from '@components/global/Button';
 import { validateFeatureSelection } from '../utils';
+import RemarksPanel from './RemarksPanel';
 
 interface FeatureSelectionProps {
   formData: any;

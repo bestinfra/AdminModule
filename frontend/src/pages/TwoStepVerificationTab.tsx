@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Button from '../components/global/Button';
+import Button from '@components/global/Button';
 
 interface User {
     email?: string;
@@ -12,9 +12,9 @@ interface TwoStepVerificationTabProps {
 }
 
 const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user }) => {
-    const [phone, setPhone] = useState('');
-    const [code, setCode] = useState(['', '', '', '', '', '']);
-    const [step, setStep] = useState(1); // 1: enter phone, 2: enter code, 3: 2FA setup
+    // const [phone, setPhone] = useState('');
+    // const [code, setCode] = useState(['', '', '', '', '', '']);
+    // const [step, setStep] = useState(1); // 1: enter phone, 2: enter code, 3: 2FA setup
     const [show2FASetup, setShow2FASetup] = useState(false);
     const [show2FADisable, setShow2FADisable] = useState(false);
     const [showEmailVerification, setShowEmailVerification] = useState(false);
@@ -27,7 +27,7 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
     const [is2FAEnabled, setIs2FAEnabled] = useState(false);
     const [errors, setErrors] = useState<Record<string, string>>({});
     const [success, setSuccess] = useState('');
-    const [emailVerified, setEmailVerified] = useState(false);
+    // const [emailVerified, setEmailVerified] = useState(false);
 
     // Mock user data if no user is provided
     const mockUser: User = {
@@ -60,17 +60,17 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
         }
     };
 
-    const handleCodeChange = (idx: number, value: string) => {
-        if (!/^[0-9]?$/.test(value)) return;
-        const newCode = [...code];
-        newCode[idx] = value;
-        setCode(newCode);
-        // Auto-focus next
-        if (value && idx < 5) {
-            const next = document.getElementById(`twoStepCode${idx + 1}`);
-            if (next) next.focus();
-        }
-    };
+    // const handleCodeChange = (idx: number, value: string) => {
+    //     if (!/^[0-9]?$/.test(value)) return;
+    //     const newCode = [...code];
+    //     newCode[idx] = value;
+    //     setCode(newCode);
+    //     // Auto-focus next
+    //     if (value && idx < 5) {
+    //         const next = document.getElementById(`twoStepCode${idx + 1}`);
+    //         if (next) next.focus();
+    //     }
+    // };
 
     const handleEmailOTPChange = (idx: number, value: string) => {
         if (!/^[0-9]?$/.test(value)) return;
@@ -130,7 +130,7 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
             await new Promise(resolve => setTimeout(resolve, 1000));
 
             // Email verified successfully, proceed to 2FA setup
-            setEmailVerified(true);
+            // setEmailVerified(true);
             setShowEmailVerification(false);
             setEmailOTP(['', '', '', '', '', '']);
             
@@ -186,7 +186,7 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
             setTotp('');
             setQrCodeUrl('');
             setSecretKey('');
-            setEmailVerified(false);
+            // setEmailVerified(false);
             setSuccess('Two-Factor Authentication has been successfully enabled!');
             setIs2FAEnabled(true);
             
@@ -350,7 +350,7 @@ const TwoStepVerificationTab: React.FC<TwoStepVerificationTabProps> = ({ user })
                                 variant="outline"
                                 onClick={() => {
                                     setShow2FASetup(false);
-                                    setEmailVerified(false);
+                                    // setEmailVerified(false);
                                     setErrors({});
                                 }}
                                 disabled={isLoading}

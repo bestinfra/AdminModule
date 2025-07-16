@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { PieChart, LineChart } from '../graphs';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
-import type { TableData, Column } from '../components/global/Table';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
+import type { TableData, Column } from '@components/global/Table';
 
 interface TableAction {
     label: string;

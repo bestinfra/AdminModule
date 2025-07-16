@@ -1,10 +1,10 @@
 import React from 'react';
-import Page from '../components/global/Page';
+import Page from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 import {
-  createHeaderComponent} from '../components/global/PageComponents';
-import Form from '../components/forms/Form';
-import type { FormInputConfig } from '../components/forms/types';
+  createHeaderComponent} from '@components/global/PageComponents';
+import Form from '@components/forms/Form';
+import type { FormInputConfig } from '@components/forms/types';
 
 const meterInputs: FormInputConfig[] = [
   { name: 'uid', type: 'text', label: 'UID', placeholder: 'UID', icon: '/icons/badge.svg', required: true },
