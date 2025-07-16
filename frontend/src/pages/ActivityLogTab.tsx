@@ -154,13 +154,13 @@ const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ user: _user }) => {
     const getStatusColor = (type: string) => {
         switch (type) {
             case 'success':
-                return 'bg-blue-100 color-positive';
+                return 'bg-secondary-light color-positive';
             case 'warning':
-                return 'bg-yellow-100 color-warning';
+                return 'bg-warning-alt color-warning';
             case 'error':
-                return 'bg-red-100 color-danger';
+                return 'bg-danger-light color-danger';
             default:
-                return 'bg-blue-50 color-primary';
+                return 'bg-accent-light color-primary';
         }
     };
 
@@ -187,7 +187,7 @@ const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ user: _user }) => {
             </div>
             <div className="flex flex-col gap-4">
                 {activities.map((activity) => (
-                    <div key={activity.id} className="bg-gray-50 rounded-2xl p-5 shadow-sm">
+                    <div key={activity.id} className="bg-neutral-light rounded-2xl p-5 shadow-sm">
                         <div className="flex justify-between items-start mb-2">
                             <div className="font-medium color-text-primary">{activity.description}</div>
                             <div className="color-text-secondary text-sm whitespace-nowrap ml-4">
@@ -210,12 +210,12 @@ const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ user: _user }) => {
                     </div>
                 ))}
             </div>
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 p-4 border-t border-gray-200">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 p-4 border-t border-neutral-light">
                 <div className="flex items-center gap-4">
                     <select
                         value={rowsPerPage}
                         onChange={(e) => handlePageChange(1, Number(e.target.value))}
-                        className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        className="px-3 py-2 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-accent"
                     >
                         {[5, 10, 20, 50, 100].map((option) => (
                             <option key={option} value={option}>

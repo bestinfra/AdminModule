@@ -211,7 +211,7 @@ const AddConsumer = () => {
             <div className="flex flex-col lg:flex-row gap-6 w-full overflow-x-hidden justify-start items-start">
                 <div className="flex flex-col lg:flex-row gap-6 w-full overflow-x-hidden justify-start items-start">
                     {/* Sidebar Stepper */}
-                    <aside className="w-full lg:w-auto lg:min-w-fit lg:max-w-md bg-slate-50 rounded-2xl shadow-sm border border-gray-200 p-6   h-fit top-8 z-10 overflow-x-hidden">
+                    <aside className="w-full lg:w-auto lg:min-w-fit lg:max-w-md bg-neutral-light rounded-2xl shadow-sm border border-neutral-light p-6   h-fit top-8 z-10 overflow-x-hidden">
                         <nav className="w-full flex flex-col space-y-6 overflow-x-auto lg:overflow-x-visible scrollbar-hide">
                             {stepLabels.map((step, idx) => {
                                 const isCompleted = idx < currentStep - 1;
@@ -236,8 +236,8 @@ const AddConsumer = () => {
                                         <div
                                             className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 flex-shrink-0 ${
                                                 isCompleted
-                                                    ? 'bg-green-500 text-white'
-                                                    : 'bg-blue-500 text-white'
+                                                    ? 'bg-secondary text-white'
+                                                    : 'bg-primary text-white'
                                             }`}
                                         >
                                             {isCompleted ? (
@@ -260,12 +260,12 @@ const AddConsumer = () => {
                                         </div>
                                         <div className="flex-1 flex flex-col min-w-0">
                                             <h3 className={`font-semibold text-base mb-1 ${
-                                                isActive ? 'text-blue-600' : 'text-gray-900'
+                                                isActive ? 'text-primary' : 'text-neutral-darker'
                                             }`}>
                                                 {step.label}
                                             </h3>
                                             <p className={`text-sm leading-relaxed ${
-                                                isActive ? 'text-blue-500' : 'text-gray-500'
+                                                isActive ? 'text-primary' : 'text-neutral'
                                             }`}>
                                                 {step.sub}
                                             </p>
@@ -322,8 +322,8 @@ const AddConsumer = () => {
                                     />
                                 )}
                                 {errors.submit && (
-                                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
-                                        <p className="text-red-800">{errors.submit}</p>
+                                    <div className="mt-4 p-4 bg-danger-light border border-danger rounded-md">
+                                        <p className="text-danger">{errors.submit}</p>
                                     </div>
                                 )}
                             </form>
@@ -350,7 +350,7 @@ const AddConsumer = () => {
                     }}
                 />
             }
-            className="min-h-screen bg-gray-50 flex flex-col gap-4"
+            className="min-h-screen bg-neutral-light flex flex-col gap-4"
         />
     );
 };
