@@ -1,8 +1,8 @@
 import React from 'react';
-import Table from '../components/global/Table';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Table from '@components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 import { useNavigate } from 'react-router-dom';
 
 const columns = [

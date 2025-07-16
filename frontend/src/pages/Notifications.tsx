@@ -1,5 +1,5 @@
 import React from 'react';
-import Page from '../components/global/Page';
+import Page from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 
 const userSidebarMenu = [
@@ -41,20 +41,9 @@ const tabs = [
 
 const notificationTypes = ['Email', 'SMS', 'App'];
 
-const notificationData = [
-  {
-    label: 'Account Updates',
-    items: [
-      { label: 'Account status', types: [true, false, true] },
-      { label: 'Ticket Status Updates', types: [false, true, false] },
-    ],
-  },
-  // Add more tab data as needed
-];
-
 const Notifications: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState(0);
-  const [toggles, setToggles] = React.useState(notificationData[0].items.map(i => i.types));
+
 
   const content = (
     <div className="w-full max-w-6xl flex flex-col gap-6">
@@ -89,7 +78,7 @@ const Notifications: React.FC = () => {
             ))}
             {/* Row for Account Updates */}
             <div className="text-center">Account Updates</div>
-            {notificationTypes.map((type, idx) => (
+            {notificationTypes.map((type) => (
               <div key={type} className="flex justify-center">
                 <input type="checkbox" checked={true} readOnly className="w-5 h-5 accent-primary rounded" />
               </div>

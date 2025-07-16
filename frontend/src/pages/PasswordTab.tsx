@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Button from '../components/global/Button';
+import Button from '@components/global/Button';
 
 interface User {
     USER_ID?: string;
@@ -20,7 +20,7 @@ interface PasswordChecks {
     match: boolean;
 }
 
-const PasswordTab: React.FC<PasswordTabProps> = ({ user }) => {
+const PasswordTab: React.FC<PasswordTabProps> = ({ user: _user }) => {
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -48,14 +48,14 @@ const PasswordTab: React.FC<PasswordTabProps> = ({ user }) => {
         });
     }, [newPassword, confirmPassword]);
 
-    const getStrength = () => {
-        let score = 0;
-        if (passwordChecks.length) score++;
-        if (passwordChecks.lowercase) score++;
-        if (passwordChecks.uppercase) score++;
-        if (passwordChecks.number || passwordChecks.special) score++;
-        return (score / 4) * 100;
-    };
+    // const getStrength = () => {
+    //     let score = 0;
+    //     if (passwordChecks.length) score++;
+    //     if (passwordChecks.lowercase) score++;
+    //     if (passwordChecks.uppercase) score++;
+    //     if (passwordChecks.number || passwordChecks.special) score++;
+    //     return (score / 4) * 100;
+    // };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();

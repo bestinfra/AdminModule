@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Logo from '../components/global/Logo';
+import Logo from '@components/global/Logo';
 
 const MIN_PASSWORD_LENGTH = 6;
 const INPUT_BASE_CLASSES = "w-full px-4 py-3 border border-neutral-light rounded-full focus:bg-white outline-none transition-all text-sm placeholder:text-neutral";

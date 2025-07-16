@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Button from '../components/global/Button';
+import Button from '@components/global/Button';
 import BasicInformationTab from './BasicInformationTab';
 import PasswordTab from './PasswordTab';
 import ActivityLogTab from './ActivityLogTab';

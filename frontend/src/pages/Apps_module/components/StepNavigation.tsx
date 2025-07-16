@@ -6,7 +6,7 @@ interface StepNavigationProps {
   onBack: () => void;
 }
 
-const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, onBack }) => {
+const StepNavigation: React.FC<StepNavigationProps> = ({ currentStep, onBack: _onBack }) => {
   return (
     <div className="flex flex-col">
       <div className="createSteps bg-primary-lightest p-4 rounded-2xl">

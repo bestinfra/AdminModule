@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import Card from '../components/global/Card';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
-import Table from '../components/global/Table';
-import type { TableData } from '../components/global/Table';
+import Card from '@components/global/Card';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import Table from '@components/global/Table';
+import type { TableData } from '@components/global/Table';
 import BarChart from '../graphs/BarChart';
 import { useNavigate } from 'react-router-dom';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();

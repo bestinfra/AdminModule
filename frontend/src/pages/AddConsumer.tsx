@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { z } from 'zod';
-import Header from '../components/global/PageHeader';
-import Step1 from '../components/AddConsumer/Step1';
-import Step2 from '../components/AddConsumer/Step2';
-import Step3 from '../components/AddConsumer/Step3';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import Header from '@components/global/PageHeader';
+import Step1 from '@components/AddConsumer/Step1';
+import Step2 from '@components/AddConsumer/Step2';
+import Step3 from '@components/AddConsumer/Step3';
     
 // Validation schemas for each step
 const personalInfoSchema = z.object({
@@ -202,142 +204,154 @@ const AddConsumer = () => {
         setGps('17.385044, 78.486671');
     };
 
-    return (
-        <div className="min-h-screen bg-gray-50 flex flex-col gap-4">
-            <Header
-                title="Add Consumer"
-                buttonsLabel="Cancel"
-                variant="outline"
-                size="medium"
-                backButtonText="Back to Consumers"
-                onClick={() => {
-                    navigate(isAdmin() ? '/admin/consumers' : '/user/consumers');
-                }}
-            />
+    // Define the main content section
+    const mainContentSection: Section = {
+        id: 'main-content',
+        component: (
             <div className="flex flex-col lg:flex-row gap-6 w-full overflow-x-hidden justify-start items-start">
                 <div className="flex flex-col lg:flex-row gap-6 w-full overflow-x-hidden justify-start items-start">
-                {/* Sidebar Stepper */}
-                <aside className="w-full lg:w-auto lg:min-w-fit lg:max-w-md bg-slate-50 rounded-2xl shadow-sm border border-gray-200 p-6   h-fit top-8 z-10 overflow-x-hidden">
-                    <nav className="w-full flex flex-col space-y-6 overflow-x-auto lg:overflow-x-visible scrollbar-hide">
-                        {stepLabels.map((step, idx) => {
-                            const isCompleted = idx < currentStep - 1;
-                            const isActive = idx === currentStep - 1;
-                            const isClickable = idx < currentStep;
-                            return (
-                                <div
-                                    key={step.label}
-                                    className={`flex items-start gap-4 p-4 rounded-lg transition-all duration-200 ${
-                                        isClickable 
-                                            ? 'cursor-pointer hover:bg-white/40' 
-                                            : 'cursor-default'
-                                    } ${
-                                        isActive ? 'bg-white shadow-md' : ''
-                                    }`}
-                                    onClick={
-                                        isClickable
-                                            ? () => setCurrentStep(idx + 1)
-                                            : undefined
-                                    }
-                                >
+                    {/* Sidebar Stepper */}
+                    <aside className="w-full lg:w-auto lg:min-w-fit lg:max-w-md bg-slate-50 rounded-2xl shadow-sm border border-gray-200 p-6   h-fit top-8 z-10 overflow-x-hidden">
+                        <nav className="w-full flex flex-col space-y-6 overflow-x-auto lg:overflow-x-visible scrollbar-hide">
+                            {stepLabels.map((step, idx) => {
+                                const isCompleted = idx < currentStep - 1;
+                                const isActive = idx === currentStep - 1;
+                                const isClickable = idx < currentStep;
+                                return (
                                     <div
-                                        className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 flex-shrink-0 ${
-                                            isCompleted
-                                                ? 'bg-green-500 text-white'
-                                                : 'bg-blue-500 text-white'
+                                        key={step.label}
+                                        className={`flex items-start gap-4 p-4 rounded-lg transition-all duration-200 ${
+                                            isClickable 
+                                                ? 'cursor-pointer hover:bg-white/40' 
+                                                : 'cursor-default'
+                                        } ${
+                                            isActive ? 'bg-white shadow-md' : ''
                                         }`}
+                                        onClick={
+                                            isClickable
+                                                ? () => setCurrentStep(idx + 1)
+                                                : undefined
+                                        }
                                     >
-                                        {isCompleted ? (
-                                            <svg 
-                                                className="w-5 h-5" 
-                                                fill="none" 
-                                                stroke="currentColor" 
-                                                viewBox="0 0 24 24"
-                                            >
-                                                <path 
-                                                    strokeLinecap="round" 
-                                                    strokeLinejoin="round" 
-                                                    strokeWidth={2} 
-                                                    d="M5 13l4 4L19 7" 
-                                                />
-                                            </svg>
-                                        ) : (
-                                            <span>{idx + 1}</span>
-                                        )}
+                                        <div
+                                            className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 flex-shrink-0 ${
+                                                isCompleted
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-blue-500 text-white'
+                                            }`}
+                                        >
+                                            {isCompleted ? (
+                                                <svg 
+                                                    className="w-5 h-5" 
+                                                    fill="none" 
+                                                    stroke="currentColor" 
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path 
+                                                        strokeLinecap="round" 
+                                                        strokeLinejoin="round" 
+                                                        strokeWidth={2} 
+                                                        d="M5 13l4 4L19 7" 
+                                                    />
+                                                </svg>
+                                            ) : (
+                                                <span>{idx + 1}</span>
+                                            )}
+                                        </div>
+                                        <div className="flex-1 flex flex-col min-w-0">
+                                            <h3 className={`font-semibold text-base mb-1 ${
+                                                isActive ? 'text-blue-600' : 'text-gray-900'
+                                            }`}>
+                                                {step.label}
+                                            </h3>
+                                            <p className={`text-sm leading-relaxed ${
+                                                isActive ? 'text-blue-500' : 'text-gray-500'
+                                            }`}>
+                                                {step.sub}
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="flex-1 flex flex-col min-w-0">
-                                        <h3 className={`font-semibold text-base mb-1 ${
-                                            isActive ? 'text-blue-600' : 'text-gray-900'
-                                        }`}>
-                                            {step.label}
-                                        </h3>
-                                        <p className={`text-sm leading-relaxed ${
-                                            isActive ? 'text-blue-500' : 'text-gray-500'
-                                        }`}>
-                                            {step.sub}
-                                        </p>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                    </nav>
-                </aside>
+                                );
+                            })}
+                        </nav>
+                    </aside>
 
-                {/* Main Content */}
-                <main className="flex-1 min-w-0 flex flex-col overflow-x-hidden">
-                    <div className="flex flex-col gap-8 w-full overflow-x-hidden">
-                        <form onSubmit={handleSubmit} className="w-full mx-auto overflow-x-hidden">
-                            {currentStep === 1 && (
-                                <Step1
-                                    formData={formData}
-                                    errors={errors}
-                                    valid={valid}
-                                    focus={focus}
-                                    handleInputChange={handleInputChange}
-                                    setFieldFocus={setFieldFocus}
-                                    buildingSearch={buildingSearch}
-                                    setBuildingSearch={setBuildingSearch}
-                                    selectedBuilding={selectedBuilding}
-                                    handleBuildingSelect={handleBuildingSelect}
-                                    onNext={handleNext}
-                                    isAdmin={isAdmin()}
-                                />
-                            )}
-                            {currentStep === 2 && (
-                                <Step2
-                                    selectedUtilities={selectedUtilities}
-                                    handleUtilityToggle={handleUtilityToggle}
-                                    sharedMeter={sharedMeter}
-                                    setSharedMeter={setSharedMeter}
-                                    gps={gps} // gps state was removed, so pass empty string
-                                    handleGetLocation={handleGetLocation}
-                                    accountNumber={formData.uid}
-                                    onNext={handleNext}
-                                    onBack={handleBack}
-                                />
-                            )}
-                            {currentStep === 3 && (
-                                <Step3
-                                    formData={formData}
-                                    selectedUtilities={selectedUtilities}
-                                    sharedMeter={sharedMeter}
-                                    sharedConsumers={sharedConsumers}
-                                    accountNumber={formData.uid}
-                                    onBack={handleBack}
-                                    onSubmit={handleSubmit}
-                                    isSubmitting={isSubmitting}
-                                />
-                            )}
-                            {errors.submit && (
-                                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
-                                    <p className="text-red-800">{errors.submit}</p>
-                                </div>
-                            )}
-                        </form>
-                    </div>
-                </main>
+                    {/* Main Content */}
+                    <main className="flex-1 min-w-0 flex flex-col overflow-x-hidden">
+                        <div className="flex flex-col gap-8 w-full overflow-x-hidden">
+                            <form onSubmit={handleSubmit} className="w-full mx-auto overflow-x-hidden">
+                                {currentStep === 1 && (
+                                    <Step1
+                                        formData={formData}
+                                        errors={errors}
+                                        valid={valid}
+                                        focus={focus}
+                                        handleInputChange={handleInputChange}
+                                        setFieldFocus={setFieldFocus}
+                                        buildingSearch={buildingSearch}
+                                        setBuildingSearch={setBuildingSearch}
+                                        selectedBuilding={selectedBuilding}
+                                        handleBuildingSelect={handleBuildingSelect}
+                                        onNext={handleNext}
+                                        isAdmin={isAdmin()}
+                                    />
+                                )}
+                                {currentStep === 2 && (
+                                    <Step2
+                                        selectedUtilities={selectedUtilities}
+                                        handleUtilityToggle={handleUtilityToggle}
+                                        sharedMeter={sharedMeter}
+                                        setSharedMeter={setSharedMeter}
+                                        gps={gps}
+                                        handleGetLocation={handleGetLocation}
+                                        accountNumber={formData.uid}
+                                        onNext={handleNext}
+                                        onBack={handleBack}
+                                    />
+                                )}
+                                {currentStep === 3 && (
+                                    <Step3
+                                        formData={formData}
+                                        selectedUtilities={selectedUtilities}
+                                        sharedMeter={sharedMeter}
+                                        sharedConsumers={sharedConsumers}
+                                        accountNumber={formData.uid}
+                                        onBack={handleBack}
+                                        onSubmit={handleSubmit}
+                                        isSubmitting={isSubmitting}
+                                    />
+                                )}
+                                {errors.submit && (
+                                    <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+                                        <p className="text-red-800">{errors.submit}</p>
+                                    </div>
+                                )}
+                            </form>
+                        </div>
+                    </main>
                 </div>
             </div>
-        </div>
+        )
+    };
+
+    return (
+        <Page
+            layout="single-column"
+            sections={[mainContentSection]}
+            header={
+                <Header
+                    title="Add Consumer"
+                    buttonsLabel="Cancel"
+                    variant="outline"
+                    size="medium"
+                    backButtonText="Back to Consumers"
+                    onClick={() => {
+                        navigate(isAdmin() ? '/admin/consumers' : '/user/consumers');
+                    }}
+                />
+            }
+            className="min-h-screen bg-gray-50 flex flex-col gap-4"
+        />
     );
 };
 

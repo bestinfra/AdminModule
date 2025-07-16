@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Page from '../components/global/Page';
+import Page from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 
 const userSidebarMenu = [

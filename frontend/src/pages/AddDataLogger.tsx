@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Page from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Page from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const AddDataLogger: React.FC = () => {
   const [form, setForm] = useState({
