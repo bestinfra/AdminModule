@@ -2,7 +2,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
 import tailwindcss from '@tailwindcss/vite'
-// https://vite.dev/config/
+import path from 'path' // <-- Add this!
+
 export default defineConfig({
   plugins: [
     react(),
@@ -40,22 +41,23 @@ export default defineConfig({
         './DataLoggerMaster': './src/pages/DataLoggerMaster.tsx',
         './Users': './src/pages/UserManagment.tsx',
         './RoleManagement': './src/pages/RoleManagment.tsx',
-        // CSS Files exposed for federation
-        './styles/global.css': './src/styles/global.css',
-        './styles/default.css': './src/styles/default.css',
-        './styles/custom.css': './src/styles/custom.css',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
       },
       shared: ['react', 'react-dom', 'reactflow', 'react-router-dom', 'echarts-for-react'],
     }),
   ],
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src'), // So you can use '@/file'
+      '@components': path.resolve(__dirname, 'src/components'), // So you can use '@components/YourComponent'
+    },
+  },
   build: {
     target: 'esnext',
     minify: false,
     cssCodeSplit: false,
     rollupOptions: {
       output: {
-        // Ensure CSS is properly bundled
         assetFileNames: (assetInfo) => {
           if (assetInfo.name === 'global.css') {
             return 'assets/global.css';
@@ -66,7 +68,6 @@ export default defineConfig({
     },
   },
   css: {
-    // Ensure CSS is processed during build
     postcss: {
       plugins: [
         // Tailwind CSS v4 handles this automatically

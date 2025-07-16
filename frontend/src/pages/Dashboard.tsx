@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { BarChart, PieChart } from '../graphs';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
-import type { Section } from '../components/global/Page';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 
 // Constants
@@ -114,7 +115,7 @@ const Dashboard: React.FC = () => {
     };
 
     const handleHighUsageConsumersClick = () => {
-        navigate('/consumers?filter=high-usage');
+        navigate('/consumers/high-usage');
     };
 
     // Helper functions to generate data based on time range
@@ -201,7 +202,7 @@ const Dashboard: React.FC = () => {
 
     // Section Components
     const renderConsumerStatistics = () => (
-        <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
+        <div className="bg-primary-lightest dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
             <div className="flex justify-between items-center gap-2">
                 <h2 className="text-base font-regular m-0">Consumer Statistics</h2>
                 <div style={{ opacity: 0, pointerEvents: 'none' }}>
@@ -230,7 +231,7 @@ const Dashboard: React.FC = () => {
     );
 
     const renderConsumptionBilling = () => (
-        <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
+        <div className="bg-primary-lightest dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl px-5 py-4 flex flex-col gap-1">
             <div className="flex justify-between items-center gap-2">
                 <h2 className="text-base font-regular">
                     Consumption & Billing <span className="text-base font-regular">(Jul 4, 2025)</span>
@@ -290,7 +291,7 @@ const Dashboard: React.FC = () => {
 
     const renderMetricsTable = () => (
         <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
-            <div className="flex justify-between items-center gap-4 bg-[var(--color-primary-lightest)] dark:bg-primary-dark-light rounded-t-3xl p-4">
+            <div className="flex justify-between items-center gap-4 bg-primary-lightest dark:bg-primary-dark-light rounded-t-3xl p-4">
                 <div className="font-medium text-neutral-darker dark:text-surface">
                     {metricsView} Consumption Metrics
                     <span className="text-xs font-normal text-neutral-dark dark:text-surface ml-1">
@@ -327,7 +328,7 @@ const Dashboard: React.FC = () => {
 
     const renderMeterCommunicationStatus = () => (
         <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
-            <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-tl-3xl rounded-tr-3xl px-4 py-4">
+            <div className="flex justify-between items-center gap-2 bg-primary-lightest rounded-tl-3xl rounded-tr-3xl px-4 py-4">
                 <h2 className="text-base font-normal">Meter Communication Status</h2>
                 <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border">
                     <img
@@ -343,6 +344,15 @@ const Dashboard: React.FC = () => {
                     height={200}
                     showNoDataMessage={false}
                     title={''}
+                    onClick={(segmentName?: string) => {
+                        if (segmentName === 'Communicating') {
+                            navigate('/connect-disconnect/communicating');
+                        } else if (segmentName === 'Non-Communicating') {
+                            navigate('/connect-disconnect/non-communicating');
+                        } else {
+                            navigate('/connect-disconnect');
+                        }
+                    }}
                 />
             </div>
         </div>
@@ -350,7 +360,7 @@ const Dashboard: React.FC = () => {
 
     const renderLatestMeterEvents = () => (
         <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
-            <div className="flex justify-between items-center gap-2 bg-[var(--color-primary-lightest)] rounded-t-3xl rounded-tr-3xl p-4">
+            <div className="flex justify-between items-center gap-2 bg-primary-lightest rounded-t-3xl rounded-tr-3xl p-4">
                 <h2 className="text-lg font-semibold">Latest Meter Events</h2>
             </div>
             <div className="p-4">
@@ -358,58 +368,64 @@ const Dashboard: React.FC = () => {
                     data={METER_EVENTS}
                     columns={METER_EVENT_COLUMNS}
                     loading={false}
-                    searchable={false}
+                    searchable={true}
                     pagination={false}
-                    showActions={false}
+                    showActions={true}
+                    actions={[{
+                        label: 'View',
+                        icon: '/icons/eye.svg',
+                        onClick: (row: any) => {
+                            navigate(`/consumers/${row.uid}`);
+                        }
+                    }]}
                 />
             </div>
         </div>
     );
 
-    // Page Sections - Each as separate section
-    const consumerStatisticsSection: Section = {
-        id: 'consumer-statistics',
-        component: renderConsumerStatistics()
+    // Page Sections - Organized by layout
+    const topRowSection: Section = {
+        id: 'top-row',
+        component: (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div>{renderConsumerStatistics()}</div>
+                <div>{renderConsumptionBilling()}</div>
+            </div>
+        )
     };
 
-    const consumptionBillingSection: Section = {
-        id: 'consumption-billing',
-        component: renderConsumptionBilling()
+    const metricsSection: Section = {
+        id: 'metrics-section',
+        component: (
+            <div className="space-y-4">
+                {renderMetricsHeader()}
+                {metricsType === 'Graph' ? renderMetricsGraph() : renderMetricsTable()}
+            </div>
+        )
     };
 
-    const metricsHeaderSection: Section = {
-        id: 'metrics-header',
-        component: renderMetricsHeader()
-    };
-
-    const metricsContentSection: Section = {
-        id: 'metrics-content',
-        component: metricsType === 'Graph' ? renderMetricsGraph() : renderMetricsTable()
-    };
-
-    const meterCommunicationSection: Section = {
-        id: 'meter-communication',
-        component: renderMeterCommunicationStatus()
-    };
-
-    const meterEventsSection: Section = {
-        id: 'meter-events',
-        component: renderLatestMeterEvents()
+    const bottomRowSection: Section = {
+        id: 'bottom-row',
+        component: (
+            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div className="col-span-1">{renderMeterCommunicationStatus()}</div>
+                <div className="col-span-1 lg:col-span-3">{renderLatestMeterEvents()}</div>
+            </div>
+        )
     };
 
     return (
-        <div className="flex flex-col gap-4 bg-[var(--color-surface)]">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                <div>{consumerStatisticsSection.component}</div>
-                <div>{consumptionBillingSection.component}</div>
-            </div>
-            <div>{metricsHeaderSection.component}</div>
-            <div>{metricsContentSection.component}</div>
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                <div className="col-span-1">{meterCommunicationSection.component}</div>
-                <div className="col-span-1 lg:col-span-3">{meterEventsSection.component}</div>
-            </div>
-        </div>
+        <Page
+            layout="single-column"
+            sections={[
+                topRowSection,
+                metricsSection,
+                bottomRowSection
+            ]}
+            className="bg-[var(--color-surface)]"
+            containerClassName="space-y-4"
+            sectionClassName=""
+        />
     );
 };
 

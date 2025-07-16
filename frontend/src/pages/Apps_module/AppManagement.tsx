@@ -1,6 +1,6 @@
 import React from 'react';
-import Page from '../../components/global/Page';
-import PageHeader from '../../components/global/PageHeader';
+import Page from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 import ApplicationSetup from './components/ApplicationSetup';
 import AccessControl from './components/AccessControl';
 import BrandPersonalization from './components/BrandPersonalization';
@@ -55,6 +55,8 @@ const AppManagement: React.FC = () => {
             onInputChange={handleAppBasicsInputChange}
             onArrayChange={handleAppBasicsArrayChange}
             onNext={handleAppBasicsSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 2:
@@ -66,6 +68,8 @@ const AppManagement: React.FC = () => {
             onDropdownChange={handleAdminDropdownChange}
             loading={loading}
             onSubmit={handleAdminSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 3:
@@ -75,6 +79,8 @@ const AppManagement: React.FC = () => {
             errors={brandingErrors}
             onInputChange={handleBrandingInputChange}
             onNext={handleBrandingSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 4:
@@ -84,6 +90,8 @@ const AppManagement: React.FC = () => {
             errors={moduleErrors}
             onModuleToggle={handleModuleToggle}
             onNext={handleModuleSubmit}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       case 5:
@@ -98,6 +106,8 @@ const AppManagement: React.FC = () => {
             onEditStep={handleEditStep}
             onSubmit={handleFinalSubmit}
             isSubmitting={loading}
+            currentStep={currentStep}
+            onBack={handleBack}
           />
         );
       default:
@@ -113,7 +123,7 @@ const AppManagement: React.FC = () => {
   ];
 
   return (
-    <main className="min-h-screen dark:bg-primary-dark-light flex flex-col items-center justify-start w-full">
+    <main className=" dark:bg-primary-dark-light flex flex-col items-center justify-start w-full">
       <div className="w-full flex flex-col gap-4">
         {/* Page Header */}
         <div className="">

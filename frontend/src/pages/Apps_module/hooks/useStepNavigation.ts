@@ -31,6 +31,8 @@ export const useStepNavigation = (
   // Step submit handlers
   const handleAppBasicsSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Validation is handled in the component itself
+    // The component will only call this if validation passes
     handleNext();
   };
 

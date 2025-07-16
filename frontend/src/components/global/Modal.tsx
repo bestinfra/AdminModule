@@ -123,11 +123,11 @@ const Modal: React.FC<ModalProps> = ({
               role="document"
             >
               {(title || showCloseIcon) && (
-                <header className="flex items-center justify-between px-6 py-4  border-b  border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-t-xl ">
+                <header className="flex items-center justify-between p-6  border-b  border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-t-xl ">
                   {title && (
                     <h2
                       id={`${uniqueModalId}-title`}
-                      className="text-lg font-semibold text-main dark:text-white"
+                      className="text-lg font-semibold text-main dark:text-white text-grey"
                     >
                       {title}
                     </h2>
@@ -135,7 +135,7 @@ const Modal: React.FC<ModalProps> = ({
                   {showCloseIcon && (
                     <span
                       onClick={onClose}
-                      className="w-8 h-8 rounded-full bg-background-primary dark:bg-dark-secondary flex justify-center items-center relative transition-colors duration-300 cursor-pointer"
+                      className="w-8 h-8 rounded-full bg-background-secondary dark:bg-dark-secondary flex justify-center items-center relative transition-colors duration-300 cursor-pointer"
                       aria-label="Close modal"
                     >
                       <img

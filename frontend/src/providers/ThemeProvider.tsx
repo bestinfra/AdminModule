@@ -162,9 +162,10 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
             ...newTheme,
         }));
         Object.entries(newTheme).forEach(([key, value]) => {
+            console.log(key, value);
             document.documentElement.style.setProperty(
                 `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`,
-                value as string
+                value
             );
         });
     };

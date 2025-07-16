@@ -2,16 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 // Components
-import Page from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
-import Table from '../components/global/Table';
-import Button from '../components/global/Button';
+import Page from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
+import Table from '@components/global/Table';
+import Button from '@components/global/Button';
 
 // Context
 
 // Types
-import type { Section } from '../components/global/Page';
-import type { TableData, Column } from '../components/global/Table';
+import type { Section } from '@components/global/Page';
+import type { TableData, Column } from '@components/global/Table';
 
 // Interfaces
 interface Role extends TableData {
@@ -305,10 +305,10 @@ const RoleManagement: React.FC = () => {
                 <div className="flex items-center gap-3 mb-6">
                     <img src="/icons/roles.svg" alt="Role" className="w-8 h-8" />
                     <div>
-                        <h3 className="text-lg font-semibold text-gray-900">
+                        <h3 className="text-lg font-semibold text-text-primary">
                             {selectedRole ? 'Edit Role' : 'Add New Role'}
                         </h3>
-                        <p className="text-gray-600 text-sm">
+                        <p className="text-text-secondary text-sm">
                             {selectedRole ? 'Update role information' : 'Create a new role'}
                         </p>
                     </div>
@@ -316,7 +316,7 @@ const RoleManagement: React.FC = () => {
                 
                 <form onSubmit={handleSaveRole} className="space-y-6">
                     <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
+                        <label className="block text-sm font-semibold text-text-secondary">
                             Role Name *
                         </label>
                         <input
@@ -325,12 +325,12 @@ const RoleManagement: React.FC = () => {
                             onChange={(e) => setNewRole({ ...newRole, name: e.target.value })}
                             placeholder="Enter role name"
                             required
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            className="w-full px-4 py-2 border border-neutral-light rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                         />
                     </div>
                     
                     <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-gray-700">
+                        <label className="block text-sm font-semibold text-text-secondary">
                             Description
                         </label>
                         <textarea
@@ -338,7 +338,7 @@ const RoleManagement: React.FC = () => {
                             onChange={(e) => setNewRole({ ...newRole, description: e.target.value })}
                             placeholder="Enter role description"
                             rows={4}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-vertical"
+                            className="w-full px-4 py-2 border border-neutral-light rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-vertical"
                         />
                     </div>
                     

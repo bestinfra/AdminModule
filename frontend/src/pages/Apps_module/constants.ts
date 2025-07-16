@@ -8,13 +8,17 @@ export const STEP_LABELS: { label: string; sub: string }[] = [
 
 export const INITIAL_APP_BASICS_DATA = {
   appName: '',
+  subdomain: '',
+  addressLine: '',
   country: '',
   state: '',
   city: '',
-  categories: [],
-  subdomain: '',
+  applicationCategory: [],
+  projectType: '',
+  ownershipType: '',
   tariffPlans: [],
-  termsAccepted: false,
+  billingMode: '',
+  meteringType: [],
 };
 
 export const INITIAL_ADMIN_ACCESS_DATA = {

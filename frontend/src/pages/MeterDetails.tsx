@@ -1,10 +1,10 @@
 import React from 'react';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
 import { useParams, useNavigate } from 'react-router-dom';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const summaryCards = [
   {
@@ -96,12 +96,12 @@ const MeterDetails: React.FC = () => {
   const meterInfoSection: Section = {
     id: 'meter-info',
     component: (
-      <div className="bg-white rounded-2xl shadow p-6 border border-gray-200">
+      <div className="bg-white rounded-2xl shadow p-6 border border-neutral-light">
         <div className="text-xl font-semibold mb-4">Meter Information</div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {info.map((info, idx) => (
             <div key={idx} className="mb-2">
-              <div className="text-gray-500 text-sm">{info.label}</div>
+              <div className="text-neutral text-sm">{info.label}</div>
               <div className="text-base font-semibold">{info.value}</div>
             </div>
           ))}
@@ -114,7 +114,7 @@ const MeterDetails: React.FC = () => {
   const meterHistorySection: Section = {
     id: 'meter-history',
     component: (
-      <div className="bg-white rounded-2xl shadow p-6 border border-gray-200">
+      <div className="bg-white rounded-2xl shadow p-6 border border-neutral-light">
         <div className="text-xl font-semibold mb-4">Meter History</div>
         <div className="mb-4 flex items-center"></div>
         <Table columns={historyColumns} data={historyData} pagination={false} searchable={false} />

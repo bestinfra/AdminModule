@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const mockDTRData = {
   name: 'TGNP_DTR-03',
@@ -55,19 +55,19 @@ const DTRDetailPage = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-4">
           <div className="flex flex-col">
-            <span className="text-sm text-gray-500 font-semibold">DTR Name</span>
+            <span className="text-sm text-neutral font-semibold">DTR Name</span>
             <span className="text-base text-main dark:text-white font-medium">{dtr.name}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm text-gray-500 font-semibold">Rating</span>
+            <span className="text-sm text-neutral font-semibold">Rating</span>
             <span className="text-base text-main dark:text-white font-medium">{dtr.rating}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm text-gray-500 font-semibold">Address</span>
+            <span className="text-sm text-neutral font-semibold">Address</span>
             <span className="text-base text-main dark:text-white font-medium">{dtr.address}</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-sm text-gray-500 font-semibold">Location</span>
+            <span className="text-sm text-neutral font-semibold">Location</span>
             <span className="text-base text-main dark:text-white font-medium">{dtr.location.lat}, {dtr.location.lng}</span>
           </div>
         </div>
@@ -79,7 +79,7 @@ const DTRDetailPage = () => {
   const dtrStatsSection: Section = {
     id: 'dtr-stats',
     component: (
-      <section className="border border-primary-border rounded-3xl bg-[var(--color-primary-lightest)] dark:bg-primary-dark p-4 flex flex-col gap-4">
+      <section className="border border-primary-border rounded-3xl bg-primary-lightest dark:bg-primary-dark p-4 flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <h3 className="text-lg font-semibold">Distribution Transformer (DTR) Statistics</h3>
         </div>

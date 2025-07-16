@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Card from '../components/global/Card';
+import Card from '@components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
-import Table from '../components/global/Table';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Table from '@components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 
 // Mock data (should be shared or moved to a common location in real app)
@@ -147,7 +147,7 @@ const ConsumerView: React.FC = () => {
     id: 'instantaneous-data',
     component: (
       <div className="bg-primary-lightest rounded-[var(--radius-2xl)] p-6">
-        <div className="flex items-center justify-between bg-[var(--color-primary-lightest)] rounded-t-lg px-4 py-2">
+        <div className="flex items-center justify-between bg-primary-lightest rounded-t-lg px-4 py-2">
           <div className="font-semibold">Instantaneous Data</div>
           <div className="text-sm text-gray-500">Last Comm Date: 10/07/2025 07:00:00</div>
         </div>
@@ -248,7 +248,7 @@ const ConsumerView: React.FC = () => {
           </div>
           {/* Power Metrics Card */}
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
-            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-[var(--color-primary-lightest)]  rounded-t-3xl">
+            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-3xl">
               <div className="font-semibold text-base">Power Metrics</div>
               <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Metrics')}>
                 <img

@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import Dropdown from '../components/global/Dropdown';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import Dropdown from '@components/global/Dropdown';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const meterCards = [
   {

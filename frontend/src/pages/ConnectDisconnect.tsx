@@ -1,79 +1,67 @@
-import React, { useState } from 'react';
-import Button from '../components/global/Button';
-import type { Column } from '../components/global/Table';
-import Table from '../components/global/Table';
-import Modal from '../components/global/Modal';
-import LoadingSpinner from '../components/global/LoadingSpinner';
-import PageHeader from '../components/global/PageHeader';
-import Card from '../components/global/Card';
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import Button from '@components/global/Button';
+import Table from '@components/global/Table';
+import Modal from '@components/global/Modal';
+import LoadingSpinner from '@components/global/LoadingSpinner';
+import PageHeader from '@components/global/PageHeader';
+import Card from '@components/global/Card';
 import meterConnectionAPI, { MeterConnectionAPI } from '../api/meterConnection';
-
 interface MeterData {
   id: string;
   meterNo: string;
-  consumerName: string;
+  uid: string;
+  consumerName: string; 
   location: string;
   status: 'connected' | 'disconnected';
+  communicationStatus: 'communicating' | 'non-communicating';
   lastReading: number;
   lastUpdate: string;
+  lastCommunication: string;
   phase: string;
-  type: 'prepaid' | 'postpaid';
+  type: "prepaid" | "postpaid";
 }
 
 const meterData: MeterData[] = [
-  { id: '1', meterNo: 'A9345717', consumerName: 'John Smith', location: '1007, Block B, Asian Sun City', status: 'disconnected', lastReading: 145.17, lastUpdate: '2024-01-15', phase: 'Single Phase', type: 'prepaid' },
-  { id: '2', meterNo: 'B1234567', consumerName: 'Sarah Johnson', location: '205, Tower A, Downtown Plaza', status: 'connected', lastReading: 89.45, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
-  { id: '3', meterNo: 'C7890123', consumerName: 'Mike Wilson', location: '15, Green Valley Society', status: 'connected', lastReading: 234.78, lastUpdate: '2024-01-16', phase: 'Three Phase', type: 'prepaid' },
-  { id: '4', meterNo: 'D4567890', consumerName: 'Emily Davis', location: '78, Lake View Apartments', status: 'disconnected', lastReading: 67.23, lastUpdate: '2024-01-14', phase: 'Single Phase', type: 'postpaid' },
-  { id: '5', meterNo: 'E2345678', consumerName: 'David Brown', location: '45, Riverside Colony', status: 'connected', lastReading: 156.89, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'prepaid' },
-  { id: '6', meterNo: 'F8901234', consumerName: 'Lisa Anderson', location: '12, Hill Top Residency', status: 'disconnected', lastReading: 98.34, lastUpdate: '2024-01-13', phase: 'Three Phase', type: 'postpaid' },
-  { id: '7', meterNo: 'G5678901', consumerName: 'Robert Taylor', location: '89, Central Park View', status: 'connected', lastReading: 178.92, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'prepaid' },
-  { id: '8', meterNo: 'H3456789', consumerName: 'Jennifer White', location: '34, Sunshine Heights', status: 'connected', lastReading: 123.45, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
-  { id: '9', meterNo: 'I9012345', consumerName: 'Michael Clark', location: '67, Ocean View Towers', status: 'disconnected', lastReading: 87.65, lastUpdate: '2024-01-12', phase: 'Three Phase', type: 'prepaid' },
-  { id: '10', meterNo: 'J6789012', consumerName: 'Amanda Lee', location: '23, Garden City Complex', status: 'connected', lastReading: 145.67, lastUpdate: '2024-01-16', phase: 'Single Phase', type: 'postpaid' },
+  { id: '1', meterNo: 'A9211433', uid: 'BI25GMRA004', consumerName: 'Mobikins', location: 'Tech Park, GMR', status: 'connected', communicationStatus: 'communicating', lastReading: 1271.76, lastUpdate: '2025-07-06', lastCommunication: '2025-07-06 16:12:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '2', meterNo: 'A9345417', uid: 'BI25GMRA002', consumerName: 'Neo Travels', location: 'Airport Road, GMR', status: 'connected', communicationStatus: 'communicating', lastReading: 10157.62, lastUpdate: '2025-07-06', lastCommunication: '2025-07-06 16:47:00', phase: 'Three Phase', type: 'postpaid' },
+  { id: '3', meterNo: 'A9345418', uid: 'BI25GMRA003', consumerName: 'Dormitory', location: 'Campus Area, GMR', status: 'connected', communicationStatus: 'communicating', lastReading: 1108.34, lastUpdate: '2025-07-06', lastCommunication: '2025-07-06 12:19:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '4', meterNo: 'A9211434', uid: 'BI25GMRA001', consumerName: 'Airborne General Store', location: 'GHASL, GMR', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 145.17, lastUpdate: '2025-07-05', lastCommunication: '2025-07-05 10:30:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '5', meterNo: 'A9345717', uid: 'BI25GMRA005', consumerName: 'John Smith', location: '1007, Block B, Asian Sun City', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 145.17, lastUpdate: '2024-01-15', lastCommunication: '2024-01-15 14:30:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '6', meterNo: 'B1234567', uid: 'BI25GMRA006', consumerName: 'Sarah Johnson', location: '205, Tower A, Downtown Plaza', status: 'connected', communicationStatus: 'communicating', lastReading: 89.45, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 09:15:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '7', meterNo: 'C7890123', uid: 'BI25GMRA007', consumerName: 'Mike Wilson', location: '15, Green Valley Society', status: 'connected', communicationStatus: 'communicating', lastReading: 234.78, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 11:45:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '8', meterNo: 'D4567890', uid: 'BI25GMRA008', consumerName: 'Emily Davis', location: '78, Lake View Apartments', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 67.23, lastUpdate: '2024-01-14', lastCommunication: '2024-01-14 16:20:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '9', meterNo: 'E2345678', uid: 'BI25GMRA009', consumerName: 'David Brown', location: '45, Riverside Colony', status: 'connected', communicationStatus: 'communicating', lastReading: 156.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 13:30:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '10', meterNo: 'F8901234', uid: 'BI25GMRA010', consumerName: 'Lisa Anderson', location: '12, Hill Top Residency', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 98.34, lastUpdate: '2024-01-13', lastCommunication: '2024-01-13 08:45:00', phase: 'Three Phase', type: 'postpaid' },
+  { id: '11', meterNo: 'G5678901', uid: 'BI25GMRA011', consumerName: 'Robert Wilson', location: '34, Sunshine Apartments', status: 'connected', communicationStatus: 'communicating', lastReading: 445.67, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 15:20:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '12', meterNo: 'H2345678', uid: 'BI25GMRA012', consumerName: 'Jennifer Lee', location: '67, Green Meadows', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 223.45, lastUpdate: '2024-01-13', lastCommunication: '2024-01-13 12:30:00', phase: 'Three Phase', type: 'postpaid' },
+  { id: '13', meterNo: 'I8901234', uid: 'BI25GMRA013', consumerName: 'Michael Chen', location: '89, Riverside Drive', status: 'connected', communicationStatus: 'communicating', lastReading: 789.12, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 17:45:00', phase: 'Single Phase', type: 'prepaid' },
+  { id: '14', meterNo: 'J4567890', uid: 'BI25GMRA014', consumerName: 'Amanda Taylor', location: '123, Oak Street', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 156.78, lastUpdate: '2024-01-14', lastCommunication: '2024-01-14 09:15:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '15', meterNo: 'K1234567', uid: 'BI25GMRA015', consumerName: 'Christopher Brown', location: '456, Pine Avenue', status: 'connected', communicationStatus: 'communicating', lastReading: 567.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 14:30:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '16', meterNo: 'L7890123', uid: 'BI25GMRA016', consumerName: 'Jessica Garcia', location: '789, Maple Lane', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 334.56, lastUpdate: '2024-01-12', lastCommunication: '2024-01-12 11:20:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '17', meterNo: 'M3456789', uid: 'BI25GMRA017', consumerName: 'Daniel Martinez', location: '321, Cedar Road', status: 'connected', communicationStatus: 'communicating', lastReading: 678.90, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 16:10:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '18', meterNo: 'N9012345', uid: 'BI25GMRA018', consumerName: 'Ashley Rodriguez', location: '654, Birch Street', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 445.67, lastUpdate: '2024-01-11', lastCommunication: '2024-01-11 13:45:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '19', meterNo: 'O5678901', uid: 'BI25GMRA019', consumerName: 'Matthew Thompson', location: '987, Elm Court', status: 'connected', communicationStatus: 'communicating', lastReading: 789.01, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 18:20:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '20', meterNo: 'P2345678', uid: 'BI25GMRA020', consumerName: 'Nicole White', location: '147, Willow Way', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 223.45, lastUpdate: '2024-01-10', lastCommunication: '2024-01-10 10:30:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '21', meterNo: 'Q8901234', uid: 'BI25GMRA021', consumerName: 'Kevin Johnson', location: '258, Spruce Drive', status: 'connected', communicationStatus: 'communicating', lastReading: 456.78, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 19:15:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '22', meterNo: 'R4567890', uid: 'BI25GMRA022', consumerName: 'Stephanie Davis', location: '369, Aspen Lane', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 345.67, lastUpdate: '2024-01-09', lastCommunication: '2024-01-09 14:20:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '23', meterNo: 'S1234567', uid: 'BI25GMRA023', consumerName: 'Ryan Miller', location: '741, Poplar Road', status: 'connected', communicationStatus: 'communicating', lastReading: 567.89, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 20:30:00', phase: 'Three Phase', type: 'prepaid' },
+  { id: '24', meterNo: 'T7890123', uid: 'BI25GMRA024', consumerName: 'Lauren Anderson', location: '852, Sycamore Street', status: 'disconnected', communicationStatus: 'non-communicating', lastReading: 234.56, lastUpdate: '2024-01-08', lastCommunication: '2024-01-08 16:45:00', phase: 'Single Phase', type: 'postpaid' },
+  { id: '25', meterNo: 'U3456789', uid: 'BI25GMRA025', consumerName: 'Brandon Wilson', location: '963, Magnolia Court', status: 'connected', communicationStatus: 'communicating', lastReading: 678.90, lastUpdate: '2024-01-16', lastCommunication: '2024-01-16 21:10:00', phase: 'Three Phase', type: 'prepaid' },
 ];
 
-const columns: Column[] = [
-  { key: 'sNo', label: 'S.No' },
-  { key: 'meterNo', label: 'Meter No' },
-  { key: 'consumerName', label: 'Consumer Name' },
-  { key: 'location', label: 'Location' },
-  { 
-    key: 'status', 
-    label: 'Connection Status',
-    render: (value) => (
-      <span
-        className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-          value === 'connected'
-            ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-            : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-        }`}>
-        <div
-          className={`w-2 h-2 rounded-full mr-2 ${
-            value === 'connected' ? 'bg-green-500' : 'bg-red-500'
-          }`}></div>
-        {value === 'connected' ? 'CONNECTED' : 'DISCONNECTED'}
-      </span>
-    )
-  },
-  { key: 'lastUpdate', label: 'Last Status Update' },
-  { 
-    key: 'type', 
-    label: 'Meter Type',
-    render: (value) => (
-      <span className="capitalize font-medium text-gray-600 dark:text-gray-300">
-        {value}
-      </span>
-    )
-  },
-];
+
 
 const ConnectDisconnect: React.FC = () => {
+  const params = useParams<{ filter?: string }>();
+  const navigate = useNavigate();
   const [meters, setMeters] = useState<MeterData[]>(meterData);
   const [selectedMeter, setSelectedMeter] = useState<MeterData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [actionType, setActionType] = useState<'connect' | 'disconnect'>('connect');
-  const [reason, setReason] = useState('');
+  const [actionType, setActionType] = useState<"connect" | "disconnect">(
+    "connect"
+  );
+  const [reason, setReason] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
@@ -81,34 +69,67 @@ const ConnectDisconnect: React.FC = () => {
   const [lastApiResponse, setLastApiResponse] = useState<any>(null);
   const [apiLogs, setApiLogs] = useState<string[]>([]);
   const [selectedMeters, setSelectedMeters] = useState<string[]>([]);
-  const [bulkActionType, setBulkActionType] = useState<'connect' | 'disconnect' | null>(null);
+  const [communicationFilter, setCommunicationFilter] = useState<'all' | 'communicating' | 'non-communicating'>('all');
+  const [selectedTimeRange, setSelectedTimeRange] = useState<string>('Daily');
 
 
+  const timeRangeLabels = {
+    'Daily': 'All',
+    'Monthly': 'Online', 
+    'Yearly': 'Offline'
+  };
+
+  // Handle time range change
+  const handleTimeRangeChange = (range: string) => {
+    setSelectedTimeRange(range);
+    console.log('Time range changed to:', range);
+  };
+
+  // Handle route parameters for initial filtering
+  useEffect(() => {
+    const filterParam = params.filter;
+    console.log('Route filter parameter:', filterParam);
+    
+    if (filterParam === 'communicating' || filterParam === 'non-communicating') {
+      console.log('Setting filter to:', filterParam);
+      setCommunicationFilter(filterParam);
+    } else {
+      console.log('No filter or invalid filter, setting to all');
+      setCommunicationFilter('all');
+    }
+  }, [params.filter]);
+
+
+  const [bulkActionType, setBulkActionType] = useState<
+    "connect" | "disconnect" | null
+  >(null);
 
   const addApiLog = (message: string) => {
     const timestamp = new Date().toLocaleTimeString();
-    setApiLogs(prev => [...prev.slice(-9), `[${timestamp}] ${message}`]);
+    setApiLogs((prev) => [...prev.slice(-9), `[${timestamp}] ${message}`]);
   };
 
   const testApiConnectivity = async () => {
-    setIsLoading(true);    
-    try {      
-      const testMeter = 'TEST_CONNECTIVITY';
+    setIsLoading(true);
+    try {
+      const testMeter = "TEST_CONNECTIVITY";
       await meterConnectionAPI.getMeterStatus(testMeter);
-      
-      addApiLog('API connectivity test successful!');
-      
+
+      addApiLog("API connectivity test successful!");
     } catch (error) {
-      console.error('API connectivity test failed:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+      console.error("API connectivity test failed:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
+
       // Check if it's a 404/403 error (meter not found) vs network error
-      if (errorMessage.includes('404') || errorMessage.includes('403')) {
-        addApiLog('Connectivity test successful - API server is reachable');
-              } else if (error instanceof TypeError && errorMessage.includes('fetch')) {
-          addApiLog('This looks like a network/CORS issue');
-          addApiLog('Possible causes: 1) CORS not enabled 2) API server down 3) Network firewall');
-        } else {
+      if (errorMessage.includes("404") || errorMessage.includes("403")) {
+        addApiLog("Connectivity test successful - API server is reachable");
+      } else if (error instanceof TypeError && errorMessage.includes("fetch")) {
+        addApiLog("This looks like a network/CORS issue");
+        addApiLog(
+          "Possible causes: 1) CORS not enabled 2) API server down 3) Network firewall"
+        );
+      } else {
         addApiLog(`Connectivity test failed: ${errorMessage}`);
       }
     } finally {
@@ -118,59 +139,76 @@ const ConnectDisconnect: React.FC = () => {
 
   const handleConnect = (meter: MeterData) => {
     setSelectedMeter(meter);
-    setActionType('connect');
+    setActionType("connect");
     setIsModalOpen(true);
   };
 
   const handleDisconnect = (meter: MeterData) => {
     setSelectedMeter(meter);
-    setActionType('disconnect');
+    setActionType("disconnect");
     setIsModalOpen(true);
   };
 
   const confirmAction = async () => {
     if (!selectedMeter || !reason.trim()) {
-      setError('Please provide a reason for this action');
+      setError("Please provide a reason for this action");
       return;
     }
 
     setActionLoading(true);
     setError(null);
-    addApiLog(`Starting ${actionType} operation for meter ${selectedMeter.meterNo}`);
+    addApiLog(
+      `Starting ${actionType} operation for meter ${selectedMeter.meterNo}`
+    );
 
     try {
       let response;
-      
-      if (actionType === 'connect') {
+
+      if (actionType === "connect") {
         addApiLog(`Calling connectMeter API for ${selectedMeter.meterNo}`);
-        response = await meterConnectionAPI.connectMeter(selectedMeter.meterNo, reason);
+        response = await meterConnectionAPI.connectMeter(
+          selectedMeter.meterNo,
+          reason
+        );
       } else {
         addApiLog(`Calling disconnectMeter API for ${selectedMeter.meterNo}`);
-        response = await meterConnectionAPI.disconnectMeter(selectedMeter.meterNo, reason);
+        response = await meterConnectionAPI.disconnectMeter(
+          selectedMeter.meterNo,
+          reason
+        );
       }
 
       setLastApiResponse(response);
-      addApiLog(`API call successful! Transaction ID: ${response.transactionId}`);
-      console.log('API Response:', response);
+      addApiLog(
+        `API call successful! Transaction ID: ${response.transactionId}`
+      );
+      console.log("API Response:", response);
 
       // Update the meter status in the local state
-      const updatedMeters = meters.map(meter =>
+      const updatedMeters = meters.map((meter) =>
         meter.id === selectedMeter.id
-          ? { ...meter, status: (actionType === 'connect' ? 'connected' : 'disconnected') as 'connected' | 'disconnected' }
+          ? {
+              ...meter,
+              status: (actionType === "connect"
+                ? "connected"
+                : "disconnected") as "connected" | "disconnected",
+            }
           : meter
       );
 
       setMeters(updatedMeters);
       setIsModalOpen(false);
       setSelectedMeter(null);
-      setReason('');
-      
+      setReason("");
+
       // Show success message
-      alert(`Meter ${selectedMeter.meterNo} ${actionType}ed successfully!\nTransaction ID: ${response.transactionId}\nMessage: ${response.message}`);
-      
+      alert(
+        `Meter ${selectedMeter.meterNo} ${actionType}ed successfully!\nTransaction ID: ${response.transactionId}\nMessage: ${response.message}`
+      );
     } catch (error) {
-      console.error('Error performing action:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error("Error performing action:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       addApiLog(`API call failed: ${errorMessage}`);
       setError(`Failed to ${actionType} meter: ${errorMessage}`);
     } finally {
@@ -182,88 +220,110 @@ const ConnectDisconnect: React.FC = () => {
     addApiLog(`Refreshing status for meter ${meterNo}`);
     try {
       const statusResponse = await meterConnectionAPI.getMeterStatus(meterNo);
-      const parsedStatus = MeterConnectionAPI.parseConnectionStatus(statusResponse.isConnected);
-      
-      setLastApiResponse(statusResponse);
-      addApiLog(`Status refresh successful for ${meterNo}: ${parsedStatus} (API: ${statusResponse.isConnected})`);
-      
-      // Update the meter status in the local state
-      const updatedMeters = meters.map(meter =>
-        meter.meterNo === meterNo
-          ? { ...meter, status: parsedStatus }
-          : meter
+      const parsedStatus = MeterConnectionAPI.parseConnectionStatus(
+        statusResponse.isConnected
       );
-      
+
+      setLastApiResponse(statusResponse);
+      addApiLog(
+        `Status refresh successful for ${meterNo}: ${parsedStatus} (API: ${statusResponse.isConnected})`
+      );
+
+      // Update the meter status in the local state
+      const updatedMeters = meters.map((meter) =>
+        meter.meterNo === meterNo ? { ...meter, status: parsedStatus } : meter
+      );
+
       setMeters(updatedMeters);
-      
     } catch (error) {
-      console.error('Error refreshing meter status:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error("Error refreshing meter status:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error";
       addApiLog(`Status refresh failed for ${meterNo}: ${errorMessage}`);
-      setError(`Failed to refresh status for meter ${meterNo}: ${errorMessage}`);
+      setError(
+        `Failed to refresh status for meter ${meterNo}: ${errorMessage}`
+      );
     }
   };
 
   const refreshAllMeterStatuses = async () => {
     setIsLoading(true);
     setError(null);
-    
+
     try {
       const refreshPromises = meters.map(async (meter) => {
         try {
-          const statusResponse = await meterConnectionAPI.getMeterStatus(meter.meterNo);
-          const parsedStatus = MeterConnectionAPI.parseConnectionStatus(statusResponse.isConnected);
+          const statusResponse = await meterConnectionAPI.getMeterStatus(
+            meter.meterNo
+          );
+          const parsedStatus = MeterConnectionAPI.parseConnectionStatus(
+            statusResponse.isConnected
+          );
           return { ...meter, status: parsedStatus };
         } catch (error) {
           console.error(`Error refreshing meter ${meter.meterNo}:`, error);
-          return { ...meter, status: 'disconnected' as const };
+          return { ...meter, status: "disconnected" as const };
         }
       });
-      
+
       const updatedMeters = await Promise.all(refreshPromises);
       setMeters(updatedMeters);
-      
     } catch (error) {
-      console.error('Error refreshing all meter statuses:', error);
-      setError('Failed to refresh meter statuses');
+      console.error("Error refreshing all meter statuses:", error);
+      setError("Failed to refresh meter statuses");
     } finally {
       setIsLoading(false);
     }
   };
 
-
-
-  const handleBulkAction = async (action: 'connect' | 'disconnect') => {
+  const handleBulkAction = async (action: "connect" | "disconnect") => {
     if (selectedMeters.length === 0) return;
-    
+
     setActionLoading(true);
     setError(null);
-    
+
     try {
-      const selectedMeterData = meters.filter(m => selectedMeters.includes(m.id));
+      const selectedMeterData = meters.filter((m) =>
+        selectedMeters.includes(m.id)
+      );
       const actionPromises = selectedMeterData.map(async (meter) => {
         try {
-          if (action === 'connect') {
-            await meterConnectionAPI.connectMeter(meter.meterNo, 'Bulk connect operation');
+          if (action === "connect") {
+            await meterConnectionAPI.connectMeter(
+              meter.meterNo,
+              "Bulk connect operation"
+            );
           } else {
-            await meterConnectionAPI.disconnectMeter(meter.meterNo, 'Bulk disconnect operation');
+            await meterConnectionAPI.disconnectMeter(
+              meter.meterNo,
+              "Bulk disconnect operation"
+            );
           }
-          return { ...meter, status: (action === 'connect' ? 'connected' : 'disconnected') as 'connected' | 'disconnected' };
+          return {
+            ...meter,
+            status: (action === "connect" ? "connected" : "disconnected") as
+              | "connected"
+              | "disconnected",
+          };
         } catch (error) {
-          console.error(`Error in bulk ${action} for meter ${meter.meterNo}:`, error);
+          console.error(
+            `Error in bulk ${action} for meter ${meter.meterNo}:`,
+            error
+          );
           return meter;
         }
       });
-      
+
       const updatedMeters = await Promise.all(actionPromises);
-      setMeters(prev => prev.map(meter => {
-        const updated = updatedMeters.find(um => um.id === meter.id);
-        return updated || meter;
-      }));
-      
+      setMeters((prev) =>
+        prev.map((meter) => {
+          const updated = updatedMeters.find((um) => um.id === meter.id);
+          return updated || meter;
+        })
+      );
+
       setSelectedMeters([]);
       setBulkActionType(null);
-      
     } catch (error) {
       console.error(`Error in bulk ${action}:`, error);
       setError(`Failed to ${action} selected meters`);
@@ -278,48 +338,125 @@ const ConnectDisconnect: React.FC = () => {
     setBulkActionType(null);
   }, []);
 
+  const actions = [
+    {
+      label: 'View Consumer',
+      icon: '/icons/eye.svg',
+      onClick: (row: any) => {
+        navigate(`/consumers/${row.uid}`);
+      },
+    },
+    {
+      label: "Connect",
+      icon: "/icons/connect.svg",
+      onClick: (row: any) => handleConnect(row as MeterData),
+      condition: (row: any) => row.status === "disconnected",
+    },
+    {
+      label: "Disconnect",
+      icon: "/icons/disconnect.svg",
+      onClick: (row: any) => handleDisconnect(row as MeterData),
+      condition: (row: any) => row.status === "connected",
+    },
+  ];
+
+  // Filter meters based on communication status and time range
+  const filteredMeters = meters.filter(meter => {
+    // First filter by communication status
+    let communicationMatches = true;
+    if (communicationFilter !== 'all') {
+      communicationMatches = meter.communicationStatus === communicationFilter;
+    }
+    
+    // Then filter by time range (communication status)
+    let timeRangeMatches = true;
+    if (selectedTimeRange === 'Monthly') { // Online
+      timeRangeMatches = meter.communicationStatus === 'communicating';
+    } else if (selectedTimeRange === 'Yearly') { // Offline
+      timeRangeMatches = meter.communicationStatus === 'non-communicating';
+    }
+    // For 'Daily' (All), timeRangeMatches remains true
+    
+    const matches = communicationMatches && timeRangeMatches;
+    console.log(`Meter ${meter.consumerName}: communication=${communicationMatches}, timeRange=${timeRangeMatches}, final=${matches}`);
+    return matches;
+  });
+
+  console.log('Current communication filter:', communicationFilter);
+  console.log('Current time range filter:', selectedTimeRange);
+  console.log('Total meters:', meters.length);
+  console.log('Filtered meters:', filteredMeters.length);
+  console.log('Filtered meter names:', filteredMeters.map(m => m.consumerName));
+
+  // Add sNo property to each row for serial number
+  const tableData = filteredMeters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+
   // Update bulk action type based on selected meters
   React.useEffect(() => {
     if (selectedMeters.length === 0) {
       setBulkActionType(null);
       return;
     }
+
+    const selectedMeterData = filteredMeters.filter((m) =>
+      selectedMeters.includes(m.id)
+    );
     
-    const selectedMeterData = meters.filter(m => selectedMeters.includes(m.id));
-    const allDisconnected = selectedMeterData.every(m => m.status === 'disconnected');
-    const allConnected = selectedMeterData.every(m => m.status === 'connected');
-    
-    if (allDisconnected) {
-      setBulkActionType('connect');
-    } else if (allConnected) {
-      setBulkActionType('disconnect');
+    if (selectedMeterData.length === 0) {
+      setBulkActionType(null);
+      return;
+    }
+
+    const allOnline = selectedMeterData.every(
+      (m) => m.communicationStatus === "communicating"
+    );
+    const allOffline = selectedMeterData.every(
+      (m) => m.communicationStatus === "non-communicating"
+    );
+
+    if (allOffline) {
+      setBulkActionType("connect");
+    } else if (allOnline) {
+      setBulkActionType("disconnect");
     } else {
       setBulkActionType(null);
     }
-  }, [selectedMeters, meters]);
+  }, [selectedMeters, filteredMeters]);
 
-  const actions = [
-    {
-      label: 'Refresh Status',
-      icon: '/icons/refresh.svg',
-      onClick: (row: any) => refreshMeterStatus(row.meterNo),
+  // Define columns for the meter data
+  const columns = [
+    { key: 'sNo', label: 'S.No' },
+    { key: 'meterNo', label: 'Meter No' },
+    { key: 'uid', label: 'UID' },
+    { key: 'consumerName', label: 'Consumer Name' },
+    { key: 'location', label: 'Location' },
+    { 
+      key: 'communicationStatus', 
+      label: 'Communication',
+      render: (value: string | number | boolean | null | undefined) => {
+        const isCommunicating = value === 'communicating';
+        return (
+          <div className="flex items-center gap-2">
+            <div className={`w-3 h-3 rounded-full ${
+              isCommunicating 
+                ? 'bg-secondary animate-pulse' 
+                : 'bg-danger'
+            }`}></div>
+            <span className={`text-sm font-medium ${
+              isCommunicating 
+                ? 'text-positive' 
+                : 'text-danger'
+            }`}>
+              {isCommunicating ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        );
+      }
     },
-    {
-      label: 'Connect',
-      icon: '/icons/connect.svg',
-      onClick: (row: any) => handleConnect(row as MeterData),
-      condition: (row: any) => row.status === 'disconnected',
-    },
-    {
-      label: 'Disconnect',
-      icon: '/icons/disconnect.svg',
-      onClick: (row: any) => handleDisconnect(row as MeterData),
-      condition: (row: any) => row.status === 'connected',
-    },
+    { key: 'lastUpdate', label: 'Last Update' },
+    { key: 'lastCommunication', label: 'Last Communication' },
+    { key: 'type', label: 'Type' },
   ];
-
-  // Add sNo property to each row for serial number
-  const tableData = meters.map((row, idx) => ({ ...row, sNo: idx + 1 }));
 
   return (
     <div className="">
@@ -334,31 +471,32 @@ const ConnectDisconnect: React.FC = () => {
           showMenu={true}
           showDropdown={true}
           menuItems={[
-            { id: 'export-csv', label: 'Export CSV' },
-            { id: 'recent-activity', label: 'Recent Activity' }
+            { id: "export-csv", label: "Export CSV" },
+            { id: "recent-activity", label: "Recent Activity" },
           ]}
-                      onMenuItemClick={(itemId) => {
-              console.log(`Filter by: ${itemId}`);
-              if (itemId === 'export-csv') {
-                console.log('Export CSV action');
-              } else if (itemId === 'recent-activity') {
-                // Navigate to TicketsFilteredView page to show history
-                window.location.href = '/tickets-filtered?filter=all';
-              }
-              // TODO: Implement filtering logic based on selection
-            }}
+          onMenuItemClick={(itemId) => {
+            console.log(`Filter by: ${itemId}`);
+            if (itemId === "export-csv") {
+              console.log("Export CSV action");
+            } else if (itemId === "recent-activity") {
+              // Navigate to TicketsFilteredView page to show history
+              window.location.href = "/tickets-filtered?filter=all";
+            }
+            // TODO: Implement filtering logic based on selection
+          }}
         />
       </div>
 
       {error && (
-        <div className="mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg">
+        <div className="mb-4 p-4 bg-danger-light text-danger rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <span>{error}</span>
             </div>
             <button
               onClick={() => setError(null)}
-              className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100">
+              className="text-danger hover:text-danger-alt"
+            >
               ×
             </button>
           </div>
@@ -373,93 +511,107 @@ const ConnectDisconnect: React.FC = () => {
       )}
 
       {debugMode && (
-        <div className="mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+        <div className="mb-6 bg-primary-lightest dark:bg-primary-dark-light rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-4">🔧 Debug Panel</h3>
-          
+
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <h4 className="font-medium mb-2">API Logs</h4>
-              <div className="bg-black text-green-400 p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
+              <div className="bg-black text-secondary p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
                 {apiLogs.length === 0 ? (
-                  <div className="text-gray-500">No API calls yet...</div>
+                  <div className="text-neutral">No API calls yet...</div>
                 ) : (
                   apiLogs.map((log, index) => (
-                    <div key={index} className="mb-1">{log}</div>
+                    <div key={index} className="mb-1">
+                      {log}
+                    </div>
                   ))
                 )}
               </div>
               <button
                 onClick={() => setApiLogs([])}
-                className="mt-2 text-sm text-blue-600 hover:text-blue-800">
+                className="mt-2 text-sm text-primary hover:text-primary-dark"
+              >
                 Clear Logs
               </button>
             </div>
-            
+
             <div>
               <h4 className="font-medium mb-2">Last API Response</h4>
-              <div className="bg-black text-yellow-400 p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
+              <div className="bg-black text-warning p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
                 {lastApiResponse ? (
                   <pre>{JSON.stringify(lastApiResponse, null, 2)}</pre>
                 ) : (
-                  <div className="text-gray-500">No API response yet...</div>
+                  <div className="text-neutral">No API response yet...</div>
                 )}
               </div>
             </div>
           </div>
-          
+
           <div className="mt-4">
             <h4 className="font-medium mb-3">API Tests</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-               <Button
-                 label="Test Connectivity"
-                 variant="outline"
-                 onClick={testApiConnectivity}
-                 disabled={isLoading}
-               />
-               <Button
-                 label="Test Get Status"
-                 variant="outline"
-                 onClick={() => refreshMeterStatus('A9345717')}
-                 disabled={isLoading}
-               />
-               <Button
-                 label="Test Connect"
-                 variant="success"
-                 onClick={() => {
-                   const meter = meters.find(m => m.meterNo === 'A9345717');
-                   if (meter) {
-                     setSelectedMeter(meter);
-                     setActionType('connect');
-                     setReason('Debug test connection');
-                     setIsModalOpen(true);
-                   }
-                 }}
-                 disabled={isLoading}
-               />
-               <Button
-                 label="Test Disconnect"
-                 variant="danger"
-                 onClick={() => {
-                   const meter = meters.find(m => m.meterNo === 'A9345717');
-                   if (meter) {
-                     setSelectedMeter(meter);
-                     setActionType('disconnect');
-                     setReason('Debug test disconnection');
-                     setIsModalOpen(true);
-                   }
-                 }}
-                 disabled={isLoading}
-               />
+              <Button
+                label="Test Connectivity"
+                variant="outline"
+                onClick={testApiConnectivity}
+                disabled={isLoading}
+              />
+              <Button
+                label="Test Get Status"
+                variant="outline"
+                onClick={() => refreshMeterStatus("A9345717")}
+                disabled={isLoading}
+              />
+              <Button
+                label="Test Connect"
+                variant="success"
+                onClick={() => {
+                  const meter = meters.find((m) => m.meterNo === "A9345717");
+                  if (meter) {
+                    setSelectedMeter(meter);
+                    setActionType("connect");
+                    setReason("Debug test connection");
+                    setIsModalOpen(true);
+                  }
+                }}
+                disabled={isLoading}
+              />
+              <Button
+                label="Test Disconnect"
+                variant="danger"
+                onClick={() => {
+                  const meter = meters.find((m) => m.meterNo === "A9345717");
+                  if (meter) {
+                    setSelectedMeter(meter);
+                    setActionType("disconnect");
+                    setReason("Debug test disconnection");
+                    setIsModalOpen(true);
+                  }
+                }}
+                disabled={isLoading}
+              />
+            </div>
 
-             </div>
-            
-            <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 rounded-md">
-              <h5 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">🔍 Troubleshooting Tips</h5>
-              <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
-                <li>• If you see "Failed to fetch", it's likely a CORS or network issue</li>
-                <li>• Check browser console (F12) for detailed error messages</li>
-                <li>• Ensure API server is running at: https://arcticterntech.in:8443</li>
-                <li>• Try "Test Connectivity" first to verify basic connection</li>
+            <div className="mt-4 p-3 bg-warning-alt rounded-md">
+              <h5 className="font-medium text-warning mb-2">
+                🔍 Troubleshooting Tips
+              </h5>
+              <ul className="text-sm text-warning space-y-1">
+                <li>
+                  • If you see "Failed to fetch", it's likely a CORS or network
+                  issue
+                </li>
+                <li>
+                  • Check browser console (F12) for detailed error messages
+                </li>
+                <li>
+                  • Ensure API server is running at:
+                  https://arcticterntech.in:8443
+                </li>
+                <li>
+                  • Try "Test Connectivity" first to verify basic connection
+                </li>
                 <li>• Check your network firewall/proxy settings</li>
               </ul>
             </div>
@@ -469,8 +621,6 @@ const ConnectDisconnect: React.FC = () => {
 
       {/* Enhanced Overview Section */}
       <div className="mb-8">
-         
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
           <Card
             title="Total Meters"
@@ -478,49 +628,63 @@ const ConnectDisconnect: React.FC = () => {
             icon="/icons/meter-bolt.svg"
             loading={isLoading}
             onValueClick={() => refreshAllMeterStatuses()}
-            subtitle1="Prepaid"
-            subtitle2="Postpaid"
+            subtitle1="Active meters in system"
           />
-          
+
           <Card
-            title={`Prepaid`}
-            value={meters.filter(m => m.type === 'prepaid').length}
-            icon="/icons/prepaid.svg"
+            title="Pre Paid"
+            value={meters.filter(m => m.communicationStatus === 'communicating').length}
+            icon="/icons/connect.svg"
             loading={isLoading}
-            onValueClick={() => {
-              console.log('Filtering to show prepaid meters');
-            }}
-            subtitle1={`${meters.filter(m => m.type === 'prepaid' && m.status === 'connected').length} Connected`}
-            subtitle2={`${meters.filter(m => m.type === 'prepaid' && m.status === 'disconnected').length} Disconnected`}
+            onValueClick={() => navigate('/connect-disconnect/communicating')}
+            
+            subtitle1={`${
+              meters.filter(
+                (m) => m.type === "prepaid" && m.status === "connected"
+              ).length
+            } Connected`}
+            subtitle2={`${
+              meters.filter(
+                (m) => m.type === "prepaid" && m.status === "disconnected"
+              ).length
+            } Disconnected`}
           />
-          
+
           <Card
-            title={`Postpaid`}
-            value={meters.filter(m => m.type === 'postpaid').length}
-            icon="/icons/bills.svg"
+              title="Post Paid"
+            value={meters.filter(m => m.communicationStatus === 'non-communicating').length}
+            icon="/icons/disconnect.svg"
             loading={isLoading}
-            onValueClick={() => {
-              console.log('Filtering to show postpaid meters');
-            }}
-            subtitle1={`${meters.filter(m => m.type === 'postpaid' && m.status === 'connected').length} Connected`}
-            subtitle2={`${meters.filter(m => m.type === 'postpaid' && m.status === 'disconnected').length} Disconnected`}
+            onValueClick={() => navigate('/connect-disconnect/non-communicating')}
+            
+            subtitle1={`${
+              meters.filter(
+                (m) => m.type === "postpaid" && m.status === "connected"
+              ).length
+            } Connected`}
+            subtitle2={`${
+              meters.filter(
+                (m) => m.type === "postpaid" && m.status === "disconnected"
+              ).length
+            } Disconnected`}
           />
 
           <Card
             title="Auto Triggered Disconnects"
-            value="4"
-            icon="/icons/disconnect.svg"
+            value={`${meters.filter(m => m.status === 'connected').length}`}
+            icon="/icons/meter-bolt.svg"
             loading={isLoading}
             onValueClick={() => {
-              console.log('Showing auto disconnect details');
+              console.log('Showing connection status details');
+              console.log("Showing auto disconnect details");
             }}
-            subtitle1=" 2 Yesterday"
-            subtitle2="4 Consumers Today"
+            subtitle1={`${meters.filter(m => m.status === 'connected').length} Connected`}
+            subtitle2={`${meters.filter(m => m.status === 'disconnected').length} Disconnected`}
           />
         </div>
-            </div>
+      </div>
 
-            {/* Quick Actions Section - Only show when meters are selected */}
+      {/* Quick Actions Section - Only show when meters are selected */}
       {selectedMeters.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
@@ -528,7 +692,9 @@ const ConnectDisconnect: React.FC = () => {
               Quick Actions
             </h3>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400">Last updated:</span>
+              <span className="text-xs text-gray-500 dark:text-gray-400">
+                Last updated:
+              </span>
               <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
                 {new Date().toLocaleTimeString()}
               </span>
@@ -536,17 +702,18 @@ const ConnectDisconnect: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            {bulkActionType === 'connect' && (  
+            {bulkActionType === "connect" && (
               <div className="bg-white flex flex-col gap-4 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
                 <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                   Bulk Connect Meters
                 </h3>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col items-center gap-3">
                   <Button
                     label="Connect Selected"
                     variant="primary"
-                    onClick={() => handleBulkAction('connect')}
+                    onClick={() => handleBulkAction("connect")}
                     disabled={actionLoading}
+                    className="w-full max-w-xs"
                   />
                   <span className="text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
@@ -554,103 +721,139 @@ const ConnectDisconnect: React.FC = () => {
                 </div>
               </div>
             )}
-            {bulkActionType === 'disconnect' && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg ">
-                <div className="flex items-center justify-between">
-                  <div className='flex'>  
-                  
-                    <Button
-                      label="Disconnect Selected"
-                      variant="danger"
-                      onClick={() => handleBulkAction('disconnect')}
-                      disabled={actionLoading}
-                    />
-                  </div>
+            {bulkActionType === "disconnect" && (
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                  Bulk Disconnect Meters
+                </h3>
+                <div className="flex flex-col items-center gap-3">
+                  <Button
+                    label="Disconnect Selected"
+                    variant="danger"
+                    onClick={() => handleBulkAction("disconnect")}
+                    disabled={actionLoading}
+                    className="w-full max-w-xs"
+                  />
                   <span className="text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900 px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
                   </span>
-          </div>
-             
-               
+                </div>
               </div>
             )}
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-              <div className="flex items-center justify-between mb-3">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                Refresh All Meters
+              </h3>
+              <div className="flex flex-col items-center gap-3">
+                <Button
+                  label="Refresh All"
+                  variant="primary"
+                  onClick={refreshAllMeterStatuses}
+                  disabled={isLoading}
+                  className="w-full max-w-xs"
+                />
                 <span className="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
                   Real-time
                 </span>
-            </div>
-              <Button
-                label="Refresh All"
-                variant="primary"
-                onClick={refreshAllMeterStatuses}
-                disabled={isLoading}
-              />
+              </div>
             </div>
           </div>
         </div>
       )}
       {/* Meter Table */}
       <div className="mb-8">
-       <div className="mb-6">
-         
-      </div>
-
-      <Table
+       
+        <Table
         data={tableData}
         columns={columns}
         actions={actions}
         showActions
         searchable
-        pagination
+        pagination={true}
+        rowsPerPageOptions={[5, 10, 15, 25]}
+        initialRowsPerPage={10}
         selectable={true}
         selectedRows={selectedMeters}
-        onSelectionChange={setSelectedMeters}
+        onSelectionChange={(selectedIds) => {
+          // Handle "Select All" from pagination - if all current page items are selected, select all filtered items
+          const currentPageIds = tableData.map(row => row.id);
+          const allCurrentPageSelected = currentPageIds.every(id => selectedIds.includes(id));
+          
+          if (allCurrentPageSelected && selectedIds.length === currentPageIds.length) {
+            // Select all filtered meters
+            const allFilteredIds = filteredMeters.map(meter => meter.id);
+            setSelectedMeters(allFilteredIds);
+          } else {
+            // Normal selection
+            setSelectedMeters(selectedIds);
+          }
+        }}
         emptyMessage="No meters found"
         showHeader={true}
         headerTitle="Meter Connection Status"
         dateRange="Jan 2024 - Dec 2024"
+        selectedTimeRange={selectedTimeRange}
+        onTimeRangeChange={handleTimeRangeChange}
+        timeRangeLabels={timeRangeLabels}
       />
+        <div className="mb-6"></div>
+      
       </div>
-
-
-
       <Modal
+        size="lg"
         isOpen={isModalOpen}
         onClose={() => {
           if (!actionLoading) {
             setIsModalOpen(false);
             setError(null);
-            setReason('');
+            setReason("");
           }
         }}
-        title={`${actionType === 'connect' ? 'Connect Meter' : 'Disconnect Meter'}`}>
-        <div className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold mb-2 text-gray-800 dark:text-gray-200">
-              {actionType === 'connect' ? 'Connecting Meter' : 'Disconnecting Meter'}
-            </h3>
-            <div className="grid grid-cols-2 gap-2 text-sm">
+        title={`${
+          actionType === "connect" ? "Connect Meter" : "Disconnect Meter"
+        }`}
+
+      >
+        <div className="flex flex-col gap-8">
+          <div className="">
+          
+            <div className="grid grid-cols-2 gap-2 text-sm space-x-4">
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Meter No:</span>
-                <span className="ml-2 font-medium">{selectedMeter?.meterNo}</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Meter No:
+                </span>
+                <span className="ml-2 font-medium">
+                  {selectedMeter?.meterNo}
+                </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Consumer:</span>
-                <span className="ml-2 font-medium">{selectedMeter?.consumerName}</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Consumer:
+                </span>
+                <span className="ml-2 font-medium">
+                  {selectedMeter?.consumerName}
+                </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Location:</span>
-                <span className="ml-2 font-medium">{selectedMeter?.location}</span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Location:
+                </span>
+                <span className="ml-2 font-medium">
+                  {selectedMeter?.location}
+                </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">Current Status:</span>
-                <span className={`ml-2 font-medium ${
-                  selectedMeter?.status === 'connected' 
-                    ? 'text-green-600' 
-                    : 'text-red-600'
-                }`}>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Status:
+                </span>
+                <span
+                  className={`ml-2 font-medium ${
+                    selectedMeter?.status === "connected"
+                      ? "text-green-600"
+                      : "text-red-600"
+                  }`}
+                >
                   {selectedMeter?.status}
                 </span>
               </div>
@@ -658,25 +861,31 @@ const ConnectDisconnect: React.FC = () => {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-md text-sm">
+            <div className="p-3 bg-danger-light text-danger rounded-md text-sm">
               {error}
             </div>
           )}
 
           <div>
-            <label htmlFor="reason" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-              Reason for {actionType === 'connect' ? 'Connection' : 'Disconnection'} *
+            <label
+              htmlFor="reason"
+              className="block text-lg font-medium text-grey dark:text-gray-300 mb-2"
+            >
+              Reason for{" "}
+              {actionType === "connect" ? "Connection" : "Disconnection"} 
             </label>
-            <textarea
-              id="reason"
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              placeholder={`Enter reason for ${actionType === 'connect' ? 'connecting' : 'disconnecting'} this meter...`}
-              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-              rows={3}
-              disabled={actionLoading}
-              required
-            />
+              <textarea
+                id="reason"
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder={`Enter reason for ${
+                  actionType === "connect" ? "connecting" : "disconnecting"
+                } this meter...`}
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+                rows={3}
+                disabled={actionLoading}
+                required
+              />
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
@@ -686,17 +895,21 @@ const ConnectDisconnect: React.FC = () => {
               onClick={() => {
                 setIsModalOpen(false);
                 setError(null);
-                setReason('');
+                setReason("");
               }}
               disabled={actionLoading}
             />
             <Button
               label={
-                actionLoading 
-                  ? `${actionType === 'connect' ? 'Connecting' : 'Disconnecting'}...` 
-                  : `${actionType === 'connect' ? 'Connect' : 'Disconnect'} Meter`
+                actionLoading
+                  ? `${
+                      actionType === "connect" ? "Connecting" : "Disconnecting"
+                    }...`
+                  : `${
+                      actionType === "connect" ? "Connect" : "Disconnect"
+                    } Meter`
               }
-              variant={actionType === 'connect' ? 'primary' : 'danger'}
+              variant={actionType === "connect" ? "primary" : "danger"}
               onClick={confirmAction}
               disabled={actionLoading || !reason.trim()}
             />
@@ -707,4 +920,4 @@ const ConnectDisconnect: React.FC = () => {
   );
 };
 
-export default ConnectDisconnect; 
+export default ConnectDisconnect;

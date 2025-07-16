@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import Card from '../components/global/Card';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
-import Table from '../components/global/Table';
-import type { TableData } from '../components/global/Table';
+import Card from '@components/global/Card';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import Table from '@components/global/Table';
+import type { TableData } from '@components/global/Table';
 import BarChart from '../graphs/BarChart';
 import { useNavigate } from 'react-router-dom';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -131,7 +131,7 @@ const DTRDashboard: React.FC = () => {
         component: (
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
                 {/* DTR Statistics */}
-                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-3 col-span-1 rounded-[var(--radius-2xl)]">
+                <div className="bg-primary-lightest dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-3 col-span-1 rounded-2xl">
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-lg font-semibold m-0">Distribution Transformer (DTR) Statistics</h2>
                         <div className="flex items-center gap-2" style={{ opacity: 0, pointerEvents: 'none' }}>
@@ -188,7 +188,7 @@ const DTRDashboard: React.FC = () => {
                     </div>
                 </div>
                 {/* Consumption & Energies */}
-                <div className="bg-[var(--color-primary-lightest)] dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-2 col-span-1 rounded-[var(--radius-2xl)]">
+                <div className="bg-primary-lightest dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-2 col-span-1 rounded-2xl">
                     <div className="flex justify-between items-center mb-2">
                         <h2 className="text-lg font-semibold">Consumption & Energies</h2>
                         <TimeRangeSelector
@@ -267,7 +267,7 @@ const DTRDashboard: React.FC = () => {
         component: (
             <div className="mt-8">
                 <h2 className="text-lg font-semibold mb-2">Statistics</h2>
-                <div className="gap-2 bg-[var(--color-primary-lightest)] p-4 rounded-[var(--radius-2xl)] flex items-center justify-between">
+                <div className="gap-2 bg-primary-lightest p-4 rounded-2xl flex items-center justify-between">
                     <div className="font-semibold">DTR Alert Statistics <span className="text-sm font-normal">(Last 12 Months)</span></div>
                     <div className="flex items-center gap-2">
                         <TimeRangeSelector
@@ -296,7 +296,7 @@ const DTRDashboard: React.FC = () => {
             sections={[dtrStatsSection, dtrsTableSection, latestAlertsSection, statisticsChartSection]}
             header={headerComponent}
             sidebarPosition="right"
-            className="space-y-6 bg-[var(--color-surface)]"
+            className="space-y-6 bg-surface"
             sectionClassName=""
         />
     );
