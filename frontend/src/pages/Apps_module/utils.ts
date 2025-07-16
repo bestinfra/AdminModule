@@ -335,7 +335,9 @@ export const validateBrandPersonalization = (formData: any): { isValid: boolean;
     errors.companyWebsite = 'Please enter a valid website URL starting with http:// or https://';
   }
 
-  if (!formData.primaryColor) {
+  // Check for primary color in both brand and custom modes
+  const primaryColor = formData.primaryColor || formData.customPrimaryColor || '#0066cc';
+  if (!primaryColor) {
     errors.primaryColor = 'Primary color is required';
   }
 
@@ -356,8 +358,8 @@ export const validateBrandPersonalization = (formData: any): { isValid: boolean;
     remarks.push(`✓ Company website configured: ${formData.companyWebsite}`);
   }
 
-  if (formData.primaryColor) {
-    remarks.push(`✓ Primary color selected: ${formData.primaryColor}`);
+  if (primaryColor) {
+    remarks.push(`✓ Primary color selected: ${primaryColor}`);
   }
 
   if (formData.appLogo) {
@@ -407,7 +409,7 @@ export const validateBrandPersonalization = (formData: any): { isValid: boolean;
     remarks.push('💡 Multi-language support enabled - consider adding language packs');
   }
 
-  if (formData.primaryColor === '#0066cc') {
+  if (primaryColor === '#0066cc') {
     remarks.push('💡 Default blue color selected - consider customizing for brand identity');
   }
 

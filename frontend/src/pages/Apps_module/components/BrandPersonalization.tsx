@@ -1,8 +1,8 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import FormInput from "@components/forms/FormInput";
-import Dropdown from "@components/global/Dropdown";
 import Button from "@components/global/Button";
 import TimeRangeSelector from "@components/global/TimeRangeSelector";
+import ColorPicker from "./ColorPicker";
 import type { FormInputValue } from "@components/forms/types";
 import { validateBrandPersonalization } from "../utils";
 import RemarksPanel from "./RemarksPanel";
@@ -26,15 +26,31 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
   currentStep = 1,
   onBack,
 }) => {
-  const [logoPreview, setLogoPreview] = useState<string | null>(null);
-  const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isLogoDragOver, setIsLogoDragOver] = useState(false);
   const [isFaviconDragOver, setIsFaviconDragOver] = useState(false);
   const [colorMode, setColorMode] = useState("brand");
+  const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
+  // Individual preview states for each upload area
+  const [darkModeLogo1Preview, setDarkModeLogo1Preview] = useState<string | null>(null);
+  const [darkModeLogo2Preview, setDarkModeLogo2Preview] = useState<string | null>(null);
+  const [lightModeLogo1Preview, setLightModeLogo1Preview] = useState<string | null>(null);
+  const [lightModeLogo2Preview, setLightModeLogo2Preview] = useState<string | null>(null);
+
+  // Log form data changes
+  useEffect(() => {
+    console.log('BrandPersonalization - Form Data Updated:', {
+      formData,
+      currentStep,
+      colorMode,
+      hasSubmitted
+    });
+  }, [formData, currentStep, colorMode, hasSubmitted]);
+
   const handleFormInputChange = (name: string, value: FormInputValue) => {
+    console.log(' BrandPersonalization - Input Change:', { name, value, type: typeof value });
     onInputChange({ target: { name, value } } as any);
     if (hasSubmitted) setHasSubmitted(false);
   };
@@ -49,17 +65,46 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     errors: validationErrors,
     remarks,
   } = useMemo(() => {
-    return validateBrandPersonalization(formData);
+    const validationResult = validateBrandPersonalization(formData);
+    console.log(' BrandPersonalization - Validation Result:', {
+      isValid: validationResult.isValid,
+      errors: validationResult.errors,
+      remarks: validationResult.remarks,
+      formDataKeys: Object.keys(formData)
+    });
+    return validationResult;
   }, [formData]);
 
   // Only show validation errors if form has been submitted
   const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
 
-  const handleFileUpload = (file: File, type: 'logo' | 'favicon') => {
+  const handleFileUpload = (file: File, type: 'logo' | 'favicon', uploadArea?: string) => {
+    console.log('📁 BrandPersonalization - File Upload:', { 
+      type, 
+      fileName: file.name, 
+      fileSize: file.size, 
+      fileType: file.type,
+      uploadArea
+    });
+    
     const reader = new FileReader();
     reader.onload = (e) => {
       if (type === 'logo') {
-        setLogoPreview(e.target?.result as string);
+        // Handle individual logo upload areas
+        switch (uploadArea) {
+          case 'darkMode1':
+            setDarkModeLogo1Preview(e.target?.result as string);
+            break;
+          case 'darkMode2':
+            setDarkModeLogo2Preview(e.target?.result as string);
+            break;
+          case 'lightMode1':
+            setLightModeLogo1Preview(e.target?.result as string);
+            break;
+          case 'lightMode2':
+            setLightModeLogo2Preview(e.target?.result as string);
+            break;
+        }
       } else {
         setFaviconPreview(e.target?.result as string);
       }
@@ -76,10 +121,10 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     onInputChange(syntheticEvent);
   };
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>, uploadArea?: string) => {
     const file = e.target.files?.[0];
     if (file) {
-      handleFileUpload(file, 'logo');
+      handleFileUpload(file, 'logo', uploadArea);
     }
   };
 
@@ -108,7 +153,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     }
   };
 
-  const handleDrop = (e: React.DragEvent, type: 'logo' | 'favicon') => {
+  const handleDrop = (e: React.DragEvent, type: 'logo' | 'favicon', uploadArea?: string) => {
     e.preventDefault();
     if (type === 'logo') {
       setIsLogoDragOver(false);
@@ -120,7 +165,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     const imageFile = files.find(file => file.type.startsWith('image/'));
     
     if (imageFile) {
-      handleFileUpload(imageFile, type);
+      handleFileUpload(imageFile, type, uploadArea);
     }
   };
 
@@ -135,31 +180,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     { value: "#6c757d", label: "Gray", color: "#6c757d" },
   ];
 
-  const timezoneOptions = [
-    { value: "", label: "Select timezone" },
-    { value: "UTC", label: "UTC" },
-    { value: "America/New_York", label: "Eastern Time (ET)" },
-    { value: "America/Chicago", label: "Central Time (CT)" },
-    { value: "America/Denver", label: "Mountain Time (MT)" },
-    { value: "America/Los_Angeles", label: "Pacific Time (PT)" },
-    { value: "Europe/London", label: "London (GMT)" },
-    { value: "Europe/Paris", label: "Paris (CET)" },
-    { value: "Asia/Dubai", label: "Dubai (GST)" },
-    { value: "Asia/Kolkata", label: "India (IST)" },
-    { value: "Asia/Shanghai", label: "China (CST)" },
-    { value: "Asia/Tokyo", label: "Japan (JST)" },
-  ];
 
-  const currencyOptions = [
-    { value: "", label: "Select currency" },
-    { value: "USD", label: "USD - US Dollar" },
-    { value: "EUR", label: "EUR - Euro" },
-    { value: "GBP", label: "GBP - British Pound" },
-    { value: "INR", label: "INR - Indian Rupee" },
-    { value: "AED", label: "AED - UAE Dirham" },
-    { value: "CAD", label: "CAD - Canadian Dollar" },
-    { value: "AUD", label: "AUD - Australian Dollar" },
-  ];
 
   return (
     <div className="mx-auto">
@@ -180,9 +201,20 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
               e.preventDefault();
               setHasSubmitted(true);
 
+              console.log(' BrandPersonalization - Form Submission:', {
+                formData,
+                isValid,
+                validationErrors,
+                remarks,
+                hasSubmitted: true
+              });
+
               // Only proceed if validation passes
               if (isValid) {
+                console.log(' BrandPersonalization - Validation passed, proceeding to next step');
                 onNext(e);
+              } else {
+                console.log('BrandPersonalization - Validation failed, showing errors:', validationErrors);
               }
             }}
             action="#"
@@ -194,52 +226,50 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
               <div className="mb-4">
                 <h3 className="text-sm font-semibold text-primary">Company Information</h3>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormInput
-                  input={{
-                    name: "companyName",
-                    type: "text",
-                    label: "Company Name",
-                    placeholder: "Enter company name",
-                    required: true,
-                  }}
-                  value={formData.companyName}
-                  error={allErrors.companyName}
-                  showError={!!allErrors.companyName}
-                  disabled={false}
-                  onInputChange={handleFormInputChange}
-                  onInputBlur={handleFormInputBlur}
-                  fileInputRefs={fileInputRefs}
-                />
-                <FormInput
-                  input={{
-                    name: "companyWebsite",
-                    type: "url",
-                    label: "Company Website",
-                    placeholder: "https://example.com",
-                  }}
-                  value={formData.companyWebsite}
-                  error={undefined}
-                  showError={false}
-                  disabled={false}
-                  onInputChange={handleFormInputChange}
-                  onInputBlur={handleFormInputBlur}
-                  fileInputRefs={fileInputRefs}
-                />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormInput
+                input={{
+                  name: "companyName",
+                  type: "text",
+                  placeholder: "Enter company name",
+                  required: true,
+                }}
+                value={formData.companyName}
+                error={allErrors.companyName}
+                showError={!!allErrors.companyName}
+                disabled={false}
+                onInputChange={handleFormInputChange}
+                onInputBlur={handleFormInputBlur}
+                fileInputRefs={fileInputRefs}
+              />
+              <FormInput
+                input={{
+                  name: "companyWebsite",
+                  type: "url",
+                  placeholder: "https://example.com",
+                }}
+                value={formData.companyWebsite}
+                error={undefined}
+                showError={false}
+                disabled={false}
+                onInputChange={handleFormInputChange}
+                onInputBlur={handleFormInputBlur}
+                fileInputRefs={fileInputRefs}
+              />
               </div>
             </div>
 
             {/* Branding Assets Section */}
             <div className="p-4 border border-primary-border rounded-xl">
               <div className="mb-4">
-                <h3 className="text-sm font-semibold text-primary">Branding Assets</h3>
+                <h3 className="text-sm font-semibold text-primary">Company Logo</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-xl">
-                <div className="div1 flex justify-between w-full gap-4">
+                <div className="div1 flex justify-between w-full gap-6">
                   <div className="div2 w-full flex flex-col gap-4">
                     <label
                       htmlFor="appLogo"
-                      className="block text-sm font-medium text-main dark:text-white "
+                      className="block text-sm font-medium text-main dark:text-white"
                     >
                       Dark Mode
                     </label>
@@ -252,45 +282,51 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                         }`}
                         onDragOver={(e) => handleDragOver(e, 'logo')}
                         onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'darkMode1')}
                       >
                         <input
                           type="file"
                           id="appLogo"
                           name="appLogo"
                           accept="image/*"
-                          onChange={handleLogoChange}
+                          onChange={(e) => handleLogoChange(e, 'darkMode1')}
                           className="hidden"
                         />
                         <div className="flex flex-col items-center gap-2">
-                          <img
-                            src="/icons/cloud-upload-alt.svg"
-                            alt="Upload"
-                            className="w-8 h-8 filter dark:invert opacity-60"
-                          />
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Drag & drop logo here or{" "}
-                            <label
-                              htmlFor="appLogo"
-                              className="text-primary cursor-pointer hover:underline"
+                          {darkModeLogo1Preview ? (
+                            <div 
+                              className="w-full h-full cursor-pointer flex items-center justify-center"
+                              onClick={() => document.getElementById('appLogo')?.click()}
                             >
-                              browse
-                            </label>
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            PNG, SVG up to 5MB
-                          </p>
+                              <img
+                                src={darkModeLogo1Preview}
+                                alt="Logo preview"
+                                className="w-32 h-32  dark:border-dark-border rounded-lg object-contain dark:bg-primary-dark-light p-2"
+                              />
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                src="/icons/cloud-upload-alt.svg"
+                                alt="Upload"
+                                className="w-8 h-8 filter dark:invert opacity-60"
+                              />
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Drag & drop logo here or{" "}
+                                <label
+                                  htmlFor="appLogo"
+                                  className="text-primary cursor-pointer hover:underline"
+                                >
+                                  browse
+                                </label>
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                PNG, SVG up to 5MB
+                              </p>
+                            </>
+                          )}
                         </div>
                       </div>
-                      {logoPreview && (
-                        <div className="mt-2">
-                          <img
-                            src={logoPreview}
-                            alt="Logo preview"
-                            className="max-w-[200px] max-h-[100px] border border-gray-300 dark:border-dark-border rounded-lg object-contain bg-gray-50 dark:bg-primary-dark-light p-2"
-                          />
-                        </div>
-                      )}
                     </div>
                     <div className="flex items-center gap-3">
                       <div
@@ -301,51 +337,57 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                         }`}
                         onDragOver={(e) => handleDragOver(e, 'logo')}
                         onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'darkMode2')}
                       >
                         <input
                           type="file"
                           id="appLogo2"
                           name="appLogo"
                           accept="image/*"
-                          onChange={handleLogoChange}
+                          onChange={(e) => handleLogoChange(e, 'darkMode2')}
                           className="hidden"
                         />
                         <div className="flex flex-col items-center gap-2">
-                          <img
-                            src="/icons/cloud-upload-alt.svg"
-                            alt="Upload"
-                            className="w-8 h-8 filter dark:invert opacity-60"
-                          />
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Drag & drop logo here or{" "}
-                            <label
-                              htmlFor="appLogo2"
-                              className="text-primary cursor-pointer hover:underline"
+                          {darkModeLogo2Preview ? (
+                            <div 
+                              className="w-full h-full cursor-pointer flex items-center justify-center"
+                              onClick={() => document.getElementById('appLogo2')?.click()}
                             >
-                              browse
-                            </label>
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            PNG, SVG up to 5MB
-                          </p>
+                              <img
+                                src={darkModeLogo2Preview}
+                                alt="Logo preview"
+                                className="w-32 h-32  rounded-lg object-contain  dark:bg-primary-dark-light p-2"
+                              />
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                src="/icons/cloud-upload-alt.svg"
+                                alt="Upload"
+                                className="w-8 h-8 filter dark:invert opacity-60"
+                              />
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Drag & drop logo here or{" "}
+                                <label
+                                  htmlFor="appLogo2"
+                                  className="text-primary cursor-pointer hover:underline"
+                                >
+                                  browse
+                                </label>
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                PNG, SVG up to 5MB
+                              </p>
+                            </>
+                          )}
                         </div>
                       </div>
-                      {logoPreview && (
-                        <div className="mt-2">
-                          <img
-                            src={logoPreview}
-                            alt="Logo preview"
-                            className="max-w-[200px] max-h-[100px] border border-gray-300 dark:border-dark-border rounded-lg object-contain bg-gray-50 dark:bg-primary-dark-light p-2"
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
                   <div className="div2 w-full flex flex-col gap-4">
                     <label
                       htmlFor="appLogo3"
-                      className="block text-sm font-medium text-main dark:text-white "
+                      className="block text-sm font-medium text-main dark:text-white"
                     >
                       Light Mode
                     </label>
@@ -358,45 +400,51 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                         }`}
                         onDragOver={(e) => handleDragOver(e, 'logo')}
                         onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'lightMode1')}
                       >
                         <input
                           type="file"
                           id="appLogo3"
                           name="appLogo"
                           accept="image/*"
-                          onChange={handleLogoChange}
+                          onChange={(e) => handleLogoChange(e, 'lightMode1')}
                           className="hidden"
                         />
                         <div className="flex flex-col items-center gap-2">
-                          <img
-                            src="/icons/cloud-upload-alt.svg"
-                            alt="Upload"
-                            className="w-8 h-8 filter dark:invert opacity-60"
-                          />
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Drag & drop logo here or{" "}
-                            <label
-                              htmlFor="appLogo3"
-                              className="text-primary cursor-pointer hover:underline"
+                          {lightModeLogo1Preview ? (
+                            <div 
+                              className="w-full h-full cursor-pointer flex items-center justify-center"
+                              onClick={() => document.getElementById('appLogo3')?.click()}
                             >
-                              browse
-                            </label>
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            PNG, SVG up to 5MB
-                          </p>
+                              <img
+                                src={lightModeLogo1Preview}
+                                alt="Logo preview"
+                                className="w-32 h-32  dark:border-dark-border rounded-lg object-contain  dark:bg-primary-dark-light p-2"
+                              />
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                src="/icons/cloud-upload-alt.svg"
+                                alt="Upload"
+                                className="w-8 h-8 filter dark:invert opacity-60"
+                              />
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Drag & drop logo here or{" "}
+                                <label
+                                  htmlFor="appLogo3"
+                                  className="text-primary cursor-pointer hover:underline"
+                                >
+                                  browse
+                                </label>
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                PNG, SVG up to 5MB
+                              </p>
+                            </>
+                          )}
                         </div>
                       </div>
-                      {logoPreview && (
-                        <div className="mt-2">
-                          <img
-                            src={logoPreview}
-                            alt="Logo preview"
-                            className="max-w-[200px] max-h-[100px] border border-gray-300 dark:border-dark-border rounded-lg object-contain bg-gray-50 dark:bg-primary-dark-light p-2"
-                          />
-                        </div>
-                      )}
                     </div>
                     <div className="flex items-center gap-3">
                       <div
@@ -407,54 +455,61 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                         }`}
                         onDragOver={(e) => handleDragOver(e, 'logo')}
                         onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'lightMode2')}
                       >
                         <input
                           type="file"
                           id="appLogo4"
                           name="appLogo"
                           accept="image/*"
-                          onChange={handleLogoChange}
+                          onChange={(e) => handleLogoChange(e, 'lightMode2')}
                           className="hidden"
                         />
                         <div className="flex flex-col items-center gap-2">
-                          <img
-                            src="/icons/cloud-upload-alt.svg"
-                            alt="Upload"
-                            className="w-8 h-8 filter dark:invert opacity-60"
-                          />
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Drag & drop logo here or{" "}
-                            <label
-                              htmlFor="appLogo4"
-                              className="text-primary cursor-pointer hover:underline"
+                          {lightModeLogo2Preview ? (
+                            <div 
+                              className="w-full h-full cursor-pointer flex items-center justify-center"
+                              onClick={() => document.getElementById('appLogo4')?.click()}
                             >
-                              browse
-                            </label>
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            PNG,  SVG up to 5MB
-                          </p>
+                              <img
+                                src={lightModeLogo2Preview}
+                                alt="Logo preview"
+                                className="w-32 h-32  dark:border-dark-border rounded-lg object-contain dark:bg-primary-dark-light p-2"
+                              />
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                src="/icons/cloud-upload-alt.svg"
+                                alt="Upload"
+                                className="w-8 h-8 filter dark:invert opacity-60"
+                              />
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Drag & drop logo here or{" "}
+                                <label
+                                  htmlFor="appLogo4"
+                                  className="text-primary cursor-pointer hover:underline"
+                                >
+                                  browse
+                                </label>
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                PNG, SVG up to 5MB
+                              </p>
+                            </>
+                          )}
                         </div>
                       </div>
-                      {logoPreview && (
-                        <div className="mt-2">
-                          <img
-                            src={logoPreview}
-                            alt="Logo preview"
-                            className="max-w-[200px] max-h-[100px] border border-gray-300 dark:border-dark-border rounded-lg object-contain bg-gray-50 dark:bg-primary-dark-light p-2"
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
-                {/* Favicon Section */}
-                <div className="div1 flex justify-between w-full gap-4 ">
+                
+                {/* Favicon Section - Right Side */}
+                <div className="div1 flex justify-between w-full gap-4">
                   <div className="div2 w-full flex flex-col gap-4">
                     <label
                       htmlFor="appFavicon"
-                      className="block text-sm font-medium text-main dark:text-white "
+                      className="block text-sm font-medium text-main dark:text-white"
                     >
                       Favicon
                     </label>
@@ -478,34 +533,40 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                           className="hidden"
                         />
                         <div className="flex flex-col items-center gap-2">
-                          <img
-                            src="/icons/cloud-upload-alt.svg"
-                            alt="Upload"
-                            className="w-6 h-6 filter dark:invert opacity-60"
-                          />
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            Drag & drop favicon here or{" "}
-                            <label
-                              htmlFor="appFavicon"
-                              className="text-primary cursor-pointer hover:underline"
+                          {faviconPreview ? (
+                            <div 
+                              className="w-full h-full cursor-pointer flex items-center justify-center"
+                              onClick={() => document.getElementById('appFavicon')?.click()}
                             >
-                              browse
-                            </label>
-                          </p>
-                          <p className="text-xs text-gray-500 dark:text-gray-400">
-                            ICO, PNG up to 1MB
-                          </p>
+                              <img
+                                src={faviconPreview}
+                                alt="Favicon preview"
+                                className="w-24 h-24 dark:border-dark-border rounded object-contain dark:bg-primary-dark-light p-1"
+                              />
+                            </div>
+                          ) : (
+                            <>
+                              <img
+                                src="/icons/cloud-upload-alt.svg"
+                                alt="Upload"
+                                className="w-6 h-6 filter dark:invert opacity-60"
+                              />
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                Drag & drop favicon here or{" "}
+                                <label
+                                  htmlFor="appFavicon"
+                                  className="text-primary cursor-pointer hover:underline"
+                                >
+                                  browse
+                                </label>
+                              </p>
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                ICO, PNG up to 1MB
+                              </p>
+                            </>
+                          )}
                         </div>
                       </div>
-                      {faviconPreview && (
-                        <div className="mt-2">
-                          <img
-                            src={faviconPreview}
-                            alt="Favicon preview"
-                            className="w-8 h-8 border border-gray-300 dark:border-dark-border rounded object-contain bg-gray-50 dark:bg-primary-dark-light p-1"
-                          />
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -515,327 +576,208 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
             {/* Primary Color Section */}
             <div className="p-4 border border-primary-border rounded-xl">
               <div className="mb-4 flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-primary">Branding Colors</h3>
+                <h3 className="text-sm font-semibold text-primary">Brand Colors</h3>
                 <div className="flex items-center justify-between mt-2">
                   <TimeRangeSelector
                     availableTimeRanges={["brand", "custom"]}
                     selectedTimeRange={colorMode}
                     handleTimeRangeChange={setColorMode}
                     timeRangeLabels={{
-                      brand: "Brand Colors",
-                      custom: "Custom Colors"
+                      brand: "Default",
+                      custom: "Custom"
                     }}
                   />
                 </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-main dark:text-white mb-2">
-                  Primary Color <span className="text-error">*</span>
-                </label>
+            <div>
                 
                 {colorMode === "brand" ? (
-                  <div className="flex gap-3 flex-wrap mt-2 p-4 bg-gray-50 dark:bg-primary-dark-light rounded-lg border border-gray-200 dark:border-dark-border">
-                    {colorOptions.map((option) => (
-                      <label
-                        key={option.value}
-                        className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white dark:hover:bg-primary-dark transition-colors"
-                      >
-                        <input
-                          type="radio"
-                          name="primaryColor"
-                          value={option.value}
-                          checked={formData.primaryColor === option.value}
-                          onChange={onInputChange}
-                          className="sr-only"
-                        />
-                        <div
-                          className={`w-10 h-10 rounded-full border-3 transition-all ${
-                            formData.primaryColor === option.value
-                              ? "border-main dark:border-white ring-2 ring-primary"
-                              : "border-gray-300 dark:border-dark-border"
-                          }`}
-                          style={{ backgroundColor: option.color }}
-                          title={option.label}
-                        />
-                      </label>
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <ColorPicker
+                    label="Primary Color"
+                      name="primaryColor"
+                    value={formData.primaryColor || "#0066cc"}
+                    onChange={onInputChange}
+                    options={colorOptions}
+                    required={true}
+                    disabled={true}
+                  />
+                    <ColorPicker
+                      label="Secondary Color"
+                      name="secondaryColor"
+                      value={formData.secondaryColor || "#55b56c"}
+                      onChange={onInputChange}
+                      options={colorOptions}
+                      required={false}
+                      disabled={true}
+                    />
                   </div>
-                ) : (
-                  <div className="space-y-4 p-4 bg-gray-50 dark:bg-primary-dark-light rounded-lg border border-gray-200 dark:border-dark-border">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Primary Color
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="color"
-                            name="customPrimaryColor"
-                            value={formData.customPrimaryColor || "#163b7c"}
-                            onChange={onInputChange}
-                            className="w-12 h-10 rounded border border-gray-300 dark:border-dark-border cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            name="customPrimaryColor"
-                            value={formData.customPrimaryColor || "#163b7c"}
-                            onChange={onInputChange}
-                            placeholder="#163b7c"
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg bg-white dark:bg-primary-dark text-main dark:text-white"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Secondary Color
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="color"
-                            name="customSecondaryColor"
-                            value={formData.customSecondaryColor || "#55b56c"}
-                            onChange={onInputChange}
-                            className="w-12 h-10 rounded border border-gray-300 dark:border-dark-border cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            name="customSecondaryColor"
-                            value={formData.customSecondaryColor || "#55b56c"}
-                            onChange={onInputChange}
-                            placeholder="#55b56c"
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg bg-white dark:bg-primary-dark text-main dark:text-white"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
+                    {/* Primary Colors */}
+                    <ColorPicker
+                      label="Primary Color"
+                      name="customPrimaryColor"
+                      value={formData.customPrimaryColor || "#163b7c"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#163b7c", label: "Primary Blue", color: "#163b7c" },
+                        { value: "#041328", label: "Primary Dark", color: "#041328" },
+                        { value: "#005c8e", label: "Primary Light", color: "#005c8e" },
+                        { value: "#202d59", label: "Primary Deep", color: "#202d59" },
+                        { value: "#dce7ec", label: "Primary BG Light", color: "#dce7ec" },
+                        { value: "#f5f8fc", label: "Primary Lightest", color: "#f5f8fc" }
+                      ]}
+                    />
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Warning Color
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="color"
-                            name="customWarningColor"
-                            value={formData.customWarningColor || "#ed8c22"}
-                            onChange={onInputChange}
-                            className="w-12 h-10 rounded border border-gray-300 dark:border-dark-border cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            name="customWarningColor"
-                            value={formData.customWarningColor || "#ed8c22"}
-                            onChange={onInputChange}
-                            placeholder="#ed8c22"
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg bg-white dark:bg-primary-dark text-main dark:text-white"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Danger Color
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="color"
-                            name="customDangerColor"
-                            value={formData.customDangerColor || "#dc272c"}
-                            onChange={onInputChange}
-                            className="w-12 h-10 rounded border border-gray-300 dark:border-dark-border cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            name="customDangerColor"
-                            value={formData.customDangerColor || "#dc272c"}
-                            onChange={onInputChange}
-                            placeholder="#dc272c"
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg bg-white dark:bg-primary-dark text-main dark:text-white"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                    {/* Secondary Colors */}
+                    <ColorPicker
+                      label="Secondary Color"
+                      name="customSecondaryColor"
+                      value={formData.customSecondaryColor || "#55b56c"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#55b56c", label: "Primary Green", color: "#55b56c" },
+                        { value: "#bbe1c4", label: "Secondary Light", color: "#bbe1c4" },
+                        { value: "#029447", label: "Positive Green", color: "#029447" },
+                        { value: "#6bc47a", label: "Light Green", color: "#6bc47a" },
+                        { value: "#81d38a", label: "Bright Green", color: "#81d38a" },
+                        { value: "#97e298", label: "Mint Green", color: "#97e298" }
+                      ]}
+                    />
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Accent Color
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="color"
-                            name="customAccentColor"
-                            value={formData.customAccentColor || "#00d1b2"}
-                            onChange={onInputChange}
-                            className="w-12 h-10 rounded border border-gray-300 dark:border-dark-border cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            name="customAccentColor"
-                            value={formData.customAccentColor || "#00d1b2"}
-                            onChange={onInputChange}
-                            placeholder="#00d1b2"
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg bg-white dark:bg-primary-dark text-main dark:text-white"
-                          />
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                          Neutral Color
-                        </label>
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="color"
-                            name="customNeutralColor"
-                            value={formData.customNeutralColor || "#7e7e7e"}
-                            onChange={onInputChange}
-                            className="w-12 h-10 rounded border border-gray-300 dark:border-dark-border cursor-pointer"
-                          />
-                          <input
-                            type="text"
-                            name="customNeutralColor"
-                            value={formData.customNeutralColor || "#7e7e7e"}
-                            onChange={onInputChange}
-                            placeholder="#7e7e7e"
-                            className="flex-1 px-3 py-2 border border-gray-300 dark:border-dark-border rounded-lg bg-white dark:bg-primary-dark text-main dark:text-white"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    {/* Text Primary Colors */}
+                    <ColorPicker
+                      label="Text Primary Color"
+                      name="customTextPrimaryColor"
+                      value={formData.customTextPrimaryColor || "#262626"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#262626", label: "Text Primary", color: "#262626" },
+                        { value: "#7e7e7e", label: "Text Secondary", color: "#7e7e7e" },
+                        { value: "#476189", label: "Text Tertiary", color: "#476189" },
+                        { value: "#091b3b", label: "Text Quaternary", color: "#091b3b" },
+                        { value: "#3c3c3c", label: "Dark Text", color: "#3c3c3c" },
+                        { value: "#a0a0a0", label: "Light Text", color: "#a0a0a0" }
+                      ]}
+                    />
+                    
+                    {/* Text Secondary Colors */}
+                    <ColorPicker
+                      label="Text Secondary Color"
+                      name="customTextSecondaryColor"
+                      value={formData.customTextSecondaryColor || "#7e7e7e"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#7e7e7e", label: "Text Secondary", color: "#7e7e7e" },
+                        { value: "#476189", label: "Text Tertiary", color: "#476189" },
+                        { value: "#a0a0a0", label: "Light Text", color: "#a0a0a0" },
+                        { value: "#3c3c3c", label: "Dark Text", color: "#3c3c3c" },
+                        { value: "#262626", label: "Text Primary", color: "#262626" },
+                        { value: "#091b3b", label: "Text Quaternary", color: "#091b3b" }
+                      ]}
+                    />
+                    
+                    {/* Background Colors */}
+                    <ColorPicker
+                      label="Background Color"
+                      name="customBackgroundColor"
+                      value={formData.customBackgroundColor || "#f5f8fc"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#f5f8fc", label: "Background Secondary", color: "#f5f8fc" },
+                        { value: "#ffffff", label: "Surface White", color: "#ffffff" },
+                        { value: "#e9efff", label: "Primary Border", color: "#e9efff" },
+                        { value: "#091b3b", label: "Dark Border", color: "#091b3b" },
+                        { value: "#dce7ec", label: "Primary BG Light", color: "#dce7ec" },
+                        { value: "#f0f0f0", label: "Light Background", color: "#f0f0f0" }
+                      ]}
+                    />
+                    
+                    {/* Border Colors */}
+                    <ColorPicker
+                      label="Border Color"
+                      name="customBorderColor"
+                      value={formData.customBorderColor || "#e9efff"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#e9efff", label: "Primary Border", color: "#e9efff" },
+                        { value: "#091b3b", label: "Dark Border", color: "#091b3b" },
+                        { value: "#dce7ec", label: "Light Border", color: "#dce7ec" },
+                        { value: "#aebdd1", label: "Neutral Border", color: "#aebdd1" },
+                        { value: "#c8c8c8", label: "Gray Border", color: "#c8c8c8" },
+                        { value: "#e0e0e0", label: "Light Gray Border", color: "#e0e0e0" }
+                      ]}
+                    />
+                    
+                    {/* Shadow Colors */}
+                    <ColorPicker
+                      label="Shadow Color"
+                      name="customShadowColor"
+                      value={formData.customShadowColor || "#dce4ef"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#dce4ef", label: "Shadow Primary", color: "#dce4ef" },
+                        { value: "#dce4ef", label: "Shadow Secondary", color: "#dce4ef" },
+                        { value: "#e9efff", label: "Light Shadow", color: "#e9efff" },
+                        { value: "#c8d4e0", label: "Dark Shadow", color: "#c8d4e0" },
+                        { value: "#f0f4f8", label: "Very Light Shadow", color: "#f0f4f8" },
+                        { value: "#b8c4d0", label: "Medium Shadow", color: "#b8c4d0" }
+                      ]}
+                    />
+                    
+                    {/* Icon Colors */}
+                    <ColorPicker
+                      label="Icon Color"
+                      name="customIconColor"
+                      value={formData.customIconColor || "#476189"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#476189", label: "Subinfo Color", color: "#476189" },
+                        { value: "#163b7c", label: "Primary Icon", color: "#163b7c" },
+                        { value: "#55b56c", label: "Success Icon", color: "#55b56c" },
+                        { value: "#ed8c22", label: "Warning Icon", color: "#ed8c22" },
+                        { value: "#dc272c", label: "Danger Icon", color: "#dc272c" },
+                        { value: "#00d1b2", label: "Accent Icon", color: "#00d1b2" }
+                      ]}
+                    />
+                    
+                    {/* Gradient Colors */}
+                    <ColorPicker
+                      label="Gradient Color"
+                      name="customGradientColor"
+                      value={formData.customGradientColor || "#163b7c"}
+                      onChange={onInputChange}
+                      options={[
+                        { value: "#163b7c", label: "Primary Blue", color: "#163b7c" },
+                        { value: "#55b56c", label: "Primary Green", color: "#55b56c" },
+                        { value: "#ed8c22", label: "Primary Orange", color: "#ed8c22" },
+                        { value: "#dc272c", label: "Primary Red", color: "#dc272c" },
+                        { value: "#00d1b2", label: "Primary Teal", color: "#00d1b2" },
+                        { value: "#7e7e7e", label: "Primary Gray", color: "#7e7e7e" }
+                      ]}
+                    />
+              </div>
                 )}
                 
-                {allErrors.primaryColor && (
-                  <span className="text-error text-xs mt-1 block">
-                    {allErrors.primaryColor}
-                  </span>
-                )}
+              {/* {allErrors.primaryColor && (
+                <span className="text-error text-xs mt-1 block">
+                  {allErrors.primaryColor}
+                </span>
+              )} */}
               </div>
             </div>
 
-            {/* App Description Section */}
-            <div className="p-4 border border-primary-border rounded-xl">
-              <div className="mb-4">
-                <h3 className="text-sm font-semibold text-primary">App Description</h3>
-              </div>
-              <textarea
-                id="appDescription"
-                name="appDescription"
-                value={formData.appDescription}
-                onChange={onInputChange}
-                placeholder="Describe your application..."
-                rows={4}
-                className="w-full px-4 py-3 border border-gray-300 dark:border-dark-border rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-white dark:bg-primary-dark text-main dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
-              />
-            </div>
 
-            {/* Contact Information Section */}
-            <div className="p-4 border border-primary-border rounded-xl">
-              <div className="mb-4">
-                <h3 className="text-sm font-semibold text-primary">Contact Information</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <FormInput
-                  input={{
-                    name: "contactEmail",
-                    type: "email",
-                    label: "Contact Email",
-                    placeholder: "contact@company.com",
-                  }}
-                  value={formData.contactEmail}
-                  error={undefined}
-                  showError={false}
-                  disabled={false}
-                  onInputChange={handleFormInputChange}
-                  onInputBlur={handleFormInputBlur}
-                  fileInputRefs={fileInputRefs}
-                />
-                <FormInput
-                  input={{
-                    name: "contactPhone",
-                    type: "tel",
-                    label: "Contact Phone",
-                    placeholder: "+1-234-567-8900",
-                  }}
-                  value={formData.contactPhone}
-                  error={undefined}
-                  showError={false}
-                  disabled={false}
-                  onInputChange={handleFormInputChange}
-                  onInputBlur={handleFormInputBlur}
-                  fileInputRefs={fileInputRefs}
-                />
-              </div>
-            </div>
-
-            {/* Preferences Section */}
-            <div className="p-4 border border-primary-border rounded-xl">
-              <div className="mb-4">
-                <h3 className="text-sm font-semibold text-primary">Preferences</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <Dropdown
-                    name="timezone"
-                    value={formData.timezone}
-                    onChange={onInputChange}
-                    options={timezoneOptions}
-                    placeholder="Select timezone"
-                    required
-                    error={allErrors.timezone}
-                  />
-                </div>
-                <div>
-                  <Dropdown
-                    name="currency"
-                    value={formData.currency}
-                    onChange={onInputChange}
-                    options={currencyOptions}
-                    placeholder="Select currency"
-                    required
-                    error={allErrors.currency}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                <div className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-primary-dark-light rounded-lg border border-gray-200 dark:border-dark-border">
-                  <input
-                    type="checkbox"
-                    name="enableDarkMode"
-                    checked={formData.enableDarkMode}
-                    onChange={onInputChange}
-                    className="w-5 h-5 accent-primary border-gray-300 dark:border-dark-border mt-0.5"
-                  />
-                  <div>
-                    <label className="text-sm font-medium text-main dark:text-white">
-                      Enable Dark Mode
-                    </label>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                      Users can switch between light and dark themes
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
 
             <div className="flex justify-between items-center">
               {currentStep > 1 && (
-                <span
-                  className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                <Button 
+                  label="Previous" 
+                  type="button" 
+                  variant="secondary" 
                   onClick={onBack}
-                >
-                  <img
-                    src={"/icons/arrow-back.svg"}
-                    alt="arrow-left"
-                    className="w-5 h-5 filter dark:invert"
-                  />
-                  <span className="text-neutral dark:text-gray-300 font-medium">
-                    Previous
-                  </span>
-                </span>
+                />
               )}
               <div className="ml-auto">
                 <Button label="Next" type="submit" variant="primary" />

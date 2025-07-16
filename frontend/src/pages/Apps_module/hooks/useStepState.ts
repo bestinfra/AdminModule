@@ -92,7 +92,18 @@ export const useStepState = () => {
     let newValue = value;
     if (type === 'checkbox') newValue = checked;
     
-    setBrandingData((prev) => ({ ...prev, [name]: newValue }));
+    console.log('useStepState - Branding Input Change:', { 
+      name, 
+      value: newValue, 
+      type: typeof newValue,
+      previousData: brandingData[name as keyof BrandingData]
+    });
+    
+    setBrandingData((prev) => {
+      const updatedData = { ...prev, [name]: newValue };
+      console.log(' useStepState - Updated Branding Data:', updatedData);
+      return updatedData;
+    });
     clearFieldError(brandingErrors, name as keyof BrandingData, setBrandingErrors);
   };
 
