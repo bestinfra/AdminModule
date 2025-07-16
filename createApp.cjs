@@ -40,6 +40,7 @@ function createAppProject(formData) {
         companyName,
         companyWebsite,
         primaryColor,
+        secondaryColor,
         timezone,
         currency,
         modules,
@@ -1620,7 +1621,8 @@ export const Theme = ({ children }) => {
     const { theme, updateTheme } = useTheme();
     useEffect(() => {
         updateTheme({
-            primary: '#000000',
+            primary: '${primaryColor || '#3B82F6'}',
+            secondary: '${secondaryColor || '#10B981'}'
         });
     }, []);
 

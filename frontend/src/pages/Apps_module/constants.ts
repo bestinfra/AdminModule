@@ -40,6 +40,7 @@ export const INITIAL_BRANDING_DATA = {
   appLogo: null,
   appFavicon: null,
   primaryColor: '',
+  secondaryColor: '',
   appDescription: '',
   contactEmail: '',
   contactPhone: '',

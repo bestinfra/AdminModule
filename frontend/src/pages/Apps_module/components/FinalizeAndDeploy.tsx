@@ -89,6 +89,18 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </span>
                   ) : 'Not specified'}
                 </p>
+                <p>
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Secondary Color:</span> 
+                  {formData.secondaryColor ? (
+                    <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                      <div 
+                        className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                        style={{ backgroundColor: formData.secondaryColor }}
+                      />
+                      {formData.secondaryColor}
+                    </span>
+                  ) : 'Not specified'}
+                </p>
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Timezone:</span> {formData.timezone || 'Not specified'}</p>
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Currency:</span> {formData.currency || 'Not specified'}</p>
               </div>
