@@ -260,30 +260,30 @@ const TicketView: React.FC = () => {
     const getStatusBadgeClasses = (status: string): string => {
         switch (status?.toLowerCase()) {
             case 'open':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-warning-alt text-warning';
             case 'in progress':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-accent-light text-accent';
             case 'resolved':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary-light text-secondary';
             case 'closed':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-neutral-light text-neutral';
             default:
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-neutral-light text-neutral';
         }
     };
 
     const getPriorityBadgeClasses = (priority: string): string => {
         switch (priority?.toLowerCase()) {
             case 'low':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary-light text-secondary';
             case 'medium':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-warning-alt text-warning';
             case 'high':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-danger-light text-danger';
             case 'critical':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-200 text-red-900 font-semibold';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-danger text-white font-semibold';
             default:
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800';
+                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-neutral-light text-neutral';
         }
     };
 
@@ -412,9 +412,9 @@ const TicketView: React.FC = () => {
             <div className="bg-white rounded-lg shadow p-6 h-fit">
                 <div className="flex justify-between items-start mb-6">
                     <div>
-                        <h2 className="text-xl font-semibold text-gray-900 mb-2">Issue Details</h2>
+                        <h2 className="text-xl font-semibold text-neutral-darker mb-2">Issue Details</h2>
                         <div className="flex items-center space-x-3">
-                            <span className="text-sm text-gray-500">Priority:</span>
+                            <span className="text-sm text-neutral">Priority:</span>
                             <span className={getPriorityBadgeClasses(ticket?.priority || '')}>
                                 {ticket?.priority || 'N/A'}
                             </span>
@@ -423,18 +423,18 @@ const TicketView: React.FC = () => {
                 </div>
 
                 <div className="mb-6">
-                    <h3 className="text-lg font-medium text-gray-900 mb-3">Issue</h3>
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 inline-block">
-                        <span className="text-blue-700 text-sm font-medium">{ticket?.category || 'Meter Issue'}</span>
+                    <h3 className="text-lg font-medium text-neutral-darker mb-3">Issue</h3>
+                    <div className="bg-accent-light border border-accent rounded-lg p-3 inline-block">
+                        <span className="text-accent text-sm font-medium">{ticket?.category || 'Meter Issue'}</span>
                     </div>
                 </div>
 
                 <div className="space-y-4">
-                    <h4 className="text-lg font-medium text-gray-900">
+                    <h4 className="text-lg font-medium text-neutral-darker">
                         {ticket?.title || 'No Subject'}
                     </h4>
                     <div className="prose prose-sm max-w-none">
-                        <p className="text-gray-600 leading-relaxed">
+                        <p className="text-neutral leading-relaxed">
                             {ticket?.description || 'No description provided.'}
                         </p>
                     </div>
@@ -449,7 +449,7 @@ const TicketView: React.FC = () => {
         component: (
             <div className="bg-white rounded-lg shadow p-6 h-fit">
                 <div className="flex justify-between items-start mb-6">
-                    <h2 className="text-xl font-semibold text-gray-900">Ticket Information</h2>
+                    <h2 className="text-xl font-semibold text-neutral-darker">Ticket Information</h2>
                     <span className={getStatusBadgeClasses(ticket?.status || '')}>
                         {ticket?.status || 'N/A'}
                     </span>
@@ -458,32 +458,32 @@ const TicketView: React.FC = () => {
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
                         <div>
-                            <span className="text-gray-500">Ticket ID</span>
-                            <p className="font-medium text-gray-900">#{ticket?.ticket_id || id || 'N/A'}</p>
+                            <span className="text-neutral">Ticket ID</span>
+                            <p className="font-medium text-neutral-darker">#{ticket?.ticket_id || id || 'N/A'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Ticket Type</span>
-                            <p className="font-medium text-gray-900">{ticket?.category || 'Meter Issue'}</p>
+                            <span className="text-neutral">Ticket Type</span>
+                            <p className="font-medium text-neutral-darker">{ticket?.category || 'Meter Issue'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Source</span>
-                            <p className="font-medium text-gray-900">N/A</p>
+                            <span className="text-neutral">Source</span>
+                            <p className="font-medium text-neutral-darker">N/A</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Created By</span>
-                            <p className="font-medium text-gray-900">{ticket?.UnitName || 'N/A'}</p>
+                            <span className="text-neutral">Created By</span>
+                            <p className="font-medium text-neutral-darker">{ticket?.UnitName || 'N/A'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Created On</span>
-                            <p className="font-medium text-gray-900">{formatDate(ticket?.created_at || '')}</p>
+                            <span className="text-neutral">Created On</span>
+                            <p className="font-medium text-neutral-darker">{formatDate(ticket?.created_at || '')}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Last Updated</span>
-                            <p className="font-medium text-gray-900">{formatDate(ticket?.updated_at || '')}</p>
+                            <span className="text-neutral">Last Updated</span>
+                            <p className="font-medium text-neutral-darker">{formatDate(ticket?.updated_at || '')}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Assigned To</span>
-                            <p className="font-medium text-gray-900">{ticket?.assigned_to || 'BI - Tech Team'}</p>
+                            <span className="text-neutral">Assigned To</span>
+                            <p className="font-medium text-neutral-darker">{ticket?.assigned_to || 'BI - Tech Team'}</p>
                         </div>
                     </div>
                 </div>
@@ -496,41 +496,41 @@ const TicketView: React.FC = () => {
         id: 'unit-details',
         component: (
             <div className="bg-white rounded-lg shadow p-6 h-fit">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Unit Details</h2>
+                <h2 className="text-xl font-semibold text-neutral-darker mb-6">Unit Details</h2>
                 
                 <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
                         <div>
-                            <span className="text-gray-500">Unit Name</span>
-                            <p className="font-medium text-gray-900">{toCamelCase(ticket?.UnitName || 'N/A')}</p>
+                            <span className="text-neutral">Unit Name</span>
+                            <p className="font-medium text-neutral-darker">{toCamelCase(ticket?.UnitName || 'N/A')}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Unit Number</span>
-                            <p className="font-medium text-gray-900">N/A</p>
+                            <span className="text-neutral">Unit Number</span>
+                            <p className="font-medium text-neutral-darker">N/A</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">UID</span>
-                            <p className="font-medium text-gray-900 font-mono text-xs">{ticket?.uid || 'BI25GMRA001'}</p>
+                            <span className="text-neutral">UID</span>
+                            <p className="font-medium text-neutral-darker font-mono text-xs">{ticket?.uid || 'BI25GMRA001'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Meter ID</span>
-                            <p className="font-medium text-gray-900 font-mono text-xs">{ticket?.meter_no || 'A9211434'}</p>
+                            <span className="text-neutral">Meter ID</span>
+                            <p className="font-medium text-neutral-darker font-mono text-xs">{ticket?.meter_no || 'A9211434'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Location</span>
-                            <p className="font-medium text-gray-900">{ticket?.hierarchy_name || 'GMR'}</p>
+                            <span className="text-neutral">Location</span>
+                            <p className="font-medium text-neutral-darker">{ticket?.hierarchy_name || 'GMR'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Connection Type</span>
-                            <p className="font-medium text-gray-900">{ticket?.connection_type || 'NA'}</p>
+                            <span className="text-neutral">Connection Type</span>
+                            <p className="font-medium text-neutral-darker">{ticket?.connection_type || 'NA'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Email</span>
-                            <p className="font-medium text-blue-600">{ticket?.Email_Id || 'ravin1109@gmail.com'}</p>
+                            <span className="text-neutral">Email</span>
+                            <p className="font-medium text-accent">{ticket?.Email_Id || 'ravin1109@gmail.com'}</p>
                         </div>
                         <div>
-                            <span className="text-gray-500">Mobile</span>
-                            <p className="font-medium text-gray-900">{ticket?.MobileNumber || '9989923312'}</p>
+                            <span className="text-neutral">Mobile</span>
+                            <p className="font-medium text-neutral-darker">{ticket?.MobileNumber || '9989923312'}</p>
                         </div>
                     </div>
                 </div>
@@ -543,11 +543,11 @@ const TicketView: React.FC = () => {
         id: 'activity-log',
         component: (
             <div className="bg-white rounded-lg shadow p-6 h-fit">
-                <h2 className="text-xl font-semibold text-gray-900 mb-6">Activity Log</h2>
+                <h2 className="text-xl font-semibold text-neutral-darker mb-6">Activity Log</h2>
                 
                 <div className="relative h-64 overflow-y-auto">
                     {!activities || activities.length === 0 ? (
-                        <div className="text-center py-4 text-gray-500">
+                        <div className="text-center py-4 text-neutral">
                             <p className="text-sm">No activity recorded yet.</p>
                         </div>
                     ) : (
@@ -557,22 +557,22 @@ const TicketView: React.FC = () => {
                                 .map((activity) => (
                                     <div key={`activity-${activity.id}`} className="flex items-start justify-between py-2">
                                         <div className="flex-1">
-                                            <p className="text-sm font-medium text-gray-900 mb-1">
+                                            <p className="text-sm font-medium text-neutral-darker mb-1">
                                                 {activity.description}
                                             </p>
                                             {activity.status && (
                                                 <div className="flex items-center space-x-2">
-                                                    <span className="text-sm text-gray-600">Status:</span>
+                                                    <span className="text-sm text-neutral">Status:</span>
                                                     <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                                                        activity.status.toLowerCase() === 'open' ? 'bg-yellow-100 text-yellow-800' :
-                                                        'bg-gray-100 text-gray-800'
+                                                        activity.status.toLowerCase() === 'open' ? 'bg-warning-alt text-warning' :
+                                                        'bg-neutral-light text-neutral'
                                                     }`}>
                                                         {activity.status}
                                                     </span>
                                                 </div>
                                             )}
                                         </div>
-                                        <div className="text-right text-xs text-gray-500">
+                                        <div className="text-right text-xs text-neutral">
                                             {formatDate(activity.timestamp)}
                                         </div>
                                     </div>
@@ -589,25 +589,25 @@ const TicketView: React.FC = () => {
         id: 'conversation',
         component: (
             <div className="bg-white rounded-lg shadow p-6 h-fit">
-                <div className="bg-gray-100 rounded-lg p-4 mb-4">
+                <div className="bg-primary-lightest rounded-lg p-4 mb-4">
                     <div className="flex items-center space-x-3 mb-3">
-                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-                            <svg className="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                        <div className="w-8 h-8 bg-neutral-light rounded-full flex items-center justify-center">
+                            <svg className="w-4 h-4 text-neutral" fill="currentColor" viewBox="0 0 20 20">
                                 <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                             </svg>
                         </div>
                         <div>
-                            <p className="font-medium text-gray-900">{ticket?.UnitName || 'Airborne General Store'}</p>
-                            <p className="text-xs text-gray-500">{formatDate(ticket?.created_at || '2024-01-15T10:30:00Z')}</p>
+                            <p className="font-medium text-neutral-darker">{ticket?.UnitName || 'Airborne General Store'}</p>
+                            <p className="text-xs text-neutral">{formatDate(ticket?.created_at || '2024-01-15T10:30:00Z')}</p>
                         </div>
                     </div>
-                    <p className="text-sm text-gray-700">Issue</p>
+                    <p className="text-sm text-neutral">Issue</p>
                 </div>
                 
                 {/* Chat input */}
-                <div className="bg-blue-600 rounded-lg p-4">
+                <div className="bg-accent rounded-lg p-4">
                     <div className="flex items-center space-x-2">
-                        <button className="p-2 text-white hover:bg-blue-700 rounded-lg">
+                        <button className="p-2 text-white hover:bg-accent-light rounded-lg">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
                             </svg>
@@ -617,7 +617,7 @@ const TicketView: React.FC = () => {
                             value={chatMessage}
                             onChange={(e) => setChatMessage(e.target.value)}
                             placeholder="Type your message here..."
-                            className="flex-1 px-4 py-3 bg-white border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300 text-gray-900 placeholder-gray-500"
+                            className="flex-1 px-4 py-3 bg-white border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent text-neutral-darker placeholder-neutral"
                             onKeyPress={(e) => {
                                 if (e.key === 'Enter' && !e.shiftKey) {
                                     e.preventDefault();
@@ -629,7 +629,7 @@ const TicketView: React.FC = () => {
                         <button
                             onClick={handleSendMessage}
                             disabled={!chatMessage.trim() || isSubmittingResponse}
-                            className="px-4 py-3 bg-blue-700 text-white rounded-lg hover:bg-blue-800 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                            className="px-4 py-3 bg-accent-light text-white rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                         >
                             Send
                         </button>
@@ -650,16 +650,16 @@ const TicketView: React.FC = () => {
                     {
                         id: 'error',
                         component: (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                            <div className="bg-danger-light border border-danger rounded-lg p-6">
                                 <div className="flex items-center">
                                     <div className="flex-shrink-0">
-                                        <svg className="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <svg className="h-5 w-5 text-danger" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                                         </svg>
                                     </div>
                                     <div className="ml-3">
-                                        <h3 className="text-sm font-medium text-red-800">Error Loading Ticket</h3>
-                                        <p className="text-sm text-red-700 mt-1">{error}</p>
+                                        <h3 className="text-sm font-medium text-danger">Error Loading Ticket</h3>
+                                        <p className="text-sm text-danger mt-1">{error}</p>
                                         <div className="mt-4">
                                             <Button
                                                 label="Go Back"
@@ -690,9 +690,9 @@ const TicketView: React.FC = () => {
                         component: (
                             <div className="bg-white rounded-lg shadow p-6">
                                 <div className="animate-pulse space-y-4">
-                                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-                                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-                                    <div className="h-4 bg-gray-200 rounded w-5/6"></div>
+                                    <div className="h-4 bg-neutral-light rounded w-3/4"></div>
+                                    <div className="h-4 bg-neutral-light rounded w-1/2"></div>
+                                    <div className="h-4 bg-neutral-light rounded w-5/6"></div>
                                 </div>
                             </div>
                         ),
@@ -713,16 +713,16 @@ const TicketView: React.FC = () => {
                     {
                         id: 'not-found',
                         component: (
-                            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+                            <div className="bg-warning-alt border border-warning rounded-lg p-6">
                                 <div className="flex items-center">
                                     <div className="flex-shrink-0">
-                                        <svg className="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <svg className="h-5 w-5 text-warning" viewBox="0 0 20 20" fill="currentColor">
                                             <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                                         </svg>
                                     </div>
                                     <div className="ml-3">
-                                        <h3 className="text-sm font-medium text-yellow-800">Ticket Not Found</h3>
-                                        <p className="text-sm text-yellow-700 mt-1">
+                                        <h3 className="text-sm font-medium text-warning">Ticket Not Found</h3>
+                                        <p className="text-sm text-warning mt-1">
                                             The ticket you're looking for doesn't exist or may have been removed.
                                         </p>
                                         <div className="mt-4">

@@ -439,13 +439,13 @@ const ConnectDisconnect: React.FC = () => {
           <div className="flex items-center gap-2">
             <div className={`w-3 h-3 rounded-full ${
               isCommunicating 
-                ? 'bg-green-500 animate-pulse' 
-                : 'bg-red-500'
+                ? 'bg-secondary animate-pulse' 
+                : 'bg-danger'
             }`}></div>
             <span className={`text-sm font-medium ${
               isCommunicating 
-                ? 'text-green-700 dark:text-green-400' 
-                : 'text-red-700 dark:text-red-400'
+                ? 'text-positive' 
+                : 'text-danger'
             }`}>
               {isCommunicating ? 'Online' : 'Offline'}
             </span>
@@ -488,14 +488,14 @@ const ConnectDisconnect: React.FC = () => {
       </div>
 
       {error && (
-        <div className="mb-4 p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg">
+        <div className="mb-4 p-4 bg-danger-light text-danger rounded-lg">
           <div className="flex items-center justify-between">
             <div>
               <span>{error}</span>
             </div>
             <button
               onClick={() => setError(null)}
-              className="text-red-700 dark:text-red-300 hover:text-red-900 dark:hover:text-red-100"
+              className="text-danger hover:text-danger-alt"
             >
               ×
             </button>
@@ -511,15 +511,15 @@ const ConnectDisconnect: React.FC = () => {
       )}
 
       {debugMode && (
-        <div className="mb-6 bg-gray-100 dark:bg-gray-800 rounded-lg p-4">
+        <div className="mb-6 bg-primary-lightest dark:bg-primary-dark-light rounded-lg p-4">
           <h3 className="text-lg font-semibold mb-4">🔧 Debug Panel</h3>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div>
               <h4 className="font-medium mb-2">API Logs</h4>
-              <div className="bg-black text-green-400 p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
+              <div className="bg-black text-secondary p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
                 {apiLogs.length === 0 ? (
-                  <div className="text-gray-500">No API calls yet...</div>
+                  <div className="text-neutral">No API calls yet...</div>
                 ) : (
                   apiLogs.map((log, index) => (
                     <div key={index} className="mb-1">
@@ -530,7 +530,7 @@ const ConnectDisconnect: React.FC = () => {
               </div>
               <button
                 onClick={() => setApiLogs([])}
-                className="mt-2 text-sm text-blue-600 hover:text-blue-800"
+                className="mt-2 text-sm text-primary hover:text-primary-dark"
               >
                 Clear Logs
               </button>
@@ -538,11 +538,11 @@ const ConnectDisconnect: React.FC = () => {
 
             <div>
               <h4 className="font-medium mb-2">Last API Response</h4>
-              <div className="bg-black text-yellow-400 p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
+              <div className="bg-black text-warning p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
                 {lastApiResponse ? (
                   <pre>{JSON.stringify(lastApiResponse, null, 2)}</pre>
                 ) : (
-                  <div className="text-gray-500">No API response yet...</div>
+                  <div className="text-neutral">No API response yet...</div>
                 )}
               </div>
             </div>
@@ -593,11 +593,11 @@ const ConnectDisconnect: React.FC = () => {
               />
             </div>
 
-            <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900 rounded-md">
-              <h5 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
+            <div className="mt-4 p-3 bg-warning-alt rounded-md">
+              <h5 className="font-medium text-warning mb-2">
                 🔍 Troubleshooting Tips
               </h5>
-              <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+              <ul className="text-sm text-warning space-y-1">
                 <li>
                   • If you see "Failed to fetch", it's likely a CORS or network
                   issue
@@ -861,7 +861,7 @@ const ConnectDisconnect: React.FC = () => {
           </div>
 
           {error && (
-            <div className="p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-md text-sm">
+            <div className="p-3 bg-danger-light text-danger rounded-md text-sm">
               {error}
             </div>
           )}
