@@ -3,79 +3,133 @@ import type { ReactNode } from 'react';
 
 interface ThemeContextType {
     theme: {
-        primary: string;
-        'primary-50': string;
-        'primary-100': string;
-        'primary-200': string;
-        'primary-300': string;
-        'primary-400': string;
-        'primary-500': string;
-        'primary-600': string;
-        'primary-700': string;
-        'primary-800': string;
-        'primary-900': string;
-        'primary-950': string;
-
-        secondary: string;
-        'secondary-50': string;
-        'secondary-100': string;
-        'secondary-200': string;
-        'secondary-300': string;
-        'secondary-400': string;
-        'secondary-500': string;
-        'secondary-600': string;
-        'secondary-700': string;
-        'secondary-800': string;
-        'secondary-900': string;
-        'secondary-950': string;
-
-        success: string;
-        warning: string;
-        error: string;
-        info: string;
-        muted: string;
-        default: string;
-        danger: string;
-        skeleton: string;
+        colorBorder: string;
+        colorDarkBorder: string;
+        colorBackgroundSecondary: string;
+        colorBrandBlue: string;
+        colorGrey: string;
+        colorAccent: string;
+        colorIconHover: string;
+        colorTextPrimary: string;
+        colorTextSecondary: string;
+        colorTextTertiary: string;
+        colorTextQuaternary: string;
+        colorPrimary: string;
+        colorPrimaryDark: string;
+        colorPrimaryLight: string;
+        colorPrimaryBg: string;
+        colorPrimaryDeep: string;
+        colorPrimaryDeepLight: string;
+        colorPrimaryBgLight: string;
+        colorPrimaryLightest: string;
+        colorPrimaryDarkLight: string;
+        colorSecondary: string;
+        colorSecondaryLight: string;
+        colorPositive: string;
+        colorWarning: string;
+        colorWarningAlt: string;
+        colorDanger: string;
+        colorDangerAlt: string;
+        colorDangerLight: string;
+        colorAccentLight: string;
+        colorNeutral: string;
+        colorNeutralDark: string;
+        colorNeutralDarker: string;
+        colorNeutralLight: string;
+        colorSurface: string;
+        colorInfo: string;
+        colorSubinfo: string;
+        colorPrimaryBorder: string;
+        colorDarkBorder2: string;
+        colorGradientPrimary: string;
+        colorGradientSecondary: string;
+        colorPrimaryTransparent: string;
+        colorTest: string;
+        colorCustomPrimary: string;
+        colorCustomSecondary: string;
+        colorCustomWarning: string;
+        colorCustomDanger: string;
+        colorCustomAccent: string;
+        colorCustomNeutral: string;
+        colorCustomSurface: string;
+        colorCustomPrimaryLight: string;
+        colorCustomSecondaryLight: string;
+        colorCustomWarningLight: string;
+        colorCustomDangerLight: string;
+        colorCustomAccentLight: string;
+        colorCustomNeutralLight: string;
+        colorCustomSurfaceLight: string;
+        colorShadowPrimary: string;
+        colorShadowSecondary: string;
+        colorStatIconGradient: string;
     };
     updateTheme: (newTheme: Partial<ThemeContextType['theme']>) => void;
 }
 
 const defaultTheme = {
-    primary: 'rgba(0, 51, 102, 1)',
-    'primary-50': 'rgba(240, 245, 250, 1)',
-    'primary-100': 'rgba(224, 235, 245, 1)',
-    'primary-200': 'rgba(192, 215, 235, 1)',
-    'primary-300': 'rgba(160, 195, 225, 1)',
-    'primary-400': 'rgba(128, 175, 215, 1)',
-    'primary-500': 'rgba(0, 51, 102, 1)',
-    'primary-600': 'rgba(0, 41, 82, 1)',
-    'primary-700': 'rgba(0, 31, 62, 1)',
-    'primary-800': 'rgba(0, 21, 42, 1)',
-    'primary-900': 'rgba(0, 11, 22, 1)',
-    'primary-950': 'rgba(0, 5, 10, 1)',
-
-    secondary: 'rgba(51, 51, 51, 1)',
-    'secondary-50': 'rgba(250, 250, 250, 1)',
-    'secondary-100': 'rgba(230, 230, 230, 1)',
-    'secondary-200': 'rgba(180, 180, 180, 1)',
-    'secondary-300': 'rgba(128, 128, 128, 1)',
-    'secondary-400': 'rgba(77, 77, 77, 1)',
-    'secondary-500': 'rgba(51, 51, 51, 1)',
-    'secondary-600': 'rgba(38, 38, 38, 1)',
-    'secondary-700': 'rgba(26, 26, 26, 1)',
-    'secondary-800': 'rgba(18, 18, 18, 1)',
-    'secondary-900': 'rgba(13, 13, 13, 1)',
-    'secondary-950': 'rgba(8, 8, 8, 1)',
-
-    success: 'rgba(46, 213, 115, 1)',
-    warning: 'rgba(255, 171, 0, 1)',
-    error: 'rgba(255, 71, 87, 1)',
-    info: 'rgba(0, 122, 255, 1)',
-    muted: 'rgb(239 239 239)',
-    default: 'rgba(51, 51, 51, 1)',
-    danger: 'rgba(255, 71, 87, 1)',
-    skeleton: 'rgb(239 239 245)',
+    colorBorder: 'rgba(233, 239, 255, 1)',
+    colorDarkBorder: 'rgba(9, 27, 59, 1)',
+    colorBackgroundSecondary: 'rgba(245, 248, 252, 1)',
+    colorBrandBlue: 'rgba(22, 59, 124, 1)',
+    colorGrey: 'rgba(126, 126, 126, 1)',
+    colorAccent: 'rgba(71, 97, 137, 1)',
+    colorIconHover:
+        'brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)hue-rotate(190deg) brightness(90%) contrast(105%)',
+    colorTextPrimary: 'rgba(38, 38, 38, 1)',
+    colorTextSecondary: 'rgba(126, 126, 126, 1)',
+    colorTextTertiary: 'rgba(71, 97, 137, 1)',
+    colorTextQuaternary: 'rgba(9, 27, 59, 1)',
+    colorPrimary: 'rgba(22, 59, 124, 1)',
+    colorPrimaryDark: 'rgba(4, 19, 40, 1)',
+    colorPrimaryLight: 'rgba(0, 92, 142, 1)',
+    colorPrimaryBg: 'rgba(239, 239, 239, 1)',
+    colorPrimaryDeep: 'rgba(32, 45, 89, 1)',
+    colorPrimaryDeepLight: 'rgba(32, 45, 89, 0.05)',
+    colorPrimaryBgLight: 'rgba(220, 231, 236, 1)',
+    colorPrimaryLightest: 'rgba(245, 248, 252, 1)',
+    colorPrimaryDarkLight: 'rgba(6, 21, 45, 1)',
+    colorSecondary: 'rgba(85, 181, 108, 1)',
+    colorSecondaryLight: 'rgba(187, 225, 196, 1)',
+    colorPositive: 'rgba(2, 148, 71, 1)',
+    colorWarning: 'rgba(237, 140, 34, 1)',
+    colorWarningAlt: 'rgba(255, 209, 8, 1)',
+    colorDanger: 'rgba(220, 39, 44, 1)',
+    colorDangerAlt: 'rgba(255, 124, 92, 1)',
+    colorDangerLight: 'rgba(255, 124, 92, 0.05)',
+    colorAccentLight: 'rgba(0, 209, 178, 0.05)',
+    colorNeutral: 'rgba(126, 126, 126, 1)',
+    colorNeutralDark: 'rgba(60, 60, 60, 1)',
+    colorNeutralDarker: 'rgba(38, 38, 38, 1)',
+    colorNeutralLight: 'rgba(174, 189, 209, 1)',
+    colorSurface: 'rgba(255, 255, 255, 1)',
+    colorInfo: 'none',
+    colorSubinfo: 'rgba(71, 97, 137, 1)',
+    colorPrimaryBorder: 'rgb(233, 239, 255)',
+    colorDarkBorder2: 'rgba(9, 27, 59, 1)',
+    colorGradientPrimary:
+        'linear-gradient(135deg, var(--color-primary), var(--color-primary-light))',
+    colorGradientSecondary:
+        'linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))',
+    colorPrimaryTransparent: 'rgba(85, 181, 108, 0)',
+    colorTest: 'rgba(63, 104, 178, 1)',
+    colorCustomPrimary: 'rgba(32, 45, 89, 1)',
+    colorCustomSecondary: 'rgba(85, 181, 108, 1)',
+    colorCustomWarning: 'rgba(237, 140, 34, 1)',
+    colorCustomDanger: 'rgba(220, 39, 44, 1)',
+    colorCustomAccent: 'rgba(0, 209, 178, 1)',
+    colorCustomNeutral: 'rgba(126, 126, 126, 1)',
+    colorCustomSurface: 'rgba(255, 255, 255, 1)',
+    colorCustomPrimaryLight: 'rgba(32, 45, 89, 0.8)',
+    colorCustomSecondaryLight: 'rgba(85, 181, 108, 0.8)',
+    colorCustomWarningLight: 'rgba(237, 140, 34, 0.8)',
+    colorCustomDangerLight: 'rgba(220, 39, 44, 0.8)',
+    colorCustomAccentLight: 'rgba(0, 209, 178, 0.8)',
+    colorCustomNeutralLight: 'rgba(126, 126, 126, 0.8)',
+    colorCustomSurfaceLight: 'rgba(255, 255, 255, 0.8)',
+    colorShadowPrimary: 'rgba(220, 228, 239, 1)',
+    colorShadowSecondary: 'rgba(220, 228, 239, 1)',
+    colorStatIconGradient:
+        'linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))',
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -103,29 +157,15 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     });
 
     const updateTheme = (newTheme: Partial<ThemeContextType['theme']>) => {
-        const synchronizedTheme = { ...newTheme };
-
-        if ('primary' in newTheme) {
-            synchronizedTheme['primary-500'] = newTheme.primary;
-        }
-        if ('primary-500' in newTheme) {
-            synchronizedTheme.primary = newTheme['primary-500'];
-        }
-
-        if ('secondary' in newTheme) {
-            synchronizedTheme['secondary-500'] = newTheme.secondary;
-        }
-        if ('secondary-500' in newTheme) {
-            synchronizedTheme.secondary = newTheme['secondary-500'];
-        }
-
         setTheme((prev) => ({
             ...prev,
-            ...synchronizedTheme,
+            ...newTheme,
         }));
-
-        Object.entries(synchronizedTheme).forEach(([key, value]) => {
-            document.documentElement.style.setProperty(`--color-${key}`, value);
+        Object.entries(newTheme).forEach(([key, value]) => {
+            document.documentElement.style.setProperty(
+                `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`,
+                value as string
+            );
         });
     };
 

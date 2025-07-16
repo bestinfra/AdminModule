@@ -44,6 +44,7 @@ export default defineConfig({
         './styles/global.css': './src/styles/global.css',
         './styles/default.css': './src/styles/default.css',
         './styles/custom.css': './src/styles/custom.css',
+        './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
       },
       shared: ['react', 'react-dom', 'reactflow', 'react-router-dom', 'echarts-for-react'],
     }),
