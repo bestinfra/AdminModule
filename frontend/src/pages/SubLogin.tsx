@@ -3,26 +3,26 @@ import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';
 
 const SubLogin: React.FC = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-    setLoading(true);
-    // TODO: Replace with real authentication logic (API call)
-    setTimeout(() => {
-      setLoading(false);
-      if (email === 'admin@example.com' && password === 'password') {
-        localStorage.setItem('token', 'dummy-token');
-        window.location.href = '/';
-      } else {
-        setError('Invalid credentials');
-      }
-    }, 1000);
-  };
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+        // TODO: Replace with real authentication logic (API call)
+        setTimeout(() => {
+            setLoading(false);
+            if (email === 'admin@example.com' && password === 'password') {
+                localStorage.setItem('token', 'dummy-token');
+                window.location.href = '/';
+            } else {
+                setError('Invalid credentials');
+            }
+        }, 1000);
+    };
 
   // Login Form Section
   const loginFormSection: Section = {
@@ -76,4 +76,4 @@ const SubLogin: React.FC = () => {
   );
 };
 
-export default SubLogin; 
+export default SubLogin;

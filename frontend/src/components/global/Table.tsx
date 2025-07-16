@@ -459,18 +459,18 @@ const Table: React.FC<TableProps> = ({
         return [onView, onPayment, onEdit, onDelete].filter(Boolean).length;
     };
 
-    const handleRowsPerPageChange = (
-        e: React.ChangeEvent<HTMLSelectElement>
-    ) => {
-        const value = e.target.value;
-        if (value === 'Custom') {
-            setShowCustomInput(true);
-        } else {
-            setShowCustomInput(false);
-            const newLimit = Number(value);
-            handlePageChangeInternal(1, newLimit);
-        }
-    };
+    // const handleRowsPerPageChange = (
+    //     e: React.ChangeEvent<HTMLSelectElement>
+    // ) => {
+    //     const value = e.target.value;
+    //     if (value === 'Custom') {
+    //         setShowCustomInput(true);
+    //     } else {
+    //         setShowCustomInput(false);
+    //         const newLimit = Number(value);
+    //         handlePageChangeInternal(1, newLimit);
+    //     }
+    // };
 
     const handleCustomRowsPerPageSubmit = (
         e: React.KeyboardEvent<HTMLInputElement>
