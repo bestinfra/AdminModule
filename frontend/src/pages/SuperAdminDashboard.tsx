@@ -338,7 +338,6 @@ const SuperAdminDashboard: React.FC = () => {
             </div>
         )
     };
-
     // System Events Section
     const systemEventsSection: Section = {
         id: 'system-events',

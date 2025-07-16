@@ -199,7 +199,7 @@ const CreateTicket: React.FC = () => {
                                             label: '',
                                             placeholder: 'Consumer Name',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.consumerName}
                                         error={errors.consumerName}
@@ -219,7 +219,7 @@ const CreateTicket: React.FC = () => {
                                             label: '',
                                             placeholder: 'Consumer No',
                                             required: false,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.consumerNo}
                                         error={errors.consumerNo}
@@ -239,7 +239,7 @@ const CreateTicket: React.FC = () => {
                                             label: '',
                                             placeholder: 'Mobile',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.mobile}
                                         error={errors.mobile}
@@ -264,7 +264,7 @@ const CreateTicket: React.FC = () => {
                                             label: '',
                                             placeholder: 'Email',
                                             required: false,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.email}
                                         error={errors.email}
@@ -338,7 +338,7 @@ const CreateTicket: React.FC = () => {
                                             label: '',
                                             placeholder: 'Subject',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.subject}
                                         error={errors.subject}
@@ -362,7 +362,7 @@ const CreateTicket: React.FC = () => {
                                         onChange={handleInputChange}
                                         placeholder="Description"
                                         rows={4}
-                                        className={`w-full px-4 py-3.5 rounded-xl border text-base font-medium resize-none ${
+                                        className={`w-full px-4 py-3 rounded-full border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light ${
                                             errors.description 
                                                 ? 'border-danger focus:border-danger' 
                                                 : 'border-primary-border dark:border-dark-border focus:border-primary'

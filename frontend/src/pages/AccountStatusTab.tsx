@@ -59,11 +59,11 @@
                         </label>
                     </div>
                     {error && (
-                        <div className="color-danger p-3 bg-red-50 rounded-lg">
+                        <div className="color-danger p-3 bg-danger-light rounded-lg">
                             {error}
                         </div>
                     )}
-                    {success && <div className="color-positive p-3 bg-green-50 rounded-lg">{success}</div>}
+                    {success && <div className="color-positive p-3 bg-secondary-light rounded-lg">{success}</div>}
                     <div className="flex gap-4">
                         <Button 
                             label={isLoading ? "Updating..." : "Delete My Account"}

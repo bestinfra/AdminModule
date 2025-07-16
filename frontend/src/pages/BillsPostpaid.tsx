@@ -149,7 +149,7 @@ const BillsPostpaid: React.FC = () => {
         />
         <input
           type="date"
-          className="w-full md:w-1/3 px-4 py-3 border border-gray-200 rounded-full focus:outline-none"
+          className="w-full md:w-1/3 px-4 py-3 border border-neutral-light rounded-full focus:outline-none"
           placeholder="Select Date"
         />
         <Dropdown
@@ -173,7 +173,7 @@ const BillsPostpaid: React.FC = () => {
           value={search}
           onChange={e => setSearch(e.target.value)}
           placeholder="Search"
-          className="w-full px-4 py-3 border border-gray-200 rounded-full focus:outline-none"
+          className="w-full px-4 py-3 border border-neutral-light rounded-full focus:outline-none"
         />
       </div>
     )
