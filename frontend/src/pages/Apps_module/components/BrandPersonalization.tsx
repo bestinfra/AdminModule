@@ -5,6 +5,7 @@ import Button from '@components/global/Button';
 import type { FormInputValue } from '@components/forms/types';
 import { validateBrandPersonalization } from '../utils';
 import RemarksPanel from './RemarksPanel';
+import ColorPicker from './ColorPicker';
 
 interface BrandPersonalizationProps {
   formData: any;
@@ -200,38 +201,25 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({ formData, e
           </div>
         </div>
 
-        <div>
-          <label className="block text-sm font-medium text-main dark:text-white mb-1">
-            Primary Color <span className="text-error">*</span>
-          </label>
-          <div className="flex gap-3 flex-wrap mt-2 p-4 bg-gray-50 dark:bg-primary-dark-light rounded-lg border border-gray-200 dark:border-dark-border">
-            {colorOptions.map((option) => (
-              <label 
-                key={option.value}
-                className="flex items-center gap-2 cursor-pointer p-2 rounded-lg hover:bg-white dark:hover:bg-primary-dark transition-colors"
-              >
-                <input
-                  type="radio"
-                  name="primaryColor"
-                  value={option.value}
-                  checked={formData.primaryColor === option.value}
-                  onChange={onInputChange}
-                  className="sr-only"
-                />
-                <div
-                  className={`w-10 h-10 rounded-full border-3 transition-all ${
-                    formData.primaryColor === option.value 
-                      ? 'border-main dark:border-white ring-2 ring-primary' 
-                      : 'border-gray-300 dark:border-dark-border'
-                  }`}
-                  style={{ backgroundColor: option.color }}
-                  title={option.label}
-                />
-              </label>
-            ))}
-          </div>
-          {allErrors.primaryColor && <span className="text-error text-xs mt-1 block">{allErrors.primaryColor}</span>}
-        </div>
+        <ColorPicker
+          label="Primary Color"
+          name="primaryColor"
+          value={formData.primaryColor}
+          onChange={onInputChange}
+          error={allErrors.primaryColor}
+          options={colorOptions}
+          required
+        />
+
+        <ColorPicker
+          label="Secondary Color"
+          name="secondaryColor"
+          value={formData.secondaryColor}
+          onChange={onInputChange}
+          error={allErrors.secondaryColor}
+          options={colorOptions}
+          required
+        />
 
         <div>
           {/* <label htmlFor="appDescription" className="block text-sm font-medium text-main dark:text-white mb-1">
