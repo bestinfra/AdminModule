@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-// @ts-ignore: If axios types are missing, install with: npm install axios @types/axios
 import axios from 'axios';
 import FormInput from '@components/forms/FormInput'; 
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
 import type { FormInputValue } from '@components/forms/types';
 import { validateApplicationSetup } from '../utils';
-import RemarksPanel from './RemarksPanel';
+import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 
 interface ApplicationSetupProps {
     formData: any;
@@ -538,7 +537,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                             )}
                             <div className="ml-auto">
                                 <Button
-                                    label="Next Step"
+                                    label="Next"
                                     type="submit"
                                     variant="primary"
                                 />

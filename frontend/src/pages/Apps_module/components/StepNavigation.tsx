@@ -1,5 +1,5 @@
 import React from 'react';
-import { STEP_LABELS } from '../constants';
+import { STEP_LABELS } from '@pages/Apps_module/constants';
 
 interface StepNavigationProps {
   currentStep: number;
