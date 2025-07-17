@@ -52,6 +52,7 @@ import UserManagement from './pages/UserManagment';
 import RoleManagement from './pages/RoleManagment';
 import TicketsFilteredView from './pages/TicketsFilteredView';
 import CreateTicket from './pages/CreateTicket';
+import ComponentsDocumentation from './pages/ComponentsDocumentation';
 
 
 const App: React.FC = () => {
@@ -92,6 +93,7 @@ const App: React.FC = () => {
                                 path="/tickets-filtered"
                                 element={<TicketsFilteredView />}
                             />
+                            <Route path="/components-documentation" element={<ComponentsDocumentation />} />
                             <Route path="/forms" element={<Forms />} />
                             <Route path="/consumers" element={<Consumers />} /> 
                             <Route path="/consumers/high-usage" element={<Consumers />} />
