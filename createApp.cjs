@@ -28,23 +28,23 @@ function copyPagesDirectory(sourcePagesDir, destPagesDir) {
 
 // Function to create app project in generated-apps folder
 function createAppProject(formData) {
-    const {
-        appName,
-        subdomain,
-        categories,
-        tariffPlans,
-        adminFirstName,
-        adminLastName,
-        adminEmail,
-        adminRole,
-        companyName,
-        companyWebsite,
-        primaryColor,
-        secondaryColor,
-        timezone,
-        currency,
-        modules,
-    } = formData;
+  const {
+    appName,
+    subdomain,
+    categories,
+    tariffPlans,
+    adminFirstName,
+    adminLastName,
+    adminEmail,
+    adminRole,
+    companyName,
+    companyWebsite,
+    primaryColor,
+    secondaryColor,
+    timezone,
+    currency,
+    modules,
+  } = formData;
 
   // Create the project folder name - use appName instead of subdomain to avoid special characters
   const projectFolderName =

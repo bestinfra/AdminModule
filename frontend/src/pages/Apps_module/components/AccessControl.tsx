@@ -154,10 +154,34 @@ const AccessControl: React.FC<AccessControlProps> = ({
   // Validate form data and generate remarks
   const { isValid, errors: validationErrors, remarks } = useMemo(() => {
     return validateAccessControl(formData);
-  }, [formData]);
+  }, [
+    formData.adminFirstName,
+    formData.adminLastName,
+    formData.adminUsername,
+    formData.adminEmail,
+    formData.adminPhone,
+    formData.adminPassword,
+    formData.adminConfirmPassword,
+    formData.newAccounts,
+    formData.newAccountFirstName,
+    formData.newAccountLastName,
+    formData.newAccountUsername,
+    formData.newAccountEmail,
+    formData.newAccountPhone,
+    formData.newAccountPassword,
+    formData.newAccountConfirmPassword,
+    formData.newAccountRole,
+    formData.sendWelcomeEmail
+  ]);
 
   // Only show validation errors if form has been submitted
   const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
+
+  // Helper function to get error for new account fields
+  const getNewAccountError = (accountIndex: number, fieldName: string) => {
+    const errorKey = `newAccounts.${accountIndex}.${fieldName}`;
+    return (allErrors as any)[errorKey];
+  };
 
   // Dropdown options for admin role
   const adminRoleOptions = [
@@ -243,7 +267,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
               />
             </div>
           </div>
-          {/* user name */}
+          
+          {/* Username and Email */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
             <div>
               <FormInput
@@ -283,7 +308,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                 fileInputRefs={fileInputRefs}
               />
             </div>
-           
           </div>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
            
@@ -393,8 +417,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.firstName}
-                  error={allErrors.newAccounts?.[index]?.firstName}
-                  showError={!!allErrors.newAccounts?.[index]?.firstName}
+                  error={getNewAccountError(index, 'firstName')}
+                  showError={!!getNewAccountError(index, 'firstName')}
                   disabled={loading}
                   onInputChange={(name, value) => handleNewAccountChange(account.id, 'firstName', value as string)}
                   onInputBlur={handleFormInputBlur}
@@ -412,8 +436,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.lastName}
-                  error={allErrors.newAccounts?.[index]?.lastName}
-                  showError={!!allErrors.newAccounts?.[index]?.lastName}
+                  error={getNewAccountError(index, 'lastName')}
+                  showError={!!getNewAccountError(index, 'lastName')}
                   disabled={loading}
                   onInputChange={(name, value) => handleNewAccountChange(account.id, 'lastName', value as string)}
                   onInputBlur={handleFormInputBlur}
@@ -434,8 +458,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.username}
-                  error={allErrors.newAccounts?.[index]?.username}
-                  showError={!!allErrors.newAccounts?.[index]?.username}
+                  error={getNewAccountError(index, 'username')}
+                  showError={!!getNewAccountError(index, 'username')}
                   disabled={loading}
                   onInputChange={(name, value) => handleNewAccountChange(account.id, 'username', value as string)}
                   onInputBlur={handleFormInputBlur}
@@ -453,8 +477,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.email}
-                  error={allErrors.newAccounts?.[index]?.email}
-                  showError={!!allErrors.newAccounts?.[index]?.email}
+                  error={getNewAccountError(index, 'email')}
+                  showError={!!getNewAccountError(index, 'email')}
                   disabled={loading}
                   onInputChange={(name, value) => handleNewAccountChange(account.id, 'email', value as string)}
                   onInputBlur={handleFormInputBlur}
@@ -475,8 +499,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.phone}
-                  error={allErrors.newAccounts?.[index]?.phone}
-                  showError={!!allErrors.newAccounts?.[index]?.phone}
+                  error={getNewAccountError(index, 'phone')}
+                  showError={!!getNewAccountError(index, 'phone')}
                   disabled={loading}
                   onInputChange={(name, value) => handleNewAccountChange(account.id, 'phone', value as string)}
                   onInputBlur={handleFormInputBlur}
@@ -490,7 +514,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   onChange={(e) => handleNewAccountChange(account.id, 'role', e.target.value as string)}
                   options={adminRoleOptions}
                   placeholder="Select Role"
-                  error={allErrors.newAccounts?.[index]?.role}
+                  error={getNewAccountError(index, 'role')}
                   searchable={false}
                 />
               </div>
@@ -508,8 +532,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.password}
-                  error={allErrors.newAccounts?.[index]?.password}
-                  showError={!!allErrors.newAccounts?.[index]?.password}
+                  error={getNewAccountError(index, 'password')}
+                  showError={!!getNewAccountError(index, 'password')}
                   disabled={loading}
                   onInputChange={(name, value) => handleNewAccountChange(account.id, 'password', value as string)}
                   onInputBlur={handleFormInputBlur}
@@ -527,8 +551,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.confirmPassword}
-                  error={allErrors.newAccounts?.[index]?.confirmPassword}
-                  showError={!!allErrors.newAccounts?.[index]?.confirmPassword}
+                  error={getNewAccountError(index, 'confirmPassword')}
+                  showError={!!getNewAccountError(index, 'confirmPassword')}
                   disabled={loading}
                   onInputChange={(name, value) => handleNewAccountChange(account.id, 'confirmPassword', value as string)}
                   onInputBlur={handleFormInputBlur}

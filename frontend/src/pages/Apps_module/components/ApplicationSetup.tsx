@@ -527,13 +527,12 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                         {/* Submit Button */}
                         <div className="flex justify-between items-center">
                             {currentStep > 1 && (
-                                <span 
-                                    className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-primary-lightest dark:hover:bg-primary-dark-light transition-colors" 
+                                <Button
+                                    label="Previous"
+                                    type="button"
+                                    variant="secondary"
                                     onClick={onBack}
-                                >
-                                    <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
-                                    <span className="text-neutral dark:text-neutral-light font-medium">Previous</span>
-                                </span>
+                                />
                             )}
                             <div className="ml-auto">
                                 <Button
