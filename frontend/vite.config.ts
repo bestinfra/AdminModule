@@ -2,7 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import federation from '@originjs/vite-plugin-federation'
 import tailwindcss from '@tailwindcss/vite'
-import path from 'path' // <-- Add this!
+import path from 'path'
 
 export default defineConfig({
   plugins: [
@@ -48,8 +48,18 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, 'src'), // So you can use '@/file'
-      '@components': path.resolve(__dirname, 'src/components'), // So you can use '@components/YourComponent'
+      '@': path.resolve(__dirname, './src'),
+      '@api': path.resolve(__dirname, './src/api'),
+      '@components': path.resolve(__dirname, './src/components'),
+      '@pages': path.resolve(__dirname, './src/pages'),
+      '@graphs': path.resolve(__dirname, './src/graphs'),
+      '@context': path.resolve(__dirname, './src/context'),
+      '@providers': path.resolve(__dirname, './src/providers'),
+      '@utils': path.resolve(__dirname, './src/utils'),
+      '@hooks': path.resolve(__dirname, './src/hooks'),
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@types': path.resolve(__dirname, './src/types'),
+      
     },
   },
   build: {
@@ -76,15 +86,15 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    strictPort: true, // Force the port to be 5173
     fs: {
       allow: ['..'],
     },
     proxy: {
       '/api': {
-        target: 'https://arcticterntech.in:8443',
+        target: 'http://localhost:4000',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/attSmart')
       }
     }
   },

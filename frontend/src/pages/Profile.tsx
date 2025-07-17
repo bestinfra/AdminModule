@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@context/AuthContext';
 import Button from '@components/global/Button';
-import BasicInformationTab from './BasicInformationTab';
-import PasswordTab from './PasswordTab';
-import ActivityLogTab from './ActivityLogTab';
-import NotificationsTab from './NotificationTab';
-import TwoStepVerificationTab from './TwoStepVerificationTab';
-import AccountStatusTab from './AccountStatusTab';
+
+
+
+import BasicInformationTab from '@pages/BasicInformationTab';
+import PasswordTab from '@pages/PasswordTab';
+import ActivityLogTab from '@pages/ActivityLogTab';
+import NotificationsTab from '@pages/NotificationTab';
+import TwoStepVerificationTab from '@pages/TwoStepVerificationTab';
+import AccountStatusTab from '@pages/AccountStatusTab';
 
 interface TabItem {
     id: string;

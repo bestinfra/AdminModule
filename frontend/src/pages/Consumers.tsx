@@ -6,23 +6,20 @@ import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';
 import PageHeader from '@components/global/PageHeader';
 
-const consumersData = [
-  { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17 },
-  { uid: 'BI25GMRA002', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62 },
-  { uid: 'BI25GMRA003', name: 'Dormitory', meter: 'A9345418', reading: 1108.34 },
-  { uid: 'BI25GMRA004', name: 'Mobikins', meter: 'A9211433', reading: 1271.76 },
-];
-
 const columns: Column[] = [
   { key: 'sNo', label: 'S.No' },
-  { key: 'uid', label: 'UID' },
+  { key: 'consumerNumber', label: 'UID' },
   { key: 'name', label: 'Consumer Name' },
   { key: 'meter', label: 'Meter SI No' },
   { key: 'reading', label: 'Current Reading' },
 ];
 
 const Consumers: React.FC = () => {
+  console.log('🚀 Consumers component is mounting...');
+  alert('Consumers component is mounting!'); // Temporary debug
   const [menuValue, setMenuValue] = useState('');
+  const [consumers, setConsumers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const params = useParams();
   const location = useLocation();
   
@@ -41,41 +38,95 @@ const Consumers: React.FC = () => {
     };
   }
 
+  // Fetch consumers from backend
+  useEffect(() => {
+    console.log('🔄 useEffect is running - about to fetch data');
+    alert('useEffect is running!'); // Temporary debug
+    setLoading(true);
+    const apiUrl = '/api/consumers';
+    console.log('🔍 Fetching consumers from:', apiUrl);
+    console.log('🔍 Current window location:', window.location.href);
+    console.log('🔍 Current window origin:', window.location.origin);
+    
+    // Test the proxy directly
+    fetch(apiUrl)
+      .then(res => {
+        console.log('📡 Response status:', res.status);
+        console.log('📡 Response status text:', res.statusText);
+        console.log('📡 Response headers:', Object.fromEntries(res.headers.entries()));
+        console.log('📡 Response URL:', res.url);
+        console.log('📡 Response type:', res.type);
+        return res.text(); // Get raw text first
+      })
+      .then(text => {
+        console.log('📄 Raw response text length:', text.length);
+        console.log('📄 Raw response text (first 500 chars):', text.substring(0, 500));
+        console.log('📄 Raw response text (last 200 chars):', text.substring(text.length - 200));
+        
+        // Check if it starts with HTML
+        if (text.trim().toLowerCase().startsWith('<!doctype')) {
+          console.error('❌ Response is HTML, not JSON!');
+          alert('Got HTML instead of JSON! Check proxy configuration.');
+          setConsumers([]);
+          setLoading(false);
+          return;
+        }
+        
+        try {
+          const result = JSON.parse(text);
+          console.log('✅ Parsed result from backend:', result);
+          if (result.success && Array.isArray(result.data)) {
+            console.log('✅ Setting consumers data:', result.data.length, 'consumers');
+            setConsumers(result.data);
+          } else {
+            console.log('⚠️ No valid data in response');
+            setConsumers([]);
+          }
+        } catch (parseError) {
+          console.error('❌ JSON parse error:', parseError);
+          console.error('❌ Raw text that failed to parse:', text);
+          alert('Failed to parse JSON response!');
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('❌ Network error fetching consumers:', err);
+        alert('Network error: ' + err.message);
+        setConsumers([]);
+        setLoading(false);
+      });
+  }, []);
+
   // Check for filter parameter from route
   useEffect(() => {
-    console.log('Current pathname:', location.pathname);
-    console.log('Params uid:', params.uid);
-    
     if (location.pathname === '/consumers/high-usage') {
-      console.log('Setting filter to high-usage');
       setMenuValue('high-usage');
     } else if (params.uid && params.uid !== 'high-usage') {
       // This is a regular consumer view, not a filter
-      console.log('This is a consumer view for UID:', params.uid);
     }
   }, [location.pathname, params.uid]);
 
   // Add sNo property and filter based on menu selection
   const getFilteredData = () => {
-    let filteredData = consumersData;
-    
-    console.log('Current menuValue:', menuValue);
-    console.log('Total consumers before filtering:', consumersData.length);
-    
+    let filteredData = consumers.map((consumer, idx) => {
+      // Find the first meter for the consumer, if any
+      const meter = consumer.meters && consumer.meters.length > 0 ? consumer.meters[0] : null;
+      return {
+        ...consumer,
+        sNo: idx + 1,
+        meter: meter ? meter.serialNumber : '-',
+        reading: meter && meter.readings && meter.readings.length > 0 ? meter.readings[0].value : '-',
+      };
+    });
+
     if (menuValue === 'occupied') {
-      // Filter to show occupied consumers (using first 80% as occupied)
-      filteredData = consumersData.slice(0, Math.floor(consumersData.length * 0.8));
+      filteredData = filteredData.slice(0, Math.floor(filteredData.length * 0.8));
     } else if (menuValue === 'vacant') {
-      // Filter to show vacant consumers (using last 20% as vacant)
-      filteredData = consumersData.slice(Math.floor(consumersData.length * 0.8));
+      filteredData = filteredData.slice(Math.floor(filteredData.length * 0.8));
     } else if (menuValue === 'high-usage') {
-      // Filter to show high usage consumers (reading > 1000)
-      filteredData = consumersData.filter(consumer => consumer.reading > 1000);
-      console.log('High usage consumers found:', filteredData.length);
+      filteredData = filteredData.filter(consumer => Number(consumer.reading) > 1000);
     }
-    
-    console.log('Filtered data length:', filteredData.length);
-    return filteredData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+    return filteredData;
   };
 
   const tableData = getFilteredData();
@@ -85,7 +136,7 @@ const Consumers: React.FC = () => {
       label: 'View',
       icon: '/icons/eye.svg',
       onClick: (row: any) => {
-        navigate(`/consumers/${row.uid}`);
+        navigate(`/consumers/${row.consumerNumber}`);
       },
     },
   ];
@@ -108,15 +159,10 @@ const Consumers: React.FC = () => {
         { id: 'high-usage', label: 'High Usage' }
       ]}
       onMenuItemClick={(itemId) => {
-        console.log(`Filter by: ${itemId}`);
         setMenuValue(itemId);
       }}
     />
   );
-
-
-
-  
 
   // Consumers Table Section
   const consumersTableSection: Section = {
@@ -130,7 +176,8 @@ const Consumers: React.FC = () => {
           showActions
           searchable={false}
           pagination
-          emptyMessage="No consumers found"
+          loading={loading}
+          emptyMessage={loading ? 'Loading consumers...' : 'No consumers found'}
         />
       </div>
     )
@@ -144,7 +191,6 @@ const Consumers: React.FC = () => {
       sidebarPosition="right"
       className=""
       sectionClassName=""
-
     />
   );
 };

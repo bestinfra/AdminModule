@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart, PieChart } from '../graphs';
+import { BarChart, PieChart } from '@graphs/index';
 import Card from '@components/global/Card';
 import Table from '@components/global/Table';
 import TimeRangeSelector from '@components/global/TimeRangeSelector';
