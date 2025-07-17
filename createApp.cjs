@@ -282,19 +282,6 @@ module.exports = {
   ],
   theme: {
     extend: {
-      colors: {
-        primary: '${primaryColor || "#3B82F6"}',
-        'primary-lightest': '#F0F9FF',
-        'primary-border': 'rgb(233, 239, 255)',
-        'dark-border': '#374151',
-        'primary-dark': '#1F2937',
-        'primary-dark-light': '#374151',
-        'dark-secondary': '#4B5563',
-        'subinfo': '#9CA3AF',
-        'main': '#111827',
-        'light': '#6B7280',
-        'light-border': '#D1D5DB'
-      }
     },
   },
   plugins: [],
