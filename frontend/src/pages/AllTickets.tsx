@@ -1,13 +1,12 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import Card from '../components/global/Card';
-import Table from '../components/global/Table';
-import Holder from '../components/global/Holder';
-import PageHeader from '../components/global/PageHeader';
-import type { Column } from '../components/global/Table';
-
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import Card from '@components/global/Card';
+import Table from '@components/global/Table';
+import Holder from '@components/global/Holder';
+import PageHeader from '@components/global/PageHeader';
+import type { Column } from '@components/global/Table';
 
 interface TicketData {
     id: number;
@@ -22,14 +21,19 @@ interface TicketData {
     [key: string]: string | number | boolean | null | undefined;
 }
 
-type FilterType = 'all' | 'high-priority' | 'in-progress' | 'resolved' | 'closed';
+type FilterType =
+    | 'all'
+    | 'high-priority'
+    | 'in-progress'
+    | 'resolved'
+    | 'closed';
 
 const AllTickets: React.FC = () => {
     const navigate = useNavigate();
     const { filter } = useParams<{ filter?: string }>();
     const [loading] = useState(false);
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
-    
+
     // Get filter from URL params, default to 'all'
     const activeFilter = (filter as FilterType) || 'all';
     // Ensure layout is properly initialized
@@ -41,35 +45,7 @@ const AllTickets: React.FC = () => {
         }
     }, []);
 
-    // // Handler for Total Tickets card click
-    // const handleTotalTicketsClick = () => {
-    //     console.log('Total Tickets clicked!');
-    //     window.location.href = '/tickets-filtered?filter=all';
-    // };
 
-    // // Handler for High Priority tickets card click
-    // const handleHighPriorityClick = () => {
-    //     console.log('High Priority clicked!');
-    //     window.location.href = '/tickets-filtered?filter=high-priority';
-    // };
-
-    // // Handler for Open tickets card click
-    // const handleOpenTicketsClick = () => {
-    //     console.log('Open Tickets clicked!');
-    //     window.location.href = '/tickets-filtered?filter=open';
-    // };
-
-    // // Handler for In Progress tickets card click
-    // const handleInProgressClick = () => {
-    //     console.log('In Progress clicked!');
-    //     window.location.href = '/tickets-filtered?filter=in-progress';
-    // };
-
-    // // Handler for Closed tickets card click
-    // const handleClosedTicketsClick = () => {
-    //     console.log('Closed Tickets clicked!');
-    //     window.location.href = '/tickets-filtered?filter=closed';
-    // };
 
 
     const ticketData: TicketData[] = [
@@ -82,7 +58,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'John Doe',
             createdAt: '2024-03-20',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 2,
@@ -93,7 +69,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Jane Smith',
             createdAt: '2024-03-19',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 3,
@@ -104,7 +80,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Mike Johnson',
             createdAt: '2024-03-18',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 4,
@@ -115,7 +91,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Sarah Wilson',
             createdAt: '2024-03-17',
             category: 'Billing',
-            department: 'Finance'
+            department: 'Finance',
         },
         {
             id: 5,
@@ -126,7 +102,7 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Tom Anderson',
             createdAt: '2024-03-21',
             category: 'Infrastructure',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 6,
@@ -137,21 +113,29 @@ const AllTickets: React.FC = () => {
             assignedTo: 'Lisa Chen',
             createdAt: '2024-03-16',
             category: 'Security',
-            department: 'IT'
-        }
+            department: 'IT',
+        },
     ];
 
     // Filter tickets based on active filter
     const filteredTickets = useMemo(() => {
         switch (activeFilter) {
             case 'high-priority':
-                return ticketData.filter(ticket => ticket.priority === 'High');
+                return ticketData.filter(
+                    (ticket) => ticket.priority === 'High'
+                );
             case 'in-progress':
-                return ticketData.filter(ticket => ticket.status === 'In Progress');
+                return ticketData.filter(
+                    (ticket) => ticket.status === 'In Progress'
+                );
             case 'resolved':
-                return ticketData.filter(ticket => ticket.status === 'Resolved');
+                return ticketData.filter(
+                    (ticket) => ticket.status === 'Resolved'
+                );
             case 'closed':
-                return ticketData.filter(ticket => ticket.status === 'Closed');
+                return ticketData.filter(
+                    (ticket) => ticket.status === 'Closed'
+                );
             default:
                 return ticketData;
         }
@@ -160,17 +144,23 @@ const AllTickets: React.FC = () => {
     // Calculate statistics
     const stats = useMemo(() => {
         const total = ticketData.length;
-        const highPriority = ticketData.filter(t => t.priority === 'High').length;
-        const inProgress = ticketData.filter(t => t.status === 'In Progress').length;
-        const resolved = ticketData.filter(t => t.status === 'Resolved').length;
-        const closed = ticketData.filter(t => t.status === 'Closed').length;
+        const highPriority = ticketData.filter(
+            (t) => t.priority === 'High'
+        ).length;
+        const inProgress = ticketData.filter(
+            (t) => t.status === 'In Progress'
+        ).length;
+        const resolved = ticketData.filter(
+            (t) => t.status === 'Resolved'
+        ).length;
+        const closed = ticketData.filter((t) => t.status === 'Closed').length;
 
         return {
             total,
             highPriority,
             inProgress,
             resolved,
-            closed
+            closed,
         };
     }, [ticketData]);
 
@@ -180,16 +170,22 @@ const AllTickets: React.FC = () => {
         { key: 'status', label: 'Status' },
         { key: 'priority', label: 'Priority' },
         { key: 'assignedTo', label: 'Assigned To' },
-        { key: 'createdAt', label: 'Created At' }
+        { key: 'createdAt', label: 'Created At' },
     ];
 
-    const handleCardClick = useCallback((filter: FilterType) => {
-        navigate(`/tickets/${filter}`);
-    }, [navigate]);
+    const handleCardClick = useCallback(
+        (filter: FilterType) => {
+            navigate(`/tickets/${filter}`);
+        },
+        [navigate]
+    );
 
-    const handleFilterChange = useCallback((filter: FilterType) => {
-        navigate(`/tickets/${filter}`);
-    }, [navigate]);
+    const handleFilterChange = useCallback(
+        (filter: FilterType) => {
+            navigate(`/tickets/${filter}`);
+        },
+        [navigate]
+    );
 
     const handleBackToCards = useCallback(() => {
         navigate('/tickets');
@@ -267,7 +263,7 @@ const AllTickets: React.FC = () => {
                         onValueClick={() => handleCardClick('closed')}
                     />
                 </div>
-            )
+            ),
         };
 
         const ticketsTableSection: Section = {
@@ -280,8 +276,7 @@ const AllTickets: React.FC = () => {
                     selectedTimeRange={selectedTimeRange}
                     handleTimeRangeChange={setSelectedTimeRange}
                     handleDownload={() => console.log('Downloading tickets...')}
-                    loading={loading}
-                >
+                    loading={loading}>
                     <Table
                         data={ticketData}
                         columns={columns}
@@ -290,11 +285,11 @@ const AllTickets: React.FC = () => {
                         pagination={true}
                         showActions={true}
                         // onEdit={(row) => console.log('Edit ticket:', row)}
-                        onDelete={(row) => console.log('Delete ticket:', row)}
+                        onDelete={(row: any) => console.log('Delete ticket:', row)}
                         onView={() => navigate('/ticket-view')}
                     />
                 </Holder>
-            )
+            ),
         };
 
         const mainHeaderComponent = (
@@ -311,8 +306,8 @@ const AllTickets: React.FC = () => {
         );
 
         return (
-            <Page 
-                layout="single-column" 
+            <Page
+                layout="single-column"
                 sections={[overviewSection, ticketsTableSection]}
                 header={mainHeaderComponent}
                 sidebarPosition="right"
@@ -340,9 +335,9 @@ const AllTickets: React.FC = () => {
                 { id: 'high-priority', label: 'High Priority' },
                 { id: 'in-progress', label: 'In Progress' },
                 { id: 'resolved', label: 'Resolved' },
-                { id: 'closed', label: 'Closed' }
+                { id: 'closed', label: 'Closed' },
             ]}
-            onMenuItemClick={(itemId) => handleFilterChange(itemId as FilterType)}
+            onMenuItemClick={(itemId: string) => handleFilterChange(itemId as FilterType)}
         />
     );
 
@@ -356,8 +351,7 @@ const AllTickets: React.FC = () => {
                 selectedTimeRange={selectedTimeRange}
                 handleTimeRangeChange={setSelectedTimeRange}
                 handleDownload={() => console.log('Downloading tickets...')}
-                loading={loading}
-            >
+                loading={loading}>
                 <Table
                     data={filteredTickets}
                     columns={columns}
@@ -366,84 +360,84 @@ const AllTickets: React.FC = () => {
                     pagination={true}
                     showActions={true}
                     // onEdit={(row) => console.log('Edit ticket:', row)}
-                    onDelete={(row) => console.log('Delete ticket:', row)}
+                    onDelete={(row: any) => console.log('Delete ticket:', row)}
                     onView={() => navigate('/ticket-view')}
                 />
             </Holder>
-        )
+        ),
     };
 
     const recentActivitySection: Section = {
         id: 'recent-activity',
         component: (
             <div className="mb-8">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <h3 className="text-lg font-semibold text-neutral-darker dark:text-white mb-4">
                     Recent Ticket Activity
                 </h3>
-                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
-                    <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+                <div className="bg-white dark:bg-primary-dark-light rounded-xl border border-neutral-light dark:border-dark-border overflow-hidden">
+                    <div className="p-4 border-b border-neutral-light dark:border-dark-border">
                         <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Latest Operations</span>
-                            <span className="text-xs text-gray-500 dark:text-gray-400">Last 24 hours</span>
+                            <span className="text-sm font-medium text-neutral dark:text-neutral-light">Latest Operations</span>
+                            <span className="text-xs text-neutral dark:text-neutral-light">Last 24 hours</span>
                         </div>
                     </div>
                     <div className="p-4">
                         <div className="space-y-3">
-                            <div className="flex items-center gap-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                <div className="p-2 bg-blue-500 rounded-lg">
+                            <div className="flex items-center gap-3 p-3 bg-accent-light dark:bg-accent-light rounded-lg">
+                                <div className="p-2 bg-accent rounded-lg">
                                     <img src="/icons/tickets.svg" alt="" className="w-4 h-4 text-white" />
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
-                                        <span className="font-medium text-gray-900 dark:text-white">Ticket TICK-001 Created</span>
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">2 minutes ago</span>
+                                        <span className="font-medium text-neutral-darker dark:text-white">Ticket TICK-001 Created</span>
+                                        <span className="text-xs text-neutral dark:text-neutral-light">2 minutes ago</span>
                                     </div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">System Access Issue - High Priority</p>
+                                    <p className="text-sm text-neutral dark:text-neutral-light">System Access Issue - High Priority</p>
                                 </div>
                             </div>
                             
-                            <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
-                                <div className="p-2 bg-yellow-500 rounded-lg">
+                            <div className="flex items-center gap-3 p-3 bg-warning-alt dark:bg-warning-alt rounded-lg">
+                                <div className="p-2 bg-warning rounded-lg">
                                     <img src="/icons/clock.svg" alt="" className="w-4 h-4 text-white" />
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
-                                        <span className="font-medium text-gray-900 dark:text-white">Ticket TICK-002 Updated</span>
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">15 minutes ago</span>
+                                        <span className="font-medium text-neutral-darker dark:text-white">Ticket TICK-002 Updated</span>
+                                        <span className="text-xs text-neutral dark:text-neutral-light">15 minutes ago</span>
                                     </div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">Status changed to In Progress</p>
+                                    <p className="text-sm text-neutral dark:text-neutral-light">Status changed to In Progress</p>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
-                                <div className="p-2 bg-green-500 rounded-lg">
+                            <div className="flex items-center gap-3 p-3 bg-secondary-light dark:bg-secondary-light rounded-lg">
+                                <div className="p-2 bg-secondary rounded-lg">
                                     <img src="/icons/check-circle.svg" alt="" className="w-4 h-4 text-white" />
                                 </div>
                                 <div className="flex-1">
                                     <div className="flex items-center justify-between">
-                                        <span className="font-medium text-gray-900 dark:text-white">Ticket TICK-003 Resolved</span>
-                                        <span className="text-xs text-gray-500 dark:text-gray-400">1 hour ago</span>
+                                        <span className="font-medium text-neutral-darker dark:text-white">Ticket TICK-003 Resolved</span>
+                                        <span className="text-xs text-neutral dark:text-neutral-light">1 hour ago</span>
                                     </div>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">Software Update completed successfully</p>
+                                    <p className="text-sm text-neutral dark:text-neutral-light">Software Update completed successfully</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        )
+        ),
     };
 
     const sections: Section[] = [
         // overviewSection,
         ticketsTableSection,
-        recentActivitySection
+        recentActivitySection,
     ];
     // const sections: Section[] = [ticketsTableSection];
 
     return (
-        <Page 
-            layout="single-column" 
+        <Page
+            layout="single-column"
             sections={sections}
             header={headerComponent}
             sidebarPosition="right"
@@ -455,4 +449,4 @@ const AllTickets: React.FC = () => {
     );
 };
 
-export default AllTickets; 
+export default AllTickets;

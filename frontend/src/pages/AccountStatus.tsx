@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Page from '../components/global/Page';
+import Page from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 
 const userSidebarMenu = [
@@ -13,14 +13,14 @@ const userSidebarMenu = [
 const SidebarMenu = ({ selected = 4 }) => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col gap-2 p-4 bg-[#f7fafd] rounded-2xl min-h-[500px] w-full">
+    <div className="flex flex-col gap-2 p-4 bg-primary-lightest rounded-2xl min-h-[500px] w-full">
       {userSidebarMenu.map((item, idx) => (
         <button
           key={item.title}
           className={`text-left px-4 py-3 rounded-xl font-medium text-[16px] transition-all ${
             idx === selected
               ? 'bg-white shadow text-primary'
-              : 'text-[#1a3353] hover:bg-white hover:shadow'
+              : 'text-neutral-darker hover:bg-white hover:shadow'
           }`}
           style={{ outline: 'none', border: 'none' }}
           onClick={() => item.path && item.path !== '#' && navigate(item.path)}
@@ -37,11 +37,11 @@ const AccountStatus: React.FC = () => {
   const content = (
     <div className="w-full max-w-4xl flex flex-col gap-6">
       <div className="font-bold text-lg">Permanently Delete Your Account</div>
-      <div className="text-gray-500">
+      <div className="text-neutral">
         Deleting your account will revoke access to all Front services and permanently erase your personal data from our systems.<br />
         This action is irreversible after 14 days.
       </div>
-      <div className="text-gray-600">
+      <div className="text-neutral">
         By proceeding, you acknowledge that:
         <ul className="list-disc pl-6 mt-2">
           <li>Your data will be permanently deleted after 14 days.</li>
@@ -54,20 +54,20 @@ const AccountStatus: React.FC = () => {
           type="checkbox"
           checked={checked}
           onChange={e => setChecked(e.target.checked)}
-          className="w-5 h-5 accent-[#163977] rounded"
+          className="w-5 h-5 accent-primary rounded"
         />
-        <label className="text-base text-gray-700 select-none">
+        <label className="text-base text-neutral select-none">
           I understand and confirm that I want to permanently delete my account.
         </label>
       </div>
       <div className="flex gap-4">
         <button
-          className={`bg-red-300 text-white font-bold py-3 px-10 rounded-full text-lg ${checked ? 'bg-red-500 hover:bg-red-600' : 'cursor-not-allowed'}`}
+          className={`bg-danger-light text-white font-bold py-3 px-10 rounded-full text-lg ${checked ? 'bg-danger hover:bg-danger-alt' : 'cursor-not-allowed'}`}
           disabled={!checked}
         >
           Delete My Account
         </button>
-        <button className="bg-[#163977] hover:bg-blue-900 text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
+        <button className="bg-primary hover:bg-primary-light text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
       </div>
     </div>
   );

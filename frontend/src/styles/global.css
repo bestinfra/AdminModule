@@ -84,7 +84,7 @@ body {
     --color-dark-border: rgba(9, 27, 59, 1);
     --color-background-secondary: rgba(245, 248, 252, 1);
     --color-brand-blue: rgba(22, 59, 124, 1);
-    --color-grey: rgba(126, 126, 126, 1);
+    --color-grey: rgba(126, 126, 126, 1);                                              /* #7e7e7e */
     --color-accent: rgba(71, 97, 137, 1);
     --color-icon-hover: brightness(0) saturate(100%) invert(15%) sepia(80%) saturate(1705%)hue-rotate(190deg) brightness(90%) contrast(105%);
 
@@ -133,7 +133,7 @@ body {
     --color-surface: rgba(255, 255, 255, 1);
 
     /* Info Colors */
-    --color-info: none;
+    /* --color-info: none; */
     --color-subinfo: rgba(71, 97, 137, 1);
     /* #476189 */
 
@@ -147,14 +147,14 @@ body {
 
 
     /* Transperent Colors */
-    --color-primary-transparent: rgba(85, 181, 108, 0);
+    /* --color-primary-transparent: rgba(85, 181, 108, 0); */
 
 
     /* === Utility / Misc === */
-    --color-test: rgba(63, 104, 178, 1);
+    /* --color-test: rgba(63, 104, 178, 1); */
 
     /* Color customs */
-    --color-custom-primary: rgba(32, 45, 89, 1);
+    /* --color-custom-primary: rgba(32, 45, 89, 1);
     --color-custom-secondary: rgba(85, 181, 108, 1);
     --color-custom-warning: rgba(237, 140, 34, 1);
     --color-custom-danger: rgba(220, 39, 44, 1);
@@ -167,7 +167,7 @@ body {
     --color-custom-danger-light: rgba(220, 39, 44, 0.8);
     --color-custom-accent-light: rgba(0, 209, 178, 0.8);
     --color-custom-neutral-light: rgba(126, 126, 126, 0.8);
-    --color-custom-surface-light: rgba(255, 255, 255, 0.8);
+    --color-custom-surface-light: rgba(255, 255, 255, 0.8); */
 
 
     /* Shadow colors  */

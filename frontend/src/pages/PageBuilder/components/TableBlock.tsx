@@ -1,6 +1,6 @@
 import React from 'react';
 import type { ComponentType } from '../types';
-import Table from '../../../components/global/Table';
+import Table from '@components/global/Table';
 
 interface TableBlockProps {
     component: ComponentType;

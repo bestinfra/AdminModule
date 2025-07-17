@@ -6,7 +6,7 @@ import AllTickets from './pages/AllTickets';
 import Forms from './pages/Forms';
 import MainLayout from './components/layout/MainLayout';
 import NotFound from './pages/NotFound';
-import { AppProvider } from './context/AppContext'; 
+import { AppProvider } from './context/AppContext';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import Login from './pages/Login';
@@ -55,39 +55,43 @@ import CreateTicket from './pages/CreateTicket';
 
 
 const App: React.FC = () => {
-
     return (
         <AppProvider>
             <AuthProvider>
                 <Router>
                     <Routes>
                         {/* Public routes */}
-                        <Route 
-                            path="/login" 
+                        <Route
+                            path="/login"
                             element={
                                 <ProtectedRoute requireAuth={false}>
                                     <Login />
                                 </ProtectedRoute>
-                            } 
+                            }
                         />
-                        
+
                         {/* Protected routes */}
-                        <Route 
+                        <Route
                             element={
                                 <ProtectedRoute>
                                     <MainLayout />
                                 </ProtectedRoute>
-                            }
-                        >
+                            }>
+                            <Route path="/" element={<Dashboard />} />
                             <Route
-                                path="/"
-                                element={<Dashboard />}
+                                path="/super-admin"
+                                element={<SuperAdminDashboard />}
                             />
-                            <Route path="/super-admin" element={<SuperAdminDashboard />} />
                             <Route path="/apps" element={<AppManagement />} />
-                            <Route path="/asset-management" element={<AssetManagement />} />
+                            <Route
+                                path="/asset-management"
+                                element={<AssetManagement />}
+                            />
                             <Route path="/profile" element={<Profile />} />
-                            <Route path="/tickets-filtered" element={<TicketsFilteredView />} />
+                            <Route
+                                path="/tickets-filtered"
+                                element={<TicketsFilteredView />}
+                            />
                             <Route path="/forms" element={<Forms />} />
                             <Route path="/consumers" element={<Consumers />} /> 
                             <Route path="/consumers/high-usage" element={<Consumers />} />

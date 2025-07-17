@@ -1,12 +1,12 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import Card from '../components/global/Card';
+import Card from '@components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
-import Table from '../components/global/Table';
-import Page from '../components/global/Page';
-import type { Section } from '../components/global/Page';
-import PageHeader from '../components/global/PageHeader';
+import Table from '@components/global/Table';
+import Page from '@components/global/Page';
+import type { Section } from '@components/global/Page';
+import PageHeader from '@components/global/PageHeader';
 
 
 // Mock data (should be shared or moved to a common location in real app)
@@ -68,11 +68,11 @@ const ConsumerView: React.FC = () => {
     return (
       <div className="p-6">
         <h1 className="text-2xl font-bold mb-4">Consumer not found</h1>
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-          <h3 className="font-semibold text-red-800 mb-2">Debug Information:</h3>
-          <p className="text-sm text-red-700 mb-2">UID from URL: <strong>{uid}</strong></p>
-          <p className="text-sm text-red-700 mb-2">Available UIDs: <strong>{consumersData.map(c => c.uid).join(', ')}</strong></p>
-          <p className="text-sm text-red-700">Please check the URL parameter and ensure it matches one of the available consumer UIDs.</p>
+        <div className="bg-danger-light border border-danger rounded-lg p-4">
+          <h3 className="font-semibold text-danger mb-2">Debug Information:</h3>
+          <p className="text-sm text-danger mb-2">UID from URL: <strong>{uid}</strong></p>
+          <p className="text-sm text-danger mb-2">Available UIDs: <strong>{consumersData.map(c => c.uid).join(', ')}</strong></p>
+          <p className="text-sm text-danger">Please check the URL parameter and ensure it matches one of the available consumer UIDs.</p>
         </div>
       </div>
     );
@@ -104,38 +104,38 @@ const ConsumerView: React.FC = () => {
       <div className="bg-white rounded-lg shadow p-6">
         <div className="grid grid-cols-4 gap-4 mb-4">
           <div>
-            <div className="text-xs text-gray-500">Current Balance (₹)</div>
-            <div className="text-green-600 text-lg font-bold">₹{consumer.balance.toFixed(2)}</div>
+            <div className="text-xs text-neutral">Current Balance (₹)</div>
+            <div className="text-secondary text-lg font-bold">₹{consumer.balance.toFixed(2)}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-500">Unique Identification No</div>
+            <div className="text-xs text-neutral">Unique Identification No</div>
             <div className="text-md font-medium">{consumer.uid}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-500">Meter Serial Number</div>
-            <div className="flex items-center gap-2"><span className="h-2 w-2 bg-green-500 rounded-full inline-block"></span>{consumer.meter}</div>
+            <div className="text-xs text-neutral">Meter Serial Number</div>
+            <div className="flex items-center gap-2"><span className="h-2 w-2 bg-secondary rounded-full inline-block"></span>{consumer.meter}</div>
           </div>
           <div>
-            <div className="text-xs text-gray-500">Occupancy Status</div>
+            <div className="text-xs text-neutral">Occupancy Status</div>
             <div className="text-md font-medium">{consumer.occupancy}</div>
           </div>
         </div>
         <div className="grid grid-cols-4 gap-4">
           <div>
             <div className="font-semibold">Permanent Address</div>
-            <div className="text-sm text-gray-600">{consumer.address}</div>
+            <div className="text-sm text-neutral">{consumer.address}</div>
           </div>
           <div>
             <div className="font-semibold">Billing Address</div>
-            <div className="text-sm text-gray-600">{consumer.address}</div>
+            <div className="text-sm text-neutral">{consumer.address}</div>
           </div>
           <div>
             <div className="font-semibold">Mobile No</div>
-            <div className="text-sm text-gray-600">{consumer.mobile}</div>
+            <div className="text-sm text-neutral">{consumer.mobile}</div>
           </div>
           <div>
             <div className="font-semibold">Email ID</div>
-            <div className="text-sm text-gray-600">{consumer.email}</div>
+            <div className="text-sm text-neutral">{consumer.email}</div>
           </div>
         </div>
       </div>
@@ -147,9 +147,9 @@ const ConsumerView: React.FC = () => {
     id: 'instantaneous-data',
     component: (
       <div className="bg-primary-lightest rounded-[var(--radius-2xl)] p-6">
-        <div className="flex items-center justify-between bg-[var(--color-primary-lightest)] rounded-t-lg px-4 py-2">
+        <div className="flex items-center justify-between bg-primary-lightest rounded-t-lg px-4 py-2">
           <div className="font-semibold">Instantaneous Data</div>
-          <div className="text-sm text-gray-500">Last Comm Date: 10/07/2025 07:00:00</div>
+          <div className="text-sm text-neutral">Last Comm Date: 10/07/2025 07:00:00</div>
         </div>
         <div className="grid grid-cols-3 gap-4">
           <Card
@@ -218,9 +218,9 @@ const ConsumerView: React.FC = () => {
               <div className="flex flex-col items-center w-full md:w-2/3">
                 {/* Legend above chart */}
                 <div className="flex items-center gap-6 mb-2">
-                  <span className="flex items-center gap-1 text-green-500 font-medium text-sm"><span className="w-3 h-3 rounded-full bg-green-500 inline-block"></span>Apparent Power</span>
-                  <span className="flex items-center gap-1 text-blue-500 font-medium text-sm"><span className="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>Active Power</span>
-                  <span className="flex items-center gap-1 text-red-500 font-medium text-sm"><span className="w-3 h-3 rounded-full bg-red-500 inline-block"></span>Reactive Power</span>
+                  <span className="flex items-center gap-1 text-secondary font-medium text-sm"><span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>Apparent Power</span>
+                  <span className="flex items-center gap-1 text-accent font-medium text-sm"><span className="w-3 h-3 rounded-full bg-accent inline-block"></span>Active Power</span>
+                  <span className="flex items-center gap-1 text-danger font-medium text-sm"><span className="w-3 h-3 rounded-full bg-danger inline-block"></span>Reactive Power</span>
                 </div>
                 <PieChart
                   data={[
@@ -238,9 +238,9 @@ const ConsumerView: React.FC = () => {
               <div className="flex flex-col items-center w-full md:w-1/3 mt-4 md:mt-0">
                 <div className="bg-white rounded-xl p-4 shadow flex flex-col items-start w-full max-w-xs">
                   <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2 text-green-500"><span className="w-3 h-3 rounded-full bg-green-500 inline-block"></span>0.109kVA <span className="text-gray-500">50.0%</span></div>
-                    <div className="flex items-center gap-2 text-blue-500"><span className="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>0.109kVA <span className="text-gray-500">50.0%</span></div>
-                    <div className="flex items-center gap-2 text-red-500"><span className="w-3 h-3 rounded-full bg-red-500 inline-block"></span>0kVA <span className="text-gray-500">0.0%</span></div>
+                    <div className="flex items-center gap-2 text-secondary"><span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>0.109kVA <span className="text-neutral">50.0%</span></div>
+                    <div className="flex items-center gap-2 text-accent"><span className="w-3 h-3 rounded-full bg-accent inline-block"></span>0.109kVA <span className="text-neutral">50.0%</span></div>
+                    <div className="flex items-center gap-2 text-danger"><span className="w-3 h-3 rounded-full bg-danger inline-block"></span>0kVA <span className="text-neutral">0.0%</span></div>
                   </div>
                 </div>
               </div>
@@ -248,7 +248,7 @@ const ConsumerView: React.FC = () => {
           </div>
           {/* Power Metrics Card */}
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
-            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-[var(--color-primary-lightest)]  rounded-t-3xl">
+            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-3xl">
               <div className="font-semibold text-base">Power Metrics</div>
               <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Metrics')}>
                 <img
@@ -285,7 +285,7 @@ const ConsumerView: React.FC = () => {
           {/* Daily Consumption Card */}
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
-              <div className="font-semibold text-base">Daily Consumption <span className="text-gray-500 font-normal text-sm">(9 May, 2025 - 10 Jul, 2025)</span></div>
+              <div className="font-semibold text-base">Daily Consumption <span className="text-neutral font-normal text-sm">(9 May, 2025 - 10 Jul, 2025)</span></div>
               <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Daily Consumption')}>
                 <img
                   alt="Download chart"
@@ -313,7 +313,7 @@ const ConsumerView: React.FC = () => {
           {/* Monthly Consumption Card */}
           <div className="rounded-2xl shadow p-0 flex flex-col h-full">
             <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
-              <div className="font-semibold text-base">Monthly Consumption <span className="text-gray-500 font-normal text-sm">(Jul 2024 - Jul 2025)</span></div>
+              <div className="font-semibold text-base">Monthly Consumption <span className="text-neutral font-normal text-sm">(Jul 2024 - Jul 2025)</span></div>
               <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Monthly Consumption')}>
                 <img
                   alt="Download chart"
@@ -461,11 +461,11 @@ const ConsumerView: React.FC = () => {
   const debugSection: Section = {
     id: 'debug',
     component: (
-      <div className="bg-gray-50 rounded-lg p-4 mb-4">
-        <h3 className="font-semibold text-gray-800 mb-2">Debug Information:</h3>
-        <p className="text-sm text-gray-600 mb-1">UID from URL: <strong>{uid}</strong></p>
-        <p className="text-sm text-gray-600 mb-1">Consumer found: <strong>{consumer ? 'Yes' : 'No'}</strong></p>
-        <p className="text-sm text-gray-600">Total consumers: <strong>{consumersData.length}</strong></p>
+      <div className="bg-neutral-light rounded-lg p-4 mb-4">
+        <h3 className="font-semibold text-neutral-darker mb-2">Debug Information:</h3>
+        <p className="text-sm text-neutral mb-1">UID from URL: <strong>{uid}</strong></p>
+        <p className="text-sm text-neutral mb-1">Consumer found: <strong>{consumer ? 'Yes' : 'No'}</strong></p>
+        <p className="text-sm text-neutral">Total consumers: <strong>{consumersData.length}</strong></p>
       </div>
     )
   };

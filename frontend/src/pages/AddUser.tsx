@@ -25,7 +25,7 @@ const AddUser: React.FC = () => {
           <input
             type="text"
             name="fullName"
-            className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary"
+            className="rounded-full border border-neutral-light px-6 py-3 text-base outline-none focus:border-primary"
             placeholder="Enter full name"
             value={form.fullName}
             onChange={handleChange}
@@ -33,14 +33,14 @@ const AddUser: React.FC = () => {
           <input
             type="text"
             name="phone"
-            className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary"
+            className="rounded-full border border-neutral-light px-6 py-3 text-base outline-none focus:border-primary"
             placeholder="Enter phone number"
             value={form.phone}
             onChange={handleChange}
           />
           <select
             name="role"
-            className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary text-gray-500"
+            className="rounded-full border border-neutral-light px-6 py-3 text-base outline-none focus:border-primary text-neutral"
             value={form.role}
             onChange={handleChange}
           >
@@ -54,7 +54,7 @@ const AddUser: React.FC = () => {
           <input
             type="email"
             name="email"
-            className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary"
+            className="rounded-full border border-neutral-light px-6 py-3 text-base outline-none focus:border-primary"
             placeholder="Enter email address"
             value={form.email}
             onChange={handleChange}
@@ -62,14 +62,14 @@ const AddUser: React.FC = () => {
           <input
             type="password"
             name="password"
-            className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary"
+            className="rounded-full border border-neutral-light px-6 py-3 text-base outline-none focus:border-primary"
             placeholder="Enter password"
             value={form.password}
             onChange={handleChange}
           />
           <select
             name="parentRole"
-            className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary text-gray-500"
+            className="rounded-full border border-neutral-light px-6 py-3 text-base outline-none focus:border-primary text-neutral"
             value={form.parentRole}
             onChange={handleChange}
           >
@@ -81,8 +81,8 @@ const AddUser: React.FC = () => {
         </div>
       </form>
       <div className="flex justify-end gap-6">
-        <button type="button" className="bg-[#163977] hover:bg-blue-900 text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
-        <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-10 rounded-full text-lg">Save</button>
+        <button type="button" className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
+        <button type="submit" className="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-10 rounded-full text-lg">Save</button>
       </div>
     </div>
   );

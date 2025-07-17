@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 // @ts-ignore: If axios types are missing, install with: npm install axios @types/axios
 import axios from 'axios';
-import FormInput from '../../../components/forms/FormInput';
-import Dropdown from '../../../components/global/Dropdown';
-import Button from '../../../components/global/Button';
-import type { FormInputValue } from '../../../components/forms/types';
+import FormInput from '@components/forms/FormInput'; 
+import Dropdown from '@components/global/Dropdown';
+import Button from '@components/global/Button';
+import type { FormInputValue } from '@components/forms/types';
 import { validateApplicationSetup } from '../utils';
+import RemarksPanel from './RemarksPanel';
 
 interface ApplicationSetupProps {
     formData: any;
@@ -13,9 +14,11 @@ interface ApplicationSetupProps {
     onInputChange: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
     onArrayChange: (name: string, value: any) => void;
     onNext: (e: React.FormEvent<HTMLFormElement>) => void;
+    currentStep?: number;
+    onBack?: () => void;
 }
 
-const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, onInputChange, onArrayChange, onNext }) => {
+const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, onInputChange, onArrayChange, onNext, currentStep = 1, onBack }) => {
 
     const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
     const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -26,8 +29,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     const [countryOptions, setCountryOptions] = useState<{ value: string; label: string }[]>([]);
 
     // Unified loading state and debounce ref for location lookups
-    const [locationLoading, setLocationLoading] = useState<'none' | 'city' | 'state'>('none');
-    console.log(locationLoading);
+
     const locationDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
     // Fetch countries on mount
@@ -94,8 +96,19 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     };
 
     // Auto-generate subdomain from app name
+    const prevAppNameRef = useRef<string>('');
+    const isInitialMount = useRef(true);
+    
     useEffect(() => {
-        if (formData.appName) {
+        // Skip on initial mount to avoid setting subdomain when component first loads
+        if (isInitialMount.current) {
+            isInitialMount.current = false;
+            prevAppNameRef.current = formData.appName || '';
+            return;
+        }
+        
+        // Only update if app name has actually changed and is different from previous
+        if (formData.appName && formData.appName !== prevAppNameRef.current) {
             const generated = formData.appName
                 .toLowerCase()
                 .replace(/[^a-z0-9]/g, '-')
@@ -106,12 +119,11 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
         } else {
             onInputChange({ target: { name: 'subdomain', value: '' } });
         }
-    }, [formData.appName, onInputChange]);
+    }, [formData.appName]);
 
     // Fetch state/country from city
     const fetchStateCountryFromCity = async (city: string) => {
         if (!city) return;
-        setLocationLoading('city');
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json&addressdetails=1&limit=1`);
             const data = await response.json();
@@ -126,15 +138,12 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
             }
         } catch (error) {
             console.error('Error fetching state/country from city:', error);
-        } finally {
-            setLocationLoading('none');
         }
     };
 
     // Fetch country from state
     const fetchCountryFromState = async (state: string) => {
         if (!state) return;
-        setLocationLoading('state');
         try {
             const response = await fetch(`https://nominatim.openstreetmap.org/search?state=${encodeURIComponent(state)}&format=json&addressdetails=1&limit=1`);
             const data = await response.json();
@@ -143,8 +152,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
             }
         } catch (error) {
             console.error('Error fetching country from state:', error);
-        } finally {
-            setLocationLoading('none');
         }
     };
 
@@ -170,8 +177,29 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
 
     // Validate form data and generate remarks
     const { isValid, errors: validationErrors, remarks } = useMemo(() => {
+        //  subdomain issues
+        if (formData.subdomain) {
+            console.log('Subdomain validation debug:', {
+                subdomain: formData.subdomain,
+                isValid: /^https:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/.test(formData.subdomain),
+                regex: /^https:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/
+            });
+        }
         return validateApplicationSetup(formData);
-    }, [formData]);
+    }, [
+        formData.appName,
+        formData.subdomain,
+        formData.addressLine,
+        formData.country,
+        formData.state,
+        formData.city,
+        formData.applicationCategory,
+        formData.projectType,
+        formData.ownershipType,
+        formData.tariffPlans,
+        formData.billingMode,
+        formData.meteringType
+    ]);
 
     // Only show validation errors if form has been submitted
     const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
@@ -256,7 +284,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                 <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
                     <div className="">
                         <h2 className="text-base font-semibold text-primary">Application Setup</h2>
-                        <p className="text-base text-gray-600 mt-2">Configure your application's basic information, location details, project specifications, and billing preferences to get started.</p>
+                        <p className="text-base text-neutral mt-2">Configure your application's basic information, location details, project specifications, and billing preferences to get started.</p>
                     </div>
 
                     <form className="flex flex-col gap-4" onSubmit={(e) => {
@@ -283,7 +311,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter your Application Name',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.appName}
                                         error={allErrors.appName}
@@ -350,7 +378,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter Address Line',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.addressLine}
                                         error={allErrors.addressLine}
@@ -369,7 +397,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter City',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.city}
                                         error={allErrors.city}
@@ -391,7 +419,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter State/Province',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-gray-300',
+                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.state}
                                         error={allErrors.state}
@@ -498,68 +526,32 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
 
 
                         {/* Submit Button */}
-                        <div className="flex justify-end">
-                            <Button
-                                label="Next Step"
-                                type="submit"
-                                variant="primary"
-                            />
+                        <div className="flex justify-between items-center">
+                            {currentStep > 1 && (
+                                <span 
+                                    className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-primary-lightest dark:hover:bg-primary-dark-light transition-colors" 
+                                    onClick={onBack}
+                                >
+                                    <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
+                                    <span className="text-neutral dark:text-neutral-light font-medium">Previous</span>
+                                </span>
+                            )}
+                            <div className="ml-auto">
+                                <Button
+                                    label="Next Step"
+                                    type="submit"
+                                    variant="primary"
+                                />
+                            </div>
                         </div>
                     </form>
                 </div>
-                <div className="col-span-1 bg-primary-lightest rounded-xl p-4">
-                    <div className="flex flex-col gap-4">
-                        <h2 className="text-base font-semibold text-primary">Remarks</h2>
-                        <div className="rounded text-sm font-medium">
-                            {!hasSubmitted ? (
-                                <div className="text-blue-700 bg-blue-100 border border-blue-300 rounded p-2">
-                                    ℹ️ Fill in the form and click "Next Step" to validate
-                                </div>
-                            ) : isValid ? (
-                                <div className="text-green-700 bg-green-100 border border-green-300 rounded p-2">
-                                    ✓ Form is valid and ready to proceed
-                                </div>
-                            ) : (
-                                <div className="text-red-700 bg-red-100 border border-red-300 rounded p-2">
-                                    ⚠️ Please fix {Object.keys(validationErrors).length} validation error(s) to continue
-                                </div>
-                            )}
-                        </div>
-                        <div className="space-y-2 max-h-96">
-                            {remarks.length > 0 ? (
-                                remarks.map((remark, index) => {
-                                    const isWarning = remark.includes('⚠️');
-                                    const isTip = remark.includes('💡');
-                                    const isSuccess = remark.includes('✓');
-                                    
-                                    let borderColor = 'border-green-500';
-                                    let bgColor = 'bg-green-50';
-                                    
-                                    if (isWarning) {
-                                        borderColor = 'border-yellow-500';
-                                        bgColor = 'bg-yellow-50';
-                                    } else if (isTip) {
-                                        borderColor = 'border-blue-500';
-                                        bgColor = 'bg-blue-50';
-                                    } else if (isSuccess) {
-                                        borderColor = 'border-green-500';
-                                        bgColor = 'bg-green-50';
-                                    }
-                                    
-                                    return (
-                                        <div key={index} className={`text-sm text-gray-700 p-2 ${bgColor} rounded ${borderColor}`}>
-                                            <span dangerouslySetInnerHTML={{ __html: remark }} />
-                                        </div>
-                                    );
-                                })
-                            ) : !hasSubmitted ? null : (
-                                <div className="text-base text-gray-500 p-2 bg-gray-50 rounded">
-                                    No additional remarks available.
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                <RemarksPanel
+                    hasSubmitted={hasSubmitted}
+                    isValid={isValid}
+                    validationErrors={validationErrors}
+                    remarks={remarks}
+                />
             </div>
 
         </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Page from '../components/global/Page';
+import Page from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 
 const userSidebarMenu = [
@@ -13,14 +13,14 @@ const userSidebarMenu = [
 const SidebarMenu = ({ selected = 3 }) => {
   const navigate = useNavigate();
   return (
-    <div className="flex flex-col gap-2 p-4 bg-[#f7fafd] rounded-2xl min-h-[500px] w-full">
+    <div className="flex flex-col gap-2 p-4 bg-primary-lightest rounded-2xl min-h-[500px] w-full">
       {userSidebarMenu.map((item, idx) => (
         <button
           key={item.title}
           className={`text-left px-4 py-3 rounded-xl font-medium text-[16px] transition-all ${
             idx === selected
               ? 'bg-white shadow text-primary'
-              : 'text-[#1a3353] hover:bg-white hover:shadow'
+              : 'text-neutral-darker hover:bg-white hover:shadow'
           }`}
           style={{ outline: 'none', border: 'none' }}
           onClick={() => item.path && item.path !== '#' && navigate(item.path)}
@@ -35,10 +35,10 @@ const SidebarMenu = ({ selected = 3 }) => {
 const TwoStepVerification: React.FC = () => {
   const content = (
     <div className="w-full flex flex-col items-center justify-center min-h-[300px] gap-6">
-      <div className="text-lg font-semibold text-gray-600 mb-6 mt-8">
-        <span className="font-bold">Two-Factor Authentication Status:</span> <span className="text-gray-500 font-normal">Disabled</span>
+      <div className="text-lg font-semibold text-neutral mb-6 mt-8">
+        <span className="font-bold">Two-Factor Authentication Status:</span> <span className="text-neutral font-normal">Disabled</span>
       </div>
-      <button className="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full text-lg">
+      <button className="bg-secondary hover:bg-secondary-light text-white font-bold py-4 px-10 rounded-full text-lg">
         Setup Two-Factor Authentication
       </button>
     </div>

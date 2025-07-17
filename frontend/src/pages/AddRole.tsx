@@ -20,21 +20,21 @@ const AddRole: React.FC = () => {
         <input
           type="text"
           name="roleName"
-          className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary"
+          className="rounded-full border border-primary-border px-6 py-3 text-base outline-none focus:border-primary"
           placeholder="Enter role name"
           value={form.roleName}
           onChange={handleChange}
         />
         <textarea
           name="description"
-          className="rounded-2xl border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary min-h-[80px] resize-none"
+          className="rounded-2xl border border-primary-border px-6 py-3 text-base outline-none focus:border-primary min-h-[80px] resize-none"
           placeholder="Enter description"
           value={form.description}
           onChange={handleChange}
         />
         <select
           name="parentRole"
-          className="rounded-full border border-[#e6ecf5] px-6 py-3 text-base outline-none focus:border-primary text-gray-500"
+          className="rounded-full border border-primary-border px-6 py-3 text-base outline-none focus:border-primary text-neutral"
           value={form.parentRole}
           onChange={handleChange}
         >
@@ -45,8 +45,8 @@ const AddRole: React.FC = () => {
         </select>
       </form>
       <div className="flex justify-end gap-6">
-        <button type="button" className="bg-[#163977] hover:bg-blue-900 text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
-        <button type="submit" className="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-10 rounded-full text-lg">Save</button>
+        <button type="button" className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
+        <button type="submit" className="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-10 rounded-full text-lg">Save</button>
       </div>
     </div>
   );
