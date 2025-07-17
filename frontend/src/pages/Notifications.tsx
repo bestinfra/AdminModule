@@ -55,7 +55,8 @@ const notificationData = [
 const Notifications: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState(0);
   const [toggles, setToggles] = React.useState(notificationData[0].items.map(i => i.types));
-
+  console.log(toggles);
+  console.log(setToggles);
   const content = (
     <div className="w-full max-w-6xl flex flex-col gap-6">
       <div className="border rounded-lg p-4 bg-white">
@@ -89,7 +90,7 @@ const Notifications: React.FC = () => {
             ))}
             {/* Row for Account Updates */}
             <div className="text-center">Account Updates</div>
-            {notificationTypes.map((type, idx) => (
+            {notificationTypes.map((type) => (
               <div key={type} className="flex justify-center">
                 <input type="checkbox" checked={true} readOnly className="w-5 h-5 accent-[#163977] rounded" />
               </div>

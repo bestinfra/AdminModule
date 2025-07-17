@@ -38,7 +38,7 @@ const permissionsData = [
 const RolesPermission: React.FC = () => {
   const navigate = useNavigate();
   const { roleId } = useParams();
-
+  console.log(roleId);
   return (
     <div className="w-full max-w-7xl flex flex-col gap-6 p-0">
       <div className="text-xl font-bold">Permissions for GMR</div>

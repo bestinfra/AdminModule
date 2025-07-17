@@ -27,6 +27,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
 
     // Unified loading state and debounce ref for location lookups
     const [locationLoading, setLocationLoading] = useState<'none' | 'city' | 'state'>('none');
+    console.log(locationLoading);
     const locationDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
     // Fetch countries on mount
