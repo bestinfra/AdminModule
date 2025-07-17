@@ -1,16 +1,7 @@
 
-/**
- * Organization Chart Component (Tailwind CSS Version)
- * 
- * A hierarchical visualization of an organization's structure using ReactFlow.
- * This component creates an interactive organization chart with different levels
- * of hierarchy and their relationships.
- */
-
 import React from "react";
 import ReactFlow, { Position, Background, Controls } from "reactflow";
 import type { Node, Edge } from "reactflow";
-// import "reactflow/dist/style.css"; // Commented out for Module Federation compatibility
 
 interface OrgChartNode {
   hierarchy_id: string;
@@ -19,7 +10,6 @@ interface OrgChartNode {
   children?: OrgChartNode[];
 }
 
-// Dummy data as per your screenshot
 const dummyData: OrgChartNode[] = [
   {
     hierarchy_id: '1',
@@ -61,13 +51,11 @@ const dummyData: OrgChartNode[] = [
   },
 ];
 
-// Helper to compute subtree height
 const computeSubtreeHeight = (node: OrgChartNode): number => {
   if (!node.children || node.children.length === 0) return 1;
   return node.children.reduce((sum: number, child: OrgChartNode) => sum + computeSubtreeHeight(child), 0);
 };
 
-// Convert hierarchical data to ReactFlow nodes and edges
 const getNodesAndEdges = (data: OrgChartNode[]): { nodes: Node[]; edges: Edge[] } => {
   const nodes: Node[] = [];
   const edges: Edge[] = [];

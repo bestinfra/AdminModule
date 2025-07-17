@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Button from './Button';
+import Button from '@components/global/Button';
 import PropTypes from 'prop-types';
 
 interface MenuItem {

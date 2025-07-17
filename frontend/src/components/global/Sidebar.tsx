@@ -1,8 +1,8 @@
 import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Cookies from 'js-cookie';
-import { useApp } from '../../context/AppContext';
-import '../../styles/custom.css';
+import { useApp } from '@context/AppContext';
+import '@/styles/custom.css';
 
 interface SubMenuItem {
     title: string;

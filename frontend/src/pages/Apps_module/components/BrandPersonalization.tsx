@@ -2,10 +2,10 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import FormInput from "@components/forms/FormInput";
 import Button from "@components/global/Button";
 import TimeRangeSelector from "@components/global/TimeRangeSelector";
-import ColorPicker from "./ColorPicker";
+import ColorPicker from "@pages/Apps_module/components/ColorPicker";
 import type { FormInputValue } from "@components/forms/types";
-import { validateBrandPersonalization } from "../utils";
-import RemarksPanel from "./RemarksPanel";
+import { validateBrandPersonalization } from "@pages/Apps_module/utils";
+import RemarksPanel from "@pages/Apps_module/components/RemarksPanel";
 
 interface BrandPersonalizationProps {
   formData: any;

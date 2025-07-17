@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Button from '../global/Button';
-import FormInput from '../forms/FormInput';
+import FormInput from '@components/forms/FormInput';
 
 // Configuration data
 const idTypeOptions = [

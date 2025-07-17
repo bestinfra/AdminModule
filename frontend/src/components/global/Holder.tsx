@@ -1,6 +1,6 @@
 import React from 'react';
-import TimeRangeSelector from './TimeRangeSelector';
-import LoadingSpinner from './LoadingSpinner';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import LoadingSpinner from '@components/global/LoadingSpinner';
 
 interface HolderProps {
     className?: string;

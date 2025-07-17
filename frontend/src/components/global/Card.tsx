@@ -12,8 +12,8 @@ interface CardProps {
     iconStyle?: React.CSSProperties; // new prop for custom icon styling
 }
 
-import CardSkeleton from '../skeletons/CardSkeleton';
-import '../../styles/custom.css';
+import CardSkeleton from '@components/skeletons/CardSkeleton';
+import '@/styles/custom.css';
 
 const Card = ({
     title,

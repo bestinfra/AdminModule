@@ -4,14 +4,14 @@ interface TimeRangeSelectorProps {
     availableTimeRanges: string[];
     selectedTimeRange: string;
     handleTimeRangeChange: (range: string) => void;
-    timeRangeLabels?: Record<string, string>; // New prop for customizable labels
+    timeRangeLabels?: Record<string, string>; 
 }
 
 const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
     availableTimeRanges,
     selectedTimeRange,
     handleTimeRangeChange,
-    timeRangeLabels = {}, // Default to empty object
+    timeRangeLabels = {}, 
 }) => {
     const [dimensions, setDimensions] = useState<{
         width: number;
@@ -23,7 +23,6 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
     const updateDimensions = () => {
         if (selectedRef.current && containerRef.current) {
             const selectedElement = selectedRef.current;
-            // const containerElement = containerRef.current;
 
             setDimensions({
                 width: selectedElement.offsetWidth,
@@ -50,7 +49,6 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
 
     if (availableTimeRanges.length === 0) return null;
 
-    // Helper function to get display label for a range
     const getDisplayLabel = (range: string): string => {
         return timeRangeLabels[range] || range;
     };

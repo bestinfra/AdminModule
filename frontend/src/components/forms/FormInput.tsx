@@ -1,19 +1,19 @@
 import React, { memo } from 'react';
-import { CLASSES } from './constants';
+import { CLASSES } from '@components/forms/constants';
 import type { 
   FormInputProps, 
   FormInputEvent, 
   FormBlurEvent, 
   CommonInputProps,
   FormInputValue 
-} from './types';
+} from '@components/forms/types';
 import {
   TextInput,
   TextareaInput,
   SelectInput,
   FileInput,
   CheckboxInput
-} from './renderers';
+} from '@components/forms/renderers';
 
 const FormInput: React.FC<FormInputProps> = ({ 
   input, value, error, showError, disabled, onInputChange, onInputBlur, fileInputRefs 
