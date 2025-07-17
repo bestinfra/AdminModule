@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@context/AuthContext';
 import { z } from 'zod';
 import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';

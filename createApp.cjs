@@ -1,5 +1,5 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // Function to copy pages directory recursively
 function copyPagesDirectory(sourcePagesDir, destPagesDir) {
@@ -11,7 +11,7 @@ function copyPagesDirectory(sourcePagesDir, destPagesDir) {
   // Read all files and directories in the source
   const items = fs.readdirSync(sourcePagesDir);
 
-  items.forEach(item => {
+  items.forEach((item) => { 
     const sourcePath = path.join(sourcePagesDir, item);
     const destPath = path.join(destPagesDir, item);
 
@@ -28,28 +28,33 @@ function copyPagesDirectory(sourcePagesDir, destPagesDir) {
 
 // Function to create app project in generated-apps folder
 function createAppProject(formData) {
-    const {
-        appName,
-        subdomain,
-        categories,
-        tariffPlans,
-        adminFirstName,
-        adminLastName,
-        adminEmail,
-        adminRole,
-        companyName,
-        companyWebsite,
-        primaryColor,
-        secondaryColor,
-        timezone,
-        currency,
-        modules,
-    } = formData;
+  const {
+    appName,
+    subdomain,
+    categories,
+    tariffPlans,
+    adminFirstName,
+    adminLastName,
+    adminEmail,
+    adminRole,
+    companyName,
+    companyWebsite,
+    primaryColor,
+    secondaryColor,
+    timezone,
+    currency,
+    modules,
+  } = formData;
 
   // Create the project folder name - use appName instead of subdomain to avoid special characters
-  const projectFolderName = appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app';
-  const baseDir = path.join(__dirname, 'generated-apps', projectFolderName);
-  
+  const projectFolderName =
+    appName
+      ?.toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "my-admin-app";
+  const baseDir = path.join(__dirname, "generated-apps", projectFolderName);
+
   // Helper to ensure directory exists
   function ensureDir(dir) {
     if (!fs.existsSync(dir)) {
@@ -57,241 +62,182 @@ function createAppProject(formData) {
     }
   }
 
-    // Create base directory
-    ensureDir(baseDir);
+  // Create base directory
+  ensureDir(baseDir);
 
   // Set up frontend directory
-  const frontendDir = path.join(baseDir, 'frontend');
+  const frontendDir = path.join(baseDir, "frontend");
   ensureDir(frontendDir);
 
   // Copy pages directory
-  const sourcePagesDir = path.join(__dirname, 'frontend', 'src', 'pages');
-  const destPagesDir = path.join(frontendDir, 'src', 'pages');
+  const sourcePagesDir = path.join(__dirname, "frontend", "src", "pages");
+  const destPagesDir = path.join(frontendDir, "src", "pages");
   if (fs.existsSync(sourcePagesDir)) {
     copyPagesDirectory(sourcePagesDir, destPagesDir);
-    console.log('Copied all pages to generated app');
+    console.log("Copied all pages to generated app");
   } else {
-    console.log('Pages directory not found:', sourcePagesDir);
+    console.log("Pages directory not found:", sourcePagesDir);
   }
 
-    // Helper to copy all icons and images
-    function copyAllAssets() {
-        // Copy all icons
-        const sourceIconsDir = path.join(
-            __dirname,
-            'frontend',
-            'public',
-            'icons'
-        );
-        const destIconsDir = path.join(frontendDir, 'public', 'icons');
-        ensureDir(destIconsDir);
+  // Helper to copy all icons and images
+  function copyAllAssets() {
+    // Copy all icons
+    const sourceIconsDir = path.join(__dirname, "frontend", "public", "icons");
+    const destIconsDir = path.join(frontendDir, "public", "icons");
+    ensureDir(destIconsDir);
 
-        if (fs.existsSync(sourceIconsDir)) {
-            const iconFiles = fs.readdirSync(sourceIconsDir);
-            iconFiles.forEach((iconName) => {
-                const sourcePath = path.join(sourceIconsDir, iconName);
-                const destPath = path.join(destIconsDir, iconName);
+    if (fs.existsSync(sourceIconsDir)) {
+      const iconFiles = fs.readdirSync(sourceIconsDir);
+      iconFiles.forEach((iconName) => {
+        const sourcePath = path.join(sourceIconsDir, iconName);
+        const destPath = path.join(destIconsDir, iconName);
 
-                if (fs.statSync(sourcePath).isFile()) {
-                    fs.copyFileSync(sourcePath, destPath);
-                }
-            });
-        } else {
-            console.log(`Icons directory not found: ${sourceIconsDir}`);
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
         }
-
-        // Copy all images
-        const sourceImagesDir = path.join(
-            __dirname,
-            'frontend',
-            'public',
-            'images'
-        );
-        const destImagesDir = path.join(frontendDir, 'public', 'images');
-        ensureDir(destImagesDir);
-
-        if (fs.existsSync(sourceImagesDir)) {
-            const imageFiles = fs.readdirSync(sourceImagesDir);
-            imageFiles.forEach((imageName) => {
-                const sourcePath = path.join(sourceImagesDir, imageName);
-                const destPath = path.join(destImagesDir, imageName);
-
-                if (fs.statSync(sourcePath).isFile()) {
-                    fs.copyFileSync(sourcePath, destPath);
-                }
-            });
-        } else {
-            console.log(`Images directory not found: ${sourceImagesDir}`);
-        }
-
-        // Copy fonts directory
-        const sourceFontsDir = path.join(
-            __dirname,
-            'frontend',
-            'public',
-            'fonts'
-        );
-        const destFontsDir = path.join(frontendDir, 'public', 'fonts');
-
-        // Ensure Manrope font subdirectory exists in destination
-        const sourceManropeDir = path.join(sourceFontsDir, 'Manrope');
-        const destManropeDir = path.join(destFontsDir, 'Manrope');
-        if (fs.existsSync(sourceManropeDir)) {
-            ensureDir(destManropeDir);
-            const manropeFiles = fs.readdirSync(sourceManropeDir);
-            manropeFiles.forEach((fontName) => {
-                const sourcePath = path.join(sourceManropeDir, fontName);
-                const destPath = path.join(destManropeDir, fontName);
-                if (fs.statSync(sourcePath).isFile()) {
-                    fs.copyFileSync(sourcePath, destPath);
-                }
-            });
-            console.log(`Copied Manrope fonts to ${destManropeDir}`);
-        } else {
-            console.log(
-                `Manrope fonts directory not found: ${sourceManropeDir}`
-            );
-        }
+      });
+    } else {
+      console.log(`Icons directory not found: ${sourceIconsDir}`);
     }
 
-    // Copy all assets (icons, images, fonts)
-    copyAllAssets();
+    // Copy all images
+    const sourceImagesDir = path.join(
+      __dirname,
+      "frontend",
+      "public",
+      "images"
+    );
+    const destImagesDir = path.join(frontendDir, "public", "images");
+    ensureDir(destImagesDir);
 
-    // Helper to sync CSS files using the new sync utility
-    // function syncCSSFiles() {
-    //     const cssDir = path.join(frontendDir, 'src', 'styles');
-    //     ensureDir(cssDir);
+    if (fs.existsSync(sourceImagesDir)) {
+      const imageFiles = fs.readdirSync(sourceImagesDir);
+      imageFiles.forEach((imageName) => {
+        const sourcePath = path.join(sourceImagesDir, imageName);
+        const destPath = path.join(destImagesDir, imageName);
 
-    //     // Import the sync utility
-    //     const {
-    //         syncCSSToApp,
-    //         transformCSSForGeneratedApp,
-    //     } = require('./scripts/sync-css.js');
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+    } else {
+      console.log(`Images directory not found: ${sourceImagesDir}`);
+    }
 
-    //     // Use the sync utility to copy and transform CSS files
-    //     const sourceStylesDir = path.join(
-    //         __dirname,
-    //         'frontend',
-    //         'src',
-    //         'styles'
-    //     );
+    // Copy fonts directory
+    const sourceFontsDir = path.join(__dirname, "frontend", "public", "fonts");
+    const destFontsDir = path.join(frontendDir, "public", "fonts");
 
-    //     if (fs.existsSync(sourceStylesDir)) {
-    //         const cssFiles = fs.readdirSync(sourceStylesDir);
-    //         cssFiles.forEach((cssFile) => {
-    //             const sourcePath = path.join(sourceStylesDir, cssFile);
-    //             const destPath = path.join(cssDir, cssFile);
+    // Ensure Manrope font subdirectory exists in destination
+    const sourceManropeDir = path.join(sourceFontsDir, "Manrope");
+    const destManropeDir = path.join(destFontsDir, "Manrope");
+    if (fs.existsSync(sourceManropeDir)) {
+      ensureDir(destManropeDir);
+      const manropeFiles = fs.readdirSync(sourceManropeDir);
+      manropeFiles.forEach((fontName) => {
+        const sourcePath = path.join(sourceManropeDir, fontName);
+        const destPath = path.join(destManropeDir, fontName);
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+      console.log(`Copied Manrope fonts to ${destManropeDir}`);
+    } else {
+      console.log(`Manrope fonts directory not found: ${sourceManropeDir}`);
+    }
+  }
 
-    //             if (
-    //                 fs.statSync(sourcePath).isFile() &&
-    //                 cssFile.endsWith('.css')
-    //             ) {
-    //                 let cssContent = fs.readFileSync(sourcePath, 'utf8');
+  // Copy all assets (icons, images, fonts)
+  copyAllAssets();
 
-    //                 // Use the transformCSSForGeneratedApp function for consistency
-    //                 const transformedContent =
-    //                     transformCSSForGeneratedApp(cssContent);
+  // Create the React project structure
+  const projectStructure = {
+    "package.json": JSON.stringify(
+      {
+        name:
+          appName
+            ?.toLowerCase()
+            .replace(/[^a-z0-9-]/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "") || projectFolderName,
+        version: "0.1.0",
+        private: true,
 
-    //                 fs.writeFileSync(destPath, transformedContent);
-    //                 console.log(`✅ Synced ${cssFile} to ${projectFolderName}`);
-    //             }
-    //         });
-    //     } else {
-    //         console.log(`CSS directory not found: ${sourceStylesDir}`);
-    //     }
-    // }
+        scripts: {
+          dev: "vite",
+          build: "tsc && vite build",
+          preview: "vite preview",
+          lint: "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        },
+        dependencies: {
+          react: "^19.1.0",
+          "react-dom": "^19.1.0",
+          "react-router-dom": "^6.8.0",
+          "js-cookie": "^3.0.5",
+          "@types/react": "^18.0.28",
+          "@types/react-dom": "^18.0.11",
+          typescript: "^4.9.3",
+          vite: "^4.1.0",
+          "@vitejs/plugin-react": "^3.1.0",
+          "@originjs/vite-plugin-federation": "^1.4.1",
+          tailwindcss: "^3.2.7",
+          postcss: "^8.4.21",
+          autoprefixer: "^10.4.14",
+        },
+        devDependencies: {
+          "@types/node": "^18.15.11",
+          eslint: "^8.36.0",
+          "@typescript-eslint/eslint-plugin": "^5.57.1",
+          "@typescript-eslint/parser": "^5.57.1",
+        },
+      },
+      null,
+      2
+    ),
 
-    // Sync all CSS files using the new sync utility
-    // syncCSSFiles();
+    "tsconfig.json": JSON.stringify(
+      {
+        compilerOptions: {
+          target: "ES2020",
+          useDefineForClassFields: true,
+          lib: ["ES2020", "DOM", "DOM.Iterable"],
+          module: "ESNext",
+          skipLibCheck: true,
+          moduleResolution: "bundler",
+          allowImportingTsExtensions: true,
+          resolveJsonModule: true,
+          isolatedModules: true,
+          noEmit: true,
+          jsx: "react-jsx",
+          jsxImportSource: "react",
+          strict: true,
+          noUnusedLocals: true,
+          noUnusedParameters: true,
+          noFallthroughCasesInSwitch: true,
+        },
+        include: ["src"],
+        references: [{ path: "./tsconfig.node.json" }],
+      },
+      null,
+      2
+    ),
 
-    // Create the React project structure
-    const projectStructure = {
-        'package.json': JSON.stringify(
-            {
-                name:
-                    appName
-                        ?.toLowerCase()
-                        .replace(/[^a-z0-9-]/g, '-')
-                        .replace(/-+/g, '-')
-                        .replace(/^-|-$/g, '') || projectFolderName,
-                version: '0.1.0',
-                private: true,
+    "tsconfig.node.json": JSON.stringify(
+      {
+        compilerOptions: {
+          composite: true,
+          skipLibCheck: true,
+          module: "ESNext",
+          moduleResolution: "bundler",
+          allowSyntheticDefaultImports: true,
+        },
+        include: ["vite.config.ts"],
+      },
+      null,
+      2
+    ),
 
-                scripts: {
-                    dev: 'vite',
-                    build: 'tsc && vite build',
-                    preview: 'vite preview',
-                    lint: 'eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0',
-                },
-                dependencies: {
-                    react: '^19.1.0',
-                    'react-dom': '^19.1.0',
-                    'react-router-dom': '^6.8.0',
-                    'js-cookie': '^3.0.5',
-                    '@types/react': '^18.0.28',
-                    '@types/react-dom': '^18.0.11',
-                    typescript: '^4.9.3',
-                    vite: '^4.1.0',
-                    '@vitejs/plugin-react': '^3.1.0',
-                    '@originjs/vite-plugin-federation': '^1.4.1',
-                    tailwindcss: '^3.2.7',
-                    postcss: '^8.4.21',
-                    autoprefixer: '^10.4.14',
-                },
-                devDependencies: {
-                    '@types/node': '^18.15.11',
-                    eslint: '^8.36.0',
-                    '@typescript-eslint/eslint-plugin': '^5.57.1',
-                    '@typescript-eslint/parser': '^5.57.1',
-                },
-            },
-            null,
-            2
-        ),
-
-        'tsconfig.json': JSON.stringify(
-            {
-                compilerOptions: {
-                    target: 'ES2020',
-                    useDefineForClassFields: true,
-                    lib: ['ES2020', 'DOM', 'DOM.Iterable'],
-                    module: 'ESNext',
-                    skipLibCheck: true,
-                    moduleResolution: 'bundler',
-                    allowImportingTsExtensions: true,
-                    resolveJsonModule: true,
-                    isolatedModules: true,
-                    noEmit: true,
-                    jsx: 'react-jsx',
-                    jsxImportSource: 'react',
-                    strict: true,
-                    noUnusedLocals: true,
-                    noUnusedParameters: true,
-                    noFallthroughCasesInSwitch: true,
-                },
-                include: ['src'],
-                references: [{ path: './tsconfig.node.json' }],
-            },
-            null,
-            2
-        ),
-
-        'tsconfig.node.json': JSON.stringify(
-            {
-                compilerOptions: {
-                    composite: true,
-                    skipLibCheck: true,
-                    module: 'ESNext',
-                    moduleResolution: 'bundler',
-                    allowSyntheticDefaultImports: true,
-                },
-                include: ['vite.config.ts'],
-            },
-            null,
-            2
-        ),
-
-        'vite.config.ts': `import { defineConfig } from 'vite';
+    "vite.config.ts": `import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import federation from '@originjs/vite-plugin-federation';
 
@@ -328,7 +274,7 @@ export default defineConfig({
   publicDir: 'public',
 });`,
 
-        'tailwind.config.js': `/** @type {import('tailwindcss').Config} */
+    "tailwind.config.js": `/** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
     "./index.html",
@@ -337,7 +283,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: '${primaryColor || '#3B82F6'}',
+        primary: '${primaryColor || "#3B82F6"}',
         'primary-lightest': '#F0F9FF',
         'primary-border': 'rgb(233, 239, 255)',
         'dark-border': '#374151',
@@ -355,20 +301,20 @@ module.exports = {
   darkMode: 'class'
 }`,
 
-        'postcss.config.js': `module.exports = {
+    "postcss.config.js": `module.exports = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {},
   },
 }`,
 
-        'index.html': `<!doctype html>
+    "index.html": `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>${appName || 'Admin App'}</title>
+    <title>${appName || "Admin App"}</title>
   </head>
   <body>
     <div id="root"></div>
@@ -376,7 +322,7 @@ module.exports = {
   </body>
 </html>`,
 
-        'src/main.tsx': `import React from 'react'
+    "src/main.tsx": `import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -387,7 +333,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   </React.StrictMode>,
 )`,
 
-        'src/index.css': `@tailwind base;
+    "src/index.css": `@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -412,7 +358,7 @@ body {
   display: none;
 }`,
 
-        'src/App.tsx': `
+    "src/App.tsx": `
 import React, { lazy, Suspense, ComponentType, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
@@ -798,34 +744,6 @@ function AppContent() {
     },
   ];
 
-  // const menuItems = [
-  //   {
-  //     title: 'Dashboard',
-  //     icon: '/icons/user-profile.svg',
-  //     link: '/consumers/BI25GMRA001',
-  //   },
-  //   {
-  //     title: 'All Tickets',
-  //     icon: '/icons/support-tickets.svg',
-  //     link: '/all-tickets',
-  //   },
-  // {
-  //     title: 'Bills',
-  //     icon: '/icons/bills.svg',
-  //     hasSubmenu: true,
-  //     submenu: [
-  //       {
-  //         title: 'Prepaid',
-  //         link: '/bills/prepaid',
-  //       },
-  //       {
-  //         title: 'Postpaid',
-  //         link: '/bills/postpaid',
-  //       },
-  //     ],
-  //   },
-  // ]
-  
   return (
    
     <FederatedContextProvider value={contextValue}>
@@ -853,11 +771,11 @@ function AppContent() {
                     ]}
                     logo={{
                       src: '/images/bi-blue-logo.svg',
-                      alt: '${appName || 'Admin App'}',
+                      alt: '${appName || "Admin App"}',
                       collapsedSrc: '/images/changed-logo.svg',
                     }}
                     footer={{
-                      copyright: '© 2024 ${companyName || 'Company'}',
+                      copyright: '© 2024 ${companyName || "Company"}',
                       showThemeToggle: true,
                       showShareButton: false,
                     }}
@@ -937,12 +855,12 @@ function App() {
 
 export default App;`,
 
-        'src/App.css': `#root {
+    "src/App.css": `#root {
   width: 100%;
   margin: 0 auto;
 }`,
 
-        'src/context/AppContext.tsx': `import React, { createContext, useContext, useEffect, useState } from 'react';
+    "src/context/AppContext.tsx": `import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface AppContextType {
     isDarkMode: boolean;
@@ -1018,7 +936,7 @@ export const useApp = () => {
     return context;
 };`,
 
-        'src/components/Input.tsx': `import React, { useRef, useEffect } from 'react';
+    "src/components/Input.tsx": `import React, { useRef, useEffect } from 'react';
 
 interface SearchInputProps {
     onSearch?: (query: string) => void;
@@ -1079,7 +997,7 @@ const Input = ({
 
 export default Input;`,
 
-        'src/components/Sidebar.tsx': `import { Link, useLocation } from 'react-router-dom';
+    "src/components/Sidebar.tsx": `import { Link, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 
@@ -1128,15 +1046,15 @@ const Sidebar = () => {
           link: '/consumers',
         },
         ${
-            modules
-                ?.map(
-                    (module) => `{
+          modules
+            ?.map(
+              (module) => `{
           title: '${module.charAt(0).toUpperCase() + module.slice(1)}',
           icon: '📋',
           link: '/${module}',
         }`
-                )
-                .join(',\n        ') || ''
+            )
+            .join(",\n        ") || ""
         }
       ],
     },
@@ -1162,13 +1080,13 @@ const Sidebar = () => {
             className={\`sticky top-0 z-10 dark:bg-primary-dark h-24 flex justify-center border-b border-b-primary-border dark:border-dark-border items-center \${isSidebarCollapsed ? 'bg-primary px-4' : 'bg-white px-16'} py-8\`}>
             <div className={\`\${isSidebarCollapsed ? 'w-8' : 'w-full'}\`}>
               <h1 className={\`font-bold text-gray-800 dark:text-white \${isSidebarCollapsed ? 'text-center' : 'text-left'}\`}>
-                {isSidebarCollapsed ? '${appName?.charAt(0) || 'A'}' : '${
-            appName || 'Admin App'
-        }'}
+                {isSidebarCollapsed ? '${appName?.charAt(0) || "A"}' : '${
+      appName || "Admin App"
+    }'}
               </h1>
               {!isSidebarCollapsed && (
                 <p className="text-sm text-gray-600 dark:text-gray-400">${
-                    companyName || 'Company Name'
+                  companyName || "Company Name"
                 }</p>
               )}
             </div>
@@ -1261,7 +1179,7 @@ const Sidebar = () => {
             <>
               <div className="flex items-center justify-between w-full">
                 <p className="text-xs text-light dark:text-subinfo">
-                  © 2024 ${companyName || 'Company'}
+                  © 2024 ${companyName || "Company"}
                 </p>
                 <button
                   className="w-10 h-10 border border-primary-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
@@ -1293,7 +1211,7 @@ const Sidebar = () => {
 
 export default Sidebar;`,
 
-        'src/components/Header.tsx': `import Input from './Input';
+    "src/components/Header.tsx": `import Input from './Input';
 import { useApp } from '../context/AppContext';
 import { useLocation } from 'react-router-dom';
 
@@ -1338,23 +1256,23 @@ const Header = ({
       case '/role-management':
         return 'Role Management';
       ${
-          modules
-              ?.filter(
-                  (module) =>
-                      ![
-                          'dashboard',
-                          'consumers',
-                          'user_management_default',
-                          'role_management',
-                      ].includes(module)
-              )
-              .map(
-                  (module) => `case '/${module}':
+        modules
+          ?.filter(
+            (module) =>
+              ![
+                "dashboard",
+                "consumers",
+                "user_management_default",
+                "role_management",
+              ].includes(module)
+          )
+          .map(
+            (module) => `case '/${module}':
         return '${
-            module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')
+          module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, " ")
         } Module';`
-              )
-              .join('\n      ') || ''
+          )
+          .join("\n      ") || ""
       }
       default:
         return 'Dashboard';
@@ -1414,9 +1332,9 @@ const Header = ({
         ))}
         <div className="p-2 flex items-center justify-center">
           <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
-            ${adminFirstName?.charAt(0) || 'A'}${
-            adminLastName?.charAt(0) || 'U'
-        }
+            ${adminFirstName?.charAt(0) || "A"}${
+      adminLastName?.charAt(0) || "U"
+    }
           </div>
         </div>
       </nav>
@@ -1426,7 +1344,7 @@ const Header = ({
 
 export default Header;`,
 
-        'src/components/SidebarWrapper.tsx': `import React from 'react';
+    "src/components/SidebarWrapper.tsx": `import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 interface SidebarWrapperProps {
@@ -1469,26 +1387,26 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
         //   link: '/role-management',
         // },
         // ${
-            modules
-                ?.filter(
-                    (module) =>
-                        ![
-                            'dashboard',
-                            'consumers',
-                            'user_management_default',
-                            'role_management',
-                        ].includes(module)
-                )
-                .map(
-                    (module) => `{
+          modules
+            ?.filter(
+              (module) =>
+                ![
+                  "dashboard",
+                  "consumers",
+                  "user_management_default",
+                  "role_management",
+                ].includes(module)
+            )
+            .map(
+              (module) => `{
         //   title: '${
-            module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')
+          module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, " ")
         }',
         //   icon: '/icons/apps-icon.svg',
         //   link: '/${module}',
         // }`
-                )
-                .join(',\n        ') || ''
+            )
+            .join(",\n        ") || ""
         }
         {
           title: 'Consumer View',
@@ -1516,7 +1434,7 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
 
 export default SidebarWrapper; `,
 
-        'src/components/FederatedWrapper.tsx': `import React, { createContext, useContext } from 'react';
+    "src/components/FederatedWrapper.tsx": `import React, { createContext, useContext } from 'react';
 
 // Context that matches the SuperAdmin's AppContext interface
 interface FederatedAppContextType {
@@ -1558,7 +1476,7 @@ export const useFederatedApp = () => {
     return context;
 }; `,
 
-        'src/components/CSSLoader.tsx': `import React, { useEffect, useState } from 'react';
+    "src/components/CSSLoader.tsx": `import React, { useEffect, useState } from 'react';
 
 interface CSSLoaderProps {
   cssFiles?: string[];
@@ -1621,7 +1539,7 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
 
 export default CSSLoader;`,
 
-        'src/Theme.jsx': `import React, { useEffect } from 'react';
+    "src/Theme.jsx": `import React, { useEffect } from 'react';
 import { useTheme } from 'SuperAdmin/providers/ThemeProvider';
 
 export const Theme = ({ children }) => {
@@ -1636,7 +1554,7 @@ export const Theme = ({ children }) => {
     return <div>{children}</div>;
 };`,
 
-        'src/types/federation.d.ts': `
+    "src/types/federation.d.ts": `
 declare module 'SuperAdmin/Dashboard' {
   const Dashboard: React.ComponentType<any>;
   export default Dashboard;
@@ -1771,23 +1689,23 @@ declare module 'SuperAdmin/useApp' {
 }
 `,
 
-        'README.md': `# ${appName || 'Admin App'}
+    "README.md": `# ${appName || "Admin App"}
 
 This is a React application generated from the Admin Module configuration.
 
 ## App Details
 
-- **App Name**: ${appName || 'Not specified'}
-- **Company**: ${companyName || 'Not specified'}
-- **Subdomain**: ${subdomain || 'Not specified'}
+- **App Name**: ${appName || "Not specified"}
+- **Company**: ${companyName || "Not specified"}
+- **Subdomain**: ${subdomain || "Not specified"}
 - **Admin**: ${adminFirstName} ${adminLastName} (${adminEmail})
-- **Role**: ${adminRole || 'Administrator'}
-- **Timezone**: ${timezone || 'Not specified'}
-- **Currency**: ${currency || 'Not specified'}
+- **Role**: ${adminRole || "Administrator"}
+- **Timezone**: ${timezone || "Not specified"}
+- **Currency**: ${currency || "Not specified"}
 
 ## Modules
 
-${modules?.map((module) => `- ${module}`).join('\n') || 'No modules configured'}
+${modules?.map((module) => `- ${module}`).join("\n") || "No modules configured"}
 
 ## Getting Started
 
@@ -1840,29 +1758,29 @@ src/
 
 Generated on: ${new Date().toLocaleDateString()}
 `,
-    };
+  };
 
-    // --- BACKEND SCAFFOLDING START ---
-    // Backend template files
-    const backendFiles = {
-        'package.json': JSON.stringify(
-            {
-                name: `${projectFolderName}-backend`,
-                version: '1.0.0',
-                main: 'server.js',
-                scripts: {
-                    start: 'node server.js',
-                },
-                dependencies: {
-                    express: '^4.18.2',
-                    dotenv: '^16.0.3',
-                },
-            },
-            null,
-            2
-        ),
+  // --- BACKEND SCAFFOLDING START ---
+  // Backend template files
+  const backendFiles = {
+    "package.json": JSON.stringify(
+      {
+        name: `${projectFolderName}-backend`,
+        version: "1.0.0",
+        main: "server.js",
+        scripts: {
+          start: "node server.js",
+        },
+        dependencies: {
+          express: "^4.18.2",
+          dotenv: "^16.0.3",
+        },
+      },
+      null,
+      2
+    ),
 
-        'server.js': `
+    "server.js": `
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -1877,23 +1795,23 @@ app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
 app.listen(PORT, () => console.log('Backend running on port ' + PORT));
 `,
 
-        'routes/index.js': `\nconst express = require('express');\nconst router = express.Router();\n\n// Define your routes here\n\nmodule.exports = router;\n`,
-    };
+    "routes/index.js": `\nconst express = require('express');\nconst router = express.Router();\n\n// Define your routes here\n\nmodule.exports = router;\n`,
+  };
 
-    // Create backend directory
-    const backendDir = path.join(baseDir, 'backend');
-    ensureDir(backendDir);
-    ensureDir(path.join(backendDir, 'routes'));
+  // Create backend directory
+  const backendDir = path.join(baseDir, "backend");
+  ensureDir(backendDir);
+  ensureDir(path.join(backendDir, "routes"));
 
-    // Write backend files
-    Object.entries(backendFiles).forEach(([filePath, content]) => {
-        const fullPath = path.join(backendDir, filePath);
-        ensureDir(path.dirname(fullPath));
-        fs.writeFileSync(fullPath, content.trimStart());
-    });
+  // Write backend files
+  Object.entries(backendFiles).forEach(([filePath, content]) => {
+    const fullPath = path.join(backendDir, filePath);
+    ensureDir(path.dirname(fullPath));
+    fs.writeFileSync(fullPath, content.trimStart());
+  });
 
-    // Add .env example file for backend
-    const envExampleContent = `# Example environment file for backend
+  // Add .env example file for backend
+  const envExampleContent = `# Example environment file for backend
 NODE_ENV=development
 PORT=4000
 
@@ -1901,38 +1819,38 @@ JWT_EXPIRES_IN=4h
 
 DATABASE_URL=postgresql://postgres:password@localhost:5432/your_db_name_here?schema=public
 `;
-    fs.writeFileSync(path.join(backendDir, '.env'), envExampleContent);
-    // --- BACKEND SCAFFOLDING END ---
+  fs.writeFileSync(path.join(backendDir, ".env"), envExampleContent);
+  // --- BACKEND SCAFFOLDING END ---
 
-    // --- PRISMA SUPPORT START ---
-    // Update backend package.json for Prisma
-    const backendPkgPath = path.join(backendDir, 'package.json');
-    if (fs.existsSync(backendPkgPath)) {
-        const backendPkg = JSON.parse(fs.readFileSync(backendPkgPath, 'utf8'));
-        backendPkg.dependencies = backendPkg.dependencies || {};
-        backendPkg.devDependencies = backendPkg.devDependencies || {};
-        backendPkg.dependencies['@prisma/client'] = '^5.12.0';
-        backendPkg.devDependencies['prisma'] = '^5.12.0';
-        fs.writeFileSync(backendPkgPath, JSON.stringify(backendPkg, null, 2));
-    }
+  // --- PRISMA SUPPORT START ---
+  // Update backend package.json for Prisma
+  const backendPkgPath = path.join(backendDir, "package.json");
+  if (fs.existsSync(backendPkgPath)) {
+    const backendPkg = JSON.parse(fs.readFileSync(backendPkgPath, "utf8"));
+    backendPkg.dependencies = backendPkg.dependencies || {};
+    backendPkg.devDependencies = backendPkg.devDependencies || {};
+    backendPkg.dependencies["@prisma/client"] = "^5.12.0";
+    backendPkg.devDependencies["prisma"] = "^5.12.0";
+    fs.writeFileSync(backendPkgPath, JSON.stringify(backendPkg, null, 2));
+  }
 
-    // Create prisma directory and schema.prisma
-    const prismaDir = path.join(backendDir, 'prisma');
-    ensureDir(prismaDir);
+  // Create prisma directory and schema.prisma
+  const prismaDir = path.join(backendDir, "prisma");
+  ensureDir(prismaDir);
 
-    // Copy db_schema.txt as schema.prisma if it exists, otherwise use example schema
-    const dbSchemaPath = path.join(
-        __dirname,
-        '..',
-        'AdminModule',
-        'db_schema.txt'
-    );
-    const targetSchemaPath = path.join(prismaDir, 'schema.prisma');
-    if (fs.existsSync(dbSchemaPath)) {
-        fs.copyFileSync(dbSchemaPath, targetSchemaPath);
-        console.log('Copied db_schema.txt to', targetSchemaPath);
-    } else {
-        const schemaContent = `// Example Prisma schema
+  // Copy db_schema.txt as schema.prisma if it exists, otherwise use example schema
+  const dbSchemaPath = path.join(
+    __dirname,
+    "..",
+    "AdminModule",
+    "db_schema.txt"
+  );
+  const targetSchemaPath = path.join(prismaDir, "schema.prisma");
+  if (fs.existsSync(dbSchemaPath)) {
+    fs.copyFileSync(dbSchemaPath, targetSchemaPath);
+    console.log("Copied db_schema.txt to", targetSchemaPath);
+  } else {
+    const schemaContent = `// Example Prisma schema
 // Replace this with your actual schema
 
 generator client {
@@ -1951,39 +1869,41 @@ model User {
   name  String
 }
 `;
-        fs.writeFileSync(targetSchemaPath, schemaContent);
-        console.log('Wrote example schema.prisma to', targetSchemaPath);
-    }
+    fs.writeFileSync(targetSchemaPath, schemaContent);
+    console.log("Wrote example schema.prisma to", targetSchemaPath);
+  }
 
-    // Add Prisma usage comment to server.js
-    const serverPath = path.join(backendDir, 'server.js');
-    if (fs.existsSync(serverPath)) {
-        let serverContent = fs.readFileSync(serverPath, 'utf8');
-        if (!serverContent.includes('PrismaClient')) {
-            serverContent =
-                `// To use Prisma:
+  // Add Prisma usage comment to server.js
+  const serverPath = path.join(backendDir, "server.js");
+  if (fs.existsSync(serverPath)) {
+    let serverContent = fs.readFileSync(serverPath, "utf8");
+    if (!serverContent.includes("PrismaClient")) {
+      serverContent =
+        `// To use Prisma:
 // const { PrismaClient } = require('@prisma/client');
 // const prisma = new PrismaClient();
 
 ` + serverContent;
-            fs.writeFileSync(serverPath, serverContent);
-        }
+      fs.writeFileSync(serverPath, serverContent);
     }
-    // --- PRISMA SUPPORT END ---
+  }
+  // --- PRISMA SUPPORT END ---
 
-    // Create directories and write files
-    Object.entries(projectStructure).forEach(([filePath, content]) => {
-        const fullPath = path.join(frontendDir, filePath);
-        const dir = path.dirname(fullPath);
+  // Create directories and write files
+  Object.entries(projectStructure).forEach(([filePath, content]) => {
+    const fullPath = path.join(frontendDir, filePath);
+    const dir = path.dirname(fullPath);
 
-        // Ensure directory exists
-        ensureDir(dir);
+    // Ensure directory exists
+    ensureDir(dir);
 
-        // Write file
-        fs.writeFileSync(fullPath, content);
-    });
+    // Write file
+    fs.writeFileSync(fullPath, content);
+  });
 
-  console.log(`Project "${projectFolderName}" created successfully at: ${baseDir}`);
+  console.log(
+    `Project "${projectFolderName}" created successfully at: ${baseDir}`
+  );
   console.log(`Next steps:`);
   console.log(`   1. cd ${baseDir}`);
   console.log(`   2. npm install`);
@@ -1992,29 +1912,30 @@ model User {
   console.log(`   • CSS files are already synced during creation`);
   console.log(`   • To sync CSS changes later, run: npm run css-sync`);
   console.log(`   • To watch for CSS changes, run: npm run css-sync-watch`);
-  console.log(`   • To sync to specific app: npm run css-sync-app ${projectFolderName}`); 
-  
+  console.log(
+    `   • To sync to specific app: npm run css-sync-app ${projectFolderName}`
+  );
+
   return baseDir;
 }
 
 // Export the function
 module.exports = { createAppProject };
-
 // If running directly, use example data
 if (require.main === module) {
-    const exampleFormData = {
-        appName: 'Example App',
-        subdomain: 'example-app',
-        companyName: 'Example Company',
-        adminFirstName: 'Admin',
-        adminLastName: 'User',
-        adminEmail: 'admin@example.com',
-        adminRole: 'Administrator',
-        primaryColor: '#3B82F6',
-        timezone: 'UTC',
-        currency: 'USD',
-        modules: ['dashboard', 'user_management_default', 'role_management'],
-    };
+  const exampleFormData = {
+    appName: "Example App",
+    subdomain: "example-app",
+    companyName: "Example Company",
+    adminFirstName: "Admin",
+    adminLastName: "User",
+    adminEmail: "admin@example.com",
+    adminRole: "Administrator",
+    primaryColor: "#3B82F6",
+    timezone: "UTC",
+    currency: "USD",
+    modules: ["dashboard", "user_management_default", "role_management"],
+  };
 
-    createAppProject(exampleFormData);
+  createAppProject(exampleFormData);
 }

@@ -7,7 +7,7 @@ import PageHeader from '@components/global/PageHeader';
 import Button from '@components/global/Button';
 
 // Context
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '@context/AuthContext';
 
 // Types
 import type { Section } from '@components/global/Page';
