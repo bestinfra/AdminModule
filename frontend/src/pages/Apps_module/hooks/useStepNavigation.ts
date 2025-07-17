@@ -43,6 +43,11 @@ export const useStepNavigation = (
 
   const handleBrandingSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    console.log(' useStepNavigation - Branding Step Submitted:', {
+      currentStep,
+      brandingData: stepData.branding,
+      allStepData: stepData
+    });
     handleNext();
   };
 
@@ -56,6 +61,8 @@ export const useStepNavigation = (
     setLoading(true);
     try {
       const allFormData = combineFormData(stepData);
+      console.log(' useStepNavigation - Final Submit - Combined Form Data:', allFormData);
+      console.log('useStepNavigation - Final Submit - Step Data:', stepData);
       await submitAppCreation(allFormData);
       // Optional: Reset form or redirect after successful submission
       // resetAllData();

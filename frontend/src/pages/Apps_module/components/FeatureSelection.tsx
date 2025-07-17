@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import Button from '@components/global/Button';
 import { validateFeatureSelection } from '../utils';
-import RemarksPanel from './RemarksPanel';
+import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 
 interface FeatureSelectionProps {
   formData: any;
@@ -90,36 +90,39 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
     ];
   }
 
-  // Render default modules as always selected and not toggleable
+  // Check if sections are completed
+  const isDefaultSectionCompleted = moduleConfig.default.every(module => module && isModuleEnabled(module.key));
+  const isOptionalSectionCompleted = gridModules.filter(m => m && !('isNested' in m)).every(optModule => optModule && isModuleEnabled(optModule.key));
+
+  // Render default modules as selectable
   const renderDefaultModuleItem = (module: any) => (
-    <div key={module.key} className="flex items-center gap-4 p-4 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-xl transition-all">
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
-        <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
-      </div>
+    <div key={module.key} className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
       <button
         type="button"
-        className="w-10 h-10 border-2 border-primary bg-primary rounded-full flex items-center justify-center cursor-not-allowed opacity-60"
-        aria-label={`Default module: ${module.label}`}
-        disabled
-        tabIndex={-1}
+        className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all flex-shrink-0 ${
+          isModuleEnabled(module.key) 
+            ? 'border-primary bg-primary text-white' 
+            : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
+        }`}
+        onClick={() => onModuleToggle(module.key)}
+        aria-label={`Toggle ${module.label}`}
       >
-        <span className="text-white font-bold text-sm">✓</span>
+        {isModuleEnabled(module.key) && <span className="font-bold text-xs">✓</span>}
       </button>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-semibold text-main dark:text-white">{module.label}</div>
+        <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
+      </div>
     </div>
   );
 
   const renderModuleItem = (module: any) => {
     if (module.isNested) {
       return (
-        <div key={module.key} className="flex items-center gap-4 p-4 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-xl transition-all ml-8 border-l-3 border-l-primary bg-blue-50 dark:bg-blue-900/10">
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
-          </div>
+        <div key={module.key} className="flex items-center gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all ml-8 border-l-3 border-l-primary bg-blue-50 dark:bg-blue-900/10">
           <button
             type="button"
-            className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-all ${
+            className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all flex-shrink-0 ${
               isNestedModuleEnabled(module.key) 
                 ? 'border-primary bg-primary text-white' 
                 : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
@@ -127,20 +130,20 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
             onClick={() => handleNestedModuleToggle(module.key)}
             aria-label={`Toggle ${module.label}`}
           >
-            {isNestedModuleEnabled(module.key) && <span className="font-bold text-sm">✓</span>}
+            {isNestedModuleEnabled(module.key) && <span className="font-bold text-xs">✓</span>}
           </button>
+          <div className="flex-1 min-w-0">
+            <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
+          </div>
         </div>
       );
     }
     return (
-      <div key={module.key} className="flex items-center gap-4 p-4 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-xl transition-all hover:border-primary hover:shadow-md hover:-translate-y-0.5">
-        <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
-          <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
-        </div>
+      <div key={module.key} className="flex items-center justify-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
         <button
           type="button"
-          className={`w-10 h-10 border-2 rounded-full flex items-center justify-center transition-all ${
+          className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all flex-shrink-0 ${
             isModuleEnabled(module.key) 
               ? 'border-primary bg-primary text-white' 
               : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
@@ -148,8 +151,12 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           onClick={() => handleModuleToggle(module.key)}
           aria-label={`Toggle ${module.label}`}
         >
-          {isModuleEnabled(module.key) && <span className="font-bold text-sm">✓</span>}
+          {isModuleEnabled(module.key) && <span className="font-bold text-xs">✓</span>}
         </button>
+        <div className="flex-1 min-w-0">
+          <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
+          <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
+        </div>
       </div>
     );
   };
@@ -166,22 +173,19 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           <form className="space-y-8" onSubmit={(e) => {
             e.preventDefault();
             setHasSubmitted(true);
-            
             // Only proceed if validation passes
             if (isValid) {
               onNext(e);
             }
           }} action="#" method="post" noValidate>
         {/* Default Modules Section */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
-          <div className="flex justify-between items-start mb-6 gap-4">
+        <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 flex flex-col gap-3 flex flex-col gap-2">
+          <div className="flex  items-start m gap-4">
             <div>
-              <h3 className="text-xl font-semibold text-main dark:text-white mb-1">Default Modules</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                These modules are enabled by default and provide core functionality
-              </p>
+              <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Recomanded Modules</h3>
             </div>
-            <span className="text-xs font-bold px-3 py-1 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 rounded-full uppercase tracking-wide whitespace-nowrap flex-shrink-0">
+         
+            <span className="text-xs  px-4 py-1 rounded-full bg-primary-lightest">
               Default
             </span>
           </div>
@@ -191,15 +195,14 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
         </div>
 
         {/* Optional Modules Section */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
-          <div className="flex justify-between items-start mb-6 gap-4">
+        <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 flex flex-col gap-3">
+          <div className="flex  items-start gap-4">
             <div>
-              <h3 className="text-xl font-semibold text-main dark:text-white mb-1">Optional Modules</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Enable additional features based on your requirements
-              </p>
+              <h3 className="text-sm font-semibold text-primary dark:text-white">Optional Modules</h3>
+           
             </div>
-            <span className="text-xs font-bold px-3 py-1 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded-full uppercase tracking-wide whitespace-nowrap flex-shrink-0">
+           
+            <span className="text-xs bg-secondary-light px-4 py-1 rounded-full">
               Optional
             </span>
           </div>
@@ -215,13 +218,7 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
 
         <div className="flex justify-between items-center">
           {currentStep > 1 && (
-            <span 
-              className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors" 
-              onClick={onBack}
-            >
-              <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
-              <span className="text-neutral dark:text-gray-300 font-medium">Previous</span>
-            </span>
+            <Button label="Previous" type="button" variant="secondary" onClick={onBack} />
           )}
           <div className="ml-auto">
             <Button label="Next" type="submit" variant="primary" />

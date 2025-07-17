@@ -16,11 +16,11 @@ const RemarksPanel: React.FC<RemarksPanelProps> = ({
   // Helper function to extract icon and text from remark
   const parseRemark = (remark: string) => {
     if (remark.includes('⚠️')) {
-      return { icon: '⚠️', text: remark.replace('⚠️', '').trim() };
+      return { icon: 'triangle-warning', text: remark.replace('⚠️', '').trim() };
     } else if (remark.includes('💡')) {
-      return { icon: '💡', text: remark.replace('💡', '').trim() };
+      return { icon: 'info', text: remark.replace('💡', '').trim() };
     } else if (remark.includes('✓')) {
-      return { icon: '✓', text: remark.replace('✓', '').trim() };
+      return { icon: 'checkmark', text: remark.replace('✓', '').trim() };
     }
     return { icon: null, text: remark };
   };
@@ -34,16 +34,19 @@ const RemarksPanel: React.FC<RemarksPanelProps> = ({
         
         <section className="rounded text-sm font-medium">
           {!hasSubmitted ? (
-            <div className="text-info bg-blue-100 border border-blue-300 rounded p-2">
-              ℹ️ Fill in the form and click "Next Step" to validate
+            <div className="text-info bg-blue-100 border border-blue-300 rounded p-2 flex items-center gap-2">
+              <img src='icons/info.svg' alt='info' className='w-4 h-4' />
+              Fill in the form and click "Next Step" to validate
             </div>
           ) : isValid ? (
-            <div className="text-secondary bg-secondary-light border border-secondary rounded p-2">
-              ✓ Form is valid and ready to proceed
+            <div className="text-secondary bg-secondary-light border border-secondary rounded p-2 flex items-center gap-2">
+              <img src='icons/check.svg' alt='success' className='w-4 h-4' />
+              Form is valid and ready to proceed
             </div>
           ) : (
-            <div className="text-danger bg-danger-light border border-danger rounded p-2">
-              ⚠️ Please fix {Object.keys(validationErrors).length} validation error(s) to continue
+            <div className="text-danger bg-danger-light border border-danger rounded p-2 flex items-center gap-2">
+              <img src='icons/triangle-warning.svg' alt='warning' className='w-4 h-4' />
+              Please fix {Object.keys(validationErrors).length} validation error(s) to continue
             </div>
           )}
         </section>
@@ -53,9 +56,9 @@ const RemarksPanel: React.FC<RemarksPanelProps> = ({
             <ul className="space-y-2">
               {remarks.map((remark, index) => {
                 const { icon, text } = parseRemark(remark);
-                const isWarning = icon === '⚠️';
-                const isTip = icon === '💡';
-                const isSuccess = icon === '✓';
+                const isWarning = icon === 'triangle-warning';
+                const isTip = icon === 'info';
+                const isSuccess = icon === 'checkmark';
                 
                 let borderColor = 'border-secondary';
                 let bgColor = 'bg-secondary-light';
@@ -78,8 +81,12 @@ const RemarksPanel: React.FC<RemarksPanelProps> = ({
                 return (
                   <li key={index} className={`text-sm text-neutral-darker p-3 ${bgColor} rounded ${borderColor} flex items-start gap-3`}>
                     {icon && (
-                      <span className={`text-lg flex-shrink-0 ${iconColor}`}>
-                        {icon}
+                      <span className="bg-white rounded p-1 flex-shrink-0">
+                        <img 
+                          src={`icons/${icon}.svg`} 
+                          alt={icon} 
+                          className={`w-4 h-4 ${iconColor}`}
+                        />
                       </span>
                     )}
                     <span 

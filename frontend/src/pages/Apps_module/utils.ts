@@ -232,7 +232,7 @@ export const validateAccessControl = (formData: any): { isValid: boolean; errors
   const errors: Record<string, string> = {};
   const remarks: string[] = [];
 
-  // Required field validations
+  // Required field validations for admin account
   if (!formData.adminFirstName?.trim()) {
     errors.adminFirstName = 'First name is required';
   } else if (formData.adminFirstName.length < 2) {
@@ -243,6 +243,14 @@ export const validateAccessControl = (formData: any): { isValid: boolean; errors
     errors.adminLastName = 'Last name is required';
   } else if (formData.adminLastName.length < 2) {
     errors.adminLastName = 'Last name must be at least 2 characters long';
+  }
+
+  if (!formData.adminUsername?.trim()) {
+    errors.adminUsername = 'Username is required';
+  } else if (formData.adminUsername.length < 3) {
+    errors.adminUsername = 'Username must be at least 3 characters long';
+  } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.adminUsername)) {
+    errors.adminUsername = 'Username can only contain letters, numbers, hyphens, and underscores';
   }
 
   if (!formData.adminEmail?.trim()) {
@@ -271,35 +279,171 @@ export const validateAccessControl = (formData: any): { isValid: boolean; errors
     errors.adminConfirmPassword = 'Passwords do not match';
   }
 
+  // Validate new accounts array if it exists
+  if (formData.newAccounts && Array.isArray(formData.newAccounts)) {
+    formData.newAccounts.forEach((account: any, index: number) => {
+      // Only validate if at least one field is filled
+      const hasAnyField = account.firstName?.trim() || account.lastName?.trim() || 
+                         account.username?.trim() || account.email?.trim() || 
+                         account.phone?.trim() || account.password?.trim() || 
+                         account.confirmPassword?.trim() || account.role?.trim();
+
+      if (hasAnyField) {
+        // Validate required fields for new accounts
+        if (!account.firstName?.trim()) {
+          errors[`newAccounts.${index}.firstName`] = 'First name is required';
+        } else if (account.firstName.length < 2) {
+          errors[`newAccounts.${index}.firstName`] = 'First name must be at least 2 characters long';
+        }
+
+        if (!account.lastName?.trim()) {
+          errors[`newAccounts.${index}.lastName`] = 'Last name is required';
+        } else if (account.lastName.length < 2) {
+          errors[`newAccounts.${index}.lastName`] = 'Last name must be at least 2 characters long';
+        }
+
+        if (!account.username?.trim()) {
+          errors[`newAccounts.${index}.username`] = 'Username is required';
+        } else if (account.username.length < 3) {
+          errors[`newAccounts.${index}.username`] = 'Username must be at least 3 characters long';
+        } else if (!/^[a-zA-Z0-9_-]+$/.test(account.username)) {
+          errors[`newAccounts.${index}.username`] = 'Username can only contain letters, numbers, hyphens, and underscores';
+        }
+
+        if (!account.email?.trim()) {
+          errors[`newAccounts.${index}.email`] = 'Email is required';
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(account.email)) {
+          errors[`newAccounts.${index}.email`] = 'Please enter a valid email address';
+        }
+
+        if (!account.phone?.trim()) {
+          errors[`newAccounts.${index}.phone`] = 'Phone number is required';
+        } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(account.phone.replace(/\s/g, ''))) {
+          errors[`newAccounts.${index}.phone`] = 'Please enter a valid phone number';
+        }
+
+        if (!account.role?.trim()) {
+          errors[`newAccounts.${index}.role`] = 'Role is required';
+        }
+
+        if (!account.password?.trim()) {
+          errors[`newAccounts.${index}.password`] = 'Password is required';
+        } else if (account.password.length < 8) {
+          errors[`newAccounts.${index}.password`] = 'Password must be at least 8 characters long';
+        } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(account.password)) {
+          errors[`newAccounts.${index}.password`] = 'Password must contain uppercase, lowercase, number, and special character';
+        }
+
+        if (!account.confirmPassword?.trim()) {
+          errors[`newAccounts.${index}.confirmPassword`] = 'Please confirm your password';
+        } else if (account.password !== account.confirmPassword) {
+          errors[`newAccounts.${index}.confirmPassword`] = 'Passwords do not match';
+        }
+      }
+    });
+  }
+
+  // Validate default new account fields (if any are filled)
+  const hasDefaultNewAccountFields = formData.newAccountFirstName?.trim() || 
+                                   formData.newAccountLastName?.trim() || 
+                                   formData.newAccountUsername?.trim() || 
+                                   formData.newAccountEmail?.trim() || 
+                                   formData.newAccountPhone?.trim() || 
+                                   formData.newAccountPassword?.trim() || 
+                                   formData.newAccountConfirmPassword?.trim() || 
+                                   formData.newAccountRole?.trim();
+
+  if (hasDefaultNewAccountFields) {
+    if (!formData.newAccountFirstName?.trim()) {
+      errors.newAccountFirstName = 'First name is required';
+    } else if (formData.newAccountFirstName.length < 2) {
+      errors.newAccountFirstName = 'First name must be at least 2 characters long';
+    }
+
+    if (!formData.newAccountLastName?.trim()) {
+      errors.newAccountLastName = 'Last name is required';
+    } else if (formData.newAccountLastName.length < 2) {
+      errors.newAccountLastName = 'Last name must be at least 2 characters long';
+    }
+
+    if (!formData.newAccountUsername?.trim()) {
+      errors.newAccountUsername = 'Username is required';
+    } else if (formData.newAccountUsername.length < 3) {
+      errors.newAccountUsername = 'Username must be at least 3 characters long';
+    } else if (!/^[a-zA-Z0-9_-]+$/.test(formData.newAccountUsername)) {
+      errors.newAccountUsername = 'Username can only contain letters, numbers, hyphens, and underscores';
+    }
+
+    if (!formData.newAccountEmail?.trim()) {
+      errors.newAccountEmail = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.newAccountEmail)) {
+      errors.newAccountEmail = 'Please enter a valid email address';
+    }
+
+    if (!formData.newAccountPhone?.trim()) {
+      errors.newAccountPhone = 'Phone number is required';
+    } else if (!/^[\+]?[1-9][\d]{0,15}$/.test(formData.newAccountPhone.replace(/\s/g, ''))) {
+      errors.newAccountPhone = 'Please enter a valid phone number';
+    }
+
+    if (!formData.newAccountRole?.trim()) {
+      errors.newAccountRole = 'Role is required';
+    }
+
+    if (!formData.newAccountPassword?.trim()) {
+      errors.newAccountPassword = 'Password is required';
+    } else if (formData.newAccountPassword.length < 8) {
+      errors.newAccountPassword = 'Password must be at least 8 characters long';
+    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])/.test(formData.newAccountPassword)) {
+      errors.newAccountPassword = 'Password must contain uppercase, lowercase, number, and special character';
+    }
+
+    if (!formData.newAccountConfirmPassword?.trim()) {
+      errors.newAccountConfirmPassword = 'Please confirm your password';
+    } else if (formData.newAccountPassword !== formData.newAccountConfirmPassword) {
+      errors.newAccountConfirmPassword = 'Passwords do not match';
+    }
+  }
+
   // Generate remarks based on form data
   if (formData.adminFirstName && formData.adminLastName) {
-    remarks.push(`✓ Admin name configured: ${formData.adminFirstName} ${formData.adminLastName}`);
+    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin name configured: ${formData.adminFirstName} ${formData.adminLastName}`);
+  }
+
+  if (formData.adminUsername && formData.adminUsername.length >= 3) {
+    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin username: ${formData.adminUsername}`);
   }
 
   if (formData.adminEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.adminEmail)) {
-    remarks.push(`✓ Admin email configured: ${formData.adminEmail}`);
+    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin email configured: ${formData.adminEmail}`);
   }
 
   if (formData.adminPhone && /^[\+]?[1-9][\d]{0,15}$/.test(formData.adminPhone.replace(/\s/g, ''))) {
-    remarks.push(`✓ Admin phone configured: ${formData.adminPhone}`);
+    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin phone configured: ${formData.adminPhone}`);
   }
 
   if (formData.adminPassword && formData.adminPassword.length >= 8) {
-    remarks.push('✓ Password meets security requirements');
+    remarks.push('<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Password meets security requirements');
   }
 
   if (formData.adminPassword === formData.adminConfirmPassword && formData.adminPassword) {
-    remarks.push('✓ Password confirmation matches');
+    remarks.push('<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Password confirmation matches');
   }
 
-  if (formData.adminAddress?.trim()) {
-    remarks.push('✓ Admin address provided');
+  // Count new accounts
+  const newAccountsCount = formData.newAccounts?.length || 0;
+  if (newAccountsCount > 0) {
+    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> ${newAccountsCount} additional account(s) configured`);
+  }
+
+  if (hasDefaultNewAccountFields) {
+    remarks.push('<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Default new account template configured');
   }
 
   if (formData.sendWelcomeEmail) {
-    remarks.push('💡 Welcome email will be sent to admin upon account creation');
+    remarks.push('💡 Welcome email will be sent to users upon account creation');
   } else {
-    remarks.push('⚠️ Welcome email is disabled - admin will need to set password manually');
+    remarks.push('⚠️ Welcome email is disabled - users will need to set passwords manually');
   }
 
   // Additional helpful remarks
@@ -309,6 +453,14 @@ export const validateAccessControl = (formData: any): { isValid: boolean; errors
 
   if (formData.adminPassword && formData.adminPassword.length > 12) {
     remarks.push('💡 Strong password detected - good security practice');
+  }
+
+  if (newAccountsCount > 5) {
+    remarks.push('⚠️ Many additional accounts configured - consider bulk import for large teams');
+  }
+
+  if (formData.newAccounts?.some((acc: any) => acc.role === 'admin')) {
+    remarks.push('💡 Additional admin accounts detected - ensure proper access controls');
   }
 
   return {
@@ -336,7 +488,9 @@ export const validateBrandPersonalization = (formData: any): { isValid: boolean;
     errors.companyWebsite = 'Please enter a valid website URL starting with http:// or https://';
   }
 
-  if (!formData.primaryColor) {
+  // Check for primary color in both brand and custom modes
+  const primaryColor = formData.primaryColor || formData.customPrimaryColor || '#0066cc';
+  if (!primaryColor) {
     errors.primaryColor = 'Primary color is required';
   }
 
@@ -357,8 +511,8 @@ export const validateBrandPersonalization = (formData: any): { isValid: boolean;
     remarks.push(`✓ Company website configured: ${formData.companyWebsite}`);
   }
 
-  if (formData.primaryColor) {
-    remarks.push(`✓ Primary color selected: ${formData.primaryColor}`);
+  if (primaryColor) {
+    remarks.push(`✓ Primary color selected: ${primaryColor}`);
   }
 
   if (formData.appLogo) {
@@ -408,7 +562,7 @@ export const validateBrandPersonalization = (formData: any): { isValid: boolean;
     remarks.push('💡 Multi-language support enabled - consider adding language packs');
   }
 
-  if (formData.primaryColor === '#0066cc') {
+  if (primaryColor === '#0066cc') {
     remarks.push('💡 Default blue color selected - consider customizing for brand identity');
   }
 

@@ -1,14 +1,14 @@
 import React from 'react';
 import Page from '@components/global/Page';
 import PageHeader from '@components/global/PageHeader';
-import ApplicationSetup from './components/ApplicationSetup';
-import AccessControl from './components/AccessControl';
-import BrandPersonalization from './components/BrandPersonalization';
-import FeatureSelection from './components/FeatureSelection';
-import FinalizeAndDeploy from './components/FinalizeAndDeploy';
-import StepNavigation from './components/StepNavigation';
-import { useStepState } from './hooks/useStepState';
-import { useStepNavigation } from './hooks/useStepNavigation';
+import ApplicationSetup from '@pages/Apps_module/components/ApplicationSetup';
+import AccessControl from '@pages/Apps_module/components/AccessControl';
+import BrandPersonalization from '@pages/Apps_module/components/BrandPersonalization';
+import FeatureSelection from '@pages/Apps_module/components/FeatureSelection';
+import FinalizeAndDeploy from '@pages/Apps_module/components/FinalizeAndDeploy';
+import StepNavigation from '@pages/Apps_module/components/StepNavigation';
+import { useStepState } from '@pages/Apps_module/hooks/useStepState';
+import { useStepNavigation } from '@pages/Apps_module/hooks/useStepNavigation';
 
 const AppManagement: React.FC = () => {
   // Custom hooks for state and navigation management
