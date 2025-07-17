@@ -135,7 +135,7 @@ const Heading: React.FC<HeadingProps> = ({
         .join(' ');
 
     // Heading elements
-    const headingElements = {
+    const headingElements: { [key: number]: React.ElementType } = {
         1: 'h1',
         2: 'h2',
         3: 'h3',
@@ -144,7 +144,7 @@ const Heading: React.FC<HeadingProps> = ({
         6: 'h6',
     };
 
-    const Tag = headingElements[level] as keyof JSX.IntrinsicElements;
+    const Tag = headingElements[level] || 'h1';
 
     return (
         <Tag className={classes} onClick={onClick}>

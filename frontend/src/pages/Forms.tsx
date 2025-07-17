@@ -3,11 +3,11 @@ import Form from '@components/forms/Form';
 import type { FormInputConfig } from '@components/forms/types';
 import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';
-import { 
-    createHeaderComponent, 
-    createActionsComponent, 
+import {
+    createHeaderComponent,
+    createActionsComponent,
     createSidebarStatsComponent,
-    createFooterComponent
+    createFooterComponent,
 } from '@components/global/PageComponents';
 
 const Forms: React.FC = () => {
@@ -23,8 +23,8 @@ const Forms: React.FC = () => {
             required: true,
             validation: {
                 minLength: 2,
-                maxLength: 50
-            }
+                maxLength: 50,
+            },
         },
         {
             name: 'lastName',
@@ -34,8 +34,8 @@ const Forms: React.FC = () => {
             required: true,
             validation: {
                 minLength: 2,
-                maxLength: 50
-            }
+                maxLength: 50,
+            },
         },
         {
             name: 'email',
@@ -44,8 +44,8 @@ const Forms: React.FC = () => {
             placeholder: 'Enter your email',
             required: true,
             validation: {
-                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-            }
+                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            },
         },
         {
             name: 'phone',
@@ -54,8 +54,8 @@ const Forms: React.FC = () => {
             placeholder: 'Enter your phone number',
             required: false,
             validation: {
-                pattern: /^[\+]?[1-9][\d]{0,15}$/
-            }
+                pattern: /^[\+]?[1-9][\d]{0,15}$/,
+            },
         },
         {
             name: 'age',
@@ -65,15 +65,15 @@ const Forms: React.FC = () => {
             required: false,
             validation: {
                 min: 0,
-                max: 120
-            }
+                max: 120,
+            },
         },
         {
             name: 'birthDate',
             type: 'date',
             label: 'Birth Date',
-            required: false
-        }
+            required: false,
+        },
     ];
 
     // Advanced form inputs
@@ -89,8 +89,8 @@ const Forms: React.FC = () => {
                 { value: 'finance', label: 'Finance' },
                 { value: 'marketing', label: 'Marketing' },
                 { value: 'sales', label: 'Sales' },
-                { value: 'operations', label: 'Operations' }
-            ]
+                { value: 'operations', label: 'Operations' },
+            ],
         },
         {
             name: 'role',
@@ -101,8 +101,8 @@ const Forms: React.FC = () => {
                 { value: 'admin', label: 'Administrator' },
                 { value: 'manager', label: 'Manager' },
                 { value: 'employee', label: 'Employee' },
-                { value: 'intern', label: 'Intern' }
-            ]
+                { value: 'intern', label: 'Intern' },
+            ],
         },
         {
             name: 'bio',
@@ -111,31 +111,31 @@ const Forms: React.FC = () => {
             placeholder: 'Tell us about yourself...',
             required: false,
             validation: {
-                maxLength: 500
+                maxLength: 500,
             },
-            colSpan: 2
+            colSpan: 2,
         },
         {
             name: 'avatar',
             type: 'file',
             label: 'Profile Picture',
             required: false,
-            colSpan: 2
+            colSpan: 2,
         },
         {
             name: 'newsletter',
             type: 'checkbox',
             label: 'Subscribe to Newsletter',
             required: false,
-            description: 'Receive updates about new features and announcements'
+            description: 'Receive updates about new features and announcements',
         },
         {
             name: 'terms',
             type: 'checkbox',
             label: 'I agree to the Terms and Conditions',
             required: true,
-            description: 'You must agree to continue'
-        }
+            description: 'You must agree to continue',
+        },
     ];
 
     // Contact form inputs
@@ -148,15 +148,15 @@ const Forms: React.FC = () => {
             required: true,
             validation: {
                 minLength: 3,
-                maxLength: 100
-            }
+                maxLength: 100,
+            },
         },
         {
             name: 'email',
             type: 'email',
             label: 'Email',
             placeholder: 'Enter your email address',
-            required: true
+            required: true,
         },
         {
             name: 'subject',
@@ -166,8 +166,8 @@ const Forms: React.FC = () => {
             required: true,
             validation: {
                 minLength: 5,
-                maxLength: 200
-            }
+                maxLength: 200,
+            },
         },
         {
             name: 'message',
@@ -177,9 +177,9 @@ const Forms: React.FC = () => {
             required: true,
             validation: {
                 minLength: 10,
-                maxLength: 1000
+                maxLength: 1000,
             },
-            colSpan: 2
+            colSpan: 2,
         },
         {
             name: 'priority',
@@ -190,28 +190,28 @@ const Forms: React.FC = () => {
                 { value: 'low', label: 'Low' },
                 { value: 'medium', label: 'Medium' },
                 { value: 'high', label: 'High' },
-                { value: 'urgent', label: 'Urgent' }
-            ]
+                { value: 'urgent', label: 'Urgent' },
+            ],
         },
         {
             name: 'attachment',
             type: 'file',
             label: 'Attachment',
             required: false,
-            description: 'Upload any relevant files (max 10MB)'
-        }
+            description: 'Upload any relevant files (max 10MB)',
+        },
     ];
 
     const handleBasicFormSubmit = (data: Record<string, any>) => {
-        setFormResults(prev => ({ ...prev, basic: data }));
+        setFormResults((prev) => ({ ...prev, basic: data }));
     };
 
     const handleAdvancedFormSubmit = (data: Record<string, any>) => {
-        setFormResults(prev => ({ ...prev, advanced: data }));
+        setFormResults((prev) => ({ ...prev, advanced: data }));
     };
 
     const handleContactFormSubmit = (data: Record<string, any>) => {
-        setFormResults(prev => ({ ...prev, contact: data }));
+        setFormResults((prev) => ({ ...prev, contact: data }));
     };
 
     // Header component
@@ -223,9 +223,21 @@ const Forms: React.FC = () => {
 
     // Actions component
     const actionsComponent = createActionsComponent([
-        { label: 'Export Forms', onClick: () => console.log('Exporting forms...'), variant: 'outline' },
-        { label: 'Documentation', onClick: () => console.log('Opening documentation...'), variant: 'outline' },
-        { label: 'Settings', onClick: () => console.log('Opening settings...'), variant: 'outline' }
+        {
+            label: 'Export Forms',
+            onClick: () => console.log('Exporting forms...'),
+            variant: 'outline',
+        },
+        {
+            label: 'Documentation',
+            onClick: () => console.log('Opening documentation...'),
+            variant: 'outline',
+        },
+        {
+            label: 'Settings',
+            onClick: () => console.log('Opening settings...'),
+            variant: 'outline',
+        },
     ]);
 
     // Sidebar stats component
@@ -235,29 +247,29 @@ const Forms: React.FC = () => {
             value: '3',
             subtitle1: 'Basic, Advanced, Contact',
             subtitle2: 'All input types covered',
-            comparisonValue: 0
+            comparisonValue: 0,
         },
         {
             title: 'Input Types',
             value: '12',
             subtitle1: 'Different input types',
             subtitle2: 'Text, email, file, etc.',
-            comparisonValue: 0
+            comparisonValue: 0,
         },
         {
             title: 'Validation Rules',
             value: '8',
             subtitle1: 'Active validations',
             subtitle2: 'Pattern, length, range',
-            comparisonValue: 0
-        }
+            comparisonValue: 0,
+        },
     ]);
 
     // Footer component
     const footerComponent = createFooterComponent({
         id: 'Forms Showcase ID: FORMS-001',
         version: '2.1.0',
-        supportLink: '#'
+        supportLink: '#',
     });
 
     // Basic Form Section
@@ -285,14 +297,16 @@ const Forms: React.FC = () => {
                 />
                 {formResults.basic && (
                     <div className="mt-4 p-4 bg-secondary-light rounded-lg">
-                        <h3 className="font-semibold text-positive mb-2">Form Results:</h3>
+                        <h3 className="font-semibold text-positive mb-2">
+                            Form Results:
+                        </h3>
                         <pre className="text-sm text-positive overflow-auto">
                             {JSON.stringify(formResults.basic, null, 2)}
                         </pre>
                     </div>
                 )}
             </div>
-        )
+        ),
     };
 
     // Advanced Form Section
@@ -304,7 +318,8 @@ const Forms: React.FC = () => {
                     Advanced Form Inputs
                 </h2>
                 <p className="text-text-secondary dark:text-neutral-light mb-4">
-                    Complex inputs with file uploads, checkboxes, and multi-column layout
+                    Complex inputs with file uploads, checkboxes, and
+                    multi-column layout
                 </p>
                 <Form
                     inputs={advancedFormInputs}
@@ -320,14 +335,16 @@ const Forms: React.FC = () => {
                 />
                 {formResults.advanced && (
                     <div className="mt-4 p-4 bg-primary-lightest rounded-lg">
-                        <h3 className="font-semibold text-primary mb-2">Form Results:</h3>
+                        <h3 className="font-semibold text-primary mb-2">
+                            Form Results:
+                        </h3>
                         <pre className="text-sm text-primary overflow-auto">
                             {JSON.stringify(formResults.advanced, null, 2)}
                         </pre>
                     </div>
                 )}
             </div>
-        )
+        ),
     };
 
     // Contact Form Section
@@ -355,20 +372,26 @@ const Forms: React.FC = () => {
                 />
                 {formResults.contact && (
                     <div className="mt-4 p-4 bg-accent-light rounded-lg">
-                        <h3 className="font-semibold text-accent mb-2">Form Results:</h3>
+                        <h3 className="font-semibold text-accent mb-2">
+                            Form Results:
+                        </h3>
                         <pre className="text-sm text-accent overflow-auto">
                             {JSON.stringify(formResults.contact, null, 2)}
                         </pre>
                     </div>
                 )}
             </div>
-        )
+        ),
     };
 
     return (
         <Page
             layout="single-column"
-            sections={[basicFormSection, advancedFormSection, contactFormSection]}
+            sections={[
+                basicFormSection,
+                advancedFormSection,
+                contactFormSection,
+            ]}
             header={headerComponent}
             actions={actionsComponent}
             sidebar={sidebarComponent}
@@ -379,4 +402,4 @@ const Forms: React.FC = () => {
     );
 };
 
-export default Forms; 
+export default Forms;

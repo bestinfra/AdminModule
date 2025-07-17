@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Page from '@/components/global/Page';
+import Page from '@/components/global/PageC';
 
 const PageDemo: React.FC = () => {
     const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
