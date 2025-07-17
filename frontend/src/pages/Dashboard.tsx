@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BarChart, PieChart } from '../graphs';
+import { BarChart, PieChart } from '@graphs/index';
 import Card from '@components/global/Card';
 import Table from '@components/global/Table';
 import TimeRangeSelector from '@components/global/TimeRangeSelector';
@@ -305,7 +305,7 @@ const Dashboard: React.FC = () => {
                         handleTimeRangeChange={handleTimeRangeChange}
                     />
                     <span 
-                        className="cursor-pointer w-8 h-8 rounded-full bg-white dark:bg-primary-dark flex justify-center items-center border border-primary-border dark:border-dark-border hover:bg-gray-50 dark:hover:bg-primary-dark-light transition-colors"
+                        className="cursor-pointer w-8 h-8 rounded-full bg-white dark:bg-primary-dark flex justify-center items-center border border-primary-border dark:border-dark-border hover:bg-neutral-light dark:hover:bg-primary-dark-light transition-colors"
                         onClick={() => handleDownload(metricsView, metricsType)}
                         role="button"
                         aria-label="Download chart"

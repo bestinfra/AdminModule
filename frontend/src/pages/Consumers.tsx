@@ -6,16 +6,9 @@ import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';
 import PageHeader from '@components/global/PageHeader';
 
-const consumersData = [
-  { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17 },
-  { uid: 'BI25GMRA002', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62 },
-  { uid: 'BI25GMRA003', name: 'Dormitory', meter: 'A9345418', reading: 1108.34 },
-  { uid: 'BI25GMRA004', name: 'Mobikins', meter: 'A9211433', reading: 1271.76 },
-];
-
 const columns: Column[] = [
   { key: 'sNo', label: 'S.No' },
-  { key: 'uid', label: 'UID' },
+  { key: 'consumerNumber', label: 'UID' },
   { key: 'name', label: 'Consumer Name' },
   { key: 'meter', label: 'Meter SI No' },
   { key: 'reading', label: 'Current Reading' },
@@ -23,6 +16,8 @@ const columns: Column[] = [
 
 const Consumers: React.FC = () => {
   const [menuValue, setMenuValue] = useState('');
+  const [consumers, setConsumers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const params = useParams();
   const location = useLocation();
   
@@ -41,41 +36,57 @@ const Consumers: React.FC = () => {
     };
   }
 
+  // Fetch consumers from backend
+  useEffect(() => {
+    setLoading(true);
+    
+    fetch('/api/consumers')
+      .then(res => res.json())
+      .then(result => {
+        if (result.success && Array.isArray(result.data)) {
+          setConsumers(result.data);
+        } else {
+          setConsumers([]);
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error('Error fetching consumers:', err);
+        setConsumers([]);
+        setLoading(false);
+      });
+  }, []);
+
   // Check for filter parameter from route
   useEffect(() => {
-    console.log('Current pathname:', location.pathname);
-    console.log('Params uid:', params.uid);
-    
     if (location.pathname === '/consumers/high-usage') {
-      console.log('Setting filter to high-usage');
       setMenuValue('high-usage');
     } else if (params.uid && params.uid !== 'high-usage') {
       // This is a regular consumer view, not a filter
-      console.log('This is a consumer view for UID:', params.uid);
     }
   }, [location.pathname, params.uid]);
 
   // Add sNo property and filter based on menu selection
   const getFilteredData = () => {
-    let filteredData = consumersData;
-    
-    console.log('Current menuValue:', menuValue);
-    console.log('Total consumers before filtering:', consumersData.length);
-    
+    let filteredData = consumers.map((consumer, idx) => {
+      // Find the first meter for the consumer, if any
+      const meter = consumer.meters && consumer.meters.length > 0 ? consumer.meters[0] : null;
+      return {
+        ...consumer,
+        sNo: idx + 1,
+        meter: meter ? meter.serialNumber : '-',
+        reading: meter && meter.readings && meter.readings.length > 0 ? meter.readings[0].value : '-',
+      };
+    });
+
     if (menuValue === 'occupied') {
-      // Filter to show occupied consumers (using first 80% as occupied)
-      filteredData = consumersData.slice(0, Math.floor(consumersData.length * 0.8));
+      filteredData = filteredData.slice(0, Math.floor(filteredData.length * 0.8));
     } else if (menuValue === 'vacant') {
-      // Filter to show vacant consumers (using last 20% as vacant)
-      filteredData = consumersData.slice(Math.floor(consumersData.length * 0.8));
+      filteredData = filteredData.slice(Math.floor(filteredData.length * 0.8));
     } else if (menuValue === 'high-usage') {
-      // Filter to show high usage consumers (reading > 1000)
-      filteredData = consumersData.filter(consumer => consumer.reading > 1000);
-      console.log('High usage consumers found:', filteredData.length);
+      filteredData = filteredData.filter(consumer => Number(consumer.reading) > 1000);
     }
-    
-    console.log('Filtered data length:', filteredData.length);
-    return filteredData.map((row, idx) => ({ ...row, sNo: idx + 1 }));
+    return filteredData;
   };
 
   const tableData = getFilteredData();
@@ -85,7 +96,7 @@ const Consumers: React.FC = () => {
       label: 'View',
       icon: '/icons/eye.svg',
       onClick: (row: any) => {
-        navigate(`/consumers/${row.uid}`);
+        navigate(`/consumers/${row.consumerNumber}`);
       },
     },
   ];
@@ -108,15 +119,10 @@ const Consumers: React.FC = () => {
         { id: 'high-usage', label: 'High Usage' }
       ]}
       onMenuItemClick={(itemId) => {
-        console.log(`Filter by: ${itemId}`);
         setMenuValue(itemId);
       }}
     />
   );
-
-
-
-  
 
   // Consumers Table Section
   const consumersTableSection: Section = {
@@ -130,7 +136,8 @@ const Consumers: React.FC = () => {
           showActions
           searchable={false}
           pagination
-          emptyMessage="No consumers found"
+          loading={loading}
+          emptyMessage={loading ? 'Loading consumers...' : 'No consumers found'}
         />
       </div>
     )
@@ -144,7 +151,6 @@ const Consumers: React.FC = () => {
       sidebarPosition="right"
       className=""
       sectionClassName=""
-
     />
   );
 };

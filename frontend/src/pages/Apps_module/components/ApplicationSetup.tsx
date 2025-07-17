@@ -1,12 +1,11 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
-// @ts-ignore: If axios types are missing, install with: npm install axios @types/axios
 import axios from 'axios';
 import FormInput from '@components/forms/FormInput'; 
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
 import type { FormInputValue } from '@components/forms/types';
 import { validateApplicationSetup } from '../utils';
-import RemarksPanel from './RemarksPanel';
+import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 
 interface ApplicationSetupProps {
     formData: any;
@@ -528,17 +527,16 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                         {/* Submit Button */}
                         <div className="flex justify-between items-center">
                             {currentStep > 1 && (
-                                <span 
-                                    className="flex items-center gap-2 p-2 px-4 rounded-3xl border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark cursor-pointer hover:bg-primary-lightest dark:hover:bg-primary-dark-light transition-colors" 
+                                <Button
+                                    label="Previous"
+                                    type="button"
+                                    variant="secondary"
                                     onClick={onBack}
-                                >
-                                    <img src={'/icons/arrow-back.svg'} alt="arrow-left" className="w-5 h-5 filter dark:invert" />
-                                    <span className="text-neutral dark:text-neutral-light font-medium">Previous</span>
-                                </span>
+                                />
                             )}
                             <div className="ml-auto">
                                 <Button
-                                    label="Next Step"
+                                    label="Next"
                                     type="submit"
                                     variant="primary"
                                 />

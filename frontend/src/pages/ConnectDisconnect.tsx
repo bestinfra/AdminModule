@@ -688,14 +688,14 @@ const ConnectDisconnect: React.FC = () => {
       {selectedMeters.length > 0 && (
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+            <h3 className="text-lg font-semibold text-neutral-darker dark:text-white">
               Quick Actions
             </h3>
             <div className="flex items-center gap-2">
-              <span className="text-xs text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-neutral dark:text-neutral-light">
                 Last updated:
               </span>
-              <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-xs font-medium text-neutral dark:text-neutral-light">
                 {new Date().toLocaleTimeString()}
               </span>
             </div>
@@ -703,8 +703,8 @@ const ConnectDisconnect: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
             {bulkActionType === "connect" && (
-              <div className="bg-white flex flex-col gap-4 dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <div className="bg-white flex flex-col gap-4 dark:bg-primary-dark-light rounded-xl p-4 border border-neutral-light dark:border-dark-border shadow-lg">
+                <h3 className="text-lg font-semibold text-neutral-darker dark:text-white">
                   Bulk Connect Meters
                 </h3>
                 <div className="flex flex-col items-center gap-3">
@@ -715,15 +715,15 @@ const ConnectDisconnect: React.FC = () => {
                     disabled={actionLoading}
                     className="w-full max-w-xs"
                   />
-                  <span className="text-xs font-medium text-blue-700 dark:text-blue-300 bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded-full">
+                  <span className="text-xs font-medium text-accent dark:text-accent bg-accent-light dark:bg-accent-light px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
                   </span>
                 </div>
               </div>
             )}
             {bulkActionType === "disconnect" && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+              <div className="bg-white dark:bg-primary-dark-light rounded-xl p-4 border border-neutral-light dark:border-dark-border shadow-lg">
+                <h3 className="text-lg font-semibold text-neutral-darker dark:text-white mb-4">
                   Bulk Disconnect Meters
                 </h3>
                 <div className="flex flex-col items-center gap-3">
@@ -734,15 +734,15 @@ const ConnectDisconnect: React.FC = () => {
                     disabled={actionLoading}
                     className="w-full max-w-xs"
                   />
-                  <span className="text-xs font-medium text-red-700 dark:text-red-300 bg-red-100 dark:bg-red-900 px-2 py-1 rounded-full">
+                  <span className="text-xs font-medium text-danger dark:text-danger bg-danger-light dark:bg-danger-light px-2 py-1 rounded-full">
                     {selectedMeters.length} Selected
                   </span>
                 </div>
               </div>
             )}
 
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 shadow-lg">
-              <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+            <div className="bg-white dark:bg-primary-dark-light rounded-xl p-4 border border-neutral-light dark:border-dark-border shadow-lg">
+              <h3 className="text-lg font-semibold text-neutral-darker dark:text-white mb-4">
                 Refresh All Meters
               </h3>
               <div className="flex flex-col items-center gap-3">
@@ -753,7 +753,7 @@ const ConnectDisconnect: React.FC = () => {
                   disabled={isLoading}
                   className="w-full max-w-xs"
                 />
-                <span className="text-xs font-medium text-green-700 dark:text-green-300 bg-green-100 dark:bg-green-900 px-2 py-1 rounded-full">
+                <span className="text-xs font-medium text-secondary dark:text-secondary bg-secondary-light dark:bg-secondary-light px-2 py-1 rounded-full">
                   Real-time
                 </span>
               </div>
@@ -820,7 +820,7 @@ const ConnectDisconnect: React.FC = () => {
           
             <div className="grid grid-cols-2 gap-2 text-sm space-x-4">
               <div>
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-neutral dark:text-neutral-light">
                   Meter No:
                 </span>
                 <span className="ml-2 font-medium">
@@ -828,7 +828,7 @@ const ConnectDisconnect: React.FC = () => {
                 </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-neutral dark:text-neutral-light">
                   Consumer:
                 </span>
                 <span className="ml-2 font-medium">
@@ -836,7 +836,7 @@ const ConnectDisconnect: React.FC = () => {
                 </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-neutral dark:text-neutral-light">
                   Location:
                 </span>
                 <span className="ml-2 font-medium">
@@ -844,14 +844,14 @@ const ConnectDisconnect: React.FC = () => {
                 </span>
               </div>
               <div>
-                <span className="text-gray-600 dark:text-gray-400">
+                <span className="text-neutral dark:text-neutral-light">
                   Status:
                 </span>
                 <span
                   className={`ml-2 font-medium ${
                     selectedMeter?.status === "connected"
-                      ? "text-green-600"
-                      : "text-red-600"
+                      ? "text-secondary"
+                      : "text-danger"
                   }`}
                 >
                   {selectedMeter?.status}
@@ -869,7 +869,7 @@ const ConnectDisconnect: React.FC = () => {
           <div>
             <label
               htmlFor="reason"
-              className="block text-lg font-medium text-grey dark:text-gray-300 mb-2"
+              className="block text-lg font-medium text-neutral dark:text-neutral-light mb-2"
             >
               Reason for{" "}
               {actionType === "connect" ? "Connection" : "Disconnection"} 
@@ -881,7 +881,7 @@ const ConnectDisconnect: React.FC = () => {
                 placeholder={`Enter reason for ${
                   actionType === "connect" ? "connecting" : "disconnecting"
                 } this meter...`}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
+                className="w-full px-3 py-2 border border-neutral-light dark:border-dark-border rounded-md focus:outline-none focus:ring-2 focus:ring-accent dark:bg-primary-dark-light dark:text-white"
                 rows={3}
                 disabled={actionLoading}
                 required

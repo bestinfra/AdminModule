@@ -28,10 +28,18 @@ export const INITIAL_ADMIN_ACCESS_DATA = {
   adminPhone: '',
   adminPassword: '',
   adminConfirmPassword: '',
+  adminUsername: '',
   adminRole: '',
-  adminDepartment: '',
-  adminAddress: '',
+  newAccountRole: '',
   sendWelcomeEmail: false,
+  newAccountFirstName: '',
+  newAccountLastName: '',
+  newAccountUsername: '',
+  newAccountEmail: '',
+  newAccountPhone: '',
+  newAccountPassword: '',
+  newAccountConfirmPassword: '',
+  newAccounts: [],
 };
 
 export const INITIAL_BRANDING_DATA = {
@@ -40,6 +48,7 @@ export const INITIAL_BRANDING_DATA = {
   appLogo: null,
   appFavicon: null,
   primaryColor: '',
+  secondaryColor: '',
   appDescription: '',
   contactEmail: '',
   contactPhone: '',
