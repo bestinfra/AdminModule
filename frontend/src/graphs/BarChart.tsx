@@ -1,7 +1,7 @@
 import React, { useMemo, useCallback, useState } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useApp } from '../context/AppContext';
-import TimeRangeSelector from '../components/global/TimeRangeSelector';
+import { useApp } from '@context/AppContext';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
 
 interface SeriesData {
   name: string;

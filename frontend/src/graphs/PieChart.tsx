@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import ReactECharts from 'echarts-for-react';
-import { useApp } from '../context/AppContext';
+import { useApp } from '@context/AppContext';
 
 interface PieChartProps {
     title?: string;

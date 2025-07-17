@@ -1,12 +1,12 @@
 import React, { useRef } from 'react';
 import { useDrop } from 'react-dnd';
-import type { ComponentType } from './types';
-import Row from './components/Row';
-import Column from './components/Column';
-import TextBlock from './components/TextBlock';
-import CardBlock from './components/CardBlock';
-import TableBlock from './components/TableBlock';
-import ComponentWrapper from './components/ComponentWrapper';
+import type { ComponentType } from '@pages/PageBuilder/types';
+import Row from '@pages/PageBuilder/components/Row';
+import Column from '@pages/PageBuilder/components/Column';
+import TextBlock from '@pages/PageBuilder/components/TextBlock';
+import CardBlock from '@pages/PageBuilder/components/CardBlock';
+import TableBlock from '@pages/PageBuilder/components/TableBlock';
+import ComponentWrapper from '@pages/PageBuilder/components/ComponentWrapper';
 
 interface CanvasProps {
     components: ComponentType[];

@@ -1,9 +1,9 @@
 import React, { useState, useCallback, useRef, useMemo, memo } from 'react';
-import Button from '../global/Button';
-import FormInput from './FormInput';
-import { CLASSES } from './constants';
-import type { FormProps, FormInputConfig, FormInputValue } from './types';
-import { getDefaultValue, formatPhone, validateField } from './utils';
+import Button from '@components/global/Button';
+import FormInput from '@components/forms/FormInput';
+import { CLASSES } from '@components/forms/constants';
+import type { FormProps, FormInputConfig, FormInputValue } from '@components/forms/types';
+import { getDefaultValue, formatPhone, validateField } from '@components/forms/utils';
 
 const Form: React.FC<FormProps> = ({
   inputs, onSubmit, submitLabel = 'Submit', cancelLabel = 'Cancel', className = '', layout = 'grid', gridCols = 3,

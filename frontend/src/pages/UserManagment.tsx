@@ -46,10 +46,6 @@ interface PaginationInfo {
     hasPrevPage: boolean;
 }
 
-
-
-
-
 const UserManagement: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -64,7 +60,7 @@ const UserManagement: React.FC = () => {
     const [error, setError] = useState<string | null>(null);
     const [_errorType, setErrorType] = useState<string | null>(null);
     const [_errorDetails, setErrorDetails] = useState<string | null>(null);
-    
+
     const [pagination, setPagination] = useState<PaginationInfo>({
         currentPage: 1,
         totalPages: 1,
@@ -86,8 +82,6 @@ const UserManagement: React.FC = () => {
         averageRevenue: 0,
     });
 
-
-
     // Utility functions
     const updateUrlParams = (page: number, limit: number) => {
         const params = new URLSearchParams(location.search);
@@ -99,8 +93,6 @@ const UserManagement: React.FC = () => {
     const handlePageChange = (page: number, limit: number) => {
         updateUrlParams(page, limit);
     };
-
-
 
     const formatDateSlash = (dateString: string): string => {
         if (!dateString) return '-';
@@ -250,7 +242,7 @@ const UserManagement: React.FC = () => {
                 setErrorDetails(null);
 
                 // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 500));
+                await new Promise((resolve) => setTimeout(resolve, 500));
 
                 // Calculate pagination for dummy data
                 const startIndex = (page - 1) * limit;
@@ -268,7 +260,6 @@ const UserManagement: React.FC = () => {
                     hasNextPage: page < totalPages,
                     hasPrevPage: page > 1,
                 });
-
             } catch (err) {
                 setError('Failed to fetch users data');
                 setErrorType('fetch_error');
@@ -286,13 +277,12 @@ const UserManagement: React.FC = () => {
     const fetchStats = useCallback(async () => {
         try {
             setStatsLoading(true);
-            
+
             // Simulate API delay
-            await new Promise(resolve => setTimeout(resolve, 300));
+            await new Promise((resolve) => setTimeout(resolve, 300));
 
             // Use dummy stats data
             setStats(dummyStats);
-
         } catch (err) {
             setError('Error fetching stats');
             console.error('Error fetching stats:', err);
@@ -302,18 +292,21 @@ const UserManagement: React.FC = () => {
     }, []); // Empty dependency array
 
     // Event Handlers
-    const handleEdit = useCallback((user: User) => {
-        navigate('/admin/users/add', { state: { user, isEdit: true } });
-    }, [navigate]);
+    const handleEdit = useCallback(
+        (user: User) => {
+            navigate('/admin/users/add', { state: { user, isEdit: true } });
+        },
+        [navigate]
+    );
 
     const handleDelete = useCallback(async (user: User) => {
         if (window.confirm('Are you sure you want to delete this user?')) {
             try {
                 setLoading(true);
-                
+
                 // Simulate API delay
-                await new Promise(resolve => setTimeout(resolve, 500));
-                
+                await new Promise((resolve) => setTimeout(resolve, 500));
+
                 // Remove user from dummy data
                 setUsers((prev) =>
                     prev.filter((u) => u.USER_ID !== user.USER_ID)
@@ -328,9 +321,12 @@ const UserManagement: React.FC = () => {
         }
     }, []);
 
-    const handleView = useCallback((user: User, tab = 'basic') => {
-        navigate(`/admin/users/${user.USER_ID}`, { state: { user, tab } });
-    }, [navigate]);
+    const handleView = useCallback(
+        (user: User, tab = 'basic') => {
+            navigate(`/admin/users/${user.USER_ID}`, { state: { user, tab } });
+        },
+        [navigate]
+    );
 
     // Effects - Fixed to prevent infinite loops
     useEffect(() => {
@@ -344,98 +340,122 @@ const UserManagement: React.FC = () => {
     }, [searchParams]); // Only depend on searchParams, not fetchUsers
 
     // Table columns - Memoized to prevent unnecessary re-renders
-    const columns: Column[] = React.useMemo(() => [
-        {
-            key: 'name',
-            label: 'Full Name',
-            render: (value: string | number | boolean | null | undefined) => (value as string) || '-',
-        },
-        {
-            key: 'email',
-            label: 'Email Address',
-            render: (value: string | number | boolean | null | undefined) => (value as string) || '-',
-        },
-        {
-            key: 'phone',
-            label: 'Phone Number',
-            render: (value: string | number | boolean | null | undefined) => (value as string) || '-',
-        },
-        {
-            key: 'role_title',
-            label: 'Role',
-            render: (value: string | number | boolean | null | undefined) => (value as string) || '-',
-        },
-        {
-            key: 'client_name',
-            label: 'Client',
-            render: (value: string | number | boolean | null | undefined) => (value as string) || '-',
-        },
-        {
-            key: 'last_active',
-            label: 'Last Active',
-            render: (value: string | number | boolean | null | undefined) => 
-                value ? formatDateSlash(value as string) : '-',
-        },
-        {
-            key: 'created_at',
-            label: 'Created Date',
-            render: (value: string | number | boolean | null | undefined) => 
-                value ? formatDateSlash(value as string) : '-',
-        },
-    ], []); // Empty dependency array since formatDateSlash is stable
+    const columns: Column[] = React.useMemo(
+        () => [
+            {
+                key: 'name',
+                label: 'Full Name',
+                render: (value: string | number | boolean | null | undefined) =>
+                    (value as string) || '-',
+            },
+            {
+                key: 'email',
+                label: 'Email Address',
+                render: (value: string | number | boolean | null | undefined) =>
+                    (value as string) || '-',
+            },
+            {
+                key: 'phone',
+                label: 'Phone Number',
+                render: (value: string | number | boolean | null | undefined) =>
+                    (value as string) || '-',
+            },
+            {
+                key: 'role_title',
+                label: 'Role',
+                render: (value: string | number | boolean | null | undefined) =>
+                    (value as string) || '-',
+            },
+            {
+                key: 'client_name',
+                label: 'Client',
+                render: (value: string | number | boolean | null | undefined) =>
+                    (value as string) || '-',
+            },
+            {
+                key: 'last_active',
+                label: 'Last Active',
+                render: (value: string | number | boolean | null | undefined) =>
+                    value ? formatDateSlash(value as string) : '-',
+            },
+            {
+                key: 'created_at',
+                label: 'Created Date',
+                render: (value: string | number | boolean | null | undefined) =>
+                    value ? formatDateSlash(value as string) : '-',
+            },
+        ],
+        []
+    ); // Empty dependency array since formatDateSlash is stable
 
     // Error component
 
-
     // Loading skeleton for stats
 
-
     // Header component - Memoized to prevent unnecessary re-renders
-    const headerComponent = React.useMemo(() => (
-        <PageHeader
-            title="User Management"
-            onBackClick={() => navigate('/admin')}
-            backButtonText="Back"
-            buttonsLabel="Add User"
-            variant="primary"
-            onClick={() => navigate('/admin/users/add')}
-        />
-    ), [navigate]);
+    const headerComponent = React.useMemo(
+        () => (
+            <PageHeader
+                title="User Management"
+                onBackClick={() => navigate('/admin')}
+                backButtonText="Back"
+                buttonsLabel="Add User"
+                variant="primary"
+                onClick={() => navigate('/admin/users/add')}
+            />
+        ),
+        [navigate]
+    );
 
     // Page sections - Memoized to prevent unnecessary re-renders
-    const sections: Section[] = React.useMemo(() => [
-        {
-            id: 'table',
-            component: (
-                <div className="bg-white rounded-2xl shadow-sm">
-                    <Table
-                        data={users}
-                        columns={columns}
-                        sortable={true}
-                        searchable={true}
-                        loading={tableLoading}
-                        emptyMessage={
-                            error ? 'Error loading users' : 'No users found'
-                        }
-                        onView={(row: TableData) => handleView(row as User)}
-                        onEdit={(row: TableData) => handleEdit(row as User)}
-                        onDelete={(row: TableData) => handleDelete(row as User)}
-                        pagination={true}
-                        rowsPerPageOptions={[5, 10, 50]}
-                        initialRowsPerPage={10}
-                        serverPagination={pagination}
-                        onPageChange={handlePageChange}
-                        text="User"
-                    />
-                </div>
-            ),
-        },
-    ], [users, columns, tableLoading, error, handleView, handleEdit, handleDelete, pagination, handlePageChange]);
+    const sections: Section[] = React.useMemo(
+        () => [
+            {
+                id: 'table',
+                component: (
+                    <div className="bg-white rounded-2xl shadow-sm">
+                        <Table
+                            data={users}
+                            columns={columns}
+                            sortable={true}
+                            searchable={true}
+                            loading={tableLoading}
+                            emptyMessage={
+                                error ? 'Error loading users' : 'No users found'
+                            }
+                            onView={(row: TableData) => handleView(row as User)}
+                            onEdit={(row: TableData) => handleEdit(row as User)}
+                            onDelete={(row: TableData) =>
+                                handleDelete(row as User)
+                            }
+                            pagination={true}
+                            rowsPerPageOptions={[5, 10, 50]}
+                            initialRowsPerPage={10}
+                            serverPagination={pagination}
+                            onPageChange={handlePageChange}
+                            text="User"
+                        />
+                    </div>
+                ),
+            },
+        ],
+        [
+            users,
+            columns,
+            tableLoading,
+            error,
+            handleView,
+            handleEdit,
+            handleDelete,
+            pagination,
+            handlePageChange,
+        ]
+    );
 
     return (
         <Page
             layout="single-column"
-            sections={sections.filter(section => section.component !== null)}
+            sections={sections.filter((section) => section.component !== null)}
             header={headerComponent}
             className="p-4"
         />

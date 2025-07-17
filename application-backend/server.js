@@ -7,6 +7,9 @@ import consumerRoutes from './routes/consumers.js';
 import assetRoutes from './routes/assets.js';
 import userRoutes from './routes/users.js';
 import roleRoutes from './routes/roles.js';
+import billingRoutes from './routes/billing.js';
+import dashboardRoutes from './routes/dashboard.js';
+import ticketRoutes from './routes/tickets.js';
 
 dotenv.config();
 
@@ -32,12 +35,14 @@ app.use('/api/consumers', consumerRoutes);
 app.use('/api/assets', assetRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
-
+app.use('/api/billing', billingRoutes);
+app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/tickets', ticketRoutes);     
 // Health check endpoint
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',
     timestamp: new Date().toISOString(),
-    message: 'Priya Backend API is running'
+    message: 'Application Backend API is running'
 }));
 
 // 404 handler

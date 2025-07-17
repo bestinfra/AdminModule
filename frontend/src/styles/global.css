@@ -60,25 +60,6 @@ body {
 }
 
 @theme {
-    /* --color-primary: rgba(0, 51, 102, 1);
-    --color-secondary: rgba(245, 248, 252, 1);
-    --color-main: rgba(38, 38, 38, 1);
-    --color-light: rgba(126, 126, 126, 1);
-    --color-rare: rgba(174, 189, 209, 1);
-    --color-dark-primary: rgba(4, 19, 40, 1);
-    --color-dark-secondary: rgba(6, 21, 45, 1);
-    --color-secondary-2: rgba(233, 239, 255, 1);
-    --color-dark-border: rgba(75, 85, 99, 1);
-
-    --color-idle: rgba(204, 204, 204, 1);
-    --color-success: rgba(46, 213, 115, 1);
-    --color-warning: rgba(255, 171, 0, 1);
-    --color-error: rgba(255, 71, 87, 1);
-    --color-info: rgba(0, 122, 255, 1);
-    --color-muted: rgb(239 239 239);
-    --color-danger: rgba(255, 71, 87, 1); */
-    /* --color-brand: rgba(85, 181, 108, 1);   */
-
     /* new added colors */
     --color-border: rgba(233, 239, 255, 1);
     --color-dark-border: rgba(9, 27, 59, 1);
