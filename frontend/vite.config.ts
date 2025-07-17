@@ -86,15 +86,15 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    strictPort: true, // Force the port to be 5173
     fs: {
       allow: ['..'],
     },
     proxy: {
       '/api': {
-        target: 'https://arcticterntech.in:8443',
+        target: 'http://localhost:4000',
         changeOrigin: true,
         secure: false,
-        rewrite: (path) => path.replace(/^\/api/, '/attSmart')
       }
     }
   },
