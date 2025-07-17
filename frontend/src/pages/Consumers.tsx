@@ -78,7 +78,7 @@ const Consumers: React.FC = () => {
         reading: meter && meter.readings && meter.readings.length > 0 ? meter.readings[0].value : '-',
       };
     });
-
+    
     if (menuValue === 'occupied') {
       filteredData = filteredData.slice(0, Math.floor(filteredData.length * 0.8));
     } else if (menuValue === 'vacant') {

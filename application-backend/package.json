@@ -1,5 +1,5 @@
 {
-  "name": "priya-backend",
+  "name": "application-backend",
   "version": "1.0.0",
   "type": "module",
   "main": "server.js",
@@ -10,14 +10,15 @@
     "setup": "node setup.js"
   },
   "dependencies": {
-    "express": "^4.18.2",
-    "dotenv": "^16.0.3",
     "@prisma/client": "^5.12.0",
-    "cors": "^2.8.5"
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
   },
   "devDependencies": {
-    "prisma": "^5.12.0",
+    "axios": "^1.6.0",
     "nodemon": "^3.0.0",
-    "axios": "^1.6.0"
+    "prisma": "^5.12.0"
   }
 }

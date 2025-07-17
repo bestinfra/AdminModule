@@ -20,7 +20,6 @@ export const getAllMeters = async (req, res) => {
     }
 };
 
-// Get meter by ID
 export const getMeterById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -48,7 +47,6 @@ export const getMeterById = async (req, res) => {
     }
 };
 
-// Create new meter
 export const createMeter = async (req, res) => {
     try {
         const {
@@ -64,7 +62,6 @@ export const createMeter = async (req, res) => {
             dtrId
         } = req.body;
 
-        // Validate required fields
         if (!meterNumber || !serialNumber || !manufacturer || !model || !type || !phase || !consumerId || !locationId) {
             return res.status(400).json({
                 success: false,
@@ -101,7 +98,6 @@ export const createMeter = async (req, res) => {
     }
 };
 
-// Update meter
 export const updateMeter = async (req, res) => {
     try {
         const { id } = req.params;
@@ -124,7 +120,6 @@ export const updateMeter = async (req, res) => {
     }
 };
 
-// Delete meter
 export const deleteMeter = async (req, res) => {
     try {
         const { id } = req.params;
@@ -144,3 +139,45 @@ export const deleteMeter = async (req, res) => {
         });
     }
 }; 
+
+export const getMeterStats = async (req, res) => {
+    try {
+        const stats = await MeterDB.getMeterStats();
+        res.json({
+            success: true,
+            data: stats
+        });
+    } catch (error) {
+        console.error('❌ getMeterStats: Error fetching meter stats:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch meter statistics',
+            error: error.message
+        });
+    }
+};
+
+export const getMeterView = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const meter = await MeterDB.getMeterView(id);
+        if (!meter) {
+            return res.status(404).json({
+                success: false,
+                message: 'Meter not found'
+            });
+        }
+        res.json({
+            success: true,
+            data: meter
+        });
+    } catch (error) {
+        console.error('❌ getMeterView: Error fetching meter:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch meter',
+            error: error.message
+        });
+    }
+}; 
+
