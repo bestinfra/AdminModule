@@ -7,6 +7,7 @@ import consumerRoutes from './routes/consumers.js';
 import assetRoutes from './routes/assets.js';
 import userRoutes from './routes/users.js';
 import roleRoutes from './routes/roles.js';
+import dashboardRoutes from './routes/dashboard.js';
 
 dotenv.config();
 
@@ -32,7 +33,7 @@ app.use('/api/consumers', consumerRoutes);
 app.use('/api/assets', assetRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes);
-
+app.use('/api/dashboard', dashboardRoutes);     
 // Health check endpoint
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',
