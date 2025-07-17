@@ -4,7 +4,7 @@ import FormInput from '@components/forms/FormInput';
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
 import type { FormInputValue } from '@components/forms/types';
-import { validateApplicationSetup } from '../utils';
+import { validateApplicationSetup } from '@pages/Apps_module/utils';
 import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 
 interface ApplicationSetupProps {

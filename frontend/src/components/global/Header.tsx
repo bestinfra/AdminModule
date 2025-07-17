@@ -1,5 +1,5 @@
-import Input from '../forms/Input';
-import { useApp } from '../../context/AppContext';
+import Input from '@components/forms/Input';
+import { useApp } from '@context/AppContext';
 import Cookies from 'js-cookie';
 import { useState } from 'react';
 

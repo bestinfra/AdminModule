@@ -1,6 +1,6 @@
 import React from 'react';
 import { useDrop } from 'react-dnd';
-import type { ComponentType } from '../types';
+import type { ComponentType } from '@pages/PageBuilder/types';
 
 interface DroppableAreaProps {
     id: string;

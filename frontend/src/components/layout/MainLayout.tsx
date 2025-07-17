@@ -1,8 +1,8 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import Sidebar from '../global/Sidebar';
-import Header from '../global/Header';
-import { useApp } from '../../context/AppContext';
+import Sidebar from '@components/global/Sidebar';
+import Header from '@components/global/Header';
+import { useApp } from '@context/AppContext';
 
 interface MainLayoutProps {
     children?: React.ReactNode;

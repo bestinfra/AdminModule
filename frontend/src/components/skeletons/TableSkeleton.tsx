@@ -1,5 +1,5 @@
 import React from 'react';
-import type { Column } from '../../components/global/Table';
+import type { Column } from '@components/global/Table';
 
 interface TableSkeletonProps {
     columns: Column[];
