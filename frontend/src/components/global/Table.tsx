@@ -1,60 +1,14 @@
 import PropTypes from 'prop-types';
-import Button from './Button';
-import Dropdown from './Dropdown';
+import Button from '@components/global/Button';
+import Dropdown from '@components/global/Dropdown';
 import debounce from 'lodash/debounce';
 import { useState, useMemo, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import TableSkeleton from '../skeletons/TableSkeleton';
+import TableSkeleton from '@components/skeletons/TableSkeleton';
 import { useNavigate } from 'react-router-dom';
-import TimeRangeSelector from './TimeRangeSelector';
+import TimeRangeSelector from '@components/global/TimeRangeSelector';
 
-/**
- * Table Component with Search and Actions
- * 
- * Sample Data for Testing:
- * 
- * const sampleData = [
- *   {
- *     sNo: 1,
- *     unitId: 'UNIT001',
- *     unitName: 'Airborne General Store',
- *     unitType: 'Commercial',
- *     sez: 'GMR SEZ',
- *     status: 'Active',
- *     meterNumber: 'A9211434',
- *     initialReading: '0.00',
- *     balance: '₹1,250.50',
- *     possessionDate: '2024-01-15',
- *     mobileNumber: '+91 98765 43210',
- *     emailAddress: 'airborne@example.com'
- *   },
- *   {
- *     sNo: 2,
- *     unitId: 'UNIT002',
- *     unitName: 'Neo Travels',
- *     unitType: 'Commercial',
- *     sez: 'GMR SEZ',
- *     status: 'Active',
- *     meterNumber: 'A9345417',
- *     initialReading: '0.00',
- *     balance: '₹890.25',
- *     possessionDate: '2024-02-20',
- *     mobileNumber: '+91 98765 43211',
- *     emailAddress: 'neo@example.com'
- *   }
- * ];
- * 
- * Usage Example:
- * 
- * <Table
- *   data={sampleData}
- *   searchable={true}
- *   showActions={true}
- *   onView={(row) => console.log('View:', row)}
- *   onEdit={(row) => console.log('Edit:', row)}
- *   onDelete={(row) => console.log('Delete:', row)}
- * />
- */
+
 export interface TableData {
     [key: string]: string | number | boolean | null | undefined;
 }

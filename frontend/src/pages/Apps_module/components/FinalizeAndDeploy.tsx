@@ -11,15 +11,14 @@ interface FinalizeAndDeployProps {
   onBack?: () => void;
 }
 
-const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange, currentStep = 1, onBack }) => {
+const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange, currentStep = 1 }) => {
   return (
     <div className=" bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Terms & Conditions</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Please review and accept the terms before completing your app configuration</p>
-      
       <div className="space-y-6">
         {/* App Basics & Admin Access in 2 columns */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
+        <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
           <div className="flex flex-col md:flex-row gap-6">
             {/* App Basics Column */}
             <div className="flex-1 min-w-0">
@@ -82,7 +81,7 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
         </div>
 
         {/* Branding Review */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
+        <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
           <div className="flex justify-between items-start">
             <div className="flex flex-col gap-4">
               <h3 className="text-sm font-semibold text-primary">Branding</h3>
@@ -131,7 +130,7 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
         </div>
 
         {/* Modules Review */}
-        <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
+        <div className="dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
           <div className="flex justify-between items-start">
             <div className="flex flex-col gap-4 w-full">
               <h3 className="text-sm font-semibold text-primary">Modules</h3>
@@ -153,7 +152,7 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
         </div>
 
                 {/* Terms & Conditions */}
-                <div className="bg-gray-50 dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
+                <div className="dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
           <h3 className="text-sm font-semibold text-primary">Terms & Conditions</h3>
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-main dark:text-white">

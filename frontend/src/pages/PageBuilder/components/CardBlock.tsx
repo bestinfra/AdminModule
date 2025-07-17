@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ComponentType } from '../types';
+import type { ComponentType } from '@pages/PageBuilder/types';
 import Card from '@components/global/Card'; 
 
 interface CardBlockProps {
