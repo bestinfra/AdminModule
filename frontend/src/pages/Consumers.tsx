@@ -15,8 +15,6 @@ const columns: Column[] = [
 ];
 
 const Consumers: React.FC = () => {
-  console.log('🚀 Consumers component is mounting...');
-  alert('Consumers component is mounting!'); // Temporary debug
   const [menuValue, setMenuValue] = useState('');
   const [consumers, setConsumers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,58 +38,20 @@ const Consumers: React.FC = () => {
 
   // Fetch consumers from backend
   useEffect(() => {
-    console.log('🔄 useEffect is running - about to fetch data');
-    alert('useEffect is running!'); // Temporary debug
     setLoading(true);
-    const apiUrl = '/api/consumers';
-    console.log('🔍 Fetching consumers from:', apiUrl);
-    console.log('🔍 Current window location:', window.location.href);
-    console.log('🔍 Current window origin:', window.location.origin);
     
-    // Test the proxy directly
-    fetch(apiUrl)
-      .then(res => {
-        console.log('📡 Response status:', res.status);
-        console.log('📡 Response status text:', res.statusText);
-        console.log('📡 Response headers:', Object.fromEntries(res.headers.entries()));
-        console.log('📡 Response URL:', res.url);
-        console.log('📡 Response type:', res.type);
-        return res.text(); // Get raw text first
-      })
-      .then(text => {
-        console.log('📄 Raw response text length:', text.length);
-        console.log('📄 Raw response text (first 500 chars):', text.substring(0, 500));
-        console.log('📄 Raw response text (last 200 chars):', text.substring(text.length - 200));
-        
-        // Check if it starts with HTML
-        if (text.trim().toLowerCase().startsWith('<!doctype')) {
-          console.error('❌ Response is HTML, not JSON!');
-          alert('Got HTML instead of JSON! Check proxy configuration.');
+    fetch('/api/consumers')
+      .then(res => res.json())
+      .then(result => {
+        if (result.success && Array.isArray(result.data)) {
+          setConsumers(result.data);
+        } else {
           setConsumers([]);
-          setLoading(false);
-          return;
-        }
-        
-        try {
-          const result = JSON.parse(text);
-          console.log('✅ Parsed result from backend:', result);
-          if (result.success && Array.isArray(result.data)) {
-            console.log('✅ Setting consumers data:', result.data.length, 'consumers');
-            setConsumers(result.data);
-          } else {
-            console.log('⚠️ No valid data in response');
-            setConsumers([]);
-          }
-        } catch (parseError) {
-          console.error('❌ JSON parse error:', parseError);
-          console.error('❌ Raw text that failed to parse:', text);
-          alert('Failed to parse JSON response!');
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.error('❌ Network error fetching consumers:', err);
-        alert('Network error: ' + err.message);
+        console.error('Error fetching consumers:', err);
         setConsumers([]);
         setLoading(false);
       });
