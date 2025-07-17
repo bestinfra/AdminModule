@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import Page from '@components/global/Page';
 import PageHeader from '@components/global/PageHeader';
 import type { Section } from '@components/global/Page';
-import Button from '@components/global/Button';
-import Card from '@components/global/Card';
+
 
 interface ComponentDoc {
   name: string;
@@ -18,7 +17,6 @@ interface ComponentDoc {
 }
 
 const ComponentsDocumentation: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedComponent, setSelectedComponent] = useState<ComponentDoc | null>(null);
 
@@ -532,47 +530,18 @@ const ComponentsDocumentation: React.FC = () => {
     }
   ];
 
-  // Filter components based on category and search term
+  // Filter components based on search term
   const filteredComponents = components.filter(component => {
-    const matchesCategory = selectedCategory === 'all' || component.category === selectedCategory;
     const matchesSearch = component.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          component.path.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
+    return matchesSearch;
   });
 
   const handleComponentClick = (component: ComponentDoc) => {
     setSelectedComponent(component);
   };
 
-  const getCategoryColor = (category: string) => {
-    switch (category) {
-      case 'most-used':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'moderately-used':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'limited-usage':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'unused':
-        return 'bg-red-100 text-red-800 border-red-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
 
-  const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'most-used':
-        return 'Most Used';
-      case 'moderately-used':
-        return 'Moderately Used';
-      case 'limited-usage':
-        return 'Limited Usage';
-      case 'unused':
-        return 'Unused';
-      default:
-        return 'Unknown';
-    }
-  };
 
   // Header component
   const headerComponent = (
@@ -617,7 +586,7 @@ const ComponentsDocumentation: React.FC = () => {
           </div>
           <div className="overflow-y-auto h-[calc(100%-80px)]">
             <div className="p-6 space-y-3">
-              {filteredComponents.map((component, index) => (
+              {filteredComponents.map((component) => (
                 <div
                   key={component.name}
                   className={`border border-primary-border dark:border-dark-border rounded-xl p-4 hover:shadow-md transition-shadow cursor-pointer ${
