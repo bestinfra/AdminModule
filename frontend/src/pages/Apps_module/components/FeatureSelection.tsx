@@ -90,9 +90,7 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
     ];
   }
 
-  // Check if sections are completed
-  const isDefaultSectionCompleted = moduleConfig.default.every(module => module && isModuleEnabled(module.key));
-  const isOptionalSectionCompleted = gridModules.filter(m => m && !('isNested' in m)).every(optModule => optModule && isModuleEnabled(optModule.key));
+
 
   // Render default modules as selectable
   const renderDefaultModuleItem = (module: any) => (
