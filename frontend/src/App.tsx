@@ -52,7 +52,7 @@ import UserManagement from './pages/UserManagment';
 import RoleManagement from './pages/RoleManagment';
 import TicketsFilteredView from './pages/TicketsFilteredView';
 import CreateTicket from './pages/CreateTicket';
-
+import PageDemo from './pages/PageDemo';
 
 const App: React.FC = () => {
     return (
@@ -93,51 +93,176 @@ const App: React.FC = () => {
                                 element={<TicketsFilteredView />}
                             />
                             <Route path="/forms" element={<Forms />} />
-                            <Route path="/consumers" element={<Consumers />} /> 
-                            <Route path="/consumers/high-usage" element={<Consumers />} />
-                            <Route path="/consumers/add" element={<AddConsumer />} />
-                            <Route path="/consumers/:uid" element={<ConsumerView />} />
-                            <Route path="/connect-disconnect/:filter" element={<ConnectDisconnect />} />
-                            <Route path="/connect-disconnect" element={<ConnectDisconnect />} />
-                            <Route path="/bills/prepaid" element={<BillsPrepaid />} />
-                            <Route path="/bills/postpaid" element={<BillsPostpaid />} />
-                            <Route path="/dtr-dashboard" element={<DTRDashboard />} />
-                            <Route path="/dtr/:id" element={<DTRDetailPage />} />
+                            <Route path="/consumers" element={<Consumers />} />
+                            <Route
+                                path="/consumers/high-usage"
+                                element={<Consumers />}
+                            />
+                            <Route
+                                path="/consumers/add"
+                                element={<AddConsumer />}
+                            />
+                            <Route
+                                path="/consumers/:uid"
+                                element={<ConsumerView />}
+                            />
+                            <Route
+                                path="/connect-disconnect/:filter"
+                                element={<ConnectDisconnect />}
+                            />
+                            <Route
+                                path="/connect-disconnect"
+                                element={<ConnectDisconnect />}
+                            />
+                            <Route
+                                path="/bills/prepaid"
+                                element={<BillsPrepaid />}
+                            />
+                            <Route
+                                path="/bills/postpaid"
+                                element={<BillsPostpaid />}
+                            />
+                            <Route
+                                path="/dtr-dashboard"
+                                element={<DTRDashboard />}
+                            />
+                            <Route
+                                path="/dtr/:id"
+                                element={<DTRDetailPage />}
+                            />
                             <Route path="/feeders/:id" element={<Feeders />} />
-                            <Route path="/user-management" element={<UserManagement />} />
-                            <Route path="/role-management" element={<RoleManagement />} />
-                            <Route path="/dtr-statistics/total-dtrs" element={<DTRTotalDTRs />} />
-                            <Route path="/dtr-statistics/total-lt-feeders" element={<DTRTotalLTFeeders />} />
-                            <Route path="/dtr-statistics/total-fuse-blown" element={<DTRTotalFuseBlown />} />
-                            <Route path="/dtr-statistics/overloaded-feeders" element={<DTROverloadedFeeders />} />
-                            <Route path="/dtr-statistics/underloaded-feeders" element={<DTRUnderloadedFeeders />} />
-                            <Route path="/dtr-statistics/lt-side-fuse-blown" element={<DTRLTSideFuseBlown />} />
-                            <Route path="/dtr-statistics/unbalanced-dtrs" element={<DTRUnbalancedDTRs />} />
-                            <Route path="/dtr-statistics/power-failure-feeders" element={<DTRPowerFailureFeeders />} />
-                            <Route path="/dtr-statistics/ht-side-fuse-blown" element={<DTRHTSideFuseBlown />} />
-                            <Route path="/meter-management/data-logger-master" element={<DataLoggerMaster />} />
-                            <Route path="/meter-management/data-logger-master/add" element={<AddDataLogger />} />
-                            <Route path="/meter-management/meters-list" element={<MetersList />} />
-                            <Route path="/meter-management/meters-list/add" element={<AddMeter />} />
-                            <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
-                            <Route path="/user-management/users" element={<Users />} />
-                            <Route path="/user-management/roles" element={<Roles />} />
-                            <Route path="/user-management/roles/:roleId/permissions" element={<RolesPermission />} />
-                            <Route path="/user-management/users/:userId" element={<UserDetails />} />
-                            <Route path="/user-management/change-password" element={<ChangePassword />} />
-                            <Route path="/user-management/notifications" element={<Notifications />} />
-                            <Route path="/user-management/two-step-verification" element={<TwoStepVerification />} />
-                            <Route path="/user-management/account-status" element={<AccountStatus />} />
-                            <Route path="/user-management/add-user" element={<AddUser />} />
-                            <Route path="/user-management/add-role" element={<AddRole />} />
-                            <Route path="/all-tickets" element={<AllTickets />} />
-                            <Route path="/tickets/:filter" element={<AllTickets />} />
-                            <Route path="/create-ticket" element={<CreateTicket />} />
+                            <Route
+                                path="/user-management"
+                                element={<UserManagement />}
+                            />
+                            <Route
+                                path="/role-management"
+                                element={<RoleManagement />}
+                            />
+                            <Route
+                                path="/dtr-statistics/total-dtrs"
+                                element={<DTRTotalDTRs />}
+                            />
+                            <Route
+                                path="/dtr-statistics/total-lt-feeders"
+                                element={<DTRTotalLTFeeders />}
+                            />
+                            <Route
+                                path="/dtr-statistics/total-fuse-blown"
+                                element={<DTRTotalFuseBlown />}
+                            />
+                            <Route
+                                path="/dtr-statistics/overloaded-feeders"
+                                element={<DTROverloadedFeeders />}
+                            />
+                            <Route
+                                path="/dtr-statistics/underloaded-feeders"
+                                element={<DTRUnderloadedFeeders />}
+                            />
+                            <Route
+                                path="/dtr-statistics/lt-side-fuse-blown"
+                                element={<DTRLTSideFuseBlown />}
+                            />
+                            <Route
+                                path="/dtr-statistics/unbalanced-dtrs"
+                                element={<DTRUnbalancedDTRs />}
+                            />
+                            <Route
+                                path="/dtr-statistics/power-failure-feeders"
+                                element={<DTRPowerFailureFeeders />}
+                            />
+                            <Route
+                                path="/dtr-statistics/ht-side-fuse-blown"
+                                element={<DTRHTSideFuseBlown />}
+                            />
+                            <Route
+                                path="/meter-management/data-logger-master"
+                                element={<DataLoggerMaster />}
+                            />
+                            <Route
+                                path="/meter-management/data-logger-master/add"
+                                element={<AddDataLogger />}
+                            />
+                            <Route
+                                path="/meter-management/meters-list"
+                                element={<MetersList />}
+                            />
+                            <Route
+                                path="/meter-management/meters-list/add"
+                                element={<AddMeter />}
+                            />
+                            <Route
+                                path="/meter-details/:meterSlNo"
+                                element={<MeterDetails />}
+                            />
+                            <Route
+                                path="/user-management/users"
+                                element={<Users />}
+                            />
+                            <Route
+                                path="/user-management/roles"
+                                element={<Roles />}
+                            />
+                            <Route
+                                path="/user-management/roles/:roleId/permissions"
+                                element={<RolesPermission />}
+                            />
+                            <Route
+                                path="/user-management/users/:userId"
+                                element={<UserDetails />}
+                            />
+                            <Route
+                                path="/user-management/change-password"
+                                element={<ChangePassword />}
+                            />
+                            <Route
+                                path="/user-management/notifications"
+                                element={<Notifications />}
+                            />
+                            <Route
+                                path="/user-management/two-step-verification"
+                                element={<TwoStepVerification />}
+                            />
+                            <Route
+                                path="/user-management/account-status"
+                                element={<AccountStatus />}
+                            />
+                            <Route
+                                path="/user-management/add-user"
+                                element={<AddUser />}
+                            />
+                            <Route
+                                path="/user-management/add-role"
+                                element={<AddRole />}
+                            />
+                            <Route
+                                path="/all-tickets"
+                                element={<AllTickets />}
+                            />
+                            <Route
+                                path="/tickets/:filter"
+                                element={<AllTickets />}
+                            />
+                            <Route
+                                path="/create-ticket"
+                                element={<CreateTicket />}
+                            />
                             {/* <Route path="/tickets/view/:id" element={<TicketView />} /> */}
-                            <Route path="/ticket-view" element={<TicketView />} />
+                            <Route
+                                path="/ticket-view"
+                                element={<TicketView />}
+                            />
                             {/* <Route path="/ticket-view/:ticketId" element={<TicketView />} /> */}
                             {/* <Route path="/ticket-view/:ticketId/add-message" element={<TicketView />} /> */}
-                            <Route path="/role-management" element={<RoleManagement />} />
+                            <Route
+                                path="/role-management"
+                                element={<RoleManagement />}
+                            />
+                            {/* PageDemo route */}
+                            <Route
+                                path="/universal-page-demo"
+                                element={<PageDemo />}
+                            />
                             <Route path="*" element={<NotFound />} />
                         </Route>
                         <Route path="/page-builder" element={<PageBuilder />} />
