@@ -260,7 +260,7 @@ const App: React.FC = () => {
                             />
                             {/* PageDemo route */}
                             <Route
-                                path="/universal-page-demo"
+                                path="/page-demo"
                                 element={<PageDemo />}
                             />
                             <Route path="*" element={<NotFound />} />

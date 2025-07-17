@@ -88,7 +88,8 @@ interface PageProps {
     style?: React.CSSProperties;
 }
 
-const getLayoutClass = (layout: LayoutConfig) => {
+const getLayoutClass = (layout?: LayoutConfig) => {
+    if (!layout) return '';
     const { type, columns, gridRows, gap, className, bg } = layout;
 
     let baseClass = '';
@@ -197,7 +198,7 @@ const Page: React.FC<PageProps> = ({
     return (
         <div className={`w-full h-full`} style={style}>
             {sections.map((section, idx) => {
-                if (section.layout.rows) {
+                if (section.layout && section.layout.rows) {
                     const sectionClass = getLayoutClass(section.layout);
                     return (
                         <section
