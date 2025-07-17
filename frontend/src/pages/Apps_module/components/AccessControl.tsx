@@ -420,7 +420,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'firstName')}
                   showError={!!getNewAccountError(index, 'firstName')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'firstName', value as string)}
+                  onInputChange={(value) => handleNewAccountChange(account.id, 'firstName', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
@@ -439,7 +439,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'lastName')}
                   showError={!!getNewAccountError(index, 'lastName')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'lastName', value as string)}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'lastName', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
@@ -461,7 +461,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'username')}
                   showError={!!getNewAccountError(index, 'username')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'username', value as string)}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'username', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
@@ -480,7 +480,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'email')}
                   showError={!!getNewAccountError(index, 'email')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'email', value as string)}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'email', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
@@ -502,7 +502,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'phone')}
                   showError={!!getNewAccountError(index, 'phone')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'phone', value as string)}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'phone', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
@@ -535,7 +535,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'password')}
                   showError={!!getNewAccountError(index, 'password')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'password', value as string)}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'password', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
@@ -554,7 +554,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'confirmPassword')}
                   showError={!!getNewAccountError(index, 'confirmPassword')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'confirmPassword', value as string)}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'confirmPassword', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
