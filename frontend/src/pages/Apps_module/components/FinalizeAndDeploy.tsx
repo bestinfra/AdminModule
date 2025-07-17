@@ -13,7 +13,7 @@ interface FinalizeAndDeployProps {
 
 const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange, currentStep = 1, onBack }) => {
   return (
-    <div className="max-w-4xl mx-auto bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
+    <div className=" bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Terms & Conditions</h2>
       <p className="text-gray-600 dark:text-gray-300 mb-6">Please review and accept the terms before completing your app configuration</p>
       
