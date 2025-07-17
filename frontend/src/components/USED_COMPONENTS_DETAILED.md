@@ -325,8 +325,203 @@
 **Limited Usage (1-2 imports):** 7 components
 - Logo, Search, ProtectedRoute, MainLayout, Step1, Step2, Step3
 
-### ❌ **NOT USED (12 components):**
-- RecentActivities, ExpandableTable, Tabs, Sidebar, CardSkeleton, TableSkeleton, Input, TextInput, TextareaInput, SelectInput, CheckboxInput, FileInput
+## ❌ UNUSED COMPONENTS (12 components)
+
+### Global Components
+
+#### 21. RecentActivities (`@components/global/RecentActivities`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `activities` | `Activity[]` | Array of recent activities |
+| `maxItems` | `number` | Maximum number of items to show |
+| `showTimestamp` | `boolean` | Shows activity timestamps |
+| `onActivityClick` | `(activity: Activity) => void` | Activity click handler |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+#### 22. ExpandableTable (`@components/global/ExpandableTable`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `data` | `TableData[]` | Array of data objects |
+| `columns` | `Column[]` | Column configuration |
+| `expandableRows` | `boolean` | Enables row expansion |
+| `expandedContent` | `(row: TableData) => ReactNode` | Content for expanded rows |
+| `onRowExpand` | `(row: TableData) => void` | Row expand handler |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+#### 23. Tabs (`@components/global/Tabs`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `tabs` | `TabItem[]` | Array of tab items |
+| `defaultTab` | `number` | Default active tab index |
+| `onTabChange` | `(index: number) => void` | Tab change handler |
+| `activeTabIndex` | `number` | Currently active tab index |
+
+**Usage Count:** 0 imports
+
+#### 24. Sidebar (`@components/global/Sidebar`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `menuItems` | `MenuItem[]` | Array of menu items |
+| `collapsed` | `boolean` | Sidebar collapse state |
+| `onItemClick` | `(item: MenuItem) => void` | Menu item click handler |
+| `logo` | `string` | Logo path |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+### Skeleton Components
+
+#### 25. CardSkeleton (`@components/skeletons/CardSkeleton`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `className` | `string` | Additional CSS classes |
+| `height` | `string` | Skeleton height |
+| `width` | `string` | Skeleton width |
+
+**Usage Count:** 0 imports
+
+#### 26. TableSkeleton (`@components/skeletons/TableSkeleton`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `rows` | `number` | Number of skeleton rows |
+| `columns` | `number` | Number of skeleton columns |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+### Form Components
+
+#### 27. Input (`@components/forms/Input`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `onSearch` | `(query: string) => void` | Search handler |
+| `placeholder` | `string` | Search placeholder text |
+| `className` | `string` | Additional CSS classes |
+| `disabled` | `boolean` | Disables the input |
+| `value` | `string` | Input value |
+
+**Usage Count:** 0 imports
+
+#### 28. TextInput (`@components/forms/renderers/TextInput`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `type` | `string` | Input type (text, email, password, etc.) |
+| `value` | `string` | Input value |
+| `placeholder` | `string` | Placeholder text |
+| `icon` | `React.ReactNode` | Input icon |
+| `name` | `string` | Form field name |
+| `label` | `string` | Field label |
+| `onChange` | `(value: any) => void` | Change handler |
+| `required` | `boolean` | Makes field required |
+| `error` | `string` | Error message |
+| `disabled` | `boolean` | Disables the field |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+#### 29. TextareaInput (`@components/forms/renderers/TextareaInput`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | `string` | Textarea value |
+| `placeholder` | `string` | Placeholder text |
+| `rows` | `number` | Number of textarea rows |
+| `name` | `string` | Form field name |
+| `label` | `string` | Field label |
+| `onChange` | `(value: any) => void` | Change handler |
+| `required` | `boolean` | Makes field required |
+| `error` | `string` | Error message |
+| `disabled` | `boolean` | Disables the field |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+#### 30. SelectInput (`@components/forms/renderers/SelectInput`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | `string` | Selected value |
+| `options` | `Option[]` | Available options |
+| `placeholder` | `string` | Placeholder text |
+| `name` | `string` | Form field name |
+| `label` | `string` | Field label |
+| `onChange` | `(value: any) => void` | Change handler |
+| `required` | `boolean` | Makes field required |
+| `error` | `string` | Error message |
+| `disabled` | `boolean` | Disables the field |
+| `isMultiSelect` | `boolean` | Enables multiple selection |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+#### 31. CheckboxInput (`@components/forms/renderers/CheckboxInput`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `checked` | `boolean` | Checkbox checked state |
+| `label` | `string` | Checkbox label |
+| `name` | `string` | Form field name |
+| `onChange` | `(value: any) => void` | Change handler |
+| `required` | `boolean` | Makes field required |
+| `error` | `string` | Error message |
+| `disabled` | `boolean` | Disables the field |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+#### 32. FileInput (`@components/forms/renderers/FileInput`)
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `value` | `File \| null` | Selected file |
+| `accept` | `string` | Accepted file types |
+| `multiple` | `boolean` | Allows multiple file selection |
+| `name` | `string` | Form field name |
+| `label` | `string` | Field label |
+| `onChange` | `(value: any) => void` | Change handler |
+| `required` | `boolean` | Makes field required |
+| `error` | `string` | Error message |
+| `disabled` | `boolean` | Disables the field |
+| `maxSize` | `number` | Maximum file size in bytes |
+| `className` | `string` | Additional CSS classes |
+
+**Usage Count:** 0 imports
+
+## 📊 COMPLETE SUMMARY
+
+### ✅ **ACTUALLY USED COMPONENTS: 20**
+
+**Most Used (10+ imports):** 7 components
+- Button, Card, Table, Page, PageHeader, Dropdown, Modal
+
+**Moderately Used (3-9 imports):** 6 components
+- TimeRangeSelector, Header, FormInput, LoadingSpinner, Form, Holder
+
+**Limited Usage (1-2 imports):** 7 components
+- Logo, Search, ProtectedRoute, MainLayout, Step1, Step2, Step3
+
+### ❌ **UNUSED COMPONENTS: 12**
+
+**Global Components:** 4 components
+- RecentActivities, ExpandableTable, Tabs, Sidebar
+
+**Skeleton Components:** 2 components
+- CardSkeleton, TableSkeleton
+
+**Form Components:** 6 components
+- Input, TextInput, TextareaInput, SelectInput, CheckboxInput, FileInput
 
 ## 🎯 KEY FINDINGS
 
@@ -334,4 +529,5 @@
 2. **12 components are unused** and can be considered for removal
 3. **Most critical components:** Button, Card, Table, Page, PageHeader, Dropdown, Modal
 4. **Form components:** Only Form and FormInput are used, renderers are unused
-5. **Skeleton components:** Both CardSkeleton and TableSkeleton are unused 
+5. **Skeleton components:** Both CardSkeleton and TableSkeleton are unused
+6. **Total components:** 32 (20 used + 12 unused) 
