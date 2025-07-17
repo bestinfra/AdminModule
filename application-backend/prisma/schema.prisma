@@ -1,0 +1,1017 @@
+// Complete Database Schema
+// =====================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// =====================================
+// USER MANAGEMENT & AUTHENTICATION
+// =====================================
+
+model User {
+  id                  Int       @id @default(autoincrement())
+  username            String    @unique
+  email               String    @unique
+  password            String
+  firstName           String
+  lastName            String
+  phone               String?
+  profileImage        String?
+  
+  // Status
+  isActive            Boolean   @default(true)
+  isLocked            Boolean   @default(false)
+  lastLoginAt         DateTime?
+  passwordChangedAt   DateTime?
+  failedLoginAttempts Int       @default(0)
+  lockoutUntil        DateTime?
+  
+  // Role Assignment
+  roles               UserRole[]
+  department          Department? @relation(fields: [departmentId], references: [id])
+  departmentId        Int?
+  accessLevel         AccessLevel @default(NORMAL)
+  permissions         UserPermission[]
+  
+  // Session & Activity
+  sessions            UserSession[]
+  loginHistory        LoginHistory[]
+  activityLogs        UserActivityLog[]
+  
+  // Ticket Relations
+  raisedTickets       Ticket[]     @relation("RaisedBy")
+  assignedTickets     Ticket[]     @relation("AssignedTo")
+  
+  // Audit
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  createdBy           Int?
+  updatedBy           Int?
+
+  @@map("users")
+}
+
+// =====================================
+// CONSUMER MANAGEMENT
+// =====================================
+
+model Consumer {
+  id                Int       @id @default(autoincrement())
+  consumerNumber    String    @unique
+  name              String
+  email             String?
+  primaryPhone      String
+  alternatePhone    String?
+  
+  // KYC Details
+  idType            IdType
+  idNumber          String
+  
+  // Connection Details
+  connectionType    ConnectionType
+  category          ConsumerCategory
+  sanctionedLoad    Float
+  connectionDate    DateTime
+  
+  // Location
+  location          Location   @relation(fields: [locationId], references: [id])
+  locationId        Int       @unique
+  
+  // Billing
+  billingCycle      BillingCycle
+  billDeliveryMode  BillDeliveryMode[]
+  defaultPaymentMethod PaymentMethod?
+  creditScore       Int?
+  
+  // Relationships
+  meters            Meter[]
+  documents         ConsumerDocument[]
+  bills            Bill[]
+  notifications    Notification[]
+  tickets          Ticket[]
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("consumers")
+}
+
+// =====================================
+// LOCATION MANAGEMENT
+// =====================================
+
+model Location {
+  id              Int       @id @default(autoincrement())
+  name            String
+  code            String    @unique
+  locationType    LocationType @relation(fields: [locationTypeId], references: [id])
+  locationTypeId  Int
+  parent          Location?   @relation("LocationHierarchy", fields: [parentId], references: [id])
+  parentId        Int?
+  children        Location[]  @relation("LocationHierarchy")
+  latitude        Float?
+  longitude       Float?
+  address         String?
+  pincode         String?
+  consumer        Consumer?
+  meters          Meter[]
+  dtrs            DTR[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("locations")
+}
+
+// =====================================
+// METER MANAGEMENT
+// =====================================
+
+model Meter {
+  id              Int       @id @default(autoincrement())
+  meterNumber     String    @unique
+  serialNumber    String    @unique
+  manufacturer    String
+  model           String
+  type            MeterType
+  phase           Int       // 1 or 3 phase
+  
+  // Configuration
+  config          MeterConfiguration?
+  
+  // Status
+  status          MeterStatus @default(ACTIVE)
+  isInUse         Boolean   @default(true)
+  installationDate DateTime
+  lastMaintenanceDate DateTime?
+  decommissionDate DateTime?
+  
+  // Relationships
+  consumer        Consumer  @relation(fields: [consumerId], references: [id])
+  consumerId      Int
+  location        Location  @relation(fields: [locationId], references: [id])
+  locationId      Int
+  readings        MeterReading[]
+  consumptions    Consumption[]
+  bills           Bill[]
+  dtr             DTR? @relation(fields: [dtrId], references: [id])
+  dtrId           Int?
+  connectionEvents MeterConnectionEvent[]
+  
+  // CT/PT Details
+  currentTransformers CurrentTransformer[]
+  potentialTransformers PotentialTransformer[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("meters")
+}
+
+model MeterConfiguration {
+  id              Int       @id @default(autoincrement())
+  meter           Meter     @relation(fields: [meterId], references: [id])
+  meterId         Int       @unique
+  
+  // CT Configuration
+  ctRatio         String    // e.g., "100/5"
+  ctRatioPrimary  Float     // e.g., 100
+  ctRatioSecondary Float    // e.g., 5
+  adoptedCTRatio  String?
+  ctAccuracyClass String?
+  ctBurden        Float?
+  
+  // PT Configuration
+  ptRatio         String    // e.g., "11000/110"
+  ptRatioPrimary  Float     // e.g., 11000
+  ptRatioSecondary Float    // e.g., 110
+  adoptedPTRatio  String?
+  ptAccuracyClass String?
+  ptBurden        Float?
+  
+  // Multiplication Factors
+  mf              Float     // Overall Multiplication Factor
+  vmf             Float     // Voltage Multiplication Factor
+  cmf             Float     // Current Multiplication Factor
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("meter_configurations")
+}
+
+// =====================================
+// METER READING MANAGEMENT
+// =====================================
+
+model MeterReading {
+  id              Int       @id @default(autoincrement())
+  meter           Meter     @relation(fields: [meterId], references: [id])
+  meterId         Int
+  
+  // Reading Details
+  readingDate     DateTime
+  readingType     ReadingType
+  readingSource   ReadingSource
+  
+  // Energy Measurements
+  kWh             Float    // Active Energy
+  kVAh            Float    // Apparent Energy
+  kVARh           Float?   // Reactive Energy
+  
+  // Power Quality Parameters
+  powerFactor     Float?
+  averagePF       Float?
+  minimumPF       Float?
+  
+  // Voltage Parameters
+  voltageR        Float?
+  voltageY        Float?
+  voltageB        Float?
+  averageVoltage  Float?
+  
+  // Current Parameters
+  currentR        Float?
+  currentY        Float?
+  currentB        Float?
+  averageCurrent  Float?
+  
+  // Validation
+  isValid         Boolean   @default(true)
+  validatedBy     String?
+  validatedAt     DateTime?
+  
+  // Bill Reference
+  bill            Bill?     @relation(fields: [billId], references: [id])
+  billId          Int?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([meterId, readingDate])
+  @@map("meter_readings")
+}
+
+model Consumption {
+  id              Int       @id @default(autoincrement())
+  
+  // Meter Relationship
+  meter           Meter     @relation(fields: [meterId], references: [id])
+  meterId         Int
+  
+  // Consumption Values
+  previousValue   Float     // Previous meter reading
+  finalValue      Float     // Final meter reading
+  consumption     Float     // Calculated consumption
+  
+  // Timestamps
+  consumptionDate DateTime  // Date when consumption was calculated
+  timestamp       DateTime  @default(now())
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([meterId, timestamp])
+  @@map("consumption")
+}
+
+// =====================================
+// RAW XML IMPORT
+// =====================================
+
+model RawXmlImport {
+  id              Int       @id @default(autoincrement())
+  doc             String    // XML document content
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("raw_xml_import")
+}
+
+// =====================================
+// BILLING SYSTEM
+// =====================================
+
+model Bill {
+  id              Int       @id @default(autoincrement())
+  billNumber      String    @unique
+  
+  // Relationships
+  meter           Meter     @relation(fields: [meterId], references: [id])
+  meterId         Int
+  consumer        Consumer  @relation(fields: [consumerId], references: [id])
+  consumerId      Int
+  
+  // Bill Period
+  billMonth       Int      // 1-12
+  billYear        Int
+  fromDate        DateTime
+  toDate          DateTime
+  dueDate         DateTime
+  
+  // Readings
+  previousReading Float
+  currentReading  Float
+  unitsConsumed   Float
+  
+  // Charges
+  fixedCharge     Float
+  energyCharge    Float
+  powerFactorCharge Float?
+  otherCharges    Json?
+  
+  // Amounts
+  subTotal        Float
+  taxes           Json
+  totalAmount     Float
+  
+  // Status
+  status          BillStatus @default(GENERATED)
+  isPaid          Boolean   @default(false)
+  paidAmount      Float     @default(0)
+  
+  // Relationships
+  payments        Payment[]
+  readings        MeterReading[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("bills")
+}
+
+// =====================================
+// PAYMENT SYSTEM
+// =====================================
+
+model Payment {
+  id              Int       @id @default(autoincrement())
+  transactionId   String    @unique
+  
+  // Payment Details
+  bill            Bill      @relation(fields: [billId], references: [id])
+  billId          Int
+  amount          Float
+  paymentMode     PaymentMode
+  paymentStatus   PaymentStatus @default(PENDING)
+  
+  // Transaction Details
+  gatewayResponse Json?
+  receiptNumber   String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("payments")
+}
+
+// =====================================
+// NOTIFICATION SYSTEM
+// =====================================
+
+model Notification {
+  id              Int       @id @default(autoincrement())
+  consumer        Consumer  @relation(fields: [consumerId], references: [id])
+  consumerId      Int
+  
+  type            NotificationType
+  title           String
+  message         String
+  priority        NotificationPriority
+  
+  // Delivery
+  channels        NotificationChannel[]
+  status          NotificationStatus @default(PENDING)
+  
+  // Tracking
+  readAt          DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("notifications")
+}
+
+// =====================================
+// TICKET SYSTEM
+// =====================================
+
+model Ticket {
+  id              Int       @id @default(autoincrement())
+  ticketNumber    String    @unique
+  
+  // Relationships
+  consumer        Consumer  @relation(fields: [consumerId], references: [id])
+  consumerId      Int
+  raisedBy        User     @relation("RaisedBy", fields: [raisedById], references: [id])
+  raisedById      Int
+  assignedTo      User?    @relation("AssignedTo", fields: [assignedToId], references: [id])
+  assignedToId    Int?
+  
+  // Ticket Details
+  type            TicketType
+  category        TicketCategory
+  priority        TicketPriority @default(MEDIUM)
+  status          TicketStatus @default(OPEN)
+  
+  // Content
+  subject         String
+  description     String
+  resolution      String?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("tickets")
+}
+
+// =====================================
+// ENUMS
+// =====================================
+
+enum AccessLevel {
+  RESTRICTED
+  NORMAL
+  ELEVATED
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum IdType {
+  PASSPORT
+  DRIVING_LICENSE
+  NATIONAL_ID
+  VOTER_ID
+  TAX_ID
+}
+
+enum ConnectionType {
+  RESIDENTIAL
+  COMMERCIAL
+  INDUSTRIAL
+  AGRICULTURAL
+}
+
+enum ConsumerCategory {
+  DOMESTIC
+  SMALL_COMMERCIAL
+  LARGE_COMMERCIAL
+  INDUSTRIAL
+  AGRICULTURAL
+  GOVERNMENT
+}
+
+enum BillingCycle {
+  MONTHLY
+  BIMONTHLY
+  QUARTERLY
+}
+
+enum BillDeliveryMode {
+  EMAIL
+  SMS
+  WHATSAPP
+  PHYSICAL
+}
+
+enum PaymentMode {
+  CASH
+  CHEQUE
+  CARD
+  UPI
+  NETBANKING
+  WALLET
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum MeterType {
+  PREPAID
+  POSTPAID
+}
+
+enum MeterStatus {
+  ACTIVE
+  INACTIVE
+  FAULTY
+  DISCONNECTED
+}
+
+enum ReadingType {
+  REGULAR
+  SPECIAL
+  PROVISIONAL
+  FINAL
+}
+
+enum ReadingSource {
+  AMR
+  MANUAL
+  MOBILE_APP
+  ESTIMATED
+}
+
+enum BillStatus {
+  GENERATED
+  VERIFIED
+  APPROVED
+  DISPUTED
+  CANCELLED
+}
+
+enum NotificationType {
+  BILL_GENERATED
+  PAYMENT_DUE
+  PAYMENT_RECEIVED
+  LOW_BALANCE
+  METER_DISCONNECTED
+}
+
+enum NotificationPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum NotificationChannel {
+  SMS
+  EMAIL
+  PUSH
+  WHATSAPP
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  DELIVERED
+  FAILED
+}
+
+enum TicketType {
+  COMPLAINT
+  SERVICE_REQUEST
+  INQUIRY
+}
+
+enum TicketCategory {
+  BILLING
+  METER
+  CONNECTION
+  TECHNICAL
+  OTHER
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TicketStatus {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+} 
+
+// =====================================
+// DTR MANAGEMENT
+// =====================================
+
+model DTR {
+  id              Int       @id @default(autoincrement())
+  dtrNumber       String    @unique
+  serialNumber    String    @unique
+  
+  // Basic Details
+  manufacturer    String
+  model           String
+  capacity        Float     // in kVA
+  type            DTRType
+  phase           Int       // 1 or 3 phase
+  
+  // Technical Specifications
+  primaryVoltage  Float     // in kV
+  secondaryVoltage Float    // in V
+  frequency       Float?    // in Hz
+  impedance       Float?    // in %
+  coolingType     CoolingType
+  oilType         OilType?
+  oilCapacity     Float?    // in Liters
+  
+  // Installation Details
+  location        Location  @relation(fields: [locationId], references: [id])
+  locationId      Int
+  installationDate DateTime
+  commissionDate  DateTime?
+  lastMaintenanceDate DateTime?
+  
+  // Operational Parameters
+  maxLoadLimit    Float?    // Maximum load limit in kVA
+  alarmThreshold  Float?    // Alarm threshold in %
+  tripThreshold   Float?    // Trip threshold in %
+  
+  // Monitoring
+  status          DTRStatus @default(ACTIVE)
+  healthIndex     Int?      // 0-100
+  temperature     Float?    // Current temperature
+  loadPercentage  Float?    // Current load %
+  
+  // Relationships
+  meters          Meter[]
+  readings        DTRReading[]
+  maintenanceLogs DTRMaintenance[]
+  faults          DTRFault[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("dtrs")
+}
+
+// DTR Readings
+model DTRReading {
+  id              Int       @id @default(autoincrement())
+  dtr             DTR       @relation(fields: [dtrId], references: [id])
+  dtrId           Int
+  
+  // Reading Time
+  readingDate     DateTime
+  readingType     DTRReadingType
+  
+  // Load Readings
+  loadKVA         Float     // Current load in kVA
+  loadPercentage  Float     // Load percentage
+  
+  // Voltage Readings
+  primaryVoltage  Json      // { r: float, y: float, b: float }
+  secondaryVoltage Json     // { r: float, y: float, b: float }
+  
+  // Current Readings
+  primaryCurrent  Json      // { r: float, y: float, b: float }
+  secondaryCurrent Json     // { r: float, y: float, b: float }
+  
+  // Power Factor
+  powerFactor     Float?
+  
+  // Temperature Readings
+  oilTemperature  Float?    // Oil temperature
+  windingTemperature Float? // Winding temperature
+  ambientTemperature Float? // Ambient temperature
+  
+  // Power Quality
+  frequency       Float?
+  voltageUnbalance Float?
+  currentUnbalance Float?
+  
+  // Validation
+  isValid         Boolean   @default(true)
+  validatedBy     String?
+  validatedAt     DateTime?
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([dtrId, readingDate])
+  @@map("dtr_readings")
+}
+
+// DTR Maintenance
+model DTRMaintenance {
+  id              Int       @id @default(autoincrement())
+  dtr             DTR       @relation(fields: [dtrId], references: [id])
+  dtrId           Int
+  
+  // Maintenance Details
+  maintenanceType MaintenanceType
+  scheduledDate   DateTime
+  completedDate   DateTime?
+  
+  // Work Details
+  workDone        String
+  findings        String?
+  recommendations String?
+  
+  // Oil Tests
+  oilDielectricTest Float?
+  oilAcidityTest   Float?
+  moistureContent  Float?
+  
+  // Personnel
+  performedBy     String
+  verifiedBy      String?
+  
+  // Status
+  status          MaintenanceStatus @default(SCHEDULED)
+  
+  // Attachments
+  documents       Json?     // Array of document references
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("dtr_maintenance")
+}
+
+// DTR Faults
+model DTRFault {
+  id              Int       @id @default(autoincrement())
+  dtr             DTR       @relation(fields: [dtrId], references: [id])
+  dtrId           Int
+  
+  // Fault Details
+  faultType       FaultType
+  severity        FaultSeverity
+  occuredAt       DateTime
+  resolvedAt      DateTime?
+  
+  // Description
+  description     String
+  rootCause       String?
+  resolution      String?
+  
+  // Impact
+  affectedMeters  Int?      // Number of meters affected
+  outageMinutes   Int?      // Duration of outage
+  
+  // Status
+  status          FaultStatus @default(DETECTED)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("dtr_faults")
+}
+
+// Additional Enums for DTR
+enum DTRType {
+  DISTRIBUTION
+  POWER
+  AUTO
+  SPECIAL_PURPOSE
+}
+
+enum CoolingType {
+  ONAN    // Oil Natural Air Natural
+  ONAF    // Oil Natural Air Forced
+  OFAF    // Oil Forced Air Forced
+  ODAF    // Oil Directed Air Forced
+}
+
+enum OilType {
+  MINERAL
+  SYNTHETIC
+  BIO_BASED
+  SILICONE
+}
+
+enum DTRStatus {
+  ACTIVE
+  INACTIVE
+  MAINTENANCE
+  FAULTY
+  OVERLOADED
+  DECOMMISSIONED
+}
+
+enum DTRReadingType {
+  REGULAR
+  SPECIAL
+  ALARM
+  FAULT
+}
+
+enum MaintenanceType {
+  ROUTINE
+  PREVENTIVE
+  CORRECTIVE
+  EMERGENCY
+  OIL_TEST
+  INSPECTION
+}
+
+enum MaintenanceStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  DEFERRED
+}
+
+enum FaultType {
+  OVERLOAD
+  SHORT_CIRCUIT
+  EARTH_FAULT
+  OIL_LEAK
+  HIGH_TEMPERATURE
+  LOW_OIL
+  BUSHING_FAILURE
+  WINDING_FAILURE
+  OTHER
+}
+
+enum FaultSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FaultStatus {
+  DETECTED
+  ANALYZING
+  REPAIRING
+  RESOLVED
+  UNRESOLVED
+} 
+
+// =====================================
+// METER CONNECTION EVENTS
+// =====================================
+
+model MeterConnectionEvent {
+  id           Int      @id @default(autoincrement())
+  meter        Meter    @relation(fields: [meterId], references: [id])
+  meterId      Int
+  eventType    ConnectionEventType
+  eventTime    DateTime @default(now()) // Timestamp for the event
+  reason       String?
+  performedBy  Int?     // User ID if available
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([meterId, eventTime])
+  @@map("meter_connection_events")
+}
+
+enum ConnectionEventType {
+  CONNECT
+  DISCONNECT
+} 
+
+// UserRole: Many-to-many between User and Role
+model UserRole {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  role   Role @relation(fields: [roleId], references: [id])
+  roleId Int
+
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+// Role: Basic role definition
+model Role {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  users UserRole[]
+  permissions RolePermission[]
+  @@map("roles")
+}
+
+// RolePermission: Many-to-many between Role and Permission
+model RolePermission {
+  id           Int        @id @default(autoincrement())
+  role         Role       @relation(fields: [roleId], references: [id])
+  roleId       Int
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+// Permission: Basic permission definition
+model Permission {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  roles RolePermission[]
+  users UserPermission[]
+  @@map("permissions")
+}
+
+// UserPermission: Many-to-many between User and Permission
+model UserPermission {
+  id           Int        @id @default(autoincrement())
+  user         User       @relation(fields: [userId], references: [id])
+  userId       Int
+  permission   Permission @relation(fields: [permissionId], references: [id])
+  permissionId Int
+
+  @@unique([userId, permissionId])
+  @@map("user_permissions")
+}
+
+// Department: Simple department model
+model Department {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  users User[]
+  @@map("departments")
+}
+
+// UserSession: Tracks user sessions
+model UserSession {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@map("user_sessions")
+}
+
+// LoginHistory: Tracks user logins
+model LoginHistory {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  loginAt   DateTime @default(now())
+  ip        String?
+  userAgent String?
+
+  @@map("login_history")
+}
+
+// UserActivityLog: Tracks user activity
+model UserActivityLog {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
+  action    String
+  details   String?
+  createdAt DateTime @default(now())
+
+  @@map("user_activity_logs")
+} 
+
+// PaymentMethod: Enum for payment methods
+enum PaymentMethod {
+  CASH
+  CHEQUE
+  CARD
+  UPI
+  NETBANKING
+  WALLET
+}
+
+// ConsumerDocument: Model for documents related to a consumer
+model ConsumerDocument {
+  id         Int      @id @default(autoincrement())
+  consumer   Consumer @relation(fields: [consumerId], references: [id])
+  consumerId Int
+  type       String
+  url        String
+  uploadedAt DateTime @default(now())
+  @@map("consumer_documents")
+}
+
+// LocationType: Model for location types
+model LocationType {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  locations Location[]
+  @@map("location_types")
+}
+
+// CurrentTransformer: Model for CT details
+model CurrentTransformer {
+  id        Int    @id @default(autoincrement())
+  meter     Meter  @relation(fields: [meterId], references: [id])
+  meterId   Int
+  ratio     String
+  accuracy  String?
+  burden    Float?
+  @@map("current_transformers")
+}
+
+// PotentialTransformer: Model for PT details
+model PotentialTransformer {
+  id        Int    @id @default(autoincrement())
+  meter     Meter  @relation(fields: [meterId], references: [id])
+  meterId   Int
+  ratio     String
+  accuracy  String?
+  burden    Float?
+  @@map("potential_transformers")
+} 
