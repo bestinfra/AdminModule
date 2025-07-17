@@ -51,6 +51,7 @@ import UserManagement from '@/pages/UserManagment';
 import RoleManagement from '@/pages/RoleManagment';
 import TicketsFilteredView from '@/pages/TicketsFilteredView';
 import CreateTicket from '@/pages/CreateTicket';
+import PageDemo from '@/pages/PageDemo';
 
 
 const App: React.FC = () => {

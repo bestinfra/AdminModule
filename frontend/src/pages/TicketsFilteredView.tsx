@@ -36,7 +36,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'John Doe',
             createdAt: '2024-03-20',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 2,
@@ -47,7 +47,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'Jane Smith',
             createdAt: '2024-03-19',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 3,
@@ -58,7 +58,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'Mike Johnson',
             createdAt: '2024-03-18',
             category: 'Technical',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 4,
@@ -69,7 +69,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'Sarah Wilson',
             createdAt: '2024-03-17',
             category: 'Infrastructure',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 5,
@@ -80,7 +80,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'David Brown',
             createdAt: '2024-03-16',
             category: 'Support',
-            department: 'Help Desk'
+            department: 'Help Desk',
         },
         {
             id: 6,
@@ -91,7 +91,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'Alex Johnson',
             createdAt: '2024-03-15',
             category: 'Infrastructure',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 7,
@@ -102,7 +102,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'Sarah Wilson',
             createdAt: '2024-03-14',
             category: 'Database',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 8,
@@ -113,7 +113,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'Mike Johnson',
             createdAt: '2024-03-13',
             category: 'Access Control',
-            department: 'Security'
+            department: 'Security',
         },
         {
             id: 9,
@@ -124,7 +124,7 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'John Doe',
             createdAt: '2024-03-12',
             category: 'Network',
-            department: 'IT'
+            department: 'IT',
         },
         {
             id: 10,
@@ -135,10 +135,9 @@ const TicketsFilteredView: React.FC = () => {
             assignedTo: 'Jane Smith',
             createdAt: '2024-03-11',
             category: 'Licensing',
-            department: 'IT'
-        }
+            department: 'IT',
+        },
     ];
-    
 
     // Filter data based on URL parameter
     useEffect(() => {
@@ -150,19 +149,29 @@ const TicketsFilteredView: React.FC = () => {
 
         switch (filterParam) {
             case 'high-priority':
-                filtered = ticketData.filter(ticket => ticket.priority === 'High');
+                filtered = ticketData.filter(
+                    (ticket) => ticket.priority === 'High'
+                );
                 title = 'High Priority Tickets';
                 break;
             case 'open':
-                filtered = ticketData.filter(ticket => ticket.status === 'Open');
+                filtered = ticketData.filter(
+                    (ticket) => ticket.status === 'Open'
+                );
                 title = 'Open Tickets';
                 break;
             case 'in-progress':
-                filtered = ticketData.filter(ticket => ticket.status === 'In Progress');
+                filtered = ticketData.filter(
+                    (ticket) => ticket.status === 'In Progress'
+                );
                 title = 'In Progress Tickets';
                 break;
             case 'closed':
-                filtered = ticketData.filter(ticket => ticket.status === 'Resolved' || ticket.status === 'Closed');
+                filtered = ticketData.filter(
+                    (ticket) =>
+                        ticket.status === 'Resolved' ||
+                        ticket.status === 'Closed'
+                );
                 title = 'Closed Tickets';
                 break;
             default:
@@ -182,7 +191,7 @@ const TicketsFilteredView: React.FC = () => {
         { key: 'assignedTo', label: 'Assigned To' },
         { key: 'createdAt', label: 'Created At' },
         { key: 'category', label: 'Category' },
-        { key: 'department', label: 'Department' }
+        { key: 'department', label: 'Department' },
     ];
 
     const headerComponent = (
@@ -203,7 +212,7 @@ const TicketsFilteredView: React.FC = () => {
                 { id: 'closed', label: 'Closed' },
                 { id: 'high-priority', label: 'High Priority' },
                 { id: 'medium-priority', label: 'Medium Priority' },
-                { id: 'low-priority', label: 'Low Priority' }
+                { id: 'low-priority', label: 'Low Priority' },
             ]}
             onMenuItemClick={(itemId) => {
                 console.log(`Filter by: ${itemId}`);
@@ -222,8 +231,7 @@ const TicketsFilteredView: React.FC = () => {
                 selectedTimeRange={selectedTimeRange}
                 handleTimeRangeChange={setSelectedTimeRange}
                 handleDownload={() => console.log('Downloading tickets...')}
-                loading={loading}
-            >
+                loading={loading}>
                 <Table
                     data={filteredData}
                     columns={columns}
@@ -236,7 +244,7 @@ const TicketsFilteredView: React.FC = () => {
                     onView={(row) => console.log('View ticket:', row)}
                 />
             </Holder>
-        )
+        ),
     };
 
     // Summary section showing filtered ticket count
@@ -250,7 +258,8 @@ const TicketsFilteredView: React.FC = () => {
                             {pageTitle}
                         </h3>
                         <p className="text-sm text-text-secondary">
-                            Showing {filteredData.length} of {ticketData.length} total tickets
+                            Showing {filteredData.length} of {ticketData.length}{' '}
+                            total tickets
                         </p>
                     </div>
                     <div className="text-right">
@@ -261,17 +270,14 @@ const TicketsFilteredView: React.FC = () => {
                     </div>
                 </div>
             </div>
-        )
+        ),
     };
 
-    const sections: Section[] = [
-        summarySection,
-        ticketsTableSection
-    ];
+    const sections: Section[] = [summarySection, ticketsTableSection];
 
     return (
-        <Page 
-            layout="single-column" 
+        <Page
+            layout="single-column"
             sections={sections}
             header={headerComponent}
             loading={loading}
@@ -282,4 +288,4 @@ const TicketsFilteredView: React.FC = () => {
     );
 };
 
-export default TicketsFilteredView; 
+export default TicketsFilteredView;

@@ -46,15 +46,15 @@ const Forms: React.FC<FormsProps> = ({
     const [formResults, setFormResults] = useState<Record<string, any>>({});
 
     const handleBasicFormSubmit = (data: Record<string, any>) => {
-        setFormResults(prev => ({ ...prev, basic: data }));
+        setFormResults((prev) => ({ ...prev, basic: data }));
     };
 
     const handleAdvancedFormSubmit = (data: Record<string, any>) => {
-        setFormResults(prev => ({ ...prev, advanced: data }));
+        setFormResults((prev) => ({ ...prev, advanced: data }));
     };
 
     const handleContactFormSubmit = (data: Record<string, any>) => {
-        setFormResults(prev => ({ ...prev, contact: data }));
+        setFormResults((prev) => ({ ...prev, contact: data }));
     };
 
     const basicFormSection: Section = {
@@ -82,14 +82,16 @@ const Forms: React.FC<FormsProps> = ({
                 />
                 {formResults.basic && (
                     <div className="mt-4 p-4 bg-secondary-light rounded-lg">
-                        <h3 className="font-semibold text-positive mb-2">Form Results:</h3>
+                        <h3 className="font-semibold text-positive mb-2">
+                            Form Results:
+                        </h3>
                         <pre className="text-sm text-positive overflow-auto">
                             {JSON.stringify(formResults.basic, null, 2)}
                         </pre>
                     </div>
                 )}
             </div>
-        )
+        ),
     };
 
     const advancedFormSection: Section = {
@@ -117,14 +119,16 @@ const Forms: React.FC<FormsProps> = ({
                 />
                 {formResults.advanced && (
                     <div className="mt-4 p-4 bg-primary-lightest rounded-lg">
-                        <h3 className="font-semibold text-primary mb-2">Form Results:</h3>
+                        <h3 className="font-semibold text-primary mb-2">
+                            Form Results:
+                        </h3>
                         <pre className="text-sm text-primary overflow-auto">
                             {JSON.stringify(formResults.advanced, null, 2)}
                         </pre>
                     </div>
                 )}
             </div>
-        )
+        ),
     };
 
     const contactFormSection: Section = {
@@ -152,20 +156,26 @@ const Forms: React.FC<FormsProps> = ({
                 />
                 {formResults.contact && (
                     <div className="mt-4 p-4 bg-accent-light rounded-lg">
-                        <h3 className="font-semibold text-accent mb-2">Form Results:</h3>
+                        <h3 className="font-semibold text-accent mb-2">
+                            Form Results:
+                        </h3>
                         <pre className="text-sm text-accent overflow-auto">
                             {JSON.stringify(formResults.contact, null, 2)}
                         </pre>
                     </div>
                 )}
             </div>
-        )
+        ),
     };
 
     return (
         <Page
             layout="single-column"
-            sections={[basicFormSection, advancedFormSection, contactFormSection]}
+            sections={[
+                basicFormSection,
+                advancedFormSection,
+                contactFormSection,
+            ]}
             header={headerComponent}
             actions={actionsComponent}
             sidebar={sidebarComponent}
