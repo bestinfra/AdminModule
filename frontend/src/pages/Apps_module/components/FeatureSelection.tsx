@@ -19,6 +19,7 @@ const moduleConfig = {
     { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
     { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions' },
     { key: 'role_management', label: 'Role Management', description: 'Role-based access control' },
+    { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
   ],
   optional: [
     { 
@@ -30,16 +31,14 @@ const moduleConfig = {
         { key: 'postpaid', label: 'Postpaid', description: 'Postpaid billing system' }
       ]
     },
-    { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
     { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
     { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
-    { key: 'user_management_optional', label: 'User Management (Advanced)', description: 'Advanced user management features' },
   ]
 };
 
 const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, onModuleToggle, onNext, currentStep = 1, onBack }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  const enabledModules = formData.modules || ['dashboard', 'consumer', 'user_management_default', 'role_management'];
+  const enabledModules = formData.modules || ['dashboard', 'consumer', 'user_management_default', 'role_management', 'tickets'];
 
   // Validate form data and generate remarks
   const { isValid, errors: validationErrors, remarks } = useMemo(() => {
@@ -96,19 +95,26 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
 
   // Render default modules as selectable
   const renderDefaultModuleItem = (module: any) => (
-    <div key={module.key} className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
-      <button
-        type="button"
-        className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all flex-shrink-0 ${
+    <div key={module.key} className="flex items-center gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
+      <label className="flex items-center select-none cursor-pointer flex-shrink-0">
+        <input
+          type="checkbox"
+          checked={isModuleEnabled(module.key)}
+          onChange={() => onModuleToggle(module.key)}
+          className="peer sr-only"
+        />
+        <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
           isModuleEnabled(module.key) 
-            ? 'border-primary bg-primary text-white' 
+            ? 'border-primary bg-primary' 
             : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
-        }`}
-        onClick={() => onModuleToggle(module.key)}
-        aria-label={`Toggle ${module.label}`}
-      >
-        {isModuleEnabled(module.key) && <span className="font-bold text-xs">✓</span>}
-      </button>
+        }`}>
+          {isModuleEnabled(module.key) && (
+            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          )}
+        </span>
+      </label>
       <div className="flex-1 min-w-0">
         <div className="text-sm font-semibold text-main dark:text-white">{module.label}</div>
         <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
@@ -119,19 +125,26 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
   const renderModuleItem = (module: any) => {
     if (module.isNested) {
       return (
-        <div key={module.key} className="flex items-center gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all ml-8 border-l-3 border-l-primary bg-blue-50 dark:bg-blue-900/10">
-          <button
-            type="button"
-            className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all flex-shrink-0 ${
+        <div key={module.key} className="flex items-center gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all bg-blue-50 dark:bg-blue-900/10">
+          <label className="flex items-center select-none cursor-pointer flex-shrink-0">
+            <input
+              type="checkbox"
+              checked={isNestedModuleEnabled(module.key)}
+              onChange={() => handleNestedModuleToggle(module.key)}
+              className="peer sr-only"
+            />
+            <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
               isNestedModuleEnabled(module.key) 
-                ? 'border-primary bg-primary text-white' 
+                ? 'border-primary bg-primary' 
                 : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
-            }`}
-            onClick={() => handleNestedModuleToggle(module.key)}
-            aria-label={`Toggle ${module.label}`}
-          >
-            {isNestedModuleEnabled(module.key) && <span className="font-bold text-xs">✓</span>}
-          </button>
+            }`}>
+              {isNestedModuleEnabled(module.key) && (
+                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              )}
+            </span>
+          </label>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
@@ -141,18 +154,25 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
     }
     return (
       <div key={module.key} className="flex items-center justify-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
-        <button
-          type="button"
-          className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all flex-shrink-0 ${
+        <label className="flex items-center select-none cursor-pointer flex-shrink-0">
+          <input
+            type="checkbox"
+            checked={isModuleEnabled(module.key)}
+            onChange={() => handleModuleToggle(module.key)}
+            className="peer sr-only"
+          />
+          <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
             isModuleEnabled(module.key) 
-              ? 'border-primary bg-primary text-white' 
+              ? 'border-primary bg-primary' 
               : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
-          }`}
-          onClick={() => handleModuleToggle(module.key)}
-          aria-label={`Toggle ${module.label}`}
-        >
-          {isModuleEnabled(module.key) && <span className="font-bold text-xs">✓</span>}
-        </button>
+          }`}>
+            {isModuleEnabled(module.key) && (
+              <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            )}
+          </span>
+        </label>
         <div className="flex-1 min-w-0">
           <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
           <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
@@ -167,7 +187,7 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
         <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
           <div className="">
             <h2 className="text-base font-semibold text-primary">Module Selection</h2>
-            <p className="text-base text-gray-600 mt-2">Configure which modules will be enabled for your application</p>
+            <p className="text-base text-gray-600 ">Configure which modules will be enabled for your application</p>
           </div>
           
           <form className="space-y-8" onSubmit={(e) => {
