@@ -1,5 +1,5 @@
 import React from 'react';
-import type { CommonInputProps } from '../types';
+import type { CommonInputProps } from '@components/forms/types';
 
 interface TextareaInputProps extends CommonInputProps {
   value: string;

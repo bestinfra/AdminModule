@@ -3,204 +3,47 @@ import Form from '@components/forms/Form';
 import type { FormInputConfig } from '@components/forms/types';
 import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';
-import {
-    createHeaderComponent,
-    createActionsComponent,
-    createSidebarStatsComponent,
-    createFooterComponent,
-} from '@components/global/PageComponents';
 
-const Forms: React.FC = () => {
+type FormsProps = {
+    basicFormInputs: FormInputConfig[];
+    advancedFormInputs: FormInputConfig[];
+    contactFormInputs: FormInputConfig[];
+    headerComponent: React.ReactNode;
+    actionsComponent?: React.ReactNode;
+    sidebarComponent?: React.ReactNode;
+    footerComponent?: React.ReactNode;
+    basicFormSectionTitle?: string;
+    basicFormSectionSubtitle?: string;
+    advancedFormSectionTitle?: string;
+    advancedFormSectionSubtitle?: string;
+    contactFormSectionTitle?: string;
+    contactFormSectionSubtitle?: string;
+    basicFormProps?: Partial<React.ComponentProps<typeof Form>>;
+    advancedFormProps?: Partial<React.ComponentProps<typeof Form>>;
+    contactFormProps?: Partial<React.ComponentProps<typeof Form>>;
+    pageProps?: Partial<React.ComponentProps<typeof Page>>;
+};
+
+const Forms: React.FC<FormsProps> = ({
+    basicFormInputs,
+    advancedFormInputs,
+    contactFormInputs,
+    headerComponent,
+    actionsComponent,
+    sidebarComponent,
+    footerComponent,
+    basicFormSectionTitle = 'Basic Form Inputs',
+    basicFormSectionSubtitle = 'Common form inputs with validation',
+    advancedFormSectionTitle = 'Advanced Form Inputs',
+    advancedFormSectionSubtitle = 'Complex inputs with file uploads, checkboxes, and multi-column layout',
+    contactFormSectionTitle = 'Contact Form',
+    contactFormSectionSubtitle = 'A complete contact form with all input types',
+    basicFormProps = {},
+    advancedFormProps = {},
+    contactFormProps = {},
+    pageProps = {},
+}) => {
     const [formResults, setFormResults] = useState<Record<string, any>>({});
-
-    // Basic form inputs
-    const basicFormInputs: FormInputConfig[] = [
-        {
-            name: 'firstName',
-            type: 'text',
-            label: 'First Name',
-            placeholder: 'Enter your first name',
-            required: true,
-            validation: {
-                minLength: 2,
-                maxLength: 50,
-            },
-        },
-        {
-            name: 'lastName',
-            type: 'text',
-            label: 'Last Name',
-            placeholder: 'Enter your last name',
-            required: true,
-            validation: {
-                minLength: 2,
-                maxLength: 50,
-            },
-        },
-        {
-            name: 'email',
-            type: 'email',
-            label: 'Email Address',
-            placeholder: 'Enter your email',
-            required: true,
-            validation: {
-                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-            },
-        },
-        {
-            name: 'phone',
-            type: 'text',
-            label: 'Phone Number',
-            placeholder: 'Enter your phone number',
-            required: false,
-            validation: {
-                pattern: /^[\+]?[1-9][\d]{0,15}$/,
-            },
-        },
-        {
-            name: 'age',
-            type: 'number',
-            label: 'Age',
-            placeholder: 'Enter your age',
-            required: false,
-            validation: {
-                min: 0,
-                max: 120,
-            },
-        },
-        {
-            name: 'birthDate',
-            type: 'date',
-            label: 'Birth Date',
-            required: false,
-        },
-    ];
-
-    // Advanced form inputs
-    const advancedFormInputs: FormInputConfig[] = [
-        {
-            name: 'department',
-            type: 'select',
-            label: 'Department',
-            required: true,
-            options: [
-                { value: 'it', label: 'Information Technology' },
-                { value: 'hr', label: 'Human Resources' },
-                { value: 'finance', label: 'Finance' },
-                { value: 'marketing', label: 'Marketing' },
-                { value: 'sales', label: 'Sales' },
-                { value: 'operations', label: 'Operations' },
-            ],
-        },
-        {
-            name: 'role',
-            type: 'select',
-            label: 'Role',
-            required: true,
-            options: [
-                { value: 'admin', label: 'Administrator' },
-                { value: 'manager', label: 'Manager' },
-                { value: 'employee', label: 'Employee' },
-                { value: 'intern', label: 'Intern' },
-            ],
-        },
-        {
-            name: 'bio',
-            type: 'textarea',
-            label: 'Bio',
-            placeholder: 'Tell us about yourself...',
-            required: false,
-            validation: {
-                maxLength: 500,
-            },
-            colSpan: 2,
-        },
-        {
-            name: 'avatar',
-            type: 'file',
-            label: 'Profile Picture',
-            required: false,
-            colSpan: 2,
-        },
-        {
-            name: 'newsletter',
-            type: 'checkbox',
-            label: 'Subscribe to Newsletter',
-            required: false,
-            description: 'Receive updates about new features and announcements',
-        },
-        {
-            name: 'terms',
-            type: 'checkbox',
-            label: 'I agree to the Terms and Conditions',
-            required: true,
-            description: 'You must agree to continue',
-        },
-    ];
-
-    // Contact form inputs
-    const contactFormInputs: FormInputConfig[] = [
-        {
-            name: 'name',
-            type: 'text',
-            label: 'Full Name',
-            placeholder: 'Enter your full name',
-            required: true,
-            validation: {
-                minLength: 3,
-                maxLength: 100,
-            },
-        },
-        {
-            name: 'email',
-            type: 'email',
-            label: 'Email',
-            placeholder: 'Enter your email address',
-            required: true,
-        },
-        {
-            name: 'subject',
-            type: 'text',
-            label: 'Subject',
-            placeholder: 'What is this about?',
-            required: true,
-            validation: {
-                minLength: 5,
-                maxLength: 200,
-            },
-        },
-        {
-            name: 'message',
-            type: 'textarea',
-            label: 'Message',
-            placeholder: 'Enter your message here...',
-            required: true,
-            validation: {
-                minLength: 10,
-                maxLength: 1000,
-            },
-            colSpan: 2,
-        },
-        {
-            name: 'priority',
-            type: 'select',
-            label: 'Priority',
-            required: true,
-            options: [
-                { value: 'low', label: 'Low' },
-                { value: 'medium', label: 'Medium' },
-                { value: 'high', label: 'High' },
-                { value: 'urgent', label: 'Urgent' },
-            ],
-        },
-        {
-            name: 'attachment',
-            type: 'file',
-            label: 'Attachment',
-            required: false,
-            description: 'Upload any relevant files (max 10MB)',
-        },
-    ];
 
     const handleBasicFormSubmit = (data: Record<string, any>) => {
         setFormResults((prev) => ({ ...prev, basic: data }));
@@ -214,74 +57,15 @@ const Forms: React.FC = () => {
         setFormResults((prev) => ({ ...prev, contact: data }));
     };
 
-    // Header component
-    const headerComponent = createHeaderComponent(
-        'Form Components Showcase',
-        'Explore all available form input types and configurations',
-        '3 form types available'
-    );
-
-    // Actions component
-    const actionsComponent = createActionsComponent([
-        {
-            label: 'Export Forms',
-            onClick: () => console.log('Exporting forms...'),
-            variant: 'outline',
-        },
-        {
-            label: 'Documentation',
-            onClick: () => console.log('Opening documentation...'),
-            variant: 'outline',
-        },
-        {
-            label: 'Settings',
-            onClick: () => console.log('Opening settings...'),
-            variant: 'outline',
-        },
-    ]);
-
-    // Sidebar stats component
-    const sidebarComponent = createSidebarStatsComponent([
-        {
-            title: 'Form Types',
-            value: '3',
-            subtitle1: 'Basic, Advanced, Contact',
-            subtitle2: 'All input types covered',
-            comparisonValue: 0,
-        },
-        {
-            title: 'Input Types',
-            value: '12',
-            subtitle1: 'Different input types',
-            subtitle2: 'Text, email, file, etc.',
-            comparisonValue: 0,
-        },
-        {
-            title: 'Validation Rules',
-            value: '8',
-            subtitle1: 'Active validations',
-            subtitle2: 'Pattern, length, range',
-            comparisonValue: 0,
-        },
-    ]);
-
-    // Footer component
-    const footerComponent = createFooterComponent({
-        id: 'Forms Showcase ID: FORMS-001',
-        version: '2.1.0',
-        supportLink: '#',
-    });
-
-    // Basic Form Section
     const basicFormSection: Section = {
         id: 'basic-form',
         component: (
             <div>
                 <h2 className="text-xl font-semibold text-text-primary dark:text-surface mb-2">
-                    Basic Form Inputs
+                    {basicFormSectionTitle}
                 </h2>
                 <p className="text-text-secondary dark:text-neutral-light mb-4">
-                    Common form inputs with validation
+                    {basicFormSectionSubtitle}
                 </p>
                 <Form
                     inputs={basicFormInputs}
@@ -294,6 +78,7 @@ const Forms: React.FC = () => {
                     variant="default"
                     title="Basic Information"
                     subtitle="Please fill in your basic details"
+                    {...basicFormProps}
                 />
                 {formResults.basic && (
                     <div className="mt-4 p-4 bg-secondary-light rounded-lg">
@@ -309,17 +94,15 @@ const Forms: React.FC = () => {
         ),
     };
 
-    // Advanced Form Section
     const advancedFormSection: Section = {
         id: 'advanced-form',
         component: (
             <div>
                 <h2 className="text-xl font-semibold text-text-primary dark:text-surface mb-2">
-                    Advanced Form Inputs
+                    {advancedFormSectionTitle}
                 </h2>
                 <p className="text-text-secondary dark:text-neutral-light mb-4">
-                    Complex inputs with file uploads, checkboxes, and
-                    multi-column layout
+                    {advancedFormSectionSubtitle}
                 </p>
                 <Form
                     inputs={advancedFormInputs}
@@ -332,6 +115,7 @@ const Forms: React.FC = () => {
                     variant="default"
                     title="Advanced Profile"
                     subtitle="Complete your profile information"
+                    {...advancedFormProps}
                 />
                 {formResults.advanced && (
                     <div className="mt-4 p-4 bg-primary-lightest rounded-lg">
@@ -347,16 +131,15 @@ const Forms: React.FC = () => {
         ),
     };
 
-    // Contact Form Section
     const contactFormSection: Section = {
         id: 'contact-form',
         component: (
             <div>
                 <h2 className="text-xl font-semibold text-text-primary dark:text-surface mb-2">
-                    Contact Form
+                    {contactFormSectionTitle}
                 </h2>
                 <p className="text-text-secondary dark:text-neutral-light mb-4">
-                    A complete contact form with all input types
+                    {contactFormSectionSubtitle}
                 </p>
                 <Form
                     inputs={contactFormInputs}
@@ -369,6 +152,7 @@ const Forms: React.FC = () => {
                     variant="default"
                     title="Contact Us"
                     subtitle="We'd love to hear from you"
+                    {...contactFormProps}
                 />
                 {formResults.contact && (
                     <div className="mt-4 p-4 bg-accent-light rounded-lg">
@@ -398,6 +182,7 @@ const Forms: React.FC = () => {
             footer={footerComponent}
             sidebarPosition="right"
             className="space-y-12"
+            {...pageProps}
         />
     );
 };
