@@ -1,5 +1,5 @@
-import Button from './Button';
-import Card from './Card';
+import Button from '@components/global/Button';
+import Card from '@components/global/Card';
 
 // Reusable Header Component
 export const createHeaderComponent = (title: string, subtitle: string, metadata?: string) => (

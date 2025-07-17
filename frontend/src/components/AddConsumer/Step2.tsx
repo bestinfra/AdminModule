@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Button from '../global/Button';
+import Button from '@components/global/Button';
 
 // Configuration data
 const utilityOptions = [

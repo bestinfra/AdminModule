@@ -1,5 +1,5 @@
 import React from 'react';
-import type { CommonInputProps } from '../types';
+import type { CommonInputProps } from '@components/forms/types';
 
 interface CheckboxInputProps extends CommonInputProps {
   value: boolean;
