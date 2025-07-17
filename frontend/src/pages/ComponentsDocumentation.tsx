@@ -4,7 +4,6 @@ import PageHeader from '@components/global/PageHeader';
 import type { Section } from '@components/global/Page';
 import Button from '@components/global/Button';
 import Card from '@components/global/Card';
-import Modal from '@components/global/Modal';
 
 interface ComponentDoc {
   name: string;
@@ -22,7 +21,6 @@ const ComponentsDocumentation: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedComponent, setSelectedComponent] = useState<ComponentDoc | null>(null);
-  const [showModal, setShowModal] = useState(false);
 
   // Component data from your markdown file
   const components: ComponentDoc[] = [
@@ -542,27 +540,8 @@ const ComponentsDocumentation: React.FC = () => {
     return matchesCategory && matchesSearch;
   });
 
-  // Statistics
-  const stats = [
-    { title: 'Total Components', value: components.length, icon: '/icons/components.svg', subtitle1: 'All Components' },
-    { title: 'Most Used', value: components.filter(c => c.category === 'most-used').length, icon: '/icons/star.svg', subtitle1: '10+ imports' },
-    { title: 'Moderately Used', value: components.filter(c => c.category === 'moderately-used').length, icon: '/icons/check.svg', subtitle1: '3-9 imports' },
-    { title: 'Limited Usage', value: components.filter(c => c.category === 'limited-usage').length, icon: '/icons/info.svg', subtitle1: '1-2 imports' },
-    { title: 'Unused', value: components.filter(c => c.category === 'unused').length, icon: '/icons/trash.svg', subtitle1: '0 imports' }
-  ];
-
-  // Category filter options
-  const categories = [
-    { id: 'all', label: 'All Components', count: components.length },
-    { id: 'most-used', label: 'Most Used (10+ imports)', count: components.filter(c => c.category === 'most-used').length },
-    { id: 'moderately-used', label: 'Moderately Used (3-9 imports)', count: components.filter(c => c.category === 'moderately-used').length },
-    { id: 'limited-usage', label: 'Limited Usage (1-2 imports)', count: components.filter(c => c.category === 'limited-usage').length },
-    { id: 'unused', label: 'Unused (0 imports)', count: components.filter(c => c.category === 'unused').length }
-  ];
-
   const handleComponentClick = (component: ComponentDoc) => {
     setSelectedComponent(component);
-    setShowModal(true);
   };
 
   const getCategoryColor = (category: string) => {
@@ -610,96 +589,248 @@ const ComponentsDocumentation: React.FC = () => {
     />
   );
 
-  // Filters Section
-  const filtersSection: Section = {
-    id: 'filters',
+  // Split Layout Section
+  const splitLayoutSection: Section = {
+    id: 'split-layout',
     component: (
-      <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-6">
-        <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-          <div className="flex flex-wrap gap-2">
-            {categories.map(category => (
-              <Button
-                key={category.id}
-                label={`${category.label} (${category.count})`}
-                variant={selectedCategory === category.id ? 'primary' : 'outline'}
-                size="small"
-                onClick={() => setSelectedCategory(category.id)}
-              />
-            ))}
-          </div>
-          <div className="flex-1 max-w-md">
-            <input
-              type="text"
-              placeholder="Search components..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full px-4 py-2 border border-primary-border dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-            />
-          </div>
-        </div>
-      </div>
-    )
-  };
-
-  // Components List Section
-  const componentsListSection: Section = {
-    id: 'components-list',
-    component: (
-      <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl">
-        <div className="p-6 border-b border-primary-border dark:border-dark-border">
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">Component List</h2>
-              <p className="text-sm text-neutral mt-1">
-                Showing {filteredComponents.length} of {components.length} components
-              </p>
-            </div>
-            <div className="w-full md:w-80">
-              <input
-                type="text"
-                placeholder="Search components by name or path..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full px-4 py-2 border border-primary-border dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-primary-dark text-text-primary dark:text-text-primary"
-              />
+      <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)]">
+        {/* Left Side - Component List */}
+        <div className="lg:w-1/3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden">
+          <div className="p-6 border-b border-primary-border dark:border-dark-border">
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
+              <div>
+                <h2 className="text-xl font-semibold">Component List</h2>
+                <p className="text-sm text-neutral mt-1">
+                  Showing {filteredComponents.length} of {components.length} components
+                </p>
+              </div>
+              <div className="w-full md:w-80">
+                <input
+                  type="text"
+                  placeholder="Search components by name or path..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full px-4 py-2 border border-primary-border dark:border-dark-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary bg-white dark:bg-primary-dark text-text-primary dark:text-text-primary"
+                />
+              </div>
             </div>
           </div>
-        </div>
-        <div className="p-6">
-          <div className="grid gap-4">
-            {filteredComponents.map((component, index) => (
-              <div
-                key={component.name}
-                className="border border-primary-border dark:border-dark-border rounded-xl p-4 hover:shadow-md transition-shadow cursor-pointer"
-                onClick={() => handleComponentClick(component)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3">
-                      <h3 className="text-lg font-semibold text-text-primary dark:text-text-primary">
-                        {component.name}
-                      </h3>
+          <div className="overflow-y-auto h-[calc(100%-80px)]">
+            <div className="p-6 space-y-3">
+              {filteredComponents.map((component, index) => (
+                <div
+                  key={component.name}
+                  className={`border border-primary-border dark:border-dark-border rounded-xl p-4 hover:shadow-md transition-shadow cursor-pointer ${
+                    selectedComponent?.name === component.name 
+                      ? 'border-primary bg-primary-lightest dark:bg-primary-dark-light' 
+                      : ''
+                  }`}
+                  onClick={() => handleComponentClick(component)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3">
+                        <h3 className="text-lg font-semibold text-text-primary dark:text-text-primary">
+                          {component.name}
+                        </h3>
+                      </div>
+                      <p className="text-sm text-neutral mt-1 font-mono">
+                        {component.path}
+                      </p>
+                      <div className="flex items-center gap-4 mt-2">
+                        <span className="text-sm text-neutral">
+                          <strong>Props:</strong> {component.props.length}
+                        </span>
+                      </div>
                     </div>
-                    <p className="text-sm text-neutral mt-1 font-mono">
-                      {component.path}
-                    </p>
-                    <div className="flex items-center gap-4 mt-2">
+                    <div className="flex items-center gap-2">
                       <span className="text-sm text-neutral">
-                        <strong>Props:</strong> {component.props.length}
+                        Click to view details
                       </span>
+                      <svg className="w-5 h-5 text-neutral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm text-neutral">
-                      Click to view details
-                    </span>
-                    <svg className="w-5 h-5 text-neutral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Side - Component Details */}
+        <div className="lg:w-2/3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden">
+          <div className="p-6 border-b border-primary-border dark:border-dark-border">
+            <h2 className="text-xl font-semibold">
+              {selectedComponent ? `${selectedComponent.name} Details` : 'Select a Component'}
+            </h2>
+            <p className="text-sm text-neutral mt-1">
+              {selectedComponent ? 'Component documentation and props' : 'Click on a component from the list to view its details'}
+            </p>
+          </div>
+          <div className="overflow-y-auto h-[calc(100%-80px)]">
+            {selectedComponent ? (
+              <div className="p-6 space-y-6">
+                {/* Component Overview */}
+                <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-xl p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="font-semibold text-text-primary dark:text-text-primary">Component Name</h4>
+                      <p className="text-sm text-neutral">{selectedComponent.name}</p>
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-text-primary dark:text-text-primary">Import Path</h4>
+                      <p className="text-sm text-neutral font-mono">{selectedComponent.path}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Props Documentation */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-text-primary dark:text-text-primary">
+                    Props Documentation
+                  </h3>
+                  <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl overflow-hidden">
+                    <div className="bg-primary-lightest dark:bg-primary-dark-light px-4 py-3 border-b border-primary-border dark:border-dark-border">
+                      <div className="grid grid-cols-12 gap-4 font-semibold text-sm">
+                        <div className="col-span-3">Prop Name</div>
+                        <div className="col-span-4">Type</div>
+                        <div className="col-span-5">Description</div>
+                      </div>
+                    </div>
+                    <div className="max-h-96 overflow-y-auto">
+                      {selectedComponent.props.map((prop, index) => (
+                        <div
+                          key={prop.name}
+                          className={`px-4 py-3 border-b border-primary-border dark:border-dark-border ${
+                            index % 2 === 0 ? 'bg-white dark:bg-primary-dark' : 'bg-gray-50 dark:bg-primary-dark-light'
+                          }`}
+                        >
+                          <div className="grid grid-cols-12 gap-4 text-sm">
+                            <div className="col-span-3">
+                              <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs font-mono">
+                                {prop.name}
+                              </code>
+                            </div>
+                            <div className="col-span-4">
+                              <code className="bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-xs font-mono break-all">
+                                {prop.type}
+                              </code>
+                            </div>
+                            <div className="col-span-5 text-neutral">
+                              {prop.description}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Usage Example */}
+                <div>
+                  <h3 className="text-lg font-semibold mb-4 text-text-primary dark:text-text-primary">
+                    Usage Example
+                  </h3>
+                  <div className="bg-gray-900 text-green-400 p-4 rounded-xl font-mono text-sm overflow-x-auto">
+                    <pre>{`import ${selectedComponent.name} from '${selectedComponent.path}';
+
+// Example usage
+<${selectedComponent.name}
+  ${selectedComponent.props.map(prop => {
+    // Generate realistic dummy data based on prop type and name
+    let dummyValue = '';
+    
+    if (prop.type.includes('string')) {
+      if (prop.name === 'type') {
+        dummyValue = '"text"';
+      } else if (prop.name === 'name') {
+        dummyValue = '"username"';
+      } else if (prop.name === 'label') {
+        dummyValue = '"Username"';
+      } else if (prop.name === 'placeholder') {
+        dummyValue = '"Enter your username"';
+      } else if (prop.name === 'className') {
+        dummyValue = '"w-full"';
+      } else if (prop.name === 'title') {
+        dummyValue = '"Total Users"';
+      } else if (prop.name === 'value') {
+        dummyValue = '"john_doe"';
+      } else if (prop.name === 'icon') {
+        dummyValue = '"/icons/user.svg"';
+      } else if (prop.name === 'error') {
+        dummyValue = '"This field is required"';
+      } else if (prop.name === 'variant') {
+        dummyValue = '"primary"';
+      } else if (prop.name === 'size') {
+        dummyValue = '"medium"';
+      } else {
+        dummyValue = '"example"';
+      }
+    } else if (prop.type.includes('number')) {
+      dummyValue = '42';
+    } else if (prop.type.includes('boolean')) {
+      if (prop.name === 'required') {
+        dummyValue = 'true';
+      } else if (prop.name === 'disabled') {
+        dummyValue = 'false';
+      } else if (prop.name === 'loading') {
+        dummyValue = 'false';
+      } else {
+        dummyValue = 'true';
+      }
+    } else if (prop.type.includes('function') || prop.type.includes('=>')) {
+      if (prop.name === 'onChange') {
+        dummyValue = 'handleInputChange';
+      } else if (prop.name === 'onClick') {
+        dummyValue = 'handleClick';
+      } else if (prop.name === 'onSubmit') {
+        dummyValue = 'handleSubmit';
+      } else {
+        dummyValue = '() => console.log("clicked")';
+      }
+    } else if (prop.type.includes('React.ReactNode')) {
+      if (prop.name === 'children') {
+        dummyValue = '"Button Text"';
+      } else if (prop.name === 'icon') {
+        dummyValue = '<UserIcon className="w-5 h-5 text-gray-400" />';
+      } else {
+        dummyValue = '<span>Content</span>';
+      }
+    } else if (prop.type.includes('[]')) {
+      if (prop.name === 'options') {
+        dummyValue = '[{ label: "Option 1", value: "1" }, { label: "Option 2", value: "2" }]';
+      } else if (prop.name === 'columns') {
+        dummyValue = '[{ key: "name", label: "Name" }, { key: "email", label: "Email" }]';
+      } else {
+        dummyValue = '["item1", "item2"]';
+      }
+    } else {
+      dummyValue = 'null';
+    }
+    return `${prop.name}={${dummyValue}}`;
+  }).join('\n  ')}
+/>`}</pre>
                   </div>
                 </div>
               </div>
-            ))}
+            ) : (
+              <div className="p-6 flex items-center justify-center h-full">
+                <div className="text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-semibold text-text-primary dark:text-text-primary mb-2">
+                    No Component Selected
+                  </h3>
+                  <p className="text-neutral">
+                    Click on a component from the list to view its documentation and props.
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -707,100 +838,14 @@ const ComponentsDocumentation: React.FC = () => {
   };
 
   return (
-    <>
-      <Page
-        layout="single-column"
-        sections={[componentsListSection]}
-        header={headerComponent}
-        sidebarPosition="right"
-        className=""
-        sectionClassName=""
-      />
-
-      {/* Component Details Modal */}
-      <Modal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        title={selectedComponent ? `${selectedComponent.name} Component Documentation` : ''}
-        size="xl"
-        showCloseIcon={true}
-      >
-        {selectedComponent && (
-          <div className="space-y-6">
-            {/* Component Overview */}
-            <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-xl p-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <h4 className="font-semibold text-text-primary dark:text-text-primary">Component Name</h4>
-                  <p className="text-sm text-neutral">{selectedComponent.name}</p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-text-primary dark:text-text-primary">Import Path</h4>
-                  <p className="text-sm text-neutral font-mono">{selectedComponent.path}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Props Documentation */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4 text-text-primary dark:text-text-primary">
-                Props Documentation
-              </h3>
-              <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl overflow-hidden">
-                <div className="bg-primary-lightest dark:bg-primary-dark-light px-4 py-3 border-b border-primary-border dark:border-dark-border">
-                  <div className="grid grid-cols-12 gap-4 font-semibold text-sm">
-                    <div className="col-span-3">Prop Name</div>
-                    <div className="col-span-4">Type</div>
-                    <div className="col-span-5">Description</div>
-                  </div>
-                </div>
-                <div className="max-h-96 overflow-y-auto">
-                  {selectedComponent.props.map((prop, index) => (
-                    <div
-                      key={prop.name}
-                      className={`px-4 py-3 border-b border-primary-border dark:border-dark-border ${
-                        index % 2 === 0 ? 'bg-white dark:bg-primary-dark' : 'bg-gray-50 dark:bg-primary-dark-light'
-                      }`}
-                    >
-                      <div className="grid grid-cols-12 gap-4 text-sm">
-                        <div className="col-span-3">
-                          <code className="bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs font-mono">
-                            {prop.name}
-                          </code>
-                        </div>
-                        <div className="col-span-4">
-                          <code className="bg-blue-100 dark:bg-blue-900 px-2 py-1 rounded text-xs font-mono break-all">
-                            {prop.type}
-                          </code>
-                        </div>
-                        <div className="col-span-5 text-neutral">
-                          {prop.description}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Usage Example */}
-            <div>
-              <h3 className="text-lg font-semibold mb-4 text-text-primary dark:text-text-primary">
-                Usage Example
-              </h3>
-              <div className="bg-gray-900 text-green-400 p-4 rounded-xl font-mono text-sm overflow-x-auto">
-                <pre>{`import ${selectedComponent.name} from '${selectedComponent.path}';
-
-// Example usage
-<${selectedComponent.name}
-  ${selectedComponent.props.slice(0, 3).map(prop => `${prop.name}={/* ${prop.description} */}`).join('\n  ')}
-/>`}</pre>
-              </div>
-            </div>
-          </div>
-        )}
-      </Modal>
-    </>
+    <Page
+      layout="single-column"
+      sections={[splitLayoutSection]}
+      header={headerComponent}
+      sidebarPosition="right"
+      className=""
+      sectionClassName=""
+    />
   );
 };
 
