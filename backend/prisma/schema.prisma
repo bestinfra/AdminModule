@@ -7,62 +7,459 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        Int      @id @default(autoincrement())
-  username  String   @unique
-  email     String   @unique
-  password  String
-  role      String   @default("user")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  apps      App[]    @relation("AppCreator")
+// =====================================
+// ENUMS
+// =====================================
 
-  @@map("users")
+enum AppStatus {
+  DRAFT
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+  SUSPENDED
 }
 
-model App {
-  id            Int          @id @default(autoincrement())
-  name          String       @unique
-  subdomain     String       @unique
-  description   String?
-  isActive      Boolean      @default(true)
-  isPublished   Boolean      @default(false)
-  publishedAt   DateTime?
-  createdById   Int
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  adminSettings AdminConfig? @relation("AppAdminSettings")
-  branding      AppBranding? @relation("AppBranding")
-  configuration AppConfig?   @relation("AppConfiguration")
-  createdBy     User         @relation("AppCreator", fields: [createdById], references: [id])
-
-  @@map("apps")
+enum AppDeploymentStatus {
+  NOT_DEPLOYED
+  DEPLOYING
+  DEPLOYED
+  FAILED
+  UPDATING
 }
 
-model AppConfig {
-  id                  Int      @id @default(autoincrement())
-  appId               Int      @unique
+enum AppCategory {
+  UTILITY_MANAGEMENT
+  BILLING_SYSTEM
+  CUSTOMER_PORTAL
+  ADMIN_PANEL
+  REPORTING_SYSTEM
+  ANALYTICS_PLATFORM
+  INTEGRATION_SERVICE
+  CUSTOM
+}
+
+enum ProjectType {
+  NEW_PROJECT
+  MIGRATION
+  UPGRADE
+  CUSTOMIZATION
+}
+
+enum OwnershipType {
+  PRIVATE
+  PUBLIC
+  GOVERNMENT
+  CORPORATE
+}
+
+enum BillingMode {
+  PREPAID
+  POSTPAID
+  HYBRID
+}
+
+enum MeteringType {
+  ELECTRICITY
+  WATER
+  GAS
+  SOLAR
+  WIND
+  HYDRO
+  THERMAL
+  SMART_METER
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  MANAGER
+  OPERATOR
+  VIEWER
+  CUSTOM
+}
+
+enum NotificationType {
+  EMAIL
+  SMS
+  PUSH
+  IN_APP
+}
+
+enum FileType {
+  LOGO
+  FAVICON
+  BANNER
+  DOCUMENT
+  CERTIFICATE
+  OTHER
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  PUBLISH
+  UNPUBLISH
+  DEPLOY
+  SUSPEND
+  ACTIVATE
+}
+
+enum TicketStatus {
+  OPEN
+  ASSIGNED
+  IN_PROGRESS
+  PENDING_CUSTOMER
+  RESOLVED
+  CLOSED
+  CANCELLED
+}
+
+enum TicketPriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+  CRITICAL
+}
+
+enum TicketType {
+  BUG_REPORT
+  FEATURE_REQUEST
+  TECHNICAL_ISSUE
+  BILLING_ISSUE
+  GENERAL_INQUIRY
+  COMPLAINT
+  SUGGESTION
+  OTHER
+}
+
+enum TicketCategory {
+  APP_MANAGEMENT
+  USER_ACCESS
+  BILLING_PAYMENT
+  TECHNICAL_SUPPORT
+  FEATURE_REQUEST
+  BUG_REPORT
+  GENERAL
+}
+
+enum OrganizationType {
+  COMPANY
+  GOVERNMENT
+  NON_PROFIT
+  EDUCATIONAL
+  HEALTHCARE
+  FINANCIAL
+  OTHER
+}
+
+enum ApiKeyStatus {
+  ACTIVE
+  INACTIVE
+  EXPIRED
+  REVOKED
+}
+
+enum IntegrationType {
+  PAYMENT_GATEWAY
+  EMAIL_SERVICE
+  SMS_SERVICE
+  ANALYTICS
+  CRM
+  ERP
+  CUSTOM
+}
+
+enum IntegrationStatus {
+  ACTIVE
+  INACTIVE
+  CONFIGURING
+  ERROR
+  MAINTENANCE
+}
+
+// =====================================
+// ADMIN USERS & AUTHENTICATION
+// =====================================
+
+model AdminUsers {
+  id                  Int       @id @default(autoincrement())
+  username            String    @unique
+  email               String    @unique
+  password            String
+  firstName           String
+  lastName            String
+  phone               String?
+  profileImage        String?
+  
+  // Status
+  isActive            Boolean   @default(true)
+  isLocked            Boolean   @default(false)
+  lastLoginAt         DateTime?
+  passwordChangedAt   DateTime?
+  failedLoginAttempts Int       @default(0)
+  lockoutUntil        DateTime?
+  
+  // Role Assignment
+  role                UserRole  @default(VIEWER)
+  permissions         String[]  @default([])
+  
+  // Organization Relations
+  organizationId      Int?
+  organization        Organizations? @relation(fields: [organizationId], references: [id])
+  
+  // Role Relations
+  userRoles           UserRoles[]
+  
+  // App Relations
+  createdApps         GeneratedApps[]     @relation("AppCreator")
+  managedApps         GeneratedApps[]     @relation("AppManager")
+  
+  // Ticket Relations
+  createdTickets      SupportTickets[]    @relation("TicketCreator")
+  assignedTickets     SupportTickets[]    @relation("TicketAssignee")
+  
+  // API Keys & Integrations
+  apiKeys             ApiKeys[]
+  integrations        Integrations[]
+  
+  // Audit Relations
+  appAuditLogs        AppAuditLogs[]
+  ticketComments      TicketComments[]
+  ticketHistory       TicketHistory[]
+  
+  // Session & Activity
+  userSessions        AdminUserSessions[]
+  loginHistory        AdminLoginHistory[]
+  activityLogs        AdminActivityLogs[]
+  
+  // Audit
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  createdBy           Int?
+  updatedBy           Int?
+  deletedAt           DateTime?
+
+  @@map("admin_users")
+}
+
+// =====================================
+// ORGANIZATIONS & TENANTS
+// =====================================
+
+model Organizations {
+  id              Int       @id @default(autoincrement())
+  name            String
+  type            OrganizationType
+  description     String?
+  website         String?
+  logo            String?
+  
+  // Contact Information
+  email           String?
+  phone           String?
+  address         String?
+  city            String?
+  state           String?
+  country         String?
+  postalCode      String?
+  
+  // Settings
+  isActive        Boolean   @default(true)
+  settings        Json?
+  
+  // Relations
+  users           AdminUsers[]
+  apps            GeneratedApps[]
+  apiKeys         ApiKeys[]
+  integrations    Integrations[]
+  
+  // Audit
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("organizations")
+}
+
+// =====================================
+// ROLES & PERMISSIONS
+// =====================================
+
+model Roles {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  description     String?
+  isActive        Boolean   @default(true)
+  isSystem        Boolean   @default(false)
+  
+  // Relations
+  users           UserRoles[]
+  permissions     RolePermissions[]
+  
+  // Audit
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("roles")
+}
+
+model Permissions {
+  id              Int       @id @default(autoincrement())
+  name            String    @unique
+  description     String?
+  resource        String
+  action          String
+  isActive        Boolean   @default(true)
+  
+  // Relations
+  roles           RolePermissions[]
+  
+  // Audit
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  @@map("permissions")
+}
+
+model RolePermissions {
+  id            Int         @id @default(autoincrement())
+  roleId        Int
+  permissionId  Int
+  role          Roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission    Permissions @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  
+  @@unique([roleId, permissionId])
+  @@map("role_permissions")
+}
+
+model UserRoles {
+  id            Int         @id @default(autoincrement())
+  userId        Int
+  roleId        Int
+  user          AdminUsers  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role          Roles       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, roleId])
+  @@map("user_roles")
+}
+
+model AdminUserSessions {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  sessionId   String   @unique
+  ipAddress   String?
+  userAgent   String?
+  isActive    Boolean  @default(true)
+  expiresAt   DateTime
+  createdAt   DateTime @default(now())
+  user        AdminUsers @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admin_user_sessions")
+}
+
+model AdminLoginHistory {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  ipAddress   String?
+  userAgent   String?
+  success     Boolean
+  failureReason String?
+  createdAt   DateTime @default(now())
+  user        AdminUsers @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admin_login_history")
+}
+
+model AdminActivityLogs {
+  id          Int         @id @default(autoincrement())
+  userId      Int
+  action      String
+  resource    String?
+  resourceId  Int?
+  details     Json?
+  ipAddress   String?
+  createdAt   DateTime    @default(now())
+  user        AdminUsers  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admin_activity_logs")
+}
+
+// =====================================
+// GENERATED APPLICATIONS
+// =====================================
+
+model GeneratedApps {
+  id                  Int                   @id @default(autoincrement())
+  name                String                @unique
+  subdomain           String                @unique
+  description         String?
+  
+  // Status
+  status              AppStatus             @default(DRAFT)
+  deploymentStatus    AppDeploymentStatus   @default(NOT_DEPLOYED)
+  isPublished         Boolean               @default(false)
+  publishedAt         DateTime?
+  
+  // Project Details
+  category            AppCategory
+  projectType         ProjectType
+  ownershipType       OwnershipType
+  
+  // Location
+  addressLine         String?
   country             String
   state               String
-  city                String
-  categories          String[]
-  modules             String[]
-  timezone            String
-  currency            String
-  enableDarkMode      Boolean  @default(false)
-  enableMultiLanguage Boolean  @default(false)
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
-  app                 App      @relation("AppConfiguration", fields: [appId], references: [id])
+  city                String?
+  
+  // Configuration
+  timezone            String                @default("UTC")
+  currency            String                @default("USD")
+  enableDarkMode      Boolean               @default(false)
+  enableMultiLanguage Boolean               @default(false)
+  
+  // Billing & Metering
+  billingMode         BillingMode?
+  meteringTypes       MeteringType[]
+  tariffPlans         String[]
+  
+  // Relations
+  createdById         Int
+  managedById         Int?
+  organizationId      Int?
+  createdBy           AdminUsers            @relation("AppCreator", fields: [createdById], references: [id])
+  managedBy           AdminUsers?           @relation("AppManager", fields: [managedById], references: [id])
+  organization        Organizations?        @relation(fields: [organizationId], references: [id])
+  
+  // Related Data
+  appBranding         AppBrandingSettings?
+  appAdminSettings    AppAdminSettings?
+  appModules          AppEnabledModules[]
+  appFiles            AppUploadedFiles[]
+  appNotifications    AppNotifications[]
+  appAuditLogs        AppAuditLogs[]
+  appDeployments      AppDeployments[]
+  appTickets          SupportTickets[]
+  integrations        Integrations[]
+  
+  // Audit
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  deletedAt           DateTime?
 
-  @@map("app_configs")
+  @@map("generated_apps")
 }
 
-model AppBranding {
+// =====================================
+// APP BRANDING & STYLING
+// =====================================
+
+model AppBrandingSettings {
   id             Int      @id @default(autoincrement())
   appId          Int      @unique
   companyName    String
   companyWebsite String?
+  appDescription String?
   contactEmail   String
   contactPhone   String
   appLogo        String?
@@ -71,24 +468,322 @@ model AppBranding {
   secondaryColor String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
-  app            App      @relation("AppBranding", fields: [appId], references: [id])
+  app            GeneratedApps @relation(fields: [appId], references: [id], onDelete: Cascade)
 
-  @@map("app_brandings")
+  @@map("app_branding_settings")
 }
 
-model AdminConfig {
+// =====================================
+// APP ADMIN SETTINGS
+// =====================================
+
+model AppAdminSettings {
   id         Int      @id @default(autoincrement())
   appId      Int      @unique
   firstName  String
   lastName   String
   email      String
-  phone      String
-  role       String
+  phone      String?
+  username   String?
+  password   String?
+  role       UserRole @default(ADMIN)
   department String?
   address    String?
+  sendWelcomeEmail Boolean @default(true)
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
-  app        App      @relation("AppAdminSettings", fields: [appId], references: [id])
+  app        GeneratedApps @relation(fields: [appId], references: [id], onDelete: Cascade)
 
-  @@map("admin_configs")
+  @@map("app_admin_settings")
+}
+
+// =====================================
+// APP MODULES & FEATURES
+// =====================================
+
+model AppEnabledModules {
+  id          Int      @id @default(autoincrement())
+  appId       Int
+  moduleKey   String
+  moduleName  String
+  isEnabled   Boolean  @default(true)
+  config      Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  app         GeneratedApps @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, moduleKey])
+  @@map("app_enabled_modules")
+}
+
+// =====================================
+// APP FILES & UPLOADS
+// =====================================
+
+model AppUploadedFiles {
+  id          Int      @id @default(autoincrement())
+  appId       Int
+  fileName    String
+  originalName String
+  fileType    FileType
+  filePath    String
+  fileSize    Int
+  mimeType    String
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  app         GeneratedApps @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@map("app_uploaded_files")
+}
+
+// =====================================
+// APP NOTIFICATIONS
+// =====================================
+
+model AppNotifications {
+  id          Int             @id @default(autoincrement())
+  appId       Int
+  type        NotificationType
+  title       String
+  message     String
+  isRead      Boolean         @default(false)
+  readAt      DateTime?
+  createdAt   DateTime        @default(now())
+  app         GeneratedApps   @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@map("app_notifications")
+}
+
+// =====================================
+// APP AUDIT LOGS
+// =====================================
+
+model AppAuditLogs {
+  id          Int         @id @default(autoincrement())
+  appId       Int
+  userId      Int?
+  action      AuditAction
+  resource    String?
+  resourceId  Int?
+  details     Json?
+  ipAddress   String?
+  createdAt   DateTime    @default(now())
+  app         GeneratedApps @relation(fields: [appId], references: [id], onDelete: Cascade)
+  user        AdminUsers?   @relation(fields: [userId], references: [id])
+
+  @@map("app_audit_logs")
+}
+
+// =====================================
+// APP DEPLOYMENTS
+// =====================================
+
+model AppDeployments {
+  id              Int                   @id @default(autoincrement())
+  appId           Int
+  version         String
+  status          AppDeploymentStatus
+  environment     String                @default("production")
+  deploymentUrl   String?
+  buildLogs       String?
+  errorMessage    String?
+  deployedAt      DateTime?
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+  app             GeneratedApps         @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@map("app_deployments")
+}
+
+// =====================================
+// SYSTEM CONFIGURATION
+// =====================================
+
+model SystemConfiguration {
+  id          Int      @id @default(autoincrement())
+  key         String   @unique
+  value       String
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_configuration")
+}
+
+model AppTemplates {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  category    AppCategory
+  modules     String[]
+  config      Json?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("app_templates")
+}
+
+// =====================================
+// INFRASTRUCTURE
+// =====================================
+
+model InfrastructureSettings {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  type        String
+  config      Json
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("infrastructure_settings")
+}
+
+// =====================================
+// API KEYS & INTEGRATIONS
+// =====================================
+
+model ApiKeys {
+  id              Int           @id @default(autoincrement())
+  name            String
+  key             String        @unique
+  secret          String?
+  status          ApiKeyStatus  @default(ACTIVE)
+  
+  // Permissions
+  permissions     String[]
+  allowedIps      String[]
+  rateLimit       Int?
+  
+  // Relations
+  userId          Int?
+  organizationId  Int?
+  user            AdminUsers?     @relation(fields: [userId], references: [id])
+  organization    Organizations?  @relation(fields: [organizationId], references: [id])
+  
+  // Audit
+  lastUsedAt      DateTime?
+  expiresAt       DateTime?
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  
+  @@map("api_keys")
+}
+
+model Integrations {
+  id              Int               @id @default(autoincrement())
+  name            String
+  type            IntegrationType
+  status          IntegrationStatus @default(INACTIVE)
+  
+  // Configuration
+  config          Json?
+  credentials     Json?
+  webhookUrl      String?
+  
+  // Relations
+  appId           Int?
+  organizationId  Int?
+  userId          Int?
+  app             GeneratedApps?    @relation(fields: [appId], references: [id])
+  organization    Organizations?    @relation(fields: [organizationId], references: [id])
+  user            AdminUsers?       @relation(fields: [userId], references: [id])
+  
+  // Audit
+  lastSyncAt      DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  
+  @@map("integrations")
+}
+
+// =====================================
+// SUPPORT TICKETS
+// =====================================
+
+model SupportTickets {
+  id              Int             @id @default(autoincrement())
+  
+  // Basic Information
+  ticketNumber    String          @unique
+  title           String
+  description     String
+  type            TicketType
+  category        TicketCategory
+  priority        TicketPriority  @default(MEDIUM)
+  status          TicketStatus    @default(OPEN)
+  
+  // Relations
+  appId           Int?
+  createdById     Int
+  assignedToId    Int?
+  createdBy       AdminUsers      @relation("TicketCreator", fields: [createdById], references: [id])
+  assignedTo      AdminUsers?     @relation("TicketAssignee", fields: [assignedToId], references: [id])
+  app             GeneratedApps?  @relation(fields: [appId], references: [id])
+  
+  // Customer Information
+  customerName    String?
+  customerEmail   String?
+  customerPhone   String?
+  
+  // Timestamps
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+  assignedAt      DateTime?
+  resolvedAt      DateTime?
+  closedAt        DateTime?
+  
+  // Additional Details
+  tags            String[]
+  attachments     TicketAttachments[]
+  comments        TicketComments[]
+  history         TicketHistory[]
+  
+  @@map("support_tickets")
+}
+
+model TicketAttachments {
+  id          Int      @id @default(autoincrement())
+  ticketId    Int
+  fileName    String
+  originalName String
+  filePath    String
+  fileSize    Int
+  mimeType    String
+  uploadedAt  DateTime @default(now())
+  ticket      SupportTickets @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  
+  @@map("ticket_attachments")
+}
+
+model TicketComments {
+  id          Int      @id @default(autoincrement())
+  ticketId    Int
+  userId      Int
+  comment     String
+  isInternal  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  ticket      SupportTickets @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user        AdminUsers @relation(fields: [userId], references: [id])
+  
+  @@map("ticket_comments")
+}
+
+model TicketHistory {
+  id          Int         @id @default(autoincrement())
+  ticketId    Int
+  userId      Int?
+  action      String
+  oldValue    String?
+  newValue    String?
+  details     Json?
+  createdAt   DateTime    @default(now())
+  ticket      SupportTickets @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  user        AdminUsers? @relation(fields: [userId], references: [id])
+  
+  @@map("ticket_history")
 }
