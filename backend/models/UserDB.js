@@ -7,12 +7,15 @@ class UserDB {
     // Get all users
     static async getAllUsers() {
         try {
-            const users = await prisma.user.findMany({
+            const users = await prisma.adminUsers.findMany({
                 select: {
                     id: true,
                     username: true,
                     email: true,
+                    firstName: true,
+                    lastName: true,
                     role: true,
+                    isActive: true,
                     createdAt: true,
                     updatedAt: true
                 }
@@ -27,7 +30,7 @@ class UserDB {
     // Find user by email
     static async findByEmail(email) {
         try {
-            const user = await prisma.user.findUnique({
+            const user = await prisma.adminUsers.findUnique({
                 where: { email }
             });
             return user;
@@ -40,7 +43,7 @@ class UserDB {
     // Find user by username
     static async findByUsername(username) {
         try {
-            const user = await prisma.user.findUnique({
+            const user = await prisma.adminUsers.findUnique({
                 where: { username }
             });
             return user;
@@ -53,7 +56,7 @@ class UserDB {
     // Find user by ID
     static async findById(id) {
         try {
-            const user = await prisma.user.findUnique({
+            const user = await prisma.adminUsers.findUnique({
                 where: { id: parseInt(id) }
             });
             return user;
@@ -81,18 +84,23 @@ class UserDB {
             // Hash password
             const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-            const newUser = await prisma.user.create({
+            const newUser = await prisma.adminUsers.create({
                 data: {
                     username: userData.username,
                     email: userData.email,
                     password: hashedPassword,
-                    role: userData.role || 'user'
+                    firstName: userData.firstName || '',
+                    lastName: userData.lastName || '',
+                    role: userData.role || 'VIEWER'
                 },
                 select: {
                     id: true,
                     username: true,
                     email: true,
+                    firstName: true,
+                    lastName: true,
                     role: true,
+                    isActive: true,
                     createdAt: true,
                     updatedAt: true
                 }
@@ -123,7 +131,7 @@ class UserDB {
                 updateData.password = await bcrypt.hash(updateData.password, 10);
             }
 
-            const updatedUser = await prisma.user.update({
+            const updatedUser = await prisma.adminUsers.update({
                 where: { id: parseInt(id) },
                 data: {
                     ...updateData,
@@ -133,7 +141,10 @@ class UserDB {
                     id: true,
                     username: true,
                     email: true,
+                    firstName: true,
+                    lastName: true,
                     role: true,
+                    isActive: true,
                     createdAt: true,
                     updatedAt: true
                 }
@@ -149,7 +160,7 @@ class UserDB {
     // Delete user
     static async deleteUser(id) {
         try {
-            await prisma.user.delete({
+            await prisma.adminUsers.delete({
                 where: { id: parseInt(id) }
             });
             return true;
