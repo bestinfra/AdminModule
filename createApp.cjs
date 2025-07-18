@@ -21,7 +21,6 @@ function copyPagesDirectory(sourcePagesDir, destPagesDir) {
     } else {
       // If it's a file, copy it
       fs.copyFileSync(sourcePath, destPath);
-      console.log(`Copied page: ${item}`);
     }
   });
 }
@@ -81,9 +80,6 @@ function createAppProject(formData) {
   const destPagesDir = path.join(frontendDir, "src", "pages");
   if (fs.existsSync(sourcePagesDir)) {
     copyPagesDirectory(sourcePagesDir, destPagesDir);
-    console.log("Copied all pages to generated app");
-  } else {
-    console.log("Pages directory not found:", sourcePagesDir);
   }
 
   // Helper to copy all icons and images
@@ -103,8 +99,6 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-    } else {
-      console.log(`Icons directory not found: ${sourceIconsDir}`);
     }
 
     // Copy all images
@@ -127,8 +121,6 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-    } else {
-      console.log(`Images directory not found: ${sourceImagesDir}`);
     }
 
     // Copy fonts directory
@@ -148,10 +140,7 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-      console.log(`Copied Manrope fonts to ${destManropeDir}`);
-    } else {
-      console.log(`Manrope fonts directory not found: ${sourceManropeDir}`);
-    }
+
   }
 
   // Copy all assets (icons, images, fonts)
@@ -634,8 +623,7 @@ function AppContent() {
   
   // Debug logging for routing
   useEffect(() => {
-    console.log('Current location:', location.pathname);
-    console.log('Available modules:', ${JSON.stringify(modules || [])});
+    
   }, [location.pathname]);
   
   // Check if remote app is accessible
@@ -646,7 +634,7 @@ function AppContent() {
         if (!response.ok) {
           console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
         } else {
-          console.log('Remote app is accessible');
+  
         }
       } catch (error) {
         console.error('Failed to check remote app:', error);
@@ -1350,8 +1338,7 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
   const navigate = useNavigate();
   
   const handleNavigate = (path: string) => {
-    console.log('SidebarWrapper: Navigating to:', path);
-    console.log('SidebarWrapper: Current location before navigation:', location.pathname);
+    
     navigate(path);
   };
   
@@ -1508,7 +1495,7 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
             document.head.appendChild(styleElement);
             setLoadedCSS(prev => [...prev, cssFile]);
             
-            console.log(\`Loaded federated CSS: \${cssFile}\`);
+    
           } else {
             throw new Error(\`Failed to load \${cssFile}: \${response.status}\`);
           }
@@ -1518,7 +1505,7 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
           
           // If fallback is enabled, continue using local CSS
           if (fallbackEnabled) {
-            console.log(\`Using local CSS fallback for \${cssFile}\`);
+
           }
         }
       }
@@ -1540,15 +1527,27 @@ export const Theme = ({ children }) => {
     const { theme, updateTheme } = useTheme();
     useEffect(() => {
         updateTheme({
-            primary: '${primaryColor || '#3B82F6'}',
-            secondary: '${secondaryColor || '#10B981'}',
-            textPrimary: '${textPrimaryColor || '#262626'}',
-            textSecondary: '${textSecondaryColor || '#7e7e7e'}',
-            background: '${backgroundColor || '#f5f8fc'}',
-            border: '${borderColor || '#e9efff'}',
-            shadow: '${shadowColor || '#dce4ef'}',
-            icon: '${iconColor || '#476189'}',
-            gradient: '${gradientColor || '#163b7c'}'
+            colorPrimary: '${primaryColor || '#163b7c'}',
+            colorSecondary: '${secondaryColor || '#55b56c'}',
+            colorTextPrimary: '${textPrimaryColor || '#262626'}',
+            colorTextSecondary: '${textSecondaryColor || '#7e7e7e'}',
+            colorBackgroundSecondary: '${backgroundColor || '#f5f8fc'}',
+            colorBorder: '${borderColor || '#e9efff'}',
+            colorShadowPrimary: '${shadowColor || '#dce4ef'}',
+            colorSubinfo: '${iconColor || '#476189'}',
+            colorPrimaryBorder: '${borderColor || '#e9efff'}',
+            colorCustomPrimary: '${primaryColor || '#163b7c'}',
+            colorCustomSecondary: '${secondaryColor || '#55b56c'}',
+            colorPrimaryDark: '${primaryColor || '#163b7c'}',
+            colorPrimaryLight: '${primaryColor || '#163b7c'}',
+            colorPrimaryBg: '${backgroundColor || '#f5f8fc'}',
+            colorPrimaryDeep: '${primaryColor || '#163b7c'}',
+            colorPrimaryBgLight: '${backgroundColor || '#f5f8fc'}',
+            colorPrimaryLightest: '${backgroundColor || '#f5f8fc'}',
+            colorSecondaryLight: '${secondaryColor || '#55b56c'}',
+            colorSurface: '${backgroundColor || '#f5f8fc'}',
+            colorGradientPrimary: 'linear-gradient(135deg, ${primaryColor || '#163b7c'}, ${primaryColor || '#163b7c'})',
+            colorGradientSecondary: 'linear-gradient(135deg, ${secondaryColor || '#55b56c'}, ${secondaryColor || '#55b56c'})'
         });
     }, []);
 
@@ -1909,13 +1908,6 @@ model User {
   console.log(`   1. cd ${baseDir}`);
   console.log(`   2. npm install`);
   console.log(`   3. npm run dev`);
-  console.log(`\nCSS Sync Instructions:`);
-  console.log(`   • CSS files are already synced during creation`);
-  console.log(`   • To sync CSS changes later, run: npm run css-sync`);
-  console.log(`   • To watch for CSS changes, run: npm run css-sync-watch`);
-  console.log(
-    `   • To sync to specific app: npm run css-sync-app ${projectFolderName}`
-  );
 
   return baseDir;
 }
@@ -1947,4 +1939,5 @@ if (require.main === module) {
   };
 
   createAppProject(exampleFormData);
+}
 }

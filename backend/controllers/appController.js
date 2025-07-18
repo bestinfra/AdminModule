@@ -1,7 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import { createAppProject } from '../../createApp.cjs';
+import pkg from '../../createApp.cjs';
+const { createAppProject } = pkg;
 import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -226,7 +227,7 @@ export const createApp = async (req, res) => {
                     }
                 });
                 
-                console.log('App created successfully:', app);
+
 
                             // Create branding settings
             await prisma.appBrandingSettings.create({

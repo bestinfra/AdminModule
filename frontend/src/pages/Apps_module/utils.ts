@@ -45,6 +45,17 @@ export const combineFormData = (stepData: StepData): AllFormData => {
     companyWebsite: stepData.branding.companyWebsite,
     appLogo: stepData.branding.appLogo,
     appFavicon: stepData.branding.appFavicon,
+    // Custom colors (for form state)
+    customPrimaryColor: stepData.branding.customPrimaryColor,
+    customSecondaryColor: stepData.branding.customSecondaryColor,
+    customTextPrimaryColor: stepData.branding.customTextPrimaryColor,
+    customTextSecondaryColor: stepData.branding.customTextSecondaryColor,
+    customBackgroundColor: stepData.branding.customBackgroundColor,
+    customBorderColor: stepData.branding.customBorderColor,
+    customShadowColor: stepData.branding.customShadowColor,
+    customIconColor: stepData.branding.customIconColor,
+    customGradientColor: stepData.branding.customGradientColor,
+    // Mapped colors (for API)
     primaryColor: stepData.branding.customPrimaryColor,
     secondaryColor: stepData.branding.customSecondaryColor,
     textPrimaryColor: stepData.branding.customTextPrimaryColor,
