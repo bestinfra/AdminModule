@@ -1,16 +1,39 @@
-// Form component type definitions
 export interface FormInputConfig {
   name: string;
-  type: 'text' | 'email' | 'password' | 'number' | 'date' | 'checkbox' | 'textarea' | 'select' | 'file' | 'tel' | 'url';
+  type: 
+    | 'text'   
+    | 'email'
+    | 'password'
+    | 'number'
+    | 'date'
+    | 'checkbox'
+    | 'textarea'
+    | 'select'
+    | 'file'
+    | 'tel'
+    | 'url'
+    | 'colorpicker'
+    | 'dragdrop'
+    | 'dropdown'
+    | 'radio'
+    | 'switch'
+    | 'chosenfile'
+    | 'textareafield';
   label?: string;
   placeholder?: string;
   required?: boolean;
-  defaultValue?: FormInputValue;
+  defaultValue?: FormInputValue;  
   options?: Array<{ value: string; label: string }>;
+  colorOptions?: Array<{ value: string; label: string; color: string }>;
   className?: string;
   colSpan?: number;
+  row?: number;
+  col?: number;
+  fullWidth?: boolean;
   icon?: string;
   description?: string;
+  accept?: string;
+  onChange?: (value: FormInputValue) => void;
   validation?: {
     pattern?: RegExp;
     minLength?: number;
@@ -21,6 +44,20 @@ export interface FormInputConfig {
   };
 }
 
+export interface RowConfig {
+  row: number;
+  columns: number;
+  gap?: string;
+  className?: string;
+  autoFullWidth?: boolean;
+}
+
+export interface RowLayoutProps {
+  rows: RowConfig[];
+  defaultGap?: string;
+  defaultClassName?: string;
+}
+
 export interface FormProps {
   inputs: FormInputConfig[];
   onSubmit: (data: Record<string, FormInputValue>) => void;
@@ -29,14 +66,16 @@ export interface FormProps {
   className?: string;
   layout?: 'vertical' | 'horizontal' | 'grid';
   gridCols?: 1 | 2 | 3 | 4 | 5 | 6;
-  disabled?: boolean;
+  rowLayout?: RowLayoutProps;
   showCancel?: boolean;
   isLoading?: boolean;
   onCancel?: () => void;
   formId?: string;
-  title?: string;
-  subtitle?: string;
   variant?: 'default' | 'card' | 'minimal';
+  initialData?: Record<string, FormInputValue>;
+  errorMessages?: Record<string, string>;
+  touchedFields?: Set<string>;
+  submitted?: boolean;
 }
 
 export interface FormInputProps {
@@ -50,7 +89,6 @@ export interface FormInputProps {
   fileInputRefs: React.MutableRefObject<{ [key: string]: HTMLInputElement | null }>;
 }
 
-// Form event types
 export type FormInputEvent = 
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>
@@ -61,22 +99,21 @@ export type FormBlurEvent =
   | React.FocusEvent<HTMLTextAreaElement>
   | React.FocusEvent<HTMLSelectElement>;
 
-// Form value types based on input type
 export type FormInputValue = 
   | string
+  | string[]
   | number
   | boolean
   | FileList
+  | File
   | null
   | undefined;
 
-// Typed event handlers
 export interface TypedFormHandlers {
   onChange: (event: FormInputEvent) => void;
   onBlur: (event: FormBlurEvent) => void;
 }
 
-// Common props for form inputs with accessibility support
 export interface CommonInputProps {
   id: string;
   name: string;
@@ -85,11 +122,9 @@ export interface CommonInputProps {
   className: string;
   onChange: (event: FormInputEvent) => void;
   onBlur: (event: FormBlurEvent) => void;
-  // ARIA attributes for accessibility
   'aria-invalid'?: 'true' | 'false';
   'aria-describedby'?: string;
   'aria-required'?: 'true' | 'false';
 }
 
-// Type-safe event value extractor
 export type EventValueExtractor = (event: FormInputEvent | FormBlurEvent) => FormInputValue; 

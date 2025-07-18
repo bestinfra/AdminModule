@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Form from '@components/forms/Form';
-import type { FormInputConfig } from '@components/forms/types';
+import { Form } from '@components/Form';
+import type { FormInputConfig } from '@components/Form';
 import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';
 

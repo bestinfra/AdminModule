@@ -1,9 +1,9 @@
 import React, { useRef, useState, useMemo } from 'react';
-import FormInput from '@components/forms/FormInput';
+import FormInput from '@components/Form/FormInput';
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
 import LoadingSpinner from '@components/global/LoadingSpinner';
-import type { FormInputValue } from '@components/forms/types';
+import type { FormInputValue } from '@components/Form/types';
 import { validateAccessControl } from '../utils';
 import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 

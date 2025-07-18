@@ -15,6 +15,15 @@ interface ColorPickerProps {
   options: ColorOption[];
   required?: boolean;
   disabled?: boolean;
+  showLabel?: boolean;
+  validation?: {
+    pattern?: RegExp;
+    minLength?: number;
+    maxLength?: number;
+    min?: number;
+    max?: number;
+    custom?: (value: string) => string | null;
+  };
 }
 
 const ColorPicker: React.FC<ColorPickerProps> = ({
@@ -26,16 +35,62 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   options,
   required = false,
   disabled = false,
+  showLabel = true,
+  validation,
 }) => {
   const defaultColor = options[0]?.value || '#55b56c';
   const [selectedColor, setSelectedColor] = useState(value || defaultColor);
   const [hexValue, setHexValue] = useState(value || defaultColor);
   const [rgbaValues, setRgbaValues] = useState({ r: 0, g: 0, b: 0, a: 1 });
+  const [validationError, setValidationError] = useState<string | null>(null);
+
+  // Default validation rules
+  const defaultValidation = {
+    pattern: /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/,
+    custom: (value: string) => {
+      if (required && (!value || value.trim() === '')) {
+        return `${label} is required`;
+      }
+      if (value && !/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(value)) {
+        return `${label} must be a valid hex color (e.g.,rgb(6, 77, 185))`;
+      }
+      return null;
+    }
+  };
+
+  // Merge custom validation with default validation
+  const finalValidation = {
+    ...defaultValidation,
+    ...validation,
+    custom: (value: string) => {
+      // Run default validation first
+      const defaultError = defaultValidation.custom(value);
+      if (defaultError) return defaultError;
+      
+      // Run custom validation if provided
+      if (validation?.custom) {
+        return validation.custom(value);
+      }
+      
+      return null;
+    }
+  };
+
+  // Validate color value
+  const validateColor = (colorValue: string): string | null => {
+    if (finalValidation.custom) {
+      return finalValidation.custom(colorValue);
+    }
+    return null;
+  };
 
   useEffect(() => {
     if (value) {
       setSelectedColor(value);
       setHexValue(value);
+      // Validate on value change
+      const error = validateColor(value);
+      setValidationError(error);
     }
   }, [value]);
 
@@ -62,6 +117,10 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     setSelectedColor(newColor);
     setHexValue(newColor);
     
+    // Validate the new color
+    const validationError = validateColor(newColor);
+    setValidationError(validationError);
+    
     onChange({
       target: {
         name,
@@ -77,12 +136,17 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
     }
   };
 
+  // Show either prop error or validation error
+  const displayError = error || validationError;
+
   return (
     <div>
       <div className="flex flex-col gap-2">
-        <label className="block text-sm font-medium text-main dark:text-white">
-          {label} {required && <span className="text-error">*</span>}
-        </label>
+        {showLabel && (
+          <label className="block text-sm font-medium text-main dark:text-white">
+            {label} {required && <span className="text-error">*</span>}
+          </label>
+        )}
         <div className="flex items-end gap-4">
           <div className="relative w-12 h-12">
             {!disabled && (
@@ -94,7 +158,11 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
               />
             )}
             <div 
-              className={`w-full h-full rounded-full border-2 border-gray-300 dark:border-dark-border transition-all duration-200 ${
+              className={`w-full h-full rounded-full border-2 transition-all duration-200 ${
+                displayError 
+                  ? 'border-red-500' 
+                  : 'border-gray-300 dark:border-dark-border'
+              } ${
                 !disabled ? 'hover:scale-105 cursor-pointer' : 'cursor-not-allowed opacity-75'
               }`}
               style={{ backgroundColor: selectedColor }}
@@ -138,7 +206,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
         </div>
       </div>
       
-      {error && <span className="text-error text-xs mt-1 block">{error}</span>}
+      {displayError && <span className="text-error text-xs mt-1 block">{displayError}</span>}
     </div>
   );
 };

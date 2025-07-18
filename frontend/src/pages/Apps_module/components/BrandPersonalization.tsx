@@ -1,11 +1,12 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
-import FormInput from "@components/forms/FormInput";
+import FormInput from "@components/Form/FormInput";
 import Button from "@components/global/Button";
 import TimeRangeSelector from "@components/global/TimeRangeSelector";
 import ColorPicker from "@pages/Apps_module/components/ColorPicker";
-import type { FormInputValue } from "@components/forms/types";
+import type { FormInputValue } from "@components/Form/types";
 import { validateBrandPersonalization } from "@pages/Apps_module/utils";
 import RemarksPanel from "@pages/Apps_module/components/RemarksPanel";
+import DragDropFileUpload from "@components/global/DragDropFileUpload";
 
 interface BrandPersonalizationProps {
   formData: any;
@@ -79,7 +80,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
   const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
 
   const handleFileUpload = (file: File, type: 'logo' | 'favicon', uploadArea?: string) => {
-    console.log('📁 BrandPersonalization - File Upload:', { 
+    console.log('BrandPersonalization - File Upload:', { 
       type, 
       fileName: file.name, 
       fileSize: file.size, 
@@ -267,307 +268,92 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-xl">
                 <div className="div1 flex justify-between w-full gap-6">
                   <div className="div2 w-full flex flex-col gap-4">
-                    <label
-                      htmlFor="appLogo"
-                      className="block text-sm font-medium text-main dark:text-white"
-                    >
-                      Dark Mode
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-full border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                          isLogoDragOver
-                            ? "border-primary bg-primary/5"
-                            : "border-gray-300 dark:border-dark-border hover:border-primary"
-                        }`}
-                        onDragOver={(e) => handleDragOver(e, 'logo')}
-                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo', 'darkMode1')}
-                      >
-                        <input
-                          type="file"
-                          id="appLogo"
-                          name="appLogo"
-                          accept="image/*"
-                          onChange={(e) => handleLogoChange(e, 'darkMode1')}
-                          className="hidden"
-                        />
-                        <div className="flex flex-col items-center gap-2">
-                          {darkModeLogo1Preview ? (
-                            <div 
-                              className="w-full h-full cursor-pointer flex items-center justify-center"
-                              onClick={() => document.getElementById('appLogo')?.click()}
-                            >
-                              <img
-                                src={darkModeLogo1Preview}
-                                alt="Logo preview"
-                                className="w-32 h-32  dark:border-dark-border rounded-lg object-contain dark:bg-primary-dark-light p-2"
-                              />
-                            </div>
-                          ) : (
-                            <>
-                              <img
-                                src="/icons/cloud-upload-alt.svg"
-                                alt="Upload"
-                                className="w-8 h-8 filter dark:invert opacity-60"
-                              />
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Drag & drop logo here or{" "}
-                                <label
-                                  htmlFor="appLogo"
-                                  className="text-primary cursor-pointer hover:underline"
-                                >
-                                  browse
-                                </label>
-                              </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                PNG, SVG up to 5MB
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-full border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                          isLogoDragOver
-                            ? "border-primary bg-primary/5"
-                            : "border-gray-300 dark:border-dark-border hover:border-primary"
-                        }`}
-                        onDragOver={(e) => handleDragOver(e, 'logo')}
-                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo', 'darkMode2')}
-                      >
-                        <input
-                          type="file"
-                          id="appLogo2"
-                          name="appLogo"
-                          accept="image/*"
-                          onChange={(e) => handleLogoChange(e, 'darkMode2')}
-                          className="hidden"
-                        />
-                        <div className="flex flex-col items-center gap-2">
-                          {darkModeLogo2Preview ? (
-                            <div 
-                              className="w-full h-full cursor-pointer flex items-center justify-center"
-                              onClick={() => document.getElementById('appLogo2')?.click()}
-                            >
-                              <img
-                                src={darkModeLogo2Preview}
-                                alt="Logo preview"
-                                className="w-32 h-32  rounded-lg object-contain  dark:bg-primary-dark-light p-2"
-                              />
-                            </div>
-                          ) : (
-                            <>
-                              <img
-                                src="/icons/cloud-upload-alt.svg"
-                                alt="Upload"
-                                className="w-8 h-8 filter dark:invert opacity-60"
-                              />
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Drag & drop logo here or{" "}
-                                <label
-                                  htmlFor="appLogo2"
-                                  className="text-primary cursor-pointer hover:underline"
-                                >
-                                  browse
-                                </label>
-                              </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                PNG, SVG up to 5MB
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <DragDropFileUpload
+                      id="appLogo"
+                      name="appLogo"
+                      label="Dark Mode"
+                      preview={darkModeLogo1Preview}
+                      isDragOver={isLogoDragOver}
+                      onFileChange={(file) => handleFileUpload(file, 'logo', 'darkMode1')}
+                      onDragOver={(e) => handleDragOver(e, 'logo')}
+                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                      onDrop={(e) => handleDrop(e, 'logo', 'darkMode1')}
+                      accept="image/*"
+                      browseLabel="browse"
+                      helperText="PNG, SVG up to 5MB"
+                      previewOnClick={() => document.getElementById('appLogo')?.click()}
+                    />
+
+                    <DragDropFileUpload
+                      id="appLogo2"
+                      name="appLogo"
+                      label=""
+                      preview={darkModeLogo2Preview}
+                      isDragOver={isLogoDragOver}
+                      onFileChange={(file) => handleFileUpload(file, 'logo', 'darkMode2')}
+                      onDragOver={(e) => handleDragOver(e, 'logo')}
+                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                      onDrop={(e) => handleDrop(e, 'logo', 'darkMode2')}
+                      accept="image/*"
+                      browseLabel="browse"
+                      helperText="PNG, SVG up to 5MB"
+                      previewOnClick={() => document.getElementById('appLogo2')?.click()}
+                    />
                   </div>
                   <div className="div2 w-full flex flex-col gap-4">
-                    <label
-                      htmlFor="appLogo3"
-                      className="block text-sm font-medium text-main dark:text-white"
-                    >
-                      Light Mode
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-full border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                          isLogoDragOver
-                            ? "border-primary bg-primary/5"
-                            : "border-gray-300 dark:border-dark-border hover:border-primary"
-                        }`}
-                        onDragOver={(e) => handleDragOver(e, 'logo')}
-                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo', 'lightMode1')}
-                      >
-                        <input
-                          type="file"
-                          id="appLogo3"
-                          name="appLogo"
-                          accept="image/*"
-                          onChange={(e) => handleLogoChange(e, 'lightMode1')}
-                          className="hidden"
-                        />
-                        <div className="flex flex-col items-center gap-2">
-                          {lightModeLogo1Preview ? (
-                            <div 
-                              className="w-full h-full cursor-pointer flex items-center justify-center"
-                              onClick={() => document.getElementById('appLogo3')?.click()}
-                            >
-                              <img
-                                src={lightModeLogo1Preview}
-                                alt="Logo preview"
-                                className="w-32 h-32  dark:border-dark-border rounded-lg object-contain  dark:bg-primary-dark-light p-2"
-                              />
-                            </div>
-                          ) : (
-                            <>
-                              <img
-                                src="/icons/cloud-upload-alt.svg"
-                                alt="Upload"
-                                className="w-8 h-8 filter dark:invert opacity-60"
-                              />
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Drag & drop logo here or{" "}
-                                <label
-                                  htmlFor="appLogo3"
-                                  className="text-primary cursor-pointer hover:underline"
-                                >
-                                  browse
-                                </label>
-                              </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                PNG, SVG up to 5MB
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-full border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                          isLogoDragOver
-                            ? "border-primary bg-primary/5"
-                            : "border-gray-300 dark:border-dark-border hover:border-primary"
-                        }`}
-                        onDragOver={(e) => handleDragOver(e, 'logo')}
-                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                        onDrop={(e) => handleDrop(e, 'logo', 'lightMode2')}
-                      >
-                        <input
-                          type="file"
-                          id="appLogo4"
-                          name="appLogo"
-                          accept="image/*"
-                          onChange={(e) => handleLogoChange(e, 'lightMode2')}
-                          className="hidden"
-                        />
-                        <div className="flex flex-col items-center gap-2">
-                          {lightModeLogo2Preview ? (
-                            <div 
-                              className="w-full h-full cursor-pointer flex items-center justify-center"
-                              onClick={() => document.getElementById('appLogo4')?.click()}
-                            >
-                              <img
-                                src={lightModeLogo2Preview}
-                                alt="Logo preview"
-                                className="w-32 h-32  dark:border-dark-border rounded-lg object-contain dark:bg-primary-dark-light p-2"
-                              />
-                            </div>
-                          ) : (
-                            <>
-                              <img
-                                src="/icons/cloud-upload-alt.svg"
-                                alt="Upload"
-                                className="w-8 h-8 filter dark:invert opacity-60"
-                              />
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Drag & drop logo here or{" "}
-                                <label
-                                  htmlFor="appLogo4"
-                                  className="text-primary cursor-pointer hover:underline"
-                                >
-                                  browse
-                                </label>
-                              </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                PNG, SVG up to 5MB
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <DragDropFileUpload
+                      id="appLogo3"
+                      name="appLogo"
+                      label="Light Mode"
+                      preview={lightModeLogo1Preview}
+                      isDragOver={isLogoDragOver}
+                      onFileChange={(file) => handleFileUpload(file, 'logo', 'lightMode1')}
+                      onDragOver={(e) => handleDragOver(e, 'logo')}
+                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                      onDrop={(e) => handleDrop(e, 'logo', 'lightMode1')}
+                      accept="image/*"
+                      browseLabel="browse"
+                      helperText="PNG, SVG up to 5MB"
+                      previewOnClick={() => document.getElementById('appLogo3')?.click()}
+                    />
+
+                    <DragDropFileUpload
+                      id="appLogo4"
+                      name="appLogo"
+                      label=""
+                      preview={lightModeLogo2Preview}
+                      isDragOver={isLogoDragOver}
+                      onFileChange={(file) => handleFileUpload(file, 'logo', 'lightMode2')}
+                      onDragOver={(e) => handleDragOver(e, 'logo')}
+                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                      onDrop={(e) => handleDrop(e, 'logo', 'lightMode2')}
+                      accept="image/*"
+                      browseLabel="browse"
+                      helperText="PNG, SVG up to 5MB"
+                      previewOnClick={() => document.getElementById('appLogo4')?.click()}
+                    />
+                    
                   </div>
                 </div>
-                
                 {/* Favicon Section - Right Side */}
                 <div className="div1 flex justify-between w-full gap-4">
                   <div className="div2 w-full flex flex-col gap-4">
-                    <label
-                      htmlFor="appFavicon"
-                      className="block text-sm font-medium text-main dark:text-white"
-                    >
-                      Favicon
-                    </label>
-                    <div className="flex items-center gap-3">
-                      <div
-                        className={`w-full border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                          isFaviconDragOver
-                            ? "border-primary bg-primary/5"
-                            : "border-gray-300 dark:border-dark-border hover:border-primary"
-                        }`}
-                        onDragOver={(e) => handleDragOver(e, 'favicon')}
-                        onDragLeave={(e) => handleDragLeave(e, 'favicon')}
-                        onDrop={(e) => handleDrop(e, 'favicon')}
-                      >
-                        <input
-                          type="file"
-                          id="appFavicon"
-                          name="appFavicon"
-                          accept="image/*"
-                          onChange={handleFaviconChange}
-                          className="hidden"
-                        />
-                        <div className="flex flex-col items-center gap-2">
-                          {faviconPreview ? (
-                            <div 
-                              className="w-full h-full cursor-pointer flex items-center justify-center"
-                              onClick={() => document.getElementById('appFavicon')?.click()}
-                            >
-                              <img
-                                src={faviconPreview}
-                                alt="Favicon preview"
-                                className="w-24 h-24 dark:border-dark-border rounded object-contain dark:bg-primary-dark-light p-1"
-                              />
-                            </div>
-                          ) : (
-                            <>
-                              <img
-                                src="/icons/cloud-upload-alt.svg"
-                                alt="Upload"
-                                className="w-6 h-6 filter dark:invert opacity-60"
-                              />
-                              <p className="text-sm text-gray-600 dark:text-gray-400">
-                                Drag & drop favicon here or{" "}
-                                <label
-                                  htmlFor="appFavicon"
-                                  className="text-primary cursor-pointer hover:underline"
-                                >
-                                  browse
-                                </label>
-                              </p>
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                ICO, PNG up to 1MB
-                              </p>
-                            </>
-                          )}
-                        </div>
-                      </div>
-                    </div>
+                    <DragDropFileUpload
+                      id="appFavicon"
+                      name="appFavicon"
+                      label="Favicon"
+                      preview={faviconPreview}
+                      isDragOver={isFaviconDragOver}
+                      onFileChange={(file) => handleFileUpload(file, 'favicon')}
+                      onDragOver={(e) => handleDragOver(e, 'favicon')}
+                      onDragLeave={(e) => handleDragLeave(e, 'favicon')}
+                      onDrop={(e) => handleDrop(e, 'favicon')}
+                      accept="image/*"
+                      browseLabel="browse"
+                      helperText="ICO, PNG up to 1MB"
+                      imgClassName="w-24 h-24 dark:border-dark-border rounded object-contain dark:bg-primary-dark-light p-1"
+                      previewOnClick={() => document.getElementById('appFavicon')?.click()}
+                    />
                   </div>
                 </div>
               </div>

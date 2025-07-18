@@ -1,7 +1,7 @@
 
 
 import React, { useState, useRef, useEffect, type KeyboardEvent } from 'react';
-import Input from '@components/forms/Input';
+import Input from '@components/Form/Input';
 
 interface Option {
   value: string;

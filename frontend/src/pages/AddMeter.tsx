@@ -1,80 +1,206 @@
-import React from 'react';
-import Page from '@components/global/Page';
-import { useNavigate } from 'react-router-dom';
-import {
-  createHeaderComponent} from '@components/global/PageComponents';
-import Form from '@components/forms/Form';
-import type { FormInputConfig } from '@components/forms/types';
+import React from "react";
+import Page from "@components/global/Page";
+import { useNavigate } from "react-router-dom";
+import { useFormData, createFormInputs, Form } from "@components/Form";
+import type { FormInputConfig } from "@components/Form";
 
-const meterInputs: FormInputConfig[] = [
-  { name: 'uid', type: 'text', label: 'UID', placeholder: 'UID', icon: '/icons/badge.svg', required: true },
-  { name: 'serialNumber', type: 'text', label: 'Serial Number', placeholder: 'Serial Number', icon: '/icons/precision_manufacturing.svg', required: true },
-  { name: 'location', type: 'text', label: 'Location', placeholder: 'Location', icon: '/icons/location_on.svg', required: true },
-  { name: 'phaseType', type: 'select', label: 'Phase Type', placeholder: 'Phase Type', icon: '/icons/arrow_drop_down.svg', required: true, options: [
-    { value: '', label: 'Phase Type' },
-    { value: 'single', label: 'Single' },
-    { value: 'three', label: 'Three' },
-  ] },
-  { name: 'meterType', type: 'select', label: 'Meter Type', placeholder: 'Meter Type', icon: '/icons/arrow_drop_down.svg', required: true, options: [
-    { value: '', label: 'Meter Type' },
-    { value: 'prepaid', label: 'Prepaid' },
-    { value: 'postpaid', label: 'Postpaid' },
-  ] },
-  { name: 'paymentType', type: 'select', label: 'Payment Type', placeholder: 'Payment Type', icon: '/icons/arrow_drop_down.svg', required: true, options: [
-    { value: '', label: 'Payment Type' },
-    { value: 'cash', label: 'Cash' },
-    { value: 'online', label: 'Online' },
-  ] },
-  { name: 'connectedLoad', type: 'number', label: 'Connected Load (kW)', placeholder: 'Connected Load (kW)', icon: '/icons/bolt.svg', required: true },
-  { name: 'installationDate', type: 'date', label: 'Installation Date', placeholder: 'Installation Date', icon: '/icons/calendar_today.svg', required: true },
-  { name: 'status', type: 'select', label: 'Status', placeholder: 'Status', icon: '/icons/arrow_drop_down.svg', required: true, options: [
-    { value: '', label: 'Status' },
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-  ] },
-  { name: 'notes', type: 'textarea', label: 'Notes (optional)', placeholder: 'Notes (optional)', icon: '', required: false },
+// Define the meter data structure
+interface MeterData {
+  meterName: string;
+  meterId: string;
+  meterNumber: string;
+  meterPhase: string;
+  meterType: string;
+  meterColor: string;
+  meterStatus: string;
+  isPrepaid: boolean;
+  meterLocation: string;
+  meterDocument: File | null;
+  notes: string;
+}
+
+// Base form inputs without onChange handlers
+const baseFormInputs: FormInputConfig[] = [
+  {
+    name: "meterName",
+    type: "text",
+    label: "Meter Name",
+    placeholder: "Enter meter name",
+    row: 1,
+    validation: {
+      maxLength: 5,
+    },
+  },
+  {
+    name: "meterId",
+    type: "text",
+    label: "Meter ID",
+    placeholder: "Enter meter ID",
+    row: 1,
+  },
+  {
+    name: "meterNumber",
+    type: "text",
+    label: "Meter Number",
+    placeholder: "Enter meter number",
+    row: 1,
+  },
+  {
+    name: "meterPhase",
+    type: "radio",
+    label: "Meter Phase",
+    options: [
+      { value: "single", label: "Single Phase" },
+      { value: "three", label: "Three Phase" }
+    ],
+    row: 2,
+  },
+  {
+    name: "meterType",
+    type: "dropdown",
+    label: "Meter Type",
+    placeholder: "Select meter type",
+    options: [
+      { value: "smart", label: "Smart Meter" },
+      { value: "digital", label: "Digital Meter" },
+      { value: "analog", label: "Analog Meter" }
+    ],
+    row: 2,
+  },
+  {
+    name: "meterColor",
+    type: "colorpicker",
+    label: "Meter Color",
+    required: true,
+    colorOptions: [
+      { value: "#ff0000", label: "Red", color: "#ff0000" },
+      { value: "#00ff00", label: "Green", color: "#00ff00" },
+      { value: "#0000ff", label: "Blue", color: "#0000ff" },
+      { value: "#ffa500", label: "Orange", color: "#ffa500" },
+    ],
+    row: 2,
+  },
+  {
+    name: "meterStatus",
+    type: "dropdown",
+    label: "Meter Status",
+    placeholder: "Select meter status",
+    options: [
+      { value: "active", label: "Active" },
+      { value: "inactive", label: "Inactive" },
+      { value: "maintenance", label: "Maintenance" }
+    ],
+    row: 2,
+  },
+  {
+    name: "isPrepaid",
+    type: "switch",
+    label: "Prepaid Meter",
+    description: "Enable if this is a prepaid meter.",
+    row: 3,
+  },
+  {
+    name: "meterLocation",
+    type: "text",
+    label: "Meter Location",
+    placeholder: "Enter meter location",
+    row: 3,
+  },
+  {
+    name:"choseFile",
+    type: "chosenfile",
+    label: "Meter Document",
+    placeholder: "Choose a file",
+    accept: "image/*,application/pdf,.doc,.docx",
+    row: 3,
+  },
+  {
+    name:"notes",
+    label: "Notes",
+    type: "textareafield",
+    placeholder: "Enter any additional notes",
+    row: 3,
+  },
 ];
 
 const AddMeter: React.FC = () => {
   const navigate = useNavigate();
+  
+  // Use the custom hook for form data management
+  const { formData, updateFormData } = useFormData<MeterData>({
+    meterName: '',
+    meterId: '',
+    meterNumber: '',
+    meterPhase: '',
+    meterType: '',
+    meterColor: '',
+    meterStatus: '',
+    isPrepaid: false,
+    meterLocation: '',
+    meterDocument: null,
+    notes: '',
+  });
+
+  // Create form inputs with onChange handlers
+  const formInputs = createFormInputs(baseFormInputs, updateFormData);
 
   const handleCancel = () => {
     navigate(-1);
   };
 
-  const handleSave = () => {
-    // TODO: Add save logic
-    alert('Saved!');
-  };
+  const handleSave = (formData: Record<string, any>) => {
+    console.log('AddMeter Form Data:', formData);
+    
+    // Process the form data
+    const meterData = {
+      ...formData,
+      createdAt: new Date().toISOString(),
+    };
 
-  const headerComponent = createHeaderComponent(
-    'Add Meter',
-    'Add a new meter to the system',
-    ''
-  );
+    console.log('Processed Meter Data:', meterData);
+    console.log('Current State Data:', formData);
+    
+    // TODO: Send data to API
+    // Example: await api.createMeter(meterData);
+    
+    alert("Meter data collected successfully!");
+    navigate(-1);
+  };
 
   return (
     <Page
       layout="single-column"
-      header={headerComponent}
       className=""
-      sections={[{
-        id: 'add-meter-form',
-        component: (
-          <Form
-            inputs={meterInputs}
-            onSubmit={handleSave}
-            onCancel={handleCancel}
-            submitLabel="Save"
-            cancelLabel="Cancel"
-            layout="grid"
-            gridCols={3}
-            showCancel
-          />
-        )
-      }]}
+      sections={[
+        {
+          id: "add-meter-form",
+          component: (
+            <Form
+              inputs={formInputs}
+              rowLayout={{
+                rows: [
+                  // Row 1: 2 inputs in 2-column grid (each input takes 1 column - equal width)
+                  { row: 1, columns: 3, gap: "gap-4", autoFullWidth: true },
+                  { row: 2, columns: 3, gap: "gap-4", autoFullWidth: true },
+                  {row: 3, columns: 3, gap: "gap-4", autoFullWidth: true },
+              
+                ],
+              }}
+              onSubmit={handleSave}
+              onCancel={handleCancel}
+              submitLabel="Save"
+              cancelLabel="Cancel"
+              gridCols={1}
+              showCancel
+              className=""
+              isLoading={false}
+              formId="add-meter-form"
+            />
+          ),
+        },
+      ]}
     />
   );
 };
 
-export default AddMeter; 
+export default AddMeter;

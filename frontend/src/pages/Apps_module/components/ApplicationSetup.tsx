@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import axios from 'axios';
-import FormInput from '@components/forms/FormInput'; 
+import FormInput from '@components/Form/FormInput'; 
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
-import type { FormInputValue } from '@components/forms/types';
+import type { FormInputValue } from '@components/Form/types';
 import { validateApplicationSetup } from '@pages/Apps_module/utils';
 import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 
