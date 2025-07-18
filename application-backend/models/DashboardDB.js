@@ -7,7 +7,6 @@ class DashboardDB {
         try {
             const now = new Date();
             
-            // Calculate date ranges
             const firstDayCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
             const lastDayCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
             const firstDayPreviousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -20,7 +19,6 @@ class DashboardDB {
             const startOfDayBeforeYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2);
             const endOfDayBeforeYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2, 23, 59, 59, 999);
 
-            // Get total consumers that have meters (matched consumerId)
             const totalConsumers = await prisma.consumer.count({
                 where: {
                     meters: {
@@ -29,7 +27,6 @@ class DashboardDB {
                 }
             });
 
-            // Get active meters (meters with current day readings)
             const today = new Date();
             const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
             const endOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 23, 59, 59, 999);
@@ -49,14 +46,12 @@ class DashboardDB {
 
             const activeUnits = activeMeterIds.length;
 
-            // Get total consumption for threshold calculation
             const totalConsumption = await prisma.consumption.aggregate({
                 _sum: {
                     consumption: true
                 }
             });
 
-            // Get total units for threshold calculation
             const totalUnits = await prisma.meter.count();
 
             const threshold = totalUnits > 0 
@@ -71,12 +66,11 @@ class DashboardDB {
                 }
             });
 
-            // Get user consumption categories (consumer categories)
             const usersCount = await prisma.consumer.groupBy({
                 by: ['category'],
                 where: {
                     meters: {
-                        some: {} // Only count consumers that have meters
+                        some: {} 
                     }
                 },
                 _count: {
@@ -223,7 +217,6 @@ class DashboardDB {
                 d1.setDate(d1.getDate() + 62);
                 const nextDate = sdf(new Date(d1));
 
-                // Build the meter filter condition
                 let whereClause = {
                     consumptionDate: {
                         gte: new Date(presDate),
