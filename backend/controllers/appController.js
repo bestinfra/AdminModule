@@ -150,8 +150,6 @@ export const createApp = async (req, res) => {
             contactPhone,
             appLogo,
             appFavicon,
-            primaryColor,
-            secondaryColor,
 
             // Modules
             modules
@@ -230,21 +228,63 @@ export const createApp = async (req, res) => {
                 
                 console.log('App created successfully:', app);
 
-                // Create branding settings
-                await prisma.appBrandingSettings.create({
-                    data: {
-                        appId: app.id,
-                        companyName,
-                        companyWebsite,
-                        appDescription,
-                        contactEmail: contactEmail || adminEmail,
-                        contactPhone: contactPhone || adminPhone,
-                        appLogo,
-                        appFavicon,
-                        primaryColor,
-                        secondaryColor
-                    }
-                });
+                            // Create branding settings
+            await prisma.appBrandingSettings.create({
+                data: {
+                    appId: app.id,
+                    companyName,
+                    companyWebsite,
+                    appDescription,
+                    contactEmail: contactEmail || adminEmail,
+                    contactPhone: contactPhone || adminPhone,
+                    appLogo,
+                    appFavicon
+                }
+            });
+
+            // Create custom colors
+            const customColors = [];
+
+            // Add all custom colors if they exist
+            const colorMappings = {
+                primaryColor: 'primary',
+                secondaryColor: 'secondary',
+                textPrimaryColor: 'textPrimary',
+                textSecondaryColor: 'textSecondary',
+                backgroundColor: 'background',
+                borderColor: 'border',
+                shadowColor: 'shadow',
+                iconColor: 'icon',
+                gradientColor: 'gradient'
+            };
+
+            // Add colors to customColors array
+            Object.entries(colorMappings).forEach(([fieldName, colorKey]) => {
+                if (req.body[fieldName]) {
+                    customColors.push({
+                        colorKey,
+                        colorValue: req.body[fieldName],
+                        colorName: `${colorKey.charAt(0).toUpperCase() + colorKey.slice(1)} Color`
+                    });
+                }
+            });
+
+            // Save custom colors to database
+            if (customColors.length > 0) {
+                await Promise.all(
+                    customColors.map(color =>
+                        prisma.appCustomColors.create({
+                            data: {
+                                appId: app.id,
+                                colorKey: color.colorKey,
+                                colorValue: color.colorValue,
+                                colorName: color.colorName,
+                                isActive: true
+                            }
+                        })
+                    )
+                );
+            }
 
                 // Create admin settings
                 await prisma.appAdminSettings.create({
@@ -394,8 +434,7 @@ export const getAllApps = async (req, res) => {
                     appBranding: {
                         select: {
                             companyName: true,
-                            appLogo: true,
-                            primaryColor: true
+                            appLogo: true
                         }
                     },
                     appModules: {
@@ -461,6 +500,10 @@ export const getAppById = async (req, res) => {
                 appAdminSettings: true,
                 appModules: true,
                 appFiles: true,
+                customColors: {
+                    where: { isActive: true },
+                    orderBy: { colorKey: 'asc' }
+                },
                 appNotifications: {
                     where: { isRead: false },
                     orderBy: { createdAt: 'desc' },
@@ -797,6 +840,118 @@ export const updateAppModules = async (req, res) => {
 // APP BRANDING MANAGEMENT
 // =====================================
 
+// =====================================
+// CUSTOM COLORS MANAGEMENT
+// =====================================
+
+export const getAppCustomColors = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        // Check if app exists
+        const app = await prisma.generatedApps.findUnique({
+            where: { id: parseInt(id) }
+        });
+
+        if (!app) {
+            return res.status(404).json({
+                success: false,
+                message: 'App not found'
+            });
+        }
+
+        // Get custom colors
+        const customColors = await prisma.appCustomColors.findMany({
+            where: { 
+                appId: parseInt(id),
+                isActive: true 
+            },
+            orderBy: { colorKey: 'asc' }
+        });
+
+        res.json({
+            success: true,
+            data: customColors
+        });
+
+    } catch (error) {
+        console.error('Get app custom colors error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+};
+
+export const updateAppCustomColors = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { colors } = req.body; // Array of { colorKey, colorValue, colorName }
+
+        // Check if app exists
+        const app = await prisma.generatedApps.findUnique({
+            where: { id: parseInt(id) }
+        });
+
+        if (!app) {
+            return res.status(404).json({
+                success: false,
+                message: 'App not found'
+            });
+        }
+
+        // Update colors in transaction
+        await prisma.$transaction(async (prisma) => {
+            // Delete existing colors
+            await prisma.appCustomColors.deleteMany({
+                where: { appId: parseInt(id) }
+            });
+
+            // Create new colors
+            if (colors && colors.length > 0) {
+                await Promise.all(
+                    colors.map(color =>
+                        prisma.appCustomColors.create({
+                            data: {
+                                appId: parseInt(id),
+                                colorKey: color.colorKey,
+                                colorValue: color.colorValue,
+                                colorName: color.colorName || `${color.colorKey} Color`,
+                                isActive: true
+                            }
+                        })
+                    )
+                );
+            }
+        });
+
+        // Log activity
+        await prisma.appAuditLogs.create({
+            data: {
+                appId: app.id,
+                userId: req.user?.userId || 1,
+                action: 'UPDATE',
+                resource: 'app_custom_colors',
+                resourceId: app.id,
+                details: { colorsCount: colors?.length || 0 },
+                ipAddress: req.ip
+            }
+        });
+
+        res.json({
+            success: true,
+            message: 'Custom colors updated successfully'
+        });
+
+    } catch (error) {
+        console.error('Update app custom colors error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        });
+    }
+};
+
 export const updateAppBranding = async (req, res) => {
     try {
         const { id } = req.params;
@@ -824,6 +979,62 @@ export const updateAppBranding = async (req, res) => {
             }
         });
 
+        // Handle custom colors update
+        const customColors = [];
+        
+        // Map custom color fields to color keys
+        const colorMappings = {
+            customPrimaryColor: 'customPrimary',
+            customSecondaryColor: 'customSecondary',
+            customTextPrimaryColor: 'customTextPrimary',
+            customTextSecondaryColor: 'customTextSecondary',
+            customBackgroundColor: 'customBackground',
+            customBorderColor: 'customBorder',
+            customShadowColor: 'customShadow',
+            customIconColor: 'customIcon',
+            customGradientColor: 'customGradient'
+        };
+
+        // Extract custom colors from request body
+        Object.entries(colorMappings).forEach(([fieldName, colorKey]) => {
+            if (req.body[fieldName]) {
+                customColors.push({
+                    colorKey,
+                    colorValue: req.body[fieldName],
+                    colorName: `${colorKey.charAt(0).toUpperCase() + colorKey.slice(1)} Color`
+                });
+            }
+        });
+
+        // Update custom colors in database
+        if (customColors.length > 0) {
+            await Promise.all(
+                customColors.map(async (color) => {
+                    await prisma.appCustomColors.upsert({
+                        where: {
+                            appId_colorKey: {
+                                appId: parseInt(id),
+                                colorKey: color.colorKey
+                            }
+                        },
+                        update: {
+                            colorValue: color.colorValue,
+                            colorName: color.colorName,
+                            isActive: true,
+                            updatedAt: new Date()
+                        },
+                        create: {
+                            appId: parseInt(id),
+                            colorKey: color.colorKey,
+                            colorValue: color.colorValue,
+                            colorName: color.colorName,
+                            isActive: true
+                        }
+                    });
+                })
+            );
+        }
+
         // Log activity
         await prisma.appAuditLogs.create({
             data: {
@@ -832,7 +1043,10 @@ export const updateAppBranding = async (req, res) => {
                 action: 'UPDATE',
                 resource: 'app_branding',
                 resourceId: app.id,
-                details: { updatedFields: Object.keys(brandingData) },
+                details: { 
+                    updatedFields: Object.keys(brandingData),
+                    customColorsCount: customColors.length
+                },
                 ipAddress: req.ip
             }
         });

@@ -441,6 +441,7 @@ model GeneratedApps {
   appDeployments      AppDeployments[]
   appTickets          SupportTickets[]
   integrations        Integrations[]
+  customColors        AppCustomColors[]
   
   // Audit
   createdAt           DateTime              @default(now())
@@ -464,13 +465,32 @@ model AppBrandingSettings {
   contactPhone   String
   appLogo        String?
   appFavicon     String?
-  primaryColor   String?
-  secondaryColor String?
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
   app            GeneratedApps @relation(fields: [appId], references: [id], onDelete: Cascade)
 
   @@map("app_branding_settings")
+}
+
+// =====================================
+// APP CUSTOM COLORS
+// =====================================
+
+model AppCustomColors {
+  id          Int      @id @default(autoincrement())
+  appId       Int
+  colorKey    String   // e.g., "primary", "secondary", "textPrimary"
+  colorValue  String   // e.g., "#163b7c"
+  colorName   String?  // e.g., "Primary Blue"
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  app         GeneratedApps @relation(fields: [appId], references: [id], onDelete: Cascade)
+
+  @@unique([appId, colorKey])
+  @@map("app_custom_colors")
 }
 
 // =====================================
