@@ -30,7 +30,6 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [isLogoDragOver, setIsLogoDragOver] = useState(false);
   const [isFaviconDragOver, setIsFaviconDragOver] = useState(false);
-  const [colorMode, setColorMode] = useState("brand");
   const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -45,10 +44,9 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     console.log('BrandPersonalization - Form Data Updated:', {
       formData,
       currentStep,
-      colorMode,
       hasSubmitted
     });
-  }, [formData, currentStep, colorMode, hasSubmitted]);
+  }, [formData, currentStep, hasSubmitted]);
 
   const handleFormInputChange = (name: string, value: FormInputValue) => {
     console.log(' BrandPersonalization - Input Change:', { name, value, type: typeof value });
@@ -349,194 +347,151 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
             <div className="p-4 border border-primary-border rounded-xl">
               <div className="mb-4 flex items-center justify-between">
                 <h3 className="text-sm font-semibold text-primary">Brand Colors</h3>
-                <div className="flex items-center justify-between mt-2">
-                  <TimeRangeSelector
-                    availableTimeRanges={["brand", "custom"]}
-                    selectedTimeRange={colorMode}
-                    handleTimeRangeChange={setColorMode}
-                    timeRangeLabels={{
-                      brand: "Default",
-                      custom: "Custom"
-                    }}
-                  />
-                </div>
               </div>
-            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
+                {/* Primary Colors */}
+                <ColorPicker
+                  label="Primary Color"
+                  name="customPrimaryColor"
+                  value={formData.customPrimaryColor || "#163b7c"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#163b7c", label: "Primary Blue", color: "#163b7c" },
+                    { value: "#041328", label: "Primary Dark", color: "#041328" },
+                    { value: "#005c8e", label: "Primary Light", color: "#005c8e" },
+                    { value: "#202d59", label: "Primary Deep", color: "#202d59" },
+                    { value: "#dce7ec", label: "Primary BG Light", color: "#dce7ec" },
+                    { value: "#f5f8fc", label: "Primary Lightest", color: "#f5f8fc" }
+                  ]}
+                />
                 
-                {colorMode === "brand" ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <ColorPicker
-                    label="Primary Color"
-                      name="primaryColor"
-                    value={formData.primaryColor || "#0066cc"}
-                    onChange={onInputChange}
-                    options={colorOptions}
-                    required={true}
-                    disabled={true}
-                  />
-                    <ColorPicker
-                      label="Secondary Color"
-                      name="secondaryColor"
-                      value={formData.secondaryColor || "#55b56c"}
-                      onChange={onInputChange}
-                      options={colorOptions}
-                      required={false}
-                      disabled={true}
-                    />
-                  </div>
-                                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
-                    {/* Primary Colors */}
-                    <ColorPicker
-                      label="Primary Color"
-                      name="customPrimaryColor"
-                      value={formData.customPrimaryColor || "#163b7c"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#163b7c", label: "Primary Blue", color: "#163b7c" },
-                        { value: "#041328", label: "Primary Dark", color: "#041328" },
-                        { value: "#005c8e", label: "Primary Light", color: "#005c8e" },
-                        { value: "#202d59", label: "Primary Deep", color: "#202d59" },
-                        { value: "#dce7ec", label: "Primary BG Light", color: "#dce7ec" },
-                        { value: "#f5f8fc", label: "Primary Lightest", color: "#f5f8fc" }
-                      ]}
-                    />
-                    
-                    {/* Secondary Colors */}
-                    <ColorPicker
-                      label="Secondary Color"
-                      name="customSecondaryColor"
-                      value={formData.customSecondaryColor || "#55b56c"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#55b56c", label: "Primary Green", color: "#55b56c" },
-                        { value: "#bbe1c4", label: "Secondary Light", color: "#bbe1c4" },
-                        { value: "#029447", label: "Positive Green", color: "#029447" },
-                        { value: "#6bc47a", label: "Light Green", color: "#6bc47a" },
-                        { value: "#81d38a", label: "Bright Green", color: "#81d38a" },
-                        { value: "#97e298", label: "Mint Green", color: "#97e298" }
-                      ]}
-                    />
-                    
-                    {/* Text Primary Colors */}
-                    <ColorPicker
-                      label="Text Primary Color"
-                      name="customTextPrimaryColor"
-                      value={formData.customTextPrimaryColor || "#262626"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#262626", label: "Text Primary", color: "#262626" },
-                        { value: "#7e7e7e", label: "Text Secondary", color: "#7e7e7e" },
-                        { value: "#476189", label: "Text Tertiary", color: "#476189" },
-                        { value: "#091b3b", label: "Text Quaternary", color: "#091b3b" },
-                        { value: "#3c3c3c", label: "Dark Text", color: "#3c3c3c" },
-                        { value: "#a0a0a0", label: "Light Text", color: "#a0a0a0" }
-                      ]}
-                    />
-                    
-                    {/* Text Secondary Colors */}
-                    <ColorPicker
-                      label="Text Secondary Color"
-                      name="customTextSecondaryColor"
-                      value={formData.customTextSecondaryColor || "#7e7e7e"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#7e7e7e", label: "Text Secondary", color: "#7e7e7e" },
-                        { value: "#476189", label: "Text Tertiary", color: "#476189" },
-                        { value: "#a0a0a0", label: "Light Text", color: "#a0a0a0" },
-                        { value: "#3c3c3c", label: "Dark Text", color: "#3c3c3c" },
-                        { value: "#262626", label: "Text Primary", color: "#262626" },
-                        { value: "#091b3b", label: "Text Quaternary", color: "#091b3b" }
-                      ]}
-                    />
-                    
-                    {/* Background Colors */}
-                    <ColorPicker
-                      label="Background Color"
-                      name="customBackgroundColor"
-                      value={formData.customBackgroundColor || "#f5f8fc"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#f5f8fc", label: "Background Secondary", color: "#f5f8fc" },
-                        { value: "#ffffff", label: "Surface White", color: "#ffffff" },
-                        { value: "#e9efff", label: "Primary Border", color: "#e9efff" },
-                        { value: "#091b3b", label: "Dark Border", color: "#091b3b" },
-                        { value: "#dce7ec", label: "Primary BG Light", color: "#dce7ec" },
-                        { value: "#f0f0f0", label: "Light Background", color: "#f0f0f0" }
-                      ]}
-                    />
-                    
-                    {/* Border Colors */}
-                    <ColorPicker
-                      label="Border Color"
-                      name="customBorderColor"
-                      value={formData.customBorderColor || "#e9efff"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#e9efff", label: "Primary Border", color: "#e9efff" },
-                        { value: "#091b3b", label: "Dark Border", color: "#091b3b" },
-                        { value: "#dce7ec", label: "Light Border", color: "#dce7ec" },
-                        { value: "#aebdd1", label: "Neutral Border", color: "#aebdd1" },
-                        { value: "#c8c8c8", label: "Gray Border", color: "#c8c8c8" },
-                        { value: "#e0e0e0", label: "Light Gray Border", color: "#e0e0e0" }
-                      ]}
-                    />
-                    
-                    {/* Shadow Colors */}
-                    <ColorPicker
-                      label="Shadow Color"
-                      name="customShadowColor"
-                      value={formData.customShadowColor || "#dce4ef"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#dce4ef", label: "Shadow Primary", color: "#dce4ef" },
-                        { value: "#dce4ef", label: "Shadow Secondary", color: "#dce4ef" },
-                        { value: "#e9efff", label: "Light Shadow", color: "#e9efff" },
-                        { value: "#c8d4e0", label: "Dark Shadow", color: "#c8d4e0" },
-                        { value: "#f0f4f8", label: "Very Light Shadow", color: "#f0f4f8" },
-                        { value: "#b8c4d0", label: "Medium Shadow", color: "#b8c4d0" }
-                      ]}
-                    />
-                    
-                    {/* Icon Colors */}
-                    <ColorPicker
-                      label="Icon Color"
-                      name="customIconColor"
-                      value={formData.customIconColor || "#476189"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#476189", label: "Subinfo Color", color: "#476189" },
-                        { value: "#163b7c", label: "Primary Icon", color: "#163b7c" },
-                        { value: "#55b56c", label: "Success Icon", color: "#55b56c" },
-                        { value: "#ed8c22", label: "Warning Icon", color: "#ed8c22" },
-                        { value: "#dc272c", label: "Danger Icon", color: "#dc272c" },
-                        { value: "#00d1b2", label: "Accent Icon", color: "#00d1b2" }
-                      ]}
-                    />
-                    
-                    {/* Gradient Colors */}
-                    <ColorPicker
-                      label="Gradient Color"
-                      name="customGradientColor"
-                      value={formData.customGradientColor || "#163b7c"}
-                      onChange={onInputChange}
-                      options={[
-                        { value: "#163b7c", label: "Primary Blue", color: "#163b7c" },
-                        { value: "#55b56c", label: "Primary Green", color: "#55b56c" },
-                        { value: "#ed8c22", label: "Primary Orange", color: "#ed8c22" },
-                        { value: "#dc272c", label: "Primary Red", color: "#dc272c" },
-                        { value: "#00d1b2", label: "Primary Teal", color: "#00d1b2" },
-                        { value: "#7e7e7e", label: "Primary Gray", color: "#7e7e7e" }
-                      ]}
-                    />
-              </div>
-                )}
+                {/* Secondary Colors */}
+                <ColorPicker
+                  label="Secondary Color"
+                  name="customSecondaryColor"
+                  value={formData.customSecondaryColor || "#55b56c"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#55b56c", label: "Primary Green", color: "#55b56c" },
+                    { value: "#bbe1c4", label: "Secondary Light", color: "#bbe1c4" },
+                    { value: "#029447", label: "Positive Green", color: "#029447" },
+                    { value: "#6bc47a", label: "Light Green", color: "#6bc47a" },
+                    { value: "#81d38a", label: "Bright Green", color: "#81d38a" },
+                    { value: "#97e298", label: "Mint Green", color: "#97e298" }
+                  ]}
+                />
                 
-              {/* {allErrors.primaryColor && (
-                <span className="text-error text-xs mt-1 block">
-                  {allErrors.primaryColor}
-                </span>
-              )} */}
+                {/* Text Primary Colors */}
+                <ColorPicker
+                  label="Text Primary Color"
+                  name="customTextPrimaryColor"
+                  value={formData.customTextPrimaryColor || "#262626"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#262626", label: "Text Primary", color: "#262626" },
+                    { value: "#7e7e7e", label: "Text Secondary", color: "#7e7e7e" },
+                    { value: "#476189", label: "Text Tertiary", color: "#476189" },
+                    { value: "#091b3b", label: "Text Quaternary", color: "#091b3b" },
+                    { value: "#3c3c3c", label: "Dark Text", color: "#3c3c3c" },
+                    { value: "#a0a0a0", label: "Light Text", color: "#a0a0a0" }
+                  ]}
+                />
+                
+                {/* Text Secondary Colors */}
+                <ColorPicker
+                  label="Text Secondary Color"
+                  name="customTextSecondaryColor"
+                  value={formData.customTextSecondaryColor || "#7e7e7e"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#7e7e7e", label: "Text Secondary", color: "#7e7e7e" },
+                    { value: "#476189", label: "Text Tertiary", color: "#476189" },
+                    { value: "#a0a0a0", label: "Light Text", color: "#a0a0a0" },
+                    { value: "#3c3c3c", label: "Dark Text", color: "#3c3c3c" },
+                    { value: "#262626", label: "Text Primary", color: "#262626" },
+                    { value: "#091b3b", label: "Text Quaternary", color: "#091b3b" }
+                  ]}
+                />
+                
+                {/* Background Colors */}
+                <ColorPicker
+                  label="Background Color"
+                  name="customBackgroundColor"
+                  value={formData.customBackgroundColor || "#f5f8fc"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#f5f8fc", label: "Background Secondary", color: "#f5f8fc" },
+                    { value: "#ffffff", label: "Surface White", color: "#ffffff" },
+                    { value: "#e9efff", label: "Primary Border", color: "#e9efff" },
+                    { value: "#091b3b", label: "Dark Border", color: "#091b3b" },
+                    { value: "#dce7ec", label: "Primary BG Light", color: "#dce7ec" },
+                    { value: "#f0f0f0", label: "Light Background", color: "#f0f0f0" }
+                  ]}
+                />
+                
+                {/* Border Colors */}
+                <ColorPicker
+                  label="Border Color"
+                  name="customBorderColor"
+                  value={formData.customBorderColor || "#e9efff"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#e9efff", label: "Primary Border", color: "#e9efff" },
+                    { value: "#091b3b", label: "Dark Border", color: "#091b3b" },
+                    { value: "#dce7ec", label: "Light Border", color: "#dce7ec" },
+                    { value: "#aebdd1", label: "Neutral Border", color: "#aebdd1" },
+                    { value: "#c8c8c8", label: "Gray Border", color: "#c8c8c8" },
+                    { value: "#e0e0e0", label: "Light Gray Border", color: "#e0e0e0" }
+                  ]}
+                />
+                
+                {/* Shadow Colors */}
+                <ColorPicker
+                  label="Shadow Color"
+                  name="customShadowColor"
+                  value={formData.customShadowColor || "#dce4ef"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#dce4ef", label: "Shadow Primary", color: "#dce4ef" },
+                    { value: "#dce4ef", label: "Shadow Secondary", color: "#dce4ef" },
+                    { value: "#e9efff", label: "Light Shadow", color: "#e9efff" },
+                    { value: "#c8d4e0", label: "Dark Shadow", color: "#c8d4e0" },
+                    { value: "#f0f4f8", label: "Very Light Shadow", color: "#f0f4f8" },
+                    { value: "#b8c4d0", label: "Medium Shadow", color: "#b8c4d0" }
+                  ]}
+                />
+                
+                {/* Icon Colors */}
+                <ColorPicker
+                  label="Icon Color"
+                  name="customIconColor"
+                  value={formData.customIconColor || "#476189"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#476189", label: "Subinfo Color", color: "#476189" },
+                    { value: "#163b7c", label: "Primary Icon", color: "#163b7c" },
+                    { value: "#55b56c", label: "Success Icon", color: "#55b56c" },
+                    { value: "#ed8c22", label: "Warning Icon", color: "#ed8c22" },
+                    { value: "#dc272c", label: "Danger Icon", color: "#dc272c" },
+                    { value: "#00d1b2", label: "Accent Icon", color: "#00d1b2" }
+                  ]}
+                />
+                
+                {/* Gradient Colors */}
+                <ColorPicker
+                  label="Gradient Color"
+                  name="customGradientColor"
+                  value={formData.customGradientColor || "#163b7c"}
+                  onChange={onInputChange}
+                  options={[
+                    { value: "#163b7c", label: "Primary Blue", color: "#163b7c" },
+                    { value: "#55b56c", label: "Primary Green", color: "#55b56c" },
+                    { value: "#ed8c22", label: "Primary Orange", color: "#ed8c22" },
+                    { value: "#dc272c", label: "Primary Red", color: "#dc272c" },
+                    { value: "#00d1b2", label: "Primary Teal", color: "#00d1b2" },
+                    { value: "#7e7e7e", label: "Primary Gray", color: "#7e7e7e" }
+                  ]}
+                />
               </div>
             </div>
 

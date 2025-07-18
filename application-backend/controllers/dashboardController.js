@@ -1,4 +1,5 @@
 import DashboardDB from '../models/DashboardDB.js';
+import { getDateTime } from '../utils/utils.js';
 
 export const getMainWidgets = async (req, res) => {
     try {
@@ -89,7 +90,7 @@ export const getMainGraphAnalytics = async (req, res) => {
         console.error('Error fetching graph analytics:', {
             error: error.message,
             stack: error.stack,
-            timestamp: new Date().toISOString(),
+            timestamp: getDateTime(),
         });
 
         res.status(500).json({

@@ -101,3 +101,41 @@ export const getConsumerHistory = async (req, res) => {
         });
     }
 }; 
+
+export const addConsumer = async (req, res) => {
+    try {
+        // Use validated data from middleware
+        const consumerData = req.validatedData;
+
+        const newConsumer = await ConsumerDB.addConsumer(consumerData);
+        
+        res.status(201).json({
+            success: true,
+            data: newConsumer,
+            message: 'Consumer created successfully'
+        });
+    } catch (error) {
+        console.error('addConsumer: Error creating consumer:', error);
+        
+        // Handle specific error cases
+        if (error.message.includes('already exists')) {
+            return res.status(409).json({
+                success: false,
+                message: error.message
+            });
+        }
+        
+        if (error.message.includes('not found')) {
+            return res.status(404).json({
+                success: false,
+                message: error.message
+            });
+        }
+
+        res.status(500).json({
+            success: false,
+            message: 'Failed to create consumer',
+            error: error.message
+        });
+    }
+}; 

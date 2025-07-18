@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getDateInYMDFormat } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -156,7 +157,7 @@ class TicketDB {
             for (let i = 0; i < 12; i++) {
                 const date = new Date(today.getFullYear(), today.getMonth() - 11 + i, 1);
                 months.push({
-                    month: date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0')
+                    month: getDateInYMDFormat(date).slice(0, 7)
                 });
             }
 
@@ -178,7 +179,7 @@ class TicketDB {
 
             const trendsData = months.map(monthData => {
                 const monthTickets = tickets.filter(ticket => {
-                    const ticketMonth = ticket.createdAt.getFullYear() + '-' + String(ticket.createdAt.getMonth() + 1).padStart(2, '0');
+                    const ticketMonth = getDateInYMDFormat(ticket.createdAt).slice(0, 7);
                     return ticketMonth === monthData.month;
                 });
 

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getDateInYMDFormat } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -6,7 +7,7 @@ class DashboardDB {
     static async getMainWidgets() {
         try {
             const now = new Date();
-            
+            // Use getDateInYMDFormat for string dates if needed
             const firstDayCurrentMonth = new Date(now.getFullYear(), now.getMonth(), 1);
             const lastDayCurrentMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59, 999);
             const firstDayPreviousMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
@@ -78,105 +79,6 @@ class DashboardDB {
                 }
             });
 
-            // Get current month revenue
-            // const currentMonthRevenue = await prisma.payment.aggregate({
-            //     where: {
-            //         createdAt: {
-            //             gte: firstDayCurrentMonth,
-            //             lte: lastDayCurrentMonth
-            //         },
-            //         paymentStatus: 'SUCCESS'
-            //     },
-            //     _sum: {
-            //         amount: true
-            //     },
-            //     _count: true
-            // });
-
-            // // Get last month revenue
-            // const lastMonthRevenue = await prisma.payment.aggregate({
-            //     where: {
-            //         createdAt: {
-            //             gte: firstDayPreviousMonth,
-            //             lte: lastDayPreviousMonth
-            //         },
-            //         paymentStatus: 'SUCCESS'
-            //     },
-            //     _sum: {
-            //         amount: true
-            //     },
-            //     _count: true
-            // });
-
-            // // Get before last month revenue
-            // const beforeLastMonthRevenue = await prisma.payment.aggregate({
-            //     where: {
-            //         createdAt: {
-            //             gte: firstDayBeforePreviousMonth,
-            //             lte: lastDayBeforePreviousMonth
-            //         },
-            //         paymentStatus: 'SUCCESS'
-            //     },
-            //     _sum: {
-            //         amount: true
-            //     },
-            //     _count: true
-            // });
-
-            // // Get yesterday consumption
-            // const yesterdayConsumption = await prisma.consumption.aggregate({
-            //     where: {
-            //         consumptionDate: {
-            //             gte: startOfYesterday,
-            //             lte: endOfYesterday
-            //         }
-            //     },
-            //     _sum: {
-            //         consumption: true
-            //     }
-            // });
-
-            // // Get day before yesterday consumption
-            // const dayBeforeYesterdayConsumption = await prisma.consumption.aggregate({
-            //     where: {
-            //         consumptionDate: {
-            //             gte: startOfDayBeforeYesterday,
-            //             lte: endOfDayBeforeYesterday
-            //         }
-            //     },
-            //     _sum: {
-            //         consumption: true
-            //     }
-            // });
-
-            // // Get yesterday revenue
-            // const yesterdayRevenue = await prisma.payment.aggregate({
-            //     where: {
-            //         createdAt: {
-            //             gte: startOfYesterday,
-            //             lte: endOfYesterday
-            //         },
-            //         paymentStatus: 'SUCCESS'
-            //     },
-            //     _sum: {
-            //         amount: true
-            //     }
-            // });
-
-            // // Get day before yesterday revenue
-            // const dayBeforeYesterdayRevenue = await prisma.payment.aggregate({
-            //     where: {
-            //         createdAt: {
-            //             gte: startOfDayBeforeYesterday,
-            //             lte: endOfDayBeforeYesterday
-            //         },
-            //         paymentStatus: 'SUCCESS'
-            //     },
-            //     _sum: {
-            //         amount: true
-            //     }
-            // });
-
             return {
                 activeUnits,
                 totalConsumers,
@@ -185,25 +87,9 @@ class DashboardDB {
                 totalConsumption: totalConsumption._sum.consumption || 0,
                 totalUnits,
                 usersCount,
-                
-                // Monthly Widgets Data
-                // currentMonthtotalRevenue: currentMonthRevenue._sum.amount || 0,
-                // lastMonthTotalRevenue: lastMonthRevenue._sum.amount || 0,
-                // lastMonthTotalAmount: lastMonthRevenue._sum.amount || 0,
-                // beforeLastMonthTotalAmount: beforeLastMonthRevenue._sum.amount || 0,
-                // paymentReceiptsCurrentMonth: currentMonthRevenue._count || 0,
-                // paymentReceiptsLastMonth: lastMonthRevenue._count || 0,
-                
-                // // Daily Widgets Data
-                // yesterdayConsumption: yesterdayConsumption._sum.consumption || 0,
-                // dayBeforeYesterdayConsumption: dayBeforeYesterdayConsumption._sum.consumption || 0,
-                // yesterdayTotalRevenue: yesterdayRevenue._sum.amount || 0,
-                // dayBeforeYesterdayTotalRevenue: dayBeforeYesterdayRevenue._sum.amount || 0,
-                // yesterdayPaymentReceipts: 0, // Can be calculated if needed
-                // dayBeforeYesterdayPaymentReceipts: 0, // Can be calculated if needed
             };
         } catch (error) {
-            console.error('Error getting dashboard widgets:', error);
+            console.error('getMainWidgets error:', error);
             throw error;
         }
     }
@@ -212,7 +98,7 @@ class DashboardDB {
         try {
             if (period === 'daily') {
                 const d1 = new Date();
-                const sdf = (date) => date.toISOString().split('T')[0];
+                const sdf = (date) => getDateInYMDFormat(date);
                 const presDate = sdf(new Date(d1.setDate(d1.getDate() - 62)));
                 d1.setDate(d1.getDate() + 62);
                 const nextDate = sdf(new Date(d1));
@@ -245,63 +131,61 @@ class DashboardDB {
                 });
 
                 return result.map(item => ({
-                    consumption_date: item.consumptionDate.toISOString().split('T')[0],
+                    consumption_date: getDateInYMDFormat(item.consumptionDate),
                     count: item._count.id,
                     total_consumption: item._sum.consumption || 0
                 }));
+            }
+            // monthly
+            const d1 = new Date();
+            const sdf = (date) => getDateInYMDFormat(date);
+            const presDate = sdf(new Date(d1.setMonth(d1.getMonth() - 13)));
+            d1.setMonth(d1.getMonth() + 14);
+            const nextDate = sdf(new Date(d1));
 
-            } else if (period === 'monthly') {
-                const d1 = new Date();
-                const sdf = (date) => date.toISOString().split('T')[0];
-                const presDate = sdf(new Date(d1.setMonth(d1.getMonth() - 13)));
-                d1.setMonth(d1.getMonth() + 14);
-                const nextDate = sdf(new Date(d1));
-
-                // Build the meter filter condition
-                let whereClause = {
-                    consumptionDate: {
-                        gte: new Date(presDate),
-                        lt: new Date(nextDate)
-                    }
+            let whereClause = {
+                consumptionDate: {
+                    gte: new Date(presDate),
+                    lt: new Date(nextDate)
+                }
+            };
+            
+            if (accessValues && accessValues.length > 0) {
+                whereClause.meterId = {
+                    in: accessValues
                 };
-                
-                if (accessValues && accessValues.length > 0) {
-                    whereClause.meterId = {
-                        in: accessValues
+            }
+
+            const result = await prisma.consumption.groupBy({
+                by: ['consumptionDate'],
+                where: whereClause,
+                _count: {
+                    id: true
+                },
+                _sum: {
+                    consumption: true
+                },
+                orderBy: {
+                    consumptionDate: 'asc'
+                }
+            });
+
+            // Group by month
+            const monthlyData = {};
+            result.forEach(item => {
+                const monthKey = getDateInYMDFormat(item.consumptionDate).slice(0, 7); // YYYY-MM format
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        consumption_date: monthKey,
+                        count: 0,
+                        total_consumption: 0
                     };
                 }
+                monthlyData[monthKey].count += item._count.id;
+                monthlyData[monthKey].total_consumption += item._sum.consumption || 0;
+            });
 
-                const result = await prisma.consumption.groupBy({
-                    by: ['consumptionDate'],
-                    where: whereClause,
-                    _count: {
-                        id: true
-                    },
-                    _sum: {
-                        consumption: true
-                    },
-                    orderBy: {
-                        consumptionDate: 'asc'
-                    }
-                });
-
-                // Group by month
-                const monthlyData = {};
-                result.forEach(item => {
-                    const monthKey = item.consumptionDate.toISOString().slice(0, 7); // YYYY-MM format
-                    if (!monthlyData[monthKey]) {
-                        monthlyData[monthKey] = {
-                            consumption_date: monthKey,
-                            count: 0,
-                            total_consumption: 0
-                        };
-                    }
-                    monthlyData[monthKey].count += item._count.id;
-                    monthlyData[monthKey].total_consumption += item._sum.consumption || 0;
-                });
-
-                return Object.values(monthlyData).sort((a, b) => a.consumption_date.localeCompare(b.consumption_date));
-            }
+            return Object.values(monthlyData).sort((a, b) => a.consumption_date.localeCompare(b.consumption_date));
         } catch (error) {
             console.error('graphDashboardAnalytics error:', error);
             throw error;
