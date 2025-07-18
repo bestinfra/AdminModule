@@ -26,6 +26,7 @@ const baseFormInputs: FormInputConfig[] = [
     type: "text",
     label: "Meter Name",
     placeholder: "Enter meter name",
+    required: true,
     row: 1,
     validation: {
       maxLength: 5,
@@ -36,6 +37,7 @@ const baseFormInputs: FormInputConfig[] = [
     type: "text",
     label: "Meter ID",
     placeholder: "Enter meter ID",
+    required: true,
     row: 1,
   },
   {
@@ -43,6 +45,7 @@ const baseFormInputs: FormInputConfig[] = [
     type: "text",
     label: "Meter Number",
     placeholder: "Enter meter number",
+    required: true,
     row: 1,
   },
   {
@@ -60,6 +63,7 @@ const baseFormInputs: FormInputConfig[] = [
     type: "dropdown",
     label: "Meter Type",
     placeholder: "Select meter type",
+    required: true,
     options: [
       { value: "smart", label: "Smart Meter" },
       { value: "digital", label: "Digital Meter" },
@@ -85,6 +89,7 @@ const baseFormInputs: FormInputConfig[] = [
     type: "dropdown",
     label: "Meter Status",
     placeholder: "Select meter status",
+    required: true,
     options: [
       { value: "active", label: "Active" },
       { value: "inactive", label: "Inactive" },
@@ -127,7 +132,7 @@ const AddMeter: React.FC = () => {
   const navigate = useNavigate();
   
   // Use the custom hook for form data management
-  const { formData, updateFormData } = useFormData<MeterData>({
+  const { updateFormData } = useFormData<MeterData>({
     meterName: '',
     meterId: '',
     meterNumber: '',

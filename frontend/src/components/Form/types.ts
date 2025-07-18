@@ -76,6 +76,14 @@ export interface FormProps {
   errorMessages?: Record<string, string>;
   touchedFields?: Set<string>;
   submitted?: boolean;
+  /**
+   * Whether to run built-in validations (required, type, etc). Defaults to true.
+   */
+  validations?: boolean;
+  /**
+   * Custom validation function. Receives value and input config, returns error string or null/undefined if valid.
+   */
+  customValidation?: (value: FormInputValue, input: FormInputConfig) => string | null | undefined;
 }
 
 export interface FormInputProps {
@@ -87,6 +95,14 @@ export interface FormInputProps {
   onInputChange: (name: string, value: FormInputValue, config: FormInputConfig) => void;
   onInputBlur: (name: string, value: FormInputValue, config: FormInputConfig) => void;
   fileInputRefs: React.MutableRefObject<{ [key: string]: HTMLInputElement | null }>;
+  /**
+   * Whether to run built-in validations (required, type, etc). Defaults to true.
+   */
+  validations?: boolean;
+  /**
+   * Custom validation function. Receives value and input config, returns error string or null/undefined if valid.
+   */
+  customValidation?: (value: FormInputValue, input: FormInputConfig) => string | null | undefined;
 }
 
 export type FormInputEvent = 

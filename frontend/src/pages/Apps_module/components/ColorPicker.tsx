@@ -206,7 +206,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
         </div>
       </div>
       
-      {displayError && <span className="text-error text-xs mt-1 block">{displayError}</span>}
+      {displayError && <span className="text-danger text-xs mt-1 block">{displayError}</span>}
     </div>
   );
 };

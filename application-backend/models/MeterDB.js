@@ -3,7 +3,6 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class MeterDB {
-    // Get all meters
     static async getAllMeters() {
         try {
             const meters = await prisma.meter.findMany({
@@ -43,7 +42,6 @@ class MeterDB {
         }
     }
 
-    // Find meter by ID
     static async findById(id) {
         try {
             const meter = await prisma.meter.findUnique({
@@ -94,20 +92,6 @@ class MeterDB {
         }
     }
 
-    // Find meter by meter number
-    static async findByMeterNumber(meterNumber) {
-        try {
-            const meter = await prisma.meter.findUnique({
-                where: { meterNumber }
-            });
-            return meter;
-        } catch (error) {
-            console.error('Error finding meter by meter number:', error);
-            throw error;
-        }
-    }
-
-    // Find meter by serial number
     static async findBySerialNumber(serialNumber) {
         try {
             const meter = await prisma.meter.findUnique({
@@ -124,12 +108,7 @@ class MeterDB {
     static async create(meterData) {
         try {
             // Check if meter already exists
-            const existingMeterByNumber = await this.findByMeterNumber(meterData.meterNumber);
             const existingMeterBySerial = await this.findBySerialNumber(meterData.serialNumber);
-            
-            if (existingMeterByNumber) {
-                throw new Error('Meter already exists with this meter number');
-            }
             
             if (existingMeterBySerial) {
                 throw new Error('Meter already exists with this serial number');
@@ -159,7 +138,6 @@ class MeterDB {
         }
     }
 
-    // Update meter
     static async updateMeter(id, updateData) {
         try {
             const updatedMeter = await prisma.meter.update({
@@ -177,7 +155,6 @@ class MeterDB {
         }
     }
 
-    // Delete meter (soft delete)
     static async deleteMeter(id) {
         try {
             const deletedMeter = await prisma.meter.update({
@@ -195,24 +172,136 @@ class MeterDB {
         }
     }
 
-    // Check database connection
-    static async checkConnection() {
+
+    static async getMeterStats() {
         try {
-            await prisma.$connect();
-            console.log('Database connected successfully');
-            return true;
+            const totalMeters = await prisma.meter.count();
+            const makes = await prisma.meter.groupBy({
+                by: ['manufacturer'],
+                _count: { manufacturer: true }
+            });
+            const types = await prisma.meter.groupBy({
+                by: ['type'],
+                _count: { type: true }
+            });
+            const connectionTypes = await prisma.meter.findMany({
+                select: {
+                    consumer: {
+                        select: { connectionType: true }
+                    }
+                }
+            });
+            const connTypeCounts = {};
+            connectionTypes.forEach(m => {
+                const ct = m.consumer?.connectionType;
+                if (ct) connTypeCounts[ct] = (connTypeCounts[ct] || 0) + 1;
+            });
+
+            return {
+                totalMeters,
+                makes: makes.map(m => ({ manufacturer: m.manufacturer, count: m._count.manufacturer })),
+                types: types.map(t => ({ type: t.type, count: t._count.type })),
+                connectionTypes: connTypeCounts
+            };
         } catch (error) {
-            console.error('Database connection failed:', error);
-            return false;
+            console.error('MeterDB.getMeterStats: Database error:', error);
+            throw error;
         }
     }
 
-    // Disconnect from database
-    static async disconnect() {
+    static async getMeterView(meterId) {
         try {
-            await prisma.$disconnect();
+            const meter = await prisma.meter.findUnique({
+                where: { id: parseInt(meterId) },
+                include: {
+                    config: true,
+                    consumer: {
+                        include: {
+                            location: true
+                        }
+                    },
+                    location: true,
+                    dtr: true,
+                    readings: {
+                        orderBy: { readingDate: 'desc' },
+                        take: 10
+                    }
+                }
+            });
+            if (!meter) throw new Error('Meter not found');
+            return meter;
         } catch (error) {
-            console.error('Error disconnecting from database:', error);
+            console.error(' MeterDB.getMeterView: Database error:', error);
+            throw error;
+        }
+    }
+
+    static async getMetersTable(page = 1, limit = 10, filters = {}) {
+        try {
+            const skip = (page - 1) * limit;
+            const whereClause = {};
+            if (filters.meterNumber) {
+                whereClause.meterNumber = { contains: filters.meterNumber, mode: 'insensitive' };
+            }
+            if (filters.serialNumber) {
+                whereClause.serialNumber = { contains: filters.serialNumber, mode: 'insensitive' };
+            }
+            if (filters.manufacturer) {
+                whereClause.manufacturer = { contains: filters.manufacturer, mode: 'insensitive' };
+            }
+            if (filters.type) {
+                whereClause.type = filters.type;
+            }
+            if (filters.status) {
+                whereClause.status = filters.status;
+            }
+            if (filters.consumerNumber) {
+                whereClause.consumer = {
+                    consumerNumber: { contains: filters.consumerNumber, mode: 'insensitive' }
+                };
+            }
+            const totalCount = await prisma.meter.count({ where: whereClause });
+
+            const meters = await prisma.meter.findMany({
+                where: whereClause,
+                include: {
+                    consumer: {
+                        select: {
+                            consumerNumber: true,
+                            name: true,
+                            primaryPhone: true,
+                            email: true
+                        }
+                    },
+                    location: {
+                        select: {
+                            name: true,
+                            code: true
+                        }
+                    }
+                },
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: limit
+            });
+
+            const totalPages = Math.ceil(totalCount / limit);
+
+            const result = {
+                data: meters,
+                pagination: {
+                    currentPage: page,
+                    totalPages,
+                    totalCount,
+                    limit,
+                    hasNextPage: page < totalPages,
+                    hasPrevPage: page > 1
+                }
+            };
+            return result;
+        } catch (error) {
+            console.error(' MeterDB.getMetersTable: Database error:', error);
+            throw error;
         }
     }
 }

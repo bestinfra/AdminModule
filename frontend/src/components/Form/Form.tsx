@@ -79,14 +79,17 @@ const useFormValidation = (
   formValues: Record<string, FormInputValue>,
   inputs: FormInputConfig[],
   touchedInputs: Set<string>,
-  isFormSubmitted: boolean
+  isFormSubmitted: boolean,
+  validations: boolean = true,
+  customValidation?: (value: FormInputValue, input: FormInputConfig) => string | null | undefined
 ) => {
   const validateAllFields = useCallback(() => {
     const errors: Record<string, string> = {};
     let hasErrors = false;
 
     inputs.forEach((inputConfig) => {
-      const fieldError = validateField(
+      const fieldError = validateSingleField(
+        inputConfig.name,
         formValues[inputConfig.name],
         inputConfig
       );
@@ -101,13 +104,25 @@ const useFormValidation = (
 
   const validateSingleField = useCallback(
     (
-      inputName: string,
+      _inputName: string,
       inputValue: FormInputValue,
       inputConfig: FormInputConfig
     ) => {
-      return validateField(inputValue, inputConfig);
+      let validationError: string | null = null;
+      
+      // Run built-in validations if enabled
+      if (validations) {
+        validationError = validateField(inputValue, inputConfig);
+      }
+      
+      // Run custom validation if provided and no built-in error
+      if (!validationError && typeof customValidation === 'function') {
+        validationError = customValidation(inputValue, inputConfig) || null;
+      }
+      
+      return validationError;
     },
-    []
+    [validations, customValidation]
   );
 
   const shouldShowError = useCallback(
@@ -140,6 +155,8 @@ const Form: React.FC<FormProps> = ({
   errorMessages: initialErrorMessages,
   touchedFields: initialTouchedFields,
   submitted: initialSubmitted,
+  validations = true,
+  customValidation,
 }) => {
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -163,7 +180,7 @@ const Form: React.FC<FormProps> = ({
   );
 
   const { validateAllFields, validateSingleField, shouldShowError } =
-    useFormValidation(formValues, inputs, touchedInputs, isFormSubmitted);
+    useFormValidation(formValues, inputs, touchedInputs, isFormSubmitted, validations, customValidation);
 
   // Input change handler
   const handleInputValueChange = useCallback(
@@ -263,6 +280,8 @@ const Form: React.FC<FormProps> = ({
             onInputChange={handleInputValueChange}
             onInputBlur={handleInputBlur}
             fileInputRefs={fileInputRefs}
+            validations={validations}
+            customValidation={customValidation}
           />
         ))}
       </div>
@@ -276,6 +295,8 @@ const Form: React.FC<FormProps> = ({
     handleInputValueChange,
     handleInputBlur,
     fileInputRefs,
+    validations,
+    customValidation,
   ]);
 
   const renderRowLayout = useCallback(() => {
@@ -338,6 +359,8 @@ const Form: React.FC<FormProps> = ({
                   onInputChange={handleInputValueChange}
                   onInputBlur={handleInputBlur}
                   fileInputRefs={fileInputRefs}
+                  validations={validations}
+                  customValidation={customValidation}
                 />
               </div>
             );
@@ -354,6 +377,8 @@ const Form: React.FC<FormProps> = ({
     handleInputValueChange,
     handleInputBlur,
     fileInputRefs,
+    validations,
+    customValidation,
   ]);
 
   // Error summary for accessibility

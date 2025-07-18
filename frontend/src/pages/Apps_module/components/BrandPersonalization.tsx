@@ -122,20 +122,6 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     onInputChange(syntheticEvent);
   };
 
-  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>, uploadArea?: string) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileUpload(file, 'logo', uploadArea);
-    }
-  };
-
-  const handleFaviconChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleFileUpload(file, 'favicon');
-    }
-  };
-
   const handleDragOver = (e: React.DragEvent, type: 'logo' | 'favicon') => {
     e.preventDefault();
     if (type === 'logo') {

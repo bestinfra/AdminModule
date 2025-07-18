@@ -1,27 +1,16 @@
 import express from 'express';
 import {
-    getAllMeters,
-    getMeterById,
+    getMeterStats,
+    getMeterView,
     createMeter,
-    updateMeter,
-    deleteMeter
+    getAllMeters
 } from '../controllers/meterController.js';
 
 const router = express.Router();
 
-// Get all meters
-router.get('/', getAllMeters);
-
-// Get meter by ID
-router.get('/:id', getMeterById);
-
-// Create new meter
+router.get('/stats', getMeterStats);
+router.get('/table', getAllMeters);
 router.post('/', createMeter);
-
-// Update meter
-router.put('/:id', updateMeter);
-
-// Delete meter
-router.delete('/:id', deleteMeter);
+router.get('/view/:id', getMeterView);
 
 export default router; 
