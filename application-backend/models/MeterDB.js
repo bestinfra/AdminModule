@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getDateInYMDFormat } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -124,7 +125,7 @@ class MeterDB {
                     phase: parseInt(meterData.phase),
                     consumerId: parseInt(meterData.consumerId),
                     locationId: parseInt(meterData.locationId),
-                    installationDate: new Date(meterData.installationDate),
+                    installationDate: new Date(getDateInYMDFormat(new Date(meterData.installationDate))),
                     dtrId: meterData.dtrId ? parseInt(meterData.dtrId) : null,
                     status: 'ACTIVE',
                     isInUse: true

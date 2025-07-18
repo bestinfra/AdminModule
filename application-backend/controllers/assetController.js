@@ -16,4 +16,46 @@ export const getAllAssets = async (req, res) => {
             error: error.message
         });
     }
+};
+
+export const addAsset = async (req, res) => {
+    try {
+        // Use validated data from middleware
+        const assetData = req.validatedData;
+        
+        const result = await AssetDB.addAsset(assetData);
+        res.json({
+            success: true,
+            data: result,
+            message: result.message
+        });
+    } catch (error) {
+        console.error('Error adding asset:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to add asset',
+            error: error.message
+        });
+    }
+};
+
+export const bulkUploadAssets = async (req, res) => {
+    try {
+        // Use validated data from middleware
+        const { assets } = req.validatedData;
+
+        const result = await AssetDB.bulkUploadAssets(assets);
+        res.json({
+            success: true,
+            data: result,
+            message: result.message
+        });
+    } catch (error) {
+        console.error('Error bulk uploading assets:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to bulk upload assets',
+            error: error.message
+        });
+    }
 }; 

@@ -38,32 +38,8 @@ export const getUserStats = async (req, res) => {
 
 export const addUser = async (req, res) => {
     try {
-        const userData = req.body;
-
-        const requiredFields = ['username', 'email', 'password', 'firstName', 'lastName'];
-        for (const field of requiredFields) {
-            if (!userData[field]) {
-                return res.status(400).json({
-                    success: false,
-                    message: `${field} is required`
-                });
-            }
-        }
-
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(userData.email)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid email format'
-            });
-        }
-
-        if (userData.password.length < 6) {
-            return res.status(400).json({
-                success: false,
-                message: 'Password must be at least 6 characters long'
-            });
-        }
+        // Use validated data from middleware
+        const userData = req.validatedData;
 
         const newUser = await UserDB.addUser(userData);
         
@@ -164,14 +140,8 @@ export const deleteUser = async (req, res) => {
 export const assignRolesToUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const { roleIds } = req.body;
-
-        if (!roleIds || !Array.isArray(roleIds)) {
-            return res.status(400).json({
-                success: false,
-                message: 'roleIds array is required'
-            });
-        }
+        // Use validated data from middleware
+        const { roleIds } = req.validatedData;
 
         const updatedUser = await UserDB.assignRolesToUser(parseInt(id), roleIds);
         
