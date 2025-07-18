@@ -41,6 +41,13 @@ function createAppProject(formData) {
     companyWebsite,
     primaryColor,
     secondaryColor,
+    textPrimaryColor,
+    textSecondaryColor,
+    backgroundColor,
+    borderColor,
+    shadowColor,
+    iconColor,
+    gradientColor,
     timezone,
     currency,
     modules,
@@ -1534,7 +1541,14 @@ export const Theme = ({ children }) => {
     useEffect(() => {
         updateTheme({
             primary: '${primaryColor || '#3B82F6'}',
-            secondary: '${secondaryColor || '#10B981'}'
+            secondary: '${secondaryColor || '#10B981'}',
+            textPrimary: '${textPrimaryColor || '#262626'}',
+            textSecondary: '${textSecondaryColor || '#7e7e7e'}',
+            background: '${backgroundColor || '#f5f8fc'}',
+            border: '${borderColor || '#e9efff'}',
+            shadow: '${shadowColor || '#dce4ef'}',
+            icon: '${iconColor || '#476189'}',
+            gradient: '${gradientColor || '#163b7c'}'
         });
     }, []);
 
@@ -1919,6 +1933,14 @@ if (require.main === module) {
     adminEmail: "admin@example.com",
     adminRole: "Administrator",
     primaryColor: "#3B82F6",
+    secondaryColor: "#10B981",
+    textPrimaryColor: "#262626",
+    textSecondaryColor: "#7e7e7e",
+    backgroundColor: "#f5f8fc",
+    borderColor: "#e9efff",
+    shadowColor: "#dce4ef",
+    iconColor: "#476189",
+    gradientColor: "#163b7c",
     timezone: "UTC",
     currency: "USD",
     modules: ["dashboard", "user_management_default", "role_management"],
