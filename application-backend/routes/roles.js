@@ -1,22 +1,15 @@
 import express from 'express';
-import {
-    getAllRoles,
-    getRoleStats,
-    addRole,
-    getRoleById,
-    updateRole,
-    deleteRole,
-    assignPermissionsToRole
-} from '../controllers/roleController.js';
+import { getAllRoles, addRole, getRoleById, updateRole, deleteRole, assignPermissionsToRole, getRoleStats } from '../controllers/roleController.js';
+import { validateRoleData, addRoleSchema, assignPermissionsSchema } from '../validations/roleValidation.js';
 
 const router = express.Router();
 
-router.get('/stats', getRoleStats);
 router.get('/', getAllRoles);
+router.get('/stats', getRoleStats);
 router.get('/:id', getRoleById);
-router.post('/', addRole);
+router.post('/', validateRoleData(addRoleSchema), addRole);
 router.put('/:id', updateRole);
 router.delete('/:id', deleteRole);
-router.patch('/:id/permissions', assignPermissionsToRole);
+router.post('/:id/assign-permissions', validateRoleData(assignPermissionsSchema), assignPermissionsToRole);
 
 export default router; 

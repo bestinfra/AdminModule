@@ -49,38 +49,8 @@ export const getMeterById = async (req, res) => {
 
 export const createMeter = async (req, res) => {
     try {
-        const {
-            meterNumber,
-            serialNumber,
-            manufacturer,
-            model,
-            type,
-            phase,
-            consumerId,
-            locationId,
-            installationDate,
-            dtrId
-        } = req.body;
-
-        if (!meterNumber || !serialNumber || !manufacturer || !model || !type || !phase || !consumerId || !locationId) {
-            return res.status(400).json({
-                success: false,
-                message: 'Missing required fields'
-            });
-        }
-
-        const meterData = {
-            meterNumber,
-            serialNumber,
-            manufacturer,
-            model,
-            type,
-            phase,
-            consumerId,
-            locationId,
-            installationDate,
-            dtrId
-        };
+        // Use validated data from middleware
+        const meterData = req.validatedData;
 
         const newMeter = await MeterDB.create(meterData);
 

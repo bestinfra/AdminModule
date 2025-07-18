@@ -20,29 +20,8 @@ export const getAllRoles = async (req, res) => {
 
 export const addRole = async (req, res) => {
     try {
-        const roleData = req.body;
-
-        if (!roleData.name) {
-            return res.status(400).json({
-                success: false,
-                message: 'Role name is required'
-            });
-        }
-
-        const nameRegex = /^[a-zA-Z0-9\s]+$/;
-        if (!nameRegex.test(roleData.name)) {
-            return res.status(400).json({
-                success: false,
-                message: 'Role name can only contain letters, numbers, and spaces'
-            });
-        }
-
-        if (roleData.name.length < 2 || roleData.name.length > 50) {
-            return res.status(400).json({
-                success: false,
-                message: 'Role name must be between 2 and 50 characters'
-            });
-        }
+        // Use validated data from middleware
+        const roleData = req.validatedData;
 
         const newRole = await RoleDB.addRole(roleData);
         
@@ -173,14 +152,8 @@ export const deleteRole = async (req, res) => {
 export const assignPermissionsToRole = async (req, res) => {
     try {
         const { id } = req.params;
-        const { permissionIds } = req.body;
-
-        if (!permissionIds || !Array.isArray(permissionIds)) {
-            return res.status(400).json({
-                success: false,
-                message: 'permissionIds array is required'
-            });
-        }
+        // Use validated data from middleware
+        const { permissionIds } = req.validatedData;
 
         const updatedRole = await RoleDB.assignPermissionsToRole(parseInt(id), permissionIds);
         

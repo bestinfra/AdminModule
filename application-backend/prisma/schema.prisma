@@ -224,11 +224,17 @@ model MeterReading {
   kWh             Float    // Active Energy
   kVAh            Float    // Apparent Energy
   kVARh           Float?   // Reactive Energy
+  kW              Float?   // Active Power (added)
+  kVA             Float?   // Apparent Power (added)
   
   // Power Quality Parameters
   powerFactor     Float?
   averagePF       Float?
   minimumPF       Float?
+  frequency       Float?   // Frequency in Hz
+  rphPowerFactor  Float?   // R phase Power Factor
+  yphPowerFactor  Float?   // Y phase Power Factor
+  bphPowerFactor  Float?   // B phase Power Factor
   
   // Voltage Parameters
   voltageR        Float?
