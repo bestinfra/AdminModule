@@ -10,6 +10,7 @@ import roleRoutes from './routes/roles.js';
 import billingRoutes from './routes/billing.js';
 import dashboardRoutes from './routes/dashboard.js';
 import ticketRoutes from './routes/tickets.js';
+import dtrRoutes from './routes/dtrs.js';
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use('/api/roles', roleRoutes);
 app.use('/api/billing', billingRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/tickets', ticketRoutes);     
+app.use('/api/dtrs', dtrRoutes);
 // Health check endpoint
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',
