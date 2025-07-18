@@ -600,7 +600,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                     onChange={onInputChange}
                     options={colorOptions}
                     required={true}
-                    disabled={true}
+                    // disabled={true}
                   />
                     <ColorPicker
                       label="Secondary Color"
@@ -609,7 +609,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                       onChange={onInputChange}
                       options={colorOptions}
                       required={false}
-                      disabled={true}
+                      // disabled={true}
                     />
                   </div>
                                 ) : (
