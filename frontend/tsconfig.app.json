@@ -35,7 +35,7 @@
       "@utils/*": ["src/utils/*"],
       "@hooks/*": ["src/hooks/*"],
       "@assets/*": ["src/assets/*"],
-      "@types/*": ["src/types/*"],
+      "@types/*": ["src/types/*"]
     }
   },
   "include": ["src"]
