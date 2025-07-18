@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
-import pkg from '../../createApp.cjs';
-const { createAppProject } = pkg;
+import pkg from '../../generators/createAppOptimized.js';
+const { createAppProjectOptimized: createAppProject } = pkg;
 import fs from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
