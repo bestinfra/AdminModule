@@ -1,5 +1,5 @@
 {
-  "nextPort": 4004,
+  "nextPort": 4017,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -7,9 +7,44 @@
       "path": "C:\\xampp\\htdocs\\example-backend"
     },
     "example-app": {
-      "port": 4003,
-      "deployedAt": "2025-07-19T08:03:58.875Z",
+      "port": 4014,
+      "deployedAt": "2025-07-19T11:31:24.502Z",
       "path": "C:\\xampp\\htdocs\\example-app-backend"
+    },
+    "madhu": {
+      "port": 4004,
+      "deployedAt": "2025-07-19T08:26:47.619Z",
+      "path": "C:\\xampp\\htdocs\\madhu-backend"
+    },
+    "test-deployment": {
+      "port": 4005,
+      "deployedAt": "2025-07-19T10:16:41.576Z",
+      "path": "C:\\xampp\\htdocs\\test-deployment-backend"
+    },
+    "syntax-test": {
+      "port": 4006,
+      "deployedAt": "2025-07-19T10:26:01.141Z",
+      "path": "C:\\xampp\\htdocs\\syntax-test-backend"
+    },
+    "sai": {
+      "port": 4007,
+      "deployedAt": "2025-07-19T10:35:27.502Z",
+      "path": "C:\\xampp\\htdocs\\sai-backend"
+    },
+    "pehhh": {
+      "port": 4010,
+      "deployedAt": "2025-07-19T11:18:07.894Z",
+      "path": "C:\\xampp\\htdocs\\pehhh-backend"
+    },
+    "krishna": {
+      "port": 4015,
+      "deployedAt": "2025-07-19T11:36:53.448Z",
+      "path": "C:\\xampp\\htdocs\\krishna-backend"
+    },
+    "pooo": {
+      "port": 4016,
+      "deployedAt": "2025-07-19T12:17:22.266Z",
+      "path": "C:\\xampp\\htdocs\\pooo-backend"
     }
   }
 }

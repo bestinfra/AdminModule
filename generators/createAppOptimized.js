@@ -3,6 +3,10 @@ const path = require('path');
 const { generateFrontend } = require('./frontendGenerator');
 const { generateBackend } = require('./backendGenerator');
 
+// Import the optimized deployer for automatic backend deployment
+const OptimizedDeployer = require('../scripts/optimizedDeployer.js');
+const deployer = new OptimizedDeployer();
+
 /**
  * Optimized app project generator
  * @param {Object} formData - Form data with app configuration
@@ -62,6 +66,32 @@ function createAppProjectOptimized(formData) {
 
   // Generate backend
   generateBackend(baseDir, formData);
+
+  // --- BACKEND DEPLOYMENT START ---
+  // Deploy backend to XAMPP using optimized deployer
+  try {
+    console.log('\n🚀 Deploying backend to XAMPP...');
+    const backendDir = path.join(baseDir, 'backend');
+    const deploymentResult = deployer.deployBackend(projectFolderName, backendDir);
+    
+    if (deploymentResult.success) {
+      console.log('\n✅ Backend deployed successfully!');
+      console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
+      console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
+      console.log(`   • Environment: ${deploymentResult.envUrl}`);
+      console.log(`   • Port: ${deploymentResult.port}`);
+      console.log(`   • Mode: DEVELOPMENT`);
+    } else {
+      console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
+      console.log('   You can manually deploy using:');
+      console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+    }
+  } catch (error) {
+    console.log('\n⚠️  Backend deployment failed:', error.message);
+    console.log('   You can manually deploy using:');
+    console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+  }
+  // --- BACKEND DEPLOYMENT END ---
 
   console.log(`Project "${projectFolderName}" created successfully at: ${baseDir}`);
   console.log(`Next steps:`);

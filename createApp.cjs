@@ -144,7 +144,7 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-
+    }
   }
 
   // Copy all assets (icons, images, fonts)
@@ -1787,8 +1787,7 @@ Generated on: ${new Date().toLocaleDateString()}
       2
     ),
 
-    "server.js": `
-require('dotenv').config();
+    "server.js": `require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || ${dynamicPort};
@@ -1972,5 +1971,4 @@ if (require.main === module) {
   };
 
   createAppProject(exampleFormData);
-}
 }

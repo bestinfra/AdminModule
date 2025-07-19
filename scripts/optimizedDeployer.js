@@ -64,7 +64,24 @@ class OptimizedDeployer {
     
     if (fs.existsSync(targetPath)) {
       console.log(`Removing existing backend at ${targetPath}`);
-      fs.rmSync(targetPath, { recursive: true, force: true });
+      try {
+        // Use a more robust deletion method for Windows
+        const { execSync } = require('child_process');
+        execSync(`rmdir /s /q "${targetPath}"`, { stdio: 'ignore' });
+      } catch (error) {
+        // If rmdir fails, try using PowerShell
+        try {
+          execSync(`powershell -Command "Remove-Item -Path '${targetPath}' -Recurse -Force"`, { stdio: 'ignore' });
+        } catch (psError) {
+          // If both fail, try fs.rmSync as fallback
+          try {
+            fs.rmSync(targetPath, { recursive: true, force: true });
+          } catch (fsError) {
+            console.log(`⚠️  Could not remove existing backend, will overwrite files instead`);
+            // Don't throw error, just continue with overwrite
+          }
+        }
+      }
     }
 
     console.log(`Copying backend from ${backendPath} to ${targetPath}`);
