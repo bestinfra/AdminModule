@@ -1,0 +1,33 @@
+import React, { useEffect } from 'react';
+import { useTheme } from 'SuperAdmin/providers/ThemeProvider';
+
+export const Theme = ({ children }) => {
+    const { theme, updateTheme } = useTheme();
+    useEffect(() => {
+        updateTheme({
+            colorPrimary: '{{primaryColor}}',
+            colorSecondary: '{{secondaryColor}}',
+            colorTextPrimary: '{{textPrimaryColor}}',
+            colorTextSecondary: '{{textSecondaryColor}}',
+            colorBackgroundSecondary: '{{backgroundColor}}',
+            colorBorder: '{{borderColor}}',
+            colorShadowPrimary: '{{shadowColor}}',
+            colorSubinfo: '{{iconColor}}',
+            colorPrimaryBorder: '{{borderColor}}',
+            colorCustomPrimary: '{{primaryColor}}',
+            colorCustomSecondary: '{{secondaryColor}}',
+            colorPrimaryDark: '{{primaryColor}}',
+            colorPrimaryLight: '{{primaryColor}}',
+            colorPrimaryBg: '{{backgroundColor}}',
+            colorPrimaryDeep: '{{primaryColor}}',
+            colorPrimaryBgLight: '{{backgroundColor}}',
+            colorPrimaryLightest: '{{backgroundColor}}',
+            colorSecondaryLight: '{{secondaryColor}}',
+            colorSurface: '{{backgroundColor}}',
+            colorGradientPrimary: 'linear-gradient(135deg, {{primaryColor}}, {{primaryColor}})',
+            colorGradientSecondary: 'linear-gradient(135deg, {{secondaryColor}}, {{secondaryColor}})'
+        });
+    }, []);
+
+    return <div>{children}</div>;
+}; 

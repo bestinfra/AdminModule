@@ -6,7 +6,9 @@ import {
     updateApp,
     deleteApp,
     publishApp,
-    unpublishApp
+    unpublishApp,
+    getAppCustomColors,
+    updateAppCustomColors
 } from '../controllers/appController.js';
 
 const router = express.Router();
@@ -31,5 +33,11 @@ router.post('/:id/publish', publishApp);
 
 // Unpublish app
 router.post('/:id/unpublish', unpublishApp);
+
+// Get app custom colors
+router.get('/:id/colors', getAppCustomColors);
+
+// Update app custom colors
+router.put('/:id/colors', updateAppCustomColors);
 
 export default router; 
