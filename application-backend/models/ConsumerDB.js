@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getDateInYMDFormat } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -43,7 +44,7 @@ class ConsumerDB {
             // Group by date (YYYY-MM-DD)
             const grouped = {};
             consumptions.forEach(c => {
-                const date = c.consumptionDate.toISOString().split('T')[0];
+                const date = getDateInYMDFormat(c.consumptionDate);
                 if (!grouped[date]) grouped[date] = 0;
                 grouped[date] += Number(c.consumption);
             });
@@ -228,6 +229,150 @@ class ConsumerDB {
             return consumerHistory;
         } catch (error) {
             console.error('ConsumerDB.getConsumerHistory: Database error:', error);
+            throw error;
+        }
+    }
+
+    static async addConsumer(consumerData) {
+        try {
+            console.log('🗄️ ConsumerDB.addConsumer: Creating new consumer...');
+            
+            // Validate required fields
+            const requiredFields = [
+                'consumerNumber', 'name', 'primaryPhone', 'idType', 'idNumber',
+                'connectionType', 'category', 'sanctionedLoad', 'connectionDate',
+                'billingCycle', 'locationId'
+            ];
+            
+            for (const field of requiredFields) {
+                if (!consumerData[field]) {
+                    throw new Error(`${field} is required`);
+                }
+            }
+
+            // Check if consumer number already exists
+            const existingConsumer = await prisma.consumer.findUnique({
+                where: { consumerNumber: consumerData.consumerNumber }
+            });
+            if (existingConsumer) {
+                throw new Error('Consumer number already exists');
+            }
+
+            // Check if location exists
+            const location = await prisma.location.findUnique({
+                where: { id: parseInt(consumerData.locationId) }
+            });
+            if (!location) {
+                throw new Error('Location not found');
+            }
+
+            // Create consumer with all related data
+            const newConsumer = await prisma.consumer.create({
+                data: {
+                    consumerNumber: consumerData.consumerNumber,
+                    name: consumerData.name,
+                    email: consumerData.email || null,
+                    primaryPhone: consumerData.primaryPhone,
+                    alternatePhone: consumerData.alternatePhone || null,
+                    idType: consumerData.idType,
+                    idNumber: consumerData.idNumber,
+                    connectionType: consumerData.connectionType,
+                    category: consumerData.category,
+                    sanctionedLoad: parseFloat(consumerData.sanctionedLoad),
+                    connectionDate: new Date(getDateInYMDFormat(new Date(consumerData.connectionDate))),
+                    locationId: parseInt(consumerData.locationId),
+                    billingCycle: consumerData.billingCycle,
+                    billDeliveryMode: consumerData.billDeliveryMode || [],
+                    defaultPaymentMethod: consumerData.defaultPaymentMethod || null,
+                    creditScore: consumerData.creditScore ? parseInt(consumerData.creditScore) : null,
+                    
+                    // Create related meters if provided
+                    meters: consumerData.meters ? {
+                        create: consumerData.meters.map(meter => ({
+                            meterNumber: meter.meterNumber,
+                            serialNumber: meter.serialNumber,
+                            manufacturer: meter.manufacturer,
+                            model: meter.model,
+                            type: meter.type,
+                            phase: parseInt(meter.phase),
+                            status: meter.status || 'ACTIVE',
+                            isInUse: meter.isInUse !== undefined ? meter.isInUse : true,
+                            installationDate: new Date(getDateInYMDFormat(new Date(meter.installationDate))),
+                            lastMaintenanceDate: meter.lastMaintenanceDate ? new Date(getDateInYMDFormat(new Date(meter.lastMaintenanceDate))) : null,
+                            decommissionDate: meter.decommissionDate ? new Date(getDateInYMDFormat(new Date(meter.decommissionDate))) : null,
+                            locationId: parseInt(meter.locationId),
+                            dtrId: meter.dtrId ? parseInt(meter.dtrId) : null,
+                            
+                            // Create meter configuration if provided
+                            config: meter.config ? {
+                                create: {
+                                    ctRatio: meter.config.ctRatio,
+                                    ctRatioPrimary: parseFloat(meter.config.ctRatioPrimary),
+                                    ctRatioSecondary: parseFloat(meter.config.ctRatioSecondary),
+                                    adoptedCTRatio: meter.config.adoptedCTRatio || null,
+                                    ctAccuracyClass: meter.config.ctAccuracyClass || null,
+                                    ctBurden: meter.config.ctBurden ? parseFloat(meter.config.ctBurden) : null,
+                                    ptRatio: meter.config.ptRatio,
+                                    ptRatioPrimary: parseFloat(meter.config.ptRatioPrimary),
+                                    ptRatioSecondary: parseFloat(meter.config.ptRatioSecondary),
+                                    adoptedPTRatio: meter.config.adoptedPTRatio || null,
+                                    ptAccuracyClass: meter.config.ptAccuracyClass || null,
+                                    ptBurden: meter.config.ptBurden ? parseFloat(meter.config.ptBurden) : null,
+                                    mf: parseFloat(meter.config.mf),
+                                    vmf: parseFloat(meter.config.vmf),
+                                    cmf: parseFloat(meter.config.cmf)
+                                }
+                            } : undefined,
+                            
+                            // Create current transformers if provided
+                            currentTransformers: meter.currentTransformers ? {
+                                create: meter.currentTransformers.map(ct => ({
+                                    ratio: ct.ratio,
+                                    accuracy: ct.accuracy || null,
+                                    burden: ct.burden ? parseFloat(ct.burden) : null
+                                }))
+                            } : undefined,
+                            
+                            // Create potential transformers if provided
+                            potentialTransformers: meter.potentialTransformers ? {
+                                create: meter.potentialTransformers.map(pt => ({
+                                    ratio: pt.ratio,
+                                    accuracy: pt.accuracy || null,
+                                    burden: pt.burden ? parseFloat(pt.burden) : null
+                                }))
+                            } : undefined
+                        }))
+                    } : undefined,
+                    
+                    // Create documents if provided
+                    documents: consumerData.documents ? {
+                        create: consumerData.documents.map(doc => ({
+                            type: doc.type,
+                            url: doc.url
+                        }))
+                    } : undefined
+                },
+                include: {
+                    location: true,
+                    meters: {
+                        include: {
+                            config: true,
+                            location: true,
+                            dtr: true,
+                            currentTransformers: true,
+                            potentialTransformers: true
+                        }
+                    },
+                    documents: true
+                }
+            });
+
+            console.log('🗄️ ConsumerDB.addConsumer: Consumer created successfully');
+            console.log('🗄️ ConsumerDB.addConsumer: Consumer ID:', newConsumer.id);
+            
+            return newConsumer;
+        } catch (error) {
+            console.error('❌ ConsumerDB.addConsumer: Database error:', error);
             throw error;
         }
     }

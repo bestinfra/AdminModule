@@ -1,0 +1,36 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import federation from '@originjs/vite-plugin-federation';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    federation({
+      name: '{{projectFolderName}}',
+      remotes: {
+        SuperAdmin: 'http://localhost:3000/assets/remoteEntry.js',
+      },
+      shared: ['react', 'react-dom', 'react-router', 'react-router-dom'],
+    }),
+  ],
+  build: {
+    modulePreload: false,
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false,
+  },
+  server: {
+    port: 1700,
+    fs: {
+      allow: ['..'],
+    },
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  },
+  publicDir: 'public',
+}); 

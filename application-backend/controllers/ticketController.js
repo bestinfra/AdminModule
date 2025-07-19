@@ -1,4 +1,5 @@
 import TicketDB from '../models/TicketDB.js';
+import { getDateTime } from '../utils/utils.js';
 
 export const getTicketStats = async (req, res) => {
     try {
@@ -92,7 +93,11 @@ export const getTicketTrends = async (req, res) => {
             data: result,
         });
     } catch (error) {
-        console.error(' getTicketTrends: Error fetching ticket trends:', error);
+        console.error(' getTicketTrends: Error fetching ticket trends:', {
+            error: error.message,
+            stack: error.stack,
+            timestamp: getDateTime(),
+        });
         res.status(500).json({
             status: 'error',
             message: 'Internal Server Error',
@@ -149,14 +154,8 @@ export const getTicketsByConsumerId = async (req, res) => {
 export const updateTicketStatus = async (req, res) => {
     try {
         const { id } = req.params;
-        const { status } = req.body;
-
-        if (!status) {
-            return res.status(400).json({
-                success: false,
-                message: 'Status is required'
-            });
-        }
+        // Use validated data from middleware
+        const { status } = req.validatedData;
 
         const updatedTicket = await TicketDB.updateTicketStatus(parseInt(id), status);
         
@@ -177,14 +176,8 @@ export const updateTicketStatus = async (req, res) => {
 export const assignTicket = async (req, res) => {
     try {
         const { id } = req.params;
-        const { assignedToId } = req.body;
-
-        if (!assignedToId) {
-            return res.status(400).json({
-                success: false,
-                message: 'Assigned user ID is required'
-            });
-        }
+        // Use validated data from middleware
+        const { assignedToId } = req.validatedData;
 
         const updatedTicket = await TicketDB.assignTicket(parseInt(id), parseInt(assignedToId));
         
@@ -204,17 +197,8 @@ export const assignTicket = async (req, res) => {
 
 export const createTicket = async (req, res) => {
     try {
-        const ticketData = req.body;
-
-        const requiredFields = ['ticketNumber', 'subject', 'description', 'type', 'category', 'consumerId', 'raisedById'];
-        for (const field of requiredFields) {
-            if (!ticketData[field]) {
-                return res.status(400).json({
-                    success: false,
-                    message: `${field} is required`
-                });
-            }
-        }
+        // Use validated data from middleware
+        const ticketData = req.validatedData;
 
         const newTicket = await TicketDB.createTicket(ticketData);
         

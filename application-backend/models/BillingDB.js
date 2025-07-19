@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getDateInYMDFormat } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -28,7 +29,7 @@ class BillingDB {
                 const totalPaid = bill.payments.reduce((paymentSum, payment) => 
                     paymentSum + Number(payment.amount || 0), 0);
                 const outstanding = Number(bill.totalAmount || 0) - totalPaid;
-                const isOverdue = bill.dueDate < new Date() && outstanding > 0;
+                const isOverdue = bill.dueDate < new Date(getDateInYMDFormat()) && outstanding > 0;
                 return sum + (isOverdue ? outstanding : 0);
             }, 0);
             
@@ -46,7 +47,7 @@ class BillingDB {
             const overdueCount = bills.filter(bill => {
                 const totalPaid = bill.payments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
                 const outstanding = Number(bill.totalAmount || 0) - totalPaid;
-                return bill.dueDate < new Date() && outstanding > 0;
+                return bill.dueDate < new Date(getDateInYMDFormat()) && outstanding > 0;
             }).length;
             const paidCount = bills.filter(bill => {
                 const totalPaid = bill.payments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);

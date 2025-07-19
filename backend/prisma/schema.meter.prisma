@@ -504,6 +504,7 @@ model Meter {
   locationId      Int
   readings        MeterReading[]
   bills           Bill[]
+  tamperEvents    TamperEvent[]
   
   // DTR Relationship
   dtr             DTR?      @relation(fields: [dtrId], references: [id])
@@ -1022,4 +1023,104 @@ enum FaultStatus {
   REPAIRING
   RESOLVED
   UNRESOLVED
+} 
+
+// =====================================
+// TAMPER EVENTS
+// =====================================
+
+model TamperEvent {
+  id              Int       @id @default(autoincrement())
+  
+  // Relationships
+  meter           Meter     @relation(fields: [meterId], references: [id])
+  meterId         Int
+  
+  // Tamper Details
+  tamperDatetime  DateTime  @default(now())
+  tamperType      TamperType
+  tamperStatus    TamperStatus
+  
+  // Electrical Parameters (at time of tamper)
+  avgCurrent      Float?
+  avgVoltage      Float?
+  avgPowerFactor  Float?
+  frequency       Float?
+  
+  // Energy Parameters
+  kwh             Float?    // Active Energy
+  kwhExport       Float?    // Export Energy
+  kwhImport       Float?    // Import Energy
+  kwhNet          Float?    // Net Energy
+  kwhTotal        Float?    // Total Energy
+  
+  // Power Parameters
+  kwExport        Float?    // Export Power
+  kwImport        Float?    // Import Power
+  kvaExport       Float?    // Export Apparent Power
+  kvaImport       Float?    // Import Apparent Power
+  
+  // Phase-wise Parameters
+  voltageR        Float?    // R Phase Voltage
+  voltageY        Float?    // Y Phase Voltage
+  voltageB        Float?    // B Phase Voltage
+  currentR        Float?    // R Phase Current
+  currentY        Float?    // Y Phase Current
+  currentB        Float?    // B Phase Current
+  powerFactorR    Float?    // R Phase Power Factor
+  powerFactorY    Float?    // Y Phase Power Factor
+  powerFactorB    Float?    // B Phase Power Factor
+  
+  // Tamper Count
+  tamperCount     Int?      // Number of tamper events
+  
+  // Additional Parameters (for future extensibility)
+  param1          Float?
+  param2          Float?
+  param3          Float?
+  param4          Float?
+  param5          Float?
+  
+  // Status
+  isProcessed     Boolean   @default(false)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@unique([meterId, tamperDatetime, tamperType, tamperStatus])
+  @@index([meterId, tamperDatetime])
+  @@map("tamper_events")
+}
+
+model TamperCodeDescription {
+  id              Int       @id @default(autoincrement())
+  tamperCode      Int       @unique
+  tamperDesc      String    @db.VarChar(100)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@map("tamper_code_desc")
+}
+
+enum TamperType {
+  METER_BYPASS        // 1
+  MAGNETIC_TAMPER     // 2
+  COVER_OPEN          // 3
+  TERMINAL_TAMPER     // 4
+  REVERSE_POLARITY    // 5
+  PHASE_MISMATCH      // 6
+  CURRENT_SHUNT       // 7
+  VOLTAGE_SHUNT       // 8
+  POWER_FAILURE       // 9
+  NO_LOAD             // 10
+  OTHER               // 11
+}
+
+enum TamperStatus {
+  DETECTED            // 1
+  CONFIRMED           // 2
+  RESOLVED            // 3
+  FALSE_ALARM         // 4
+  INVESTIGATING       // 5
 } 
