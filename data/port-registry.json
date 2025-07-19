@@ -1,0 +1,15 @@
+{
+  "nextPort": 4004,
+  "deployedApps": {
+    "example": {
+      "port": 4001,
+      "deployedAt": "2025-07-19T06:23:07.649Z",
+      "path": "C:\\xampp\\htdocs\\example-backend"
+    },
+    "example-app": {
+      "port": 4003,
+      "deployedAt": "2025-07-19T08:03:58.875Z",
+      "path": "C:\\xampp\\htdocs\\example-app-backend"
+    }
+  }
+}

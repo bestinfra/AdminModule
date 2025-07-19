@@ -150,7 +150,7 @@ class TicketDB {
         }
     }
 
-    static async getLastTwelveMonthsTrends(accessCondition = '', accessValues = []) {
+    static async getLastTwelveMonthsTrends() {
         try {
             const today = new Date();
             const months = [];

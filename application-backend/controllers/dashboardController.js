@@ -1,5 +1,5 @@
 import DashboardDB from '../models/DashboardDB.js';
-import { getDateTime } from '../utils/utils.js';
+import { getDateTime, getDateInYMDFormat, getDateInMYFormat, fillMissingDatesDyno } from '../utils/utils.js';
 
 export const getMainWidgets = async (req, res) => {
     try {
@@ -21,19 +21,8 @@ export const getMainWidgets = async (req, res) => {
 
 export const getMainGraphAnalytics = async (req, res) => {
     try {
-        const accessCondition = req.locationMeters?.condition || '';
-        const accessValues = req.locationMeters?.values || [];
-        
-        const consumptionOnDaily = await DashboardDB.graphDashboardAnalytics(
-            accessCondition,
-            accessValues,
-            'daily' 
-        );
-        const consumptionOnMonthly = await DashboardDB.graphDashboardAnalytics(
-            accessCondition,
-            accessValues,
-            'monthly'
-        );
+        const consumptionOnDaily = await DashboardDB.graphDashboardAnalytics('daily');
+        const consumptionOnMonthly = await DashboardDB.graphDashboardAnalytics('monthly');
         
         const { dailyxAxisData, dailysums } = consumptionOnDaily.reduce(
             (acc, item) => {
@@ -99,18 +88,4 @@ export const getMainGraphAnalytics = async (req, res) => {
             errorId: error.code || 'INTERNAL_SERVER_ERROR',
         });
     }
-};
-
-// Helper functions
-function fillMissingDatesDyno(dates, values, format, type) {
-    // This is a placeholder - you'll need to implement this based on your existing logic
-    return {
-        dates: dates,
-        values: values
-    };
-}
-
-function getDateInMYFormat(dateString) {
-    // This is a placeholder - you'll need to implement this based on your existing logic
-    return dateString;
-} 
+}; 
