@@ -95,8 +95,8 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
 
   // Render default modules as selectable
   const renderDefaultModuleItem = (module: any) => (
-    <div key={module.key} className="flex items-center gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
-      <label className="flex items-center select-none cursor-pointer flex-shrink-0">
+    <div key={module.key} className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
+      <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
         <input
           type="checkbox"
           checked={isModuleEnabled(module.key)}
@@ -125,8 +125,8 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
   const renderModuleItem = (module: any) => {
     if (module.isNested) {
       return (
-        <div key={module.key} className="flex items-center gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all bg-blue-50 dark:bg-blue-900/10">
-          <label className="flex items-center select-none cursor-pointer flex-shrink-0">
+        <div key={module.key} className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all bg-blue-50 dark:bg-blue-900/10">
+          <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
             <input
               type="checkbox"
               checked={isNestedModuleEnabled(module.key)}
@@ -146,15 +146,15 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
             </span>
           </label>
           <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
+            <div className="text-sm font-semibold text-main dark:text-white ">{module.label}</div>
             <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
           </div>
         </div>
       );
     }
     return (
-      <div key={module.key} className="flex items-center justify-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
-        <label className="flex items-center select-none cursor-pointer flex-shrink-0">
+      <div key={module.key} className="flex items-start justify-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
+        <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
           <input
             type="checkbox"
             checked={isModuleEnabled(module.key)}
@@ -174,7 +174,7 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           </span>
         </label>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-main dark:text-white mb-1">{module.label}</div>
+          <div className="text-sm font-semibold text-main dark:text-white ">{module.label}</div>
           <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
         </div>
       </div>
@@ -200,12 +200,12 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           }} action="#" method="post" noValidate>
         {/* Default Modules Section */}
         <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 flex flex-col gap-3 flex flex-col gap-2">
-          <div className="flex  items-start m gap-4">
+          <div className="flex items-start gap-4">
             <div>
-              <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Recomanded Modules</h3>
+              <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Recommended Modules</h3>
             </div>
          
-            <span className="text-xs  px-4 py-1 rounded-full bg-primary-lightest">
+            <span className="text-xs px-4 py-1 rounded-full bg-primary-lightest">
               Default
             </span>
           </div>

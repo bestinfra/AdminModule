@@ -341,10 +341,10 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                 </div>
                             </div>
                         </div>
-
+                                        
                         {/* Location Information Section */}
                         <div className="p-4 border border-primary-border rounded-xl">
-                            <div className="flex items-center justify-between mb-4">
+                            <div className="flex items-start justify-between mb-4">
                                 <h3 className="text-sm font-semibold text-primary">Location Information</h3>
                                 <button
                                     type="button"
