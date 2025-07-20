@@ -1,4 +1,8 @@
 const fs = require("fs");
+
+const OptimizedDeployer = require('./scripts/optimizedDeployer.js');
+const deployer = new OptimizedDeployer();
+
 const path = require("path");
 
 // Function to copy pages directory recursively
@@ -21,7 +25,6 @@ function copyPagesDirectory(sourcePagesDir, destPagesDir) {
     } else {
       // If it's a file, copy it
       fs.copyFileSync(sourcePath, destPath);
-      console.log(`Copied page: ${item}`);
     }
   });
 }
@@ -41,6 +44,13 @@ function createAppProject(formData) {
     companyWebsite,
     primaryColor,
     secondaryColor,
+    textPrimaryColor,
+    textSecondaryColor,
+    backgroundColor,
+    borderColor,
+    shadowColor,
+    iconColor,
+    gradientColor,
     timezone,
     currency,
     modules,
@@ -74,9 +84,6 @@ function createAppProject(formData) {
   const destPagesDir = path.join(frontendDir, "src", "pages");
   if (fs.existsSync(sourcePagesDir)) {
     copyPagesDirectory(sourcePagesDir, destPagesDir);
-    console.log("Copied all pages to generated app");
-  } else {
-    console.log("Pages directory not found:", sourcePagesDir);
   }
 
   // Helper to copy all icons and images
@@ -96,8 +103,6 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-    } else {
-      console.log(`Icons directory not found: ${sourceIconsDir}`);
     }
 
     // Copy all images
@@ -120,8 +125,6 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-    } else {
-      console.log(`Images directory not found: ${sourceImagesDir}`);
     }
 
     // Copy fonts directory
@@ -141,9 +144,6 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-      console.log(`Copied Manrope fonts to ${destManropeDir}`);
-    } else {
-      console.log(`Manrope fonts directory not found: ${sourceManropeDir}`);
     }
   }
 
@@ -627,8 +627,7 @@ function AppContent() {
   
   // Debug logging for routing
   useEffect(() => {
-    console.log('Current location:', location.pathname);
-    console.log('Available modules:', ${JSON.stringify(modules || [])});
+    
   }, [location.pathname]);
   
   // Check if remote app is accessible
@@ -639,7 +638,7 @@ function AppContent() {
         if (!response.ok) {
           console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
         } else {
-          console.log('Remote app is accessible');
+  
         }
       } catch (error) {
         console.error('Failed to check remote app:', error);
@@ -1343,8 +1342,7 @@ const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
   const navigate = useNavigate();
   
   const handleNavigate = (path: string) => {
-    console.log('SidebarWrapper: Navigating to:', path);
-    console.log('SidebarWrapper: Current location before navigation:', location.pathname);
+    
     navigate(path);
   };
   
@@ -1501,7 +1499,7 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
             document.head.appendChild(styleElement);
             setLoadedCSS(prev => [...prev, cssFile]);
             
-            console.log(\`Loaded federated CSS: \${cssFile}\`);
+    
           } else {
             throw new Error(\`Failed to load \${cssFile}: \${response.status}\`);
           }
@@ -1511,7 +1509,7 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
           
           // If fallback is enabled, continue using local CSS
           if (fallbackEnabled) {
-            console.log(\`Using local CSS fallback for \${cssFile}\`);
+
           }
         }
       }
@@ -1533,8 +1531,27 @@ export const Theme = ({ children }) => {
     const { theme, updateTheme } = useTheme();
     useEffect(() => {
         updateTheme({
-            primary: '${primaryColor || '#3B82F6'}',
-            secondary: '${secondaryColor || '#10B981'}'
+            colorPrimary: '${primaryColor || '#163b7c'}',
+            colorSecondary: '${secondaryColor || '#55b56c'}',
+            colorTextPrimary: '${textPrimaryColor || '#262626'}',
+            colorTextSecondary: '${textSecondaryColor || '#7e7e7e'}',
+            colorBackgroundSecondary: '${backgroundColor || '#f5f8fc'}',
+            colorBorder: '${borderColor || '#e9efff'}',
+            colorShadowPrimary: '${shadowColor || '#dce4ef'}',
+            colorSubinfo: '${iconColor || '#476189'}',
+            colorPrimaryBorder: '${borderColor || '#e9efff'}',
+            colorCustomPrimary: '${primaryColor || '#163b7c'}',
+            colorCustomSecondary: '${secondaryColor || '#55b56c'}',
+            colorPrimaryDark: '${primaryColor || '#163b7c'}',
+            colorPrimaryLight: '${primaryColor || '#163b7c'}',
+            colorPrimaryBg: '${backgroundColor || '#f5f8fc'}',
+            colorPrimaryDeep: '${primaryColor || '#163b7c'}',
+            colorPrimaryBgLight: '${backgroundColor || '#f5f8fc'}',
+            colorPrimaryLightest: '${backgroundColor || '#f5f8fc'}',
+            colorSecondaryLight: '${secondaryColor || '#55b56c'}',
+            colorSurface: '${backgroundColor || '#f5f8fc'}',
+            colorGradientPrimary: 'linear-gradient(135deg, ${primaryColor || '#163b7c'}, ${primaryColor || '#163b7c'})',
+            colorGradientSecondary: 'linear-gradient(135deg, ${secondaryColor || '#55b56c'}, ${secondaryColor || '#55b56c'})'
         });
     }, []);
 
@@ -1748,6 +1765,9 @@ Generated on: ${new Date().toLocaleDateString()}
   };
 
   // --- BACKEND SCAFFOLDING START ---
+  // Get dynamic port for this backend
+  const dynamicPort = deployer.findAvailablePort();
+  
   // Backend template files
   const backendFiles = {
     "package.json": JSON.stringify(
@@ -1767,11 +1787,10 @@ Generated on: ${new Date().toLocaleDateString()}
       2
     ),
 
-    "server.js": `
-require('dotenv').config();
+    "server.js": `require('dotenv').config();
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || ${dynamicPort};
 
 app.use(express.json());
 
@@ -1800,7 +1819,7 @@ app.listen(PORT, () => console.log('Backend running on port ' + PORT));
   // Add .env example file for backend
   const envExampleContent = `# Example environment file for backend
 NODE_ENV=development
-PORT=4000
+PORT=${dynamicPort}
 
 JWT_EXPIRES_IN=4h
 
@@ -1895,17 +1914,36 @@ model User {
   console.log(`   1. cd ${baseDir}`);
   console.log(`   2. npm install`);
   console.log(`   3. npm run dev`);
-  console.log(`\nCSS Sync Instructions:`);
-  console.log(`   • CSS files are already synced during creation`);
-  console.log(`   • To sync CSS changes later, run: npm run css-sync`);
-  console.log(`   • To watch for CSS changes, run: npm run css-sync-watch`);
-  console.log(
-    `   • To sync to specific app: npm run css-sync-app ${projectFolderName}`
-  );
+
+  
+  // --- BACKEND DEPLOYMENT START ---
+  // Deploy backend to XAMPP using optimized deployer
+  try {
+    console.log('\n🚀 Deploying backend to XAMPP...');
+    const deploymentResult = deployer.deployBackend(projectFolderName, backendDir);
+    
+    if (deploymentResult.success) {
+      console.log('\n✅ Backend deployed successfully!');
+      console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
+      console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
+      console.log(`   • Environment: ${deploymentResult.envUrl}`);
+      console.log(`   • Port: ${deploymentResult.port}`);
+      console.log(`   • Mode: DEVELOPMENT`);
+    } else {
+      console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
+      console.log('   You can manually deploy using:');
+      console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+    }
+  } catch (error) {
+    console.log('\n⚠️  Backend deployment failed:', error.message);
+    console.log('   You can manually deploy using:');
+    console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+  }
+  // --- BACKEND DEPLOYMENT END ---
+
 
   return baseDir;
 }
-
 // Export the function
 module.exports = { createAppProject };
 // If running directly, use example data
@@ -1919,6 +1957,14 @@ if (require.main === module) {
     adminEmail: "admin@example.com",
     adminRole: "Administrator",
     primaryColor: "#3B82F6",
+    secondaryColor: "#10B981",
+    textPrimaryColor: "#262626",
+    textSecondaryColor: "#7e7e7e",
+    backgroundColor: "#f5f8fc",
+    borderColor: "#e9efff",
+    shadowColor: "#dce4ef",
+    iconColor: "#476189",
+    gradientColor: "#163b7c",
     timezone: "UTC",
     currency: "USD",
     modules: ["dashboard", "user_management_default", "role_management"],

@@ -49,7 +49,6 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
   }, [formData, currentStep, hasSubmitted]);
 
   const handleFormInputChange = (name: string, value: FormInputValue) => {
-    console.log(' BrandPersonalization - Input Change:', { name, value, type: typeof value });
     onInputChange({ target: { name, value } } as any);
     if (hasSubmitted) setHasSubmitted(false);
   };

@@ -88,32 +88,126 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
               <div className="space-y-2">
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Company:</span> {formData.companyName || 'Not specified'}</p>
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Website:</span> {formData.companyWebsite || 'Not specified'}</p>
-                <p>
-                  <span className="font-medium text-gray-700 dark:text-gray-300">Primary Color:</span> 
-                  {formData.primaryColor ? (
-                    <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                      <div 
-                        className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
-                        style={{ backgroundColor: formData.primaryColor }}
-                      />
-                      {formData.primaryColor}
-                    </span>
-                  ) : 'Not specified'}
-                </p>
-                <p>
-                  <span className="font-medium text-gray-700 dark:text-gray-300">Secondary Color:</span> 
-                  {formData.secondaryColor ? (
-                    <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                      <div 
-                        className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
-                        style={{ backgroundColor: formData.secondaryColor }}
-                      />
-                      {formData.secondaryColor}
-                    </span>
-                  ) : 'Not specified'}
-                </p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Contact Email:</span> {formData.contactEmail || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">Contact Phone:</span> {formData.contactPhone || 'Not specified'}</p>
+                <p><span className="font-medium text-gray-700 dark:text-gray-300">App Description:</span> {formData.appDescription || 'Not specified'}</p>
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Timezone:</span> {formData.timezone || 'Not specified'}</p>
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Currency:</span> {formData.currency || 'Not specified'}</p>
+                
+                {/* Custom Colors Section */}
+                <div className="mt-4">
+                  <p className="font-medium text-gray-700 dark:text-gray-300 mb-2">Custom Colors:</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary:</span> 
+                      {formData.customPrimaryColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customPrimaryColor }}
+                          />
+                          {formData.customPrimaryColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Secondary:</span> 
+                      {formData.customSecondaryColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customSecondaryColor }}
+                          />
+                          {formData.customSecondaryColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Text Primary:</span> 
+                      {formData.customTextPrimaryColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customTextPrimaryColor }}
+                          />
+                          {formData.customTextPrimaryColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Text Secondary:</span> 
+                      {formData.customTextSecondaryColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customTextSecondaryColor }}
+                          />
+                          {formData.customTextSecondaryColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Background:</span> 
+                      {formData.customBackgroundColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customBackgroundColor }}
+                          />
+                          {formData.customBackgroundColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Border:</span> 
+                      {formData.customBorderColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customBorderColor }}
+                          />
+                          {formData.customBorderColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Shadow:</span> 
+                      {formData.customShadowColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customShadowColor }}
+                          />
+                          {formData.customShadowColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Icon:</span> 
+                      {formData.customIconColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customIconColor }}
+                          />
+                          {formData.customIconColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                    <p>
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Gradient:</span> 
+                      {formData.customGradientColor ? (
+                        <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
+                          <div 
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                            style={{ backgroundColor: formData.customGradientColor }}
+                          />
+                          {formData.customGradientColor}
+                        </span>
+                      ) : 'Not specified'}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
             <button 

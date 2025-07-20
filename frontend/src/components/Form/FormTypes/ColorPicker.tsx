@@ -132,7 +132,9 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
   const handleColorCircleClick = () => {
     if (!disabled) {
       const colorInput = document.querySelector(`input[name="${name}"]`) as HTMLInputElement;
-      colorInput?.click();
+      if (colorInput) {
+        colorInput.click();
+      }
     }
   };
 
@@ -167,6 +169,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
               }`}
               style={{ backgroundColor: selectedColor }}
               onClick={handleColorCircleClick}
+
             />
           </div>
           <div>
