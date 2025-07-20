@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import FormInput from "@components/Form/FormInput";
 import Button from "@components/global/Button";
-import TimeRangeSelector from "@components/global/TimeRangeSelector";
+
 import ColorPicker from "@pages/Apps_module/components/ColorPicker";
 import type { FormInputValue } from "@components/Form/types";
 import { validateBrandPersonalization } from "@pages/Apps_module/utils";
@@ -154,16 +154,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     }
   };
 
-  const colorOptions = [
-    { value: "#0066cc", label: "Blue", color: "#0066cc" },
-    { value: "#28a745", label: "Green", color: "#28a745" },
-    { value: "#dc3545", label: "Red", color: "#dc3545" },
-    { value: "#ffc107", label: "Yellow", color: "#ffc107" },
-    { value: "#6f42c1", label: "Purple", color: "#6f42c1" },
-    { value: "#fd7e14", label: "Orange", color: "#fd7e14" },
-    { value: "#20c997", label: "Teal", color: "#20c997" },
-    { value: "#6c757d", label: "Gray", color: "#6c757d" },
-  ];
+
 
 
 

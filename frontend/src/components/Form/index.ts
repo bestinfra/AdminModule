@@ -6,6 +6,15 @@ export { default as Input } from './Input';
 // Form utilities and hooks
 export * from './utils';
 
+// Zod validation utilities
+export { 
+  createZodSchema, 
+  validateFormData, 
+  validateField, 
+  useZodForm,
+  type ZodFormData 
+} from './zodValidation';
+
 // Form types
 export * from './types';
 

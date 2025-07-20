@@ -21,17 +21,17 @@ export interface FormInputConfig {
     | 'textareafield';
   label?: string;
   placeholder?: string;
+  description?: string;
   required?: boolean;
   defaultValue?: FormInputValue;  
   options?: Array<{ value: string; label: string }>;
   colorOptions?: Array<{ value: string; label: string; color: string }>;
   className?: string;
-  colSpan?: number;
   row?: number;
   col?: number;
+  colSpan?: number;
   fullWidth?: boolean;
   icon?: string;
-  description?: string;
   accept?: string;
   onChange?: (value: FormInputValue) => void;
   validation?: {
@@ -44,18 +44,12 @@ export interface FormInputConfig {
   };
 }
 
-export interface RowConfig {
-  row: number;
-  columns: number;
+export interface GridLayoutProps {
+  gridRows: number;
+  gridColumns: number;
   gap?: string;
   className?: string;
   autoFullWidth?: boolean;
-}
-
-export interface RowLayoutProps {
-  rows: RowConfig[];
-  defaultGap?: string;
-  defaultClassName?: string;
 }
 
 export interface FormProps {
@@ -65,25 +59,20 @@ export interface FormProps {
   cancelLabel?: string;
   className?: string;
   layout?: 'vertical' | 'horizontal' | 'grid';
-  gridCols?: 1 | 2 | 3 | 4 | 5 | 6;
-  rowLayout?: RowLayoutProps;
-  showCancel?: boolean;
+  gridLayout?: GridLayoutProps;
   isLoading?: boolean;
-  onCancel?: () => void;
   formId?: string;
   variant?: 'default' | 'card' | 'minimal';
   initialData?: Record<string, FormInputValue>;
   errorMessages?: Record<string, string>;
   touchedFields?: Set<string>;
   submitted?: boolean;
-  /**
-   * Whether to run built-in validations (required, type, etc). Defaults to true.
-   */
-  validations?: boolean;
-  /**
-   * Custom validation function. Receives value and input config, returns error string or null/undefined if valid.
-   */
-  customValidation?: (value: FormInputValue, input: FormInputConfig) => string | null | undefined;
+  customSchema?: import('zod').ZodSchema<any>;
+  showErrorsByDefault?: boolean;
+  onChange?: (formData: Record<string, FormInputValue>) => void;
+  showFormActions?: boolean;
+  submitAction?: () => void;
+  cancelAction?: () => void;
 }
 
 export interface FormInputProps {
@@ -95,14 +84,6 @@ export interface FormInputProps {
   onInputChange: (name: string, value: FormInputValue, config: FormInputConfig) => void;
   onInputBlur: (name: string, value: FormInputValue, config: FormInputConfig) => void;
   fileInputRefs: React.MutableRefObject<{ [key: string]: HTMLInputElement | null }>;
-  /**
-   * Whether to run built-in validations (required, type, etc). Defaults to true.
-   */
-  validations?: boolean;
-  /**
-   * Custom validation function. Receives value and input config, returns error string or null/undefined if valid.
-   */
-  customValidation?: (value: FormInputValue, input: FormInputConfig) => string | null | undefined;
 }
 
 export type FormInputEvent = 
@@ -143,4 +124,13 @@ export interface CommonInputProps {
   'aria-required'?: 'true' | 'false';
 }
 
-export type EventValueExtractor = (event: FormInputEvent | FormBlurEvent) => FormInputValue; 
+export type EventValueExtractor = (event: FormInputEvent | FormBlurEvent) => FormInputValue;
+
+export interface FormRef {
+  getFormValues: () => Record<string, FormInputValue>;
+  getValidationErrors: () => Record<string, string>;
+  hasErrors: () => boolean;
+  submit: () => void;
+  reset: () => void;
+  validate: () => { success: boolean; errors: Record<string, string> };
+} 

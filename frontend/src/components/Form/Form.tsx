@@ -1,16 +1,18 @@
-import React, { useState, useCallback, useRef, useMemo, memo } from "react";
+import React, { useState, useCallback, useRef, useMemo, memo, useImperativeHandle, forwardRef } from "react";
 import Button from "@components/global/Button";
 import FormInput from "./FormInput";
 import type {
   FormProps,
   FormInputConfig,
   FormInputValue,
+  FormRef,
 } from "@components/Form/types";
 import {
   getDefaultValue,
   formatPhone,
-  validateField,
 } from "@components/Form/utils";
+import { validateFormData, validateField as validateFieldZod } from "./zodValidation";
+import { z } from 'zod';
 
 // Custom hook for form state management
 const useFormState = (
@@ -80,27 +82,32 @@ const useFormValidation = (
   inputs: FormInputConfig[],
   touchedInputs: Set<string>,
   isFormSubmitted: boolean,
-  validations: boolean = true,
-  customValidation?: (value: FormInputValue, input: FormInputConfig) => string | null | undefined
+  showErrorsByDefault: boolean = false,
+  customSchema?: import('zod').ZodSchema<any>
 ) => {
   const validateAllFields = useCallback(() => {
-    const errors: Record<string, string> = {};
-    let hasErrors = false;
-
-    inputs.forEach((inputConfig) => {
-      const fieldError = validateSingleField(
-        inputConfig.name,
-        formValues[inputConfig.name],
-        inputConfig
-      );
-      if (fieldError) {
-        errors[inputConfig.name] = fieldError;
-        hasErrors = true;
+    if (customSchema) {
+      try {
+        customSchema.parse(formValues);
+        return { errors: {}, hasErrors: false };
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          const errors: Record<string, string> = {};
+          error.errors.forEach((err: z.ZodIssue) => {
+            const fieldName = err.path.join('.');
+            errors[fieldName] = err.message;
+          });
+          return { errors, hasErrors: true };
+        }
+        return { errors: { general: 'Validation failed' }, hasErrors: true };
       }
-    });
-
-    return { errors, hasErrors };
-  }, [formValues, inputs]);
+    }
+    const result = validateFormData(formValues, inputs);
+    return {
+      errors: result.errors,
+      hasErrors: !result.success
+    };
+  }, [formValues, inputs, customSchema]);
 
   const validateSingleField = useCallback(
     (
@@ -108,28 +115,16 @@ const useFormValidation = (
       inputValue: FormInputValue,
       inputConfig: FormInputConfig
     ) => {
-      let validationError: string | null = null;
-      
-      // Run built-in validations if enabled
-      if (validations) {
-        validationError = validateField(inputValue, inputConfig);
-      }
-      
-      // Run custom validation if provided and no built-in error
-      if (!validationError && typeof customValidation === 'function') {
-        validationError = customValidation(inputValue, inputConfig) || null;
-      }
-      
-      return validationError;
+      return validateFieldZod(inputValue, inputConfig);
     },
-    [validations, customValidation]
+    []
   );
 
   const shouldShowError = useCallback(
     (inputName: string, error: string) => {
-      return !!(error && (touchedInputs.has(inputName) || isFormSubmitted));
+      return !!(error && (showErrorsByDefault || touchedInputs.has(inputName) || isFormSubmitted));
     },
-    [touchedInputs, isFormSubmitted]
+    [touchedInputs, isFormSubmitted, showErrorsByDefault]
   );
 
   return {
@@ -139,25 +134,60 @@ const useFormValidation = (
   };
 };
 
-const Form: React.FC<FormProps> = ({
+// Helper function to format input value
+const formatInputValue = (inputName: string, inputValue: FormInputValue): FormInputValue => {
+  if ((inputName === "phone" || inputName === "mobile") && typeof inputValue === "string") {
+    return formatPhone(inputValue);
+  }
+  return inputValue;
+};
+
+// Helper function to render form input
+const renderFormInput = (
+  inputConfig: FormInputConfig,
+  formValues: Record<string, FormInputValue>,
+  validationErrors: Record<string, string>,
+  shouldShowError: (name: string, error: string) => boolean,
+  handleInputValueChange: (name: string, value: FormInputValue, config: FormInputConfig) => void,
+  handleInputBlur: (name: string, value: FormInputValue, config: FormInputConfig) => void,
+  fileInputRefs: React.MutableRefObject<{ [key: string]: HTMLInputElement | null }>
+) => (
+  <FormInput
+    key={inputConfig.name}
+    input={inputConfig}
+    value={formValues[inputConfig.name]}
+    error={validationErrors[inputConfig.name]}
+    showError={shouldShowError(
+      inputConfig.name,
+      validationErrors[inputConfig.name]
+    )}
+    disabled={false}
+    onInputChange={handleInputValueChange}
+    onInputBlur={handleInputBlur}
+    fileInputRefs={fileInputRefs}
+  />
+);
+
+const Form = forwardRef<FormRef, FormProps>(({
   inputs,
   onSubmit,
   submitLabel,
   cancelLabel,
   className,
-  gridCols,
-  rowLayout,
-  showCancel,
+  gridLayout,
   isLoading,
-  onCancel,
   formId,
   initialData,
   errorMessages: initialErrorMessages,
   touchedFields: initialTouchedFields,
   submitted: initialSubmitted,
-  validations = true,
-  customValidation,
-}) => {
+  customSchema,
+  showErrorsByDefault = false,
+  onChange,
+  showFormActions = true,
+  submitAction,
+  cancelAction,
+}, ref) => {
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
   // Use custom hooks for state management
@@ -180,7 +210,27 @@ const Form: React.FC<FormProps> = ({
   );
 
   const { validateAllFields, validateSingleField, shouldShowError } =
-    useFormValidation(formValues, inputs, touchedInputs, isFormSubmitted, validations, customValidation);
+    useFormValidation(formValues, inputs, touchedInputs, isFormSubmitted, showErrorsByDefault, customSchema);
+
+  // Expose form methods via ref
+  useImperativeHandle(ref, () => ({
+    getFormValues: () => formValues,
+    getValidationErrors: () => validationErrors,
+    hasErrors: () => Object.values(validationErrors).some(error => !!error),
+    submit: () => {
+      setIsFormSubmitted(true);
+      const { errors, hasErrors } = validateAllFields();
+      setValidationErrors(errors);
+      if (!hasErrors) {
+        onSubmit(formValues);
+      }
+    },
+    reset: resetForm,
+    validate: () => {
+      const { errors, hasErrors } = validateAllFields();
+      return { success: !hasErrors, errors };
+    },
+  }), [formValues, validationErrors, validateAllFields, onSubmit, resetForm]);
 
   // Input change handler
   const handleInputValueChange = useCallback(
@@ -189,27 +239,23 @@ const Form: React.FC<FormProps> = ({
       inputValue: FormInputValue,
       inputConfig: FormInputConfig
     ) => {
-      const formattedInputValue =
-        (inputConfig.name === "phone" || inputConfig.name === "mobile") &&
-        typeof inputValue === "string"
-          ? formatPhone(inputValue)
-          : inputValue;
+      const formattedInputValue = formatInputValue(inputName, inputValue);
 
-      setFormValues((prev) => ({ ...prev, [inputName]: formattedInputValue }));
+      setFormValues((prev) => {
+        const updatedFormValues = { ...prev, [inputName]: formattedInputValue };
+        onChange?.(updatedFormValues);
+        return updatedFormValues;
+      });
 
-      if (touchedInputs.has(inputName)) {
-        const fieldError = validateSingleField(
-          inputName,
-          formattedInputValue,
-          inputConfig
-        );
-        setValidationErrors((prev) => ({
-          ...prev,
-          [inputName]: fieldError || "",
-        }));
-      }
+      // Mark field as touched and validate
+      setTouchedInputs((prev) => new Set([...prev, inputName]));
+      const fieldError = validateSingleField(inputName, formattedInputValue, inputConfig);
+      setValidationErrors((prev) => ({
+        ...prev,
+        [inputName]: fieldError || "",
+      }));
     },
-    [touchedInputs, setFormValues, setValidationErrors, validateSingleField]
+    [setFormValues, setTouchedInputs, setValidationErrors, validateSingleField, onChange]
   );
 
   // Input blur handler
@@ -220,11 +266,7 @@ const Form: React.FC<FormProps> = ({
       inputConfig: FormInputConfig
     ) => {
       setTouchedInputs((prev) => new Set(prev).add(inputName));
-      const fieldError = validateSingleField(
-        inputName,
-        inputValue,
-        inputConfig
-      );
+      const fieldError = validateSingleField(inputName, inputValue, inputConfig);
       setValidationErrors((prev) => ({
         ...prev,
         [inputName]: fieldError || "",
@@ -237,8 +279,13 @@ const Form: React.FC<FormProps> = ({
   const handleFormSubmit = useCallback(
     (event: React.FormEvent) => {
       event.preventDefault();
+      
+      if (submitAction) {
+        submitAction();
+        return;
+      }
+      
       setIsFormSubmitted(true);
-
       const { errors, hasErrors } = validateAllFields();
       setValidationErrors(errors);
 
@@ -246,67 +293,52 @@ const Form: React.FC<FormProps> = ({
         onSubmit(formValues);
       }
     },
-    [
-      validateAllFields,
-      setValidationErrors,
-      setIsFormSubmitted,
-      onSubmit,
-      formValues,
-    ]
+    [submitAction, validateAllFields, setValidationErrors, setIsFormSubmitted, onSubmit, formValues]
   );
 
   // Form cancel handler
   const handleFormCancel = useCallback(() => {
+    if (cancelAction) {
+      cancelAction();
+      return;
+    }
     resetForm();
-    onCancel?.();
-  }, [resetForm, onCancel]);
+  }, [cancelAction, resetForm]);
 
   // Layout rendering functions
-  const renderGridLayout = useCallback(() => {
-    const gridColumnsClass = `grid-cols-${gridCols || 3}`;
-    return (
-      <div className={`grid gap-6 ${gridColumnsClass}`}>
-        {inputs.map((inputConfig) => (
-          <FormInput
-            key={inputConfig.name}
-            input={inputConfig}
-            value={formValues[inputConfig.name]}
-            error={validationErrors[inputConfig.name]}
-            showError={shouldShowError(
-              inputConfig.name,
-              validationErrors[inputConfig.name]
-            )}
-            disabled={false}
-            onInputChange={handleInputValueChange}
-            onInputBlur={handleInputBlur}
-            fileInputRefs={fileInputRefs}
-            validations={validations}
-            customValidation={customValidation}
-          />
-        ))}
-      </div>
-    );
-  }, [
+  const renderDefaultGridLayout = useCallback(() => (
+    <div className="grid gap-6 grid-cols-3">
+      {inputs.map((inputConfig) => 
+        renderFormInput(
+          inputConfig,
+          formValues,
+          validationErrors,
+          shouldShowError,
+          handleInputValueChange,
+          handleInputBlur,
+          fileInputRefs
+        )
+      )}
+    </div>
+  ), [
     inputs,
-    gridCols,
     formValues,
     validationErrors,
     shouldShowError,
     handleInputValueChange,
     handleInputBlur,
     fileInputRefs,
-    validations,
-    customValidation,
   ]);
 
-  const renderRowLayout = useCallback(() => {
-    if (!rowLayout) return null;
+  const renderDynamicGridLayout = useCallback(() => {
+    if (!gridLayout) return null;
 
     const {
-      rows: rowConfigurations,
-      defaultGap = "gap-6",
-      defaultClassName = "",
-    } = rowLayout;
+      gridRows,
+      gridColumns,
+      gap = "gap-4",
+      className = "",
+    } = gridLayout;
 
     // Group inputs by row
     const inputsGroupedByRow = inputs.reduce((acc, inputConfig) => {
@@ -316,60 +348,45 @@ const Form: React.FC<FormProps> = ({
       return acc;
     }, {} as Record<number, FormInputConfig[]>);
 
-    return rowConfigurations.map((rowConfig) => {
-      const {
-        row: rowNumber,
-        columns,
-        gap = defaultGap,
-        className = defaultClassName,
-        autoFullWidth = true,
-      } = rowConfig;
+    return (
+      <div className={`grid grid-cols-${gridColumns} ${gap} ${className}`}>
+        {Array.from({ length: gridRows }, (_, rowIndex) => {
+          const rowNumber = rowIndex + 1;
+          const inputsInThisRow = inputsGroupedByRow[rowNumber] || [];
+          const sortedRowInputs = inputsInThisRow.sort(
+            (a, b) => (a.col || 1) - (b.col || 1)
+          );
 
-      const inputsInThisRow = inputsGroupedByRow[rowNumber] || [];
-      const sortedRowInputs = inputsInThisRow.sort(
-        (a, b) => (a.col || 1) - (b.col || 1)
-      );
-      const shouldSpanFullWidth = autoFullWidth && sortedRowInputs.length === 1;
-      const dynamicColumnCount = Math.max(columns, sortedRowInputs.length);
-      const gridColumnsClass = `grid-cols-${dynamicColumnCount}`;
-
-      return (
-        <div
-          key={rowNumber}
-          className={`grid ${gap} ${gridColumnsClass} ${className}`}
-        >
-          {sortedRowInputs.map((inputConfig) => {
-            const shouldBeFullWidth =
-              inputConfig.fullWidth || shouldSpanFullWidth;
-            const columnSpan = shouldBeFullWidth
-              ? dynamicColumnCount
-              : Math.ceil(dynamicColumnCount / sortedRowInputs.length);
-
-            return (
-              <div key={inputConfig.name} className={`col-span-${columnSpan}`}>
-                <FormInput
-                  input={inputConfig}
-                  value={formValues[inputConfig.name]}
-                  error={validationErrors[inputConfig.name]}
-                  showError={shouldShowError(
-                    inputConfig.name,
-                    validationErrors[inputConfig.name]
-                  )}
-                  disabled={false}
-                  onInputChange={handleInputValueChange}
-                  onInputBlur={handleInputBlur}
-                  fileInputRefs={fileInputRefs}
-                  validations={validations}
-                  customValidation={customValidation}
-                />
-              </div>
-            );
-          })}
-        </div>
-      );
-    });
+          return (
+            <React.Fragment key={rowNumber}>
+              {sortedRowInputs.map((inputConfig) => {
+                const columnSpan = inputConfig.colSpan || 1;
+                const startCol = inputConfig.col || 1;
+                
+                return (
+                  <div 
+                    key={inputConfig.name} 
+                    className={`col-start-${startCol} col-span-${columnSpan} w-full`}
+                  >
+                    {renderFormInput(
+                      inputConfig,
+                      formValues,
+                      validationErrors,
+                      shouldShowError,
+                      handleInputValueChange,
+                      handleInputBlur,
+                      fileInputRefs
+                    )}
+                  </div>
+                );
+              })}
+            </React.Fragment>
+          );
+        })}
+      </div>
+    );
   }, [
-    rowLayout,
+    gridLayout,
     inputs,
     formValues,
     validationErrors,
@@ -377,15 +394,18 @@ const Form: React.FC<FormProps> = ({
     handleInputValueChange,
     handleInputBlur,
     fileInputRefs,
-    validations,
-    customValidation,
   ]);
 
   // Error summary for accessibility
   const allErrorMessages = Object.values(validationErrors).filter(Boolean);
   const hasValidationErrors = allErrorMessages.length > 0;
 
-  const formContainerClasses = `bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 ${className}`;
+  // Form container classes
+  const baseClasses = 'rounded-lg shadow-sm p-6';
+  const defaultClasses = 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700';
+  const formContainerClasses = className 
+    ? `${baseClasses} ${className}` 
+    : `${baseClasses} ${defaultClasses}`;
 
   return (
     <div className={`w-full ${formContainerClasses}`}>
@@ -407,12 +427,12 @@ const Form: React.FC<FormProps> = ({
 
         {/* Form inputs */}
         <div className="space-y-6">
-          {rowLayout ? renderRowLayout() : renderGridLayout()}
+          {gridLayout ? renderDynamicGridLayout() : renderDefaultGridLayout()}
         </div>
 
         {/* Form actions */}
-        <div className="flex items-center justify-end space-x-4 dark:border-gray-700">
-          {showCancel && (
+        {showFormActions && (
+          <div className="flex items-center justify-end space-x-4 dark:border-gray-700">
             <Button
               onClick={handleFormCancel}
               disabled={isLoading}
@@ -420,20 +440,22 @@ const Form: React.FC<FormProps> = ({
               variant="secondary"
               type="button"
             />
-          )}
-          <Button
-            type="submit"
-            disabled={isLoading}
-            variant="primary"
-            label={isLoading ? "Loading..." : submitLabel || "Submit"}
-            aria-describedby={
-              hasValidationErrors ? `${formId}-errors` : undefined
-            }
-          />
-        </div>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              variant="primary"
+              label={isLoading ? "Loading..." : submitLabel || "Submit"}
+              aria-describedby={
+                hasValidationErrors ? `${formId}-errors` : undefined
+              }
+            />
+          </div>
+        )}
       </form>
     </div>
   );
-};
+});
+
+Form.displayName = 'Form';
 
 export default memo(Form);

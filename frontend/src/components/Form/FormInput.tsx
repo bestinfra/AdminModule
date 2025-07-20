@@ -28,8 +28,6 @@ const FormInput: React.FC<FormInputProps> = ({
   onInputChange,
   onInputBlur,
   fileInputRefs,
-  validations = true,
-  customValidation,
 }) => {
   const {
     name,
@@ -39,16 +37,13 @@ const FormInput: React.FC<FormInputProps> = ({
     required,
     options,
     className: inputClassName,
-    colSpan = 1,
     icon,
     description,
   } = input;
 
-  const gridSpanClass = `col-span-${colSpan}`;
   const errorId = `${name}-error`;
   const descriptionId = `${name}-description`;
 
-  // Helper function to extract value from event based on input type
   const extractValueFromEvent = (event: FormInputEvent): FormInputValue => {
     const target = event.target;
 
@@ -63,7 +58,6 @@ const FormInput: React.FC<FormInputProps> = ({
     return target.value;
   };
 
-  // Helper function to extract value from blur event
   const extractValueFromBlurEvent = (event: FormBlurEvent): FormInputValue => {
     const target = event.target;
 
@@ -99,7 +93,6 @@ const FormInput: React.FC<FormInputProps> = ({
     } ${inputClassName || ""}`,
     onChange: handleInputChange,
     onBlur: handleInputBlur,
-    // Add ARIA attributes for accessibility
     "aria-invalid": showError ? "true" : "false",
     "aria-describedby": showError
       ? errorId
@@ -110,7 +103,6 @@ const FormInput: React.FC<FormInputProps> = ({
   };
 
   const renderInput = () => {
-    // Convert null values to empty strings for string inputs
     const stringValue = value === null ? "" : (value as string);
     const booleanValue = value === null ? false : (value as boolean);
     const fileValue = value === null ? null : (value as FileList);
@@ -203,7 +195,6 @@ const FormInput: React.FC<FormInputProps> = ({
             name={name}
             value={value as string | string[]}
             onChange={(e) => {
-              // If multi-select, pass array, else string
               const newValue = isMultiSelect
                 ? (e.target.value as string[])
                 : (e.target.value as string);
@@ -272,7 +263,6 @@ const FormInput: React.FC<FormInputProps> = ({
         );
 
       default:
-        // Only allow valid types for text-like input
         const allowedTextInputTypes = [
           "text",
           "email",
@@ -298,7 +288,7 @@ const FormInput: React.FC<FormInputProps> = ({
   };
 
   return (
-    <div className={`w-full ${gridSpanClass}`}>
+    <div className={`w-full ${inputClassName || ""}`}>
       <div className="flex flex-col gap-2">
         {label &&
           ![
@@ -313,7 +303,6 @@ const FormInput: React.FC<FormInputProps> = ({
             </label>
           )}
         <div className="relative">
-          {/* Floating error message */}
           {showError && error && !["colorpicker"].includes(type) && (
             <span
               id={errorId}
@@ -324,14 +313,12 @@ const FormInput: React.FC<FormInputProps> = ({
               {error}
             </span>
           )}
-          {/* Input with red border if error */}
           {React.cloneElement(renderInput(), {
             className: `${renderInput().props.className || ""} ${
               showError ? "border-red-500" : ""
             }`.trim(),
           })}
         </div>
-        {/* Accessible description */}
         {description && !showError && (
           <p id={descriptionId} className="text-sm text-gray-500" role="note">
             {description}
