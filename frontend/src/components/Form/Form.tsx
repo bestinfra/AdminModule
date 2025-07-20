@@ -169,22 +169,23 @@ const renderFormInput = (
 );
 
 const Form = forwardRef<FormRef, FormProps>(({
+  // usefull
   inputs,
   onSubmit,
   submitLabel,
   cancelLabel,
   className,
+  formBackground,
   gridLayout,
-  isLoading,
   formId,
   initialData,
   errorMessages: initialErrorMessages,
   touchedFields: initialTouchedFields,
   submitted: initialSubmitted,
   customSchema,
-  showErrorsByDefault = false,
+  showErrorsByDefault = true,
   onChange,
-  showFormActions = true,
+  showFormActions,
   submitAction,
   cancelAction,
 }, ref) => {
@@ -222,7 +223,11 @@ const Form = forwardRef<FormRef, FormProps>(({
       const { errors, hasErrors } = validateAllFields();
       setValidationErrors(errors);
       if (!hasErrors) {
-        onSubmit(formValues);
+        if (submitAction) {
+          submitAction();
+        } else {
+          onSubmit(formValues);
+        }
       }
     },
     reset: resetForm,
@@ -230,7 +235,7 @@ const Form = forwardRef<FormRef, FormProps>(({
       const { errors, hasErrors } = validateAllFields();
       return { success: !hasErrors, errors };
     },
-  }), [formValues, validationErrors, validateAllFields, onSubmit, resetForm]);
+  }), [formValues, validationErrors, validateAllFields, onSubmit, resetForm, submitAction]);
 
   // Input change handler
   const handleInputValueChange = useCallback(
@@ -280,17 +285,16 @@ const Form = forwardRef<FormRef, FormProps>(({
     (event: React.FormEvent) => {
       event.preventDefault();
       
-      if (submitAction) {
-        submitAction();
-        return;
-      }
-      
       setIsFormSubmitted(true);
       const { errors, hasErrors } = validateAllFields();
       setValidationErrors(errors);
 
       if (!hasErrors) {
-        onSubmit(formValues);
+        if (submitAction) {
+          submitAction();
+        } else {
+          onSubmit(formValues);
+        }
       }
     },
     [submitAction, validateAllFields, setValidationErrors, setIsFormSubmitted, onSubmit, formValues]
@@ -366,7 +370,7 @@ const Form = forwardRef<FormRef, FormProps>(({
                 return (
                   <div 
                     key={inputConfig.name} 
-                    className={`col-start-${startCol} col-span-${columnSpan} w-full`}
+                    className={`col-start-${startCol} col-span-${columnSpan} w-full `}
                   >
                     {renderFormInput(
                       inputConfig,
@@ -403,16 +407,18 @@ const Form = forwardRef<FormRef, FormProps>(({
   // Form container classes
   const baseClasses = 'rounded-lg shadow-sm p-6';
   const defaultClasses = 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700';
-  const formContainerClasses = className 
-    ? `${baseClasses} ${className}` 
-    : `${baseClasses} ${defaultClasses}`;
+  
+  // Use formBackground prop if provided, otherwise use default background
+  const backgroundClass = formBackground || defaultClasses;
+  
+  const formContainerClasses = `${baseClasses} ${backgroundClass} ${className || ''}`;
 
   return (
-    <div className={`w-full ${formContainerClasses}`}>
+    <div className={`w-full   ${formContainerClasses}`}>
       <form
         id={formId}
         onSubmit={handleFormSubmit}
-        className="w-full"
+        className="w-full flex flex-col gap-4"
         noValidate
         aria-label="Form"
       >
@@ -435,16 +441,14 @@ const Form = forwardRef<FormRef, FormProps>(({
           <div className="flex items-center justify-end space-x-4 dark:border-gray-700">
             <Button
               onClick={handleFormCancel}
-              disabled={isLoading}
               label={cancelLabel || "Cancel"}
               variant="secondary"
               type="button"
             />
             <Button
               type="submit"
-              disabled={isLoading}
               variant="primary"
-              label={isLoading ? "Loading..." : submitLabel || "Submit"}
+              label={submitLabel || "Submit"}
               aria-describedby={
                 hasValidationErrors ? `${formId}-errors` : undefined
               }

@@ -58,9 +58,9 @@ export interface FormProps {
   submitLabel?: string;
   cancelLabel?: string;
   className?: string;
+  formBackground?: string;
   layout?: 'vertical' | 'horizontal' | 'grid';
   gridLayout?: GridLayoutProps;
-  isLoading?: boolean;
   formId?: string;
   variant?: 'default' | 'card' | 'minimal';
   initialData?: Record<string, FormInputValue>;
@@ -108,7 +108,6 @@ export type FormInputValue =
 
 export interface TypedFormHandlers {
   onChange: (event: FormInputEvent) => void;
-  onBlur: (event: FormBlurEvent) => void;
 }
 
 export interface CommonInputProps {
@@ -118,7 +117,6 @@ export interface CommonInputProps {
   disabled?: boolean;
   className: string;
   onChange: (event: FormInputEvent) => void;
-  onBlur: (event: FormBlurEvent) => void;
   'aria-invalid'?: 'true' | 'false';
   'aria-describedby'?: string;
   'aria-required'?: 'true' | 'false';

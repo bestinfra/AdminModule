@@ -2,7 +2,7 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import FormInput from "@components/Form/FormInput";
 import Button from "@components/global/Button";
 
-import ColorPicker from "@pages/Apps_module/components/ColorPicker";
+import ColorPicker from "@/components/Form/FormTypes/ColorPicker";
 import type { FormInputValue } from "@components/Form/types";
 import { validateBrandPersonalization } from "@pages/Apps_module/utils";
 import RemarksPanel from "@pages/Apps_module/components/RemarksPanel";

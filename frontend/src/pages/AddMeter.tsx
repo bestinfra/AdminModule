@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import Page from "@components/global/Page";
 import { useNavigate } from "react-router-dom";
 import { useFormData, createFormInputs, Form } from "@components/Form";
@@ -34,7 +34,7 @@ const baseFormInputs: FormInputConfig[] = [
     name: "meterId",
     type: "text",
     label: "Meter ID",
-    placeholder: "Enter Meter ID",
+    placeholder: "Enter Meter ID",  
     required: true,
   },
   {
@@ -59,8 +59,7 @@ const baseFormInputs: FormInputConfig[] = [
 const AddMeter: React.FC = () => {
   const navigate = useNavigate();
   const formRef = useRef<FormRef>(null);
-  const [formData, setFormData] = useState<Record<string, FormInputValue>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+
   
   const { updateFormData } = useFormData<MeterData>({
     meterName: '',
@@ -79,17 +78,10 @@ const AddMeter: React.FC = () => {
   const formInputs = createFormInputs(baseFormInputs, updateFormData);
 
   const handleFormChange = (data: Record<string, FormInputValue>) => {
-    setFormData(data);
     console.log('Meter form data changed:', data);
   };
 
-  const handleCancel = () => {
-    navigate(-1);
-  };
-
   const handleSave = (formData: Record<string, any>) => {
-    setIsSubmitting(true);
-    
     const meterData = {
       ...formData,
     };
@@ -97,7 +89,6 @@ const AddMeter: React.FC = () => {
     console.log('Saving meter data:', meterData);
 
     setTimeout(() => {
-      setIsSubmitting(false);
       navigate(-1);
     }, 1000);
   };
@@ -121,7 +112,6 @@ const AddMeter: React.FC = () => {
   const handleCancelAction = () => {
     if (formRef.current) {
       formRef.current.reset();
-      setFormData({});
     }
     navigate(-1);
   };
@@ -141,19 +131,17 @@ const AddMeter: React.FC = () => {
                 gridRows: 2,
                 gridColumns: 3,
                 gap: "gap-4",
-                className: "",
                 autoFullWidth: false,
               }}
-              onSubmit={handleSave}
               onChange={handleFormChange}
-              className=""
-              isLoading={isSubmitting}
+              submitAction={handleSubmitAction}
+              cancelAction={handleCancelAction}
+              onSubmit={handleSave}
+              formBackground="bg-white"
               formId="add-meter-form"
               showFormActions={true}
               submitLabel="Saving"
               cancelLabel="Cancel"
-              submitAction={handleSubmitAction}
-              cancelAction={handleCancelAction}
             />
           ),
         },

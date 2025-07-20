@@ -72,9 +72,12 @@ const Forms: React.FC<FormsProps> = ({
                     onSubmit={handleBasicFormSubmit}
                     submitLabel="Submit Basic Form"
                     cancelLabel="Reset"
-                    showCancel={true}
                     layout="grid"
-                    gridCols={3}
+                    gridLayout={{
+                        gridRows: 1,
+                        gridColumns: 3,
+                        gap: "gap-4"
+                    }}
                     variant="default"
                     {...basicFormProps}
                 />
@@ -107,9 +110,12 @@ const Forms: React.FC<FormsProps> = ({
                     onSubmit={handleAdvancedFormSubmit}
                     submitLabel="Submit Advanced Form"
                     cancelLabel="Reset"
-                    showCancel={true}
                     layout="grid"
-                    gridCols={3}
+                    gridLayout={{
+                        gridRows: 1,
+                        gridColumns: 3,
+                        gap: "gap-4"
+                    }}
                     variant="default"
                     {...advancedFormProps}
                 />
@@ -142,9 +148,12 @@ const Forms: React.FC<FormsProps> = ({
                     onSubmit={handleContactFormSubmit}
                     submitLabel="Send Message"
                     cancelLabel="Clear"
-                    showCancel={true}
                     layout="grid"
-                    gridCols={2}
+                    gridLayout={{
+                        gridRows: 1,
+                        gridColumns: 2,
+                        gap: "gap-4"
+                    }}
                     variant="default"
                     {...contactFormProps}
                 />

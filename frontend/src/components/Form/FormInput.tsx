@@ -2,7 +2,6 @@ import React, { memo } from "react";
 import type {
   FormInputProps,
   FormInputEvent,
-  FormBlurEvent,
   CommonInputProps,
   FormInputValue,
 } from "@components/Form/types";
@@ -15,7 +14,7 @@ import {
   SwitchInput,
   TextareaField,
 } from "@components/Form/index";
-import ColorPicker from "@pages/Apps_module/components/ColorPicker";
+import ColorPicker from "@/components/Form/FormTypes/ColorPicker";
 import Dropdown from "@components/global/Dropdown";
 import DragDropFileUpload from "@components/global/DragDropFileUpload";
 
@@ -26,7 +25,7 @@ const FormInput: React.FC<FormInputProps> = ({
   showError,
   disabled,
   onInputChange,
-  onInputBlur,
+ 
   fileInputRefs,
 }) => {
   const {
@@ -58,19 +57,7 @@ const FormInput: React.FC<FormInputProps> = ({
     return target.value;
   };
 
-  const extractValueFromBlurEvent = (event: FormBlurEvent): FormInputValue => {
-    const target = event.target;
-
-    if (target.type === "checkbox") {
-      return (target as HTMLInputElement).checked;
-    }
-
-    if (target.type === "file") {
-      return (target as HTMLInputElement).files;
-    }
-
-    return target.value;
-  };
+ 
 
   const handleInputChange = (event: FormInputEvent) => {
     const extractedValue = extractValueFromEvent(event);
@@ -78,10 +65,7 @@ const FormInput: React.FC<FormInputProps> = ({
     input.onChange?.(extractedValue);
   };
 
-  const handleInputBlur = (event: FormBlurEvent) => {
-    const extractedValue = extractValueFromBlurEvent(event);
-    onInputBlur(name, extractedValue, input);
-  };
+
 
   const commonProps: CommonInputProps = {
     id: name,
@@ -92,7 +76,6 @@ const FormInput: React.FC<FormInputProps> = ({
       showError ? "border-red-500" : "border-gray-300"
     } ${inputClassName || ""}`,
     onChange: handleInputChange,
-    onBlur: handleInputBlur,
     "aria-invalid": showError ? "true" : "false",
     "aria-describedby": showError
       ? errorId
@@ -288,7 +271,7 @@ const FormInput: React.FC<FormInputProps> = ({
   };
 
   return (
-    <div className={`w-full ${inputClassName || ""}`}>
+    <div className={`w-full  ${inputClassName || ""}`}>
       <div className="flex flex-col gap-2">
         {label &&
           ![

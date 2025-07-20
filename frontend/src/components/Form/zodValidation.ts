@@ -180,165 +180,317 @@ export function enhanceFormInputs(inputs: FormInputConfig[]): FormInputConfig[] 
   });
 }
 
+// Enhanced validation patterns for different input types
+const VALIDATION_PATTERNS = {
+  // Phone number patterns
+  PHONE: {
+    INTERNATIONAL: /^[\+]?[1-9][\d]{0,15}$/,
+    US: /^[\+]?1?[-.\s]?\(?([0-9]{3})\)?[-.\s]?([0-9]{3})[-.\s]?([0-9]{4})$/,
+    INDIAN: /^[\+]?91?[-.\s]?([0-9]{5})[-.\s]?([0-9]{5})$/,
+    GENERAL: /^[\+]?[1-9][\d\s\-\(\)]{7,15}$/
+  },
+  
+  // Email patterns
+  EMAIL: {
+    STANDARD: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    STRICT: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+  },
+  
+  // URL patterns
+  URL: {
+    STANDARD: /^https?:\/\/.+/,
+    STRICT: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
+  },
+  
+  // Password patterns
+  PASSWORD: {
+    WEAK: /^.{6,}$/,
+    MEDIUM: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+    STRONG: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+  },
+  
+  // Number patterns
+  NUMBER: {
+    INTEGER: /^\d+$/,
+    DECIMAL: /^\d*\.?\d+$/,
+    POSITIVE: /^[1-9]\d*$/,
+    NEGATIVE: /^-\d+$/,
+    CURRENCY: /^\d+(\.\d{1,2})?$/
+  },
+  
+  // Date patterns
+  DATE: {
+    ISO: /^\d{4}-\d{2}-\d{2}$/,
+    US: /^\d{2}\/\d{2}\/\d{4}$/,
+    EU: /^\d{2}-\d{2}-\d{4}$/
+  },
+  
+  // Text patterns
+  TEXT: {
+    ALPHA: /^[a-zA-Z\s]+$/,
+    ALPHANUMERIC: /^[a-zA-Z0-9\s]+$/,
+    NO_SPECIAL: /^[a-zA-Z0-9\s\-_]+$/,
+    USERNAME: /^[a-zA-Z0-9_-]{3,20}$/,
+    NAME: /^[a-zA-Z\s'-]+$/
+  }
+};
+
+// Helper function to create base schema based on input type
+function createBaseSchema(input: FormInputConfig): z.ZodTypeAny {
+  const { type, label = 'This field' } = input;
+  
+  switch (type) {
+    case 'email':
+      return z.string()
+        .email(`${label} must be a valid email address`)
+        .min(1, `${label} is required`)
+        .max(254, `${label} must be less than 254 characters`)
+        .transform(val => val.trim().toLowerCase())
+        .nullable()
+        .optional();
+
+    case 'password':
+      return z.string()
+        .min(1, `${label} is required`)
+        .max(128, `${label} must be less than 128 characters`)
+        .nullable()
+        .optional();
+
+    case 'number':
+      return z.coerce
+        .number({
+          invalid_type_error: `${label} must be a valid number`,
+          required_error: `${label} is required`
+        })
+        .refine(
+          (val) => !isNaN(val) && isFinite(val),
+          { message: `${label} must be a valid number` }
+        )
+        .nullable()
+        .optional();
+
+    case 'date':
+      return z.string()
+        .min(1, `${label} is required`)
+        .refine(
+          (val) => {
+            const date = new Date(val);
+            return !isNaN(date.getTime());
+          },
+          { message: `${label} must be a valid date` }
+        )
+        .nullable()
+        .optional();
+
+    case 'tel':
+      return z.string()
+        .min(1, `${label} is required`)
+        .refine(
+          (val) => VALIDATION_PATTERNS.PHONE.GENERAL.test(val.replace(/\s/g, '')),
+          { message: `${label} must be a valid phone number` }
+        )
+        .transform(val => val.replace(/\s/g, ''))
+        .nullable()
+        .optional();
+
+    case 'url':
+      return z.string()
+        .min(1, `${label} is required`)
+        .url(`${label} must be a valid URL`)
+        .refine(
+          (val) => val.startsWith('http://') || val.startsWith('https://'),
+          { message: `${label} must start with http:// or https://` }
+        )
+        .nullable()
+        .optional();
+
+    case 'checkbox':
+    case 'switch':
+      return z.boolean()
+        .nullable()
+        .optional();
+
+    case 'file':
+    case 'chosenfile':
+      return z.any()
+        .refine(
+          (val) => {
+            if (!val) return true; // Optional file
+            if (val instanceof File) return val.size > 0;
+            if (val instanceof FileList) return val.length > 0;
+            return true;
+          },
+          { message: `${label} must be a valid file` }
+        )
+        .nullable()
+        .optional();
+
+    case 'dragdrop':
+      return z.any()
+        .refine(
+          (val) => {
+            if (!val) return true; // Optional files
+            if (Array.isArray(val)) return val.every(file => file instanceof File);
+            if (val instanceof FileList) return val.length > 0;
+            return true;
+          },
+          { message: `${label} must contain valid files` }
+        )
+        .nullable()
+        .optional();
+
+    case 'select':
+    case 'dropdown':
+      return z.string()
+        .min(1, `${label} is required`)
+        .nullable()
+        .optional();
+
+    case 'radio':
+      return z.string()
+        .min(1, `${label} is required`)
+        .nullable()
+        .optional();
+
+    case 'colorpicker':
+      return z.string()
+        .min(1, `${label} is required`)
+        .regex(/^#[0-9A-F]{6}$/i, `${label} must be a valid hex color (e.g., #FF0000)`)
+        .nullable()
+        .optional();
+
+    case 'textarea':
+    case 'textareafield':
+      return z.string()
+        .min(1, `${label} is required`)
+        .max(10000, `${label} must be less than 10,000 characters`)
+        .nullable()
+        .optional();
+
+    case 'text':
+    default:
+      return z.string()
+        .min(1, `${label} is required`)
+        .max(255, `${label} must be less than 255 characters`)
+        .transform(val => val.trim())
+        .nullable()
+        .optional();
+  }
+}
+
+// Helper function to apply validation rules
+function applyValidationRules(schema: z.ZodTypeAny, input: FormInputConfig): z.ZodTypeAny {
+  const { validation, label = 'This field', required } = input;
+  
+  if (!validation && !required) {
+    return schema;
+  }
+
+  let enhancedSchema = schema;
+
+  // Required validation
+  if (required) {
+    enhancedSchema = enhancedSchema.refine(
+      (val) => {
+        if (val === null || val === undefined || val === '') return false;
+        if (typeof val === 'boolean') return true; // Boolean fields are always valid when present
+        if (val instanceof FileList) return val.length > 0;
+        if (val instanceof File) return val.size > 0;
+        if (Array.isArray(val)) return val.length > 0;
+        return true;
+      },
+      { message: `${label} is required` }
+    );
+  }
+
+  if (!validation) {
+    return enhancedSchema;
+  }
+
+  const { minLength, maxLength, min, max, pattern, custom } = validation;
+
+  // String-specific validations
+  if (typeof enhancedSchema === 'object' && 'refine' in enhancedSchema) {
+    if (minLength) {
+      enhancedSchema = enhancedSchema.refine(
+        (val) => {
+          if (typeof val !== 'string') return true;
+          return val.length >= minLength;
+        },
+        { message: `${label} must be at least ${minLength} characters` }
+      );
+    }
+
+    if (maxLength) {
+      enhancedSchema = enhancedSchema.refine(
+        (val) => {
+          if (typeof val !== 'string') return true;
+          return val.length <= maxLength;
+        },
+        { message: `${label} must be no more than ${maxLength} characters` }
+      );
+    }
+
+    if (pattern) {
+      enhancedSchema = enhancedSchema.refine(
+        (val) => {
+          if (typeof val !== 'string') return true;
+          return pattern.test(val);
+        },
+        { message: `${label} format is invalid` }
+      );
+    }
+
+    // Number-specific validations
+    if (min !== undefined) {
+      enhancedSchema = enhancedSchema.refine(
+        (val) => {
+          if (input.type === 'number') {
+            return typeof val === 'number' && !isNaN(val) && val >= min;
+          }
+          const num = typeof val === 'string' ? Number(val) : val;
+          return typeof num === 'number' && !isNaN(num) && num >= min;
+        },
+        { message: `${label} must be at least ${min}` }
+      );
+    }
+
+    if (max !== undefined) {
+      enhancedSchema = enhancedSchema.refine(
+        (val) => {
+          if (input.type === 'number') {
+            return typeof val === 'number' && !isNaN(val) && val <= max;
+          }
+          const num = typeof val === 'string' ? Number(val) : val;
+          return typeof num === 'number' && !isNaN(num) && num <= max;
+        },
+        { message: `${label} must be no more than ${max}` }
+      );
+    }
+
+    // Custom validation
+    if (custom) {
+      enhancedSchema = enhancedSchema.refine(
+        (val) => {
+          const customError = custom(val);
+          return !customError;
+        },
+        (val) => ({ message: custom(val) || 'Invalid value' })
+      );
+    }
+  }
+
+  return enhancedSchema;
+}
+
 // Helper function to convert FormInputConfig to Zod schema
 export function createZodSchema(inputs: FormInputConfig[]) {
   const schemaObject: Record<string, z.ZodTypeAny> = {};
 
   inputs.forEach((input) => {
-    let fieldSchema: z.ZodTypeAny;
-
-    // Base schema based on input type
-    switch (input.type) {
-      case 'email':
-        fieldSchema = z.string().email(`${input.label || 'This field'} must be a valid email`).nullable().optional();
-        break;
-      
-      case 'number':
-        fieldSchema = z.coerce
-          .number()
-          .refine(
-            (val) => !isNaN(val) && isFinite(val),
-            { message: `${input.label || 'This field'} must be a valid number` }
-          )
-          .nullable()
-          .optional();
-        break;
-      
-      case 'checkbox':
-      case 'switch':
-        fieldSchema = z.boolean().nullable().optional();
-        break;
-      
-      case 'file':
-      case 'chosenfile':
-        fieldSchema = z.any(); // File validation handled separately
-        break;
-      
-      case 'date':
-        fieldSchema = z.string().datetime().nullable().optional();
-        break;
-      
-      case 'url':
-        fieldSchema = z.string().url(`${input.label || 'This field'} must be a valid URL`).nullable().optional();
-        break;
-      
-      case 'tel':
-        fieldSchema = z.string().regex(/^[\+]?[1-9][\d]{0,15}$/, `${input.label || 'This field'} must be a valid phone number`).nullable().optional();
-        break;
-      
-      case 'radio':
-        fieldSchema = z.string().nullable().optional();
-        break;
-      case 'textarea':
-      case 'textareafield':
-      case 'text':
-      case 'password':
-      case 'select':
-      case 'dropdown':
-      case 'colorpicker':
-      default:
-        fieldSchema = z.string().nullable().optional();
-        break;
-    }
-
-    // Apply validation rules
-    if (input.validation) {
-      const { validation } = input;
-
-      // Required validation
-      if (input.required) {
-        fieldSchema = fieldSchema.refine(
-          (val) => {
-            if (val === null || val === undefined || val === '') return false;
-            if (typeof val === 'boolean') return val;
-            if (val instanceof FileList) return val.length > 0;
-            if (val instanceof File) return val.size > 0;
-            if (Array.isArray(val)) return val.length > 0;
-            return true;
-          },
-          { message: `${input.label || 'This field'} is required` }
-        );
-      }
-      // Note: We don't need to call .optional() again since it's already applied in the base schema
-
-      // String-specific validations
-      if (typeof fieldSchema === 'object' && 'refine' in fieldSchema) {
-        if (validation.minLength) {
-          fieldSchema = fieldSchema.refine(
-            (val) => typeof val === 'string' && val.length >= validation.minLength!,
-            { message: `${input.label || 'This field'} must be at least ${validation.minLength} characters` }
-          );
-        }
-
-        if (validation.maxLength) {
-          fieldSchema = fieldSchema.refine(
-            (val) => typeof val === 'string' && val.length <= validation.maxLength!,
-            { message: `${input.label || 'This field'} must be no more than ${validation.maxLength} characters` }
-          );
-        }
-
-        if (validation.pattern) {
-          fieldSchema = fieldSchema.refine(
-            (val) => typeof val === 'string' && validation.pattern!.test(val),
-            { message: `${input.label || 'This field'} format is invalid` }
-          );
-        }
-
-        // Number-specific validations
-        if (validation.min !== undefined) {
-          fieldSchema = fieldSchema.refine(
-            (val) => {
-              if (input.type === 'number') {
-                return typeof val === 'number' && !isNaN(val) && val >= validation.min!;
-              }
-              const num = typeof val === 'string' ? Number(val) : val;
-              return typeof num === 'number' && !isNaN(num) && num >= validation.min!;
-            },
-            { message: `${input.label || 'This field'} must be at least ${validation.min}` }
-          );
-        }
-
-        if (validation.max !== undefined) {
-          fieldSchema = fieldSchema.refine(
-            (val) => {
-              if (input.type === 'number') {
-                return typeof val === 'number' && !isNaN(val) && val <= validation.max!;
-              }
-              const num = typeof val === 'string' ? Number(val) : val;
-              return typeof num === 'number' && !isNaN(num) && num <= validation.max!;
-            },
-            { message: `${input.label || 'This field'} must be no more than ${validation.max}` }
-          );
-        }
-
-        // Custom validation
-        if (validation.custom) {
-          fieldSchema = fieldSchema.refine(
-            (val) => {
-              const customError = validation.custom!(val);
-              return !customError;
-            },
-            (val) => ({ message: validation.custom!(val) || 'Invalid value' })
-          );
-        }
-      }
-    } else if (input.required) {
-      // If no validation object but field is required
-      fieldSchema = fieldSchema.refine(
-        (val) => {
-          if (val === null || val === undefined || val === '') return false;
-          if (typeof val === 'boolean') return val;
-          if (val instanceof FileList) return val.length > 0;
-          if (val instanceof File) return val.size > 0;
-          if (Array.isArray(val)) return val.length > 0;
-          return true;
-        },
-        { message: `${input.label || 'This field'} is required` }
-      );
-    }
-    // Note: We don't need to call .optional() again since it's already applied in the base schema
-
-    schemaObject[input.name] = fieldSchema;
+    const baseSchema = createBaseSchema(input);
+    const enhancedSchema = applyValidationRules(baseSchema, input);
+    schemaObject[input.name] = enhancedSchema;
   });
 
   return z.object(schemaObject);
@@ -379,12 +531,11 @@ export function validateField(value: FormInputValue, input: FormInputConfig): st
 }
 
 // Type for form data with Zod validation
-export type ZodFormData<T> = z.infer<ReturnType<typeof createZodSchema>>;
+export type ZodFormData = z.infer<ReturnType<typeof createZodSchema>>;
 
 // Hook for Zod form validation
-export function useZodForm<T extends Record<string, any>>(
-  inputs: FormInputConfig[],
-  initialData?: T
+export function useZodForm(
+  inputs: FormInputConfig[]
 ) {
   const schema = createZodSchema(inputs);
   
@@ -403,4 +554,7 @@ export function useZodForm<T extends Record<string, any>>(
     validate,
     validateField: validateFieldByName,
   };
-} 
+}
+
+// Export validation patterns for external use
+export { VALIDATION_PATTERNS }; 
