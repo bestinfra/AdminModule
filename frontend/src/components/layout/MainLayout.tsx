@@ -1,8 +1,32 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@components/global/Sidebar';
-import Header from '@components/global/Header';
+import HeaderTest from '@components/global/HeaderTest';
 import { useApp } from '@context/AppContext';
+// import Cookies from 'js-cookie';
+
+// Define action configurations for header
+const headerActions = [
+    {
+        icon: '/icons/user.svg',
+        onClick: () => console.log('User Profile clicked'),
+        ariaLabel: 'User Profile',
+        className: 'hover:bg-blue-100 dark:hover:bg-blue-900'
+    },
+    {
+        icon: '/icons/bell.svg',
+        onClick: () => console.log('Notifications clicked'),
+        ariaLabel: 'Notifications',
+        className: 'hover:bg-yellow-100 dark:hover:bg-yellow-900',
+        count: 5 // Example notification count
+    },
+    {
+        icon: '/icons/settings.svg',
+        onClick: () => console.log('Settings clicked'),
+        ariaLabel: 'Settings',
+        className: 'hover:bg-green-100 dark:hover:bg-green-900'
+    }
+];
 
 interface MainLayoutProps {
     children?: React.ReactNode;
@@ -78,10 +102,14 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
         <div className="flex h-screen bg-white ">
             <Sidebar onNavigate={handleNavigate} />
             <div className="flex flex-col flex-1">
-                <Header
+                <HeaderTest
                     title={getPageTitle()}
                     onSidebarToggle={toggleSidebar}
-                />
+                    actions={headerActions}
+                    searchEnabled={true}
+                    searchPlaceholder="Search anything..."
+                    onSearch={(query) => console.log('Search:', query)}
+                    />
                 <main className="flex-1 px-6  py-4  bg-white overflow-auto dark:bg-primary-dark hide-scrollbar-y">
                     <Outlet />
                 </main>

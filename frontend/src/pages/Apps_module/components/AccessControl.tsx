@@ -221,7 +221,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
 
         {/* Admin Access Section */}
         <div className="p-4 border border-primary-border rounded-xl">
-          <div className="mb-4 flex items-center gap-4">
+          <div className="mb-4 flex items-start gap-4">
             <h3 className="text-sm font-semibold text-primary">Admin Access</h3>
             <div className='text-xs  px-4 py-1 rounded-full bg-primary-lightest'>Default</div>
           </div>
@@ -327,7 +327,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
             </div>
              <div>
               <div className="w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-not-allowed dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light bg-gray-50">
-                <span className="text-gray-600">Admin</span>
+                <span className="text-base">Admin</span>
                 <span className="text-xs text-gray-400">Default</span>
               </div>
             </div>
@@ -376,8 +376,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
         {/* New Accounts Section */}
         {formData.newAccounts?.map((account, index) => (
           <div key={account.id} className="p-4 border border-primary-border rounded-xl">
-            <div className="mb-4 flex items-center gap-4 justify-between">
-              <div className='h-full flex items-center gap-4'>
+            <div className="mb-4 flex items-start gap-4 justify-between">
+              <div className='h-full flex items-start gap-4'>
                 <h3 className="text-sm font-semibold text-primary">New Account {index + 1}</h3> 
                 <div className='text-xs bg-secondary-light px-4 py-1 rounded-full'>Optional</div>
               </div>
@@ -551,8 +551,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
 
         {/* Default New Account Section */}
         <div className="p-4 border border-primary-border rounded-xl">
-          <div className="mb-4 flex items-center gap-4 justify-between">
-            <div className='h-full flex items-center gap-4'>
+          <div className="mb-4 flex items-start gap-4 justify-between">
+            <div className='h-full flex items-start gap-4'>
               <h3 className="text-sm font-semibold text-primary">New Account</h3> 
               <div className='text-xs bg-secondary-light px-4 py-1 rounded-full'>Optional</div>
             </div>

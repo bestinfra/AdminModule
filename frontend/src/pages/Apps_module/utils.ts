@@ -168,7 +168,7 @@ export const validateApplicationSetup = (formData: any): { isValid: boolean; err
 
   // Generate remarks based on form data
   if (formData.appName && formData.appName.length >= 3) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Application name "${formData.appName}" is valid`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Application name "${formData.appName}" is valid</div>`);
   }
 
   if (
@@ -176,72 +176,72 @@ export const validateApplicationSetup = (formData: any): { isValid: boolean; err
     formData.subdomain &&
     /^https:\/\/www\.[a-z0-9-]+\.bestinfra\.app$/.test(formData.subdomain)
   ) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Subdomain configured: ${formData.subdomain}`);
+    remarks.push(`<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Subdomain configured: ${formData.subdomain}`);
   }
 
   if (formData.addressLine && formData.country && formData.state && formData.city) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Location configured: ${formData.city}, ${formData.state}, ${formData.country}`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Location configured: ${formData.city}, ${formData.state}, ${formData.country}</div>`);
   } else if (formData.addressLine || formData.city || formData.state || formData.country) {
     const locationParts = [formData.city, formData.state, formData.country].filter(Boolean);
     if (locationParts.length > 0) {
-      remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Partial location: ${locationParts.join(', ')}`);
+      remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Partial location: ${locationParts.join(', ')}</div>`);
     }
   }
 
   if (formData.applicationCategory && formData.applicationCategory.length > 0) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Application categories selected: ${formData.applicationCategory.length} category(ies)`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Application categories selected: ${formData.applicationCategory.length} category(ies)</div>`);
   }
 
   if (formData.projectType) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Project type: ${formData.projectType}`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Project type: ${formData.projectType}</div>`);
   }
 
   if (formData.ownershipType) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Ownership type: ${formData.ownershipType}`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Ownership type: ${formData.ownershipType}</div>`);
   }
 
   if (formData.tariffPlans && formData.tariffPlans.length > 0) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Tariff plans configured: ${formData.tariffPlans.length} plan(s)`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Tariff plans configured: ${formData.tariffPlans.length} plan(s)</div>`);
   }
 
   if (formData.billingMode) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Billing mode: ${formData.billingMode}`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Billing mode: ${formData.billingMode}</div>`);
   }
 
   if (formData.meteringType && formData.meteringType.length > 0) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Metering types: ${formData.meteringType.length} type(s)`);
+    remarks.push(`<div class="flex items-center gap-2"><img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Metering types: ${formData.meteringType.length} type(s)</div>`);
   }
 
   // Additional helpful remarks
   if (formData.applicationCategory?.includes('smart-metering') && formData.meteringType?.includes('smart-meter')) {
-    remarks.push('💡 Smart metering configuration detected - consider enabling AMR/AMI features');
+    remarks.push('<div class="flex items-center gap-2"><img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Smart metering configuration detected - consider enabling AMR/AMI features</div>');
   }
 
   if (formData.billingMode === 'prepaid' && formData.tariffPlans?.includes('prepaid')) {
-    remarks.push('💡 Prepaid billing mode selected - ensure payment gateway integration is configured');
+    remarks.push('<div class="flex items-center gap-2"><img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Prepaid billing mode selected - ensure payment gateway integration is configured</div>');
   }
 
 
 
   if (formData.projectType === 'pilot') {
-    remarks.push('💡 Pilot project detected - consider limited user access and testing features');
+    remarks.push('  <div class="flex items-center gap-2"><img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Pilot project detected - consider limited user access and testing features</div>');
   }
 
   if (formData.applicationCategory?.includes('solar-epc') || formData.meteringType?.includes('solar-bidirectional')) {
-    remarks.push('💡 Solar/EPC configuration detected - ensure net metering features are enabled');
+    remarks.push('<div class="flex items-center gap-2"><img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Solar/EPC configuration detected - ensure net metering features are enabled</div>');
   }
 
   // Validation warnings
   if (formData.applicationCategory?.length > 3) {
-    remarks.push('⚠️ Multiple application categories selected - consider focusing on core functionality');
+    remarks.push('<img src="icons/triangle-warning.svg" alt="warning" class="w-4 h-4 inline mr-1" /> Multiple application categories selected - consider focusing on core functionality');
   }
 
   if (formData.tariffPlans?.length > 5) {
-    remarks.push('⚠️ Many tariff plans selected - ensure billing system can handle complexity');
+    remarks.push('<img src="icons/triangle-warning.svg" alt="warning" class="w-4 h-4 inline mr-1" /> Many tariff plans selected - ensure billing system can handle complexity');
   }
 
   if (formData.meteringType?.length > 4) {
-    remarks.push('⚠️ Multiple metering types selected - verify hardware compatibility');
+    remarks.push('<img src="icons/triangle-warning.svg" alt="warning" class="w-4 h-4 inline mr-1" /> Multiple metering types selected - verify hardware compatibility');
   }
 
   return {
@@ -433,60 +433,60 @@ export const validateAccessControl = (formData: any): { isValid: boolean; errors
 
   // Generate remarks based on form data
   if (formData.adminFirstName && formData.adminLastName) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin name configured: ${formData.adminFirstName} ${formData.adminLastName}`);
+    remarks.push(`<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Admin name configured: ${formData.adminFirstName} ${formData.adminLastName}`);
   }
 
   if (formData.adminUsername && formData.adminUsername.length >= 3) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin username: ${formData.adminUsername}`);
+    remarks.push(`<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Admin username: ${formData.adminUsername}`);
   }
 
   if (formData.adminEmail && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.adminEmail)) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin email configured: ${formData.adminEmail}`);
+    remarks.push(`<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Admin email configured: ${formData.adminEmail}`);
   }
 
   if (formData.adminPhone && /^[\+]?[1-9][\d]{0,15}$/.test(formData.adminPhone.replace(/\s/g, ''))) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Admin phone configured: ${formData.adminPhone}`);
+    remarks.push(`<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" /> Admin phone configured: ${formData.adminPhone}`);
   }
 
   if (formData.adminPassword && formData.adminPassword.length >= 8) {
-    remarks.push('<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Password meets security requirements');
+    remarks.push('<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" />" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Password meets security requirements');
   }
 
   if (formData.adminPassword === formData.adminConfirmPassword && formData.adminPassword) {
-    remarks.push('<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Password confirmation matches');
+    remarks.push('<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" />" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Password confirmation matches');
   }
 
   // Count new accounts
   const newAccountsCount = formData.newAccounts?.length || 0;
   if (newAccountsCount > 0) {
-    remarks.push(`<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> ${newAccountsCount} additional account(s) configured`);
+    remarks.push(`<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" />" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> ${newAccountsCount} additional account(s) configured`);
   }
 
   if (hasDefaultNewAccountFields) {
-    remarks.push('<svg class="w-4 h-4 inline mr-1 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Default new account template configured');
+    remarks.push('<img src="icons/check.svg" alt="success" class="w-4 h-4 inline mr-1" />" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg> Default new account template configured');
   }
 
   if (formData.sendWelcomeEmail) {
-    remarks.push('💡 Welcome email will be sent to users upon account creation');
+    remarks.push('<img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Welcome email will be sent to users upon account creation');
   } else {
-    remarks.push('⚠️ Welcome email is disabled - users will need to set passwords manually');
+    remarks.push('<img src="icons/triangle-warning.svg" alt="warning" class="w-4 h-4 inline mr-1" /> Welcome email is disabled - users will need to set passwords manually');
   }
 
   // Additional helpful remarks
   if (formData.adminEmail?.includes('admin') || formData.adminEmail?.includes('administrator')) {
-    remarks.push('💡 Consider using a personal email for admin account for better security');
+    remarks.push('<img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Consider using a personal email for admin account for better security');
   }
 
   if (formData.adminPassword && formData.adminPassword.length > 12) {
-    remarks.push('💡 Strong password detected - good security practice');
+    remarks.push('<img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Strong password detected - good security practice');
   }
 
   if (newAccountsCount > 5) {
-    remarks.push('⚠️ Many additional accounts configured - consider bulk import for large teams');
+    remarks.push('<img src="icons/triangle-warning.svg" alt="warning" class="w-4 h-4 inline mr-1" /> Many additional accounts configured - consider bulk import for large teams');
   }
 
   if (formData.newAccounts?.some((acc: any) => acc.role === 'admin')) {
-    remarks.push('💡 Additional admin accounts detected - ensure proper access controls');
+    remarks.push('<img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Additional admin accounts detected - ensure proper access controls');
   }
 
   return {

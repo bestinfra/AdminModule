@@ -335,7 +335,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
 
             {/* Primary Color Section */}
             <div className="p-4 border border-primary-border rounded-xl">
-              <div className="mb-4 flex items-center justify-between">
+              <div className="mb-4 flex items-start justify-between">
                 <h3 className="text-sm font-semibold text-primary">Brand Colors</h3>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
