@@ -21,13 +21,11 @@ interface MeterData {
 const baseFormInputs: FormInputConfig[] = [
   {
     name: "meterName",
-    type: "text",
+    type: "email",
     label: "Meter Name",
     placeholder: "Enter Meter Name",
     required: true,
-    validation: {
-      maxLength: 5,
-    },
+   
   },
   
   {
@@ -126,7 +124,7 @@ const AddMeter: React.FC = () => {
           component: (
             <Form
               ref={formRef}
-              inputs={formInputs}
+              inputs={formInputs} 
               gridLayout={{
                 gridRows: 2,
                 gridColumns: 3,

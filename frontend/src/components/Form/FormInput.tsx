@@ -25,7 +25,6 @@ const FormInput: React.FC<FormInputProps> = ({
   showError,
   disabled,
   onInputChange,
- 
   fileInputRefs,
 }) => {
   const {
@@ -57,15 +56,11 @@ const FormInput: React.FC<FormInputProps> = ({
     return target.value;
   };
 
- 
-
   const handleInputChange = (event: FormInputEvent) => {
     const extractedValue = extractValueFromEvent(event);
     onInputChange(name, extractedValue, input);
     input.onChange?.(extractedValue);
   };
-
-
 
   const commonProps: CommonInputProps = {
     id: name,
@@ -100,7 +95,6 @@ const FormInput: React.FC<FormInputProps> = ({
             placeholder={placeholder || label}
           />
         );
-
       case "select":
         return (
           <SelectInput
@@ -110,7 +104,6 @@ const FormInput: React.FC<FormInputProps> = ({
             options={options}
           />
         );
-
       case "file":
         return (
           <FileInput
