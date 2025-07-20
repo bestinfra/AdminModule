@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import axios from 'axios';
-import FormInput from '@components/forms/FormInput'; 
+import FormInput from '@components/Form/FormInput'; 
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
-import type { FormInputValue } from '@components/forms/types';
+import type { FormInputValue } from '@components/Form/types';
 import { validateApplicationSetup } from '@pages/Apps_module/utils';
 import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 
@@ -310,7 +310,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter your Application Name',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.appName}
                                         error={allErrors.appName}
@@ -377,7 +376,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter Address Line',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.addressLine}
                                         error={allErrors.addressLine}
@@ -396,7 +394,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter City',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.city}
                                         error={allErrors.city}
@@ -418,7 +415,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             label: '',
                                             placeholder: 'Enter State/Province',
                                             required: true,
-                                            className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                                         }}
                                         value={formData.state}
                                         error={allErrors.state}
