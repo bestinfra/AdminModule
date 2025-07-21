@@ -306,17 +306,13 @@ const Dashboard: React.FC = () => {
                                 {
                                     layout: 'column',
                                     gap: 'gap-4',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-4',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
                                         {
-                                            name: 'Heading',
+                                            name: 'Holder',
                                             props: {
-                                                text: 'Meter Communication Status',
-                                                level: 2,
-                                                size: 'base',
-                                                variant: 'primary',
-                                                weight: 'regular',
-                                                align: 'left'
+                                                title: 'Meter Communication Status',
+                                                className: 'border-none'
                                             }
                                         },
                                         {
@@ -340,19 +336,15 @@ const Dashboard: React.FC = () => {
                                 {
                                     layout: 'column',
                                     gap: 'gap-4',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-4',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
-                                        // {
-                                        //     name: 'Heading',
-                                        //     props: {
-                                        //         text: 'Latest Meter Events',
-                                        //         level: 2,
-                                        //         size: 'base',
-                                        //         variant: 'primary',
-                                        //         weight: 'regular',
-                                        //         align: 'left'
-                                        //     }
-                                        // },
+                                        {
+                                            name: 'Holder',
+                                            props: {
+                                                title: 'Latest Meter Events',
+                                                className: 'border-none'
+                                            }
+                                        },
                                         {
                                             name: 'Table',
                                             props: {
