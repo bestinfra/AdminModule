@@ -1,7 +1,7 @@
 
 
 import React, { useState, useRef, useEffect, type KeyboardEvent } from 'react';
-import Input from '@components/forms/Input';
+import Input from '@components/Form/Input';
 
 interface Option {
   value: string;
@@ -194,6 +194,13 @@ const Dropdown: React.FC<DropdownProps> = ({
     return option?.label || placeholder;
   };
 
+  const isOptionSelected = () => {
+    if (isMultiSelect) {
+      return selectedValues.length > 0;
+    }
+    return value && value !== '';
+  };
+
   // RENDER
   return (
     <div
@@ -201,57 +208,65 @@ const Dropdown: React.FC<DropdownProps> = ({
       onKeyDown={handleKeyDown}
       className={`relative w-full ${className}`}
     >
-      <div
-        onClick={() => !disabled && setIsOpen(!isOpen)}
-        tabIndex={0}
-        className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium
-          ${disabled ? ' text-gray-400' : ''}
-          ${error ? 'border-red-500' : 'border-gray-300'}`}
-        role="combobox"
-        aria-expanded={isOpen}
-        aria-haspopup="listbox"
-      >
-        {leftIcon && (
-          <img src={leftIcon} alt="icon" className="w-5 h-5 mr-2" />
+      <div className="relative">
+        {error && (
+          <span
+            className="absolute top-0 left-6 -translate-y-1/2 px-1 z-20 bg-white dark:bg-primary-dark text-red-500 text-sm font-medium"
+            role="alert"
+            aria-live="polite"
+          >
+            {error}
+          </span>
         )}
-        <span className="truncate flex-1 text-left text-neutral">
-          {getDisplayValue()}
-        </span>
-        <svg
-          className={`ml-2 w-4 h-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-        </svg>
-      </div>
-
-      {isOpen && (
+        
         <div
-          className="absolute z-10 w-full mt-2 dark:bg-primary-dark bg-white dark:text-white border border-primary-border dark:border-dark-border rounded-2xl overflow-auto scrollbar-hide"
-          style={{ maxHeight }}
-          role="listbox"
+          onClick={() => !disabled && setIsOpen(!isOpen)}
+          tabIndex={0}
+          className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium
+            ${disabled ? ' text-gray-400' : 'text-current'}
+            ${error ? 'border-red-500' : 'border-gray-300'}`}
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
         >
-          {searchable && (
-            <div className="p-2  dark:border-dark-border">
-              <Input
-                onSearch={(query) => setSearchTerm(query)}
-                placeholder="Search..."
-                showShortcut={false}
-                className="mb-2"
-              />
-            </div>
+          {leftIcon && (
+            <img src={leftIcon} alt="icon" className="w-5 h-5 mr-2" />
           )}
-          <div className="max-h-60 overflow-y-auto scrollbar-hide mt-2 mb-1">
-            {renderOptions()}
-          </div>
+          <span className={`truncate flex-1 text-left ${isOptionSelected() ? 'text-base dark:text-blue-400' : 'text-gray-500 dark:text-gray-400'}`}>
+            {getDisplayValue()}
+          </span>
+          <svg
+            className={`ml-2 w-4 h-4 text-gray-500 transition-transform duration-200 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
-      )}
 
-      {error && (
-        <div className="text-sm text-red-600 mt-1">{error}</div>
-      )}
+        {isOpen && (
+          <div
+            className="absolute z-10 w-full mt-2 dark:bg-primary-dark bg-white dark:text-white border border-primary-border dark:border-dark-border rounded-2xl overflow-auto scrollbar-hide"
+            style={{ maxHeight }}
+            role="listbox"
+          >
+            {searchable && (
+              <div className="p-2  dark:border-dark-border">
+                <Input
+                  onSearch={(query) => setSearchTerm(query)}
+                  placeholder="Search..."
+                  showShortcut={false}
+                  className="mb-2"
+                />
+              </div>
+            )}
+            <div className="max-h-60 overflow-y-auto scrollbar-hide mt-2 mb-1">
+              {renderOptions()}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -13,6 +13,7 @@ interface HolderProps {
     handleDownload: () => void;
     loading: boolean;
     children?: React.ReactNode;
+    contentPadding?: string; // Add contentPadding prop
 }
 
 const Holder: React.FC<HolderProps> = ({
@@ -26,6 +27,7 @@ const Holder: React.FC<HolderProps> = ({
     handleDownload,
     loading,
     children,
+    contentPadding = 'p-4', // Add contentPadding prop with default
 }) => {
     return (
         <div
@@ -59,7 +61,7 @@ const Holder: React.FC<HolderProps> = ({
                 </div>
             </div>
 
-            <div className="p-4 h-full">
+            <div className={`${contentPadding} h-full`}>
                 {loading ? <LoadingSpinner /> : children}
             </div>
         </div>

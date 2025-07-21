@@ -133,11 +133,16 @@ body {
 
     /* === Utility / Misc === */
     /* --color-test: rgba(63, 104, 178, 1); */
-
+    --color-custom-primary:rgba(232, 234, 238,1);
+    --color-custom-warning: rgba(255, 242, 241,1);
+    --color-custom-secondary: rgba(236, 249, 240,1);
     /* Color customs */
     /* --color-custom-primary: rgba(32, 45, 89, 1);
-    --color-custom-secondary: rgba(85, 181, 108, 1);
-    --color-custom-warning: rgba(237, 140, 34, 1);
+
+
+
+
+
     --color-custom-danger: rgba(220, 39, 44, 1);
     --color-custom-accent: rgba(0, 209, 178, 1);
     --color-custom-neutral: rgba(126, 126, 126, 1);
@@ -378,7 +383,6 @@ img {
     font-size: 0.875rem;
     font-weight: 500;
     color: #374151;
-    margin-bottom: 0.5rem;
 }
 
 .dark .label {
