@@ -305,14 +305,14 @@ const Dashboard: React.FC = () => {
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-4',
+                                    gap: 'gap-0',
                                     className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
                                         {
                                             name: 'Holder',
                                             props: {
                                                 title: 'Meter Communication Status',
-                                                className: 'border-none'
+                                                className: 'border-none rounded-t-3xl'
                                             }
                                         },
                                         {
@@ -335,14 +335,14 @@ const Dashboard: React.FC = () => {
                                 },
                                 {
                                     layout: 'column',
-                                    gap: 'gap-4',
+                                    gap: 'gap-0',
                                     className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
                                         {
                                             name: 'Holder',
                                             props: {
                                                 title: 'Latest Meter Events',
-                                                className: 'border-none'
+                                                className: 'border-none rounded-t-3xl'
                                             }
                                         },
                                         {
