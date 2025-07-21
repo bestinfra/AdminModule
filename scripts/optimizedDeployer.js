@@ -9,6 +9,7 @@ class OptimizedDeployer {
     this.apacheMainConfigPath = 'C:/xampp/apache/conf/httpd.conf';
     this.portRegistryPath = path.join(__dirname, '..', 'data', 'port-registry.json');
     this.startPort = 4001;
+    this.lastAssignedPort = null; // Added to track the last assigned port
   }
 
   // Initialize port registry
@@ -86,7 +87,16 @@ class OptimizedDeployer {
 
     console.log(`Copying backend from ${backendPath} to ${targetPath}`);
     this.copyDirectory(backendPath, targetPath);
-    
+
+    // After copying, update the port in server.js (always use the copied file)
+    const serverPath = path.join(targetPath, 'server.js');
+    if (fs.existsSync(serverPath)) {
+      let serverContent = fs.readFileSync(serverPath, 'utf8');
+      // Replace the port assignment line
+      serverContent = serverContent.replace(/const PORT = process\.env\.PORT \|\| \d+/, `const PORT = process.env.PORT || ${this.lastAssignedPort}`);
+      fs.writeFileSync(serverPath, serverContent);
+      console.log(`✅ Updated server.js with dynamic port (copied from application-backend)`);
+    }
     return targetPath;
   }
 
@@ -292,8 +302,8 @@ process.on('SIGTERM', () => {
 NODE_ENV=development
 PORT=${port}
 
-# Database configuration (optional)
-# DATABASE_URL=postgresql://postgres:password@localhost:5432/${appName}_db?schema=public
+# Database configuration
+DATABASE_URL=postgresql://postgres:root1234@localhost:5432/subapp_db?schema=public
 
 # JWT configuration (optional)
 # JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
@@ -372,10 +382,54 @@ APP_VERSION=1.0.0
       // Change to backend directory
       process.chdir(backendPath);
       
+      // Ensure @prisma/client and prisma are in package.json
+      let pkgPath = path.join(backendPath, 'package.json');
+      if (fs.existsSync(pkgPath)) {
+        let pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+        pkg.dependencies = pkg.dependencies || {};
+        pkg.devDependencies = pkg.devDependencies || {};
+        if (!pkg.dependencies['@prisma/client']) {
+          pkg.dependencies['@prisma/client'] = '^5.12.0';
+        }
+        if (!pkg.devDependencies['prisma']) {
+          pkg.devDependencies['prisma'] = '^5.12.0';
+        }
+        // Ensure all dependencies from application-backend/package.json are present
+        const appBackendPkgPath = path.join(__dirname, '..', 'application-backend', 'package.json');
+        if (fs.existsSync(appBackendPkgPath)) {
+          const appBackendPkg = JSON.parse(fs.readFileSync(appBackendPkgPath, 'utf8'));
+          pkg.dependencies = pkg.dependencies || {};
+          pkg.devDependencies = pkg.devDependencies || {};
+          // Merge dependencies
+          if (appBackendPkg.dependencies) {
+            for (const [dep, ver] of Object.entries(appBackendPkg.dependencies)) {
+              if (!pkg.dependencies[dep]) {
+                pkg.dependencies[dep] = ver;
+              }
+            }
+          }
+          // Merge devDependencies
+          if (appBackendPkg.devDependencies) {
+            for (const [dep, ver] of Object.entries(appBackendPkg.devDependencies)) {
+              if (!pkg.devDependencies[dep]) {
+                pkg.devDependencies[dep] = ver;
+              }
+            }
+          }
+        }
+        fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
+      }
       // Install dependencies
       console.log('📦 Installing dependencies...');
       execSync('npm install', { stdio: 'inherit' });
-      
+      // Run prisma generate if schema.prisma exists
+      if (fs.existsSync(path.join(backendPath, 'prisma', 'schema.prisma'))) {
+        try {
+          execSync('npx prisma generate', { stdio: 'inherit' });
+        } catch (e) {
+          console.warn('⚠️  Prisma generate failed:', e.message);
+        }
+      }
       // Install PM2 globally if not installed
       try {
         execSync('pm2 --version', { stdio: 'ignore' });
@@ -383,13 +437,10 @@ APP_VERSION=1.0.0
         console.log('📦 Installing PM2 globally...');
         execSync('npm install -g pm2', { stdio: 'inherit' });
       }
-      
       // Start with PM2
       console.log('🔄 Starting with PM2...');
       execSync('pm2 start ecosystem.config.js', { stdio: 'inherit' });
-      
       console.log(`✅ ${appName} backend started successfully with PM2`);
-      
       return true;
     } catch (error) {
       console.error(`❌ Failed to start ${appName} backend:`, error.message);
@@ -410,13 +461,13 @@ APP_VERSION=1.0.0
       
       // Find available port
       const port = this.findAvailablePort();
+      this.lastAssignedPort = port;
       console.log(`🔌 Assigned port: ${port}`);
       
-      // Copy backend to XAMPP
+      // Copy backend to XAMPP (now also updates server.js port)
       const targetPath = this.copyBackendToXampp(appName, backendPath);
       
-      // Create optimized files
-      this.createOptimizedServer(appName, port);
+      // Create optimized files (skip server.js, only update .env, package.json, etc.)
       this.createOptimizedPackageJson(appName);
       this.createEnvFile(appName, port);
       this.createPm2Config(appName, port);

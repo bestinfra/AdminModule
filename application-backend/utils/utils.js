@@ -44,4 +44,27 @@ export function generateInvoiceNumber() {
     const timePart = isoString.slice(11, 19).replace(/:/g, '');
     const randomPart = Math.floor(1000 + Math.random() * 9000);
     return `${prefix}${datePart.substring(2)}${timePart}${randomPart}`;
+}
+
+// Returns date in MM-YYYY format
+export function getDateInMYFormat(date = new Date()) {
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${month}-${year}`;
+}
+
+// Fills missing dates in data for charts
+export function fillMissingDatesDyno(dates, values, format = 'DD MMM, YYYY', type = 'day') {
+    if (!dates || !values || dates.length === 0) {
+        return { dates: [], values: [] };
+    }
+
+    const result = { dates: [], values: [] };
+    
+    // For now, return the original data
+    // This function can be enhanced later for proper date filling
+    result.dates = dates;
+    result.values = values;
+    
+    return result;
 } 
