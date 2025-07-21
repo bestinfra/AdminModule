@@ -305,18 +305,14 @@ const Dashboard: React.FC = () => {
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-4',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-4',
+                                    gap: 'gap-0',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
                                         {
-                                            name: 'Heading',
+                                            name: 'Holder',
                                             props: {
-                                                text: 'Meter Communication Status',
-                                                level: 2,
-                                                size: 'base',
-                                                variant: 'primary',
-                                                weight: 'regular',
-                                                align: 'left'
+                                                title: 'Meter Communication Status',
+                                                className: 'border-none rounded-t-3xl'
                                             }
                                         },
                                         {
@@ -326,6 +322,7 @@ const Dashboard: React.FC = () => {
                                                 height: 250,
                                                 showNoDataMessage: false,
                                                 showHeader: false,
+                                                className: "p-6",
                                                 title: "",
                                                 onClick: (segmentName?: string) => {
                                                     if (segmentName === 'Communicating') navigate('/connect-disconnect/communicating');
@@ -339,20 +336,17 @@ const Dashboard: React.FC = () => {
                                 },
                                 {
                                     layout: 'column',
-                                    gap: 'gap-4',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-4',
+                                    gap: 'gap-0',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
-                                        // {
-                                        //     name: 'Heading',
-                                        //     props: {
-                                        //         text: 'Latest Meter Events',
-                                        //         level: 2,
-                                        //         size: 'base',
-                                        //         variant: 'primary',
-                                        //         weight: 'regular',
-                                        //         align: 'left'
-                                        //     }
-                                        // },
+                                        {
+                                            name: 'Holder',
+                                            props: {
+                                                title: 'Latest Meter Events',
+                                                className: 'border-none rounded-t-3xl',
+                                                contentPadding: 'pt-0 px-4 pb-4'
+                                            }
+                                        },
                                         {
                                             name: 'Table',
                                             props: {
@@ -363,6 +357,7 @@ const Dashboard: React.FC = () => {
                                                 pagination: true,
                                                 title: 'Latest Meter Events',
                                                 showActions: true,
+                                                className: "p-4 [&_.relative]:mt-0",
                                                 actions: [{
                                                     label: 'View',
                                                     icon: '/icons/eye.svg',

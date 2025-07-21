@@ -47,7 +47,8 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
         };
     }, [selectedTimeRange]);
 
-    if (availableTimeRanges.length === 0) return null;
+    // Safety check for undefined or null availableTimeRanges
+    if (!availableTimeRanges || availableTimeRanges.length === 0) return null;
 
     const getDisplayLabel = (range: string): string => {
         return timeRangeLabels[range] || range;
