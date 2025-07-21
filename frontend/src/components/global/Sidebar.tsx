@@ -79,6 +79,11 @@ const defaultMenus: MenuCategory[] = [
                             icon: '/icons/apps-icon.svg',
                             link: '/apps',
                         },
+                        {
+                            title: 'User Management',
+                            icon: '/icons/user-management.svg',
+                            link: '/user-management',
+                        }
            
             // {
             //     title: 'DTR Dashboard',
