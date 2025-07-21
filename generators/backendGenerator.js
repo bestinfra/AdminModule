@@ -2,6 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const { copyTemplateDirectory, loadAndProcessTemplate } = require('./utils/templateProcessor');
 
+// Import the optimized deployer for dynamic port assignment
+const OptimizedDeployer = require('../scripts/optimizedDeployer.js');
+const deployer = new OptimizedDeployer();
+
 /**
  * Generate backend application structure
  * @param {string} baseDir - Base directory for the project
@@ -12,9 +16,13 @@ function generateBackend(baseDir, formData) {
   
   const backendDir = path.join(baseDir, 'backend');
   
+  // Get dynamic port for this backend
+  const dynamicPort = deployer.findAvailablePort();
+  
   // Create variables for template replacement
   const variables = {
-    projectFolderName: appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app'
+    projectFolderName: appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app',
+    dynamicPort: dynamicPort
   };
 
   // Copy template directory
@@ -24,7 +32,6 @@ function generateBackend(baseDir, formData) {
   // Generate additional backend files
   generateRoutes(backendDir, variables);
   generatePrismaSchema(backendDir, variables);
-  generateEnvFile(backendDir, variables);
 
   console.log('Backend generated successfully');
 }

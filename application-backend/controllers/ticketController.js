@@ -50,13 +50,7 @@ export const getTicketsTable = async (req, res) => {
 
 export const getTicketTrends = async (req, res) => {
     try {
-        const accessCondition = req.locationMeters?.condition || '';
-        const accessValues = req.locationMeters?.values || [];
-
-        const trendsData = await TicketDB.getLastTwelveMonthsTrends(
-            accessCondition,
-            accessValues
-        );
+        const trendsData = await TicketDB.getLastTwelveMonthsTrends();
 
         const formattedData = trendsData.map(row => ({
             month: row.month,

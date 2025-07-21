@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Form from '@components/forms/Form';
-import type { FormInputConfig } from '@components/forms/types';
+import { Form } from '@components/Form';
+import type { FormInputConfig } from '@components/Form';
 import Page from '@components/global/Page';
 import type { Section } from '@components/global/Page';
 
@@ -72,12 +72,13 @@ const Forms: React.FC<FormsProps> = ({
                     onSubmit={handleBasicFormSubmit}
                     submitLabel="Submit Basic Form"
                     cancelLabel="Reset"
-                    showCancel={true}
                     layout="grid"
-                    gridCols={3}
+                    gridLayout={{
+                        gridRows: 1,
+                        gridColumns: 3,
+                        gap: "gap-4"
+                    }}
                     variant="default"
-                    title="Basic Information"
-                    subtitle="Please fill in your basic details"
                     {...basicFormProps}
                 />
                 {formResults.basic && (
@@ -109,12 +110,13 @@ const Forms: React.FC<FormsProps> = ({
                     onSubmit={handleAdvancedFormSubmit}
                     submitLabel="Submit Advanced Form"
                     cancelLabel="Reset"
-                    showCancel={true}
                     layout="grid"
-                    gridCols={3}
+                    gridLayout={{
+                        gridRows: 1,
+                        gridColumns: 3,
+                        gap: "gap-4"
+                    }}
                     variant="default"
-                    title="Advanced Profile"
-                    subtitle="Complete your profile information"
                     {...advancedFormProps}
                 />
                 {formResults.advanced && (
@@ -146,12 +148,13 @@ const Forms: React.FC<FormsProps> = ({
                     onSubmit={handleContactFormSubmit}
                     submitLabel="Send Message"
                     cancelLabel="Clear"
-                    showCancel={true}
                     layout="grid"
-                    gridCols={2}
+                    gridLayout={{
+                        gridRows: 1,
+                        gridColumns: 2,
+                        gap: "gap-4"
+                    }}
                     variant="default"
-                    title="Contact Us"
-                    subtitle="We'd love to hear from you"
                     {...contactFormProps}
                 />
                 {formResults.contact && (

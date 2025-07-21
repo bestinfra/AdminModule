@@ -1,4 +1,8 @@
 const fs = require("fs");
+
+const OptimizedDeployer = require('./scripts/optimizedDeployer.js');
+const deployer = new OptimizedDeployer();
+
 const path = require("path");
 
 // Function to copy pages directory recursively
@@ -140,7 +144,7 @@ function createAppProject(formData) {
           fs.copyFileSync(sourcePath, destPath);
         }
       });
-
+    }
   }
 
   // Copy all assets (icons, images, fonts)
@@ -1761,6 +1765,9 @@ Generated on: ${new Date().toLocaleDateString()}
   };
 
   // --- BACKEND SCAFFOLDING START ---
+  // Get dynamic port for this backend
+  const dynamicPort = deployer.findAvailablePort();
+  
   // Backend template files
   const backendFiles = {
     "package.json": JSON.stringify(
@@ -1780,11 +1787,10 @@ Generated on: ${new Date().toLocaleDateString()}
       2
     ),
 
-    "server.js": `
-require('dotenv').config();
+    "server.js": `require('dotenv').config();
 const express = require('express');
 const app = express();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || ${dynamicPort};
 
 app.use(express.json());
 
@@ -1813,7 +1819,7 @@ app.listen(PORT, () => console.log('Backend running on port ' + PORT));
   // Add .env example file for backend
   const envExampleContent = `# Example environment file for backend
 NODE_ENV=development
-PORT=4000
+PORT=${dynamicPort}
 
 JWT_EXPIRES_IN=4h
 
@@ -1909,9 +1915,35 @@ model User {
   console.log(`   2. npm install`);
   console.log(`   3. npm run dev`);
 
+  
+  // --- BACKEND DEPLOYMENT START ---
+  // Deploy backend to XAMPP using optimized deployer
+  try {
+    console.log('\n🚀 Deploying backend to XAMPP...');
+    const deploymentResult = deployer.deployBackend(projectFolderName, backendDir);
+    
+    if (deploymentResult.success) {
+      console.log('\n✅ Backend deployed successfully!');
+      console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
+      console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
+      console.log(`   • Environment: ${deploymentResult.envUrl}`);
+      console.log(`   • Port: ${deploymentResult.port}`);
+      console.log(`   • Mode: DEVELOPMENT`);
+    } else {
+      console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
+      console.log('   You can manually deploy using:');
+      console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+    }
+  } catch (error) {
+    console.log('\n⚠️  Backend deployment failed:', error.message);
+    console.log('   You can manually deploy using:');
+    console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+  }
+  // --- BACKEND DEPLOYMENT END ---
+
+
   return baseDir;
 }
-
 // Export the function
 module.exports = { createAppProject };
 // If running directly, use example data
@@ -1939,5 +1971,4 @@ if (require.main === module) {
   };
 
   createAppProject(exampleFormData);
-}
 }
