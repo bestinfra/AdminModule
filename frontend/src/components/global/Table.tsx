@@ -76,6 +76,7 @@ interface TableProps {
     selectedTimeRange?: string;
     onTimeRangeChange?: (range: string) => void;
     timeRangeLabels?: Record<string, string>; // New prop for customizable time range labels
+    className?: string; // Add className prop
 }
 
 interface DefaultRowWrapperProps {
@@ -133,6 +134,7 @@ const Table: React.FC<TableProps> = ({
     selectedTimeRange = 'Daily',
     onTimeRangeChange = () => {},
     timeRangeLabels = {}, // New prop for customizable time range labels
+    className, // Add className prop
 }) => {
     const [sortConfig, setSortConfig] = useState<{
         key: string | null;
@@ -469,7 +471,7 @@ const Table: React.FC<TableProps> = ({
 
     // Table content component
     const tableContent = (
-        <div className="w-full">
+        <div className={`w-full ${className || ''}`}>
             {searchable && (
                 <div className="relative mb-4">
                     <input
@@ -825,7 +827,7 @@ const Table: React.FC<TableProps> = ({
 
     // Return table with header
     return (
-        <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>
+        <div className={`bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl font-manrope ${className || ''}`} style={{ fontFamily: 'Manrope, sans-serif' }}>
             {/* Header Section */}
             <div className="flex justify-between items-center gap-4 bg-background-secondary dark:bg-primary-dark-light rounded-t-3xl p-4">
                 <div className="font-medium text-neutral-darker dark:text-surface font-manrope" style={{ fontFamily: 'Manrope, sans-serif' }}>

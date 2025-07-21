@@ -322,6 +322,7 @@ const Dashboard: React.FC = () => {
                                                 height: 250,
                                                 showNoDataMessage: false,
                                                 showHeader: false,
+                                                className: "p-6",
                                                 title: "",
                                                 onClick: (segmentName?: string) => {
                                                     if (segmentName === 'Communicating') navigate('/connect-disconnect/communicating');
@@ -342,7 +343,8 @@ const Dashboard: React.FC = () => {
                                             name: 'Holder',
                                             props: {
                                                 title: 'Latest Meter Events',
-                                                className: 'border-none rounded-t-3xl'
+                                                className: 'border-none rounded-t-3xl',
+                                                contentPadding: 'pt-0 px-4 pb-4'
                                             }
                                         },
                                         {
@@ -355,6 +357,7 @@ const Dashboard: React.FC = () => {
                                                 pagination: true,
                                                 title: 'Latest Meter Events',
                                                 showActions: true,
+                                                className: "p-4 [&_.relative]:mt-0",
                                                 actions: [{
                                                     label: 'View',
                                                     icon: '/icons/eye.svg',
