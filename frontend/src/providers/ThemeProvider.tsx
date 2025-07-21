@@ -9,7 +9,7 @@ interface ThemeContextType {  /*Total 38 colors*/
         colorPrimaryAlt: string;           // Alternative primary color
         colorPrimaryLight: string;         // Lighter shade of primary
         colorPrimaryDeep: string;          // Deep/dark primary variant
-        colorPrimaryDeepLight: string;     // Light version of deep primary 
+        colorPrimaryDeepLight: string;     // Light version of deep primary c
         colorPrimaryTransparent: string;   // Transparent primary for overlays
         colorPrimaryBg: string;            // Primary background color
         colorPrimaryBgLight: string;       // Light primary background
