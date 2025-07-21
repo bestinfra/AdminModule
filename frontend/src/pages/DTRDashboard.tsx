@@ -1,37 +1,12 @@
 import React, { useState } from 'react';
-import Card from '@components/global/Card';
-import TimeRangeSelector from '@components/global/TimeRangeSelector';
-import Table from '@components/global/Table';
 import type { TableData } from '@components/global/Table';
-import BarChart from '@graphs/BarChart';
 import { useNavigate } from 'react-router-dom';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
-import PageHeader from '@components/global/PageHeader';
+import PageC from '@components/global/PageC';
 
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
-    const [view, setView] = useState<'Daily' | 'Monthly'>('Daily');
 
-    const dtrStats = [
-        { title: 'Total DTRs', value: 29, icon: '/icons/dtr.svg', subtitle1: 'Total Transformer Units' },
-        { title: 'Total LT Feeders', value: 33, icon: '/icons/feeder.svg', subtitle1: 'Connected to DTRs' },
-        { title: 'Total Fuse Blown', value: 3, icon: '/icons/power_failure.svg', subtitle1: '0.10% of Total DTRs' },
-        { title: 'Overloaded Feeders', value: 0, icon: '/icons/dtr.svg', subtitle1: '0.00% of Total Feeders' },
-        { title: 'Underloaded Feeders', value: 33, icon: '/icons/dtr.svg', subtitle1: '100.0% of Total Feeders' },
-        { title: 'LT Side Fuse Blown', value: 3, icon: '/icons/power_failure.svg', subtitle1: '3 Incidents' },
-        { title: 'Unbalanced DTRs', value: 0, icon: '/icons/dtr.svg', subtitle1: '0.00% of Total DTRs' },
-        { title: 'Power Failure Feeders', value: 0, icon: '/icons/power_failure.svg', subtitle1: '0.00% of Feeders' },
-        { title: 'HT Side Fuse Blown', value: 0, icon: '/icons/power_failure.svg', subtitle1: '0 Incident' },
-    ];
-    const consumptionStats = [
-        { title: 'Total kWh', value: '107618.42', icon: '/icons/consumption.svg', subtitle1: 'Cumulative Active Energy' },
-        { title: 'Total kVAh', value: '109022.43', icon: '/icons/consumption.svg', subtitle1: 'Cumulative Apparent Energy' },
-        { title: 'Total kW', value: '7.62', icon: '/icons/consumption.svg', subtitle1: 'Active Power' },
-        { title: 'Total kVA', value: '7.89', icon: '/icons/consumption.svg', subtitle1: 'Apparent Power' },
-        { title: 'Active DTRs', value: 29, icon: '/icons/dtr.svg', subtitle1: '100.00% of Total DTRs', iconColor: 'green' },
-        { title: 'In-Active DTRs', value: 0, icon: '/icons/dtr.svg', subtitle1: '0.00% of Total DTRs', iconColor: 'red' },
-    ];
+
 
     // Dummy data for DTRs table
     const dtrTableColumns = [
@@ -95,210 +70,367 @@ const DTRDashboard: React.FC = () => {
     }));
     const alertColors = alertTypes.map(type => type.color);
 
-    // Header component
-    const headerComponent = (
-        <PageHeader
-            title="DTR Dashboard"
-            onBackClick={() => window.history.back()}
-            backButtonText="Back to Dashboard"
-            buttonsLabel="Add DTR"
-            variant="primary"
-            onClick={() => console.log('Adding new DTR...')}
-            showMenu={true}
-            showDropdown={true}
-            menuItems={[
-                { id: 'all', label: 'All DTRs' },
-                { id: 'active', label: 'Active DTRs' },
-                { id: 'inactive', label: 'Inactive DTRs' },
-                { id: 'overloaded', label: 'Overloaded' },
-                { id: 'underloaded', label: 'Underloaded' },
-                { id: 'fuse-blown', label: 'Fuse Blown' },
-                { id: 'unbalanced', label: 'Unbalanced' },
-                { id: 'power-failure', label: 'Power Failure' }
-            ]}
-            onMenuItemClick={(itemId) => {
-                console.log(`Filter by: ${itemId}`);
-                // TODO: Implement filtering logic based on selection
-            }}
-        />
-    );
-
-    
-
-    // DTR Statistics Section
-    const dtrStatsSection: Section = {
-        id: 'dtr-stats',
-        component: (
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
-                {/* DTR Statistics */}
-                <div className="bg-primary-lightest dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-3 col-span-1 rounded-2xl">
-                    <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-lg font-semibold m-0">Distribution Transformer (DTR) Statistics</h2>
-                        <div className="flex items-center gap-2" style={{ opacity: 0, pointerEvents: 'none' }}>
-                            <TimeRangeSelector
-                                availableTimeRanges={['Daily', 'Monthly']}
-                                selectedTimeRange={view}
-                                handleTimeRangeChange={() => {}}
-                            />
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {dtrStats.map((card, idx) => (
-                            <Card
-                                key={idx}
-                                title={card.title}
-                                value={card.value}
-                                icon={card.icon}
-                                subtitle1={card.subtitle1}
-                                onValueClick={() => {
-                                    switch (card.title) {
-                                        case 'Total DTRs':
-                                            navigate('/dtr-statistics/total-dtrs');
-                                            break;
-                                        case 'Total LT Feeders':
-                                            navigate('/dtr-statistics/total-lt-feeders');
-                                            break;
-                                        case 'Total Fuse Blown':
-                                            navigate('/dtr-statistics/total-fuse-blown');
-                                            break;
-                                        case 'Overloaded Feeders':
-                                            navigate('/dtr-statistics/overloaded-feeders');
-                                            break;
-                                        case 'Underloaded Feeders':
-                                            navigate('/dtr-statistics/underloaded-feeders');
-                                            break;
-                                        case 'LT Side Fuse Blown':
-                                            navigate('/dtr-statistics/lt-side-fuse-blown');
-                                            break;
-                                        case 'Unbalanced DTRs':
-                                            navigate('/dtr-statistics/unbalanced-dtrs');
-                                            break;
-                                        case 'Power Failure Feeders':
-                                            navigate('/dtr-statistics/power-failure-feeders');
-                                            break;
-                                        case 'HT Side Fuse Blown':
-                                            navigate('/dtr-statistics/ht-side-fuse-blown');
-                                            break;
-                                        default:
-                                            break;
+    // PageC sections configuration
+    const sections = [
+        // Header section
+        {
+            layout: {
+                type: 'row' as const,
+                className: 'mb-6'
+            },
+            components: [
+                {
+                    name: 'PageHeader',
+                    props: {
+                        title: "DTR Dashboard",
+                        onBackClick: () => window.history.back(),
+                        backButtonText: "Back to Dashboard",
+                        buttonsLabel: "Add DTR",
+                        variant: "primary",
+                        onClick: () => console.log('Adding new DTR...'),
+                        showMenu: true,
+                        showDropdown: true,
+                        menuItems: [
+                            { id: 'all', label: 'All DTRs' },
+                            { id: 'active', label: 'Active DTRs' },
+                            { id: 'inactive', label: 'Inactive DTRs' },
+                            { id: 'overloaded', label: 'Overloaded' },
+                            { id: 'underloaded', label: 'Underloaded' },
+                            { id: 'fuse-blown', label: 'Fuse Blown' },
+                            { id: 'unbalanced', label: 'Unbalanced' },
+                            { id: 'power-failure', label: 'Power Failure' }
+                        ],
+                        onMenuItemClick: (itemId: string) => {
+                            console.log(`Filter by: ${itemId}`);
+                        }
+                    }
+                }
+            ]
+        },
+        // Main widgets row (side by side)
+        {
+            layout: {
+                type: 'grid' as const,
+                columns: 2,
+                gap: 'gap-6',
+                className: 'mb-8'
+            },
+            components: [
+                // Left: DTR Statistics
+                {
+                    name: 'Holder',
+                    props: {
+                        className: 'bg-primary-lightest p-6 border border-primary-border dark:border-dark-border rounded-3xl h-full flex flex-col'
+                    },
+                    children: [
+                        {
+                            name: 'Heading',
+                            props: {
+                                text: 'Distribution Transformer (DTR) Statistics',
+                                level: 2,
+                                size: 'md',
+                                variant: 'primary',
+                                weight: 'bold',
+                                align: 'left',
+                                className: 'mb-4'
+                            }
+                        },
+                        {
+                            name: 'Holder',
+                            props: {
+                                className: 'grid grid-cols-3 gap-4'
+                            },
+                            children: [
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Total DTRs',
+                                        value: 29,
+                                        icon: '/icons/dtr.svg',
+                                        subtitle1: 'Total Transformer Units',
+                                        onValueClick: () => navigate('/dtr-statistics/total-dtrs')
                                     }
-                                }}
-                            />
-                        ))}
-                    </div>
-                </div>
-                {/* Consumption & Energies */}
-                <div className="bg-primary-lightest dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-2 col-span-1 rounded-2xl">
-                    <div className="flex justify-between items-center mb-2">
-                        <h2 className="text-lg font-semibold">Consumption & Energies</h2>
-                        <TimeRangeSelector
-                            availableTimeRanges={['Daily', 'Monthly']}
-                            selectedTimeRange={view}
-                            handleTimeRangeChange={(v) => setView(v as 'Daily' | 'Monthly')}
-                        />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {consumptionStats.map((card, idx) => (
-                            <Card
-                                key={idx}
-                                title={card.title}
-                                value={card.value}
-                                icon={card.icon}
-                                subtitle1={card.subtitle1}
-                            />
-                        ))}
-                    </div>
-                </div>
-            </div>
-        )
-    };
-
-    // DTRs Table Section
-    const dtrsTableSection: Section = {
-        id: 'dtrs-table',
-        component: (
-            <div className="mt-8">
-                <div className="flex items-center justify-between px-0 pt-0 pb-2">
-                    <h2 className="text-lg font-semibold mb-0">DTRs</h2>
-                </div>
-                <div className="px-0 pb-6">
-                    <Table
-                        data={dtrTableData}
-                        columns={dtrTableColumns}
-                        actions={dtrTableActions}
-                        showActions={true}
-                        searchable={true}
-                        pagination={true}
-                        initialRowsPerPage={10}
-                        emptyMessage="No DTRs found"
-                        onRowClick={(row) => navigate(`/dtr/${row.dtrId}`)}
-                    />
-                </div>
-            </div>
-        )
-    };
-
-    // Latest Alerts Section
-    const latestAlertsSection: Section = {
-        id: 'latest-alerts',
-        component: (
-            <div className="">
-                <div className="flex items-center justify-between px-0 pt-0 pb-2">
-                    <h2 className="text-lg font-semibold mb-0">Latest Alerts</h2>
-                </div>
-                <div className="px-0 pb-6">
-                    <Table
-                        data={alertsTableData}
-                        columns={alertsTableColumns}
-                        showActions={false}
-                        searchable={true}
-                        pagination={true}
-                        initialRowsPerPage={10}
-                        emptyMessage="No alerts found"
-                    />
-                </div>
-            </div>
-        )
-    };
-
-    // Statistics Chart Section
-    const statisticsChartSection: Section = {
-        id: 'statistics-chart',
-        component: (
-            <div className="mt-8">
-                <h2 className="text-lg font-semibold mb-2">Statistics</h2>
-                <div className="gap-2 bg-primary-lightest p-4 rounded-2xl flex items-center justify-between">
-                    <div className="font-semibold">DTR Alert Statistics <span className="text-sm font-normal">(Last 12 Months)</span></div>
-                    <div className="flex items-center gap-2">
-                        <TimeRangeSelector
-                            availableTimeRanges={['Monthly', 'Yearly']}
-                            selectedTimeRange={statsRange}
-                            handleTimeRangeChange={v => setStatsRange(v as 'Monthly' | 'Yearly')}
-                        />
-                        <img src="/icons/download-app.svg" alt="Download" className="w-6 h-6 cursor-pointer" />
-                    </div>
-                </div>
-                <BarChart
-                    xAxisData={months}
-                    seriesData={alertSeries}
-                    seriesColors={alertColors}
-                    height={300}
-                    showLegendInteractions={true}
-                    timeRange={statsRange}
-                />
-            </div>
-        )
-    };
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Total LT Feeders',
+                                        value: 33,
+                                        icon: '/icons/feeder.svg',
+                                        subtitle1: 'Connected to DTRs',
+                                        onValueClick: () => navigate('/dtr-statistics/total-lt-feeders')
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Total Fuse Blown',
+                                        value: 3,
+                                        icon: '/icons/power_failure.svg',
+                                        subtitle1: '0.10% of Total DTRs',
+                                        onValueClick: () => navigate('/dtr-statistics/total-fuse-blown')
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Overloaded Feeders',
+                                        value: 0,
+                                        icon: '/icons/dtr.svg',
+                                        subtitle1: '0.00% of Total Feeders',
+                                        onValueClick: () => navigate('/dtr-statistics/overloaded-feeders')
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Underloaded Feeders',
+                                        value: 33,
+                                        icon: '/icons/dtr.svg',
+                                        subtitle1: '100.0% of Total Feeders',
+                                        onValueClick: () => navigate('/dtr-statistics/underloaded-feeders')
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'LT Side Fuse Blown',
+                                        value: 3,
+                                        icon: '/icons/power_failure.svg',
+                                        subtitle1: '3 Incidents',
+                                        onValueClick: () => navigate('/dtr-statistics/lt-side-fuse-blown')
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Unbalanced DTRs',
+                                        value: 0,
+                                        icon: '/icons/dtr.svg',
+                                        subtitle1: '0.00% of Total DTRs',
+                                        onValueClick: () => navigate('/dtr-statistics/unbalanced-dtrs')
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Power Failure Feeders',
+                                        value: 0,
+                                        icon: '/icons/power_failure.svg',
+                                        subtitle1: '0.00% of Feeders',
+                                        onValueClick: () => navigate('/dtr-statistics/power-failure-feeders')
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'HT Side Fuse Blown',
+                                        value: 0,
+                                        icon: '/icons/power_failure.svg',
+                                        subtitle1: '0 Incident',
+                                        onValueClick: () => navigate('/dtr-statistics/ht-side-fuse-blown')
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                },
+                // Right: Consumption & Energies
+                {
+                    name: 'Holder',
+                    props: {
+                        className: 'bg-primary-lightest p-6 border border-primary-border dark:border-dark-border rounded-3xl h-full flex flex-col'
+                    },
+                    children: [
+                        {
+                            name: 'Holder',
+                            props: {
+                                className: 'flex items-center justify-between mb-4'
+                            },
+                            children: [
+                                {
+                                    name: 'Heading',
+                                    props: {
+                                        text: 'Consumption & Energies',
+                                        level: 2,
+                                        size: 'md',
+                                        variant: 'primary',
+                                        weight: 'bold',
+                                        align: 'left'
+                                    }
+                                },
+                                {
+                                    name: 'TimeRangeSelector',
+                                    props: {
+                                        availableTimeRanges: ['Daily', 'Monthly'],
+                                        selectedTimeRange: 'Daily',
+                                        handleTimeRangeChange: () => {},
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            name: 'Holder',
+                            props: {
+                                className: 'grid grid-cols-2 gap-4'
+                            },
+                            children: [
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Total kWh',
+                                        value: '111931.96',
+                                        icon: '/icons/consumption.svg',
+                                        subtitle1: 'Cumulative Active Energy'
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Total kVAh',
+                                        value: '113369.06',
+                                        icon: '/icons/consumption.svg',
+                                        subtitle1: 'Cumulative Apparent Energy'
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Total kW',
+                                        value: '6.10',
+                                        icon: '/icons/consumption.svg',
+                                        subtitle1: 'Active Power'
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Total kVA',
+                                        value: '6.26',
+                                        icon: '/icons/consumption.svg',
+                                        subtitle1: 'Apparent Power'
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'Active DTRs',
+                                        value: 29,
+                                        icon: '/icons/dtr.svg',
+                                        subtitle1: '100.00% of Total DTRs',
+                                        iconColor: 'green'
+                                    }
+                                },
+                                {
+                                    name: 'Card',
+                                    props: {
+                                        title: 'In-Active DTRs',
+                                        value: 0,
+                                        icon: '/icons/dtr.svg',
+                                        subtitle1: '0.00% of Total DTRs',
+                                        iconColor: 'red'
+                                    }
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        // DTRs Table section
+        {
+            layout: {
+                type: 'column' as const,
+                className: 'mb-8'
+            },
+            components: [
+                {
+                    name: 'Heading',
+                    props: {
+                        text: 'DTRs',
+                        level: 2,
+                        className: 'text-lg font-semibold mb-4'
+                    }
+                },
+                {
+                    name: 'Table',
+                    props: {
+                        data: dtrTableData,
+                        columns: dtrTableColumns,
+                        actions: dtrTableActions,
+                        showActions: true,
+                        searchable: true,
+                        pagination: true,
+                        initialRowsPerPage: 10,
+                        emptyMessage: "No DTRs found",
+                        onRowClick: (row: TableData) => navigate(`/dtr/${row.dtrId}`)
+                    }
+                }
+            ]
+        },
+        // Latest Alerts section
+        {
+            layout: {
+                type: 'column' as const,
+                className: 'mb-8'
+            },
+            components: [
+                {
+                    name: 'Heading',
+                    props: {
+                        text: 'Latest Alerts',
+                        level: 2,
+                        className: 'text-lg font-semibold mb-4'
+                    }
+                },
+                {
+                    name: 'Table',
+                    props: {
+                        data: alertsTableData,
+                        columns: alertsTableColumns,
+                        showActions: false,
+                        searchable: true,
+                        pagination: true,
+                        initialRowsPerPage: 10,
+                        emptyMessage: "No alerts found"
+                    }
+                }
+            ]
+        },
+        // Statistics Chart section
+        {
+            layout: {
+                type: 'column' as const,
+                className: 'mb-8'
+            },
+            components: [
+                {
+                    name: 'Heading',
+                    props: {
+                        text: 'Statistics',
+                        level: 2,
+                        className: 'text-lg font-semibold mb-4'
+                    }
+                },
+                {
+                    name: 'BarChart',
+                    props: {
+                        xAxisData: months,
+                        seriesData: alertSeries,
+                        seriesColors: alertColors,
+                        height: 300,
+                        showLegendInteractions: true,
+                        timeRange: statsRange
+                    }
+                }
+            ]
+        }
+    ];
 
     return (
-        <Page
-            layout="single-column"
-            sections={[dtrStatsSection, dtrsTableSection, latestAlertsSection, statisticsChartSection]}
-            header={headerComponent}
-            sidebarPosition="right"
-            className="space-y-6 bg-surface"
-            sectionClassName=""
-        />
+        <div className="p-2 min-h-screen">
+            <PageC sections={sections} />
+        </div>
     );
 };
 
