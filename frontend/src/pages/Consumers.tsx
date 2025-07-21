@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import type { Column } from '@components/global/Table';
-import Table from '@components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
-import PageHeader from '@components/global/PageHeader';
+import Page from '@components/global/PageC';
 
 const columns: Column[] = [
     { key: 'sNo', label: 'S.No' },
@@ -12,6 +9,52 @@ const columns: Column[] = [
     { key: 'name', label: 'Consumer Name' },
     { key: 'meter', label: 'Meter SI No' },
     { key: 'reading', label: 'Current Reading' },
+];
+
+// Dummy data matching the image
+const DUMMY_CONSUMERS = [
+    {
+        id: 1,
+        sNo: 1,
+        consumerNumber: 'BI25GMRA001',
+        name: 'Airborne General Store',
+        meter: 'A9211434',
+        reading: '177.89',
+        email: 'airborne@example.com',
+        primaryPhone: '+91 9876543210',
+        connectionType: 'COMMERCIAL',
+        category: 'COMMERCIAL',
+        sanctionedLoad: 10.0,
+        status: 'ACTIVE'
+    },
+    {
+        id: 2,
+        sNo: 2,
+        consumerNumber: 'BI25GMRA002',
+        name: 'Neo Travels',
+        meter: 'A9345417',
+        reading: '12480.54',
+        email: 'neo.travels@example.com',
+        primaryPhone: '+91 9876543211',
+        connectionType: 'COMMERCIAL',
+        category: 'COMMERCIAL',
+        sanctionedLoad: 25.0,
+        status: 'ACTIVE'
+    },
+    {
+        id: 3,
+        sNo: 4,
+        consumerNumber: 'BI25GMRA004',
+        name: 'Mobikins',
+        meter: 'A9211433',
+        reading: '1559.28',
+        email: 'mobikins@example.com',
+        primaryPhone: '+91 9876543212',
+        connectionType: 'COMMERCIAL',
+        category: 'COMMERCIAL',
+        sanctionedLoad: 15.0,
+        status: 'ACTIVE'
+    }
 ];
 
 const Consumers: React.FC = () => {
@@ -38,25 +81,15 @@ const Consumers: React.FC = () => {
         };
     }
 
-    // Fetch consumers from backend
+    // Load dummy data instead of API call
     useEffect(() => {
         setLoading(true);
-
-        fetch('/api/consumers')
-            .then((res) => res.json())
-            .then((result) => {
-                if (result.success && Array.isArray(result.data)) {
-                    setConsumers(result.data);
-                } else {
-                    setConsumers([]);
-                }
-                setLoading(false);
-            })
-            .catch((err) => {
-                console.error('Error fetching consumers:', err);
-                setConsumers([]);
-                setLoading(false);
-            });
+        
+        // Simulate API delay
+        setTimeout(() => {
+            setConsumers(DUMMY_CONSUMERS);
+            setLoading(false);
+        }, 500);
     }, []);
 
     // Check for filter parameter from route
@@ -68,111 +101,90 @@ const Consumers: React.FC = () => {
         }
     }, [location.pathname, params.uid]);
 
-    // Add sNo property and filter based on menu selection
-    const getFilteredData = () => {
-        let filteredData = consumers.map((consumer, idx) => {
-            // Find the first meter for the consumer, if any
-            const meter =
-                consumer.meters && consumer.meters.length > 0
-                    ? consumer.meters[0]
-                    : null;
-            return {
-                ...consumer,
-                sNo: idx + 1,
-                meter: meter ? meter.serialNumber : '-',
-                reading:
-                    meter && meter.readings && meter.readings.length > 0
-                        ? meter.readings[0].value
-                        : '-',
-            };
-        });
+    // Filter consumers based on menu value
+    const filteredConsumers = menuValue === 'high-usage' 
+        ? consumers.filter(consumer => parseFloat(consumer.reading) > 1000)
+        : consumers;
 
-        if (menuValue === 'occupied') {
-            filteredData = filteredData.slice(
-                0,
-                Math.floor(filteredData.length * 0.8)
-            );
-        } else if (menuValue === 'vacant') {
-            filteredData = filteredData.slice(
-                Math.floor(filteredData.length * 0.8)
-            );
-        } else if (menuValue === 'high-usage') {
-            filteredData = filteredData.filter(
-                (consumer) => Number(consumer.reading) > 1000
-            );
-        }
-        return filteredData;
+    const handleRowClick = (row: any) => {
+        navigate(`/consumers/${row.consumerNumber}`);
     };
 
-    const tableData = getFilteredData();
+    const handleMenuChange = (value: string) => {
+        setMenuValue(value);
+    };
 
-    const actions = [
-        {
-            label: 'View',
-            icon: '/icons/eye.svg',
-            onClick: (row: any) => {
-                navigate(`/consumers/${row.consumerNumber}`);
-            },
-        },
-    ];
-
-    // Header component
-    const headerComponent = (
-        <PageHeader
-            title={
-                menuValue === 'high-usage'
-                    ? 'High Usage Consumers'
-                    : 'Consumers'
-            }
-            subtitle={menuValue === 'high-usage' ? undefined : undefined}
-            onBackClick={() => window.history.back()}
-            backButtonText="Back to Dashboard"
-            buttonsLabel="Add Consumer"
-            variant="primary"
-            onClick={() => navigate('/consumers/add')}
-            showMenu={true}
-            showDropdown={true}
-            menuItems={[
-                { id: 'occupied', label: 'Occupied' },
-                { id: 'vacant', label: 'Vacant' },
-                { id: 'high-usage', label: 'High Usage' },
-            ]}
-            onMenuItemClick={(itemId) => {
-                setMenuValue(itemId);
-            }}
-        />
-    );
-
-    // Consumers Table Section
-    const consumersTableSection: Section = {
-        id: 'consumers-table',
-        component: (
-            <div className="space-y-4">
-                <Table
-                    data={tableData}
-                    columns={columns}
-                    actions={actions}
-                    showActions
-                    searchable={false}
-                    pagination
-                    loading={loading}
-                    emptyMessage={
-                        loading ? 'Loading consumers...' : 'No consumers found'
-                    }
-                />
-            </div>
-        ),
+    const headerConfig = {
+        title: 'Consumers',
+        subtitle: '',
+        onBackClick: () => navigate('/dashboard'),
+        backButtonText: 'Back to Dashboard',
+        buttonsLabel: 'Add Consumer',
+        variant: 'primary',
+        onClick: () => navigate('/consumers/add'),
+        showMenu: true,
+        showDropdown: true,
+        menuItems: [
+            { id: 'occupied', label: 'Occupied' },
+            { id: 'vacant', label: 'Vacant' },
+            { id: 'high-usage', label: 'High Usage' },
+        ],
+        onMenuItemClick: (itemId: string) => {
+            setMenuValue(itemId);
+        }
     };
 
     return (
-        <Page
-            layout="single-column"
-            sections={[consumersTableSection]}
-            header={headerComponent}
-            sidebarPosition="right"
-            className=""
-            sectionClassName=""
-        />
+        <div className="p-2 min-h-screen">
+            <Page
+                sections={[
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'column',
+                                    gap: 'gap-4',
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: headerConfig
+                                        }
+                                    ]
+                                },
+                                {
+                                    layout: 'column',
+                                    gap: 'gap-4',
+                                    columns: [
+                                        {
+                                            name: 'Table',
+                                            props: {
+                                                data: filteredConsumers,
+                                                columns: columns,
+                                                loading: loading,
+                                                searchable: true,
+                                                pagination: true,
+                                                showActions: true,
+                                                actions: [
+                                                    {
+                                                        label: 'View',
+                                                        icon: '/icons/eye.svg',
+                                                        onClick: handleRowClick
+                                                    }
+                                                ],
+                                                onRowClick: handleRowClick,
+                                                emptyMessage: loading ? 'Loading consumers...' : 'No consumers found'
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]}
+            />
+        </div>
     );
 };
 
