@@ -1,9 +1,9 @@
 import React, { useRef, useState, useMemo } from 'react';
-import FormInput from '@components/forms/FormInput';
+import FormInput from '@components/Form/FormInput';
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
 import LoadingSpinner from '@components/global/LoadingSpinner';
-import type { FormInputValue } from '@components/forms/types';
+import type { FormInputValue } from '@components/Form/types';
 import { validateAccessControl } from '../utils';
 import RemarksPanel from '@pages/Apps_module/components/RemarksPanel';
 
@@ -221,7 +221,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
 
         {/* Admin Access Section */}
         <div className="p-4 border border-primary-border rounded-xl">
-          <div className="mb-4 flex items-center gap-4">
+          <div className="mb-4 flex items-start gap-4">
             <h3 className="text-sm font-semibold text-primary">Admin Access</h3>
             <div className='text-xs  px-4 py-1 rounded-full bg-primary-lightest'>Default</div>
           </div>
@@ -236,7 +236,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'First Name',
                   required: true,
-                  className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.adminFirstName}
                 error={allErrors.adminFirstName}
@@ -255,7 +254,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Last Name',
                   required: true,
-                  className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.adminLastName}
                 error={allErrors.adminLastName}
@@ -278,7 +276,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Username',
                   required: true,
-                  className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.adminUsername}
                 error={allErrors.adminUsername}
@@ -297,7 +294,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Email Address',
                   required: true,
-                  className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.adminEmail}
                 error={allErrors.adminEmail}
@@ -319,7 +315,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Mobile Number',
                   required: true,
-                  className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.adminPhone}
                 error={allErrors.adminPhone}
@@ -332,7 +327,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
             </div>
              <div>
               <div className="w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-not-allowed dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light bg-gray-50">
-                <span className="text-gray-600">Admin</span>
+                <span className="text-base">Admin</span>
                 <span className="text-xs text-gray-400">Default</span>
               </div>
             </div>
@@ -347,7 +342,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Password',
                   required: true,
-                  className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.adminPassword}
                 error={allErrors.adminPassword}
@@ -366,7 +360,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Confirm Password',
                   required: true,
-                  className: 'w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.adminConfirmPassword}
                 error={allErrors.adminConfirmPassword}
@@ -383,8 +376,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
         {/* New Accounts Section */}
         {formData.newAccounts?.map((account, index) => (
           <div key={account.id} className="p-4 border border-primary-border rounded-xl">
-            <div className="mb-4 flex items-center gap-4 justify-between">
-              <div className='h-full flex items-center gap-4'>
+            <div className="mb-4 flex items-start gap-4 justify-between">
+              <div className='h-full flex items-start gap-4'>
                 <h3 className="text-sm font-semibold text-primary">New Account {index + 1}</h3> 
                 <div className='text-xs bg-secondary-light px-4 py-1 rounded-full'>Optional</div>
               </div>
@@ -414,7 +407,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     label: '',
                     placeholder: 'First Name',
                     required: false,
-                    className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.firstName}
                   error={getNewAccountError(index, 'firstName')}
@@ -433,7 +425,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     label: '',
                     placeholder: 'Last Name',
                     required: false,
-                    className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.lastName}
                   error={getNewAccountError(index, 'lastName')}
@@ -455,7 +446,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     label: '',
                     placeholder: 'Username',
                     required: false,
-                    className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.username}
                   error={getNewAccountError(index, 'username')}
@@ -474,7 +464,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     label: '',
                     placeholder: 'Email Address',
                     required: false,
-                    className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.email}
                   error={getNewAccountError(index, 'email')}
@@ -496,7 +485,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     label: '',
                     placeholder: 'Mobile Number',
                     required: false,
-                    className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.phone}
                   error={getNewAccountError(index, 'phone')}
@@ -529,7 +517,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     label: '',
                     placeholder: 'Password',
                     required: false,
-                    className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.password}
                   error={getNewAccountError(index, 'password')}
@@ -548,7 +535,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                     label: '',
                     placeholder: 'Confirm Password',
                     required: false,
-                    className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                   }}
                   value={account.confirmPassword}
                   error={getNewAccountError(index, 'confirmPassword')}
@@ -565,8 +551,8 @@ const AccessControl: React.FC<AccessControlProps> = ({
 
         {/* Default New Account Section */}
         <div className="p-4 border border-primary-border rounded-xl">
-          <div className="mb-4 flex items-center gap-4 justify-between">
-            <div className='h-full flex items-center gap-4'>
+          <div className="mb-4 flex items-start gap-4 justify-between">
+            <div className='h-full flex items-start gap-4'>
               <h3 className="text-sm font-semibold text-primary">New Account</h3> 
               <div className='text-xs bg-secondary-light px-4 py-1 rounded-full'>Optional</div>
             </div>
@@ -601,7 +587,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'First Name',
                   required: false,
-                  className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.newAccountFirstName || ''}
                 error={allErrors.newAccountFirstName}
@@ -620,7 +605,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Last Name',
                   required: false,
-                  className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.newAccountLastName || ''}
                 error={allErrors.newAccountLastName}
@@ -642,7 +626,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Username',
                   required: false,
-                  className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.newAccountUsername || ''}
                 error={allErrors.newAccountUsername}
@@ -661,7 +644,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Email Address',
                   required: false,
-                  className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.newAccountEmail || ''}
                 error={allErrors.newAccountEmail}
@@ -683,7 +665,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Mobile Number',
                   required: false,
-                  className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.newAccountPhone || ''}
                 error={allErrors.newAccountPhone}
@@ -716,7 +697,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Password',
                   required: false,
-                  className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.newAccountPassword || ''}
                 error={allErrors.newAccountPassword}
@@ -735,7 +715,6 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   label: '',
                   placeholder: 'Confirm Password',
                   required: false,
-                  className: 'w-full flex items-center justify-between border px-6 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium border-neutral-light',
                 }}
                 value={formData.newAccountConfirmPassword || ''}
                 error={allErrors.newAccountConfirmPassword}

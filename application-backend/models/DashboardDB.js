@@ -94,7 +94,7 @@ class DashboardDB {
         }
     }
 
-    static async graphDashboardAnalytics(accessCondition, accessValues, period) {
+    static async graphDashboardAnalytics(period) {
         try {
             if (period === 'daily') {
                 const d1 = new Date();
@@ -109,12 +109,6 @@ class DashboardDB {
                         lt: new Date(nextDate)
                     }
                 };
-                
-                if (accessValues && accessValues.length > 0) {
-                    whereClause.meterId = {
-                        in: accessValues
-                    };
-                }
 
                 const result = await prisma.consumption.groupBy({
                     by: ['consumptionDate'],
@@ -135,6 +129,7 @@ class DashboardDB {
                     count: item._count.id,
                     total_consumption: item._sum.consumption || 0
                 }));
+
             }
             // monthly
             const d1 = new Date();
@@ -149,12 +144,6 @@ class DashboardDB {
                     lt: new Date(nextDate)
                 }
             };
-            
-            if (accessValues && accessValues.length > 0) {
-                whereClause.meterId = {
-                    in: accessValues
-                };
-            }
 
             const result = await prisma.consumption.groupBy({
                 by: ['consumptionDate'],

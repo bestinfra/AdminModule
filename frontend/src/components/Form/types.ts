@@ -1,16 +1,39 @@
-// Form component type definitions
 export interface FormInputConfig {
   name: string;
-  type: 'text' | 'email' | 'password' | 'number' | 'date' | 'checkbox' | 'textarea' | 'select' | 'file' | 'tel' | 'url';
+  type: 
+    | 'text'   
+    | 'email'
+    | 'password'
+    | 'number'
+    | 'date'
+    | 'checkbox'
+    | 'textarea'
+    | 'select'
+    | 'file'
+    | 'tel'
+    | 'url'
+    | 'colorpicker'
+    | 'dragdrop'
+    | 'dropdown'
+    | 'radio'
+    | 'switch'
+    | 'chosenfile'
+    | 'textareafield';
   label?: string;
   placeholder?: string;
-  required?: boolean;
-  defaultValue?: FormInputValue;
-  options?: Array<{ value: string; label: string }>;
-  className?: string;
-  colSpan?: number;
-  icon?: string;
   description?: string;
+  required?: boolean;
+  defaultValue?: FormInputValue;  
+  options?: Array<{ value: string; label: string }>;
+  colorOptions?: Array<{ value: string; label: string; color: string }>;
+  className?: string;
+  row?: number;
+  col?: number;
+  colSpan?: number;
+  fullWidth?: boolean;
+  icon?: string;
+  accept?: string;
+  onChange?: (value: FormInputValue) => void;
   validation?: {
     pattern?: RegExp;
     minLength?: number;
@@ -21,22 +44,35 @@ export interface FormInputConfig {
   };
 }
 
+export interface GridLayoutProps {
+  gridRows: number;
+  gridColumns: number;
+  gap?: string;
+  className?: string;
+  autoFullWidth?: boolean;
+}
+
 export interface FormProps {
   inputs: FormInputConfig[];
   onSubmit: (data: Record<string, FormInputValue>) => void;
   submitLabel?: string;
   cancelLabel?: string;
   className?: string;
+  formBackground?: string;
   layout?: 'vertical' | 'horizontal' | 'grid';
-  gridCols?: 1 | 2 | 3 | 4 | 5 | 6;
-  disabled?: boolean;
-  showCancel?: boolean;
-  isLoading?: boolean;
-  onCancel?: () => void;
+  gridLayout?: GridLayoutProps;
   formId?: string;
-  title?: string;
-  subtitle?: string;
   variant?: 'default' | 'card' | 'minimal';
+  initialData?: Record<string, FormInputValue>;
+  errorMessages?: Record<string, string>;
+  touchedFields?: Set<string>;
+  submitted?: boolean;
+  customSchema?: import('zod').ZodSchema<any>;
+  showErrorsByDefault?: boolean;
+  onChange?: (formData: Record<string, FormInputValue>) => void;
+  showFormActions?: boolean;
+  submitAction?: () => void;
+  cancelAction?: () => void;
 }
 
 export interface FormInputProps {
@@ -50,7 +86,6 @@ export interface FormInputProps {
   fileInputRefs: React.MutableRefObject<{ [key: string]: HTMLInputElement | null }>;
 }
 
-// Form event types
 export type FormInputEvent = 
   | React.ChangeEvent<HTMLInputElement>
   | React.ChangeEvent<HTMLTextAreaElement>
@@ -61,22 +96,20 @@ export type FormBlurEvent =
   | React.FocusEvent<HTMLTextAreaElement>
   | React.FocusEvent<HTMLSelectElement>;
 
-// Form value types based on input type
 export type FormInputValue = 
   | string
+  | string[]
   | number
   | boolean
   | FileList
+  | File
   | null
   | undefined;
 
-// Typed event handlers
 export interface TypedFormHandlers {
   onChange: (event: FormInputEvent) => void;
-  onBlur: (event: FormBlurEvent) => void;
 }
 
-// Common props for form inputs with accessibility support
 export interface CommonInputProps {
   id: string;
   name: string;
@@ -84,12 +117,18 @@ export interface CommonInputProps {
   disabled?: boolean;
   className: string;
   onChange: (event: FormInputEvent) => void;
-  onBlur: (event: FormBlurEvent) => void;
-  // ARIA attributes for accessibility
   'aria-invalid'?: 'true' | 'false';
   'aria-describedby'?: string;
   'aria-required'?: 'true' | 'false';
 }
 
-// Type-safe event value extractor
-export type EventValueExtractor = (event: FormInputEvent | FormBlurEvent) => FormInputValue; 
+export type EventValueExtractor = (event: FormInputEvent | FormBlurEvent) => FormInputValue;
+
+export interface FormRef {
+  getFormValues: () => Record<string, FormInputValue>;
+  getValidationErrors: () => Record<string, string>;
+  hasErrors: () => boolean;
+  submit: () => void;
+  reset: () => void;
+  validate: () => { success: boolean; errors: Record<string, string> };
+} 

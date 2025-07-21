@@ -1,51 +1,294 @@
 const fs = require("fs");
+
+const OptimizedDeployer = require('./scripts/optimizedDeployer.js');
+const deployer = new OptimizedDeployer();
+
 const path = require("path");
 
-// CONFIGURATION
-const DEFAULT_CONFIG = { port: 1700, primaryColor: '#163b7c', timezone: 'UTC', currency: 'USD', adminRole: 'Administrator' };
+// Function to copy pages directory recursively
+function copyPagesDirectory(sourcePagesDir, destPagesDir) {
+  // Ensure the destination directory exists
+  if (!fs.existsSync(destPagesDir)) {
+    fs.mkdirSync(destPagesDir, { recursive: true });
+  }
 
-// UTILITY FUNCTIONS
-const ensureDir = dir => !fs.existsSync(dir) && fs.mkdirSync(dir, { recursive: true });
-const copyDirectory = (source, destination) => {
-  if (!fs.existsSync(source)) return;
-  ensureDir(destination);
-  fs.readdirSync(source).forEach(file => {
-    const sourcePath = path.join(source, file);
-    const destPath = path.join(destination, file);
-    fs.statSync(sourcePath).isDirectory() ? copyDirectory(sourcePath, destPath) : fs.copyFileSync(sourcePath, destPath);
+  // Read all files and directories in the source
+  const items = fs.readdirSync(sourcePagesDir);
+
+  items.forEach((item) => { 
+    const sourcePath = path.join(sourcePagesDir, item);
+    const destPath = path.join(destPagesDir, item);
+
+    if (fs.statSync(sourcePath).isDirectory()) {
+      // If it's a directory, recursively copy it
+      copyPagesDirectory(sourcePath, destPath);
+    } else {
+      // If it's a file, copy it
+      fs.copyFileSync(sourcePath, destPath);
+    }
   });
-};
-const generateSafeFolderName = appName => appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app';
+}
 
-// TEMPLATE CONFIGURATIONS
-const TEMPLATES = {
-  packageJson: (appName, projectFolderName) => JSON.stringify({
-    name: projectFolderName, version: '0.1.0', private: true,
-    scripts: { dev: 'vite', build: 'tsc && vite build', preview: 'vite preview', lint: 'eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0' },
-    dependencies: {
-      react: '^19.1.0', 'react-dom': '^19.1.0', 'react-router-dom': '^6.8.0', 'js-cookie': '^3.0.5',
-      '@types/react': '^18.0.28', '@types/react-dom': '^18.0.11', typescript: '^4.9.3', vite: '^4.1.0',
-      '@vitejs/plugin-react': '^3.1.0', '@originjs/vite-plugin-federation': '^1.4.1', tailwindcss: '^3.2.7',
-      postcss: '^8.4.21', autoprefixer: '^10.4.14'
+// Function to create app project in generated-apps folder
+function createAppProject(formData) {
+  const {
+    appName,
+    subdomain,
+    categories,
+    tariffPlans,
+    adminFirstName,
+    adminLastName,
+    adminEmail,
+    adminRole,
+    companyName,
+    companyWebsite,
+    primaryColor,
+    secondaryColor,
+    textPrimaryColor,
+    textSecondaryColor,
+    backgroundColor,
+    borderColor,
+    shadowColor,
+    iconColor,
+    gradientColor,
+    timezone,
+    currency,
+    modules,
+  } = formData;
+
+  // Create the project folder name - use appName instead of subdomain to avoid special characters
+  const projectFolderName =
+    appName
+      ?.toLowerCase()
+      .replace(/[^a-z0-9-]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "") || "my-admin-app";
+  const baseDir = path.join(__dirname, "generated-apps", projectFolderName);
+
+  // Helper to ensure directory exists
+  function ensureDir(dir) {
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+  }
+
+  // Create base directory
+  ensureDir(baseDir);
+
+  // Set up frontend directory
+  const frontendDir = path.join(baseDir, "frontend");
+  ensureDir(frontendDir);
+
+  // Copy pages directory
+  const sourcePagesDir = path.join(__dirname, "frontend", "src", "pages");
+  const destPagesDir = path.join(frontendDir, "src", "pages");
+  if (fs.existsSync(sourcePagesDir)) {
+    copyPagesDirectory(sourcePagesDir, destPagesDir);
+  }
+
+  // Helper to copy all icons and images
+  function copyAllAssets() {
+    // Copy all icons
+    const sourceIconsDir = path.join(__dirname, "frontend", "public", "icons");
+    const destIconsDir = path.join(frontendDir, "public", "icons");
+    ensureDir(destIconsDir);
+
+    if (fs.existsSync(sourceIconsDir)) {
+      const iconFiles = fs.readdirSync(sourceIconsDir);
+      iconFiles.forEach((iconName) => {
+        const sourcePath = path.join(sourceIconsDir, iconName);
+        const destPath = path.join(destIconsDir, iconName);
+
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+    }
+
+    // Copy all images
+    const sourceImagesDir = path.join(
+      __dirname,
+      "frontend",
+      "public",
+      "images"
+    );
+    const destImagesDir = path.join(frontendDir, "public", "images");
+    ensureDir(destImagesDir);
+
+    if (fs.existsSync(sourceImagesDir)) {
+      const imageFiles = fs.readdirSync(sourceImagesDir);
+      imageFiles.forEach((imageName) => {
+        const sourcePath = path.join(sourceImagesDir, imageName);
+        const destPath = path.join(destImagesDir, imageName);
+
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+    }
+
+    // Copy fonts directory
+    const sourceFontsDir = path.join(__dirname, "frontend", "public", "fonts");
+    const destFontsDir = path.join(frontendDir, "public", "fonts");
+
+    // Ensure Manrope font subdirectory exists in destination
+    const sourceManropeDir = path.join(sourceFontsDir, "Manrope");
+    const destManropeDir = path.join(destFontsDir, "Manrope");
+    if (fs.existsSync(sourceManropeDir)) {
+      ensureDir(destManropeDir);
+      const manropeFiles = fs.readdirSync(sourceManropeDir);
+      manropeFiles.forEach((fontName) => {
+        const sourcePath = path.join(sourceManropeDir, fontName);
+        const destPath = path.join(destManropeDir, fontName);
+        if (fs.statSync(sourcePath).isFile()) {
+          fs.copyFileSync(sourcePath, destPath);
+        }
+      });
+    }
+  }
+
+  // Copy all assets (icons, images, fonts)
+  copyAllAssets();
+
+  // Create the React project structure
+  const projectStructure = {
+    "package.json": JSON.stringify(
+      {
+        name:
+          appName
+            ?.toLowerCase()
+            .replace(/[^a-z0-9-]/g, "-")
+            .replace(/-+/g, "-")
+            .replace(/^-|-$/g, "") || projectFolderName,
+        version: "0.1.0",
+        private: true,
+
+        scripts: {
+          dev: "vite",
+          build: "tsc && vite build",
+          preview: "vite preview",
+          lint: "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        },
+        dependencies: {
+          react: "^19.1.0",
+          "react-dom": "^19.1.0",
+          "react-router-dom": "^6.8.0",
+          "js-cookie": "^3.0.5",
+          "@types/react": "^18.0.28",
+          "@types/react-dom": "^18.0.11",
+          typescript: "^4.9.3",
+          vite: "^4.1.0",
+          "@vitejs/plugin-react": "^3.1.0",
+          "@originjs/vite-plugin-federation": "^1.4.1",
+          tailwindcss: "^3.2.7",
+          postcss: "^8.4.21",
+          autoprefixer: "^10.4.14",
+        },
+        devDependencies: {
+          "@types/node": "^18.15.11",
+          eslint: "^8.36.0",
+          "@typescript-eslint/eslint-plugin": "^5.57.1",
+          "@typescript-eslint/parser": "^5.57.1",
+        },
+      },
+      null,
+      2
+    ),
+
+    "tsconfig.json": JSON.stringify(
+      {
+        compilerOptions: {
+          target: "ES2020",
+          useDefineForClassFields: true,
+          lib: ["ES2020", "DOM", "DOM.Iterable"],
+          module: "ESNext",
+          skipLibCheck: true,
+          moduleResolution: "bundler",
+          allowImportingTsExtensions: true,
+          resolveJsonModule: true,
+          isolatedModules: true,
+          noEmit: true,
+          jsx: "react-jsx",
+          jsxImportSource: "react",
+          strict: true,
+          noUnusedLocals: true,
+          noUnusedParameters: true,
+          noFallthroughCasesInSwitch: true,
+        },
+        include: ["src"],
+        references: [{ path: "./tsconfig.node.json" }],
+      },
+      null,
+      2
+    ),
+
+    "tsconfig.node.json": JSON.stringify(
+      {
+        compilerOptions: {
+          composite: true,
+          skipLibCheck: true,
+          module: "ESNext",
+          moduleResolution: "bundler",
+          allowSyntheticDefaultImports: true,
+        },
+        include: ["vite.config.ts"],
+      },
+      null,
+      2
+    ),
+
+    "vite.config.ts": `import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import federation from '@originjs/vite-plugin-federation';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    federation({
+      name: '${projectFolderName}',
+      remotes: {
+        SuperAdmin: 'http://localhost:3000/assets/remoteEntry.js',
+      },
+      shared: ['react', 'react-dom', 'react-router', 'react-router-dom'],
+    }),
+  ],
+  build: {
+    modulePreload: false,
+    target: 'esnext',
+    minify: false,
+    cssCodeSplit: false,
+  },
+  server: {
+    port: 1700,
+    fs: {
+      allow: ['..'],
     },
-    devDependencies: { '@types/node': '^18.15.11', eslint: '^8.36.0', '@typescript-eslint/eslint-plugin': '^5.57.1', '@typescript-eslint/parser': '^5.57.1' }
-  }, null, 2),
-  
-  tsConfig: () => JSON.stringify({
-    compilerOptions: {
-      target: 'ES2020', useDefineForClassFields: true, lib: ['ES2020', 'DOM', 'DOM.Iterable'], module: 'ESNext',
-      skipLibCheck: true, moduleResolution: 'bundler', allowImportingTsExtensions: true, resolveJsonModule: true,
-      isolatedModules: true, noEmit: true, jsx: 'react-jsx', jsxImportSource: 'react', strict: true,
-      noUnusedLocals: true, noUnusedParameters: true, noFallthroughCasesInSwitch: true, baseUrl: '.',
-      paths: { '@/*': ['src/*'], '@components/*': ['src/components/*'] }
-    }, include: ['src'], references: [{ path: './tsconfig.node.json' }]
-  }, null, 2),
-  
-  viteConfig: (projectFolderName) => `import { defineConfig } from 'vite';import react from '@vitejs/plugin-react';import federation from '@originjs/vite-plugin-federation';import path from 'path';export default defineConfig({plugins:[react(),federation({name:'${projectFolderName}',remotes:{SuperAdmin:'http://localhost:3000/assets/remoteEntry.js'},shared:['react','react-dom','react-router','react-router-dom']})],resolve:{alias:{'@':path.resolve(__dirname,'src'),'@components':path.resolve(__dirname,'src/components')}},build:{modulePreload:false,target:'esnext',minify:false,cssCodeSplit:false},server:{port:1700,fs:{allow:['..']}},publicDir:'public'});`,
-  
-  tailwindConfig: () => `/** @type {import('tailwindcss').Config} */export default {content:['./index.html','./src/**/*.{js,ts,jsx,tsx}','./src/**/*.css'],theme:{extend:{fontFamily:{sans:['Manrope','sans-serif'],manrope:['Manrope','sans-serif']}}},experimental:{optimizeUniversalDefaults:true}};`,
-  
-  postCssConfig: () => `module.exports = {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        secure: false,
+      }
+    }
+  },
+  publicDir: 'public',
+});`,
+
+    "tailwind.config.js": `/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    extend: {
+    },
+  },
+  plugins: [],
+  darkMode: 'class'
+}`,
+
+    "postcss.config.js": `module.exports = {
   plugins: {
     tailwindcss: {},
     autoprefixer: {}
@@ -532,537 +775,428 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
   return null;
 };
 
-export default CSSLoader;`
-});
+export default CSSLoader;`,
 
-// MAIN APP CREATION FUNCTION
-const createAppProject = (formData) => {
-  const { appName, modules } = formData;
-  const projectFolderName = generateSafeFolderName(appName);
-  const baseDir = path.join(__dirname, 'generated-apps', projectFolderName);
-  
-  console.log(`Creating project: ${projectFolderName}`);
-  ensureDir(baseDir);
-  
-  // FRONTEND SETUP
-  const frontendDir = path.join(baseDir, 'frontend');
-  ensureDir(frontendDir);
-  ['src/pages', 'src/components', 'src/context', 'src/types', 'src/styles', 'public/icons', 'public/images', 'public/fonts/Manrope'].forEach(dir => ensureDir(path.join(frontendDir, dir)));
-  
-  // Copy assets
-  const sourceAssets = path.join(__dirname, 'frontend', 'public');
-  copyDirectory(sourceAssets, path.join(frontendDir, 'public'));
-  
-  // Copy CSS files
-  ['global.css', 'default.css', 'custom.css'].forEach(cssFile => {
-    const sourcePath = path.join(__dirname, 'frontend', 'src', 'styles', cssFile);
-    const destPath = path.join(frontendDir, 'src', 'styles', cssFile);
-    fs.existsSync(sourcePath) && fs.copyFileSync(sourcePath, destPath);
-  });
-  
-  // Generate frontend files
-  const frontendFiles = {
-    'package.json': TEMPLATES.packageJson(appName, projectFolderName),
-    'tsconfig.json': TEMPLATES.tsConfig(),
-    'tsconfig.node.json': JSON.stringify({ compilerOptions: { composite: true, skipLibCheck: true, module: 'ESNext', moduleResolution: 'bundler', allowSyntheticDefaultImports: true }, include: ['vite.config.ts'] }, null, 2),
-    'vite.config.ts': TEMPLATES.viteConfig(projectFolderName),
-    'tailwind.config.js': TEMPLATES.tailwindConfig(),
-    'postcss.config.js': TEMPLATES.postCssConfig(),
-    'index.html': TEMPLATES.htmlTemplate(appName),
-    'src/main.tsx': TEMPLATES.mainTsx(),
-    'src/index.css': TEMPLATES.indexCss(),
-    'src/App.css': '#root { width: 100%; margin: 0 auto; }',
-    'src/App.tsx': generateAppTsx(formData),
-    'src/pages/SubLogin.tsx': TEMPLATES.subLogin(appName),
-    'src/types/federation.d.ts': TEMPLATES.typeDefinitions(),
-    'README.md': generateReadme(formData),
-    ...generateContextFiles(modules)
+    "src/Theme.jsx": `import React, { useEffect } from 'react';
+import { useTheme } from 'SuperAdmin/providers/ThemeProvider';
+
+export const Theme = ({ children }) => {
+    const { theme, updateTheme } = useTheme();
+    useEffect(() => {
+        updateTheme({
+            colorPrimary: '${primaryColor || '#163b7c'}',
+            colorSecondary: '${secondaryColor || '#55b56c'}',
+            colorTextPrimary: '${textPrimaryColor || '#262626'}',
+            colorTextSecondary: '${textSecondaryColor || '#7e7e7e'}',
+            colorBackgroundSecondary: '${backgroundColor || '#f5f8fc'}',
+            colorBorder: '${borderColor || '#e9efff'}',
+            colorShadowPrimary: '${shadowColor || '#dce4ef'}',
+            colorSubinfo: '${iconColor || '#476189'}',
+            colorPrimaryBorder: '${borderColor || '#e9efff'}',
+            colorCustomPrimary: '${primaryColor || '#163b7c'}',
+            colorCustomSecondary: '${secondaryColor || '#55b56c'}',
+            colorPrimaryDark: '${primaryColor || '#163b7c'}',
+            colorPrimaryLight: '${primaryColor || '#163b7c'}',
+            colorPrimaryBg: '${backgroundColor || '#f5f8fc'}',
+            colorPrimaryDeep: '${primaryColor || '#163b7c'}',
+            colorPrimaryBgLight: '${backgroundColor || '#f5f8fc'}',
+            colorPrimaryLightest: '${backgroundColor || '#f5f8fc'}',
+            colorSecondaryLight: '${secondaryColor || '#55b56c'}',
+            colorSurface: '${backgroundColor || '#f5f8fc'}',
+            colorGradientPrimary: 'linear-gradient(135deg, ${primaryColor || '#163b7c'}, ${primaryColor || '#163b7c'})',
+            colorGradientSecondary: 'linear-gradient(135deg, ${secondaryColor || '#55b56c'}, ${secondaryColor || '#55b56c'})'
+        });
+    }, []);
+
+    return <div>{children}</div>;
+};`,
+
+    "src/types/federation.d.ts": `
+declare module 'SuperAdmin/Dashboard' {
+  const Dashboard: React.ComponentType<any>;
+  export default Dashboard;
+}
+
+declare module 'SuperAdmin/Consumers' {
+  const Consumers: React.ComponentType<any>;
+  export default Consumers;
+}
+
+declare module 'SuperAdmin/Sidebar' {
+  const Sidebar: React.ComponentType<any>;
+  export default Sidebar;
+}
+
+declare module 'SuperAdmin/Header' {
+  const Header: React.ComponentType<any>;
+  export default Header;
+}
+
+declare module 'SuperAdmin/Ticket' {
+  const Ticket: React.ComponentType<any>;
+  export default Ticket;
+}
+
+declare module 'SuperAdmin/ConsumerView' {
+  const ConsumerView: React.ComponentType<any>;
+  export default ConsumerView;
+}
+
+declare module 'SuperAdmin/BillsPrepaid' {
+  const BillsPrepaid: React.ComponentType<any>;
+  export default BillsPrepaid;
+}
+
+declare module 'SuperAdmin/BillsPostpaid' { 
+  const BillsPostpaid: React.ComponentType<any>;
+  export default BillsPostpaid;
+}
+
+declare module 'SuperAdmin/Transformer' {
+  const Transformer: React.ComponentType<any>;
+  export default Transformer;
+}
+
+declare module 'SuperAdmin/Assets' {
+  const Assets: React.ComponentType<any>;
+  export default Assets;
+}
+
+declare module 'SuperAdmin/Meters' {
+  const Meters: React.ComponentType<any>;
+  export default Meters;
+}
+declare module 'SuperAdmin/DataLoggerMaster' {
+  const DataLoggerMaster: React.ComponentType<any>;
+  export default DataLoggerMaster;
+}
+
+declare module 'SuperAdmin/Users' {
+  const Users: React.ComponentType<any>;
+  export default Users;
+}
+
+declare module 'SuperAdmin/RoleManagement' {
+  const RoleManagement: React.ComponentType<any>;
+  export default RoleManagement;
+}
+
+declare module 'SuperAdmin/TicketView' {
+  const TicketView: React.ComponentType<any>;
+  export default TicketView;
+}
+
+declare module 'SuperAdmin/Page' {
+  const Page: React.ComponentType<any>;
+  export default Page;
+}
+
+declare module 'SuperAdmin/Table' {
+  const Table: React.ComponentType<any>;
+  export default Table;
+}
+
+declare module 'SuperAdmin/Dropdown' {
+  const Dropdown: React.ComponentType<any>;
+  export default Dropdown;
+}
+
+declare module 'SuperAdmin/Card' {
+  const Card: React.ComponentType<any>;
+  export default Card;
+}
+
+declare module 'SuperAdmin/PieChart' {
+  const PieChart: React.ComponentType<any>;
+  export default PieChart;
+}
+
+declare module 'SuperAdmin/BarChart' {
+  const BarChart: React.ComponentType<any>;
+  export default BarChart;
+}
+
+declare module 'SuperAdmin/TimeRangeSelector' {
+  const TimeRangeSelector: React.ComponentType<any>;
+  export default TimeRangeSelector;
+}
+
+declare module 'SuperAdmin/PageHeader' {
+  const PageHeader: React.ComponentType<any>;
+  export default PageHeader;
+}
+
+declare module 'SuperAdmin/OrgChart' {
+  const OrgChart: React.ComponentType<any>;
+  export default OrgChart;
+}
+
+declare module 'SuperAdmin/context/AppContext' {
+  export const useApp: () => any;
+  export const AppProvider: React.ComponentType<any>;
+}
+
+declare module 'SuperAdmin/AppProvider' {
+  const AppProvider: React.ComponentType<any>;
+  export default AppProvider;
+}
+
+declare module 'SuperAdmin/useApp' {
+  export const useApp: () => any;
+}
+`,
+
+    "README.md": `# ${appName || "Admin App"}
+
+This is a React application generated from the Admin Module configuration.
+
+## App Details
+
+- **App Name**: ${appName || "Not specified"}
+- **Company**: ${companyName || "Not specified"}
+- **Subdomain**: ${subdomain || "Not specified"}
+- **Admin**: ${adminFirstName} ${adminLastName} (${adminEmail})
+- **Role**: ${adminRole || "Administrator"}
+- **Timezone**: ${timezone || "Not specified"}
+- **Currency**: ${currency || "Not specified"}
+
+## Modules
+
+${modules?.map((module) => `- ${module}`).join("\n") || "No modules configured"}
+
+## Getting Started
+
+1. Install dependencies:
+   \`\`\`bash
+   npm install
+   \`\`\`
+
+2. Start the development server:
+   \`\`\`bash
+   npm run dev
+   \`\`\`
+
+3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Available Scripts
+
+- \`npm run dev\` - Start development server
+- \`npm run build\` - Build for production
+- \`npm run preview\` - Preview production build
+- \`npm run lint\` - Run ESLint
+
+## Technologies Used
+
+- React 18
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+
+## Project Structure
+
+\`\`\`
+src/
+├── components/     # Reusable components
+├── pages/         # Page components
+├── context/       # React context
+├── App.tsx        # Main app component
+├── main.tsx       # App entry point
+└── index.css      # Global styles
+\`\`\`
+
+## Features
+
+- **Dark Mode Support**: Toggle between light and dark themes
+- **Collapsible Sidebar**: Expandable/collapsible navigation sidebar
+- **Responsive Design**: Works on desktop and mobile devices
+- **Search Functionality**: Global search with keyboard shortcuts (Ctrl+K)
+- **Module-based Navigation**: Dynamic navigation based on enabled modules
+
+Generated on: ${new Date().toLocaleDateString()}
+`,
   };
+
+  // --- BACKEND SCAFFOLDING START ---
+  // Get dynamic port for this backend
+  const dynamicPort = deployer.findAvailablePort();
   
-  Object.entries(frontendFiles).forEach(([filePath, content]) => {
-    const fullPath = path.join(frontendDir, filePath);
-    ensureDir(path.dirname(fullPath));
-    fs.writeFileSync(fullPath, content);
-  });
-  
-  // BACKEND SETUP
-  const backendDir = path.join(baseDir, 'backend');
-  ensureDir(backendDir);
-  ensureDir(path.join(backendDir, 'routes'));
-  ensureDir(path.join(backendDir, 'prisma'));
-  
+  // Backend template files
   const backendFiles = {
-    'package.json': TEMPLATES.backendPackage(projectFolderName),
-    'server.js': TEMPLATES.backendServer(),
-    'routes/index.js': `const express=require('express');const router=express.Router();router.get('/test',(req,res)=>{res.json({message:'Backend is working!'})});module.exports=router;`,
-    '.env': TEMPLATES.backendEnv(),
-    'prisma/schema.prisma': TEMPLATES.prismaSchema()
+    "package.json": JSON.stringify(
+      {
+        name: `${projectFolderName}-backend`,
+        version: "1.0.0",
+        main: "server.js",
+        scripts: {
+          start: "node server.js",
+        },
+        dependencies: {
+          express: "^4.18.2",
+          dotenv: "^16.0.3",
+        },
+      },
+      null,
+      2
+    ),
+
+    "server.js": `require('dotenv').config();
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || ${dynamicPort};
+
+app.use(express.json());
+
+app.get('/api/health', (req, res) => res.json({ status: 'ok' }));
+
+// Add your routes here
+
+app.listen(PORT, () => console.log('Backend running on port ' + PORT));
+`,
+
+    "routes/index.js": `\nconst express = require('express');\nconst router = express.Router();\n\n// Define your routes here\n\nmodule.exports = router;\n`,
   };
-  
+
+  // Create backend directory
+  const backendDir = path.join(baseDir, "backend");
+  ensureDir(backendDir);
+  ensureDir(path.join(backendDir, "routes"));
+
+  // Write backend files
   Object.entries(backendFiles).forEach(([filePath, content]) => {
     const fullPath = path.join(backendDir, filePath);
     ensureDir(path.dirname(fullPath));
+    fs.writeFileSync(fullPath, content.trimStart());
+  });
+
+  // Add .env example file for backend
+  const envExampleContent = `# Example environment file for backend
+NODE_ENV=development
+PORT=${dynamicPort}
+
+JWT_EXPIRES_IN=4h
+
+DATABASE_URL=postgresql://postgres:password@localhost:5432/your_db_name_here?schema=public
+`;
+  fs.writeFileSync(path.join(backendDir, ".env"), envExampleContent);
+  // --- BACKEND SCAFFOLDING END ---
+
+  // --- PRISMA SUPPORT START ---
+  // Update backend package.json for Prisma
+  const backendPkgPath = path.join(backendDir, "package.json");
+  if (fs.existsSync(backendPkgPath)) {
+    const backendPkg = JSON.parse(fs.readFileSync(backendPkgPath, "utf8"));
+    backendPkg.dependencies = backendPkg.dependencies || {};
+    backendPkg.devDependencies = backendPkg.devDependencies || {};
+    backendPkg.dependencies["@prisma/client"] = "^5.12.0";
+    backendPkg.devDependencies["prisma"] = "^5.12.0";
+    fs.writeFileSync(backendPkgPath, JSON.stringify(backendPkg, null, 2));
+  }
+
+  // Create prisma directory and schema.prisma
+  const prismaDir = path.join(backendDir, "prisma");
+  ensureDir(prismaDir);
+
+  // Copy db_schema.txt as schema.prisma if it exists, otherwise use example schema
+  const dbSchemaPath = path.join(
+    __dirname,
+    "..",
+    "AdminModule",
+    "db_schema.txt"
+  );
+  const targetSchemaPath = path.join(prismaDir, "schema.prisma");
+  if (fs.existsSync(dbSchemaPath)) {
+    fs.copyFileSync(dbSchemaPath, targetSchemaPath);
+    console.log("Copied db_schema.txt to", targetSchemaPath);
+  } else {
+    const schemaContent = `// Example Prisma schema
+// Replace this with your actual schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Example model
+model User {
+  id    Int    @id @default(autoincrement())
+  email String @unique
+  name  String
+}
+`;
+    fs.writeFileSync(targetSchemaPath, schemaContent);
+    console.log("Wrote example schema.prisma to", targetSchemaPath);
+  }
+
+  // Add Prisma usage comment to server.js
+  const serverPath = path.join(backendDir, "server.js");
+  if (fs.existsSync(serverPath)) {
+    let serverContent = fs.readFileSync(serverPath, "utf8");
+    if (!serverContent.includes("PrismaClient")) {
+      serverContent =
+        `// To use Prisma:
+// const { PrismaClient } = require('@prisma/client');
+// const prisma = new PrismaClient();
+
+` + serverContent;
+      fs.writeFileSync(serverPath, serverContent);
+    }
+  }
+  // --- PRISMA SUPPORT END ---
+
+  // Create directories and write files
+  Object.entries(projectStructure).forEach(([filePath, content]) => {
+    const fullPath = path.join(frontendDir, filePath);
+    const dir = path.dirname(fullPath);
+
+    // Ensure directory exists
+    ensureDir(dir);
+
+    // Write file
     fs.writeFileSync(fullPath, content);
   });
+
+  console.log(
+    `Project "${projectFolderName}" created successfully at: ${baseDir}`
+  );
+  console.log(`Next steps:`);
+  console.log(`   1. cd ${baseDir}`);
+  console.log(`   2. npm install`);
+  console.log(`   3. npm run dev`);
+
   
-  console.log(`\n✅ Project "${projectFolderName}" created successfully!\n📁 Location: ${baseDir}`);
+  // --- BACKEND DEPLOYMENT START ---
+  // Deploy backend to XAMPP using optimized deployer
+  try {
+    console.log('\n🚀 Deploying backend to XAMPP...');
+    const deploymentResult = deployer.deployBackend(projectFolderName, backendDir);
+    
+    if (deploymentResult.success) {
+      console.log('\n✅ Backend deployed successfully!');
+      console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
+      console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
+      console.log(`   • Environment: ${deploymentResult.envUrl}`);
+      console.log(`   • Port: ${deploymentResult.port}`);
+      console.log(`   • Mode: DEVELOPMENT`);
+    } else {
+      console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
+      console.log('   You can manually deploy using:');
+      console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+    }
+  } catch (error) {
+    console.log('\n⚠️  Backend deployment failed:', error.message);
+    console.log('   You can manually deploy using:');
+    console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+  }
+  // --- BACKEND DEPLOYMENT END ---
+
+
   return baseDir;
-};
-
-// HELPER FUNCTIONS FOR TEMPLATES
-const generateAppTsx = (formData) => {
-  const { modules } = formData;
-  const SELECTED_FEATURES = modules || [];
-  const SIDEBAR_MENUS = generateSidebarMenus(modules || []);
-  
-  return `import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from 'react-router-dom';
-import { AppProvider, useApp } from './context/AppContext';
-import { FederatedContextProvider } from './components/FederatedWrapper';
-import CSSLoader from './components/CSSLoader';
-import SubLogin from './pages/SubLogin';
-import './App.css';
-
-const FederatedSidebar = React.lazy(() => import('SuperAdmin/Sidebar').catch(error => {
-  console.error('Failed to load Sidebar:', error);
-  return Promise.resolve({
-    default: ({ isCollapsed, menus, currentPath, onNavigate }: any) => {
-      const React = require('react');
-      const { useState } = React;
-      const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
-
-      const toggleSubmenu = (menuTitle: string) => {
-        setExpandedMenus(prev => ({
-          ...prev,
-          [menuTitle]: !prev[menuTitle]
-        }));
-      };
-
-      return (
-        <div className={\`transition-[width] duration-300 ease-in-out \${isCollapsed ? 'w-20' : 'w-72'}\`}>
-          <nav className={\`h-screen flex flex-col justify-between items-center w-full bg-background-secondary dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out \${isCollapsed ? 'w-20' : 'w-72'}\`} aria-label="Main navigation">
-            <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
-              <header className={\`dark:bg-primary-dark flex justify-center border-b border-b-primary-border dark:border-dark-border items-center \${isCollapsed ? 'bg-primary px-4' : 'bg-white px-10'} py-6\`}>
-                <img
-                  src={isCollapsed ? '/images/bi-blue-logo.svg' : '/images/bi-logo-latest.svg'}
-                  alt="Logo"
-                  className={\`md:block \${isCollapsed ? 'w-8' : 'w-[170px]'}\`}
-                />
-              </header>
-              <main className="flex p-4 flex-col w-full md:block dark:bg-primary-dark-light">
-                {(menus || []).map((category: any, categoryIndex: number) => (
-                  <section key={categoryIndex} className="flex flex-col w-full" aria-label={category.category}>
-                    {!isCollapsed && (
-                      <h2 className="px-4 py-2 text-sm font-semibold uppercase text-neutral-dark dark:text-white">
-                        {category.category}
-                      </h2>
-                    )}
-                    <ul className="list-none p-0 m-0 gap-2 flex flex-col">
-                      {category.items.map((menuItem: any, itemIndex: number) => (
-                        <li key={itemIndex}>
-                          {menuItem.hasSubmenu ? (
-                            <div className="relative w-full">
-                              <button
-                                onClick={() => toggleSubmenu(menuItem.title)}
-                                className={\`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left \${currentPath === menuItem.link ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white custom-shadow' : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'}\`}
-                                aria-expanded={expandedMenus[menuItem.title]}
-                                aria-controls={\`submenu-\${menuItem.title}\`}>
-                                <span className="w-6 h-6 flex items-center justify-center">
-                                  <img src={menuItem.icon} alt="" className={\`w-6 h-6 icon-dark-filter transition-all duration-200 \${currentPath === menuItem.link ? 'icon-filter' : 'group-hover:icon-filter'}\`} aria-hidden="true" />
-                                </span>
-                                {!isCollapsed && (
-                                  <div className="flex items-center justify-between w-full gap-2">
-                                    <span>{menuItem.title}</span>
-                                    <span className={\`transition-transform \${expandedMenus[menuItem.title] ? 'rotate-180' : ''}\`}>
-                                      <img src="/icons/arrow-down.svg" alt="" className="w-3 h-3" aria-hidden="true" />
-                                    </span>
-                                  </div>
-                                )}
-                              </button>
-                              {!isCollapsed && (
-                                <ul id={\`submenu-\${menuItem.title}\`} className={\`relative flex flex-col overflow-hidden transition-all duration-300 ease-in-out pl-0 \${expandedMenus[menuItem.title] ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}\`}>
-                                  <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200"></span>
-                                  {menuItem.submenu?.map((subItem: any, subIndex: number) => (
-                                    <li key={subIndex} className="relative">
-                                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-0.5 bg-gray-200"></span>
-                                      <button
-                                        onClick={() => subItem.link && onNavigate?.(subItem.link)}
-                                        className={\`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left \${currentPath === subItem.link ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow' : 'text-gray-400 hover:text-primary'}\`}>
-                                        {subItem.title}
-                                      </button>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
-                            </div>
-                          ) : (
-                            <button
-                              onClick={() => menuItem.link && onNavigate?.(menuItem.link)}
-                              className={\`flex items-center gap-4 py-3 px-4 text-sm cursor-pointer group rounded-lg w-full text-left \${currentPath === menuItem.link ? 'text-primary bg-white dark:bg-primary dark:text-white custom-shadow' : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'}\`}>
-                              <span className="w-6 h-6 flex items-center justify-center">
-                                <img src={menuItem.icon} alt="" className={\`w-6 h-6 icon-dark-filter transition-all duration-200 \${currentPath === menuItem.link ? 'icon-filter' : ''}\`} aria-hidden="true" />
-                              </span>
-                              {!isCollapsed && (
-                                <div className="flex items-center justify-between w-full gap-2 font-semibold">
-                                  <span>{menuItem.title}</span>
-                                  {menuItem.count && (
-                                    <span className={\`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center group-hover:bg-brand items-center \${currentPath === menuItem.link ? 'bg-primary dark:bg-secondary' : 'bg-primary dark:bg-secondary'}\`}>
-                                      {menuItem.count}
-                                    </span>
-                                  )}
-                                </div>
-                              )}
-                            </button>
-                          )}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-                ))}
-              </main>
-            </div>
-          </nav>
-        </div>
-      );
-    }
-  });
-}));
-
-const FederatedHeader = React.lazy(() => import('SuperAdmin/Header').catch(error => {
-  console.error('Failed to load Header:', error);
-  return Promise.resolve({
-    default: ({ title, onSidebarToggle }: any) => {
-      const React = require('react');
-      const { useState } = React;
-      const [isFullScreen, setIsFullScreen] = useState(false);
-      const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-      const [notifications] = useState([
-        { id: 1, title: 'System Update', message: 'New system update available', time: '2 minutes ago', isRead: false, type: 'info' },
-        { id: 2, title: 'Payment Received', message: 'Payment of ₹500 received from user', time: '5 minutes ago', isRead: false, type: 'success' },
-        { id: 3, title: 'Alert', message: 'High power consumption detected', time: '10 minutes ago', isRead: true, type: 'warning' }
-      ]);
-
-      const toggleFullScreen = () => {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
-          setIsFullScreen(true);
-        } else {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-            setIsFullScreen(false);
-          }
-        }
-      };
-
-      const unreadCount = notifications.filter(n => !n.isRead).length;
-
-      return (
-        <header className="border-b border-primary-border flex items-center justify-between px-6 py-4">
-          <nav className="flex items-center gap-4">
-            <figure
-              className="p-2 bg-stat-icon-gradient w-8 h-8 rounded-full flex items-center justify-center hover:text-white cursor-pointer"
-              onClick={onSidebarToggle}
-              aria-label="Toggle sidebar">
-              <img
-                src="/icons/arrow-left-from-arc.svg"
-                className="h-6 w-6 custom-filter"
-                alt="Toggle sidebar"
-              />
-            </figure>
-            <h1 className="text-base text-primary-dark dark:text-white">{title || 'Dashboard'}</h1>
-          </nav>
-          
-          <section className="flex-1 max-w-2xl mx-8" aria-label="Search section">
-            <div className="relative">
-              <input
-                type="search"
-                placeholder="Search..."
-                className="w-full text-primary-dark px-4 py-3 pr-32 rounded-full border border-primary-border text-main text-sm font-light bg-white dark:bg-primary-dark dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder-black placeholder:font-normal dark:placeholder:text-main dark:placeholder:font-light"
-                aria-label="Search"
-              />
-              <div className="absolute inset-y-0 right-2 flex items-center gap-2">
-                <div className="flex items-center gap-1 text-sm">
-                  <kbd className="px-2 text-primary-dark-light text-sm font-light bg-background-secondary dark:bg-primary-dark-light rounded dark:text-subinfo">
-                    Ctrl
-                  </kbd>
-                  <span className="text-primary-dark dark:text-subinfo">+</span>
-                  <kbd className="px-2 text-primary-dark text-sm font-light bg-background-secondary dark:bg-primary-dark-light rounded dark:text-subinfo">
-                    K
-                  </kbd>
-                </div>
-                <span className="bg-background-secondary dark:bg-primary-dark rounded-full w-8 h-8 flex items-center justify-center">
-                  <img
-                    src="/icons/search-icon.svg"
-                    alt="Search"
-                    className="h-4.5 w-4.5"
-                  />
-                </span>
-              </div>
-            </div>
-          </section>
-
-          <nav className="flex items-center gap-4" aria-label="User actions">
-            <figure
-              className="p-2 w-8 h-8 bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center cursor-pointer"
-              onClick={toggleFullScreen}
-              aria-label="Toggle full screen">
-              <img
-                src="/icons/full-screen.svg"
-                alt="Full screen"
-                className="h-6 w-6"
-              />
-            </figure>
-            
-            <div className="relative">
-              <figure
-                onClick={() => setIsNotificationsOpen(!isNotificationsOpen)}
-                className="p-2 bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer relative"
-                aria-label="Notifications"
-              >
-                <img
-                  src="/icons/bell.svg"
-                  alt="Notifications"
-                  className="h-4 w-4"
-                />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
-                    {unreadCount > 9 ? '9+' : unreadCount}
-                  </span>
-                )}
-              </figure>
-            </div>
-            
-            <figure
-              className="p-2 flex bg-background-secondary dark:bg-dark-secondary rounded-full flex items-center justify-center items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200 cursor-pointer"
-              aria-label="User profile"
-            >
-              <img
-                src="/icons/user.svg"
-                alt="User profile"
-                className="h-6 w-6"
-              />
-            </figure>
-          </nav>
-        </header>
-      );
-    }
-  });
-}));
-
-declare global {
-  interface Window {
-    __SELECTED_MODULES__?: any[];
-    __GENERATE_MENUS__?: (modules: any[]) => any[];
-    __SUPERADMIN_AVAILABLE__?: boolean;
-  }
 }
-
-const modules = window.__SELECTED_MODULES__ || [];
-const generateSidebarMenus = window.__GENERATE_MENUS__ || (() => []);
-const SELECTED_FEATURES = modules;
-const SIDEBAR_MENUS = generateSidebarMenus(modules);
-
-if (typeof window !== 'undefined') {
-  window.__SUPERADMIN_AVAILABLE__ = false;
-}
-
-localStorage.setItem('selectedModules', JSON.stringify(modules));
-localStorage.setItem('sidebarMenus', JSON.stringify(SIDEBAR_MENUS));
-
-function DynamicContent() {
-  const location = useLocation();
-  const pathname = location.pathname;
-
-  const isAllowedPath = () => {
-    const mandatoryPaths = ['/', '/consumers', '/consumers/add', '/users', '/role-management'];
-    if (mandatoryPaths.includes(pathname)) return true;
-
-    const optionalPaths = {
-      '/bills/prepaid': ['bills', 'bills_prepaid'],
-      '/bills/postpaid': ['bills', 'bills_postpaid'],
-      '/dtr-dashboard': ['dtr_dashboard'],
-      '/asset-management': ['asset_management'],
-      '/connect-disconnect': ['asset_management'],
-      '/meter-management/meters-list': ['meters', 'meter_management'],
-      '/meter-management/meters-list/add': ['meters', 'meter_management'],
-      '/meter-management/data-logger-master': ['meters', 'meter_management'],
-      '/meter-management/data-logger-master/add': ['meters', 'meter_management'],
-      '/all-tickets': ['tickets', 'all_tickets'],
-    };
-
-    const allowedKeys = optionalPaths[pathname as keyof typeof optionalPaths];
-    return allowedKeys ? allowedKeys.some((k: any) => SELECTED_FEATURES.includes(k)) : false;
-  };
-
-  if (!isAllowedPath()) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h2>
-          <p className="text-gray-600">This feature is not available in your plan.</p>
-        </div>
-      </div>
-    );
-  }
-
-  function safeReplaceAll(str: string, search: string, replacement: string) {
-    return str.split(search).join(replacement);
-  }
-
-  function getFederatedComponentPath(pathname: string) {
-    if (pathname === '/') return '/Dashboard';
-    const cleanedPath = safeReplaceAll(pathname, '-', '');
-    return (
-      '/' +
-      cleanedPath
-        .split('/')
-        .map((p: string) => (p ? p.charAt(0).toUpperCase() + p.slice(1) : ''))
-        .join('/')
-    );
-  }
-
-  const FederatedComponent = React.lazy(() => {
-    const componentPath = getFederatedComponentPath(pathname);
-    console.log('Loading federated component:', \`SuperAdmin\${componentPath}\`);
-    
-    if (typeof window !== 'undefined' && !window.__SUPERADMIN_AVAILABLE__) {
-      console.log('SuperAdmin not available, using fallback component');
-      return Promise.resolve({
-        default: () => {
-          if (pathname === '/') {
-            return (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <h2 className="text-2xl font-bold text-gray-800 mb-4">Dashboard</h2>
-                  <p className="text-gray-600">Welcome to your admin dashboard</p>
-                </div>
-              </div>
-            );
-          }
-          
-          return (
-            <div className="flex items-center justify-center h-full">
-              <div className="text-center">
-                <h2 className="text-2xl font-bold text-gray-800 mb-4">Component Not Available</h2>
-                <p className="text-gray-600">The requested component could not be loaded.</p>
-                <p className="text-sm text-gray-500 mt-2">Path: {componentPath}</p>
-                <p className="text-sm text-gray-500">Make sure SuperAdmin is running for full functionality.</p>
-              </div>
-            </div>
-          );
-        }
-      });
-    }
-    
-    return import(\`SuperAdmin\${componentPath}\`).then(module => {
-      if (typeof window !== 'undefined') {
-        window.__SUPERADMIN_AVAILABLE__ = true;
-      }
-      return module;
-    }).catch(error => {
-      console.error('Failed to load federated component:', error);
-      if (typeof window !== 'undefined') {
-        window.__SUPERADMIN_AVAILABLE__ = false;
-      }
-      return Promise.resolve({
-        default: () => (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-800 mb-4">Component Not Available</h2>
-              <p className="text-gray-600">The requested component could not be loaded.</p>
-              <p className="text-sm text-gray-500 mt-2">Path: {componentPath}</p>
-              <p className="text-sm text-gray-500">Make sure SuperAdmin is running for full functionality.</p>
-            </div>
-          </div>
-        )
-      });
-    });
-  });
-  
-  return (
-    <React.Suspense fallback={<div className="flex items-center justify-center h-full">Loading...</div>}>
-      <FederatedComponent />
-    </React.Suspense>
-  );
-}
-
-function RequireAuth({ children }: { children: React.ReactNode }) {
-  const isLoggedIn = !!localStorage.getItem('token');
-  const location = useLocation();
-  return isLoggedIn ? children : <Navigate to="/login" state={{ from: location }} replace />;
-}
-
-function AppContent() {
-  const { isSidebarCollapsed, toggleSidebar } = useApp();
-  const location = useLocation();
-
-  return (
-    <FederatedContextProvider
-      value={{
-        isSidebarCollapsed,
-        toggleSidebar,
-        isDarkMode: false,
-        selectedModules: [],
-        toggleTheme: () => {},
-        setSelectedModules: () => {},
-      }}
-    >
-      <Routes>
-        <Route path="/login" element={<SubLogin />} />
-        <Route
-          path="*"
-          element={
-            <RequireAuth>
-              <div className="flex h-screen bg-white">
-                <React.Suspense fallback={<div>Loading Sidebar...</div>}>
-                  <FederatedSidebar
-                    isCollapsed={isSidebarCollapsed}
-                    menus={SIDEBAR_MENUS}
-                    currentPath={location.pathname}
-                    onNavigate={(path: string) => (window.location.href = path)}
-                  />
-                </React.Suspense>
-                <div className="flex flex-col flex-1">
-                  <React.Suspense fallback={<div>Loading Header...</div>}>
-                    <FederatedHeader
-                      title={(location.pathname.split('/').join(' ').trim()) || 'Dashboard'}
-                      onSidebarToggle={toggleSidebar}
-                    />
-                  </React.Suspense>
-                  <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-                    <Routes>
-                      <Route path="*" element={<DynamicContent />} />
-                    </Routes>
-                  </main>
-                </div>
-              </div>
-            </RequireAuth>
-          }
-        />
-      </Routes>
-    </FederatedContextProvider>
-  );
-}
-
-function App() {
-  return (
-    <Router>
-      <AppProvider>
-        <CSSLoader />
-        <AppContent />
-      </AppProvider>
-    </Router>
-  );
-}
-
-export default App;`;
-};
-
-const generateReadme = (formData) => {
-  const { appName, companyName, adminFirstName, adminLastName, adminEmail, adminRole, timezone, currency, modules } = formData;
-  return `# ${appName || 'Admin App'}\n\nThis is a React application generated from the Admin Module configuration.\n\n## App Details\n\n- **App Name**: ${appName || 'Not specified'}\n- **Company**: ${companyName || 'Not specified'}\n- **Admin**: ${adminFirstName} ${adminLastName} (${adminEmail})\n- **Role**: ${adminRole || 'Administrator'}\n- **Timezone**: ${timezone || 'Not specified'}\n- **Currency**: ${currency || 'Not specified'}\n\n## Modules\n\n${modules?.map((module) => `- ${module}`).join('\n') || 'No modules configured'}\n\n## Getting Started\n\n1. Install dependencies:\n   \`\`\`bash\n   npm install\n   \`\`\`\n\n2. Start the development server:\n   \`\`\`bash\n   npm run dev\n   \`\`\`\n\n3. Open [http://localhost:1700](http://localhost:1700) in your browser.\n\n## Available Scripts\n\n- \`npm run dev\` - Start development server\n- \`npm run build\` - Build for production\n- \`npm run preview\` - Preview production build\n- \`npm run lint\` - Run ESLint\n\n## Technologies Used\n\n- React 19\n- TypeScript\n- Vite\n- Tailwind CSS\n- React Router\n- Module Federation\n\n## Project Structure\n\n\`\`\`\nsrc/\n├── components/     # Reusable components\n├── pages/         # Page components\n├── context/       # React context\n├── App.tsx        # Main app component\n├── main.tsx       # App entry point\n└── index.css      # Global styles\n\`\`\`\n\n## Features\n\n- **Dark Mode Support**: Toggle between light and dark themes\n- **Collapsible Sidebar**: Expandable/collapsible navigation sidebar\n- **Responsive Design**: Works on desktop and mobile devices\n- **Module-based Navigation**: Dynamic navigation based on enabled modules\n- **Federated Components**: Loads components from SuperAdmin module\n\nGenerated on: ${new Date().toLocaleDateString()}`;
-};
-
 // Export the function
 module.exports = { createAppProject };
 // If running directly, use example data

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FormInput from '@components/forms/FormInput';
+import FormInput from '@components/Form/FormInput';
 import Dropdown from '@components/global/Dropdown';
 import Button from '@components/global/Button';
-import type { FormInputValue } from '@components/forms/types';
+import type { FormInputValue } from '@components/Form/types';
 
 interface TicketFormData {
     consumerName: string;

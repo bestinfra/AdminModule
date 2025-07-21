@@ -13,6 +13,7 @@ interface PieChartProps {
     enableAnimation?: boolean;
     showNoDataMessage?: boolean;
     onClick?: (segmentName?: string) => void;
+    className?: string; // Add className prop
 }
 
 const PieChart: React.FC<PieChartProps> = React.memo(({
@@ -27,11 +28,12 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
     colors,
     isDarkMode: propIsDarkMode,
     height = '400px',
-    ariaLabel = 'Pie chart',
+    ariaLabel = 'pie chart',
     description,
     enableAnimation = process.env.NODE_ENV === 'production',
     showNoDataMessage = true,
     onClick,
+    className, // Add className prop
 }) => {
     const { isDarkMode: contextIsDarkMode } = useApp();
     const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
@@ -136,7 +138,7 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
     }
 
     return (
-        <div className="w-full h-full" role="img" aria-label={ariaLabel}>
+        <div className={`w-full h-full ${className || ''}`} role="img" aria-label={ariaLabel}>
             {title && <span className="sr-only">{title}</span>}
             {description && <span className="sr-only">{description}</span>}
             <ReactECharts

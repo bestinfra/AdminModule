@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '@components/global/Button';
-import type { CommonInputProps } from '@components/forms/types';
+import type { CommonInputProps } from '@components/Form/types';
 
 interface FileInputProps extends CommonInputProps {
   value: FileList | null;
