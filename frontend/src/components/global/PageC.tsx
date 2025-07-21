@@ -95,13 +95,13 @@ const getLayoutClass = (layout?: LayoutConfig) => {
     let baseClass = '';
     switch (type) {
         case 'row':
-            baseClass = `flex flex-row mb-4 ${gap || 'gap-4'}`;
+            baseClass = `flex flex-row mb-2 ${gap || 'gap-4'}`;
             break;
         case 'column':
-            baseClass = `flex flex-col mb-4 ${gap || 'gap-4'}`;
+            baseClass = `flex flex-col mb-2 ${gap || 'gap-4'}`;
             break;
         case 'grid': {
-            let gridClass = `grid mb-4 ${gap || 'gap-4'}`;
+            let gridClass = `grid mb-2 ${gap || 'gap-4'}`;
             if (columns) gridClass += ` grid-cols-${columns}`;
             if (gridRows) gridClass += ` grid-rows-${gridRows}`;
             baseClass = gridClass;

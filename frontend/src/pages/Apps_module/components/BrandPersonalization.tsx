@@ -207,31 +207,32 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
 
 
   return (
-    <div className="mx-auto">
-      <div className="bg-white rounded-xl border border-primary-border p-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
-          <div className="">
-            <h2 className="text-base font-semibold text-primary">
-              Branding & Customization
-            </h2>
-            <p className="text-base text-gray-600 mt-2">
-              Customize your application's appearance and branding elements
-            </p>
-          </div>
+    <>
+      <div className="mx-auto">
+        <div className="bg-white rounded-xl border border-primary-border p-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="col-span-1 lg:col-span-3 p-4 flex flex-col gap-4">
+            <div className="">
+              <h2 className="text-base font-semibold text-primary">
+                Branding & Customization
+              </h2>
+              <p className="text-base text-gray-600 mt-2">
+                Customize your application's appearance and branding elements
+              </p>
+            </div>
 
-          <form
-            className="space-y-6"
-            onSubmit={(e) => {
-              e.preventDefault();
-              setHasSubmitted(true);
+            <form
+              className="space-y-6"
+              onSubmit={(e) => {
+                e.preventDefault();
+                setHasSubmitted(true);
 
-              console.log(' BrandPersonalization - Form Submission:', {
-                formData,
-                isValid,
-                validationErrors,
-                remarks,
-                hasSubmitted: true
-              });
+                console.log(' BrandPersonalization - Form Submission:', {
+                  formData,
+                  isValid,
+                  validationErrors,
+                  remarks,
+                  hasSubmitted: true
+                });
 
               // Only proceed if validation passes
               if (isValid) {
@@ -284,104 +285,104 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
               </div>
             </div>
 
-            {/* Branding Assets Section */}
-            <div className="p-4 border border-primary-border rounded-xl">
-              <div className="mb-4">
-                <h3 className="text-sm font-semibold text-primary">Company Logo</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-xl">
-                <div className="div1 flex justify-between w-full gap-6">
-                  <div className="div2 w-full flex flex-col gap-4">
-                    <DragDropFileUpload
-                      id="appLogo"
-                      name="appLogo"
-                      label="Dark Mode"
-                      preview={darkModeLogo1Preview}
-                      isDragOver={isLogoDragOver}
-                      onFileChange={(file) => handleFileUpload(file, 'logo', 'darkMode1')}
-                      onDragOver={(e) => handleDragOver(e, 'logo')}
-                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                      onDrop={(e) => handleDrop(e, 'logo', 'darkMode1')}
-                      accept="image/*"
-                      browseLabel="browse"
-                      helperText="PNG, SVG up to 5MB"
-                      previewOnClick={() => document.getElementById('appLogo')?.click()}
-                    />
+              {/* Branding Assets Section */}
+              <div className="p-4 border border-primary-border rounded-xl">
+                <div className="mb-4">
+                  <h3 className="text-sm font-semibold text-primary">Company Logo</h3>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-xl">
+                  <div className="div1 flex justify-between w-full gap-6">
+                    <div className="div2 w-full flex flex-col gap-4">
+                      <DragDropFileUpload
+                        id="appLogo"
+                        name="appLogo"
+                        label="Dark Mode"
+                        preview={darkModeLogo1Preview}
+                        isDragOver={isLogoDragOver}
+                        onFileChange={(file) => handleFileUpload(file, 'logo', 'darkMode1')}
+                        onDragOver={(e) => handleDragOver(e, 'logo')}
+                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'darkMode1')}
+                        accept="image/*"
+                        browseLabel="browse"
+                        helperText="PNG, SVG up to 5MB"
+                        previewOnClick={() => document.getElementById('appLogo')?.click()}
+                      />
 
-                    <DragDropFileUpload
-                      id="appLogo2"
-                      name="appLogo"
-                      label=""
-                      preview={darkModeLogo2Preview}
-                      isDragOver={isLogoDragOver}
-                      onFileChange={(file) => handleFileUpload(file, 'logo', 'darkMode2')}
-                      onDragOver={(e) => handleDragOver(e, 'logo')}
-                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                      onDrop={(e) => handleDrop(e, 'logo', 'darkMode2')}
-                      accept="image/*"
-                      browseLabel="browse"
-                      helperText="PNG, SVG up to 5MB"
-                      previewOnClick={() => document.getElementById('appLogo2')?.click()}
-                    />
+                      <DragDropFileUpload
+                        id="appLogo2"
+                        name="appLogo"
+                        label=""
+                        preview={darkModeLogo2Preview}
+                        isDragOver={isLogoDragOver}
+                        onFileChange={(file) => handleFileUpload(file, 'logo', 'darkMode2')}
+                        onDragOver={(e) => handleDragOver(e, 'logo')}
+                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'darkMode2')}
+                        accept="image/*"
+                        browseLabel="browse"
+                        helperText="PNG, SVG up to 5MB"
+                        previewOnClick={() => document.getElementById('appLogo2')?.click()}
+                      />
+                    </div>
+                    <div className="div2 w-full flex flex-col gap-4">
+                      <DragDropFileUpload
+                        id="appLogo3"
+                        name="appLogo"
+                        label="Light Mode"
+                        preview={lightModeLogo1Preview}
+                        isDragOver={isLogoDragOver}
+                        onFileChange={(file) => handleFileUpload(file, 'logo', 'lightMode1')}
+                        onDragOver={(e) => handleDragOver(e, 'logo')}
+                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'lightMode1')}
+                        accept="image/*"
+                        browseLabel="browse"
+                        helperText="PNG, SVG up to 5MB"
+                        previewOnClick={() => document.getElementById('appLogo3')?.click()}
+                      />
+
+                      <DragDropFileUpload
+                        id="appLogo4"
+                        name="appLogo"
+                        label=""
+                        preview={lightModeLogo2Preview}
+                        isDragOver={isLogoDragOver}
+                        onFileChange={(file) => handleFileUpload(file, 'logo', 'lightMode2')}
+                        onDragOver={(e) => handleDragOver(e, 'logo')}
+                        onDragLeave={(e) => handleDragLeave(e, 'logo')}
+                        onDrop={(e) => handleDrop(e, 'logo', 'lightMode2')}
+                        accept="image/*"
+                        browseLabel="browse"
+                        helperText="PNG, SVG up to 5MB"
+                        previewOnClick={() => document.getElementById('appLogo4')?.click()}
+                      />
+                      
+                    </div>
                   </div>
-                  <div className="div2 w-full flex flex-col gap-4">
-                    <DragDropFileUpload
-                      id="appLogo3"
-                      name="appLogo"
-                      label="Light Mode"
-                      preview={lightModeLogo1Preview}
-                      isDragOver={isLogoDragOver}
-                      onFileChange={(file) => handleFileUpload(file, 'logo', 'lightMode1')}
-                      onDragOver={(e) => handleDragOver(e, 'logo')}
-                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                      onDrop={(e) => handleDrop(e, 'logo', 'lightMode1')}
-                      accept="image/*"
-                      browseLabel="browse"
-                      helperText="PNG, SVG up to 5MB"
-                      previewOnClick={() => document.getElementById('appLogo3')?.click()}
-                    />
-
-                    <DragDropFileUpload
-                      id="appLogo4"
-                      name="appLogo"
-                      label=""
-                      preview={lightModeLogo2Preview}
-                      isDragOver={isLogoDragOver}
-                      onFileChange={(file) => handleFileUpload(file, 'logo', 'lightMode2')}
-                      onDragOver={(e) => handleDragOver(e, 'logo')}
-                      onDragLeave={(e) => handleDragLeave(e, 'logo')}
-                      onDrop={(e) => handleDrop(e, 'logo', 'lightMode2')}
-                      accept="image/*"
-                      browseLabel="browse"
-                      helperText="PNG, SVG up to 5MB"
-                      previewOnClick={() => document.getElementById('appLogo4')?.click()}
-                    />
-                    
+                  {/* Favicon Section - Right Side */}
+                  <div className="div1 flex justify-between w-full gap-4">
+                    <div className="div2 w-full flex flex-col gap-4">
+                      <DragDropFileUpload
+                        id="appFavicon"
+                        name="appFavicon"
+                        label="Favicon"
+                        preview={faviconPreview}
+                        isDragOver={isFaviconDragOver}
+                        onFileChange={(file) => handleFileUpload(file, 'favicon')}
+                        onDragOver={(e) => handleDragOver(e, 'favicon')}
+                        onDragLeave={(e) => handleDragLeave(e, 'favicon')}
+                        onDrop={(e) => handleDrop(e, 'favicon')}
+                        accept="image/*"
+                        browseLabel="browse"
+                        helperText="ICO, PNG up to 1MB"
+                        imgClassName="w-24 h-24 dark:border-dark-border rounded object-contain dark:bg-primary-dark-light p-1"
+                        previewOnClick={() => document.getElementById('appFavicon')?.click()}
+                      />
+                    </div>
                   </div>
                 </div>
-                {/* Favicon Section - Right Side */}
-                <div className="div1 flex justify-between w-full gap-4">
-                  <div className="div2 w-full flex flex-col gap-4">
-                    <DragDropFileUpload
-                      id="appFavicon"
-                      name="appFavicon"
-                      label="Favicon"
-                      preview={faviconPreview}
-                      isDragOver={isFaviconDragOver}
-                      onFileChange={(file) => handleFileUpload(file, 'favicon')}
-                      onDragOver={(e) => handleDragOver(e, 'favicon')}
-                      onDragLeave={(e) => handleDragLeave(e, 'favicon')}
-                      onDrop={(e) => handleDrop(e, 'favicon')}
-                      accept="image/*"
-                      browseLabel="browse"
-                      helperText="ICO, PNG up to 1MB"
-                      imgClassName="w-24 h-24 dark:border-dark-border rounded object-contain dark:bg-primary-dark-light p-1"
-                      previewOnClick={() => document.getElementById('appFavicon')?.click()}
-                    />
-                  </div>
-                </div>
               </div>
-            </div>
 
             {/* Primary Color Section */}
             <div className="p-4 border border-primary-border rounded-xl">
@@ -469,7 +470,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
           remarks={remarks}
         />
       </div>
-    </div>
+    </>
   );
 };
 
