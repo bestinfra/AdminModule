@@ -3,7 +3,6 @@ import type { Column } from '@components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Page from '@components/global/PageC';
 import { getAllConsumers } from '../api/consumers';
-import type { Consumer } from '../api/consumers';
 
 const columns: Column[] = [
     { key: 'sNo', label: 'S.No' },
@@ -11,52 +10,6 @@ const columns: Column[] = [
     { key: 'name', label: 'Consumer Name' },
     { key: 'meter', label: 'Meter SI No' },
     { key: 'reading', label: 'Current Reading' },
-];
-
-// Dummy data matching the image
-const DUMMY_CONSUMERS = [
-    {
-        id: 1,
-        sNo: 1,
-        consumerNumber: 'BI25GMRA001',
-        name: 'Airborne General Store',
-        meter: 'A9211434',
-        reading: '177.89',
-        email: 'airborne@example.com',
-        primaryPhone: '+91 9876543210',
-        connectionType: 'COMMERCIAL',
-        category: 'COMMERCIAL',
-        sanctionedLoad: 10.0,
-        status: 'ACTIVE'
-    },
-    {
-        id: 2,
-        sNo: 2,
-        consumerNumber: 'BI25GMRA002',
-        name: 'Neo Travels',
-        meter: 'A9345417',
-        reading: '12480.54',
-        email: 'neo.travels@example.com',
-        primaryPhone: '+91 9876543211',
-        connectionType: 'COMMERCIAL',
-        category: 'COMMERCIAL',
-        sanctionedLoad: 25.0,
-        status: 'ACTIVE'
-    },
-    {
-        id: 3,
-        sNo: 4,
-        consumerNumber: 'BI25GMRA004',
-        name: 'Mobikins',
-        meter: 'A9211433',
-        reading: '1559.28',
-        email: 'mobikins@example.com',
-        primaryPhone: '+91 9876543212',
-        connectionType: 'COMMERCIAL',
-        category: 'COMMERCIAL',
-        sanctionedLoad: 15.0,
-        status: 'ACTIVE'
-    }
 ];
 
 const Consumers: React.FC = () => {
@@ -92,12 +45,10 @@ const Consumers: React.FC = () => {
             .then((data) => {
                 // Map API data to table row format
                 const mapped = data.map((c, idx) => ({
+                    ...c,
                     sNo: idx + 1,
-                    consumerNumber: c.consumerNumber,
-                    name: c.name,
                     meter: c.meters && c.meters[0] ? c.meters[0].serialNumber : '',
                     reading: c.meters && c.meters[0] ? c.meters[0].currentReading : '',
-                    ...c
                 }));
                 setConsumers(mapped);
             })

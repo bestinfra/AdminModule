@@ -3,7 +3,7 @@
 const isDevelopment = import.meta.env.DEV;
 const BASE_URL = isDevelopment 
   ? '/api'  // Use Vite proxy in development
-  : 'https://your-production-url.com/api'; // Replace with actual production URL
+  : 'https://www.sandeep.bestinfra.app/api'; // Replace with actual production URL
 
 export interface Consumer {
   id: number;
