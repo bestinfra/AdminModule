@@ -44,7 +44,7 @@ export function generateInvoiceNumber() {
     const timePart = isoString.slice(11, 19).replace(/:/g, '');
     const randomPart = Math.floor(1000 + Math.random() * 9000);
     return `${prefix}${datePart.substring(2)}${timePart}${randomPart}`;
-}
+} 
 
 // Returns date in MM-YYYY format
 export function getDateInMYFormat(date = new Date()) {

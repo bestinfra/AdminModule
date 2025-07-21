@@ -24,6 +24,7 @@ const prisma = new PrismaClient();
 const corsOptions = {
     origin: process.env.CORS_ORIGIN || '*',
 };
+console.log(corsOptions);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -35,17 +36,15 @@ app.use((req, res, next) => {
 });
 
 // Group all routes under '/api'
-app.use('/api', [
-    meters,
-    consumers,
-    assets,
-    users,
-    roles,
-    billing,
-    dashboard,
-    tickets,
-    dtrs
-]);
+app.use('/api/meters', meters);
+app.use('/api/consumers', consumers);
+app.use('/api/assets', assets);
+app.use('/api/users', users);
+app.use('/api/roles', roles);
+app.use('/api/billing', billing);
+app.use('/api/dashboard', dashboard);
+app.use('/api/tickets', tickets);
+app.use('/api/dtrs', dtrs);
 // Health check endpoint
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',

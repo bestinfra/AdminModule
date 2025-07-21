@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import type { Column } from '@components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Page from '@components/global/PageC';
+import { getAllConsumers } from '../api/consumers';
+import type { Consumer } from '../api/consumers';
 
 const columns: Column[] = [
     { key: 'sNo', label: 'S.No' },
@@ -61,6 +63,7 @@ const Consumers: React.FC = () => {
     const [menuValue, setMenuValue] = useState('');
     const [consumers, setConsumers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const params = useParams();
     const location = useLocation();
 
@@ -84,12 +87,24 @@ const Consumers: React.FC = () => {
     // Load dummy data instead of API call
     useEffect(() => {
         setLoading(true);
-        
-        // Simulate API delay
-        setTimeout(() => {
-            setConsumers(DUMMY_CONSUMERS);
-            setLoading(false);
-        }, 500);
+        setError(null);
+        getAllConsumers()
+            .then((data) => {
+                // Map API data to table row format
+                const mapped = data.map((c, idx) => ({
+                    sNo: idx + 1,
+                    consumerNumber: c.consumerNumber,
+                    name: c.name,
+                    meter: c.meters && c.meters[0] ? c.meters[0].serialNumber : '',
+                    reading: c.meters && c.meters[0] ? c.meters[0].currentReading : '',
+                    ...c
+                }));
+                setConsumers(mapped);
+            })
+            .catch((err) => {
+                setError(err.message || 'Failed to fetch consumers');
+            })
+            .finally(() => setLoading(false));
     }, []);
 
     // Check for filter parameter from route
@@ -136,6 +151,11 @@ const Consumers: React.FC = () => {
 
     return (
         <div className="p-2 min-h-screen">
+            {error && (
+                <div className="mb-4 p-4 bg-danger-light border border-danger rounded-md text-danger">
+                    {error}
+                </div>
+            )}
             <Page
                 sections={[
                     {
