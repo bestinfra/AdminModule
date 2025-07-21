@@ -5,7 +5,7 @@ import type { AllFormData, StepData } from './types';
  * Combines all form data into a single object for API submission
  */
 export const combineFormData = (stepData: StepData): AllFormData => {
-  return {
+  const payload = {
     // App basics
     appName: stepData.appBasics.appName,
     subdomain: stepData.appBasics.subdomain,
@@ -45,37 +45,50 @@ export const combineFormData = (stepData: StepData): AllFormData => {
     companyWebsite: stepData.branding.companyWebsite,
     appLogo: stepData.branding.appLogo,
     appFavicon: stepData.branding.appFavicon,
-    // Custom colors (for form state)
-    customPrimaryColor: stepData.branding.customPrimaryColor,
-    customSecondaryColor: stepData.branding.customSecondaryColor,
-    customTextPrimaryColor: stepData.branding.customTextPrimaryColor,
-    customTextSecondaryColor: stepData.branding.customTextSecondaryColor,
-    customBackgroundColor: stepData.branding.customBackgroundColor,
-    customBorderColor: stepData.branding.customBorderColor,
-    customShadowColor: stepData.branding.customShadowColor,
-    customIconColor: stepData.branding.customIconColor,
-    customGradientColor: stepData.branding.customGradientColor,
-    // Mapped colors (for API)
-    primaryColor: stepData.branding.customPrimaryColor,
-    secondaryColor: stepData.branding.customSecondaryColor,
-    textPrimaryColor: stepData.branding.customTextPrimaryColor,
-    textSecondaryColor: stepData.branding.customTextSecondaryColor,
-    backgroundColor: stepData.branding.customBackgroundColor,
-    borderColor: stepData.branding.customBorderColor,
-    shadowColor: stepData.branding.customShadowColor,
-    iconColor: stepData.branding.customIconColor,
-    gradientColor: stepData.branding.customGradientColor,
+    // All color fields (for state and API)
+    colorPrimaryBg: stepData.branding.colorPrimaryBg,
+    colorPrimaryBgLight: stepData.branding.colorPrimaryBgLight,
+    colorPrimaryLightest: stepData.branding.colorPrimaryLightest,
+    colorSecondary: stepData.branding.colorSecondary,
+    colorSecondaryLight: stepData.branding.colorSecondaryLight,
+    colorSecondaryPositive: stepData.branding.colorSecondaryPositive,
+    colorSecondaryPositiveLight: stepData.branding.colorSecondaryPositiveLight,
+    colorTextPrimary: stepData.branding.colorTextPrimary,
+    colorTextSecondary: stepData.branding.colorTextSecondary,
+    colorPrimaryBorder: stepData.branding.colorPrimaryBorder,
+    colorWarning: stepData.branding.colorWarning,
+    colorWarningAlt: stepData.branding.colorWarningAlt,
+    colorWarningLight: stepData.branding.colorWarningLight,
+    colorDanger: stepData.branding.colorDanger,
+    colorDangerAlt: stepData.branding.colorDangerAlt,
+    colorDangerLight: stepData.branding.colorDangerLight,
+    colorInfo: stepData.branding.colorInfo,
+    colorNeutralDark: stepData.branding.colorNeutralDark,
+    colorNeutralDarker: stepData.branding.colorNeutralDarker,
+    colorNeutralLightest: stepData.branding.colorNeutralLightest,
+    colorAccentLight: stepData.branding.colorAccentLight,
+    colorShadowPrimary: stepData.branding.colorShadowPrimary,
+    colorShadowSecondary: stepData.branding.colorShadowSecondary,
+    colorPrimaryDark: stepData.branding.colorPrimaryDark,
+    colorPrimaryDarkLight: stepData.branding.colorPrimaryDarkLight,
+    colorDarkPrimary: stepData.branding.colorDarkPrimary,
+    colorDarkSecondary: stepData.branding.colorDarkSecondary,
+    colorDarkBorder: stepData.branding.colorDarkBorder,
+    colorPrimaryGradient: stepData.branding.colorPrimaryGradient,
+    colorPrimaryDarkGradient: stepData.branding.colorPrimaryDarkGradient,
+    colorGradientSecondary: stepData.branding.colorGradientSecondary,
+    colorStatIconGradient: stepData.branding.colorStatIconGradient,
     appDescription: stepData.branding.appDescription,
     contactEmail: stepData.branding.contactEmail,
     contactPhone: stepData.branding.contactPhone,
-    timezone: stepData.branding.timezone,
-    currency: stepData.branding.currency,
     enableDarkMode: stepData.branding.enableDarkMode,
     enableMultiLanguage: stepData.branding.enableMultiLanguage,
 
     // Modules
     modules: stepData.modules.modules,
   };
+  console.log('combineFormData payload:', payload);
+  return payload;
 };
 
 /**

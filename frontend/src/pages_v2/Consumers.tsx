@@ -125,10 +125,6 @@ const Consumers: React.FC = () => {
         navigate(`/consumers/${row.consumerNumber}`);
     };
 
-    const handleMenuChange = (value: string) => {
-        setMenuValue(value);
-    };
-
     const headerConfig = {
         title: 'Consumers',
         subtitle: '',
