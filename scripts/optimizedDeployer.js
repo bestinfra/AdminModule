@@ -310,7 +310,7 @@ DATABASE_URL=postgresql://postgres:root1234@localhost:5432/subapp_db?schema=publ
 # JWT_EXPIRES_IN=4h
 
 # CORS configuration
-CORS_ORIGIN=http://${appName}-backend.local
+CORS_ORIGIN=https://www.${appName}.bestinfra.app
 
 # Logging
 LOG_LEVEL=debug
