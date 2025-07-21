@@ -25,13 +25,8 @@ function generateBackend(baseDir, formData) {
     dynamicPort: dynamicPort
   };
 
-  // Copy template directory
-  const templateDir = path.join(__dirname, 'templates', 'backend');
-  copyTemplateDirectory(templateDir, backendDir, variables);
-
-  // Generate additional backend files
-  generateRoutes(backendDir, variables);
-  generatePrismaSchema(backendDir, variables);
+  // Copy complete application-backend structure
+  copyApplicationBackendStructure(backendDir, variables);
 
   console.log('Backend generated successfully');
 }
@@ -99,13 +94,127 @@ model User {
 }
 
 /**
- * Generate environment file
+ * Copy complete application-backend structure
  */
-function generateEnvFile(backendDir, variables) {
-  const envTemplate = path.join(__dirname, 'templates', 'backend', 'env.template');
-  const envContent = loadAndProcessTemplate(envTemplate, variables);
+function copyApplicationBackendStructure(backendDir, variables) {
+  const sourceBackendDir = path.join(__dirname, '..', 'application-backend');
+  
+  if (!fs.existsSync(sourceBackendDir)) {
+    console.error('application-backend directory not found');
+    return;
+  }
+
+  // Create backend directory
+  fs.mkdirSync(backendDir, { recursive: true });
+
+  // Copy all files and directories from application-backend
+  copyDirectoryRecursive(sourceBackendDir, backendDir);
+
+  // Update server.js with dynamic port
+  updateServerWithDynamicPort(backendDir, variables);
+
+  // Create .env file with dynamic port
+  createEnvFile(backendDir, variables);
+
+  // Update package.json with dynamic port
+  updatePackageJson(backendDir, variables);
+
+  console.log('✅ Copied complete application-backend structure');
+}
+
+/**
+ * Copy directory recursively
+ */
+function copyDirectoryRecursive(source, dest) {
+  if (!fs.existsSync(dest)) {
+    fs.mkdirSync(dest, { recursive: true });
+  }
+
+  const items = fs.readdirSync(source);
+  items.forEach((item) => {
+    const sourcePath = path.join(source, item);
+    const destPath = path.join(dest, item);
+
+    if (fs.statSync(sourcePath).isDirectory()) {
+      copyDirectoryRecursive(sourcePath, destPath);
+    } else {
+      fs.copyFileSync(sourcePath, destPath);
+    }
+  });
+}
+
+/**
+ * Update server.js with dynamic port
+ */
+function updateServerWithDynamicPort(backendDir, variables) {
+  const serverPath = path.join(backendDir, 'server.js');
+  
+  if (fs.existsSync(serverPath)) {
+    let serverContent = fs.readFileSync(serverPath, 'utf8');
+    
+    // Replace hardcoded port with dynamic port
+    serverContent = serverContent.replace(
+      /const PORT = process\.env\.PORT \|\| \d+/,
+      `const PORT = process.env.PORT || ${variables.dynamicPort}`
+    );
+    
+    fs.writeFileSync(serverPath, serverContent);
+    console.log('✅ Updated server.js with dynamic port');
+  }
+}
+
+/**
+ * Create .env file with dynamic port
+ */
+function createEnvFile(backendDir, variables) {
+  const envContent = `# Backend Environment Configuration
+NODE_ENV=development
+PORT=${variables.dynamicPort}
+
+# Database Configuration
+DATABASE_URL=postgresql://postgres:password@localhost:5432/${variables.projectFolderName}_db?schema=public
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+JWT_EXPIRES_IN=4h
+
+# App Configuration
+APP_NAME=${variables.projectFolderName}
+APP_VERSION=1.0.0
+
+# CORS Configuration
+CORS_ORIGIN=http://localhost:1700
+
+# Logging Configuration
+LOG_LEVEL=debug
+ENABLE_REQUEST_LOGGING=true
+
+# Feature Flags
+ENABLE_SWAGGER=true
+ENABLE_RATE_LIMITING=true
+`;
+  
   const envPath = path.join(backendDir, '.env');
   fs.writeFileSync(envPath, envContent);
+  console.log('✅ Created .env file with dynamic port');
+}
+
+/**
+ * Update package.json with app name
+ */
+function updatePackageJson(backendDir, variables) {
+  const packagePath = path.join(backendDir, 'package.json');
+  
+  if (fs.existsSync(packagePath)) {
+    let packageContent = fs.readFileSync(packagePath, 'utf8');
+    const packageJson = JSON.parse(packageContent);
+    
+    // Update package name
+    packageJson.name = `${variables.projectFolderName}-backend`;
+    
+    fs.writeFileSync(packagePath, JSON.stringify(packageJson, null, 2));
+    console.log('✅ Updated package.json with app name');
+  }
 }
 
 module.exports = { generateBackend }; 

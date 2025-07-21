@@ -2,15 +2,15 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import { PrismaClient } from '@prisma/client';
-import meterRoutes from './routes/meters.js';
-import consumerRoutes from './routes/consumers.js';
-import assetRoutes from './routes/assets.js';
-import userRoutes from './routes/users.js';
-import roleRoutes from './routes/roles.js';
-import billingRoutes from './routes/billing.js';
-import dashboardRoutes from './routes/dashboard.js';
-import ticketRoutes from './routes/tickets.js';
-import dtrRoutes from './routes/dtrs.js';
+import meters from './routes/meters.js';
+import consumers from './routes/consumers.js';
+import assets from './routes/assets.js';
+import users from './routes/users.js';
+import roles from './routes/roles.js';
+import billing from './routes/billing.js';
+import dashboard from './routes/dashboard.js';
+import tickets from './routes/tickets.js';
+import dtrs from './routes/dtrs.js';
 
 dotenv.config();
 
@@ -21,7 +21,10 @@ const PORT = process.env.PORT || 4000;
 const prisma = new PrismaClient();
 
 // Middleware
-app.use(cors());
+const corsOptions = {
+    origin: process.env.CORS_ORIGIN || '*',
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -31,15 +34,18 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use('/api/meters', meterRoutes);
-app.use('/api/consumers', consumerRoutes);
-app.use('/api/assets', assetRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/roles', roleRoutes);
-app.use('/api/billing', billingRoutes);
-app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/tickets', ticketRoutes);     
-app.use('/api/dtrs', dtrRoutes);
+// Group all routes under '/api'
+app.use('/api', [
+    meters,
+    consumers,
+    assets,
+    users,
+    roles,
+    billing,
+    dashboard,
+    tickets,
+    dtrs
+]);
 // Health check endpoint
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',

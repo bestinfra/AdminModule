@@ -58,21 +58,23 @@ function createAppProjectOptimized(formData) {
   // Create base directory
   ensureDir(baseDir);
 
+  // Get dynamic port for this backend
+  const dynamicPort = deployer.findAvailablePort();
+
   // Copy assets from existing frontend
   copyAssets(baseDir);
 
-  // Generate frontend
-  generateFrontend(baseDir, formData);
-
-  // Generate backend
-  generateBackend(baseDir, formData);
+  // Generate frontend with backend port
+  const frontendFormData = { ...formData, backendPort: dynamicPort };
+  generateFrontend(baseDir, frontendFormData);
 
   // --- BACKEND DEPLOYMENT START ---
   // Deploy backend to XAMPP using optimized deployer
   try {
     console.log('\n🚀 Deploying backend to XAMPP...');
-    const backendDir = path.join(baseDir, 'backend');
-    const deploymentResult = deployer.deployBackend(projectFolderName, backendDir);
+    // Deploy directly from application-backend
+    const applicationBackendDir = path.join(__dirname, '..', 'application-backend');
+    const deploymentResult = deployer.deployBackend(projectFolderName, applicationBackendDir);
     
     if (deploymentResult.success) {
       console.log('\n✅ Backend deployed successfully!');
@@ -84,12 +86,12 @@ function createAppProjectOptimized(formData) {
     } else {
       console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
       console.log('   You can manually deploy using:');
-      console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+      console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`);
     }
   } catch (error) {
     console.log('\n⚠️  Backend deployment failed:', error.message);
     console.log('   You can manually deploy using:');
-    console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${backendDir}`);
+    console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`);
   }
   // --- BACKEND DEPLOYMENT END ---
 
