@@ -412,7 +412,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   error={getNewAccountError(index, 'firstName')}
                   showError={!!getNewAccountError(index, 'firstName')}
                   disabled={loading}
-                  onInputChange={(name, value) => handleNewAccountChange(account.id, 'firstName', value as string)}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'firstName', value as string)}
                   onInputBlur={handleFormInputBlur}
                   fileInputRefs={fileInputRefs}
                 />
@@ -713,7 +713,7 @@ const AccessControl: React.FC<AccessControlProps> = ({
                   name: 'newAccountConfirmPassword',
                   type: 'password',
                   label: '',
-                  placeholder: 'Confirm Password',
+                  placeholder: 'Confirm Password',  
                   required: false,
                 }}
                 value={formData.newAccountConfirmPassword || ''}
