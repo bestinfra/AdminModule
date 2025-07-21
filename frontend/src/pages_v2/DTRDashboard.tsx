@@ -50,7 +50,9 @@ const DTRDashboard: React.FC = () => {
     ];
 
     // Dummy data for DTR Alert Statistics
-    const [statsRange, setStatsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
+    // TODO: Unused - consider removing if not needed.
+    // const [statsRange, setStatsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
+    const [statsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
     const alertTypes = [
         { name: 'LT Fuse Blown (R - Phase)', color: '#e74c3c' },
         { name: 'Unbalanced Load', color: '#f39c12' },

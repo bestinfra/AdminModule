@@ -7,7 +7,6 @@ import type { FormInputValue } from "@components/Form/types";
 import { validateBrandPersonalization } from "@pages/Apps_module/utils";
 import RemarksPanel from "@pages/Apps_module/components/RemarksPanel";
 import DragDropFileUpload from "@components/global/DragDropFileUpload";
-import { useTheme } from "@/providers/ThemeProvider";
 import TimeRangeSelector from "@/components/global/TimeRangeSelector";
 
 interface BrandPersonalizationProps {
@@ -49,6 +48,49 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
       hasSubmitted
     });
   }, [formData, currentStep, hasSubmitted]);
+
+  // Log color values whenever they change
+  useEffect(() => {
+    const colorKeys = Object.keys(formData).filter(key => key.startsWith('color'));
+    const colorValues = colorKeys.reduce((acc, key) => {
+      acc[key] = formData[key];
+      return acc;
+    }, {} as Record<string, any>);
+    console.log('BrandPersonalization - Current Color Values:', colorValues);
+  }, [
+    formData.colorPrimaryBg,
+    formData.colorPrimaryBgLight,
+    formData.colorPrimaryLightest,
+    formData.colorSecondary,
+    formData.colorSecondaryLight,
+    formData.colorSecondaryPositive,
+    formData.colorSecondaryPositiveLight,
+    formData.colorTextPrimary,
+    formData.colorTextSecondary,
+    formData.colorPrimaryBorder,
+    formData.colorWarning,
+    formData.colorWarningAlt,
+    formData.colorWarningLight,
+    formData.colorDanger,
+    formData.colorDangerAlt,
+    formData.colorDangerLight,
+    formData.colorInfo,
+    formData.colorNeutralDark,
+    formData.colorNeutralDarker,
+    formData.colorNeutralLightest,
+    formData.colorAccentLight,
+    formData.colorShadowPrimary,
+    formData.colorShadowSecondary,
+    formData.colorPrimaryDark,
+    formData.colorPrimaryDarkLight,
+    formData.colorDarkPrimary,
+    formData.colorDarkSecondary,
+    formData.colorDarkBorder,
+    formData.colorPrimaryGradient,
+    formData.colorPrimaryDarkGradient,
+    formData.colorGradientSecondary,
+    formData.colorStatIconGradient
+  ]);
 
   const handleFormInputChange = (name: string, value: FormInputValue) => {
     onInputChange({ target: { name, value } } as any);
