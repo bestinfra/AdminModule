@@ -291,11 +291,11 @@ module.exports = {
     "postcss.config.js": `module.exports = {
   plugins: {
     tailwindcss: {},
-    autoprefixer: {},
-  },
-}`,
-
-    "index.html": `<!doctype html>
+    autoprefixer: {}
+  }
+};`,
+  
+  htmlTemplate: (appName) => `<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -308,8 +308,8 @@ module.exports = {
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>`,
-
-    "src/main.tsx": `import React from 'react'
+  
+  mainTsx: () => `import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'
@@ -319,8 +319,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>,
 )`,
-
-    "src/index.css": `@tailwind base;
+  
+  indexCss: () => `@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
@@ -343,111 +343,87 @@ body {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Border utilities */
+.border-r-primary-border {
+  border-right-color: rgb(233, 239, 255);
+}
+
+.border-b-primary-border {
+  border-bottom-color: rgb(233, 239, 255);
+}
+
+.dark .border-dark-border {
+  border-color: rgba(9, 27, 59, 1);
+}
+
+/* Background utilities */
+.bg-background-secondary {
+  background-color: rgb(245, 248, 252);
+}
+
+.bg-primary-dark-light {
+  background-color: rgba(6, 21, 45, 1);
+}
+
+.bg-primary-dark {
+  background-color: rgba(4, 19, 40, 1);
+}
+
+.bg-primary {
+  background-color: rgba(22, 59, 124, 1);
+}
+
+/* Text utilities */
+.text-main {
+  color: rgba(38, 38, 38, 1);
+}
+
+.text-primary {
+  color: rgba(22, 59, 124, 1);
+}
+
+.text-secondary {
+  color: rgba(85, 181, 108, 1);
+}
+
+.text-neutral-dark {
+  color: rgba(60, 60, 60, 1);
+}
+
+/* Dark mode support */
+.dark .text-white {
+  color: white;
+}
+
+.dark .bg-primary-dark-light {
+  background-color: rgba(6, 21, 45, 1);
+}
+
+.dark .bg-primary-dark {
+  background-color: rgba(4, 19, 40, 1);
+}
+
+.dark .bg-brand-blue {
+  background-color: rgba(22, 59, 124, 1);
+}
+
+/* Custom utilities */
+.custom-shadow {
+  box-shadow: 0px 5px 5px -2px rgb(220, 228, 239);
+}
+
+.custom-filter {
+  filter: brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%);
+}
+
+.bg-stat-icon-gradient {
+  background-image: linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0));
 }`,
-
-    "src/App.tsx": `
-import React, { lazy, Suspense, ComponentType, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
-import { AppProvider, useApp } from './context/AppContext';
-import { FederatedContextProvider } from './components/FederatedWrapper';
-import CSSLoader from './components/CSSLoader';
-import './App.css';
-import { Theme } from './Theme';
-
-
-// Create safe lazy loading with error handling
-const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
-  return lazy(async () => {
-    try {
-      const module = await importFn();
-      return module;
-    } catch (error) {
-      console.warn('Failed to load remote component:', error);
-      return { default: fallback };
-    }
-  });
-};
-
-// Fallback components
-const DashboardFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Dashboard</h1>
-    <p className="text-gray-600">Loading dashboard...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote Dashboard component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const SubLoginFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Login</h1>
-    <p className="text-gray-600">Loading login page...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote Login component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const ConsumerFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Consumers</h1>
-    <p className="text-gray-600">Loading consumers...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote Consumers component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const ConsumerViewFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Consumer View</h1>
-    <p className="text-gray-600">Loading consumer view...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote ConsumerView component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const AllTicketsFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">All Tickets</h1>
-    <p className="text-gray-600">Loading all tickets...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote AllTickets component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const SidebarFallback = () => (
-  <div className="w-72 bg-gray-100 h-screen p-4">
-    <div className="text-center">Sidebar Loading...</div>
-  </div>
-);
-
-const HeaderFallback = () => (
-  <div className="h-16 bg-gray-100 border-b flex items-center px-6">
-    <span>Header Loading...</span>
-  </div>
-);
-
-// Safe lazy components with fallbacks - using federated components from SuperAdmin
-const Dashboard = createSafeLazyComponent(
-  () => import('SuperAdmin/Dashboard'),
-  DashboardFallback
-);
-
-import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';
+  
+  subLogin: (appName) => `import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const SubLogin = createSafeLazyComponent(
   () => import('SuperAdmin/Login'),
@@ -556,297 +532,78 @@ const Meters = createSafeLazyComponent(
       <h1 className="text-2xl font-bold">Meters List</h1>
       <p className="text-gray-600">Loading meters list...</p>
     </div>
-  )
-);
+  );
+};
 
-const DataLoggerMaster = createSafeLazyComponent(
-  () => import('SuperAdmin/DataLoggerMaster'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Data Logger Master</h1>
-      <p className="text-gray-600">Loading data logger master...</p>
-    </div>
-  )
-);
-
-// Use federated Sidebar and Header from SuperAdmin app
-const Sidebar = createSafeLazyComponent(
-  () => import('SuperAdmin/Sidebar'),
-  SidebarFallback
-);
-
-const Header = createSafeLazyComponent(
-  () => import('SuperAdmin/Header'),
-  HeaderFallback
-);
-
-function RequireAuth({ children }) {
-  const isLoggedIn = !!localStorage.getItem('token');
-  const location = useLocation();
-  if (!isLoggedIn) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-  return children;
+export default SubLogin;`,
+  
+  typeDefinitions: () => `declare module 'SuperAdmin/Sidebar' {
+  const Sidebar: React.ComponentType<any>;
+  export default Sidebar;
 }
 
-function AppContent() {
-  const contextValue = useApp();
-  const location = useLocation();
-  const navigate = useNavigate();
+declare module 'SuperAdmin/Header' {
+  const Header: React.ComponentType<any>;
+  export default Header;
+}`,
   
-  // Function to get page title based on current route
-  const getPageTitle = () => {
-    switch (location.pathname) {
-      case '/':
-      case '/dashboard':
-        return 'Dashboard';
-      case '/consumers':
-        return 'Consumers';
-      case '/users':
-        return 'Users';
-      case '/role-management':
-        return 'Role Management';
-      case '/bills/prepaid':
-        return 'Prepaid Bills';
-      case '/bills/postpaid':
-        return 'Postpaid Bills';
-      case '/all-tickets':
-        return 'All Tickets';
-      case '/dtr-dashboard':
-        return 'DTR Dashboard';
-      case '/asset-management':
-        return 'Asset Management';
-      case '/meters':
-        return 'Meters';
-      case '/data-logger-master':
-        return 'Data Logger Master';
-      default:
-        return 'Dashboard';
-    }
+  backendPackage: (projectFolderName) => JSON.stringify({
+    name: `${projectFolderName}-backend`, version: '1.0.0', main: 'server.js',
+    scripts: { start: 'node server.js', dev: 'nodemon server.js' },
+    dependencies: { express: '^4.18.2', dotenv: '^16.0.3', '@prisma/client': '^5.12.0' },
+    devDependencies: { nodemon: '^2.0.22', prisma: '^5.12.0' }
+  }, null, 2),
+  
+  backendServer: () => `require('dotenv').config();const express=require('express');const app=express();const PORT=process.env.PORT||4000;app.use(express.json());app.get('/api/health',(req,res)=>res.json({status:'ok'}));app.listen(PORT,()=>console.log('Backend running on port '+PORT));`,
+  
+  backendEnv: () => `NODE_ENV=development\nPORT=4000\nJWT_EXPIRES_IN=4h\nDATABASE_URL=postgresql://postgres:password@localhost:5432/your_db_name_here?schema=public`,
+  
+  prismaSchema: () => `generator client{provider="prisma-client-js"}datasource db{provider="postgresql"url=env("DATABASE_URL")}model User{id Int @id @default(autoincrement())email String @unique name String}`
+};
+
+// MENU GENERATION
+const generateSidebarMenus = (selectedModules = []) => {
+  const mandatoryMenus = [{ category: 'MAIN NAVIGATION', items: [
+    { title: 'Dashboard', icon: '/icons/dashboard.svg', link: '/', hasSubmenu: false },
+    { title: 'Consumers', icon: '/icons/user.svg', link: '/consumers', hasSubmenu: false },
+    { title: 'User Management', icon: '/icons/user-gear.svg', link: '/users', hasSubmenu: false },
+    { title: 'Role Management', icon: '/icons/roles.svg', link: '/role-management', hasSubmenu: false }
+  ]}];
+  
+  const menuMap = {
+    billing: { category: 'BILLING', items: [
+      { title: 'Bills Postpaid', icon: '/icons/bills.svg', link: '/bills/postpaid', hasSubmenu: false },
+      { title: 'Bills Prepaid', icon: '/icons/bills2.svg', link: '/bills/prepaid', hasSubmenu: false }
+    ]},
+    dtr_dashboard: { category: 'DTR MANAGEMENT', items: [
+      { title: 'DTR Overview', icon: '/icons/dtr.svg', link: '/dtr-dashboard', hasSubmenu: false }
+    ]},
+    asset_management: { category: 'ASSET MANAGEMENT', items: [
+      { title: 'Asset Management', icon: '/icons/workflow-setting-alt.svg', link: '/asset-management', hasSubmenu: false },
+      { title: 'Connect/Disconnect', icon: '/icons/connect.svg', link: '/connect-disconnect', hasSubmenu: false }
+    ]},
+    meters: { category: 'METER MANAGEMENT', items: [
+      { title: 'Meters List', icon: '/icons/meter.svg', link: '/meter-management/meters-list', hasSubmenu: false },
+      { title: 'Add Meter', icon: '/icons/meter-bolt.svg', link: '/meter-management/meters-list/add', hasSubmenu: false },
+      { title: 'Data Logger Master', icon: '/icons/database.svg', link: '/meter-management/data-logger-master', hasSubmenu: false },
+      { title: 'Add Data Logger', icon: '/icons/server.svg', link: '/meter-management/data-logger-master/add', hasSubmenu: false }
+    ]},
+    tickets: { category: 'TICKETS & SUPPORT', items: [
+      { title: 'All Tickets', icon: '/icons/support-tickets.svg', link: '/all-tickets', hasSubmenu: false }
+    ]},
+    reports: { category: 'REPORTS', items: [
+      { title: 'Analytics', icon: '/icons/graph-bar.svg', link: '/reports/analytics', hasSubmenu: false },
+      { title: 'Exports', icon: '/icons/export.svg', link: '/reports/exports', hasSubmenu: false }
+    ]}
   };
   
-  // Debug logging for routing
-  useEffect(() => {
-    
-  }, [location.pathname]);
-  
-  // Check if remote app is accessible
-  useEffect(() => {
-    const checkRemoteApp = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/assets/remoteEntry.js');
-        if (!response.ok) {
-          console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
-        } else {
-  
-        }
-      } catch (error) {
-        console.error('Failed to check remote app:', error);
-      }
-    };
-    
-    checkRemoteApp();
-  }, []);
-  
-// Generate menu items for federated components
- const menuItems = [
-    {
-      title: 'Dashboard',
-      icon: '/icons/dashboard.svg',
-      link: '/dashboard',
-    },
-    {
-      title: 'Consumers',
-      icon: '/icons/units.svg',
-      link: '/consumers',
-    },
-    {
-      title: 'Transformers',
-      icon: '/icons/transformer.svg',
-      link: '/dtr-dashboard',
-    },
-    {
-      title: 'Bills',
-      icon: '/icons/bills.svg',
-      hasSubmenu: true,
-      submenu: [
-        {
-          title: 'Prepaid',
-          link: '/bills/prepaid',
-        },
-        {
-          title: 'Postpaid',
-          link: '/bills/postpaid',
-        },
-      ],
-    },
-    {
-      title: 'Tickets',
-      icon: '/icons/customer-service.svg',
-      link: '/all-tickets',
-    },
-  ];
+  const optionalMenus = selectedModules.map(module => menuMap[module]).filter(Boolean);
+  return [...mandatoryMenus, ...optionalMenus];
+};
 
-  const menuItems2 = [
-
-    {
-      title: 'Assets',
-      icon: '/icons/workflow-setting-alt.svg',
-      link: '/asset-management',
-    },
-    {
-      title: 'Meters',
-      icon: '/icons/meter-bolt.svg',
-      link: '/meters',
-      hasSubmenu: true,
-      submenu: [
-        {
-          title: 'Data Logger Master',
-          link: '/data-logger-master',
-        },
-        {
-          title: 'Meter List',
-          link: '/meters',
-        },
-      ],
-    },
-    {
-      title: 'Users',
-      icon: '/icons/user.svg',
-      link: '/users',
-      hasSubmenu: true,
-      submenu: [
-        {
-          title: 'Users',
-          icon: '/icons/user-gear.svg',
-          link: '/users',
-        },
-        {
-          title: 'Role Management',
-          icon: '/icons/roles.svg',
-          link: '/role-management',
-        },
-      ],
-    },
-  ];
-
-  return (
-   
-    <FederatedContextProvider value={contextValue}>
-      <Routes>
-        <Route path="/login" element={<SubLogin />} />
-        <Route
-          path="*"
-          element={
-            <RequireAuth>
-              <div className="flex h-screen bg-white">
-                {/* Sidebar and Header only for authenticated users */}
-                <Suspense fallback={<SidebarFallback />}>
-                  <Sidebar 
-                    currentPath={location.pathname}
-                    onNavigate={(path:any) => navigate(path)}
-                    menus={[
-                      {
-                        category: 'General',
-                        items: menuItems,
-                      },
-                      {
-                        category: 'Admin Settings',
-                        items: menuItems2,
-                      },
-                    ]}
-                    logo={{
-                      src: '/images/bi-blue-logo.svg',
-                      alt: '${appName || "Admin App"}',
-                      collapsedSrc: '/images/changed-logo.svg',
-                    }}
-                    footer={{
-                      copyright: '© 2024 ${companyName || "Company"}',
-                      showThemeToggle: true,
-                      showShareButton: false,
-                    }}
-                  />
-                </Suspense>
-                <div className="flex flex-col flex-1">
-                  <Suspense fallback={<HeaderFallback />}>
-                    <Header title={getPageTitle()} />
-                  </Suspense>
-                  <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-                    {/* All protected routes here */}
-                    <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/consumers" element={<Consumers />} />
-                      <Route path="/consumers/:uid" element={<ConsumerView />} />
-                      <Route path="/bills/prepaid" element={<BillsPrepaid />} />
-                      <Route path="/bills/postpaid" element={<BillsPostpaid />} />
-                      <Route path="/dtr-dashboard" element={<Transformer />} />
-                      <Route path="/asset-management" element={<Assets />} />
-                      <Route path="/meters" element={<Meters />} />
-                      <Route path="/data-logger-master" element={<DataLoggerMaster />} />
-                      <Route path="/all-tickets" element={<AllTickets />} />
-                      <Route path="*" element={
-                        <div className="p-6">
-                          <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
-                          <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
-                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                            <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
-                            <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
-                            <div className="mt-4">
-                              <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
-                              <ul className="text-sm text-red-700 space-y-1">
-                                <li>/ - Dashboard</li>
-                                <li>/dashboard - Dashboard</li>
-                                <li>/consumers - Consumers</li>
-                                <li>/consumers/:uid - Consumer View</li>
-                                <li>/bills/prepaid - Bills Prepaid</li>
-                                <li>/bills/postpaid - Bills Postpaid</li>
-                                <li>/dtr-dashboard - DTR Dashboard</li>
-                                <li>/asset-management - Asset Management</li>
-                                <li>/meters - Meters List</li>
-                                <li>/data-logger-master - Data Logger Master</li>
-                                <li>/all-tickets - All Tickets</li>
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      } />
-                    </Routes>
-                  </main>
-                </div>
-              </div>
-            </RequireAuth>
-          }
-        />
-      </Routes>
-    </FederatedContextProvider>
-  );
-}
-
-function App() {
-  return (
-    <ThemeProvider>
-    <Theme>
-    <Router>
-      <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
-        <AppProvider>
-          <AppContent />
-        </AppProvider>
-      </Suspense>
-    </Router>
-    </Theme>
-    </ThemeProvider>
-  );
-}
-
-export default App;`,
-
-    "src/App.css": `#root {
-  width: 100%;
-  margin: 0 auto;
-}`,
-
-    "src/context/AppContext.tsx": `import React, { createContext, useContext, useEffect, useState } from 'react';
+// CONTEXT FILES GENERATION
+const generateContextFiles = (modules) => ({
+  'src/context/AppContext.tsx': `import React, { createContext, useContext, useEffect, useState } from 'react';
 
 interface AppContextType {
     isDarkMode: boolean;
@@ -921,505 +678,8 @@ export const useApp = () => {
     }
     return context;
 };`,
-
-    "src/components/Input.tsx": `import React, { useRef, useEffect } from 'react';
-
-interface SearchInputProps {
-    onSearch?: (query: string) => void;
-    placeholder?: string;
-    className?: string;
-    showShortcut?: boolean;
-}
-
-const Input = ({
-    onSearch,
-    placeholder = 'Search...',
-    className = '',
-    showShortcut = true,
-}: SearchInputProps) => {
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                e.preventDefault();
-                inputRef.current?.focus();
-            }
-        };
-
-        document.addEventListener('keydown', handleKeyDown);
-        return () => document.removeEventListener('keydown', handleKeyDown);
-    }, []);
-
-    return (
-        <div className={\`relative \${className}\`}>
-            <input
-                ref={inputRef}
-                type="search"
-                placeholder={placeholder}
-                className="w-full px-4 py-3 rounded-[2.5rem] border border-primary-border px-2 py-1 text-main text-sm font-light bg-white dark:bg-primary-dark rounded dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder:text-primary-dark dark:placeholder:text-main"
-                aria-label="Search"
-                onChange={(e) => onSearch?.(e.target.value)}
-            />
-            {showShortcut && (
-                <div className="absolute right-12 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm text-white ">
-                    <kbd className="px-2  text-primary-dark-light text-sm font-light bg-primary-lightest dark:bg-primary-dark-light rounded dark:text-subinfo">
-                        Ctrl
-                    </kbd>
-                    <span className="text-primary-dark  dark:bg-primary-dark dark:text-subinfo">+</span>
-                    <kbd className="px-2  text-primary-dark text-sm font-light bg-primary-lightest dark:bg-primary-dark-light rounded dark:text-subinfo">
-                        K
-                    </kbd>
-                </div>
-            )}
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-lightest dark:bg-primary-dark rounded-full w-8 h-8 flex items-center justify-center">
-                <svg className="h-4.5 w-4.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-            </span>
-        </div>
-    );
-};
-
-export default Input;`,
-
-    "src/components/Sidebar.tsx": `import { Link, useLocation } from 'react-router-dom';
-import { useState } from 'react';
-import { useApp } from '../context/AppContext';
-
-interface MenuItem {
-  title: string;
-  icon: string;
-  link?: string;
-  hasSubmenu?: boolean;
-  submenu?: Array<{
-    title: string;
-    link: string;
-    count?: number;
-  }>;
-  count?: number;
-}
-
-interface MenuCategory {
-  category: string;
-  items: MenuItem[];
-}
-
-const Sidebar = () => {
-  const { isDarkMode, isSidebarCollapsed, toggleTheme } = useApp();
-  const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>({});
-  const location = useLocation();
-
-  const toggleSubmenu = (menuTitle: string) => {
-    setExpandedMenus((prev) => ({
-      ...prev,
-      [menuTitle]: !prev[menuTitle],
-    }));
-  };
-
-  const menuItems: MenuCategory[] = [
-    {
-      category: 'MANAGEMENT',
-      items: [
-        {
-          title: 'Dashboard',
-          icon: '📊',
-          link: '/',
-        },
-        {
-          title: 'Consumers',
-          icon: '👥',
-          link: '/consumers',
-        },
-        ${
-          modules
-            ?.map(
-              (module) => `{
-          title: '${module.charAt(0).toUpperCase() + module.slice(1)}',
-          icon: '📋',
-          link: '/${module}',
-        }`
-            )
-            .join(",\n        ") || ""
-        }
-      ],
-    },
-    {
-      category: 'SETTINGS',
-      items: [
-        {
-          title: 'Logout',
-          icon: '🚪',
-          link: '/logout',
-        },
-      ],
-    },
-  ];
-
-  return (
-    <div className={\`transition-[width] duration-300 ease-in-out \${isSidebarCollapsed ? 'w-20' : 'w-72'}\`}>
-      <nav
-        className={\`h-screen flex flex-col justify-between items-center w-full bg-primary-lightest dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out \${isSidebarCollapsed ? 'w-20' : 'w-72'}\`}
-        aria-label="Main navigation">
-        <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
-          <header
-            className={\`sticky top-0 z-10 dark:bg-primary-dark h-24 flex justify-center border-b border-b-primary-border dark:border-dark-border items-center \${isSidebarCollapsed ? 'bg-primary px-4' : 'bg-white px-16'} py-8\`}>
-            <div className={\`\${isSidebarCollapsed ? 'w-8' : 'w-full'}\`}>
-              <h1 className={\`font-bold text-gray-800 dark:text-white \${isSidebarCollapsed ? 'text-center' : 'text-left'}\`}>
-                {isSidebarCollapsed ? '${appName?.charAt(0) || "A"}' : '${
-      appName || "Admin App"
-    }'}
-              </h1>
-              {!isSidebarCollapsed && (
-                <p className="text-sm text-gray-600 dark:text-gray-400">${
-                  companyName || "Company Name"
-                }</p>
-              )}
-            </div>
-          </header>
-          
-          <main className="flex-1 w-full">
-            {menuItems.map((category, categoryIndex) => (
-              <section
-                key={categoryIndex}
-                className="flex flex-col w-full"
-                aria-label={category.category}>
-                {!isSidebarCollapsed && (
-                  <h2 className="px-4 py-2 text-sm font-semibold uppercase text-neutral-dark dark:text-white">
-                    {category.category}
-                  </h2>
-                )}
-                <ul className="list-none p-0 m-0">
-                  {category.items.map((menuItem, itemIndex) => (
-                    <li key={itemIndex}>
-                      {menuItem.hasSubmenu ? (
-                        <div className="relative">
-                          <button
-                            className={\`w-full flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 \${location.pathname.startsWith(menuItem.link || '') ? 'bg-blue-50 dark:bg-blue-900 border-r-2 border-blue-500' : ''}\`}
-                            onClick={() => toggleSubmenu(menuItem.title)}
-                            aria-expanded={expandedMenus[menuItem.title]}
-                            aria-controls={\`submenu-\${menuItem.title}\`}>
-                            <span className="mr-3 text-lg">{menuItem.icon}</span>
-                            {!isSidebarCollapsed && (
-                              <div className="flex items-center justify-between w-full gap-2">
-                                <span>{menuItem.title}</span>
-                                <span className={\`transition-transform \${expandedMenus[menuItem.title] ? 'rotate-180' : ''}\`}>
-                                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                                  </svg>
-                                </span>
-                              </div>
-                            )}
-                          </button>
-                          {!isSidebarCollapsed && (
-                            <ul
-                              id={\`submenu-\${menuItem.title}\`}
-                              className={\`relative flex flex-col overflow-hidden transition-all duration-300 ease-in-out pl-0 \${expandedMenus[menuItem.title] ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'}\`}>
-                              <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200 dark:bg-gray-600"></span>
-                              {menuItem.submenu?.map((subItem, subIndex) => (
-                                <li key={subIndex}>
-                                  <Link
-                                    to={subItem.link}
-                                    className={\`block px-4 py-2 pl-8 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 \${location.pathname === subItem.link ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-400' : ''}\`}>
-                                    <div className="flex items-center justify-between w-full gap-2">
-                                      <span>{subItem.title}</span>
-                                      {subItem.count && (
-                                        <span className={\`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center items-center \${location.pathname === subItem.link ? 'bg-primary dark:bg-secondary' : 'bg-primary dark:bg-secondary'}\`}>
-                                          {subItem.count}
-                                        </span>
-                                      )}
-                                    </div>
-                                  </Link>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                      ) : (
-                        <Link
-                          to={menuItem.link || '#'}
-                          className={\`flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 \${location.pathname === menuItem.link ? 'bg-blue-50 dark:bg-blue-900 border-r-2 border-blue-500' : ''}\`}>
-                          <span className="mr-3 text-lg">{menuItem.icon}</span>
-                          {!isSidebarCollapsed && (
-                            <div className="flex items-center justify-between w-full gap-2 font-semibold">
-                              <span>{menuItem.title}</span>
-                              {menuItem.count && (
-                                <span className={\`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center items-center \${location.pathname === menuItem.link ? 'bg-primary dark:bg-secondary' : 'bg-primary dark:bg-secondary'}\`}>
-                                  {menuItem.count}
-                                </span>
-                              )}
-                            </div>
-                          )}
-                        </Link>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            ))}
-          </main>
-        </div>
-        
-        <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
-          {!isSidebarCollapsed ? (
-            <>
-              <div className="flex items-center justify-between w-full">
-                <p className="text-xs text-light dark:text-subinfo">
-                  © 2024 ${companyName || "Company"}
-                </p>
-                <button
-                  className="w-10 h-10 border border-primary-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
-                  aria-label="Toggle dark mode"
-                  onClick={toggleTheme}>
-                  <span className="text-lg">
-                    {isDarkMode ? '☀️' : '🌙'}
-                  </span>
-                </button>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-4 gap-4 w-full">
-              <button
-                className="w-10 h-10 border border-light-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
-                aria-label="Toggle dark mode"
-                onClick={toggleTheme}>
-                <span className="text-lg">
-                  {isDarkMode ? '☀️' : '🌙'}
-                </span>
-              </button>
-            </div>
-          )}
-        </footer>
-      </nav>
-    </div>
-  );
-};
-
-export default Sidebar;`,
-
-    "src/components/Header.tsx": `import Input from './Input';
-import { useApp } from '../context/AppContext';
-import { useLocation } from 'react-router-dom';
-
-interface HeaderAction {
-  icon: string;
-  alt: string;
-  onClick: () => void;
-  ariaLabel: string;
-  className?: string;
-}
-
-interface HeaderProps {
-  title?: string;
-  onSidebarToggle?: () => void;
-  onSearch?: (query: string) => void;
-  actions?: HeaderAction[];
-  secondaryLogo?: string;
-}
-
-const Header = ({
-  title,
-  onSidebarToggle,
-  onSearch,
-  actions = [],
-  secondaryLogo,
-}: HeaderProps) => {
-  const { isSidebarCollapsed, toggleSidebar } = useApp();
-  const location = useLocation();
-
-  // Function to get page title based on current route
-  const getPageTitle = () => {
-    if (title) return title;
-    
-    switch (location.pathname) {
-      case '/':
-      case '/dashboard':
-        return 'Dashboard';
-      case '/consumers':
-        return 'Consumers';
-      case '/user-management':
-        return 'User Management';
-      case '/role-management':
-        return 'Role Management';
-      ${
-        modules
-          ?.filter(
-            (module) =>
-              ![
-                "dashboard",
-                "consumers",
-                "user_management_default",
-                "role_management",
-              ].includes(module)
-          )
-          .map(
-            (module) => `case '/${module}':
-        return '${
-          module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, " ")
-        } Module';`
-          )
-          .join("\n      ") || ""
-      }
-      default:
-        return 'Dashboard';
-    }
-  };
-
-  const defaultActions: HeaderAction[] = [
-    {
-      icon: '🔔',
-      alt: 'Notifications icon',
-      onClick: () => {},
-      ariaLabel: 'Notifications',
-    },
-    {
-      icon: '⛶',
-      alt: 'Full screen icon',
-      onClick: () => {},
-      ariaLabel: 'Toggle full screen',
-    },
-  ];
-
-  const allActions = [...defaultActions, ...actions];
-
-  return (
-    <header className="border-b border-b-primary-border dark:border-dark-border dark:bg-primary-dark flex items-center justify-between px-6 py-4 h-24">
-      <nav className="flex items-center gap-4">
-        <button
-          className="p-2 bg-primary-lightest dark:bg-dark-secondary w-8 h-8 rounded-full flex items-center justify-center hover:text-white"
-          onClick={onSidebarToggle || toggleSidebar}
-          aria-label="Toggle sidebar">
-          <svg
-            className={\`h-6 w-6 \${isSidebarCollapsed ? 'rotate-180' : ''}\`}
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <h1 className="text-base dark:text-white">{getPageTitle()}</h1>
-      </nav>
-
-      <section
-        className="flex-1 max-w-2xl mx-8"
-        aria-label="Search section">
-        <Input onSearch={onSearch} />
-      </section>
-
-      <nav className="flex items-center gap-2">
-        {allActions.map((action, index) => (
-          <button
-            key={index}
-            className={\`p-2 w-8 h-8 bg-primary-lightest dark:bg-dark-secondary rounded-full flex items-center justify-center \${action.className || ''}\`}
-            onClick={action.onClick}
-            aria-label={action.ariaLabel}>
-            <span className="text-lg">{action.icon}</span>
-          </button>
-        ))}
-        <div className="p-2 flex items-center justify-center">
-          <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white font-semibold">
-            ${adminFirstName?.charAt(0) || "A"}${
-      adminLastName?.charAt(0) || "U"
-    }
-          </div>
-        </div>
-      </nav>
-    </header>
-  );
-};
-
-export default Header;`,
-
-    "src/components/SidebarWrapper.tsx": `import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-
-interface SidebarWrapperProps {
-  SidebarComponent: React.ComponentType<any>;
-}
-
-const SidebarWrapper = ({ SidebarComponent }: SidebarWrapperProps) => {
-  const location = useLocation();
-  const navigate = useNavigate();
   
-  const handleNavigate = (path: string) => {
-    
-    navigate(path);
-  };
-  
-  // Define mandatory menu items for host apps
-  const mandatoryMenus = [
-    {
-      category: 'MANAGEMENT',
-      items: [
-        // {
-        //   title: 'Dashboard',
-        //   icon: '/icons/dashboard.svg',
-        //   link: '/',
-        // },
-        // {
-        //   title: 'Consumers',
-        //   icon: '/icons/user.svg',
-        //   link: '/consumers',
-        // },
-        // {
-        //   title: 'User Management',
-        //   icon: '/icons/user-gear.svg',
-        //   link: '/user-management',
-        // },
-        // {
-        //   title: 'Role Management',
-        //   icon: '/icons/roles.svg',
-        //   link: '/role-management',
-        // },
-        // ${
-          modules
-            ?.filter(
-              (module) =>
-                ![
-                  "dashboard",
-                  "consumers",
-                  "user_management_default",
-                  "role_management",
-                ].includes(module)
-            )
-            .map(
-              (module) => `{
-        //   title: '${
-          module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, " ")
-        }',
-        //   icon: '/icons/apps-icon.svg',
-        //   link: '/${module}',
-        // }`
-            )
-            .join(",\n        ") || ""
-        }
-        {
-          title: 'Consumer View',
-          icon: '/icons/user-profile.svg',
-          link: '/consumerview',
-        },
-        {
-          title: 'All Tickets',
-          icon: '/icons/support-tickets.svg',
-          link: '/ticket',
-        },
-      ],
-    },
-  ];
-  
-  // Pass the location.pathname, navigation function, and mandatory menus to the federated Sidebar component
-  return (
-    <SidebarComponent 
-      currentPath={location.pathname} 
-      onNavigate={handleNavigate}
-      menus={mandatoryMenus}
-    />
-  );
-};
-
-export default SidebarWrapper; `,
-
-    "src/components/FederatedWrapper.tsx": `import React, { createContext, useContext } from 'react';
+  'src/components/FederatedWrapper.tsx': `import React, { createContext, useContext } from 'react';
 
 // Context that matches the SuperAdmin's AppContext interface
 interface FederatedAppContextType {
@@ -1454,14 +714,14 @@ export const FederatedContextProvider = ({
 };
 
 export const useFederatedApp = () => {
-    const context = useContext(FederatedAppContext);
-    if (context === undefined) {
-        throw new Error('useFederatedApp must be used within a FederatedContextProvider');
-    }
-    return context;
-}; `,
-
-    "src/components/CSSLoader.tsx": `import React, { useEffect, useState } from 'react';
+  const context = useContext(FederatedAppContext);
+  if (context === undefined) {
+    throw new Error('useFederatedApp must be used within a FederatedContextProvider');
+  }
+  return context;
+};`,
+  
+  'src/components/CSSLoader.tsx': `import React, { useEffect, useState } from 'react';
 
 interface CSSLoaderProps {
   cssFiles?: string[];
@@ -1498,19 +758,12 @@ const CSSLoader: React.FC<CSSLoaderProps> = ({
             
             document.head.appendChild(styleElement);
             setLoadedCSS(prev => [...prev, cssFile]);
-            
-    
           } else {
             throw new Error(\`Failed to load \${cssFile}: \${response.status}\`);
           }
         } catch (error) {
           console.warn(\`Failed to load federated CSS \${cssFile}:\`, error);
           setFailedCSS(prev => [...prev, cssFile]);
-          
-          // If fallback is enabled, continue using local CSS
-          if (fallbackEnabled) {
-
-          }
         }
       }
     };
@@ -1949,26 +1202,10 @@ module.exports = { createAppProject };
 // If running directly, use example data
 if (require.main === module) {
   const exampleFormData = {
-    appName: "Example App",
-    subdomain: "example-app",
-    companyName: "Example Company",
-    adminFirstName: "Admin",
-    adminLastName: "User",
-    adminEmail: "admin@example.com",
-    adminRole: "Administrator",
-    primaryColor: "#3B82F6",
-    secondaryColor: "#10B981",
-    textPrimaryColor: "#262626",
-    textSecondaryColor: "#7e7e7e",
-    backgroundColor: "#f5f8fc",
-    borderColor: "#e9efff",
-    shadowColor: "#dce4ef",
-    iconColor: "#476189",
-    gradientColor: "#163b7c",
-    timezone: "UTC",
-    currency: "USD",
-    modules: ["dashboard", "user_management_default", "role_management"],
+    appName: 'Example App', subdomain: 'example-app', companyName: 'Example Company',
+    adminFirstName: 'Admin', adminLastName: 'User', adminEmail: 'admin@example.com',
+    adminRole: 'Administrator', primaryColor: '#3B82F6', timezone: 'UTC', currency: 'USD',
+    modules: ['dashboard', 'user_management_default', 'role_management']
   };
-
   createAppProject(exampleFormData);
 }

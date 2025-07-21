@@ -64,28 +64,21 @@ const defaultMenus: MenuCategory[] = [
     {
         category: 'DASHBOARD',
         items: [
-            // {
-            //     title: 'Dashboard',
-            //     icon: '/icons/dashboard.svg',
-            //     link: '/',
-            // },
+            {
+                title: 'Dashboard',
+                icon: '/icons/dashboard.svg',
+                link: '/',
+            },
             {
                 title: 'Super Admin Dashboard',
                 icon: '/icons/admin.svg',
                 link: '/super-admin',
             },
             {
-                            title: 'App Management',
-                            icon: '/icons/apps-icon.svg',
-                            link: '/apps',
-                        },
-           
-            // {
-            //     title: 'DTR Dashboard',
-            //     icon: '/icons/dtr.svg',
-            //     link: '/dtr-dashboard',
-            // },
-            
+                title: 'App Management',
+                icon: '/icons/apps-icon.svg',
+                link: '/apps',
+            },
         ],
     },
     // {
@@ -241,7 +234,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/support-tickets.svg',
                 link: '/all-tickets',
             },
-            
+            {
+                title: 'Tickets',
+                icon: '/icons/support-tickets.svg',
+                link: '/tickets',
+            },
             // {
             //     title: 'Ticket View',
             //     icon: '/icons/ticket-view.svg',
@@ -263,7 +260,31 @@ const defaultMenus: MenuCategory[] = [
             //     link: '/role-management',
             // },
         ],
-
+    },
+    {
+        category: 'METER MANAGEMENT',
+        items: [
+            {
+                title: 'Meters',
+                icon: '/icons/meter.svg',
+                link: '/meters',
+            },
+            {
+                title: 'Data Logger',
+                icon: '/icons/database.svg',
+                link: '/data-logger',
+            },
+        ],
+    },
+    {
+        category: 'USER MANAGEMENT',
+        items: [
+            {
+                title: 'Users',
+                icon: '/icons/user.svg',
+                link: '/users',
+            },
+        ],
     },
     // {
     //     category: 'APPS & MODULES',
@@ -383,13 +404,13 @@ const Sidebar = ({
     const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
         {}
     );
-    
+
     // Use currentPath prop if provided, otherwise fallback to useLocation for standalone usage
     let pathname = currentPath;
     try {
         const location = useLocation();
         if (!pathname) pathname = location.pathname;
-    } catch (error) {
+    } catch {
         // useLocation failed, use currentPath or default to '/'
         pathname = currentPath || '/';
     }
@@ -421,12 +442,12 @@ const Sidebar = ({
                         <img
                             src={
                                 isSidebarCollapsed
-                                    ? (isDarkMode
+                                    ? isDarkMode
                                         ? '/images/bi-white-logo.svg'
-                                        : logo?.collapsedSrc || logo?.src)
-                                    : (isDarkMode
-                                        ? '/images/bi-white-logo.svg'
-                                        : logo?.src)
+                                        : logo?.collapsedSrc || logo?.src
+                                    : isDarkMode
+                                    ? '/images/bi-white-logo.svg'
+                                    : logo?.src
                             }
                             alt={logo?.alt}
                             className={`md:block ${
@@ -516,7 +537,8 @@ const Sidebar = ({
                                                                 id={`submenu-${menuItem.title}`}
                                                                 className={`relative flex flex-col overflow-hidden transition-all duration-300 ease-in-out pl-0 ${
                                                                     expandedMenus[
-                                                                        menuItem.title
+                                                                        menuItem
+                                                                            .title
                                                                     ]
                                                                         ? 'max-h-[500px] opacity-100'
                                                                         : 'max-h-0 opacity-0'
@@ -528,18 +550,29 @@ const Sidebar = ({
                                                                         subItem,
                                                                         subIndex
                                                                     ) => (
-                                                                        <li key={subIndex} className="relative">
+                                                                        <li
+                                                                            key={
+                                                                                subIndex
+                                                                            }
+                                                                            className="relative">
                                                                             {/* Horizontal line for each submenu item */}
                                                                             <span className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-0.5 bg-gray-200"></span>
                                                                             <button
-                                                                                onClick={() => subItem.link && onNavigate?.(subItem.link)}
+                                                                                onClick={() =>
+                                                                                    subItem.link &&
+                                                                                    onNavigate?.(
+                                                                                        subItem.link
+                                                                                    )
+                                                                                }
                                                                                 className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left ${
-                                                                                    pathname === subItem.link
+                                                                                    pathname ===
+                                                                                    subItem.link
                                                                                         ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow'
                                                                                         : 'text-gray-400 hover:text-primary'
-                                                                                }`}
-                                                                            >
-                                                                                {subItem.title}
+                                                                                }`}>
+                                                                                {
+                                                                                    subItem.title
+                                                                                }
                                                                             </button>
                                                                         </li>
                                                                     )
@@ -556,8 +589,12 @@ const Sidebar = ({
                                                                 onLogout
                                                             ) {
                                                                 onLogout();
-                                                            } else if (menuItem.link) {
-                                                                onNavigate?.(menuItem.link);
+                                                            } else if (
+                                                                menuItem.link
+                                                            ) {
+                                                                onNavigate?.(
+                                                                    menuItem.link
+                                                                );
                                                             }
                                                         }}
                                                         className={`flex items-center gap-4 py-3 px-4  text-sm cursor-pointer group rounded-lg w-full text-left ${
