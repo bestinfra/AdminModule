@@ -1,5 +1,5 @@
 {
-  "nextPort": 4017,
+  "nextPort": 4034,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -7,8 +7,8 @@
       "path": "C:\\xampp\\htdocs\\example-backend"
     },
     "example-app": {
-      "port": 4014,
-      "deployedAt": "2025-07-19T11:31:24.502Z",
+      "port": 4022,
+      "deployedAt": "2025-07-21T04:30:54.655Z",
       "path": "C:\\xampp\\htdocs\\example-app-backend"
     },
     "madhu": {
@@ -45,6 +45,66 @@
       "port": 4016,
       "deployedAt": "2025-07-19T12:17:22.266Z",
       "path": "C:\\xampp\\htdocs\\pooo-backend"
+    },
+    "sandeep": {
+      "port": 4017,
+      "deployedAt": "2025-07-19T12:39:16.405Z",
+      "path": "C:\\xampp\\htdocs\\sandeep-backend"
+    },
+    "priya": {
+      "port": 4023,
+      "deployedAt": "2025-07-21T04:59:12.964Z",
+      "path": "C:\\xampp\\htdocs\\priya-backend"
+    },
+    "kiran": {
+      "port": 4024,
+      "deployedAt": "2025-07-21T05:35:09.105Z",
+      "path": "C:\\xampp\\htdocs\\kiran-backend"
+    },
+    "test": {
+      "port": 4025,
+      "deployedAt": "2025-07-21T06:55:57.393Z",
+      "path": "C:\\xampp\\htdocs\\test-backend"
+    },
+    "kittu": {
+      "port": 4026,
+      "deployedAt": "2025-07-21T07:13:51.508Z",
+      "path": "C:\\xampp\\htdocs\\kittu-backend"
+    },
+    "akhil": {
+      "port": 4027,
+      "deployedAt": "2025-07-21T07:17:51.113Z",
+      "path": "C:\\xampp\\htdocs\\akhil-backend"
+    },
+    "dhaya": {
+      "port": 4028,
+      "deployedAt": "2025-07-21T07:31:36.976Z",
+      "path": "C:\\xampp\\htdocs\\dhaya-backend"
+    },
+    "chanduu": {
+      "port": 4029,
+      "deployedAt": "2025-07-21T07:38:32.584Z",
+      "path": "C:\\xampp\\htdocs\\chanduu-backend"
+    },
+    "gunnu": {
+      "port": 4030,
+      "deployedAt": "2025-07-21T07:51:43.069Z",
+      "path": "C:\\xampp\\htdocs\\gunnu-backend"
+    },
+    "nithin": {
+      "port": 4031,
+      "deployedAt": "2025-07-21T07:57:00.782Z",
+      "path": "C:\\xampp\\htdocs\\nithin-backend"
+    },
+    "maa": {
+      "port": 4032,
+      "deployedAt": "2025-07-21T09:49:57.266Z",
+      "path": "C:\\xampp\\htdocs\\maa-backend"
+    },
+    "madhukiran": {
+      "port": 4033,
+      "deployedAt": "2025-07-21T10:27:51.325Z",
+      "path": "C:\\xampp\\htdocs\\madhukiran-backend"
     }
   }
 }
