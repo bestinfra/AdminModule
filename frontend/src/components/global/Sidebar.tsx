@@ -296,6 +296,16 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/user.svg',
                 link: '/users',
             },
+            {
+                title: 'Add Ticket',
+                icon: '/icons/ticket-add.svg',
+                link: '/add-ticket',
+            },
+            {
+                title: 'Role Management',
+                icon: '/icons/role-management.svg',
+                link: '/role-management',
+            },
         ],
     },
     // {

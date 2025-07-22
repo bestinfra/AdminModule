@@ -14,6 +14,11 @@ import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';import AddConsumer from './pages/AddConsumer';
 import ComponentsDocumentation from './pages/ComponentsDocumentation';
 import Connect from './pages_v2/ConnectDisconnect';
+import AddTicket from './pages_v2/AddTicket';
+import RoleManagement from './pages_v2/RoleManagement';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
+import UserManagement from './pages/UserManagment';
+import AllTickets from './pages/AllTickets';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -41,6 +46,11 @@ const App: React.FC = () => {
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
                             <Route path="/connect-consumer" element={<Connect />} />
+                            <Route path="/add-ticket" element={<AddTicket/>} />
+                            <Route path="/role-management" element={<RoleManagement/>} />
+                            <Route path="/super-admin" element={<SuperAdminDashboard/>} />
+                            <Route path="/user-management" element={<UserManagement/>} />
+                            <Route path="/all-tickets" element={<AllTickets/>} />
                         </Route>
                     </Routes>
                 </Router>

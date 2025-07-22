@@ -1,5 +1,5 @@
 {
-  "nextPort": 4042,
+  "nextPort": 4043,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -125,6 +125,11 @@
       "port": 4037,
       "deployedAt": "2025-07-21T11:36:28.395Z",
       "path": "C:\\xampp\\htdocs\\lavanya-backend"
+    },
+    "iologin": {
+      "port": 4042,
+      "deployedAt": "2025-07-22T11:19:19.150Z",
+      "path": "C:\\xampp\\htdocs\\iologin-backend"
     }
   }
 }

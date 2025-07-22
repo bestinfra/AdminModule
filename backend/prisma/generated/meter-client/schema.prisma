@@ -447,11 +447,12 @@ model Consumer {
   creditScore          Int?
 
   // Relationships
-  meters        Meter[]
-  documents     ConsumerDocument[]
-  bills         Bill[]
-  notifications Notification[]
-  tickets       Ticket[]
+  meters          Meter[]
+  documents       ConsumerDocument[]
+  bills           Bill[]
+  notifications   Notification[]
+  tickets         Ticket[]
+  prepaidAccounts PrepaidAccount[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -498,12 +499,13 @@ model Meter {
   decommissionDate    DateTime?
 
   // Relationships
-  consumer   Consumer       @relation(fields: [consumerId], references: [id])
-  consumerId Int
-  location   Location       @relation(fields: [locationId], references: [id])
-  locationId Int
-  readings   MeterReading[]
-  bills      Bill[]
+  consumer     Consumer       @relation(fields: [consumerId], references: [id])
+  consumerId   Int
+  location     Location       @relation(fields: [locationId], references: [id])
+  locationId   Int
+  readings     MeterReading[]
+  bills        Bill[]
+  tamperEvents TamperEvent[]
 
   // DTR Relationship
   dtr   DTR? @relation(fields: [dtrId], references: [id])
@@ -597,6 +599,9 @@ model MeterReading {
   // Bill Reference
   bill   Bill? @relation(fields: [billId], references: [id])
   billId Int?
+
+  // Prepaid Transaction Reference
+  prepaidTransactions PrepaidTransaction[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1022,4 +1027,308 @@ enum FaultStatus {
   REPAIRING
   RESOLVED
   UNRESOLVED
+}
+
+// =====================================
+// TAMPER EVENTS
+// =====================================
+
+model TamperEvent {
+  id Int @id @default(autoincrement())
+
+  // Relationships
+  meter   Meter @relation(fields: [meterId], references: [id])
+  meterId Int
+
+  // Tamper Details
+  tamperDatetime DateTime     @default(now())
+  tamperType     TamperType
+  tamperStatus   TamperStatus
+
+  // Electrical Parameters (at time of tamper)
+  avgCurrent     Float?
+  avgVoltage     Float?
+  avgPowerFactor Float?
+  frequency      Float?
+
+  // Energy Parameters
+  kwh       Float? // Active Energy
+  kwhExport Float? // Export Energy
+  kwhImport Float? // Import Energy
+  kwhNet    Float? // Net Energy
+  kwhTotal  Float? // Total Energy
+
+  // Power Parameters
+  kwExport  Float? // Export Power
+  kwImport  Float? // Import Power
+  kvaExport Float? // Export Apparent Power
+  kvaImport Float? // Import Apparent Power
+
+  // Phase-wise Parameters
+  voltageR     Float? // R Phase Voltage
+  voltageY     Float? // Y Phase Voltage
+  voltageB     Float? // B Phase Voltage
+  currentR     Float? // R Phase Current
+  currentY     Float? // Y Phase Current
+  currentB     Float? // B Phase Current
+  powerFactorR Float? // R Phase Power Factor
+  powerFactorY Float? // Y Phase Power Factor
+  powerFactorB Float? // B Phase Power Factor
+
+  // Tamper Count
+  tamperCount Int? // Number of tamper events
+
+  // Additional Parameters (for future extensibility)
+  param1 Float?
+  param2 Float?
+  param3 Float?
+  param4 Float?
+  param5 Float?
+
+  // Status
+  isProcessed Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([meterId, tamperDatetime, tamperType, tamperStatus])
+  @@index([meterId, tamperDatetime])
+  @@map("tamper_events")
+}
+
+model TamperCodeDescription {
+  id         Int    @id @default(autoincrement())
+  tamperCode Int    @unique
+  tamperDesc String @db.VarChar(100)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("tamper_code_desc")
+}
+
+enum TamperType {
+  METER_BYPASS // 1
+  MAGNETIC_TAMPER // 2
+  COVER_OPEN // 3
+  TERMINAL_TAMPER // 4
+  REVERSE_POLARITY // 5
+  PHASE_MISMATCH // 6
+  CURRENT_SHUNT // 7
+  VOLTAGE_SHUNT // 8
+  POWER_FAILURE // 9
+  NO_LOAD // 10
+  OTHER // 11
+}
+
+enum TamperStatus {
+  DETECTED // 1
+  CONFIRMED // 2
+  RESOLVED // 3
+  FALSE_ALARM // 4
+  INVESTIGATING // 5
+}
+
+// =====================================
+// PREPAID TRANSACTION MANAGEMENT
+// =====================================
+
+model PrepaidAccount {
+  id Int @id @default(autoincrement())
+
+  // Consumer Relationship
+  consumer   Consumer @relation(fields: [consumerId], references: [id])
+  consumerId Int      @unique
+
+  // Account Details
+  accountNumber  String @unique
+  currentBalance Float  @default(0)
+  totalRecharged Float  @default(0)
+  totalConsumed  Float  @default(0)
+
+  // Account Status
+  isActive    Boolean   @default(true)
+  isBlocked   Boolean   @default(false)
+  blockReason String?
+  blockedAt   DateTime?
+  blockedBy   Int?
+
+  // Threshold Settings
+  lowBalanceThreshold Float @default(50) // Alert when balance goes below this
+  emergencyThreshold  Float @default(10) // Emergency disconnect threshold
+
+  // Auto Recharge Settings
+  autoRechargeEnabled   Boolean @default(false)
+  autoRechargeAmount    Float?
+  autoRechargeThreshold Float?
+
+  // Relationships
+  transactions PrepaidTransaction[]
+  recharges    PrepaidRecharge[]
+  alerts       PrepaidAlert[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("prepaid_accounts")
+}
+
+model PrepaidTransaction {
+  id Int @id @default(autoincrement())
+
+  // Account Relationship
+  account   PrepaidAccount @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  // Transaction Details
+  transactionId   String                 @unique
+  transactionType PrepaidTransactionType
+  amount          Float // Positive for credit, negative for debit
+  balanceBefore   Float
+  balanceAfter    Float
+
+  // Consumption Details (for debit transactions)
+  consumptionKWh Float?
+  ratePerUnit    Float?
+  fixedCharges   Float?
+  taxes          Json?
+
+  // Meter Reading (for consumption-based transactions)
+  meterReading MeterReading? @relation(fields: [readingId], references: [id])
+  readingId    Int?
+
+  // Transaction Status
+  status        PrepaidTransactionStatus @default(COMPLETED)
+  failureReason String?
+
+  // Metadata
+  description String?
+  metadata    Json? // Additional transaction data
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([accountId, createdAt])
+  @@index([transactionId])
+  @@map("prepaid_transactions")
+}
+
+model PrepaidRecharge {
+  id Int @id @default(autoincrement())
+
+  // Account Relationship
+  account   PrepaidAccount @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  // Recharge Details
+  rechargeId    String        @unique
+  amount        Float
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus @default(PENDING)
+
+  // Payment Gateway Details
+  gatewayName          String?
+  gatewayTransactionId String?
+  gatewayResponse      Json?
+
+  // Recharge Type
+  rechargeType   PrepaidRechargeType   @default(MANUAL)
+  rechargeSource PrepaidRechargeSource @default(ONLINE)
+
+  // Promotional Details
+  isPromotional   Boolean @default(false)
+  promotionalCode String?
+  discountAmount  Float   @default(0)
+  bonusAmount     Float   @default(0)
+
+  // Receipt
+  receiptNumber String?
+  receiptUrl    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([accountId, createdAt])
+  @@index([rechargeId])
+  @@map("prepaid_recharges")
+}
+
+model PrepaidAlert {
+  id Int @id @default(autoincrement())
+
+  // Account Relationship
+  account   PrepaidAccount @relation(fields: [accountId], references: [id])
+  accountId Int
+
+  // Alert Details
+  alertType  PrepaidAlertType
+  alertLevel PrepaidAlertLevel
+  message    String
+  isRead     Boolean           @default(false)
+  readAt     DateTime?
+
+  // Alert Data
+  balanceAtAlert     Float?
+  consumptionAtAlert Float?
+  thresholdValue     Float?
+
+  createdAt DateTime @default(now())
+
+  @@index([accountId, createdAt])
+  @@map("prepaid_alerts")
+}
+
+// Prepaid Enums
+enum PrepaidTransactionType {
+  RECHARGE // Money added to account
+  CONSUMPTION // Money deducted for consumption
+  ADJUSTMENT // Manual adjustment (credit/debit)
+  REFUND // Refund of excess amount
+  PENALTY // Penalty charges
+  BONUS // Bonus credit
+  EXPIRY // Expired credit
+  TRANSFER // Transfer between accounts
+}
+
+enum PrepaidTransactionStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  CANCELLED
+  REVERSED
+}
+
+enum PrepaidRechargeType {
+  MANUAL // Manual recharge by consumer
+  AUTO // Auto recharge
+  PROMOTIONAL // Promotional recharge
+  REFUND // Refund recharge
+  ADMIN // Admin recharge
+}
+
+enum PrepaidRechargeSource {
+  ONLINE // Online payment
+  OFFLINE // Offline payment center
+  MOBILE_APP // Mobile app
+  SMS // SMS recharge
+  USSD // USSD recharge
+  AGENT // Agent recharge
+}
+
+enum PrepaidAlertType {
+  LOW_BALANCE // Balance below threshold
+  EMERGENCY_LOW // Balance below emergency threshold
+  CONSUMPTION_HIGH // High consumption alert
+  RECHARGE_SUCCESS // Successful recharge
+  RECHARGE_FAILED // Failed recharge
+  DISCONNECTION_WARNING // Warning before disconnection
+  DISCONNECTED // Account disconnected
+  RECONNECTED // Account reconnected
+}
+
+enum PrepaidAlertLevel {
+  INFO
+  WARNING
+  CRITICAL
+  EMERGENCY
 }
