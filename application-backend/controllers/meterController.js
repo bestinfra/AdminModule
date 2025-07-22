@@ -4,18 +4,24 @@ import MeterDB from '../models/MeterDB.js';
 export const getAllMeters = async (req, res) => {
     try {
         const meters = await MeterDB.getAllMeters();
-        // Format for frontend table: sNo, meterNumber, serialNumber, type, status, manufacturer, consumerName, locationName, createdAt
-        const formatted = meters.map((m, idx) => ({
-            sNo: idx + 1,
-            meterNumber: m.meterNumber,
-            serialNumber: m.serialNumber,
-            type: m.type,
-            status: m.status,
-            manufacturer: m.manufacturer,
-            consumerName: m.consumer?.name,
-            locationName: m.location?.name,
-            createdAt: m.createdAt
-        }));
+        // Map all required fields for the frontend table from the latest reading
+        const formatted = meters.map((m) => {
+            const latestReading = m.readings && m.readings[0] ? m.readings[0] : {};
+            return {
+                meterNumber: m.meterNumber,
+                customerName: m.consumer?.name || 'NA',
+                location: m.location?.name || 'NA',
+                meterType: m.type || 'NA',
+                status: m.status || 'NA',
+                lastReading: latestReading.readingDate || 'NA',
+                currentReading: latestReading.kWh || 'NA',
+                previousReading: latestReading.previousReading || 'NA', // If not present, use 'NA'
+                consumption: latestReading.consumption || 'NA', // If not present, use 'NA'
+                voltage: latestReading.averageVoltage || 'NA',
+                current: latestReading.averageCurrent || 'NA',
+                powerFactor: latestReading.powerFactor || 'NA',
+            };
+        });
         res.json({
             success: true,
             data: formatted,

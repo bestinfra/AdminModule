@@ -66,6 +66,14 @@ export default function Tickets() {
         { key: 'responseTime', label: 'Response Time' },
     ]);
 
+    const statsArray = [
+        { key: 'total', label: 'Open Tickets', icon: 'icons/open-tickets.svg', subtitle1: 'Total active tickets', subtitle2: 'Last 24 hours' },
+        { key: 'open', label: 'Resolved Today', icon: 'icons/check-circle.svg', subtitle1: 'Successfully resolved', subtitle2: 'Today' },
+        { key: 'inProgress', label: 'Average Response Time', icon: 'icons/clock.svg', subtitle1: 'Customer satisfaction', subtitle2: 'Target: 4h' },
+        { key: 'resolved', label: 'Pending Escalations', icon: 'icons/alert-triggered.svg', subtitle1: 'Requires attention', subtitle2: 'High priority' },
+        { key: 'closed', label: 'Customer Satisfaction', icon: 'icons/star.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month' },
+    ];
+
     return (
         <Page
             sections={[
@@ -75,18 +83,16 @@ export default function Tickets() {
                         rows: [
                             {
                                 layout: 'row',
-                                columns: ticketStats ? ticketStats.map((ticket: any) => ({
+                                columns: statsArray.map(stat => ({
                                     name: 'Card',
                                     props: {
-                                        title: ticket.title,
-                                        value: ticket.value,
-                                        icon: ticket.icon,
-                                        showTrend: ticket.showTrend,
-                                        comparisonValue: ticket.comparisonValue,
-                                        subtitle1: ticket.subtitle1,
-                                        subtitle2: ticket.subtitle2,
+                                        title: stat.label,
+                                        value: ticketStats ? ticketStats[stat.key] : 0,
+                                        icon: stat.icon,
+                                        subtitle1: stat.subtitle1,
+                                        subtitle2: stat.subtitle2,
                                     },
-                                })) : [],
+                                })),
                             },
                         ],
                     },

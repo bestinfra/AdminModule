@@ -30,8 +30,11 @@ class MeterDB {
                         select: {
                             id: true,
                             dtrNumber: true
-                           
                         }
+                    },
+                    readings: {
+                        orderBy: { readingDate: 'desc' },
+                        take: 1
                     }
                 },
                 orderBy: { createdAt: 'desc' }
