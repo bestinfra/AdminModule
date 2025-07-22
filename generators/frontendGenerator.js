@@ -100,6 +100,10 @@ function generateAppComponent(frontendDir, variables) {
   // Ensure modulesArray is properly set for template replacement
   variables.modulesArray = JSON.stringify(modules);
   
+  // Set basic app variables
+  variables.appName = variables.appName || 'Admin App';
+  variables.companyName = variables.companyName || 'Company';
+  
   variables.userManagementCase = modules.includes('user_management_default') ? `
       case '/users':
         return 'Users';` : '';
@@ -107,6 +111,10 @@ function generateAppComponent(frontendDir, variables) {
   variables.roleManagementCase = modules.includes('role_management') ? `
       case '/role-management':
         return 'Role Management';` : '';
+  
+  variables.consumerCase = modules.includes('consumer') ? `
+      case '/consumers':
+        return 'Consumers';` : '';
   
   variables.billsPrepaidCase = (modules.includes('bills') || modules.includes('prepaid')) ? `
       case '/bills/prepaid':
@@ -154,6 +162,9 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.roleManagementRoute = modules.includes('role_management') ? 
     '<Route path="/role-management" element={<RoleManagement />} />' : '';
+  
+  variables.consumerRoute = modules.includes('consumer') ? 
+    '<Route path="/consumers" element={<Consumers />} />' : '';
 
   // Calculate error page variables
   variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
@@ -179,15 +190,19 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.roleManagementError = modules.includes('role_management') ? 
     '<li>/role-management - Role Management</li>' : '';
+  
+  variables.consumerError = modules.includes('consumer') ? 
+    '<li>/consumers - Consumers</li>' : '';
 
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
   
-  // Debug: Check if modulesArray was replaced
-  if (appContent.includes('{{modulesArray}}')) {
-    console.error('Warning: modulesArray placeholder was not replaced!');
+  // Debug: Check if any placeholders were not replaced
+  const placeholders = appContent.match(/{{[^}]+}}/g);
+  if (placeholders && placeholders.length > 0) {
+    console.error('Warning: Template placeholders were not replaced!');
+    console.error('Unreplaced placeholders:', placeholders);
     console.error('Available variables:', Object.keys(variables));
-    console.error('modulesArray value:', variables.modulesArray);
   }
   
   const appPath = path.join(frontendDir, 'src', 'App.tsx');

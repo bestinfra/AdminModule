@@ -17,6 +17,9 @@ function processTemplate(templateContent, variables) {
     processedContent = processedContent.replace(placeholder, replacement);
   });
   
+  // Remove any remaining empty lines that might have been left by empty replacements
+  processedContent = processedContent.replace(/^\s*[\r\n]/gm, '');
+  
   return processedContent;
 }
 
