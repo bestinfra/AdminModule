@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Page from '@components/global/PageC';
-import Button from '@components/global/Button';
-import Modal from '@components/global/Modal';
-import LoadingSpinner from '@components/global/LoadingSpinner';
+import Button from '@/components/global/Button';
+import Modal from '@/components/global/Modal';
+import LoadingSpinner from '@/components/global/LoadingSpinner';
 import meterConnectionAPI, { MeterConnectionAPI } from '@api/meterConnection';
 
 interface MeterData {
