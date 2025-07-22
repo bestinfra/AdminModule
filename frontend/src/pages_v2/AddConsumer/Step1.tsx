@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import Page from '../../components/global/PageC';
-import FormInput from '@components/Form/FormInput';
+
 
 // Configuration data
 const idTypeOptions = [
@@ -55,7 +55,7 @@ const Step1: React.FC<Step1Props> = ({
     handleBuildingSelect,
     onNext,
 }) => {
-    const fileInputRefs = { current: {} };
+
 
     // Memoize form input configurations
     const formInputs = useMemo(() => [
@@ -189,9 +189,7 @@ const Step1: React.FC<Step1Props> = ({
         handleInputChange(syntheticEvent);
     }, [handleInputChange]);
 
-    const handleInputBlur = useCallback((name: string) => {
-        setFieldFocus(name, false);
-    }, [setFieldFocus]);
+
 
     // Create custom components for inline use
     const ErrorSummaryComponent = useMemo(() => () => {
