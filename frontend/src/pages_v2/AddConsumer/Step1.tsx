@@ -1,6 +1,5 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import Page from '../../components/global/PageC';
-import FormInput from '@components/Form/FormInput';
 
 // Configuration data
 const idTypeOptions = [
