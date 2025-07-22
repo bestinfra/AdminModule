@@ -88,7 +88,7 @@ export const INITIAL_BRANDING_DATA = {
 };
 
 export const INITIAL_MODULE_DATA = {
-  modules: ['dashboard', 'consumer', 'user_management_default', 'role_management'],
+  modules: [],
 };
 
 export const STEP_COUNT = 5; 

@@ -629,7 +629,7 @@ export const validateFeatureSelection = (formData: any): { isValid: boolean; err
   const missingRequired = requiredModules.filter(module => !formData.modules?.includes(module));
   
   if (missingRequired.length > 0) {
-    errors.modules = `Required modules missing: ${missingRequired.join(', ')}`;
+    remarks.push(`💡 Consider enabling: ${missingRequired.join(', ')}`);
   }
 
   // Generate remarks based on form data
