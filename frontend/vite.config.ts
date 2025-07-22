@@ -15,7 +15,7 @@ export default defineConfig({
         './Login': './src/pages/SubLogin.tsx',
         './Dashboard': './src/pages_v2/Dashboard.tsx',
         './Consumers': './src/pages_v2/Consumers.tsx',
-        './Tickets': './src/pages_v2/Tickets.tsx',
+        './Ticket': './src/pages_v2/Tickets.tsx',
         './Users': './src/pages_v2/Users.tsx',
         './DataLogger': './src/pages_v2/DataLogger.tsx',
         './Meters': './src/pages_v2/Meters.tsx',
