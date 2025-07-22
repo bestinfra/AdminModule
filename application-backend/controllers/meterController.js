@@ -4,10 +4,21 @@ import MeterDB from '../models/MeterDB.js';
 export const getAllMeters = async (req, res) => {
     try {
         const meters = await MeterDB.getAllMeters();
-        
+        // Format for frontend table: sNo, meterNumber, serialNumber, type, status, manufacturer, consumerName, locationName, createdAt
+        const formatted = meters.map((m, idx) => ({
+            sNo: idx + 1,
+            meterNumber: m.meterNumber,
+            serialNumber: m.serialNumber,
+            type: m.type,
+            status: m.status,
+            manufacturer: m.manufacturer,
+            consumerName: m.consumer?.name,
+            locationName: m.location?.name,
+            createdAt: m.createdAt
+        }));
         res.json({
             success: true,
-            data: meters,
+            data: formatted,
             message: 'Meters retrieved successfully'
         });
     } catch (error) {
@@ -113,9 +124,15 @@ export const deleteMeter = async (req, res) => {
 export const getMeterStats = async (req, res) => {
     try {
         const stats = await MeterDB.getMeterStats();
+        // Only send relevant stats fields
         res.json({
             success: true,
-            data: stats
+            data: {
+                totalMeters: stats.totalMeters,
+                makes: stats.makes,
+                types: stats.types,
+                connectionTypes: stats.connectionTypes
+            }
         });
     } catch (error) {
         console.error('❌ getMeterStats: Error fetching meter stats:', error);
