@@ -1,5 +1,5 @@
 {
-  "nextPort": 4039,
+  "nextPort": 4040,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -67,8 +67,8 @@
       "path": "C:\\xampp\\htdocs\\test-backend"
     },
     "kittu": {
-      "port": 4026,
-      "deployedAt": "2025-07-21T07:13:51.508Z",
+      "port": 4039,
+      "deployedAt": "2025-07-22T05:15:52.383Z",
       "path": "C:\\xampp\\htdocs\\kittu-backend"
     },
     "akhil": {
