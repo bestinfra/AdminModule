@@ -9,13 +9,7 @@ const ICON_FILTER_STYLE = {
     filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)'
 };
 
-// const BAR_CHART_DATA = [
-//     10, 100, 200, 220, 230, 225, 225, 250, 270, 260, 230, 230, 230, 280, 270, 260, 230, 230, 230, 280, 270, 260, 230, 230, 230, 180, 170, 170, 170, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200
-// ];
 
-// const BAR_CHART_LABELS = [
-//     '4 May', '5 May', '6 May', '7 May', '8 May', '9 May', '10 May', '11 May', '12 May', '13 May', '14 May', '15 May', '16 May', '17 May', '18 May', '19 May', '20 May', '21 May', '22 May', '23 May', '24 May', '25 May', '26 May', '27 May', '28 May', '29 May', '30 May', '31 May', '1 Jun', '2 Jun', '3 Jun', '4 Jun', '5 Jun', '6 Jun', '7 Jun', '8 Jun', '9 Jun', '10 Jun', '11 Jun', '12 Jun', '13 Jun', '14 Jun', '15 Jun', '16 Jun', '17 Jun', '18 Jun', '19 Jun', '20 Jun', '21 Jun', '22 Jun', '23 Jun', '24 Jun', '25 Jun', '26 Jun', '27 Jun', '28 Jun', '29 Jun', '30 Jun', '1 Jul', '2 Jul', '3 Jul', '4 Jul'
-// ];
 
 const METER_STATUS_DATA = [
     { value: 284, name: 'Communicating' },
@@ -28,57 +22,8 @@ const Dashboard: React.FC = () => {
 
     const handleTotalConsumersClick = () => navigate('/consumers');
     const handleHighUsageConsumersClick = () => navigate('/consumers/high-usage');
-    const handleDownload = (timeRange: string, viewType: string) => console.log(`Download ${timeRange} ${viewType} data`);
-    const handleTimeRangeChange = (range: string) => setMetricsView(range);
-    const handleViewTypeChange = (viewType: string) => setMetricsType(viewType);
 
-    const generateXAxisLabels = (timeRange: string) => {
-        const now = new Date();
-        switch (timeRange) {
-            case 'Monthly': {
-                const labels = [];
-                const currentMonth = now.getMonth();
-                const currentYear = now.getFullYear();
-                for (let i = 35; i >= 0; i--) {
-                    const date = new Date(currentYear, currentMonth - i, 1);
-                    const monthName = date.toLocaleString('default', { month: 'short' });
-                    const year = date.getFullYear();
-                    labels.push(`${monthName} ${year}`);
-                }
-                return labels;
-            }
-            case 'Yearly': {
-                const labels = [];
-                const currentYear = now.getFullYear();
-                for (let i = 19; i >= 0; i--) {
-                    labels.push(`${currentYear - i}`);
-                }
-                return labels;
-            }
-            default: return BAR_CHART_LABELS;
-        }
-    };
 
-    const generateChartData = (timeRange: string) => {
-        switch (timeRange) {
-            case 'Monthly': return Array(36).fill(0).map(() => Math.floor(Math.random() * 300) + 50);
-            case 'Yearly': return Array(20).fill(0).map(() => Math.floor(Math.random() * 1000) + 100);
-            default: return BAR_CHART_DATA;
-        }
-    };
-
-    const getDateRange = (timeRange: string) => {
-        const now = new Date();
-        switch (timeRange) {
-            case 'Monthly':
-                const startMonth = new Date(now.getFullYear(), now.getMonth() - 35, 1);
-                return `${startMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })} - ${now.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}`;
-            case 'Yearly':
-                const startYear = now.getFullYear() - 19;
-                return `${startYear} - ${now.getFullYear()}`;
-            default: return "4 May, 2025 - 5 Jul, 2025";
-        }
-    };
 
     const [consumerStatsData] = useState([
         {
@@ -267,32 +212,33 @@ const Dashboard: React.FC = () => {
     ]);
 
     const [billingChartData] = useState({
-        data: [
-            [260, 260, 0, 0],    // Jun 2024
-            [260, 260, 0, 0],    // Jul 2024
-            [255, 255, 0, 0],    // Aug 2024
-            [255, 255, 0, 0],    // Sep 2024
-            [255, 255, 0, 0],    // Oct 2024
-            [255, 255, 0, 0],    // Nov 2024
-            [250, 250, 0, 0],    // Dec 2024
-            [250, 10, 0, 240],   // Jan 2025
-            [240, 0, 0, 240],    // Feb 2025
-            [275, 50, 0, 220],   // Mar 2025
-            [275, 50, 0, 220],   // Apr 2025
-            [275, 40, 0, 230],   // May 2025
-            [275, 55, 0, 220]    // Jun 2025
-        ],
         xAxisData: [
-            'Jun 2024', 'Jul 2024', 'Aug 2024', 'Sep 2024', 'Oct 2024', 'Nov 2024', 'Dec 2024',
-            'Jan 2025', 'Feb 2025', 'Mar 2025', 'Apr 2025', 'May 2025', 'Jun 2025'
+            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
         ],
-        colors: ['#3B82F6', '#10B981', '#EF4444', '#F97316'],
-        legend: [
-            { label: 'Bills Generated', color: '#3B82F6' },
-            { label: 'Paid', color: '#10B981' },
-            { label: 'Pending', color: '#EF4444' },
-            { label: 'Overdue', color: '#F97316' }
-        ]
+        seriesData: [
+            {
+                name: 'Bills Generated',
+                data: [260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295],
+            },
+            {
+                name: 'Paid',
+                data: [240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270],
+            },
+            {
+                name: 'Pending',
+                data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
+            },
+            {
+                name: 'Overdue',
+                data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
+            },
+        ],
+        seriesColors: [
+            '#3B82F6',  // Blue for Bills Generated
+            '#10B981',  // Green for Paid
+            '#EF4444',  // Red for Pending
+            '#F97316',  // Orange for Overdue
+        ],
     });
 
     return (
@@ -344,6 +290,7 @@ const Dashboard: React.FC = () => {
                                     layout: 'grid',
                                     gridColumns: 2,
                                     gridRows: 2,
+                                    span: { col: 1, row: 2 },
                                     bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
                                     gap: 'gap-4',
                                     // className: 'w-[50%] h-full', // width 30%, take full height
@@ -430,32 +377,20 @@ const Dashboard: React.FC = () => {
                                     className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
                                     columns: [
                                         {
-                                            name: 'Holder',
-                                            props: {
-                                                title: 'Billing vs Collection (Jun 2024 - Jun 2025)',
-                                                className: 'border-none rounded-t-3xl'
-                                            }
-                                        },
-                                        {
                                             name: 'BarChart',
                                             props: {
-                                            data: billingChartData.data,
-                                            xAxisData: billingChartData.xAxisData,
-                                                showXAxisLabel: true,
-                                                xAxisLabel: "Amount (Rs.)",
-                                                showHeader: false,
-                                                headerTitle: "",
-                                                dateRange: "Jun 2024 - Jun 2025",
-                                                availableTimeRanges: ['Daily', 'Monthly', 'Yearly'],
-                                                initialTimeRange: 'Monthly',
-                                                onTimeRangeChange: () => {},
-                                                onDownload: () => {},
-                                                showDownloadButton: false,
-                                                timeRange: 'Monthly',
-                                                stacked: false,
-                                                grouped: true,
-                                            colors: billingChartData.colors,
-                                            legend: billingChartData.legend,
+                                                xAxisData: billingChartData.xAxisData,
+                                                seriesData: billingChartData.seriesData,
+                                                seriesColors: billingChartData.seriesColors,
+                                                height: '400px',
+                                                showHeader: true,
+                                                headerTitle: 'Billing vs Collection',
+                                                dateRange: '2024',
+                                                showDownloadButton: true,
+                                                showViewToggle: true,
+                                                viewToggleOptions: ['Graph', 'Table'],
+                                                showTableView: true,
+                                                ariaLabel: 'Monthly billing statistics chart',
                                                 yAxisMax: 300,
                                                 yAxisStep: 50
                                             }
