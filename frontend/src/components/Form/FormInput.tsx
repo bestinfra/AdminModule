@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useMemo, useCallback, useRef } from "react";
 import type {
   FormInputProps,
   FormInputEvent,
@@ -27,6 +27,8 @@ const FormInput: React.FC<FormInputProps> = ({
   onInputChange,
   fileInputRefs,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  
   const {
     name,
     type,
@@ -56,13 +58,13 @@ const FormInput: React.FC<FormInputProps> = ({
     return target.value;
   };
 
-  const handleInputChange = (event: FormInputEvent) => {
+  const handleInputChange = useCallback((event: FormInputEvent) => {
     const extractedValue = extractValueFromEvent(event);
     onInputChange(name, extractedValue, input);
     input.onChange?.(extractedValue);
-  };
+  }, [onInputChange, name, input]);
 
-  const commonProps: CommonInputProps = {
+  const commonProps: CommonInputProps = useMemo(() => ({
     id: name,
     name,
     required,
@@ -78,19 +80,24 @@ const FormInput: React.FC<FormInputProps> = ({
       ? descriptionId
       : undefined,
     "aria-required": required ? "true" : "false",
-  };
+  }), [name, required, disabled, showError, inputClassName, handleInputChange, errorId, description, descriptionId]);
 
-  const renderInput = () => {
+  const renderInput = useMemo(() => {
     const stringValue = value === null ? "" : (value as string);
     const booleanValue = value === null ? false : (value as boolean);
     const fileValue = value === null ? null : (value as FileList);
     const fileSingleValue = value === null ? null : (value as File);
+
+    const finalClassName = `${commonProps.className} ${icon ? "pr-12" : ""} ${
+      showError ? "border-red-500" : ""
+    }`.trim();
 
     switch (type) {
       case "textarea":
         return (
           <TextareaInput
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             placeholder={placeholder || label}
           />
@@ -99,6 +106,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <SelectInput
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             placeholder={placeholder || `Select ${label}`}
             options={options}
@@ -108,6 +116,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <FileInput
             {...commonProps}
+            className={finalClassName}
             value={fileValue}
             icon={icon}
             fileInputRefs={fileInputRefs}
@@ -118,6 +127,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <CheckboxInput
             {...commonProps}
+            className={finalClassName}
             value={booleanValue}
             label={label || ""}
             description={description}
@@ -128,6 +138,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <RadioInput
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             options={options}
             label={label || ""}
@@ -139,6 +150,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <SwitchInput
             {...commonProps}
+            className={finalClassName}
             value={!!value}
             label={label || ""}
             description={description}
@@ -231,6 +243,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <TextareaField
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             label={label}
             placeholder={placeholder}
@@ -254,14 +267,16 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <input
             {...commonProps}
+            ref={inputRef}
+            key={name}
             type={textInputType}
             value={stringValue}
             placeholder={placeholder || label}
-            className={`${commonProps.className} ${icon ? "pr-12" : ""}`}
+            className={finalClassName}
           />
         );
     }
-  };
+  }, [type, value, commonProps, placeholder, label, options, icon, fileInputRefs, description, name, onInputChange, input, showError, error, required, disabled, inputClassName, showError]);
 
   return (
     <div className={`w-full  ${inputClassName || ""}`}>
@@ -289,11 +304,7 @@ const FormInput: React.FC<FormInputProps> = ({
               {error}
             </span>
           )}
-          {React.cloneElement(renderInput(), {
-            className: `${renderInput().props.className || ""} ${
-              showError ? "border-red-500" : ""
-            }`.trim(),
-          })}
+          {renderInput}
         </div>
         {description && !showError && (
           <p id={descriptionId} className="text-sm text-gray-500" role="note">
