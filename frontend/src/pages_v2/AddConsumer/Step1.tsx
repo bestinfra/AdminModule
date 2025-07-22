@@ -1,7 +1,6 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import Page from '../../components/global/PageC';
 
-
 // Configuration data
 const idTypeOptions = [
     { value: 'aadhar', label: 'Aadhar Card' },

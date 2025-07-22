@@ -105,6 +105,20 @@ export const submitAppCreation = async (formData: AllFormData): Promise<void> =>
   
   // Create the app using the API
   const result = await AppCreationAPI.createApp(formData);
+
+  // Send credentials email if requested
+  if (formData.sendWelcomeEmail && formData.adminEmail && formData.adminUsername && formData.adminPassword) {
+    try {
+      await AppCreationAPI.sendLoginCredentialsEmail({
+        to: formData.adminEmail,
+        username: formData.adminUsername,
+        password: formData.adminPassword,
+      });
+      alert('Login credentials email sent to admin.');
+    } catch (e) {
+      alert('App created, but failed to send credentials email: ' + (e instanceof Error ? e.message : e));
+    }
+  }
   
   // Handle success
   alert(`${result.message}\n\nNext steps:\n${result.nextSteps?.join('\n') || ''}`);

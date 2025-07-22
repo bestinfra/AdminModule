@@ -1,5 +1,5 @@
 {
-  "nextPort": 4050,
+  "nextPort": 4049,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -126,65 +126,40 @@
       "deployedAt": "2025-07-21T11:36:28.395Z",
       "path": "C:\\xampp\\htdocs\\lavanya-backend"
     },
-    "best-infra-app": {
-      "port": 4039,
-      "deployedAt": "2025-07-22T10:10:11.289Z",
-      "path": "C:\\xampp\\htdocs\\best-infra-app-backend"
-    },
-    "best-infra-apps": {
-      "port": 4040,
-      "deployedAt": "2025-07-22T10:13:39.716Z",
-      "path": "C:\\xampp\\htdocs\\best-infra-apps-backend"
-    },
-    "best-infraaaaa": {
-      "port": 4041,
-      "deployedAt": "2025-07-22T10:22:39.659Z",
-      "path": "C:\\xampp\\htdocs\\best-infraaaaa-backend"
-    },
-    "best-infraa": {
+    "sandeep133": {
       "port": 4042,
-      "deployedAt": "2025-07-22T11:13:51.705Z",
-      "path": "C:\\xampp\\htdocs\\best-infraa-backend"
+      "deployedAt": "2025-07-22T13:01:28.822Z",
+      "path": "C:\\xampp\\htdocs\\sandeep133-backend"
     },
-    "best-infrass": {
+    "sandeep20": {
       "port": 4043,
-      "deployedAt": "2025-07-22T11:21:02.522Z",
-      "path": "C:\\xampp\\htdocs\\best-infrass-backend"
+      "deployedAt": "2025-07-22T13:04:38.458Z",
+      "path": "C:\\xampp\\htdocs\\sandeep20-backend"
     },
-    "best-infra": {
-      "port": 4042,
-      "deployedAt": "2025-07-22T11:50:18.842Z",
-      "path": "C:\\xampp\\htdocs\\best-infra-backend"
+    "sandeep22": {
+      "port": 4044,
+      "deployedAt": "2025-07-22T13:06:59.712Z",
+      "path": "C:\\xampp\\htdocs\\sandeep22-backend"
     },
-    "best-infra-chandu": {
-      "port": 4043,
-      "deployedAt": "2025-07-22T12:21:31.401Z",
-      "path": "C:\\xampp\\htdocs\\best-infra-chandu-backend"
-    },
-    "anzee": {
+    "sandeep23": {
       "port": 4045,
-      "deployedAt": "2025-07-22T12:50:46.174Z",
-      "path": "C:\\xampp\\htdocs\\anzee-backend"
+      "deployedAt": "2025-07-22T13:10:33.541Z",
+      "path": "C:\\xampp\\htdocs\\sandeep23-backend"
     },
-    "anz": {
+    "sandeep25": {
       "port": 4046,
-      "deployedAt": "2025-07-22T12:58:21.913Z",
-      "path": "C:\\xampp\\htdocs\\anz-backend"
+      "deployedAt": "2025-07-22T18:55:06.326Z",
+      "path": "C:\\xampp\\htdocs\\sandeep25-backend"
     },
-    "chandu-aap": {
+    "sandeep26": {
       "port": 4047,
-      "deployedAt": "2025-07-22T13:24:11.825Z",
-      "path": "C:\\xampp\\htdocs\\chandu-aap-backend"
+      "deployedAt": "2025-07-22T18:57:13.189Z",
+      "path": "C:\\xampp\\htdocs\\sandeep26-backend"
     },
-    "chandu-app": {
+    "sandeep27": {
       "port": 4048,
-      "deployedAt": "2025-07-22T13:29:27.051Z",
-      "path": "C:\\xampp\\htdocs\\chandu-app-backend"
-    },
-    "chandu-appss": {
-      "port": 4049,
-      "deployedAt": "2025-07-22T13:32:06.130Z",
-      "path": "C:\\xampp\\htdocs\\chandu-appss-backend"
+      "deployedAt": "2025-07-22T19:04:14.477Z",
+      "path": "C:\\xampp\\htdocs\\sandeep27-backend"
     }
   }
 }

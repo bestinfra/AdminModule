@@ -72,4 +72,24 @@ export class AppCreationAPI {
       return false;
     }
   }
+
+  static async sendLoginCredentialsEmail({ to, username, password }: { to: string; username: string; password: string }): Promise<{ message: string }> {
+    try {
+      const response = await fetch(`${API_BASE_URL}/send-credentials`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ to, username, password }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send credentials email');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Error sending credentials email:', error);
+      throw error;
+    }
+  }
 } 
