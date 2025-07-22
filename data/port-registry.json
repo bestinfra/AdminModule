@@ -1,5 +1,5 @@
 {
-  "nextPort": 4039,
+  "nextPort": 4042,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -12,8 +12,8 @@
       "path": "C:\\xampp\\htdocs\\example-app-backend"
     },
     "madhu": {
-      "port": 4004,
-      "deployedAt": "2025-07-19T08:26:47.619Z",
+      "port": 4041,
+      "deployedAt": "2025-07-22T06:53:52.937Z",
       "path": "C:\\xampp\\htdocs\\madhu-backend"
     },
     "test-deployment": {
@@ -27,8 +27,8 @@
       "path": "C:\\xampp\\htdocs\\syntax-test-backend"
     },
     "sai": {
-      "port": 4007,
-      "deployedAt": "2025-07-19T10:35:27.502Z",
+      "port": 4040,
+      "deployedAt": "2025-07-22T05:28:38.973Z",
       "path": "C:\\xampp\\htdocs\\sai-backend"
     },
     "pehhh": {
@@ -67,8 +67,8 @@
       "path": "C:\\xampp\\htdocs\\test-backend"
     },
     "kittu": {
-      "port": 4026,
-      "deployedAt": "2025-07-21T07:13:51.508Z",
+      "port": 4039,
+      "deployedAt": "2025-07-22T05:15:52.383Z",
       "path": "C:\\xampp\\htdocs\\kittu-backend"
     },
     "akhil": {
