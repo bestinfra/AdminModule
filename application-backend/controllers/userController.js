@@ -3,13 +3,21 @@ import UserDB from '../models/UserDB.js';
 export const getAllUsers = async (req, res) => {
     try {
         const users = await UserDB.getAllUsers();
+        // Format the data for the frontend table
+        const formatted = users.map((u, idx) => ({
+            sNo: idx + 1,
+            userId: u.userId || u.id,
+            name: u.name,
+            email: u.email,
+            role: u.role || (u.roles && u.roles[0] ? u.roles[0].name : ''),
+        }));
         res.json({
             success: true,
-            data: users,
+            data: formatted,
             message: 'Users retrieved successfully'
         });
     } catch (error) {
-        console.error('Error fetching users:', error);
+        console.error('getAllUsers: Error fetching users:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to fetch users',

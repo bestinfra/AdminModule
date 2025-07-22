@@ -1,5 +1,5 @@
 {
-  "nextPort": 4041,
+  "nextPort": 4042,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -12,8 +12,8 @@
       "path": "C:\\xampp\\htdocs\\example-app-backend"
     },
     "madhu": {
-      "port": 4004,
-      "deployedAt": "2025-07-19T08:26:47.619Z",
+      "port": 4041,
+      "deployedAt": "2025-07-22T06:53:52.937Z",
       "path": "C:\\xampp\\htdocs\\madhu-backend"
     },
     "test-deployment": {

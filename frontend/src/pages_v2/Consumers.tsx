@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import type { Column } from '@components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Page from '@components/global/PageC';
-import { getAllConsumers } from '../api/consumers';
+import BACKEND_URL from '../config';
 
 const columns: Column[] = [
     { key: 'sNo', label: 'S.No' },
@@ -41,16 +41,12 @@ const Consumers: React.FC = () => {
     useEffect(() => {
         setLoading(true);
         setError(null);
-        getAllConsumers()
-            .then((data) => {
-                // Map API data to table row format
-                const mapped = data.map((c, idx) => ({
-                    ...c,
-                    sNo: idx + 1,
-                    meter: c.meters && c.meters[0] ? c.meters[0].serialNumber : '',
-                    reading: c.meters && c.meters[0] ? c.meters[0].currentReading : '',
-                }));
-                setConsumers(mapped);
+        fetch(`${BACKEND_URL}/consumers`)
+            .then(async (res) => {
+                if (!res.ok) throw new Error('Failed to fetch consumers');
+                const result = await res.json();
+                if (!result.success) throw new Error(result.message || 'Failed to fetch consumers');
+                setConsumers(result.data); // Use data as-is
             })
             .catch((err) => {
                 setError(err.message || 'Failed to fetch consumers');
