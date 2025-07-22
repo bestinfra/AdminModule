@@ -117,39 +117,10 @@ const Dashboard: React.FC = () => {
             default: return "4 May, 2025 - 5 Jul, 2025";
         }
     };
-    return (
-        <div className="p-2 min-h-screen">
-            <Page
-                sections={[
-                    {
-                        layout: {
-                            type: 'grid',
-                            columns: 2,
-                            gap: 'gap-6',
-                            rows: [
-                                {
-                                    layout: 'grid',
-                                    gridColumns: 3,
-                                    gridRows: 2,
-                                    bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
-                                    gap: 'gap-4',
-                                    className: 'h-fit',
-                                    columns: [
-                                        {
-                                            name: 'Heading',
-                                            props: {
-                                                text: 'Consumer Statistics',
-                                                level: 2,
-                                                size: 'md',
-                                                variant: 'primary',
-                                                weight: 'bold',
-                                                align: 'left',
-                                            },
-                                            span: { col: 3, row: 1 },
-                                        },
-                                        {
-                                            name: 'Card',
-                                            props: {
+
+    const [consumerStatsData] = useState([
+        {
+            id: 1,
                                                 title: 'Total Consumers',
                                                 value: '292',
                                                 icon: '/icons/account.svg',
@@ -157,55 +128,45 @@ const Dashboard: React.FC = () => {
                                                 subtitle2: '8 In-Active',
                                                 iconStyle: ICON_FILTER_STYLE,
                                                 onValueClick: handleTotalConsumersClick
-                                            }
                                         },
                                         {
-                                            name: 'Card',
-                                            props: {
+            id: 2,
                                                 title: 'Prepaid Consumers',
                                                 value: '2',
                                                 icon: '/icons/coins.svg',
                                                 subtitle1: '0 Disconnected',
                                                 subtitle2: '',
                                                 iconStyle: ICON_FILTER_STYLE
-                                            }
                                         },
                                         {
-                                            name: 'Card',
-                                            props: {
+            id: 3,
                                                 title: 'Postpaid Consumers',
                                                 value: '290',
                                                 icon: '/icons/document.svg',
                                                 subtitle1: '11 Disconnected',
                                                 subtitle2: '',
                                                 iconStyle: ICON_FILTER_STYLE
-                                            }
                                         },
                                         {
-                                            name: 'Card',
-                                            props: {
+            id: 4,
                                                 title: 'Overdue Amount',
                                                 value: '2590925.47',
                                                 icon: '/icons/bills.svg',
                                                 subtitle1: '1395 Overdue Consumers',
                                                 subtitle2: '',
                                                 iconStyle: ICON_FILTER_STYLE
-                                            }
                                         },
                                         {
-                                            name: 'Card',
-                                            props: {
+            id: 5,
                                                 title: 'Total Outstanding (Rs.)',
                                                 value: '2590925.47',
                                                 icon: '/icons/bills.svg',
                                                 subtitle1: '614.98% of Total Billed Amount',
                                                 subtitle2: '',
                                                 iconStyle: ICON_FILTER_STYLE
-                                            }
                                         },
                                         {
-                                            name: 'Card',
-                                            props: {
+            id: 6,
                                                 title: 'High-Usage Consumers',
                                                 value: '139',
                                                 icon: '/icons/graph-bar.svg',
@@ -214,8 +175,208 @@ const Dashboard: React.FC = () => {
                                                 iconStyle: ICON_FILTER_STYLE,
                                                 onValueClick: handleHighUsageConsumersClick
                                             }
-                                        }
-                                    ]
+    ]);
+
+    const [billingData] = useState([
+        {
+            id: 1,
+            title: 'Electricity Usage (kWh)',
+            value: '64010.91',
+            icon: '/icons/plug-alt.svg',
+            subtitle1: '62506.77 kWh',
+            subtitle2: 'May 2025',
+            showTrend: true,
+            comparisonValue: 2.4,
+            iconStyle: ICON_FILTER_STYLE
+        },
+        {
+            id: 2,
+            title: 'Electricity Charges (Rs)',
+            value: '421302.79',
+            icon: '/icons/coins.svg',
+            subtitle1: '515396.81',
+            subtitle2: 'May 2025',
+            showTrend: true,
+            comparisonValue: -18.3,
+            iconStyle: ICON_FILTER_STYLE
+        },
+        {
+            id: 3,
+            title: 'Payment Receipts',
+            value: '281',
+            icon: '/icons/bills.svg',
+            subtitle1: '281',
+            subtitle2: 'May 2025',
+            showTrend: true,
+            comparisonValue: 0,
+            iconStyle: ICON_FILTER_STYLE
+        },
+        {
+            id: 4,
+            title: 'Service Requests',
+            value: '0',
+            icon: '/icons/bills.svg',
+            subtitle1: '0',
+            subtitle2: 'May 2025',
+            showTrend: true,
+            comparisonValue: 0,
+            iconStyle: ICON_FILTER_STYLE
+        }
+    ]);
+
+    const [overdueConsumersData] = useState([
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '32004.12'
+        },
+        {
+            uid: '2025UIDC088',
+            consumerName: 'G Ramaraju',
+            flatNo: 'C088',
+            overdue: '22613.91'
+        },
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '21679.76'
+        },
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '20745.27'
+        },
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '19731.31'
+        }
+    ]);
+
+    const [disconnectedConsumersData] = useState([
+        {
+            uid: '2025UIDA006',
+            consumerName: 'T Vidyasagar',
+            flatNo: 'A006',
+            overdue: '4339.14'
+        },
+        {
+            uid: '2025UIDA009',
+            consumerName: 'Reading Room',
+            flatNo: 'A009',
+            overdue: '3802.83'
+        },
+        {
+            uid: '2025UIDA008',
+            consumerName: 'D Sudhakar Gupta',
+            flatNo: 'A008',
+            overdue: '2778.76'
+        },
+        {
+            uid: '2025UIDA011',
+            consumerName: 'M Nagaphani',
+            flatNo: 'A011',
+            overdue: '2627.91'
+        },
+        {
+            uid: '2025UIDA010',
+            consumerName: 'M Ramakrishna',
+            flatNo: 'A010',
+            overdue: '2244.91'
+        }
+    ]);
+
+    const [overdueConsumersColumns] = useState([
+        { key: 'uid', label: 'UID' },
+        { key: 'consumerName', label: 'Consumer Name' },
+        { key: 'flatNo', label: 'Flat No' },
+        { key: 'overdue', label: 'Overdue (Rs.)' }
+    ]);
+
+    const [disconnectedConsumersColumns] = useState([
+        { key: 'uid', label: 'UID' },
+        { key: 'consumerName', label: 'Consumer Name' },
+        { key: 'flatNo', label: 'Flat No' },
+        { key: 'overdue', label: 'Overdue (Rs.)' }
+    ]);
+
+    const [billingChartData] = useState({
+        data: [
+            [260, 260, 0, 0],    // Jun 2024
+            [260, 260, 0, 0],    // Jul 2024
+            [255, 255, 0, 0],    // Aug 2024
+            [255, 255, 0, 0],    // Sep 2024
+            [255, 255, 0, 0],    // Oct 2024
+            [255, 255, 0, 0],    // Nov 2024
+            [250, 250, 0, 0],    // Dec 2024
+            [250, 10, 0, 240],   // Jan 2025
+            [240, 0, 0, 240],    // Feb 2025
+            [275, 50, 0, 220],   // Mar 2025
+            [275, 50, 0, 220],   // Apr 2025
+            [275, 40, 0, 230],   // May 2025
+            [275, 55, 0, 220]    // Jun 2025
+        ],
+        xAxisData: [
+            'Jun 2024', 'Jul 2024', 'Aug 2024', 'Sep 2024', 'Oct 2024', 'Nov 2024', 'Dec 2024',
+            'Jan 2025', 'Feb 2025', 'Mar 2025', 'Apr 2025', 'May 2025', 'Jun 2025'
+        ],
+        colors: ['#3B82F6', '#10B981', '#EF4444', '#F97316'],
+        legend: [
+            { label: 'Bills Generated', color: '#3B82F6' },
+            { label: 'Paid', color: '#10B981' },
+            { label: 'Pending', color: '#EF4444' },
+            { label: 'Overdue', color: '#F97316' }
+        ]
+    });
+
+    return (
+        <Page
+            sections={[
+                {
+                    layout: {
+                        type: 'grid',
+                        gap: 'gap-6',
+                        columns: 3,
+                        // className: 'items-stretch',
+                        rows: [
+                            {
+                                layout: 'grid',
+                                gridColumns: 3,
+                                gridRows: 2,
+                                bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
+                                gap: 'gap-4',
+                                span: { col: 2, row: 1 },
+                                // className: 'w-[60%] h-full', // width 70%, take full height
+                                columns: [
+                                    {
+                                        name: 'Heading',
+                                        props: {
+                                            text: 'Consumer Statistics',
+                                            level: 2,
+                                            size: 'md',
+                                            variant: 'primary',
+                                            weight: 'bold',
+                                            align: 'left',
+                                        },
+                                        span: { col: 3, row: 1 },
+                                    },
+                                    ...consumerStatsData.map((stat) => ({
+                                        name: 'Card',
+                                        props: {
+                                            title: stat.title,
+                                            value: stat.value,
+                                            icon: stat.icon,
+                                            subtitle1: stat.subtitle1,
+                                            subtitle2: stat.subtitle2,
+                                            iconStyle: stat.iconStyle,
+                                            onValueClick: stat.onValueClick,
+                                        },
+                                    })),
+                                ],
                                 },
                                 {
                                     layout: 'grid',
@@ -223,7 +384,7 @@ const Dashboard: React.FC = () => {
                                     gridRows: 2,
                                     bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
                                     gap: 'gap-4',
-                                    className: 'h-fit',
+                                    // className: 'w-[50%] h-full', // width 30%, take full height
                                     columns: [
                                         {
                                             name: 'Heading',
@@ -247,62 +408,23 @@ const Dashboard: React.FC = () => {
                                             span: { col: 1, row: 1 },
                                             align: 'end',
                                         },
-                                        {
+                                    ...billingData.map((billing) => ({
                                             name: 'Card',
                                             props: {
-                                                title: 'Electricity Usage (kWh)',
-                                                value: '64010.91',
-                                                icon: '/icons/plug-alt.svg',
-                                                subtitle1: '62506.77 kWh',
-                                                subtitle2: 'May 2025',
-                                                showTrend: true,
-                                                comparisonValue: 2.4,
-                                                iconStyle: ICON_FILTER_STYLE
-                                            }
+                                            title: billing.title,
+                                            value: billing.value,
+                                            icon: billing.icon,
+                                            subtitle1: billing.subtitle1,
+                                            subtitle2: billing.subtitle2,
+                                            showTrend: billing.showTrend,
+                                            comparisonValue: billing.comparisonValue,
+                                            iconStyle: billing.iconStyle,
                                         },
-                                        {
-                                            name: 'Card',
-                                            props: {
-                                                title: 'Electricity Charges (Rs)',
-                                                value: '421302.79',
-                                                icon: '/icons/coins.svg',
-                                                subtitle1: '515396.81',
-                                                subtitle2: 'May 2025',
-                                                showTrend: true,
-                                                comparisonValue: -18.3,
-                                                iconStyle: ICON_FILTER_STYLE
-                                            }
-                                        },
-                                        {
-                                            name: 'Card',
-                                            props: {
-                                                title: 'Payment Receipts',
-                                                value: '281',
-                                                icon: '/icons/bills.svg',
-                                                subtitle1: '281',
-                                                subtitle2: 'May 2025',
-                                                showTrend: true,
-                                                comparisonValue: 0,
-                                                iconStyle: ICON_FILTER_STYLE
-                                            }
-                                        },
-                                        {
-                                            name: 'Card',
-                                            props: {
-                                                title: 'Service Requests',
-                                                value: '0',
-                                                icon: '/icons/bills.svg',
-                                                subtitle1: '0',
-                                                subtitle2: 'May 2025',
-                                                showTrend: true,
-                                                comparisonValue: 0,
-                                                iconStyle: ICON_FILTER_STYLE
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                                    })),
+                                ],
+                            },
+                        ],
+                    },
                     },
                     {
                         layout: {
@@ -355,25 +477,8 @@ const Dashboard: React.FC = () => {
                                         {
                                             name: 'BarChart',
                                             props: {
-                                                data: [
-                                                    [260, 260, 0, 0],    // Jun 2024
-                                                    [260, 260, 0, 0],    // Jul 2024
-                                                    [255, 255, 0, 0],    // Aug 2024
-                                                    [255, 255, 0, 0],    // Sep 2024
-                                                    [255, 255, 0, 0],    // Oct 2024
-                                                    [255, 255, 0, 0],    // Nov 2024
-                                                    [250, 250, 0, 0],    // Dec 2024
-                                                    [250, 10, 0, 240],   // Jan 2025
-                                                    [240, 0, 0, 240],    // Feb 2025
-                                                    [275, 50, 0, 220],   // Mar 2025
-                                                    [275, 50, 0, 220],   // Apr 2025
-                                                    [275, 40, 0, 230],   // May 2025
-                                                    [275, 55, 0, 220]    // Jun 2025
-                                                ],
-                                                xAxisData: [
-                                                    'Jun 2024', 'Jul 2024', 'Aug 2024', 'Sep 2024', 'Oct 2024', 'Nov 2024', 'Dec 2024',
-                                                    'Jan 2025', 'Feb 2025', 'Mar 2025', 'Apr 2025', 'May 2025', 'Jun 2025'
-                                                ],
+                                            data: billingChartData.data,
+                                            xAxisData: billingChartData.xAxisData,
                                                 showXAxisLabel: true,
                                                 xAxisLabel: "Amount (Rs.)",
                                                 showHeader: false,
@@ -387,13 +492,8 @@ const Dashboard: React.FC = () => {
                                                 timeRange: 'Monthly',
                                                 stacked: false,
                                                 grouped: true,
-                                                colors: ['#3B82F6', '#10B981', '#EF4444', '#F97316'],
-                                                legend: [
-                                                    { label: 'Bills Generated', color: '#3B82F6' },
-                                                    { label: 'Paid', color: '#10B981' },
-                                                    { label: 'Pending', color: '#EF4444' },
-                                                    { label: 'Overdue', color: '#F97316' }
-                                                ],
+                                            colors: billingChartData.colors,
+                                            legend: billingChartData.legend,
                                                 yAxisMax: 300,
                                                 yAxisStep: 50
                                             }
@@ -424,44 +524,8 @@ const Dashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
-                                                data: [
-                                                    {
-                                                        uid: '2025UIDC089',
-                                                        consumerName: 'I Lakshmana Rao',
-                                                        flatNo: 'C089',
-                                                        overdue: '32004.12'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDC088',
-                                                        consumerName: 'G Ramaraju',
-                                                        flatNo: 'C088',
-                                                        overdue: '22613.91'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDC089',
-                                                        consumerName: 'I Lakshmana Rao',
-                                                        flatNo: 'C089',
-                                                        overdue: '21679.76'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDC089',
-                                                        consumerName: 'I Lakshmana Rao',
-                                                        flatNo: 'C089',
-                                                        overdue: '20745.27'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDC089',
-                                                        consumerName: 'I Lakshmana Rao',
-                                                        flatNo: 'C089',
-                                                        overdue: '19731.31'
-                                                    }
-                                                ],
-                                                columns: [
-                                                    { key: 'uid', label: 'UID' },
-                                                    { key: 'consumerName', label: 'Consumer Name' },
-                                                    { key: 'flatNo', label: 'Flat No' },
-                                                    { key: 'overdue', label: 'Overdue (Rs.)' }
-                                                ],
+                                            data: overdueConsumersData,
+                                            columns: overdueConsumersColumns,
                                                 loading: false,
                                                 searchable: true,
                                                 pagination: true,
@@ -508,44 +572,8 @@ const Dashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
-                                                data: [
-                                                    {
-                                                        uid: '2025UIDA006',
-                                                        consumerName: 'T Vidyasagar',
-                                                        flatNo: 'A006',
-                                                        overdue: '4339.14'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDA009',
-                                                        consumerName: 'Reading Room',
-                                                        flatNo: 'A009',
-                                                        overdue: '3802.83'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDA008',
-                                                        consumerName: 'D Sudhakar Gupta',
-                                                        flatNo: 'A008',
-                                                        overdue: '2778.76'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDA011',
-                                                        consumerName: 'M Nagaphani',
-                                                        flatNo: 'A011',
-                                                        overdue: '2627.91'
-                                                    },
-                                                    {
-                                                        uid: '2025UIDA010',
-                                                        consumerName: 'M Ramakrishna',
-                                                        flatNo: 'A010',
-                                                        overdue: '2244.91'
-                                                    }
-                                                ],
-                                                columns: [
-                                                    { key: 'uid', label: 'UID' },
-                                                    { key: 'consumerName', label: 'Consumer Name' },
-                                                    { key: 'flatNo', label: 'Flat No' },
-                                                    { key: 'overdue', label: 'Overdue (Rs.)' }
-                                                ],
+                                            data: disconnectedConsumersData,
+                                            columns: disconnectedConsumersColumns,
                                                 loading: false,
                                                 searchable: true,
                                                 pagination: true,
@@ -582,7 +610,6 @@ const Dashboard: React.FC = () => {
                     }
                 ]}
             />
-        </div>
     );
 };
 
