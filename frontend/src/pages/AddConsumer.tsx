@@ -202,129 +202,65 @@ const AddConsumer = () => {
         setGps('17.385044, 78.486671');
     };
 
-    // Custom Stepper Component
-    const StepperComponent = () => (
-        <aside className="w-full lg:w-auto lg:min-w-fit lg:max-w-md bg-neutral-light rounded-2xl shadow-sm border border-neutral-light p-6 h-fit top-8 z-10 overflow-x-hidden">
-            <nav className="w-full flex flex-col space-y-6 overflow-x-auto lg:overflow-x-visible scrollbar-hide">
-                {stepLabels.map((step, idx) => {
-                    const isCompleted = idx < currentStep - 1;
-                    const isActive = idx === currentStep - 1;
-                    const isClickable = idx < currentStep;
-                    return (
-                        <div
-                            key={step.label}
-                            className={`flex items-start gap-4 p-4 rounded-lg transition-all duration-200 ${
-                                isClickable 
-                                    ? 'cursor-pointer hover:bg-white/40' 
-                                    : 'cursor-default'
-                            } ${
-                                isActive ? 'bg-white shadow-md' : ''
-                            }`}
-                            onClick={
-                                isClickable
-                                    ? () => setCurrentStep(idx + 1)
-                                    : undefined
-                            }
-                        >
-                            <div
-                                className={`w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-200 flex-shrink-0 ${
-                                    isCompleted
-                                        ? 'bg-secondary text-white'
-                                        : 'bg-primary text-white'
-                                }`}
-                            >
-                                {isCompleted ? (
-                                    <svg 
-                                        className="w-5 h-5" 
-                                        fill="none" 
-                                        stroke="currentColor" 
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path 
-                                            strokeLinecap="round" 
-                                            strokeLinejoin="round" 
-                                            strokeWidth={2} 
-                                            d="M5 13l4 4L19 7" 
-                                        />
-                                    </svg>
-                                ) : (
-                                    <span>{idx + 1}</span>
-                                )}
-                            </div>
-                            <div className="flex-1 flex flex-col min-w-0">
-                                <h3 className={`font-semibold text-base mb-1 ${
-                                    isActive ? 'text-primary' : 'text-neutral-darker'
-                                }`}>
-                                    {step.label}
-                                </h3>
-                                <p className={`text-sm leading-relaxed ${
-                                    isActive ? 'text-primary' : 'text-neutral'
-                                }`}>
-                                    {step.sub}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                })}
-            </nav>
-        </aside>
-    );
+    // Prepare stepper steps data
+    const stepperSteps = stepLabels.map((step, idx) => ({
+        label: step.label,
+        description: step.sub,
+        isActive: idx === currentStep - 1,
+        isCompleted: idx < currentStep - 1,
+    }));
 
-    // Custom Form Component
-    const FormComponent = () => (
-        <main className="flex-1 min-w-0 flex flex-col overflow-x-hidden">
-            <div className="flex flex-col gap-8 w-full overflow-x-hidden">
-                <form onSubmit={handleSubmit} className="w-full mx-auto overflow-x-hidden">
-                    {currentStep === 1 && (
-                        <Step1
-                            formData={formData}
-                            errors={errors}
-                            valid={valid}
-                            focus={focus}
-                            handleInputChange={handleInputChange}
-                            setFieldFocus={setFieldFocus}
-                            buildingSearch={buildingSearch}
-                            setBuildingSearch={setBuildingSearch}
-                            selectedBuilding={selectedBuilding}
-                            handleBuildingSelect={handleBuildingSelect}
-                            onNext={handleNext}
-                            isAdmin={isAdmin()}
-                        />
-                    )}
-                    {currentStep === 2 && (
-                        <Step2
-                            selectedUtilities={selectedUtilities}
-                            handleUtilityToggle={handleUtilityToggle}
-                            sharedMeter={sharedMeter}
-                            setSharedMeter={setSharedMeter}
-                            gps={gps}
-                            handleGetLocation={handleGetLocation}
-                            accountNumber={formData.uid}
-                            onNext={handleNext}
-                            onBack={handleBack}
-                        />
-                    )}
-                    {currentStep === 3 && (
-                        <Step3
-                            formData={formData}
-                            selectedUtilities={selectedUtilities}
-                            sharedMeter={sharedMeter}
-                            sharedConsumers={sharedConsumers}
-                            accountNumber={formData.uid}
-                            onBack={handleBack}
-                            onSubmit={handleSubmit}
-                            isSubmitting={isSubmitting}
-                        />
-                    )}
-                    {errors.submit && (
-                        <div className="mt-4 p-4 bg-danger-light border border-danger rounded-md">
-                            <p className="text-danger">{errors.submit}</p>
-                        </div>
-                    )}
-                </form>
-            </div>
-        </main>
-    );
+    // Prepare form content based on current step
+    const getFormContent = () => {
+        switch (currentStep) {
+            case 1:
+                return (
+                    <Step1
+                        formData={formData}
+                        errors={errors}
+                        valid={valid}
+                        focus={focus}
+                        handleInputChange={handleInputChange}
+                        setFieldFocus={setFieldFocus}
+                        buildingSearch={buildingSearch}
+                        setBuildingSearch={setBuildingSearch}
+                        selectedBuilding={selectedBuilding}
+                        handleBuildingSelect={handleBuildingSelect}
+                        onNext={handleNext}
+                        isAdmin={isAdmin()}
+                    />
+                );
+            case 2:
+                return (
+                    <Step2
+                        selectedUtilities={selectedUtilities}
+                        handleUtilityToggle={handleUtilityToggle}
+                        sharedMeter={sharedMeter}
+                        setSharedMeter={setSharedMeter}
+                        gps={gps}
+                        handleGetLocation={handleGetLocation}
+                        accountNumber={formData.uid}
+                        onNext={handleNext}
+                        onBack={handleBack}
+                    />
+                );
+            case 3:
+                return (
+                    <Step3
+                        formData={formData}
+                        selectedUtilities={selectedUtilities}
+                        sharedMeter={sharedMeter}
+                        sharedConsumers={sharedConsumers}
+                        accountNumber={formData.uid}
+                        onBack={handleBack}
+                        onSubmit={handleSubmit}
+                        isSubmitting={isSubmitting}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
 
     return (
         <Page
@@ -354,20 +290,29 @@ const AddConsumer = () => {
                             },
                             {
                                 layout: 'row',
-                                gap: 'gap-6',
+                                gap: 'gap-8',
+                                className: 'items-start',
                                 columns: [
                                     {
-                                        name: 'Holder',
+                                        name: 'Stepper',
                                         props: {
-                                            className: 'w-full lg:w-auto lg:min-w-fit lg:max-w-md',
-                                            children: <StepperComponent />,
+                                            steps: stepperSteps,
+                                            className: 'w-full lg:w-auto lg:min-w-fit lg:max-w-md flex-shrink-0',
                                         },
                                     },
                                     {
-                                        name: 'Holder',
+                                        name: 'FormContainer',
                                         props: {
-                                            className: 'flex-1 min-w-0',
-                                            children: <FormComponent />,
+                                            children: (
+                                                <form onSubmit={handleSubmit} className="w-full">
+                                                    {getFormContent()}
+                                                    {errors.submit && (
+                                                        <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
+                                                            <p className="text-red-600">{errors.submit}</p>
+                                                        </div>
+                                                    )}
+                                                </form>
+                                            ),
                                         },
                                     },
                                 ],
@@ -376,7 +321,7 @@ const AddConsumer = () => {
                     },
                 },
             ]}
-            sectionWrapperClassName="min-h-screen bg-neutral-light flex flex-col gap-4"
+            sectionWrapperClassName="min-h-screen flex flex-col gap-6"
         />
     );
 };

@@ -38,7 +38,7 @@ const moduleConfig = {
 
 const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, onModuleToggle, onNext, currentStep = 1, onBack }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  const enabledModules = formData.modules || ['dashboard', 'consumer', 'user_management_default', 'role_management', 'tickets'];
+  const enabledModules = formData.modules || [];
 
   // Validate form data and generate remarks
   const { isValid, errors: validationErrors, remarks } = useMemo(() => {
@@ -198,15 +198,15 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
               onNext(e);
             }
           }} action="#" method="post" noValidate>
-        {/* Default Modules Section */}
+        {/* Core Modules Section */}
         <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 flex flex-col gap-3 flex flex-col gap-2">
           <div className="flex items-start gap-4">
             <div>
-              <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Recommended Modules</h3>
+              <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Core Modules</h3>
             </div>
          
             <span className="text-xs px-4 py-1 rounded-full bg-primary-lightest">
-              Default
+              Core
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
