@@ -13,8 +13,8 @@ export default defineConfig({
       filename: 'remoteEntry.js',
       exposes: {
         './Login': './src/pages/SubLogin.tsx',
-        './Dashboard': './src/pages/Dashboard.tsx',
-        './Consumers': './src/pages/Consumers.tsx',
+        './Dashboard': './src/pages_v2/Dashboard.tsx',
+        './Consumers': './src/pages_v2/Consumers.tsx',
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',
         './context/AppContext': './src/context/AppContext.tsx',
@@ -33,7 +33,7 @@ export default defineConfig({
         './BillsPostpaid': './src/pages/BillsPostpaid.tsx',
         './BillsPrepaid': './src/pages/BillsPrepaid.tsx',
         './TimeRangeSelector': './src/components/global/TimeRangeSelector.tsx',
-        './Transformer': './src/pages/DTRDashboard.tsx',
+        './Transformer': './src/pages_v2/DTRDashboard.tsx',
         './Assets': './src/pages/AssetManagement.tsx',
         './OrgChart': './src/components/global/OrgChart.tsx',
         './PageHeader': './src/components/global/PageHeader.tsx',
@@ -92,7 +92,7 @@ export default defineConfig({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'http://localhost:4038',
         changeOrigin: true,
         secure: false,
       }

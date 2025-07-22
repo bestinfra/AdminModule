@@ -3,65 +3,27 @@ import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
 
 // Constants
-const METRICS_TYPE_OPTIONS = ['Graph', 'Table'];
-const METRICS_VIEW_OPTIONS = ['Daily', 'Monthly', 'Yearly'];
 const BILLING_VIEW_OPTIONS = ['Daily', 'Monthly'];
 
 const ICON_FILTER_STYLE = {
     filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)'
 };
 
-const BAR_CHART_DATA = [
-    10, 100, 200, 220, 230, 225, 225, 250, 270, 260, 230, 230, 230, 280, 270, 260, 230, 230, 230, 280, 270, 260, 230, 230, 230, 180, 170, 170, 170, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200
-];
+// const BAR_CHART_DATA = [
+//     10, 100, 200, 220, 230, 225, 225, 250, 270, 260, 230, 230, 230, 280, 270, 260, 230, 230, 230, 280, 270, 260, 230, 230, 230, 180, 170, 170, 170, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200, 210, 200, 190, 200
+// ];
 
-const BAR_CHART_LABELS = [
-    '4 May', '5 May', '6 May', '7 May', '8 May', '9 May', '10 May', '11 May', '12 May', '13 May', '14 May', '15 May', '16 May', '17 May', '18 May', '19 May', '20 May', '21 May', '22 May', '23 May', '24 May', '25 May', '26 May', '27 May', '28 May', '29 May', '30 May', '31 May', '1 Jun', '2 Jun', '3 Jun', '4 Jun', '5 Jun', '6 Jun', '7 Jun', '8 Jun', '9 Jun', '10 Jun', '11 Jun', '12 Jun', '13 Jun', '14 Jun', '15 Jun', '16 Jun', '17 Jun', '18 Jun', '19 Jun', '20 Jun', '21 Jun', '22 Jun', '23 Jun', '24 Jun', '25 Jun', '26 Jun', '27 Jun', '28 Jun', '29 Jun', '30 Jun', '1 Jul', '2 Jul', '3 Jul', '4 Jul'
-];
+// const BAR_CHART_LABELS = [
+//     '4 May', '5 May', '6 May', '7 May', '8 May', '9 May', '10 May', '11 May', '12 May', '13 May', '14 May', '15 May', '16 May', '17 May', '18 May', '19 May', '20 May', '21 May', '22 May', '23 May', '24 May', '25 May', '26 May', '27 May', '28 May', '29 May', '30 May', '31 May', '1 Jun', '2 Jun', '3 Jun', '4 Jun', '5 Jun', '6 Jun', '7 Jun', '8 Jun', '9 Jun', '10 Jun', '11 Jun', '12 Jun', '13 Jun', '14 Jun', '15 Jun', '16 Jun', '17 Jun', '18 Jun', '19 Jun', '20 Jun', '21 Jun', '22 Jun', '23 Jun', '24 Jun', '25 Jun', '26 Jun', '27 Jun', '28 Jun', '29 Jun', '30 Jun', '1 Jul', '2 Jul', '3 Jul', '4 Jul'
+// ];
 
 const METER_STATUS_DATA = [
     { value: 284, name: 'Communicating' },
     { value: 8, name: 'Non-Communicating' },
 ];
 
-const METER_EVENTS = [
-    {
-        meterNo: 'A9211433',
-        uid: 'BI25GMRA004',
-        eventDateTime: '06/05/2025 16:12:00',
-        eventDesc: 'Meter Power Fail - Start',
-    },
-    {
-        meterNo: 'A9211433',
-        uid: 'BI25GMRA004',
-        eventDateTime: '05/05/2025 12:44:00',
-        eventDesc: 'Meter Power Fail - End',
-    },
-    {
-        meterNo: 'A9345417',
-        uid: 'BI25GMRA002',
-        eventDateTime: '06/05/2025 16:47:00',
-        eventDesc: 'CT Short - End',
-    },
-    {
-        meterNo: 'A9345418',
-        uid: 'BI25GMRA003',
-        eventDateTime: '23/05/2025 12:19:00',
-        eventDesc: 'R_PH CT Reversed - Start',
-    },
-];
-
-const METER_EVENT_COLUMNS = [
-    { key: 'meterNo', label: 'Meter SI No' },
-    { key: 'uid', label: 'UID' },
-    { key: 'eventDateTime', label: 'Event Date Time' },
-    { key: 'eventDesc', label: 'Event Description' },
-];
-
 const Dashboard: React.FC = () => {
     const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>('Daily');
-    const [metricsType, setMetricsType] = useState('Graph');
-    const [metricsView, setMetricsView] = useState('Daily');
     const navigate = useNavigate();
 
     const handleTotalConsumersClick = () => navigate('/consumers');

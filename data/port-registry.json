@@ -1,5 +1,5 @@
 {
-  "nextPort": 4034,
+  "nextPort": 4039,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -47,8 +47,8 @@
       "path": "C:\\xampp\\htdocs\\pooo-backend"
     },
     "sandeep": {
-      "port": 4017,
-      "deployedAt": "2025-07-19T12:39:16.405Z",
+      "port": 4038,
+      "deployedAt": "2025-07-21T12:36:10.746Z",
       "path": "C:\\xampp\\htdocs\\sandeep-backend"
     },
     "priya": {
@@ -105,6 +105,26 @@
       "port": 4033,
       "deployedAt": "2025-07-21T10:27:51.325Z",
       "path": "C:\\xampp\\htdocs\\madhukiran-backend"
+    },
+    "testttt": {
+      "port": 4034,
+      "deployedAt": "2025-07-21T11:02:45.579Z",
+      "path": "C:\\xampp\\htdocs\\testttt-backend"
+    },
+    "pooja": {
+      "port": 4035,
+      "deployedAt": "2025-07-21T11:13:44.924Z",
+      "path": "C:\\xampp\\htdocs\\pooja-backend"
+    },
+    "raji": {
+      "port": 4036,
+      "deployedAt": "2025-07-21T11:22:03.882Z",
+      "path": "C:\\xampp\\htdocs\\raji-backend"
+    },
+    "lavanya": {
+      "port": 4037,
+      "deployedAt": "2025-07-21T11:36:28.395Z",
+      "path": "C:\\xampp\\htdocs\\lavanya-backend"
     }
   }
 }

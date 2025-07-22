@@ -11,7 +11,7 @@ import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
-import AddConsumer from './pages/AddConsumer';
+import AppManagement from './pages/Apps_module/AppManagement';import AddConsumer from './pages/AddConsumer';
 
 const App: React.FC = () => {
     return (
@@ -36,6 +36,7 @@ const App: React.FC = () => {
                             <Route path="/pagedemo" element={<PageDemo />} />
                             <Route path="/" element={<Dashboard />} />
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
+                            <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                         </Route>
                     </Routes>
