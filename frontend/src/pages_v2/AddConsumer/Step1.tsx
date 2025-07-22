@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import Button from '../global/Button';
+import Button from '../../components/global/Button';
 import FormInput from '@components/Form/FormInput';
 
 // Configuration data
