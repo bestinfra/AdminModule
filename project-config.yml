@@ -86,6 +86,7 @@ module_federation:
   filename: "remoteEntry.js"
   exposes:
     - "./Ticket": "./src/pages/ticket_module/Ticket.tsx"
+    - "./NewDashboard": "./src/pages/NewDashboard.tsx"
     - "./ThemeProvider": "./src/providers/ThemeProvider.tsx"
     - "./useTheme": "./src/providers/ThemeProvider.tsx"
   shared:

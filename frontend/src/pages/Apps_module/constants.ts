@@ -18,7 +18,7 @@ export const INITIAL_APP_BASICS_DATA = {
   ownershipType: '',
   tariffPlans: [],
   billingMode: '',
-  meteringType: [],
+  meteringType: '',
 };
 
 export const INITIAL_ADMIN_ACCESS_DATA = {
@@ -88,7 +88,7 @@ export const INITIAL_BRANDING_DATA = {
 };
 
 export const INITIAL_MODULE_DATA = {
-  modules: [],
+  modules: [] as string[],
 };
 
 export const STEP_COUNT = 5; 
