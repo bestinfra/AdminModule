@@ -1,6 +1,7 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import Page from '../../components/global/PageC';
 
+
 // Configuration data
 const idTypeOptions = [
     { value: 'aadhar', label: 'Aadhar Card' },
@@ -54,6 +55,7 @@ const Step1: React.FC<Step1Props> = ({
     handleBuildingSelect,
     onNext,
 }) => {
+
 
     // Memoize form input configurations
     const formInputs = useMemo(() => [
@@ -186,6 +188,8 @@ const Step1: React.FC<Step1Props> = ({
         } as React.ChangeEvent<HTMLInputElement | HTMLSelectElement>;
         handleInputChange(syntheticEvent);
     }, [handleInputChange]);
+
+
 
     // Create custom components for inline use
     const ErrorSummaryComponent = useMemo(() => () => {
