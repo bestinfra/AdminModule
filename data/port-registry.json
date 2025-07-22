@@ -1,5 +1,5 @@
 {
-  "nextPort": 4042,
+  "nextPort": 4050,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -112,8 +112,8 @@
       "path": "C:\\xampp\\htdocs\\testttt-backend"
     },
     "pooja": {
-      "port": 4035,
-      "deployedAt": "2025-07-21T11:13:44.924Z",
+      "port": 4044,
+      "deployedAt": "2025-07-22T12:33:56.054Z",
       "path": "C:\\xampp\\htdocs\\pooja-backend"
     },
     "raji": {
@@ -150,6 +150,41 @@
       "port": 4043,
       "deployedAt": "2025-07-22T11:21:02.522Z",
       "path": "C:\\xampp\\htdocs\\best-infrass-backend"
+    },
+    "best-infra": {
+      "port": 4042,
+      "deployedAt": "2025-07-22T11:50:18.842Z",
+      "path": "C:\\xampp\\htdocs\\best-infra-backend"
+    },
+    "best-infra-chandu": {
+      "port": 4043,
+      "deployedAt": "2025-07-22T12:21:31.401Z",
+      "path": "C:\\xampp\\htdocs\\best-infra-chandu-backend"
+    },
+    "anzee": {
+      "port": 4045,
+      "deployedAt": "2025-07-22T12:50:46.174Z",
+      "path": "C:\\xampp\\htdocs\\anzee-backend"
+    },
+    "anz": {
+      "port": 4046,
+      "deployedAt": "2025-07-22T12:58:21.913Z",
+      "path": "C:\\xampp\\htdocs\\anz-backend"
+    },
+    "chandu-aap": {
+      "port": 4047,
+      "deployedAt": "2025-07-22T13:24:11.825Z",
+      "path": "C:\\xampp\\htdocs\\chandu-aap-backend"
+    },
+    "chandu-app": {
+      "port": 4048,
+      "deployedAt": "2025-07-22T13:29:27.051Z",
+      "path": "C:\\xampp\\htdocs\\chandu-app-backend"
+    },
+    "chandu-appss": {
+      "port": 4049,
+      "deployedAt": "2025-07-22T13:32:06.130Z",
+      "path": "C:\\xampp\\htdocs\\chandu-appss-backend"
     }
   }
 }
