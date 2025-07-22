@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Page from '@components/global/PageC';
+import Button from '@components/global/Button';
+import Modal from '@components/global/Modal';
+import LoadingSpinner from '@components/global/LoadingSpinner';
 import meterConnectionAPI, { MeterConnectionAPI } from '@api/meterConnection';
 
 interface MeterData {
@@ -502,11 +505,11 @@ const ConnectDisconnect: React.FC = () => {
           // Error Message Section
           ...(error ? [{
             layout: {
-              type: 'row',
+              type: 'row' as const,
               gap: 'gap-4',
               rows: [
                 {
-                  layout: 'row',
+                  layout: 'row' as const,
                   columns: [
                     {
                       name: 'div',
@@ -535,11 +538,11 @@ const ConnectDisconnect: React.FC = () => {
           // Loading Section
           ...(isLoading ? [{
             layout: {
-              type: 'row',
+              type: 'row' as const,
               gap: 'gap-4',
               rows: [
                 {
-                  layout: 'row',
+                  layout: 'row' as const,
                   columns: [
                     {
                       name: 'div',
@@ -561,11 +564,11 @@ const ConnectDisconnect: React.FC = () => {
           // Debug Panel Section
           ...(debugMode ? [{
             layout: {
-              type: 'row',
+              type: 'row' as const,
               gap: 'gap-6',
               rows: [
                 {
-                  layout: 'row',
+                  layout: 'row' as const,
                   columns: [
                     {
                       name: 'div',
@@ -671,12 +674,12 @@ const ConnectDisconnect: React.FC = () => {
           // Overview Cards Section
           {
             layout: {
-              type: 'grid',
+              type: 'grid' as const,
               columns: 4,
               gap: 'gap-4',
               rows: [
                 {
-                  layout: 'grid',
+                  layout: 'grid' as const,
                   gridColumns: 4,
                   gap: 'gap-4',
                   columns: overviewCards.map(card => ({
@@ -690,11 +693,11 @@ const ConnectDisconnect: React.FC = () => {
           // Quick Actions Section
           ...(selectedMeters.length > 0 ? [{
             layout: {
-              type: 'row',
+              type: 'row' as const,
               gap: 'gap-6',
               rows: [
                 {
-                  layout: 'row',
+                  layout: 'row' as const,
                   columns: [
                     {
                       name: 'div',
@@ -752,11 +755,11 @@ const ConnectDisconnect: React.FC = () => {
           // Meter Table Section
           {
             layout: {
-              type: 'row',
+              type: 'row' as const,
               gap: 'gap-6',
               rows: [
                 {
-                  layout: 'row',
+                  layout: 'row' as const,
                   columns: [
                     {
                       name: 'Table',

@@ -13,6 +13,8 @@ import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';import AddConsumer from './pages/AddConsumer';
 import Connect from './pages_v2/ConnectDisconnect';
+import EmpDashboard from './pages/NewDashboard';
+
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -39,6 +41,7 @@ const App: React.FC = () => {
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/connect-consumer" element={<Connect />} />
+                            <Route path="/empdashboard" element={<EmpDashboard />} />
                         </Route>
                     </Routes>
                 </Router>

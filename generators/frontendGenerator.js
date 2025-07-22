@@ -69,6 +69,7 @@ function generateFrontend(baseDir, formData) {
     colorGradientSecondary: formData.colorGradientSecondary || 'linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))',
     colorStatIconGradient: formData.colorStatIconGradient || 'linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))',
     modules: modules || [],
+    modulesArray: JSON.stringify(modules || []),
     backendPort: backendPort || 4000
   };
 
@@ -93,8 +94,102 @@ function generateFrontend(baseDir, formData) {
  * Generate the main App.tsx component
  */
 function generateAppComponent(frontendDir, variables) {
+  // Calculate conditional cases based on selected modules
+  const modules = variables.modules || [];
+  
+  // Ensure modulesArray is properly set for template replacement
+  variables.modulesArray = JSON.stringify(modules);
+  
+  variables.userManagementCase = modules.includes('user_management_default') ? `
+      case '/users':
+        return 'Users';` : '';
+  
+  variables.roleManagementCase = modules.includes('role_management') ? `
+      case '/role-management':
+        return 'Role Management';` : '';
+  
+  variables.billsPrepaidCase = (modules.includes('bills') || modules.includes('prepaid')) ? `
+      case '/bills/prepaid':
+        return 'Prepaid Bills';` : '';
+  
+  variables.billsPostpaidCase = (modules.includes('bills') || modules.includes('postpaid')) ? `
+      case '/bills/postpaid':
+        return 'Postpaid Bills';` : '';
+  
+  variables.ticketsCase = modules.includes('tickets') ? `
+      case '/all-tickets':
+        return 'All Tickets';` : '';
+  
+  variables.assetManagementCase = modules.includes('asset_management') ? `
+      case '/asset-management':
+        return 'Asset Management';` : '';
+  
+  variables.meterManagementCase = modules.includes('meter_management') ? `
+      case '/meters':
+        return 'Meters';
+      case '/data-logger-master':
+        return 'Data Logger Master';` : '';
+
+  // Calculate route variables
+  variables.billsPrepaidRoute = (modules.includes('bills') || modules.includes('prepaid')) ? 
+    '<Route path="/bills/prepaid" element={<BillsPrepaid />} />' : '';
+  
+  variables.billsPostpaidRoute = (modules.includes('bills') || modules.includes('postpaid')) ? 
+    '<Route path="/bills/postpaid" element={<BillsPostpaid />} />' : '';
+  
+  variables.assetManagementRoute = modules.includes('asset_management') ? 
+    '<Route path="/asset-management" element={<Assets />} />' : '';
+  
+  variables.meterManagementRoute = modules.includes('meter_management') ? 
+    '<Route path="/meters" element={<Meters />} />' : '';
+  
+  variables.dataLoggerRoute = modules.includes('meter_management') ? 
+    '<Route path="/data-logger-master" element={<DataLoggerMaster />} />' : '';
+  
+  variables.ticketsRoute = modules.includes('tickets') ? 
+    '<Route path="/all-tickets" element={<AllTickets />} />' : '';
+  
+  variables.usersRoute = modules.includes('user_management_default') ? 
+    '<Route path="/users" element={<Users />} />' : '';
+  
+  variables.roleManagementRoute = modules.includes('role_management') ? 
+    '<Route path="/role-management" element={<RoleManagement />} />' : '';
+
+  // Calculate error page variables
+  variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
+    '<li>/bills/prepaid - Bills Prepaid</li>' : '';
+  
+  variables.billsPostpaidError = (modules.includes('bills') || modules.includes('postpaid')) ? 
+    '<li>/bills/postpaid - Bills Postpaid</li>' : '';
+  
+  variables.assetManagementError = modules.includes('asset_management') ? 
+    '<li>/asset-management - Asset Management</li>' : '';
+  
+  variables.meterManagementError = modules.includes('meter_management') ? 
+    '<li>/meters - Meters List</li>' : '';
+  
+  variables.dataLoggerError = modules.includes('meter_management') ? 
+    '<li>/data-logger-master - Data Logger Master</li>' : '';
+  
+  variables.ticketsError = modules.includes('tickets') ? 
+    '<li>/all-tickets - All Tickets</li>' : '';
+  
+  variables.usersError = modules.includes('user_management_default') ? 
+    '<li>/users - Users</li>' : '';
+  
+  variables.roleManagementError = modules.includes('role_management') ? 
+    '<li>/role-management - Role Management</li>' : '';
+
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
+  
+  // Debug: Check if modulesArray was replaced
+  if (appContent.includes('{{modulesArray}}')) {
+    console.error('Warning: modulesArray placeholder was not replaced!');
+    console.error('Available variables:', Object.keys(variables));
+    console.error('modulesArray value:', variables.modulesArray);
+  }
+  
   const appPath = path.join(frontendDir, 'src', 'App.tsx');
   fs.writeFileSync(appPath, appContent);
 }

@@ -1,5 +1,5 @@
 {
-  "nextPort": 4039,
+  "nextPort": 4044,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -125,6 +125,31 @@
       "port": 4037,
       "deployedAt": "2025-07-21T11:36:28.395Z",
       "path": "C:\\xampp\\htdocs\\lavanya-backend"
+    },
+    "best-infra-app": {
+      "port": 4039,
+      "deployedAt": "2025-07-22T10:10:11.289Z",
+      "path": "C:\\xampp\\htdocs\\best-infra-app-backend"
+    },
+    "best-infra-apps": {
+      "port": 4040,
+      "deployedAt": "2025-07-22T10:13:39.716Z",
+      "path": "C:\\xampp\\htdocs\\best-infra-apps-backend"
+    },
+    "best-infraaaaa": {
+      "port": 4041,
+      "deployedAt": "2025-07-22T10:22:39.659Z",
+      "path": "C:\\xampp\\htdocs\\best-infraaaaa-backend"
+    },
+    "best-infraa": {
+      "port": 4042,
+      "deployedAt": "2025-07-22T11:13:51.705Z",
+      "path": "C:\\xampp\\htdocs\\best-infraa-backend"
+    },
+    "best-infrass": {
+      "port": 4043,
+      "deployedAt": "2025-07-22T11:21:02.522Z",
+      "path": "C:\\xampp\\htdocs\\best-infrass-backend"
     }
   }
 }

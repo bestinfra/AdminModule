@@ -14,6 +14,7 @@ export default defineConfig({
       exposes: {
         './Login': './src/pages/SubLogin.tsx',
         './Dashboard': './src/pages_v2/Dashboard.tsx',
+        './NewDashboard': './src/pages/NewDashboard.tsx',
         './Consumers': './src/pages_v2/Consumers.tsx',
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',

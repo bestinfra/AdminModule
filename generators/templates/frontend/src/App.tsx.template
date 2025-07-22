@@ -94,7 +94,7 @@ const HeaderFallback = () => (
 
 // Safe lazy components with fallbacks - using federated components from SuperAdmin
 const Dashboard = createSafeLazyComponent(
-  () => import('SuperAdmin/Dashboard'),
+  () => import('SuperAdmin/NewDashboard'),
   DashboardFallback
 );
 
@@ -253,24 +253,13 @@ function AppContent() {
         return 'Dashboard';
       case '/consumers':
         return 'Consumers';
-      case '/users':
-        return 'Users';
-      case '/role-management':
-        return 'Role Management';
-      case '/bills/prepaid':
-        return 'Prepaid Bills';
-      case '/bills/postpaid':
-        return 'Postpaid Bills';
-      case '/all-tickets':
-        return 'All Tickets';
-      case '/dtr-dashboard':
-        return 'DTR Dashboard';
-      case '/asset-management':
-        return 'Asset Management';
-      case '/meters':
-        return 'Meters';
-      case '/data-logger-master':
-        return 'Data Logger Master';
+      {{userManagementCase}}
+      {{roleManagementCase}}
+      {{billsPrepaidCase}}
+      {{billsPostpaidCase}}
+      {{ticketsCase}}
+      {{assetManagementCase}}
+      {{meterManagementCase}}
       default:
         return 'Dashboard';
     }
@@ -299,8 +288,9 @@ function AppContent() {
     checkRemoteApp();
   }, []);
   
-// Generate menu items for federated components
- const menuItems = [
+// Generate dynamic menu items based on selected modules
+const generateMenuItems = (modules = []) => {
+  const mandatoryMenus = [
     {
       title: 'Dashboard',
       icon: '/icons/dashboard.svg',
@@ -311,12 +301,15 @@ function AppContent() {
       icon: '/icons/units.svg',
       link: '/consumers',
     },
-    {
-      title: 'Transformers',
-      icon: '/icons/transformer.svg',
-      link: '/dtr-dashboard',
+  ];
+
+  const moduleMenuMap = {
+    tickets: {
+      title: 'Tickets',
+      icon: '/icons/customer-service.svg',
+      link: '/all-tickets',
     },
-    {
+    bills: {
       title: 'Bills',
       icon: '/icons/bills.svg',
       hasSubmenu: true,
@@ -331,21 +324,22 @@ function AppContent() {
         },
       ],
     },
-    {
-      title: 'Tickets',
-      icon: '/icons/customer-service.svg',
-      link: '/all-tickets',
+    prepaid: {
+      title: 'Prepaid Bills',
+      icon: '/icons/bills2.svg',
+      link: '/bills/prepaid',
     },
-  ];
-
-  const menuItems2 = [
-
-    {
+    postpaid: {
+      title: 'Postpaid Bills',
+      icon: '/icons/bills.svg',
+      link: '/bills/postpaid',
+    },
+    asset_management: {
       title: 'Assets',
       icon: '/icons/workflow-setting-alt.svg',
       link: '/asset-management',
     },
-    {
+    meter_management: {
       title: 'Meters',
       icon: '/icons/meter-bolt.svg',
       link: '/meters',
@@ -361,7 +355,7 @@ function AppContent() {
         },
       ],
     },
-    {
+    user_management_default: {
       title: 'Users',
       icon: '/icons/user.svg',
       link: '/users',
@@ -379,7 +373,21 @@ function AppContent() {
         },
       ],
     },
-  ];
+    role_management: {
+      title: 'Role Management',
+      icon: '/icons/roles.svg',
+      link: '/role-management',
+    },
+  };
+
+  const selectedModuleMenus = modules
+    .map(module => moduleMenuMap[module])
+    .filter(Boolean);
+
+  return [...mandatoryMenus, ...selectedModuleMenus];
+};
+
+const menuItems = generateMenuItems({{modulesArray}});
 
   return (
    
@@ -398,12 +406,8 @@ function AppContent() {
                     onNavigate={(path:any) => navigate(path)}
                     menus={[
                       {
-                        category: 'General',
+                        category: 'Navigation',
                         items: menuItems,
-                      },
-                      {
-                        category: 'Admin Settings',
-                        items: menuItems2,
                       },
                     ]}
                     logo={{
@@ -429,13 +433,14 @@ function AppContent() {
                       <Route path="/dashboard" element={<Dashboard />} />
                       <Route path="/consumers" element={<Consumers />} />
                       <Route path="/consumers/:uid" element={<ConsumerView />} />
-                      <Route path="/bills/prepaid" element={<BillsPrepaid />} />
-                      <Route path="/bills/postpaid" element={<BillsPostpaid />} />
-                      <Route path="/dtr-dashboard" element={<Transformer />} />
-                      <Route path="/asset-management" element={<Assets />} />
-                      <Route path="/meters" element={<Meters />} />
-                      <Route path="/data-logger-master" element={<DataLoggerMaster />} />
-                      <Route path="/all-tickets" element={<AllTickets />} />
+                      {{billsPrepaidRoute}}
+                      {{billsPostpaidRoute}}
+                      {{assetManagementRoute}}
+                      {{meterManagementRoute}}
+                      {{dataLoggerRoute}}
+                      {{ticketsRoute}}
+                      {{usersRoute}}
+                      {{roleManagementRoute}}
                       <Route path="*" element={
                         <div className="p-6">
                           <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -450,13 +455,14 @@ function AppContent() {
                                 <li>/dashboard - Dashboard</li>
                                 <li>/consumers - Consumers</li>
                                 <li>/consumers/:uid - Consumer View</li>
-                                <li>/bills/prepaid - Bills Prepaid</li>
-                                <li>/bills/postpaid - Bills Postpaid</li>
-                                <li>/dtr-dashboard - DTR Dashboard</li>
-                                <li>/asset-management - Asset Management</li>
-                                <li>/meters - Meters List</li>
-                                <li>/data-logger-master - Data Logger Master</li>
-                                <li>/all-tickets - All Tickets</li>
+                                {{billsPrepaidError}}
+                                {{billsPostpaidError}}
+                                {{assetManagementError}}
+                                {{meterManagementError}}
+                                {{dataLoggerError}}
+                                {{ticketsError}}
+                                {{usersError}}
+                                {{roleManagementError}}
                               </ul>
                             </div>
                           </div>
