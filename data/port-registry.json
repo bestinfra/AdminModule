@@ -1,5 +1,6 @@
 {
   "nextPort": 4053,
+  "nextPort": 4053,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -150,36 +151,6 @@
       "port": 4046,
       "deployedAt": "2025-07-23T07:13:10.918Z",
       "path": "C:\\xampp\\htdocs\\aimd-backend"
-    },
-    "kirankittu1": {
-      "port": 4047,
-      "deployedAt": "2025-07-23T10:22:54.131Z",
-      "path": "C:\\xampp\\htdocs\\kirankittu1-backend"
-    },
-    "chadrika-foods": {
-      "port": 4048,
-      "deployedAt": "2025-07-23T10:23:32.324Z",
-      "path": "C:\\xampp\\htdocs\\chadrika-foods-backend"
-    },
-    "chandrika-apps": {
-      "port": 4049,
-      "deployedAt": "2025-07-23T10:39:48.122Z",
-      "path": "C:\\xampp\\htdocs\\chandrika-apps-backend"
-    },
-    "girish": {
-      "port": 4050,
-      "deployedAt": "2025-07-23T11:00:22.656Z",
-      "path": "C:\\xampp\\htdocs\\girish-backend"
-    },
-    "sowmya": {
-      "port": 4051,
-      "deployedAt": "2025-07-23T11:08:36.852Z",
-      "path": "C:\\xampp\\htdocs\\sowmya-backend"
-    },
-    "minnoth": {
-      "port": 4052,
-      "deployedAt": "2025-07-23T11:12:23.094Z",
-      "path": "C:\\xampp\\htdocs\\minnoth-backend"
     }
   }
 }
