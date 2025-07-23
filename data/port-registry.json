@@ -1,5 +1,5 @@
 {
-  "nextPort": 4054,
+  "nextPort": 4057,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -150,6 +150,21 @@
       "port": 4046,
       "deployedAt": "2025-07-23T07:13:10.918Z",
       "path": "C:\\xampp\\htdocs\\aimd-backend"
+    },
+    "srinivas": {
+      "port": 4054,
+      "deployedAt": "2025-07-23T11:45:00.331Z",
+      "path": "C:\\xampp\\htdocs\\srinivas-backend"
+    },
+    "surekha": {
+      "port": 4055,
+      "deployedAt": "2025-07-23T12:03:24.244Z",
+      "path": "C:\\xampp\\htdocs\\surekha-backend"
+    },
+    "saiharikiran": {
+      "port": 4056,
+      "deployedAt": "2025-07-23T12:40:03.022Z",
+      "path": "C:\\xampp\\htdocs\\saiharikiran-backend"
     }
   }
 }
