@@ -94,7 +94,7 @@ const HeaderFallback = () => (
 
 // Safe lazy components with fallbacks - using federated components from SuperAdmin
 const Dashboard = createSafeLazyComponent(
-  () => import('SuperAdmin/NewDashboard'),
+  () => import('SuperAdmin/Dashboard'),
   DashboardFallback
 );
 
@@ -440,6 +440,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                     <Routes>
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/dashboard" element={<Dashboard />} />
+                      {{consumerRoute}}
                       {{billsPrepaidRoute}}
                       {{billsPostpaidRoute}}
                       {{assetManagementRoute}}
@@ -461,6 +462,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                               <ul className="text-sm text-red-700 space-y-1">
                                 <li>/ - Dashboard</li>
                                 <li>/dashboard - Dashboard</li>
+                                {{consumerError}}
                                 {{billsPrepaidError}}
                                 {{billsPostpaidError}}
                                 {{assetManagementError}}

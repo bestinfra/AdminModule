@@ -1,6 +1,5 @@
 {
-  "nextPort": 4053,
-  "nextPort": 4053,
+  "nextPort": 4054,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -38,8 +37,8 @@
       "path": "C:\\xampp\\htdocs\\pehhh-backend"
     },
     "krishna": {
-      "port": 4015,
-      "deployedAt": "2025-07-19T11:36:53.448Z",
+      "port": 4053,
+      "deployedAt": "2025-07-23T11:36:37.769Z",
       "path": "C:\\xampp\\htdocs\\krishna-backend"
     },
     "pooo": {
