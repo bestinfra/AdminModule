@@ -1,5 +1,5 @@
 {
-  "nextPort": 4049,
+  "nextPort": 4052,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -160,6 +160,16 @@
       "port": 4048,
       "deployedAt": "2025-07-22T19:04:14.477Z",
       "path": "C:\\xampp\\htdocs\\sandeep27-backend"
+    },
+    "sasassas": {
+      "port": 4050,
+      "deployedAt": "2025-07-22T19:29:12.799Z",
+      "path": "C:\\xampp\\htdocs\\sasassas-backend"
+    },
+    "gmar": {
+      "port": 4051,
+      "deployedAt": "2025-07-22T19:30:01.966Z",
+      "path": "C:\\xampp\\htdocs\\gmar-backend"
     }
   }
 }
