@@ -11,10 +11,13 @@ import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
-import AppManagement from './pages/Apps_module/AppManagement';import AddConsumer from './pages/AddConsumer';
+import AppManagement from './pages/Apps_module/AppManagement';
+import AddConsumer from './pages/AddConsumer';
 import ComponentsDocumentation from './pages/ComponentsDocumentation';
 import Connect from './pages_v2/ConnectDisconnect';
 import EmpDashboard from './pages/NewDashboard';
+import ConsumerView from './pages/ConsumerView';
+import Consumers from './pages_v2/Consumers';
 
 const App: React.FC = () => {
     return (
@@ -44,6 +47,10 @@ const App: React.FC = () => {
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
                             <Route path="/connect-consumer" element={<Connect />} />
                             <Route path="/empdashboard" element={<EmpDashboard />} />
+                            <Route path="/consumers" element={<Consumers />} />
+                            <Route path="/consumers/high-usage" element={<Consumers />} />
+                            <Route path="/consumers/add" element={<AddConsumer />} />
+                            <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                         </Route>
                     </Routes>
                 </Router>

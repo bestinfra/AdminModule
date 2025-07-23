@@ -1,9 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import Card from '@components/global/Card';
-import Table from '@components/global/Table';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
+import Page from '@components/global/PageC';
 import PageHeader from '@components/global/PageHeader';
+
 
 const mockDTRData = {
     name: 'TGNP_DTR-03',
@@ -81,167 +80,214 @@ const DTRDetailPage = () => {
     // TODO: Fetch DTR data by id here (using mock for now)
     const dtr = mockDTRData;
 
-    // Header component
-    const headerComponent = (
-        <PageHeader
-            title={dtr.name}
-            onBackClick={() => window.history.back()}
-            backButtonText="Back to Dashboard"
-            buttonsLabel="Edit DTR"
-            variant="primary"
-            onClick={() => console.log('Editing DTR...')}
-        />
-    );
-
-    // DTR Information Section
-    const dtrInfoSection: Section = {
-        id: 'dtr-info',
-        component: (
-            <section className="border border-primary-border rounded-3xl bg-white dark:bg-primary-dark p-8 flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                    <h2 className="text-lg font-bold text-main dark:text-white">
-                        DTR Information
-                    </h2>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-4">
-                    <div className="flex flex-col">
-                        <span className="text-sm text-neutral font-semibold">
-                            DTR Name
-                        </span>
-                        <span className="text-base text-main dark:text-white font-medium">
-                            {dtr.name}
-                        </span>
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-sm text-neutral font-semibold">
-                            Rating
-                        </span>
-                        <span className="text-base text-main dark:text-white font-medium">
-                            {dtr.rating}
-                        </span>
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-sm text-neutral font-semibold">
-                            Address
-                        </span>
-                        <span className="text-base text-main dark:text-white font-medium">
-                            {dtr.address}
-                        </span>
-                    </div>
-                    <div className="flex flex-col">
-                        <span className="text-sm text-neutral font-semibold">
-                            Location
-                        </span>
-                        <span className="text-base text-main dark:text-white font-medium">
-                            {dtr.location.lat}, {dtr.location.lng}
-                        </span>
-                    </div>
-                </div>
-            </section>
-        ),
-    };
-
-    // DTR Statistics Section
-    const dtrStatsSection: Section = {
-        id: 'dtr-stats',
-        component: (
-            <section className="border border-primary-border rounded-3xl bg-primary-lightest dark:bg-primary-dark p-4 flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                    <h3 className="text-lg font-semibold">
-                        Distribution Transformer (DTR) Statistics
-                    </h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {dtr.stats.map((stat, idx) => (
-                        <Card key={idx} {...stat} />
-                    ))}
-                </div>
-            </section>
-        ),
-    };
-
-    // Feeders Section
-    const feedersSection: Section = {
-        id: 'feeders',
-        component: (
-            <div className="flex flex-col gap-4 border border-primary-border rounded-2xl p-4 bg-white">
-                <h2 className="text-lg font-semibold">Feeders</h2>
-                <Table
-                    columns={[
-                        { key: 'sNo', label: 'S No' },
-                        { key: 'feederName', label: 'Feeder Name' },
-                        { key: 'loadStatus', label: 'Load Status' },
-                        {
-                            key: 'actions',
-                            label: 'Actions',
-                            render: () => (
-                                <span className="flex justify-center items-center">
-                                    <img
-                                        src="/icons/eye.svg"
-                                        alt="View"
-                                        className="w-5 h-5 opacity-50"
-                                    />
-                                </span>
-                            ),
-                        },
-                    ]}
-                    data={[
-                        {
-                            sNo: 1,
-                            feederName: 'D1F1(32500114)',
-                            loadStatus: 'Underload',
-                            actions: '',
-                        },
-                    ]}
-                    searchable={true}
-                    pagination={true}
-                    initialRowsPerPage={5}
-                    emptyMessage="No Feeders Found"
-                    showActions={false}
-                    onRowClick={(row) => navigate(`/feeders/${row.feederName}`)}
-                />
-            </div>
-        ),
-    };
-
-    // Alerts Section
-    const alertsSection: Section = {
-        id: 'alerts',
-        component: (
-            <div className="flex flex-col gap-4 border border-primary-border rounded-2xl p-4 bg-white">
-                <h2 className="text-lg font-semibold">Alerts</h2>
-                <Table
-                    columns={[
-                        { key: 'alertId', label: 'Alert ID' },
-                        { key: 'type', label: 'Type' },
-                        { key: 'feederName', label: 'Feeder Name' },
-                        { key: 'occuredOn', label: 'Occured On' },
-                    ]}
-                    data={[]}
-                    searchable={true}
-                    pagination={true}
-                    initialRowsPerPage={5}
-                    emptyMessage="No Alerts Found"
-                    showActions={false}
-                />
-            </div>
-        ),
-    };
-
     return (
-        <Page
-            layout="single-column"
-            sections={[
-                dtrInfoSection,
-                dtrStatsSection,
-                feedersSection,
-                alertsSection,
-            ]}
-            header={headerComponent}
-            sidebarPosition="right"
-            className="p-2 flex flex-col gap-6"
-            sectionClassName=""
-        />
+        <div className="p-2 flex flex-col gap-6">
+            {/* Header Section */}
+            <PageHeader
+                title={dtr.name}
+                onBackClick={() => window.history.back()}
+                backButtonText="Back to Dashboard"
+                buttonsLabel="Edit DTR"
+                variant="primary"
+                onClick={() => console.log('Editing DTR...')}
+            />
+
+            <Page
+                sections={[
+                    // DTR Information Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            bg: 'border border-primary-border rounded-3xl bg-white dark:bg-primary-dark p-8',
+                        },
+                        components: [
+                            {
+                                name: 'Heading',
+                                props: {
+                                    text: 'DTR Information',
+                                    level: 2,
+                                    size: 'lg',
+                                    variant: 'primary',
+                                    weight: 'bold',
+                                    align: 'left',
+                                },
+                            },
+                            {
+                                name: 'Holder',
+                                props: {
+                                    children: (
+                                        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-12 gap-y-4">
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-neutral font-semibold">
+                                                    DTR Name
+                                                </span>
+                                                <span className="text-base text-main dark:text-white font-medium">
+                                                    {dtr.name}
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-neutral font-semibold">
+                                                    Rating
+                                                </span>
+                                                <span className="text-base text-main dark:text-white font-medium">
+                                                    {dtr.rating}
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-neutral font-semibold">
+                                                    Address
+                                                </span>
+                                                <span className="text-base text-main dark:text-white font-medium">
+                                                    {dtr.address}
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-col">
+                                                <span className="text-sm text-neutral font-semibold">
+                                                    Location
+                                                </span>
+                                                <span className="text-base text-main dark:text-white font-medium">
+                                                    {dtr.location.lat}, {dtr.location.lng}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ),
+                                },
+                            },
+                        ],
+                    },
+                    // DTR Statistics Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            bg: 'border border-primary-border rounded-3xl bg-primary-lightest dark:bg-primary-dark p-4',
+                        },
+                        components: [
+                            {
+                                name: 'Heading',
+                                props: {
+                                    text: 'Distribution Transformer (DTR) Statistics',
+                                    level: 3,
+                                    size: 'lg',
+                                    variant: 'primary',
+                                    weight: 'semibold',
+                                    align: 'left',
+                                },
+                            },
+                            {
+                                name: 'Holder',
+                                props: {
+                                    children: (
+                                        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                                            {dtr.stats.map((stat: any, idx: number) => (
+                                                <Card key={idx} {...stat} />
+                                            ))}
+                                        </div>
+                                    ),
+                                },
+                            },
+                        ],
+                    },
+                    // Feeders Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            bg: 'border border-primary-border rounded-2xl p-4 bg-white',
+                        },
+                        components: [
+                            {
+                                name: 'Heading',
+                                props: {
+                                    text: 'Feeders',
+                                    level: 2,
+                                    size: 'lg',
+                                    variant: 'primary',
+                                    weight: 'semibold',
+                                    align: 'left',
+                                },
+                            },
+                            {
+                                name: 'Table',
+                                props: {
+                                    columns: [
+                                        { key: 'sNo', label: 'S No' },
+                                        { key: 'feederName', label: 'Feeder Name' },
+                                        { key: 'loadStatus', label: 'Load Status' },
+                                        {
+                                            key: 'actions',
+                                            label: 'Actions',
+                                            render: () => (
+                                                <span className="flex justify-center items-center">
+                                                    <img
+                                                        src="/icons/eye.svg"
+                                                        alt="View"
+                                                        className="w-5 h-5 opacity-50"
+                                                    />
+                                                </span>
+                                            ),
+                                        },
+                                    ],
+                                    data: [
+                                        {
+                                            sNo: 1,
+                                            feederName: 'D1F1(32500114)',
+                                            loadStatus: 'Underload',
+                                            actions: '',
+                                        },
+                                    ],
+                                    searchable: true,
+                                    pagination: true,
+                                    initialRowsPerPage: 5,
+                                    emptyMessage: 'No Feeders Found',
+                                    showActions: false,
+                                    onRowClick: (row: any) => navigate(`/feeders/${row.feederName}`),
+                                },
+                            },
+                        ],
+                    },
+                    // Alerts Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            bg: 'border border-primary-border rounded-2xl p-4 bg-white',
+                        },
+                        components: [
+                            {
+                                name: 'Heading',
+                                props: {
+                                    text: 'Alerts',
+                                    level: 2,
+                                    size: 'lg',
+                                    variant: 'primary',
+                                    weight: 'semibold',
+                                    align: 'left',
+                                },
+                            },
+                            {
+                                name: 'Table',
+                                props: {
+                                    columns: [
+                                        { key: 'alertId', label: 'Alert ID' },
+                                        { key: 'type', label: 'Type' },
+                                        { key: 'feederName', label: 'Feeder Name' },
+                                        { key: 'occuredOn', label: 'Occured On' },
+                                    ],
+                                    data: [],
+                                    searchable: true,
+                                    pagination: true,
+                                    initialRowsPerPage: 5,
+                                    emptyMessage: 'No Alerts Found',
+                                    showActions: false,
+                                },
+                            },
+                        ],
+                    },
+                ]}
+            />
+        </div>
     );
 };
 

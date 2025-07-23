@@ -1,5 +1,5 @@
 {
-  "nextPort": 4051,
+  "nextPort": 4052,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -161,15 +161,15 @@
       "deployedAt": "2025-07-22T19:04:14.477Z",
       "path": "C:\\xampp\\htdocs\\sandeep27-backend"
     },
-    "meenu": {
-      "port": 4049,
-      "deployedAt": "2025-07-23T04:27:52.144Z",
-      "path": "C:\\xampp\\htdocs\\meenu-backend"
-    },
-    "testapp": {
+    "sasassas": {
       "port": 4050,
-      "deployedAt": "2025-07-23T06:17:39.384Z",
-      "path": "C:\\xampp\\htdocs\\testapp-backend"
+      "deployedAt": "2025-07-22T19:29:12.799Z",
+      "path": "C:\\xampp\\htdocs\\sasassas-backend"
+    },
+    "gmar": {
+      "port": 4051,
+      "deployedAt": "2025-07-22T19:30:01.966Z",
+      "path": "C:\\xampp\\htdocs\\gmar-backend"
     }
   }
 }
