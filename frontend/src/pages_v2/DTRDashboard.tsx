@@ -6,8 +6,6 @@ import PageC from '@components/global/PageC';
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
 
-
-
     // Dummy data for DTRs table
     const dtrTableColumns = [
         { key: 'dtrId', label: 'DTR ID' },
@@ -18,16 +16,86 @@ const DTRDashboard: React.FC = () => {
         { key: 'commStatus', label: 'Comm-Status' },
     ];
     const dtrTableData = [
-        { dtrId: 'TRANSFORMER-01', dtrName: 'TGNP_DTR-01', feedersCount: 1, streetName: 'Waddepally', city: 'Warangal', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-02', dtrName: 'TGNP_DTR-02', feedersCount: 1, streetName: 'Sun city', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-03', dtrName: 'TGNP_DTR-03', feedersCount: 4, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-04', dtrName: 'TGNP_DTR-04', feedersCount: 1, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-05', dtrName: 'TGNP_DTR-05', feedersCount: 1, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-06', dtrName: 'TGNP_DTR-06', feedersCount: 1, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-07', dtrName: 'TGNP_DTR-07', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-08', dtrName: 'TGNP_DTR-08', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-09', dtrName: 'TGNP_DTR-09', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-10', dtrName: 'TGNP_DTR-10', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
+        {
+            dtrId: 'TRANSFORMER-01',
+            dtrName: 'TGNP_DTR-01',
+            feedersCount: 1,
+            streetName: 'Waddepally',
+            city: 'Warangal',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-02',
+            dtrName: 'TGNP_DTR-02',
+            feedersCount: 1,
+            streetName: 'Sun city',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-03',
+            dtrName: 'TGNP_DTR-03',
+            feedersCount: 4,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-04',
+            dtrName: 'TGNP_DTR-04',
+            feedersCount: 1,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-05',
+            dtrName: 'TGNP_DTR-05',
+            feedersCount: 1,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-06',
+            dtrName: 'TGNP_DTR-06',
+            feedersCount: 1,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-07',
+            dtrName: 'TGNP_DTR-07',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-08',
+            dtrName: 'TGNP_DTR-08',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-09',
+            dtrName: 'TGNP_DTR-09',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-10',
+            dtrName: 'TGNP_DTR-10',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
     ];
     const dtrTableActions = [
         {
@@ -44,13 +112,17 @@ const DTRDashboard: React.FC = () => {
         { key: 'status', label: 'Status' },
     ];
     const alertsTableData = [
-        { alert: 'Overload detected', date: '2024-07-01 10:00', status: 'Active' },
+        {
+            alert: 'Overload detected',
+            date: '2024-07-01 10:00',
+            status: 'Active',
+        },
         { alert: 'Fuse blown', date: '2024-07-01 09:30', status: 'Resolved' },
         { alert: 'Power failure', date: '2024-07-01 08:45', status: 'Active' },
     ];
 
     // Dummy data for DTR Alert Statistics
-    const [statsRange, setStatsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
+    const [statsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
     const alertTypes = [
         { name: 'LT Fuse Blown (R - Phase)', color: '#e74c3c' },
         { name: 'Unbalanced Load', color: '#f39c12' },
@@ -63,12 +135,22 @@ const DTRDashboard: React.FC = () => {
         { name: 'LT Fuse Blown (B - Phase)', color: '#e67e22' },
         { name: 'R-L-P', color: '#9b59b6' },
     ];
-    const months = ['May 2025', 'Apr 2025', 'Mar 2025', 'Feb 2025', 'Jan 2025', 'Dec 2024', 'Nov 2024', 'Oct 2024', 'Sept 2024'];
+    const months = [
+        'May 2025',
+        'Apr 2025',
+        'Mar 2025',
+        'Feb 2025',
+        'Jan 2025',
+        'Dec 2024',
+        'Nov 2024',
+        'Oct 2024',
+        'Sept 2024',
+    ];
     const alertSeries = alertTypes.map((type) => ({
         name: type.name,
         data: months.map(() => Math.floor(Math.random() * 350)),
     }));
-    const alertColors = alertTypes.map(type => type.color);
+    const alertColors = alertTypes.map((type) => type.color);
 
     // PageC sections configuration
     const sections = [
@@ -76,17 +158,17 @@ const DTRDashboard: React.FC = () => {
         {
             layout: {
                 type: 'row' as const,
-                className: 'mb-6'
+                className: 'mb-6',
             },
             components: [
                 {
                     name: 'PageHeader',
                     props: {
-                        title: "DTR Dashboard",
+                        title: 'DTR Dashboard',
                         onBackClick: () => window.history.back(),
-                        backButtonText: "Back to Dashboard",
-                        buttonsLabel: "Add DTR",
-                        variant: "primary",
+                        backButtonText: 'Back to Dashboard',
+                        buttonsLabel: 'Add DTR',
+                        variant: 'primary',
                         onClick: () => console.log('Adding new DTR...'),
                         showMenu: true,
                         showDropdown: true,
@@ -98,14 +180,14 @@ const DTRDashboard: React.FC = () => {
                             { id: 'underloaded', label: 'Underloaded' },
                             { id: 'fuse-blown', label: 'Fuse Blown' },
                             { id: 'unbalanced', label: 'Unbalanced' },
-                            { id: 'power-failure', label: 'Power Failure' }
+                            { id: 'power-failure', label: 'Power Failure' },
                         ],
                         onMenuItemClick: (itemId: string) => {
                             console.log(`Filter by: ${itemId}`);
-                        }
-                    }
-                }
-            ]
+                        },
+                    },
+                },
+            ],
         },
         // Main widgets row (side by side)
         {
@@ -113,14 +195,15 @@ const DTRDashboard: React.FC = () => {
                 type: 'grid' as const,
                 columns: 2,
                 gap: 'gap-6',
-                className: 'mb-8'
+                className: 'mb-8',
             },
             components: [
                 // Left: DTR Statistics
                 {
                     name: 'Holder',
                     props: {
-                        className: 'bg-primary-lightest p-6 border border-primary-border dark:border-dark-border rounded-3xl h-full flex flex-col'
+                        className:
+                            'bg-primary-lightest p-6 border border-primary-border dark:border-dark-border rounded-3xl h-full flex flex-col',
                     },
                     children: [
                         {
@@ -132,13 +215,13 @@ const DTRDashboard: React.FC = () => {
                                 variant: 'primary',
                                 weight: 'bold',
                                 align: 'left',
-                                className: 'mb-4'
-                            }
+                                className: 'mb-4',
+                            },
                         },
                         {
                             name: 'Holder',
                             props: {
-                                className: 'grid grid-cols-3 gap-4'
+                                className: 'grid grid-cols-3 gap-4',
                             },
                             children: [
                                 {
@@ -148,8 +231,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 29,
                                         icon: '/icons/dtr.svg',
                                         subtitle1: 'Total Transformer Units',
-                                        onValueClick: () => navigate('/dtr-statistics/total-dtrs')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/total-dtrs'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -158,8 +244,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 33,
                                         icon: '/icons/feeder.svg',
                                         subtitle1: 'Connected to DTRs',
-                                        onValueClick: () => navigate('/dtr-statistics/total-lt-feeders')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/total-lt-feeders'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -168,8 +257,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 3,
                                         icon: '/icons/power_failure.svg',
                                         subtitle1: '0.10% of Total DTRs',
-                                        onValueClick: () => navigate('/dtr-statistics/total-fuse-blown')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/total-fuse-blown'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -178,8 +270,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 0,
                                         icon: '/icons/dtr.svg',
                                         subtitle1: '0.00% of Total Feeders',
-                                        onValueClick: () => navigate('/dtr-statistics/overloaded-feeders')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/overloaded-feeders'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -188,8 +283,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 33,
                                         icon: '/icons/dtr.svg',
                                         subtitle1: '100.0% of Total Feeders',
-                                        onValueClick: () => navigate('/dtr-statistics/underloaded-feeders')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/underloaded-feeders'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -198,8 +296,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 3,
                                         icon: '/icons/power_failure.svg',
                                         subtitle1: '3 Incidents',
-                                        onValueClick: () => navigate('/dtr-statistics/lt-side-fuse-blown')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/lt-side-fuse-blown'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -208,8 +309,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 0,
                                         icon: '/icons/dtr.svg',
                                         subtitle1: '0.00% of Total DTRs',
-                                        onValueClick: () => navigate('/dtr-statistics/unbalanced-dtrs')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/unbalanced-dtrs'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -218,8 +322,11 @@ const DTRDashboard: React.FC = () => {
                                         value: 0,
                                         icon: '/icons/power_failure.svg',
                                         subtitle1: '0.00% of Feeders',
-                                        onValueClick: () => navigate('/dtr-statistics/power-failure-feeders')
-                                    }
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/power-failure-feeders'
+                                            ),
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -228,24 +335,29 @@ const DTRDashboard: React.FC = () => {
                                         value: 0,
                                         icon: '/icons/power_failure.svg',
                                         subtitle1: '0 Incident',
-                                        onValueClick: () => navigate('/dtr-statistics/ht-side-fuse-blown')
-                                    }
-                                }
-                            ]
-                        }
-                    ]
+                                        onValueClick: () =>
+                                            navigate(
+                                                '/dtr-statistics/ht-side-fuse-blown'
+                                            ),
+                                    },
+                                },
+                            ],
+                        },
+                    ],
                 },
                 // Right: Consumption & Energies
                 {
                     name: 'Holder',
                     props: {
-                        className: 'bg-primary-lightest p-6 border border-primary-border dark:border-dark-border rounded-3xl h-full flex flex-col'
+                        className:
+                            'bg-primary-lightest p-6 border border-primary-border dark:border-dark-border rounded-3xl h-full flex flex-col',
                     },
                     children: [
                         {
                             name: 'Holder',
                             props: {
-                                className: 'flex items-center justify-between mb-4'
+                                className:
+                                    'flex items-center justify-between mb-4',
                             },
                             children: [
                                 {
@@ -256,23 +368,26 @@ const DTRDashboard: React.FC = () => {
                                         size: 'md',
                                         variant: 'primary',
                                         weight: 'bold',
-                                        align: 'left'
-                                    }
+                                        align: 'left',
+                                    },
                                 },
                                 {
                                     name: 'TimeRangeSelector',
                                     props: {
-                                        availableTimeRanges: ['Daily', 'Monthly'],
+                                        availableTimeRanges: [
+                                            'Daily',
+                                            'Monthly',
+                                        ],
                                         selectedTimeRange: 'Daily',
                                         handleTimeRangeChange: () => {},
-                                    }
-                                }
-                            ]
+                                    },
+                                },
+                            ],
                         },
                         {
                             name: 'Holder',
                             props: {
-                                className: 'grid grid-cols-2 gap-4'
+                                className: 'grid grid-cols-2 gap-4',
                             },
                             children: [
                                 {
@@ -281,8 +396,8 @@ const DTRDashboard: React.FC = () => {
                                         title: 'Total kWh',
                                         value: '111931.96',
                                         icon: '/icons/consumption.svg',
-                                        subtitle1: 'Cumulative Active Energy'
-                                    }
+                                        subtitle1: 'Cumulative Active Energy',
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -290,8 +405,8 @@ const DTRDashboard: React.FC = () => {
                                         title: 'Total kVAh',
                                         value: '113369.06',
                                         icon: '/icons/consumption.svg',
-                                        subtitle1: 'Cumulative Apparent Energy'
-                                    }
+                                        subtitle1: 'Cumulative Apparent Energy',
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -299,8 +414,8 @@ const DTRDashboard: React.FC = () => {
                                         title: 'Total kW',
                                         value: '6.10',
                                         icon: '/icons/consumption.svg',
-                                        subtitle1: 'Active Power'
-                                    }
+                                        subtitle1: 'Active Power',
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -308,8 +423,8 @@ const DTRDashboard: React.FC = () => {
                                         title: 'Total kVA',
                                         value: '6.26',
                                         icon: '/icons/consumption.svg',
-                                        subtitle1: 'Apparent Power'
-                                    }
+                                        subtitle1: 'Apparent Power',
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -318,8 +433,8 @@ const DTRDashboard: React.FC = () => {
                                         value: 29,
                                         icon: '/icons/dtr.svg',
                                         subtitle1: '100.00% of Total DTRs',
-                                        iconColor: 'green'
-                                    }
+                                        iconColor: 'green',
+                                    },
                                 },
                                 {
                                     name: 'Card',
@@ -328,20 +443,20 @@ const DTRDashboard: React.FC = () => {
                                         value: 0,
                                         icon: '/icons/dtr.svg',
                                         subtitle1: '0.00% of Total DTRs',
-                                        iconColor: 'red'
-                                    }
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
+                                        iconColor: 'red',
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
         },
         // DTRs Table section
         {
             layout: {
                 type: 'column' as const,
-                className: 'mb-8'
+                className: 'mb-8',
             },
             components: [
                 {
@@ -349,8 +464,8 @@ const DTRDashboard: React.FC = () => {
                     props: {
                         text: 'DTRs',
                         level: 2,
-                        className: 'text-lg font-semibold mb-4'
-                    }
+                        className: 'text-lg font-semibold mb-4',
+                    },
                 },
                 {
                     name: 'Table',
@@ -362,17 +477,18 @@ const DTRDashboard: React.FC = () => {
                         searchable: true,
                         pagination: true,
                         initialRowsPerPage: 10,
-                        emptyMessage: "No DTRs found",
-                        onRowClick: (row: TableData) => navigate(`/dtr/${row.dtrId}`)
-                    }
-                }
-            ]
+                        emptyMessage: 'No DTRs found',
+                        onRowClick: (row: TableData) =>
+                            navigate(`/dtr/${row.dtrId}`),
+                    },
+                },
+            ],
         },
         // Latest Alerts section
         {
             layout: {
                 type: 'column' as const,
-                className: 'mb-8'
+                className: 'mb-8',
             },
             components: [
                 {
@@ -380,8 +496,8 @@ const DTRDashboard: React.FC = () => {
                     props: {
                         text: 'Latest Alerts',
                         level: 2,
-                        className: 'text-lg font-semibold mb-4'
-                    }
+                        className: 'text-lg font-semibold mb-4',
+                    },
                 },
                 {
                     name: 'Table',
@@ -392,16 +508,16 @@ const DTRDashboard: React.FC = () => {
                         searchable: true,
                         pagination: true,
                         initialRowsPerPage: 10,
-                        emptyMessage: "No alerts found"
-                    }
-                }
-            ]
+                        emptyMessage: 'No alerts found',
+                    },
+                },
+            ],
         },
         // Statistics Chart section
         {
             layout: {
                 type: 'column' as const,
-                className: 'mb-8'
+                className: 'mb-8',
             },
             components: [
                 {
@@ -409,8 +525,8 @@ const DTRDashboard: React.FC = () => {
                     props: {
                         text: 'Statistics',
                         level: 2,
-                        className: 'text-lg font-semibold mb-4'
-                    }
+                        className: 'text-lg font-semibold mb-4',
+                    },
                 },
                 {
                     name: 'BarChart',
@@ -420,11 +536,11 @@ const DTRDashboard: React.FC = () => {
                         seriesColors: alertColors,
                         height: 300,
                         showLegendInteractions: true,
-                        timeRange: statsRange
-                    }
-                }
-            ]
-        }
+                        timeRange: statsRange,
+                    },
+                },
+            ],
+        },
     ];
 
     return (
@@ -434,4 +550,4 @@ const DTRDashboard: React.FC = () => {
     );
 };
 
-export default DTRDashboard; 
+export default DTRDashboard;

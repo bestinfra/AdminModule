@@ -11,7 +11,6 @@ const columns: Column[] = [
     { key: 'reading', label: 'Current Reading' },
 ];
 
-// Dummy data matching the image
 const DUMMY_CONSUMERS = [
     {
         id: 1,
@@ -25,7 +24,7 @@ const DUMMY_CONSUMERS = [
         connectionType: 'COMMERCIAL',
         category: 'COMMERCIAL',
         sanctionedLoad: 10.0,
-        status: 'ACTIVE'
+        status: 'ACTIVE',
     },
     {
         id: 2,
@@ -39,7 +38,7 @@ const DUMMY_CONSUMERS = [
         connectionType: 'COMMERCIAL',
         category: 'COMMERCIAL',
         sanctionedLoad: 25.0,
-        status: 'ACTIVE'
+        status: 'ACTIVE',
     },
     {
         id: 3,
@@ -53,8 +52,8 @@ const DUMMY_CONSUMERS = [
         connectionType: 'COMMERCIAL',
         category: 'COMMERCIAL',
         sanctionedLoad: 15.0,
-        status: 'ACTIVE'
-    }
+        status: 'ACTIVE',
+    },
 ];
 
 const Consumers: React.FC = () => {
@@ -84,7 +83,7 @@ const Consumers: React.FC = () => {
     // Load dummy data instead of API call
     useEffect(() => {
         setLoading(true);
-        
+
         // Simulate API delay
         setTimeout(() => {
             setConsumers(DUMMY_CONSUMERS);
@@ -101,17 +100,15 @@ const Consumers: React.FC = () => {
         }
     }, [location.pathname, params.uid]);
 
-    // Filter consumers based on menu value
-    const filteredConsumers = menuValue === 'high-usage' 
-        ? consumers.filter(consumer => parseFloat(consumer.reading) > 1000)
-        : consumers;
+    const filteredConsumers =
+        menuValue === 'high-usage'
+            ? consumers.filter(
+                  (consumer) => parseFloat(consumer.reading) > 1000
+              )
+            : consumers;
 
     const handleRowClick = (row: any) => {
         navigate(`/consumers/${row.consumerNumber}`);
-    };
-
-    const handleMenuChange = (value: string) => {
-        setMenuValue(value);
     };
 
     const headerConfig = {
@@ -131,7 +128,7 @@ const Consumers: React.FC = () => {
         ],
         onMenuItemClick: (itemId: string) => {
             setMenuValue(itemId);
-        }
+        },
     };
 
     return (
@@ -149,9 +146,9 @@ const Consumers: React.FC = () => {
                                     columns: [
                                         {
                                             name: 'PageHeader',
-                                            props: headerConfig
-                                        }
-                                    ]
+                                            props: headerConfig,
+                                        },
+                                    ],
                                 },
                                 {
                                     layout: 'column',
@@ -170,18 +167,20 @@ const Consumers: React.FC = () => {
                                                     {
                                                         label: 'View',
                                                         icon: '/icons/eye.svg',
-                                                        onClick: handleRowClick
-                                                    }
+                                                        onClick: handleRowClick,
+                                                    },
                                                 ],
                                                 onRowClick: handleRowClick,
-                                                emptyMessage: loading ? 'Loading consumers...' : 'No consumers found'
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
+                                                emptyMessage: loading
+                                                    ? 'Loading consumers...'
+                                                    : 'No consumers found',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
                 ]}
             />
         </div>
