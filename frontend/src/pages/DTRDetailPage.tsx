@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import Card from '@components/global/Card';
+import Card from '@components/global/Card'
 import Page from '@components/global/PageC';
 import PageHeader from '@components/global/PageHeader';
 

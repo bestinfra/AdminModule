@@ -1,24 +1,20 @@
 import React from 'react';
-import Card from '@components/global/Card';
-import Table from '@components/global/Table';
 import { useParams, useNavigate } from 'react-router-dom';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
-import PageHeader from '@components/global/PageHeader';
+import Page from '@components/global/PageC';
 
 const summaryCards = [
   {
     title: 'Current Reading',
-    value: '10535 kWh',
+    value: '12950.11 kWh',
     icon: '/icons/reading.svg',
-    subtitle1: 'Last Reading: 10376.69 kWh Consumption: 158.31 kWh',
+    subtitle1: 'Last Reading: 12790.97 kWh Consumption: 159.14 kWh',
     subtitle2: '',
   },
   {
     title: 'Status',
     value: 'Active',
     icon: '/icons/status.svg',
-    subtitle1: 'Last Communication: 08/07/2025 05:30 pm',
+    subtitle1: 'Last Communication: 23/07/2025 01:00 pm',
     subtitle2: '',
   },
   {
@@ -38,7 +34,7 @@ const summaryCards = [
 ];
 
 const meterInfo = [
-  { label: 'Meter SI No.', value: '' },
+  { label: 'Meter SI No.', value: 'A9345417' },
   { label: 'Modem SI No', value: 'RFDCU_DCU101' },
   { label: 'UID', value: 'BI25GMRA002' },
   { label: 'Assigned To', value: 'Neo Travels' },
@@ -65,70 +61,137 @@ const historyData = [
 ];
 
 const MeterDetails: React.FC = () => {
-  const { meterSlNo } = useParams();
+  const { meterId } = useParams();
   const navigate = useNavigate();
   const info = meterInfo.map((item) =>
-    item.label === 'Meter SI No.' ? { ...item, value: meterSlNo || '' } : item
+    item.label === 'Meter SI No.' ? { ...item, value: meterId || 'A9345417' } : item
   );
-
-  // Page Header component
-  const pageHeader = (
-    <PageHeader
-      title="Meter Details"
-      onBackClick={() => navigate('/meters')}
-      backButtonText="Back to Meters"
-    />
-  );
-
-  // Summary Cards Section
-  const summaryCardsSection: Section = {
-    id: 'summary-cards',
-    component: (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        {summaryCards.map((card, idx) => (
-          <Card key={idx} {...card}  />
-        ))}
-      </div>
-    )
-  };
-
-  // Meter Information Section
-  const meterInfoSection: Section = {
-    id: 'meter-info',
-    component: (
-      <div className="bg-white rounded-2xl shadow p-6 border border-neutral-light">
-        <div className="text-xl font-semibold mb-4">Meter Information</div>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-          {info.map((info, idx) => (
-            <div key={idx} className="mb-2">
-              <div className="text-neutral text-sm">{info.label}</div>
-              <div className="text-base font-semibold">{info.value}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    )
-  };
-
-  // Meter History Section
-  const meterHistorySection: Section = {
-    id: 'meter-history',
-    component: (
-      <div className="bg-white rounded-2xl shadow p-6 border border-neutral-light">
-        <div className="text-xl font-semibold mb-4">Meter History</div>
-        <div className="mb-4 flex items-center"></div>
-        <Table columns={historyColumns} data={historyData} pagination={false} searchable={false} />
-      </div>
-    )
-  };
 
   return (
-    <Page
-      layout="single-column"
-      sections={[summaryCardsSection, meterInfoSection, meterHistorySection]}
-      header={pageHeader}
-      className=""
-    />
+    <div className="p-2 min-h-screen">
+      <Page
+        sections={[
+          {
+            layout: {
+              type: 'column',
+              gap: 'gap-6',
+              rows: [
+                {
+                  layout: 'row',
+                  columns: [
+                    {
+                      name: 'PageHeader',
+                      props: {
+                        title: 'Meter Details',
+                        onBackClick: () => navigate('/meters'),
+                        backButtonText: 'Back to Meters',
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          {
+            layout: {
+              type: 'column',
+              gap: 'gap-6',
+              rows: [
+                {
+                  layout: 'grid',
+                  gridColumns: 4,
+                  gap: 'gap-4',
+                  columns: summaryCards.map((cardData) => ({
+                    name: 'Card',
+                    props: cardData,
+                  })),
+                },
+              ],
+            },
+          },
+          {
+            layout: {
+              type: 'column',
+              gap: 'gap-6',
+              rows: [
+                {
+                  layout: 'row',
+                  bg: 'bg-white rounded-2xl shadow p-6 border border-neutral-light',
+                  columns: [
+                    {
+                      name: 'Heading',
+                      props: {
+                        text: 'Meter Information',
+                        level: 2,
+                        size: 'lg',
+                        variant: 'primary',
+                        weight: 'bold',
+                        align: 'left',
+                      },
+                    },
+                  ],
+                },
+                {
+                  layout: 'grid',
+                  gridColumns: 2,
+                  gap: 'gap-8',
+                  columns: info.map((infoItem) => ({
+                    name: 'Holder',
+                    props: {
+                      children: (
+                        <div className="mb-4">
+                          <div className="text-neutral text-sm mb-1">{infoItem.label}</div>
+                          <div className="text-base font-semibold text-neutral-darker">{infoItem.value}</div>
+                        </div>
+                      ),
+                    },
+                  })),
+                },
+              ],
+            },
+          },
+          {
+            layout: {
+              type: 'column',
+              gap: 'gap-6',
+              rows: [
+                {
+                  layout: 'row',
+                  bg: 'bg-white rounded-2xl shadow p-6 border border-neutral-light',
+                  columns: [
+                    {
+                      name: 'Heading',
+                      props: {
+                        text: 'Meter History',
+                        level: 2,
+                        size: 'lg',
+                        variant: 'primary',
+                        weight: 'bold',
+                        align: 'left',
+                      },
+                    },
+                  ],
+                },
+                {
+                  layout: 'row',
+                  columns: [
+                    {
+                      name: 'Table',
+                      props: {
+                        columns: historyColumns,
+                        data: historyData,
+                        pagination: false,
+                        searchable: false,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+        ]}
+      />
+    </div>
   );
 };
 
