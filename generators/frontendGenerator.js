@@ -108,7 +108,7 @@ function generateAppComponent(frontendDir, variables) {
       case '/users':
         return 'Users';` : '';
   
-  variables.roleManagementCase = modules.includes('role_management') ? `
+  variables.roleManagementCase = (modules.includes('role_management') || modules.includes('user_management_default')) ? `
       case '/role-management':
         return 'Role Management';` : '';
   
@@ -172,7 +172,7 @@ function generateAppComponent(frontendDir, variables) {
   variables.usersRoute = modules.includes('user_management_default') ? 
     '<Route path="/users" element={<Users />} />' : '';
   
-  variables.roleManagementRoute = modules.includes('role_management') ? 
+  variables.roleManagementRoute = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
     '<Route path="/role-management" element={<RoleManagement />} />' : '';
   
   variables.consumerRoute = modules.includes('consumer') ? 
@@ -205,7 +205,7 @@ function generateAppComponent(frontendDir, variables) {
   variables.usersError = modules.includes('user_management_default') ? 
     '<li>/users - Users</li>' : '';
   
-  variables.roleManagementError = modules.includes('role_management') ? 
+  variables.roleManagementError = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
     '<li>/role-management - Role Management</li>' : '';
   
   variables.consumerError = modules.includes('consumer') ? 
