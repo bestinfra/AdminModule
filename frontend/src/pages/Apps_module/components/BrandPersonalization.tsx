@@ -190,7 +190,15 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     }
     
     const files = Array.from(e.dataTransfer.files);
-    const imageFile = files.find(file => file.type.startsWith('image/'));
+    let imageFile;
+    
+    if (type === 'favicon') {
+      // For favicon, only accept PNG files
+      imageFile = files.find(file => file.type === 'image/png');
+    } else {
+      // For logo, accept any image type
+      imageFile = files.find(file => file.type.startsWith('image/'));
+    }
     
     if (imageFile) {
       handleFileUpload(imageFile, type, uploadArea);
@@ -276,6 +284,23 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                     value={formData.companyWebsite}
                     error={undefined}
                     showError={false}
+                    disabled={false}
+                    onInputChange={handleFormInputChange}
+                    onInputBlur={handleFormInputBlur}
+                    fileInputRefs={fileInputRefs}
+                  />
+                </div>
+                <div className="mt-6">
+                  <FormInput
+                    input={{
+                      name: "appDescription",
+                      type: "textarea",
+                      placeholder: "Enter app description",
+                      required: true,
+                    }}
+                    value={formData.appDescription}
+                    error={allErrors.appDescription}
+                    showError={!!allErrors.appDescription}
                     disabled={false}
                     onInputChange={handleFormInputChange}
                     onInputBlur={handleFormInputBlur}
@@ -371,9 +396,9 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                         onDragOver={(e) => handleDragOver(e, 'favicon')}
                         onDragLeave={(e) => handleDragLeave(e, 'favicon')}
                         onDrop={(e) => handleDrop(e, 'favicon')}
-                        accept="image/*"
+                        accept="image/png"
                         browseLabel="browse"
-                        helperText="ICO, PNG up to 1MB"
+                        helperText="PNG format only, up to 1MB"
                         imgClassName="w-24 h-24 dark:border-dark-border rounded object-contain dark:bg-primary-dark-light p-1"
                         previewOnClick={() => document.getElementById('appFavicon')?.click()}
                       />

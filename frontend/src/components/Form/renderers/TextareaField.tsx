@@ -17,7 +17,7 @@ const TextareaField: React.FC<TextareaFieldProps> = ({
         {...commonProps}
         value={value}
         placeholder={placeholder}
-        className={`${commonProps.className} textarea rounded-md`}
+        className={`${commonProps.className} textarea `}
       />
       {description && <span className="block text-xs text-[var(--color-light)] dark:text-[var(--color-neutral-light)] mt-1">{description}</span>}
     </div>

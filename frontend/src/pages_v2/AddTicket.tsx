@@ -1,13 +1,9 @@
-import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@components/global/PageC';
-import Form from '@components/Form/Form';
 import type { FormInputConfig } from '@components/Form/types';
 
 export default function AddTicket() {
     const navigate = useNavigate();
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const priorityOptions = [
         { value: '', label: 'Select Priority' },
@@ -133,14 +129,11 @@ export default function AddTicket() {
     ];
 
     const handleFormSubmit = async (formData: Record<string, any>) => {
-        setIsSubmitting(true);
-        
         try {
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 2000));
             
             console.log('Ticket created:', formData);
-            setShowSuccessMessage(true);
             
             // Navigate back after 2 seconds
             setTimeout(() => {
@@ -149,8 +142,6 @@ export default function AddTicket() {
 
         } catch (error) {
             console.error('Error creating ticket:', error);
-        } finally {
-            setIsSubmitting(false);
         }
     };
 

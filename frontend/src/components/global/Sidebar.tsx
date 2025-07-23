@@ -85,11 +85,11 @@ const defaultMenus: MenuCategory[] = [
                             link: '/user-management',
                         }
            
-            // {
-            //     title: 'DTR Dashboard',
-            //     icon: '/icons/dtr.svg',
-            //     link: '/dtr-dashboard',
-            // },
+            {
+                title: 'DTR Dashboard',
+                icon: '/icons/dtr.svg',
+                link: '/dtr-dashboard',
+            },
             
         ],
     },
