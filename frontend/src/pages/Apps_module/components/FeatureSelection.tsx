@@ -16,11 +16,12 @@ interface FeatureSelectionProps {
 const moduleConfig = {
   default: [
     { key: 'dashboard', label: 'Dashboard', description: 'Overview and analytics dashboard' },
-    { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
-    { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions' },
-    { key: 'role_management', label: 'Role Management', description: 'Role-based access control' },
-    { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
     { key: 'dtr', label: 'DTR Dashboard', description: 'DTR Dashboard' },
+    { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
+    { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
+    { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions (includes Role Management)' },
+    { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
+    { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
   ],
   optional: [
     { 
@@ -32,9 +33,6 @@ const moduleConfig = {
         { key: 'postpaid', label: 'Postpaid' }
       ]
     },
-    { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
-    { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
-    { key: 'dtr', label: 'DTR', description: 'Distribution Transformer Management' },
   ]
 };
 
@@ -182,6 +180,23 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {moduleConfig.default.map(renderDefaultModuleItem)}
           </div>
+          
+          {/* Optional Modules Section */}
+          {moduleConfig.optional.length > 0 && (
+            <>
+              <div className="flex items-start gap-4 mt-6">
+                <div>
+                  <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Optional Modules</h3>
+                </div>
+                <span className="text-xs px-4 py-1 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200">
+                  Additional Features
+                </span>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {moduleConfig.optional.map(renderDefaultModuleItem)}
+              </div>
+            </>
+          )}
           {allErrors.modules && (
             <div className="text-error text-sm font-medium mt-4 p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
               {allErrors.modules}

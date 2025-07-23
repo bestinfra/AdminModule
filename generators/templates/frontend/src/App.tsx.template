@@ -191,7 +191,7 @@ const Transformer = createSafeLazyComponent(
 );
 
 const Assets = createSafeLazyComponent(
-  () => import('SuperAdmin/Assets'),
+  () => import('SuperAdmin/AssetManagment'),
   () => (
     <div className="p-6">
       <h1 className="text-2xl font-bold">Asset Management</h1>
@@ -211,7 +211,7 @@ const Meters = createSafeLazyComponent(
 );
 
 const DataLoggerMaster = createSafeLazyComponent(
-  () => import('SuperAdmin/DataLoggerMaster'),
+  () => import('SuperAdmin/DataLogger'),
   () => (
     <div className="p-6">
       <h1 className="text-2xl font-bold">Data Logger Master</h1>
@@ -376,11 +376,6 @@ const generateMenuItems = (modules = []) => {
           link: '/role-management',
         },
       ],
-    },
-    role_management: {
-      title: 'Role Management',
-      icon: '/icons/roles.svg',
-      link: '/role-management',
     },
     dtr: {
       title: 'DTR Dashboard',

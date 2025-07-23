@@ -1,5 +1,5 @@
 {
-  "nextPort": 4055,
+  "nextPort": 4058,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -148,43 +148,28 @@
     },
     "aimd": {
       "port": 4046,
-      "deployedAt": "2025-07-22T18:55:06.326Z",
-      "path": "C:\\xampp\\htdocs\\sandeep25-backend"
+      "deployedAt": "2025-07-23T07:13:10.918Z",
+      "path": "C:\\xampp\\htdocs\\aimd-backend"
     },
-    "sandeep26": {
-      "port": 4047,
-      "deployedAt": "2025-07-22T18:57:13.189Z",
-      "path": "C:\\xampp\\htdocs\\sandeep26-backend"
-    },
-    "sandeep27": {
-      "port": 4048,
-      "deployedAt": "2025-07-22T19:04:14.477Z",
-      "path": "C:\\xampp\\htdocs\\sandeep27-backend"
-    },
-    "sasassas": {
-      "port": 4050,
-      "deployedAt": "2025-07-22T19:29:12.799Z",
-      "path": "C:\\xampp\\htdocs\\sasassas-backend"
-    },
-    "gmar": {
-      "port": 4051,
-      "deployedAt": "2025-07-22T19:30:01.966Z",
-      "path": "C:\\xampp\\htdocs\\gmar-backend"
-    },
-    "madhu1": {
-      "port": 4052,
-      "deployedAt": "2025-07-23T07:34:42.286Z",
-      "path": "C:\\xampp\\htdocs\\madhu1-backend"
-    },
-    "madhu2": {
-      "port": 4053,
-      "deployedAt": "2025-07-23T08:34:51.112Z",
-      "path": "C:\\xampp\\htdocs\\madhu2-backend"
-    },
-    "madhu3": {
+    "srinivas": {
       "port": 4054,
-      "deployedAt": "2025-07-23T08:47:15.818Z",
-      "path": "C:\\xampp\\htdocs\\madhu3-backend"
+      "deployedAt": "2025-07-23T11:45:00.331Z",
+      "path": "C:\\xampp\\htdocs\\srinivas-backend"
+    },
+    "surekha": {
+      "port": 4055,
+      "deployedAt": "2025-07-23T12:03:24.244Z",
+      "path": "C:\\xampp\\htdocs\\surekha-backend"
+    },
+    "saiharikiran": {
+      "port": 4056,
+      "deployedAt": "2025-07-23T12:40:03.022Z",
+      "path": "C:\\xampp\\htdocs\\saiharikiran-backend"
+    },
+    "harikiran": {
+      "port": 4057,
+      "deployedAt": "2025-07-23T13:05:33.384Z",
+      "path": "C:\\xampp\\htdocs\\harikiran-backend"
     }
   }
 }
