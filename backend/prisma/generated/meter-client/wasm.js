@@ -571,6 +571,131 @@ exports.Prisma.DTRFaultScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TamperEventScalarFieldEnum = {
+  id: 'id',
+  meterId: 'meterId',
+  tamperDatetime: 'tamperDatetime',
+  tamperType: 'tamperType',
+  tamperStatus: 'tamperStatus',
+  avgCurrent: 'avgCurrent',
+  avgVoltage: 'avgVoltage',
+  avgPowerFactor: 'avgPowerFactor',
+  frequency: 'frequency',
+  kwh: 'kwh',
+  kwhExport: 'kwhExport',
+  kwhImport: 'kwhImport',
+  kwhNet: 'kwhNet',
+  kwhTotal: 'kwhTotal',
+  kwExport: 'kwExport',
+  kwImport: 'kwImport',
+  kvaExport: 'kvaExport',
+  kvaImport: 'kvaImport',
+  voltageR: 'voltageR',
+  voltageY: 'voltageY',
+  voltageB: 'voltageB',
+  currentR: 'currentR',
+  currentY: 'currentY',
+  currentB: 'currentB',
+  powerFactorR: 'powerFactorR',
+  powerFactorY: 'powerFactorY',
+  powerFactorB: 'powerFactorB',
+  tamperCount: 'tamperCount',
+  param1: 'param1',
+  param2: 'param2',
+  param3: 'param3',
+  param4: 'param4',
+  param5: 'param5',
+  isProcessed: 'isProcessed',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.TamperCodeDescriptionScalarFieldEnum = {
+  id: 'id',
+  tamperCode: 'tamperCode',
+  tamperDesc: 'tamperDesc',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PrepaidAccountScalarFieldEnum = {
+  id: 'id',
+  consumerId: 'consumerId',
+  accountNumber: 'accountNumber',
+  currentBalance: 'currentBalance',
+  totalRecharged: 'totalRecharged',
+  totalConsumed: 'totalConsumed',
+  isActive: 'isActive',
+  isBlocked: 'isBlocked',
+  blockReason: 'blockReason',
+  blockedAt: 'blockedAt',
+  blockedBy: 'blockedBy',
+  lowBalanceThreshold: 'lowBalanceThreshold',
+  emergencyThreshold: 'emergencyThreshold',
+  autoRechargeEnabled: 'autoRechargeEnabled',
+  autoRechargeAmount: 'autoRechargeAmount',
+  autoRechargeThreshold: 'autoRechargeThreshold',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PrepaidTransactionScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  transactionId: 'transactionId',
+  transactionType: 'transactionType',
+  amount: 'amount',
+  balanceBefore: 'balanceBefore',
+  balanceAfter: 'balanceAfter',
+  consumptionKWh: 'consumptionKWh',
+  ratePerUnit: 'ratePerUnit',
+  fixedCharges: 'fixedCharges',
+  taxes: 'taxes',
+  readingId: 'readingId',
+  status: 'status',
+  failureReason: 'failureReason',
+  description: 'description',
+  metadata: 'metadata',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PrepaidRechargeScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  rechargeId: 'rechargeId',
+  amount: 'amount',
+  paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
+  gatewayName: 'gatewayName',
+  gatewayTransactionId: 'gatewayTransactionId',
+  gatewayResponse: 'gatewayResponse',
+  rechargeType: 'rechargeType',
+  rechargeSource: 'rechargeSource',
+  isPromotional: 'isPromotional',
+  promotionalCode: 'promotionalCode',
+  discountAmount: 'discountAmount',
+  bonusAmount: 'bonusAmount',
+  receiptNumber: 'receiptNumber',
+  receiptUrl: 'receiptUrl',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PrepaidAlertScalarFieldEnum = {
+  id: 'id',
+  accountId: 'accountId',
+  alertType: 'alertType',
+  alertLevel: 'alertLevel',
+  message: 'message',
+  isRead: 'isRead',
+  readAt: 'readAt',
+  balanceAtAlert: 'balanceAtAlert',
+  consumptionAtAlert: 'consumptionAtAlert',
+  thresholdValue: 'thresholdValue',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -848,6 +973,82 @@ exports.FaultStatus = exports.$Enums.FaultStatus = {
   UNRESOLVED: 'UNRESOLVED'
 };
 
+exports.TamperType = exports.$Enums.TamperType = {
+  METER_BYPASS: 'METER_BYPASS',
+  MAGNETIC_TAMPER: 'MAGNETIC_TAMPER',
+  COVER_OPEN: 'COVER_OPEN',
+  TERMINAL_TAMPER: 'TERMINAL_TAMPER',
+  REVERSE_POLARITY: 'REVERSE_POLARITY',
+  PHASE_MISMATCH: 'PHASE_MISMATCH',
+  CURRENT_SHUNT: 'CURRENT_SHUNT',
+  VOLTAGE_SHUNT: 'VOLTAGE_SHUNT',
+  POWER_FAILURE: 'POWER_FAILURE',
+  NO_LOAD: 'NO_LOAD',
+  OTHER: 'OTHER'
+};
+
+exports.TamperStatus = exports.$Enums.TamperStatus = {
+  DETECTED: 'DETECTED',
+  CONFIRMED: 'CONFIRMED',
+  RESOLVED: 'RESOLVED',
+  FALSE_ALARM: 'FALSE_ALARM',
+  INVESTIGATING: 'INVESTIGATING'
+};
+
+exports.PrepaidTransactionType = exports.$Enums.PrepaidTransactionType = {
+  RECHARGE: 'RECHARGE',
+  CONSUMPTION: 'CONSUMPTION',
+  ADJUSTMENT: 'ADJUSTMENT',
+  REFUND: 'REFUND',
+  PENALTY: 'PENALTY',
+  BONUS: 'BONUS',
+  EXPIRY: 'EXPIRY',
+  TRANSFER: 'TRANSFER'
+};
+
+exports.PrepaidTransactionStatus = exports.$Enums.PrepaidTransactionStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  REVERSED: 'REVERSED'
+};
+
+exports.PrepaidRechargeType = exports.$Enums.PrepaidRechargeType = {
+  MANUAL: 'MANUAL',
+  AUTO: 'AUTO',
+  PROMOTIONAL: 'PROMOTIONAL',
+  REFUND: 'REFUND',
+  ADMIN: 'ADMIN'
+};
+
+exports.PrepaidRechargeSource = exports.$Enums.PrepaidRechargeSource = {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  MOBILE_APP: 'MOBILE_APP',
+  SMS: 'SMS',
+  USSD: 'USSD',
+  AGENT: 'AGENT'
+};
+
+exports.PrepaidAlertType = exports.$Enums.PrepaidAlertType = {
+  LOW_BALANCE: 'LOW_BALANCE',
+  EMERGENCY_LOW: 'EMERGENCY_LOW',
+  CONSUMPTION_HIGH: 'CONSUMPTION_HIGH',
+  RECHARGE_SUCCESS: 'RECHARGE_SUCCESS',
+  RECHARGE_FAILED: 'RECHARGE_FAILED',
+  DISCONNECTION_WARNING: 'DISCONNECTION_WARNING',
+  DISCONNECTED: 'DISCONNECTED',
+  RECONNECTED: 'RECONNECTED'
+};
+
+exports.PrepaidAlertLevel = exports.$Enums.PrepaidAlertLevel = {
+  INFO: 'INFO',
+  WARNING: 'WARNING',
+  CRITICAL: 'CRITICAL',
+  EMERGENCY: 'EMERGENCY'
+};
+
 exports.Prisma.ModelName = {
   Department: 'Department',
   User: 'User',
@@ -875,7 +1076,13 @@ exports.Prisma.ModelName = {
   DTR: 'DTR',
   DTRReading: 'DTRReading',
   DTRMaintenance: 'DTRMaintenance',
-  DTRFault: 'DTRFault'
+  DTRFault: 'DTRFault',
+  TamperEvent: 'TamperEvent',
+  TamperCodeDescription: 'TamperCodeDescription',
+  PrepaidAccount: 'PrepaidAccount',
+  PrepaidTransaction: 'PrepaidTransaction',
+  PrepaidRecharge: 'PrepaidRecharge',
+  PrepaidAlert: 'PrepaidAlert'
 };
 
 /**

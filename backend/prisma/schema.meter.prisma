@@ -600,6 +600,9 @@ model MeterReading {
   bill            Bill?     @relation(fields: [billId], references: [id])
   billId          Int?
   
+  // Prepaid Transaction Reference
+  prepaidTransactions PrepaidTransaction[]
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -997,7 +1000,34 @@ enum MaintenanceStatus {
   COMPLETED
   CANCELLED
   DEFERRED
-} 
+}
+
+enum FaultType {
+  OVERLOAD
+  SHORT_CIRCUIT
+  EARTH_FAULT
+  OIL_LEAK
+  HIGH_TEMPERATURE
+  LOW_OIL
+  BUSHING_FAILURE
+  WINDING_FAILURE
+  OTHER
+}
+
+enum FaultSeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum FaultStatus {
+  DETECTED
+  ANALYZING
+  REPAIRING
+  RESOLVED
+  UNRESOLVED
+}
 
 // =====================================
 // TAMPER EVENTS

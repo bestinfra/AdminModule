@@ -24,22 +24,32 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
     const [isGettingLocation, setIsGettingLocation] = useState(false);
     const [locationLocked, setLocationLocked] = useState(false);
 
-    // Dynamic location data states
+    // Dynamic location data states - keep API but filter to only India
     const [countryOptions, setCountryOptions] = useState<{ value: string; label: string }[]>([]);
 
     // Unified loading state and debounce ref for location lookups
-
     const locationDebounceRef = useRef<NodeJS.Timeout | null>(null);
 
-    // Fetch countries on mount
+    // Fetch countries on mount but filter to only India
     useEffect(() => {
         axios.get('https://countriesnow.space/api/v0.1/countries/positions')
             .then((res: any) => {
                 if (res.data && res.data.data) {
-                    setCountryOptions(res.data.data.map((c: any) => ({ value: c.name, label: c.name })));
+                    // Filter to only show India
+                    const indiaOnly = res.data.data
+                        .filter((c: any) => c.name === 'India')
+                        .map((c: any) => ({ value: c.name, label: c.name }));
+                    setCountryOptions(indiaOnly);
                 }
             })
-            .catch(() => setCountryOptions([]));
+            .catch(() => setCountryOptions([{ value: 'India', label: 'India' }]));
+    }, []);
+
+    // Set India as the default country on component mount
+    useEffect(() => {
+        if (!formData.country) {
+            onInputChange({ target: { name: 'country', value: 'India' } });
+        }
     }, []);
 
     // Get user's current location
@@ -57,12 +67,18 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                             if (data.address) {
                                 const address = data.address;
                                 
+                                // Check if location is in India
+                                if (address.country !== 'India') {
+                                    alert('Location detected is not in India. Please select an Indian city manually.');
+                                    setIsGettingLocation(false);
+                                    return;
+                                }
+                                
                                 // Update form with location data
                                 onInputChange({ target: { name: 'addressLine', value: data.display_name || '' } });
                                 
-                                if (address.country) {
-                                    onInputChange({ target: { name: 'country', value: address.country } });
-                                }
+                                // Always set country to India
+                                onInputChange({ target: { name: 'country', value: 'India' } });
                                 
                                 if (address.state) {
                                     onInputChange({ target: { name: 'state', value: address.state } });
@@ -120,53 +136,49 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
         }
     }, [formData.appName]);
 
-    // Fetch state/country from city
-    const fetchStateCountryFromCity = async (city: string) => {
+    // Fetch state from Indian city with validation
+    const fetchStateFromIndianCity = async (city: string) => {
         if (!city) return;
         try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&format=json&addressdetails=1&limit=1`);
+            const response = await fetch(`https://nominatim.openstreetmap.org/search?city=${encodeURIComponent(city)}&country=India&format=json&addressdetails=1&limit=1`);
             const data = await response.json();
             if (data && data.length > 0 && data[0].address) {
                 const address = data[0].address;
-                if (address.state) {
+                // Verify it's actually in India
+                if (address.country === 'India' && address.state) {
                     onInputChange({ target: { name: 'state', value: address.state } });
+                    // Always ensure country is set to India
+                    onInputChange({ target: { name: 'country', value: 'India' } });
+                } else {
+                    // If city is not found in India, show error
+                    onInputChange({ target: { name: 'city', value: '' } });
+                    alert('Please enter a valid Indian city.');
                 }
-                if (address.country) {
-                    onInputChange({ target: { name: 'country', value: address.country } });
-                }
+            } else {
+                // If no results found, it might not be an Indian city
+                onInputChange({ target: { name: 'city', value: '' } });
+                alert('Please enter a valid Indian city.');
             }
         } catch (error) {
-            console.error('Error fetching state/country from city:', error);
-        }
-    };
-
-    // Fetch country from state
-    const fetchCountryFromState = async (state: string) => {
-        if (!state) return;
-        try {
-            const response = await fetch(`https://nominatim.openstreetmap.org/search?state=${encodeURIComponent(state)}&format=json&addressdetails=1&limit=1`);
-            const data = await response.json();
-            if (data && data.length > 0 && data[0].address && data[0].address.country) {
-                onInputChange({ target: { name: 'country', value: data[0].address.country } });
-            }
-        } catch (error) {
-            console.error('Error fetching country from state:', error);
+            console.error('Error fetching state from city:', error);
         }
     };
 
     const handleFormInputChange = (name: string, value: FormInputValue) => {
         onInputChange({ target: { name, value } } as any);
         if (hasSubmitted) setHasSubmitted(false);
-        // Debounced location lookups
+        
+        // Debounced location lookups for Indian cities only
         if (locationDebounceRef.current) clearTimeout(locationDebounceRef.current);
         if (name === 'city' && typeof value === 'string' && value.trim() !== '') {
             locationDebounceRef.current = setTimeout(() => {
-                fetchStateCountryFromCity(value.trim());
+                fetchStateFromIndianCity(value.trim());
             }, 500);
-        } else if (name === 'state' && typeof value === 'string' && value.trim() !== '' && (!formData.city || formData.city.trim() === '')) {
-            locationDebounceRef.current = setTimeout(() => {
-                fetchCountryFromState(value.trim());
-            }, 500);
+        }
+        
+        // Always ensure country is set to India
+        if (name === 'country' && value !== 'India') {
+            onInputChange({ target: { name: 'country', value: 'India' } });
         }
     };
 
@@ -223,8 +235,6 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
         { value: 'migration-upgrade', label: 'Migration/Upgrade' },
         { value: 'amc-only', label: 'AMC Only' },
     ];
-
-
 
     const ownershipTypeOptions = [
         { value: 'state-owned', label: 'State-Owned' },
@@ -392,7 +402,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                             name: 'city',
                                             type: 'text',
                                             label: '',
-                                            placeholder: 'Enter City',
+                                            placeholder: 'Enter Indian City',
                                             required: true,
                                         }}
                                         value={formData.city}
@@ -433,7 +443,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         options={countryOptions}
                                         placeholder="Select Country"
                                         error={allErrors.country}
-                                        disabled={locationLocked}
+                                        disabled={true}
                                     />
                                 </div>
                             </div>

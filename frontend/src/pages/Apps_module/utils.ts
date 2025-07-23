@@ -159,6 +159,8 @@ export const validateApplicationSetup = (formData: any): { isValid: boolean; err
 
   if (!formData.country) {
     errors.country = 'Country is required';
+  } else if (formData.country !== 'India') {
+    errors.country = 'Only India is supported';
   }
 
   if (!formData.state?.trim()) {
@@ -167,6 +169,64 @@ export const validateApplicationSetup = (formData: any): { isValid: boolean; err
 
   if (!formData.city?.trim()) {
     errors.city = 'City is required';
+  } else {
+    // Validate that the city is in India
+    // This is a basic validation - in a real implementation, you might want to check against a list of Indian cities
+    const indianCities = [
+      'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Jaipur', 'Surat',
+      'Lucknow', 'Kanpur', 'Nagpur', 'Indore', 'Thane', 'Bhopal', 'Visakhapatnam', 'Pimpri-Chinchwad', 'Patna', 'Vadodara',
+      'Ghaziabad', 'Ludhiana', 'Agra', 'Nashik', 'Faridabad', 'Meerut', 'Rajkot', 'Kalyan-Dombivali', 'Vasai-Virar', 'Varanasi',
+      'Srinagar', 'Aurangabad', 'Dhanbad', 'Amritsar', 'Allahabad', 'Ranchi', 'Howrah', 'Coimbatore', 'Jabalpur', 'Gwalior',
+      'Vijayawada', 'Jodhpur', 'Madurai', 'Raipur', 'Kota', 'Guwahati', 'Chandigarh', 'Solapur', 'Hubli-Dharwad', 'Bareilly',
+      'Moradabad', 'Mysore', 'Gurgaon', 'Aligarh', 'Jalandhar', 'Tiruchirappalli', 'Bhubaneswar', 'Salem', 'Warangal', 'Mira-Bhayandar',
+      'Thiruvananthapuram', 'Bhiwandi', 'Saharanpur', 'Gorakhpur', 'Guntur', 'Bikaner', 'Amravati', 'Noida', 'Jamshedpur', 'Bhilai',
+      'Cuttack', 'Firozabad', 'Kochi', 'Nellore', 'Bhavnagar', 'Dehradun', 'Durgapur', 'Asansol', 'Rourkela', 'Nanded',
+      'Kolhapur', 'Ajmer', 'Akola', 'Gulbarga', 'Jamnagar', 'Ujjain', 'Loni', 'Siliguri', 'Jhansi', 'Ulhasnagar',
+      'Jammu', 'Mangalore', 'Erode', 'Belgaum', 'Ambattur', 'Tirunelveli', 'Malegaon', 'Gaya', 'Jalgaon', 'Udaipur',
+      'Maheshtala', 'Tirupur', 'Davanagere', 'Kozhikode', 'Akbarpur', 'Kurnool', 'Bokaro', 'Rajahmundry', 'Ballari', 'Agartala',
+      'Bhagalpur', 'Latur', 'Dhule', 'Korba', 'Bhilwara', 'Brahmapur', 'Mysore', 'Muzaffarpur', 'Ahmednagar', 'Mathura',
+      'Kollam', 'Avadi', 'Kadapa', 'Kamarhati', 'Bilaspur', 'Shahjahanpur', 'Satara', 'Bijapur', 'Rampur', 'Shivamogga',
+      'Chandrapur', 'Junagadh', 'Thrissur', 'Alwar', 'Bardhaman', 'Kulti', 'Kakinada', 'Nizamabad', 'Parbhani', 'Tumkur',
+      'Hisar', 'Ozhukarai', 'Bihar Sharif', 'Panipat', 'Darbhanga', 'Bally', 'Aizawl', 'Dewas', 'Ichalkaranji', 'Tirupati',
+      'Karnal', 'Bathinda', 'Rampur', 'Shivpuri', 'Ratlam', 'Modinagar', 'Delhi Cantonment', 'Ludhiana', 'Roorkee', 'Silchar',
+      'Hapur', 'Anantapur', 'Arrah', 'Karimnagar', 'Parbhani', 'Etawah', 'Bharatpur', 'Begusarai', 'New Delhi', 'Chhapra',
+      'Kadapa', 'Ramagundam', 'Pali', 'Satna', 'Vizianagaram', 'Katihar', 'Hardwar', 'Sonipat', 'Nagercoil', 'Thanjavur',
+      'Murwara', 'Naihati', 'Sambalpur', 'Nadiad', 'Yamunanagar', 'English Bazar', 'Eluru', 'Munger', 'Panchkula', 'Raayachuru',
+      'Panvel', 'Deoghar', 'Ongole', 'Nandyal', 'Morena', 'Bhiwani', 'Porbandar', 'Palakkad', 'Anand', 'Purnia',
+      'Baharampur', 'Barmer', 'Morvi', 'Orai', 'Bahraich', 'Vikarabad', 'Phagwara', 'Bardoli', 'Sihor', 'Bhandara',
+      'Pilkhuwa', 'Kapurthala', 'Chicheroda', 'Arambagh', 'Gohana', 'Ladnu', 'Pattukkottai', 'Sirsi', 'Sircilla', 'Tamluk',
+      'Jagraon', 'AlipurdUrban Agglomerationr', 'Alirajpur', 'Tandur', 'Naidupet', 'Tirupathur', 'Tohana', 'Ratangarh', 'Dhubri', 'Masaurhi',
+      'Visnagar', 'Vrindavan', 'Nokha', 'Nagda', 'Nohar', 'Chittur-Thathamangalam', 'Malaj Khand', 'Sarangpur', 'Robertsganj', 'Sirkali',
+      'Radhanpur', 'Tiruchendur', 'Utraula', 'Patratu', 'Vijainagar', 'Periyasemur', 'Panruti', 'Manapparai', 'Tehri', 'Samdhan',
+      'Pardi', 'Rahatgarh', 'Panagar', 'Uthiramerur', 'Tirora', 'Rangia', 'Sahjanwa', 'Wara Seoni', 'Magadi', 'Rajgarh',
+      'Modinagar', 'Lalganj', 'Narkhed', 'Mangaldoi', 'Nargund', 'Tirumangalam', 'Kawardha', 'Ramanagaram', 'Uchgaon', 'Mokokchung',
+      'Paschim Punropara', 'Sagwara', 'Ramganj Mandi', 'Tarakeswar', 'Mahalingapura', 'Dharmanagar', 'Mahemdabad', 'Manendragarh', 'Uran', 'Tharamangalam',
+      'Tirukkoyilur', 'Pen', 'Makhdumpur', 'Shoranur', 'Naharlagun', 'Saidpur', 'Rampurhat', 'Chinchani', 'Kadayanallur', 'Ranibennur',
+      'Kaikalur', 'Mangalagiri', 'Phulabani', 'Umreth', 'Narsipatnam', 'Nautanwa', 'Rajgir', 'Yellandu', 'Sathyamangalam', 'Pilibanga',
+      'Morshi', 'Pehowa', 'Sonepur', 'Pappinisseri', 'Zamania', 'Mihijam', 'Purna', 'Puliyankudi', 'Shikarpur, Bulandshahr', 'Umaria',
+      'Porsa', 'Naugawan Sadat', 'Fatehpur Sikri', 'Manuguru', 'Udaipur', 'Pipar City', 'Pattamundai', 'Nanjikottai', 'Taranagar', 'Yerraguntla',
+      'Satana', 'Sherghati', 'Sankeshwara', 'Madikeri', 'Thuraiyur', 'Sanand', 'Rajula', 'Kyathampalle', 'Shahabad, Rampur', 'Tilda Newra',
+      'Narsinghgarh', 'Chittur', 'Sirohi', 'Dandeli', 'Shamli', 'Pranpur', 'Khunti', 'Balangir', 'Wanaparthy', 'Gudur',
+      'Kendujhar', 'Mandla', 'Mandi', 'Nimbahera', 'Vijapur', 'Sawantwadi', 'Sitapur', 'Hathras', 'Silvassa', 'Talcher',
+      'Virudhachalam', 'Kanhangad', 'Karauli', 'Mangaldoi', 'Phagwara', 'Puducherry', 'Keshod', 'Sullurpeta', 'Wadhwan', 'Gurdaspur',
+      'Vatakara', 'Tura', 'Narnaul', 'Kharar', 'Yadgir', 'Ambejogai', 'Ankleshwar', 'Savarkundla', 'Paradip', 'Virudhunagar',
+      'Koratla', 'Valparai', 'Sangli', 'Vijayapura', 'Santipur', 'Bhind', 'Gondiya', 'Tiruchengode', 'Yeola', 'Mukhed',
+      'Rajgarh', 'Ladwa', 'Arsikere', 'Obra', 'Nalgonda', 'Suri', 'Rajauri', 'Perinthalmanna', 'Rafiganj', 'Mukhed',
+      'Kodungallur', 'Phulabani', 'Umreth', 'Narsipatnam', 'Nautanwa', 'Rajgir', 'Yellandu', 'Sathyamangalam', 'Pilibanga',
+      'Morshi', 'Pehowa', 'Sonepur', 'Pappinisseri', 'Zamania', 'Mihijam', 'Purna', 'Puliyankudi', 'Shikarpur, Bulandshahr', 'Umaria',
+      'Porsa', 'Naugawan Sadat', 'Fatehpur Sikri', 'Manuguru', 'Udaipur', 'Pipar City', 'Pattamundai', 'Nanjikottai', 'Taranagar', 'Yerraguntla'
+    ];
+    
+    const cityName = formData.city.trim();
+    const isIndianCity = indianCities.some(city => 
+      city.toLowerCase() === cityName.toLowerCase() ||
+      cityName.toLowerCase().includes(city.toLowerCase()) ||
+      city.toLowerCase().includes(cityName.toLowerCase())
+    );
+    
+    if (!isIndianCity) {
+      errors.city = 'Please enter a valid Indian city';
+    }
   }
 
   if (!formData.applicationCategory || formData.applicationCategory.length === 0) {
@@ -494,7 +554,7 @@ export const validateAccessControl = (formData: any): { isValid: boolean; errors
   }
 
   if (formData.sendWelcomeEmail) {
-    remarks.push('<img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Welcome email will be sent to users upon account creation');
+    remarks.push('<img src="icons/check.svg" alt="info" class="w-4 h-4 inline mr-1" /> Welcome email will be sent to users upon account creation');
   } else {
     remarks.push('<img src="icons/triangle-warning.svg" alt="warning" class="w-4 h-4 inline mr-1" /> Welcome email is disabled - users will need to set passwords manually');
   }
@@ -505,7 +565,7 @@ export const validateAccessControl = (formData: any): { isValid: boolean; errors
   }
 
   if (formData.adminPassword && formData.adminPassword.length > 12) {
-    remarks.push('<img src="icons/info.svg" alt="info" class="w-4 h-4 inline mr-1" /> Strong password detected - good security practice');
+    remarks.push('<img src="icons/check.svg" alt="info" class="w-4 h-4 inline mr-1" /> Strong password detected - good security practice');
   }
 
   if (newAccountsCount > 5) {

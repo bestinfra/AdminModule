@@ -148,6 +148,36 @@ export type DTRMaintenance = $Result.DefaultSelection<Prisma.$DTRMaintenancePayl
  * 
  */
 export type DTRFault = $Result.DefaultSelection<Prisma.$DTRFaultPayload>
+/**
+ * Model TamperEvent
+ * 
+ */
+export type TamperEvent = $Result.DefaultSelection<Prisma.$TamperEventPayload>
+/**
+ * Model TamperCodeDescription
+ * 
+ */
+export type TamperCodeDescription = $Result.DefaultSelection<Prisma.$TamperCodeDescriptionPayload>
+/**
+ * Model PrepaidAccount
+ * 
+ */
+export type PrepaidAccount = $Result.DefaultSelection<Prisma.$PrepaidAccountPayload>
+/**
+ * Model PrepaidTransaction
+ * 
+ */
+export type PrepaidTransaction = $Result.DefaultSelection<Prisma.$PrepaidTransactionPayload>
+/**
+ * Model PrepaidRecharge
+ * 
+ */
+export type PrepaidRecharge = $Result.DefaultSelection<Prisma.$PrepaidRechargePayload>
+/**
+ * Model PrepaidAlert
+ * 
+ */
+export type PrepaidAlert = $Result.DefaultSelection<Prisma.$PrepaidAlertPayload>
 
 /**
  * Enums
@@ -499,6 +529,106 @@ export const FaultStatus: {
 
 export type FaultStatus = (typeof FaultStatus)[keyof typeof FaultStatus]
 
+
+export const TamperType: {
+  METER_BYPASS: 'METER_BYPASS',
+  MAGNETIC_TAMPER: 'MAGNETIC_TAMPER',
+  COVER_OPEN: 'COVER_OPEN',
+  TERMINAL_TAMPER: 'TERMINAL_TAMPER',
+  REVERSE_POLARITY: 'REVERSE_POLARITY',
+  PHASE_MISMATCH: 'PHASE_MISMATCH',
+  CURRENT_SHUNT: 'CURRENT_SHUNT',
+  VOLTAGE_SHUNT: 'VOLTAGE_SHUNT',
+  POWER_FAILURE: 'POWER_FAILURE',
+  NO_LOAD: 'NO_LOAD',
+  OTHER: 'OTHER'
+};
+
+export type TamperType = (typeof TamperType)[keyof typeof TamperType]
+
+
+export const TamperStatus: {
+  DETECTED: 'DETECTED',
+  CONFIRMED: 'CONFIRMED',
+  RESOLVED: 'RESOLVED',
+  FALSE_ALARM: 'FALSE_ALARM',
+  INVESTIGATING: 'INVESTIGATING'
+};
+
+export type TamperStatus = (typeof TamperStatus)[keyof typeof TamperStatus]
+
+
+export const PrepaidTransactionType: {
+  RECHARGE: 'RECHARGE',
+  CONSUMPTION: 'CONSUMPTION',
+  ADJUSTMENT: 'ADJUSTMENT',
+  REFUND: 'REFUND',
+  PENALTY: 'PENALTY',
+  BONUS: 'BONUS',
+  EXPIRY: 'EXPIRY',
+  TRANSFER: 'TRANSFER'
+};
+
+export type PrepaidTransactionType = (typeof PrepaidTransactionType)[keyof typeof PrepaidTransactionType]
+
+
+export const PrepaidTransactionStatus: {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  CANCELLED: 'CANCELLED',
+  REVERSED: 'REVERSED'
+};
+
+export type PrepaidTransactionStatus = (typeof PrepaidTransactionStatus)[keyof typeof PrepaidTransactionStatus]
+
+
+export const PrepaidRechargeType: {
+  MANUAL: 'MANUAL',
+  AUTO: 'AUTO',
+  PROMOTIONAL: 'PROMOTIONAL',
+  REFUND: 'REFUND',
+  ADMIN: 'ADMIN'
+};
+
+export type PrepaidRechargeType = (typeof PrepaidRechargeType)[keyof typeof PrepaidRechargeType]
+
+
+export const PrepaidRechargeSource: {
+  ONLINE: 'ONLINE',
+  OFFLINE: 'OFFLINE',
+  MOBILE_APP: 'MOBILE_APP',
+  SMS: 'SMS',
+  USSD: 'USSD',
+  AGENT: 'AGENT'
+};
+
+export type PrepaidRechargeSource = (typeof PrepaidRechargeSource)[keyof typeof PrepaidRechargeSource]
+
+
+export const PrepaidAlertType: {
+  LOW_BALANCE: 'LOW_BALANCE',
+  EMERGENCY_LOW: 'EMERGENCY_LOW',
+  CONSUMPTION_HIGH: 'CONSUMPTION_HIGH',
+  RECHARGE_SUCCESS: 'RECHARGE_SUCCESS',
+  RECHARGE_FAILED: 'RECHARGE_FAILED',
+  DISCONNECTION_WARNING: 'DISCONNECTION_WARNING',
+  DISCONNECTED: 'DISCONNECTED',
+  RECONNECTED: 'RECONNECTED'
+};
+
+export type PrepaidAlertType = (typeof PrepaidAlertType)[keyof typeof PrepaidAlertType]
+
+
+export const PrepaidAlertLevel: {
+  INFO: 'INFO',
+  WARNING: 'WARNING',
+  CRITICAL: 'CRITICAL',
+  EMERGENCY: 'EMERGENCY'
+};
+
+export type PrepaidAlertLevel = (typeof PrepaidAlertLevel)[keyof typeof PrepaidAlertLevel]
+
 }
 
 export type AccessLevel = $Enums.AccessLevel
@@ -632,6 +762,38 @@ export const FaultSeverity: typeof $Enums.FaultSeverity
 export type FaultStatus = $Enums.FaultStatus
 
 export const FaultStatus: typeof $Enums.FaultStatus
+
+export type TamperType = $Enums.TamperType
+
+export const TamperType: typeof $Enums.TamperType
+
+export type TamperStatus = $Enums.TamperStatus
+
+export const TamperStatus: typeof $Enums.TamperStatus
+
+export type PrepaidTransactionType = $Enums.PrepaidTransactionType
+
+export const PrepaidTransactionType: typeof $Enums.PrepaidTransactionType
+
+export type PrepaidTransactionStatus = $Enums.PrepaidTransactionStatus
+
+export const PrepaidTransactionStatus: typeof $Enums.PrepaidTransactionStatus
+
+export type PrepaidRechargeType = $Enums.PrepaidRechargeType
+
+export const PrepaidRechargeType: typeof $Enums.PrepaidRechargeType
+
+export type PrepaidRechargeSource = $Enums.PrepaidRechargeSource
+
+export const PrepaidRechargeSource: typeof $Enums.PrepaidRechargeSource
+
+export type PrepaidAlertType = $Enums.PrepaidAlertType
+
+export const PrepaidAlertType: typeof $Enums.PrepaidAlertType
+
+export type PrepaidAlertLevel = $Enums.PrepaidAlertLevel
+
+export const PrepaidAlertLevel: typeof $Enums.PrepaidAlertLevel
 
 /**
  * ##  Prisma Client ʲˢ
@@ -1025,6 +1187,66 @@ export class PrismaClient<
     * ```
     */
   get dTRFault(): Prisma.DTRFaultDelegate<ExtArgs>;
+
+  /**
+   * `prisma.tamperEvent`: Exposes CRUD operations for the **TamperEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TamperEvents
+    * const tamperEvents = await prisma.tamperEvent.findMany()
+    * ```
+    */
+  get tamperEvent(): Prisma.TamperEventDelegate<ExtArgs>;
+
+  /**
+   * `prisma.tamperCodeDescription`: Exposes CRUD operations for the **TamperCodeDescription** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TamperCodeDescriptions
+    * const tamperCodeDescriptions = await prisma.tamperCodeDescription.findMany()
+    * ```
+    */
+  get tamperCodeDescription(): Prisma.TamperCodeDescriptionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.prepaidAccount`: Exposes CRUD operations for the **PrepaidAccount** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PrepaidAccounts
+    * const prepaidAccounts = await prisma.prepaidAccount.findMany()
+    * ```
+    */
+  get prepaidAccount(): Prisma.PrepaidAccountDelegate<ExtArgs>;
+
+  /**
+   * `prisma.prepaidTransaction`: Exposes CRUD operations for the **PrepaidTransaction** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PrepaidTransactions
+    * const prepaidTransactions = await prisma.prepaidTransaction.findMany()
+    * ```
+    */
+  get prepaidTransaction(): Prisma.PrepaidTransactionDelegate<ExtArgs>;
+
+  /**
+   * `prisma.prepaidRecharge`: Exposes CRUD operations for the **PrepaidRecharge** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PrepaidRecharges
+    * const prepaidRecharges = await prisma.prepaidRecharge.findMany()
+    * ```
+    */
+  get prepaidRecharge(): Prisma.PrepaidRechargeDelegate<ExtArgs>;
+
+  /**
+   * `prisma.prepaidAlert`: Exposes CRUD operations for the **PrepaidAlert** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PrepaidAlerts
+    * const prepaidAlerts = await prisma.prepaidAlert.findMany()
+    * ```
+    */
+  get prepaidAlert(): Prisma.PrepaidAlertDelegate<ExtArgs>;
 }
 
 export namespace Prisma {
@@ -1492,7 +1714,13 @@ export namespace Prisma {
     DTR: 'DTR',
     DTRReading: 'DTRReading',
     DTRMaintenance: 'DTRMaintenance',
-    DTRFault: 'DTRFault'
+    DTRFault: 'DTRFault',
+    TamperEvent: 'TamperEvent',
+    TamperCodeDescription: 'TamperCodeDescription',
+    PrepaidAccount: 'PrepaidAccount',
+    PrepaidTransaction: 'PrepaidTransaction',
+    PrepaidRecharge: 'PrepaidRecharge',
+    PrepaidAlert: 'PrepaidAlert'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1508,7 +1736,7 @@ export namespace Prisma {
 
   export type TypeMap<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, ClientOptions = {}> = {
     meta: {
-      modelProps: "department" | "user" | "role" | "userRole" | "permission" | "rolePermission" | "userPermission" | "userSession" | "loginHistory" | "userActivityLog" | "locationType" | "location" | "consumer" | "consumerDocument" | "meter" | "meterConfiguration" | "meterReading" | "currentTransformer" | "potentialTransformer" | "bill" | "payment" | "notification" | "ticket" | "dTR" | "dTRReading" | "dTRMaintenance" | "dTRFault"
+      modelProps: "department" | "user" | "role" | "userRole" | "permission" | "rolePermission" | "userPermission" | "userSession" | "loginHistory" | "userActivityLog" | "locationType" | "location" | "consumer" | "consumerDocument" | "meter" | "meterConfiguration" | "meterReading" | "currentTransformer" | "potentialTransformer" | "bill" | "payment" | "notification" | "ticket" | "dTR" | "dTRReading" | "dTRMaintenance" | "dTRFault" | "tamperEvent" | "tamperCodeDescription" | "prepaidAccount" | "prepaidTransaction" | "prepaidRecharge" | "prepaidAlert"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -3402,6 +3630,426 @@ export namespace Prisma {
           }
         }
       }
+      TamperEvent: {
+        payload: Prisma.$TamperEventPayload<ExtArgs>
+        fields: Prisma.TamperEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TamperEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TamperEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>
+          }
+          findFirst: {
+            args: Prisma.TamperEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TamperEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>
+          }
+          findMany: {
+            args: Prisma.TamperEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>[]
+          }
+          create: {
+            args: Prisma.TamperEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>
+          }
+          createMany: {
+            args: Prisma.TamperEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TamperEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>[]
+          }
+          delete: {
+            args: Prisma.TamperEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>
+          }
+          update: {
+            args: Prisma.TamperEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.TamperEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TamperEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TamperEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperEventPayload>
+          }
+          aggregate: {
+            args: Prisma.TamperEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTamperEvent>
+          }
+          groupBy: {
+            args: Prisma.TamperEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TamperEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TamperEventCountArgs<ExtArgs>
+            result: $Utils.Optional<TamperEventCountAggregateOutputType> | number
+          }
+        }
+      }
+      TamperCodeDescription: {
+        payload: Prisma.$TamperCodeDescriptionPayload<ExtArgs>
+        fields: Prisma.TamperCodeDescriptionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TamperCodeDescriptionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TamperCodeDescriptionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>
+          }
+          findFirst: {
+            args: Prisma.TamperCodeDescriptionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TamperCodeDescriptionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>
+          }
+          findMany: {
+            args: Prisma.TamperCodeDescriptionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>[]
+          }
+          create: {
+            args: Prisma.TamperCodeDescriptionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>
+          }
+          createMany: {
+            args: Prisma.TamperCodeDescriptionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TamperCodeDescriptionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>[]
+          }
+          delete: {
+            args: Prisma.TamperCodeDescriptionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>
+          }
+          update: {
+            args: Prisma.TamperCodeDescriptionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>
+          }
+          deleteMany: {
+            args: Prisma.TamperCodeDescriptionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TamperCodeDescriptionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.TamperCodeDescriptionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TamperCodeDescriptionPayload>
+          }
+          aggregate: {
+            args: Prisma.TamperCodeDescriptionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTamperCodeDescription>
+          }
+          groupBy: {
+            args: Prisma.TamperCodeDescriptionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TamperCodeDescriptionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TamperCodeDescriptionCountArgs<ExtArgs>
+            result: $Utils.Optional<TamperCodeDescriptionCountAggregateOutputType> | number
+          }
+        }
+      }
+      PrepaidAccount: {
+        payload: Prisma.$PrepaidAccountPayload<ExtArgs>
+        fields: Prisma.PrepaidAccountFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PrepaidAccountFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PrepaidAccountFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>
+          }
+          findFirst: {
+            args: Prisma.PrepaidAccountFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PrepaidAccountFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>
+          }
+          findMany: {
+            args: Prisma.PrepaidAccountFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>[]
+          }
+          create: {
+            args: Prisma.PrepaidAccountCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>
+          }
+          createMany: {
+            args: Prisma.PrepaidAccountCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PrepaidAccountCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>[]
+          }
+          delete: {
+            args: Prisma.PrepaidAccountDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>
+          }
+          update: {
+            args: Prisma.PrepaidAccountUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>
+          }
+          deleteMany: {
+            args: Prisma.PrepaidAccountDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PrepaidAccountUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PrepaidAccountUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAccountPayload>
+          }
+          aggregate: {
+            args: Prisma.PrepaidAccountAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePrepaidAccount>
+          }
+          groupBy: {
+            args: Prisma.PrepaidAccountGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidAccountGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PrepaidAccountCountArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidAccountCountAggregateOutputType> | number
+          }
+        }
+      }
+      PrepaidTransaction: {
+        payload: Prisma.$PrepaidTransactionPayload<ExtArgs>
+        fields: Prisma.PrepaidTransactionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PrepaidTransactionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PrepaidTransactionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>
+          }
+          findFirst: {
+            args: Prisma.PrepaidTransactionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PrepaidTransactionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>
+          }
+          findMany: {
+            args: Prisma.PrepaidTransactionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>[]
+          }
+          create: {
+            args: Prisma.PrepaidTransactionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>
+          }
+          createMany: {
+            args: Prisma.PrepaidTransactionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PrepaidTransactionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>[]
+          }
+          delete: {
+            args: Prisma.PrepaidTransactionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>
+          }
+          update: {
+            args: Prisma.PrepaidTransactionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>
+          }
+          deleteMany: {
+            args: Prisma.PrepaidTransactionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PrepaidTransactionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PrepaidTransactionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidTransactionPayload>
+          }
+          aggregate: {
+            args: Prisma.PrepaidTransactionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePrepaidTransaction>
+          }
+          groupBy: {
+            args: Prisma.PrepaidTransactionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidTransactionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PrepaidTransactionCountArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidTransactionCountAggregateOutputType> | number
+          }
+        }
+      }
+      PrepaidRecharge: {
+        payload: Prisma.$PrepaidRechargePayload<ExtArgs>
+        fields: Prisma.PrepaidRechargeFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PrepaidRechargeFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PrepaidRechargeFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>
+          }
+          findFirst: {
+            args: Prisma.PrepaidRechargeFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PrepaidRechargeFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>
+          }
+          findMany: {
+            args: Prisma.PrepaidRechargeFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>[]
+          }
+          create: {
+            args: Prisma.PrepaidRechargeCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>
+          }
+          createMany: {
+            args: Prisma.PrepaidRechargeCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PrepaidRechargeCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>[]
+          }
+          delete: {
+            args: Prisma.PrepaidRechargeDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>
+          }
+          update: {
+            args: Prisma.PrepaidRechargeUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>
+          }
+          deleteMany: {
+            args: Prisma.PrepaidRechargeDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PrepaidRechargeUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PrepaidRechargeUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidRechargePayload>
+          }
+          aggregate: {
+            args: Prisma.PrepaidRechargeAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePrepaidRecharge>
+          }
+          groupBy: {
+            args: Prisma.PrepaidRechargeGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidRechargeGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PrepaidRechargeCountArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidRechargeCountAggregateOutputType> | number
+          }
+        }
+      }
+      PrepaidAlert: {
+        payload: Prisma.$PrepaidAlertPayload<ExtArgs>
+        fields: Prisma.PrepaidAlertFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PrepaidAlertFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PrepaidAlertFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>
+          }
+          findFirst: {
+            args: Prisma.PrepaidAlertFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PrepaidAlertFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>
+          }
+          findMany: {
+            args: Prisma.PrepaidAlertFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>[]
+          }
+          create: {
+            args: Prisma.PrepaidAlertCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>
+          }
+          createMany: {
+            args: Prisma.PrepaidAlertCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PrepaidAlertCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>[]
+          }
+          delete: {
+            args: Prisma.PrepaidAlertDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>
+          }
+          update: {
+            args: Prisma.PrepaidAlertUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>
+          }
+          deleteMany: {
+            args: Prisma.PrepaidAlertDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PrepaidAlertUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          upsert: {
+            args: Prisma.PrepaidAlertUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PrepaidAlertPayload>
+          }
+          aggregate: {
+            args: Prisma.PrepaidAlertAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePrepaidAlert>
+          }
+          groupBy: {
+            args: Prisma.PrepaidAlertGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidAlertGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PrepaidAlertCountArgs<ExtArgs>
+            result: $Utils.Optional<PrepaidAlertCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -3853,6 +4501,7 @@ export namespace Prisma {
     bills: number
     notifications: number
     tickets: number
+    prepaidAccounts: number
   }
 
   export type ConsumerCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3861,6 +4510,7 @@ export namespace Prisma {
     bills?: boolean | ConsumerCountOutputTypeCountBillsArgs
     notifications?: boolean | ConsumerCountOutputTypeCountNotificationsArgs
     tickets?: boolean | ConsumerCountOutputTypeCountTicketsArgs
+    prepaidAccounts?: boolean | ConsumerCountOutputTypeCountPrepaidAccountsArgs
   }
 
   // Custom InputTypes
@@ -3909,6 +4559,13 @@ export namespace Prisma {
     where?: TicketWhereInput
   }
 
+  /**
+   * ConsumerCountOutputType without action
+   */
+  export type ConsumerCountOutputTypeCountPrepaidAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidAccountWhereInput
+  }
+
 
   /**
    * Count Type MeterCountOutputType
@@ -3917,6 +4574,7 @@ export namespace Prisma {
   export type MeterCountOutputType = {
     readings: number
     bills: number
+    tamperEvents: number
     currentTransformers: number
     potentialTransformers: number
   }
@@ -3924,6 +4582,7 @@ export namespace Prisma {
   export type MeterCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     readings?: boolean | MeterCountOutputTypeCountReadingsArgs
     bills?: boolean | MeterCountOutputTypeCountBillsArgs
+    tamperEvents?: boolean | MeterCountOutputTypeCountTamperEventsArgs
     currentTransformers?: boolean | MeterCountOutputTypeCountCurrentTransformersArgs
     potentialTransformers?: boolean | MeterCountOutputTypeCountPotentialTransformersArgs
   }
@@ -3956,6 +4615,13 @@ export namespace Prisma {
   /**
    * MeterCountOutputType without action
    */
+  export type MeterCountOutputTypeCountTamperEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TamperEventWhereInput
+  }
+
+  /**
+   * MeterCountOutputType without action
+   */
   export type MeterCountOutputTypeCountCurrentTransformersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CurrentTransformerWhereInput
   }
@@ -3965,6 +4631,37 @@ export namespace Prisma {
    */
   export type MeterCountOutputTypeCountPotentialTransformersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PotentialTransformerWhereInput
+  }
+
+
+  /**
+   * Count Type MeterReadingCountOutputType
+   */
+
+  export type MeterReadingCountOutputType = {
+    prepaidTransactions: number
+  }
+
+  export type MeterReadingCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    prepaidTransactions?: boolean | MeterReadingCountOutputTypeCountPrepaidTransactionsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * MeterReadingCountOutputType without action
+   */
+  export type MeterReadingCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MeterReadingCountOutputType
+     */
+    select?: MeterReadingCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * MeterReadingCountOutputType without action
+   */
+  export type MeterReadingCountOutputTypeCountPrepaidTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidTransactionWhereInput
   }
 
 
@@ -4063,6 +4760,55 @@ export namespace Prisma {
    */
   export type DTRCountOutputTypeCountFaultsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: DTRFaultWhereInput
+  }
+
+
+  /**
+   * Count Type PrepaidAccountCountOutputType
+   */
+
+  export type PrepaidAccountCountOutputType = {
+    transactions: number
+    recharges: number
+    alerts: number
+  }
+
+  export type PrepaidAccountCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    transactions?: boolean | PrepaidAccountCountOutputTypeCountTransactionsArgs
+    recharges?: boolean | PrepaidAccountCountOutputTypeCountRechargesArgs
+    alerts?: boolean | PrepaidAccountCountOutputTypeCountAlertsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PrepaidAccountCountOutputType without action
+   */
+  export type PrepaidAccountCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccountCountOutputType
+     */
+    select?: PrepaidAccountCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PrepaidAccountCountOutputType without action
+   */
+  export type PrepaidAccountCountOutputTypeCountTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidTransactionWhereInput
+  }
+
+  /**
+   * PrepaidAccountCountOutputType without action
+   */
+  export type PrepaidAccountCountOutputTypeCountRechargesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidRechargeWhereInput
+  }
+
+  /**
+   * PrepaidAccountCountOutputType without action
+   */
+  export type PrepaidAccountCountOutputTypeCountAlertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidAlertWhereInput
   }
 
 
@@ -17177,6 +17923,7 @@ export namespace Prisma {
     bills?: boolean | Consumer$billsArgs<ExtArgs>
     notifications?: boolean | Consumer$notificationsArgs<ExtArgs>
     tickets?: boolean | Consumer$ticketsArgs<ExtArgs>
+    prepaidAccounts?: boolean | Consumer$prepaidAccountsArgs<ExtArgs>
     _count?: boolean | ConsumerCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["consumer"]>
 
@@ -17232,6 +17979,7 @@ export namespace Prisma {
     bills?: boolean | Consumer$billsArgs<ExtArgs>
     notifications?: boolean | Consumer$notificationsArgs<ExtArgs>
     tickets?: boolean | Consumer$ticketsArgs<ExtArgs>
+    prepaidAccounts?: boolean | Consumer$prepaidAccountsArgs<ExtArgs>
     _count?: boolean | ConsumerCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ConsumerIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -17247,6 +17995,7 @@ export namespace Prisma {
       bills: Prisma.$BillPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       tickets: Prisma.$TicketPayload<ExtArgs>[]
+      prepaidAccounts: Prisma.$PrepaidAccountPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -17638,6 +18387,7 @@ export namespace Prisma {
     bills<T extends Consumer$billsArgs<ExtArgs> = {}>(args?: Subset<T, Consumer$billsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillPayload<ExtArgs>, T, "findMany"> | Null>
     notifications<T extends Consumer$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, Consumer$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany"> | Null>
     tickets<T extends Consumer$ticketsArgs<ExtArgs> = {}>(args?: Subset<T, Consumer$ticketsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TicketPayload<ExtArgs>, T, "findMany"> | Null>
+    prepaidAccounts<T extends Consumer$prepaidAccountsArgs<ExtArgs> = {}>(args?: Subset<T, Consumer$prepaidAccountsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -18101,6 +18851,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: TicketScalarFieldEnum | TicketScalarFieldEnum[]
+  }
+
+  /**
+   * Consumer.prepaidAccounts
+   */
+  export type Consumer$prepaidAccountsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    where?: PrepaidAccountWhereInput
+    orderBy?: PrepaidAccountOrderByWithRelationInput | PrepaidAccountOrderByWithRelationInput[]
+    cursor?: PrepaidAccountWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrepaidAccountScalarFieldEnum | PrepaidAccountScalarFieldEnum[]
   }
 
   /**
@@ -19440,6 +20210,7 @@ export namespace Prisma {
     location?: boolean | LocationDefaultArgs<ExtArgs>
     readings?: boolean | Meter$readingsArgs<ExtArgs>
     bills?: boolean | Meter$billsArgs<ExtArgs>
+    tamperEvents?: boolean | Meter$tamperEventsArgs<ExtArgs>
     dtr?: boolean | Meter$dtrArgs<ExtArgs>
     currentTransformers?: boolean | Meter$currentTransformersArgs<ExtArgs>
     potentialTransformers?: boolean | Meter$potentialTransformersArgs<ExtArgs>
@@ -19495,6 +20266,7 @@ export namespace Prisma {
     location?: boolean | LocationDefaultArgs<ExtArgs>
     readings?: boolean | Meter$readingsArgs<ExtArgs>
     bills?: boolean | Meter$billsArgs<ExtArgs>
+    tamperEvents?: boolean | Meter$tamperEventsArgs<ExtArgs>
     dtr?: boolean | Meter$dtrArgs<ExtArgs>
     currentTransformers?: boolean | Meter$currentTransformersArgs<ExtArgs>
     potentialTransformers?: boolean | Meter$potentialTransformersArgs<ExtArgs>
@@ -19514,6 +20286,7 @@ export namespace Prisma {
       location: Prisma.$LocationPayload<ExtArgs>
       readings: Prisma.$MeterReadingPayload<ExtArgs>[]
       bills: Prisma.$BillPayload<ExtArgs>[]
+      tamperEvents: Prisma.$TamperEventPayload<ExtArgs>[]
       dtr: Prisma.$DTRPayload<ExtArgs> | null
       currentTransformers: Prisma.$CurrentTransformerPayload<ExtArgs>[]
       potentialTransformers: Prisma.$PotentialTransformerPayload<ExtArgs>[]
@@ -19905,6 +20678,7 @@ export namespace Prisma {
     location<T extends LocationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, LocationDefaultArgs<ExtArgs>>): Prisma__LocationClient<$Result.GetResult<Prisma.$LocationPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     readings<T extends Meter$readingsArgs<ExtArgs> = {}>(args?: Subset<T, Meter$readingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MeterReadingPayload<ExtArgs>, T, "findMany"> | Null>
     bills<T extends Meter$billsArgs<ExtArgs> = {}>(args?: Subset<T, Meter$billsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BillPayload<ExtArgs>, T, "findMany"> | Null>
+    tamperEvents<T extends Meter$tamperEventsArgs<ExtArgs> = {}>(args?: Subset<T, Meter$tamperEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "findMany"> | Null>
     dtr<T extends Meter$dtrArgs<ExtArgs> = {}>(args?: Subset<T, Meter$dtrArgs<ExtArgs>>): Prisma__DTRClient<$Result.GetResult<Prisma.$DTRPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
     currentTransformers<T extends Meter$currentTransformersArgs<ExtArgs> = {}>(args?: Subset<T, Meter$currentTransformersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CurrentTransformerPayload<ExtArgs>, T, "findMany"> | Null>
     potentialTransformers<T extends Meter$potentialTransformersArgs<ExtArgs> = {}>(args?: Subset<T, Meter$potentialTransformersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PotentialTransformerPayload<ExtArgs>, T, "findMany"> | Null>
@@ -20324,6 +21098,26 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: BillScalarFieldEnum | BillScalarFieldEnum[]
+  }
+
+  /**
+   * Meter.tamperEvents
+   */
+  export type Meter$tamperEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    where?: TamperEventWhereInput
+    orderBy?: TamperEventOrderByWithRelationInput | TamperEventOrderByWithRelationInput[]
+    cursor?: TamperEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TamperEventScalarFieldEnum | TamperEventScalarFieldEnum[]
   }
 
   /**
@@ -22031,6 +22825,8 @@ export namespace Prisma {
     updatedAt?: boolean
     meter?: boolean | MeterDefaultArgs<ExtArgs>
     bill?: boolean | MeterReading$billArgs<ExtArgs>
+    prepaidTransactions?: boolean | MeterReading$prepaidTransactionsArgs<ExtArgs>
+    _count?: boolean | MeterReadingCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["meterReading"]>
 
   export type MeterReadingSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -22100,6 +22896,8 @@ export namespace Prisma {
   export type MeterReadingInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meter?: boolean | MeterDefaultArgs<ExtArgs>
     bill?: boolean | MeterReading$billArgs<ExtArgs>
+    prepaidTransactions?: boolean | MeterReading$prepaidTransactionsArgs<ExtArgs>
+    _count?: boolean | MeterReadingCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MeterReadingIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     meter?: boolean | MeterDefaultArgs<ExtArgs>
@@ -22111,6 +22909,7 @@ export namespace Prisma {
     objects: {
       meter: Prisma.$MeterPayload<ExtArgs>
       bill: Prisma.$BillPayload<ExtArgs> | null
+      prepaidTransactions: Prisma.$PrepaidTransactionPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
@@ -22507,6 +23306,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     meter<T extends MeterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MeterDefaultArgs<ExtArgs>>): Prisma__MeterClient<$Result.GetResult<Prisma.$MeterPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
     bill<T extends MeterReading$billArgs<ExtArgs> = {}>(args?: Subset<T, MeterReading$billArgs<ExtArgs>>): Prisma__BillClient<$Result.GetResult<Prisma.$BillPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    prepaidTransactions<T extends MeterReading$prepaidTransactionsArgs<ExtArgs> = {}>(args?: Subset<T, MeterReading$prepaidTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "findMany"> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -22894,6 +23694,26 @@ export namespace Prisma {
      */
     include?: BillInclude<ExtArgs> | null
     where?: BillWhereInput
+  }
+
+  /**
+   * MeterReading.prepaidTransactions
+   */
+  export type MeterReading$prepaidTransactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    where?: PrepaidTransactionWhereInput
+    orderBy?: PrepaidTransactionOrderByWithRelationInput | PrepaidTransactionOrderByWithRelationInput[]
+    cursor?: PrepaidTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrepaidTransactionScalarFieldEnum | PrepaidTransactionScalarFieldEnum[]
   }
 
   /**
@@ -34331,6 +35151,6980 @@ export namespace Prisma {
 
 
   /**
+   * Model TamperEvent
+   */
+
+  export type AggregateTamperEvent = {
+    _count: TamperEventCountAggregateOutputType | null
+    _avg: TamperEventAvgAggregateOutputType | null
+    _sum: TamperEventSumAggregateOutputType | null
+    _min: TamperEventMinAggregateOutputType | null
+    _max: TamperEventMaxAggregateOutputType | null
+  }
+
+  export type TamperEventAvgAggregateOutputType = {
+    id: number | null
+    meterId: number | null
+    avgCurrent: number | null
+    avgVoltage: number | null
+    avgPowerFactor: number | null
+    frequency: number | null
+    kwh: number | null
+    kwhExport: number | null
+    kwhImport: number | null
+    kwhNet: number | null
+    kwhTotal: number | null
+    kwExport: number | null
+    kwImport: number | null
+    kvaExport: number | null
+    kvaImport: number | null
+    voltageR: number | null
+    voltageY: number | null
+    voltageB: number | null
+    currentR: number | null
+    currentY: number | null
+    currentB: number | null
+    powerFactorR: number | null
+    powerFactorY: number | null
+    powerFactorB: number | null
+    tamperCount: number | null
+    param1: number | null
+    param2: number | null
+    param3: number | null
+    param4: number | null
+    param5: number | null
+  }
+
+  export type TamperEventSumAggregateOutputType = {
+    id: number | null
+    meterId: number | null
+    avgCurrent: number | null
+    avgVoltage: number | null
+    avgPowerFactor: number | null
+    frequency: number | null
+    kwh: number | null
+    kwhExport: number | null
+    kwhImport: number | null
+    kwhNet: number | null
+    kwhTotal: number | null
+    kwExport: number | null
+    kwImport: number | null
+    kvaExport: number | null
+    kvaImport: number | null
+    voltageR: number | null
+    voltageY: number | null
+    voltageB: number | null
+    currentR: number | null
+    currentY: number | null
+    currentB: number | null
+    powerFactorR: number | null
+    powerFactorY: number | null
+    powerFactorB: number | null
+    tamperCount: number | null
+    param1: number | null
+    param2: number | null
+    param3: number | null
+    param4: number | null
+    param5: number | null
+  }
+
+  export type TamperEventMinAggregateOutputType = {
+    id: number | null
+    meterId: number | null
+    tamperDatetime: Date | null
+    tamperType: $Enums.TamperType | null
+    tamperStatus: $Enums.TamperStatus | null
+    avgCurrent: number | null
+    avgVoltage: number | null
+    avgPowerFactor: number | null
+    frequency: number | null
+    kwh: number | null
+    kwhExport: number | null
+    kwhImport: number | null
+    kwhNet: number | null
+    kwhTotal: number | null
+    kwExport: number | null
+    kwImport: number | null
+    kvaExport: number | null
+    kvaImport: number | null
+    voltageR: number | null
+    voltageY: number | null
+    voltageB: number | null
+    currentR: number | null
+    currentY: number | null
+    currentB: number | null
+    powerFactorR: number | null
+    powerFactorY: number | null
+    powerFactorB: number | null
+    tamperCount: number | null
+    param1: number | null
+    param2: number | null
+    param3: number | null
+    param4: number | null
+    param5: number | null
+    isProcessed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TamperEventMaxAggregateOutputType = {
+    id: number | null
+    meterId: number | null
+    tamperDatetime: Date | null
+    tamperType: $Enums.TamperType | null
+    tamperStatus: $Enums.TamperStatus | null
+    avgCurrent: number | null
+    avgVoltage: number | null
+    avgPowerFactor: number | null
+    frequency: number | null
+    kwh: number | null
+    kwhExport: number | null
+    kwhImport: number | null
+    kwhNet: number | null
+    kwhTotal: number | null
+    kwExport: number | null
+    kwImport: number | null
+    kvaExport: number | null
+    kvaImport: number | null
+    voltageR: number | null
+    voltageY: number | null
+    voltageB: number | null
+    currentR: number | null
+    currentY: number | null
+    currentB: number | null
+    powerFactorR: number | null
+    powerFactorY: number | null
+    powerFactorB: number | null
+    tamperCount: number | null
+    param1: number | null
+    param2: number | null
+    param3: number | null
+    param4: number | null
+    param5: number | null
+    isProcessed: boolean | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TamperEventCountAggregateOutputType = {
+    id: number
+    meterId: number
+    tamperDatetime: number
+    tamperType: number
+    tamperStatus: number
+    avgCurrent: number
+    avgVoltage: number
+    avgPowerFactor: number
+    frequency: number
+    kwh: number
+    kwhExport: number
+    kwhImport: number
+    kwhNet: number
+    kwhTotal: number
+    kwExport: number
+    kwImport: number
+    kvaExport: number
+    kvaImport: number
+    voltageR: number
+    voltageY: number
+    voltageB: number
+    currentR: number
+    currentY: number
+    currentB: number
+    powerFactorR: number
+    powerFactorY: number
+    powerFactorB: number
+    tamperCount: number
+    param1: number
+    param2: number
+    param3: number
+    param4: number
+    param5: number
+    isProcessed: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TamperEventAvgAggregateInputType = {
+    id?: true
+    meterId?: true
+    avgCurrent?: true
+    avgVoltage?: true
+    avgPowerFactor?: true
+    frequency?: true
+    kwh?: true
+    kwhExport?: true
+    kwhImport?: true
+    kwhNet?: true
+    kwhTotal?: true
+    kwExport?: true
+    kwImport?: true
+    kvaExport?: true
+    kvaImport?: true
+    voltageR?: true
+    voltageY?: true
+    voltageB?: true
+    currentR?: true
+    currentY?: true
+    currentB?: true
+    powerFactorR?: true
+    powerFactorY?: true
+    powerFactorB?: true
+    tamperCount?: true
+    param1?: true
+    param2?: true
+    param3?: true
+    param4?: true
+    param5?: true
+  }
+
+  export type TamperEventSumAggregateInputType = {
+    id?: true
+    meterId?: true
+    avgCurrent?: true
+    avgVoltage?: true
+    avgPowerFactor?: true
+    frequency?: true
+    kwh?: true
+    kwhExport?: true
+    kwhImport?: true
+    kwhNet?: true
+    kwhTotal?: true
+    kwExport?: true
+    kwImport?: true
+    kvaExport?: true
+    kvaImport?: true
+    voltageR?: true
+    voltageY?: true
+    voltageB?: true
+    currentR?: true
+    currentY?: true
+    currentB?: true
+    powerFactorR?: true
+    powerFactorY?: true
+    powerFactorB?: true
+    tamperCount?: true
+    param1?: true
+    param2?: true
+    param3?: true
+    param4?: true
+    param5?: true
+  }
+
+  export type TamperEventMinAggregateInputType = {
+    id?: true
+    meterId?: true
+    tamperDatetime?: true
+    tamperType?: true
+    tamperStatus?: true
+    avgCurrent?: true
+    avgVoltage?: true
+    avgPowerFactor?: true
+    frequency?: true
+    kwh?: true
+    kwhExport?: true
+    kwhImport?: true
+    kwhNet?: true
+    kwhTotal?: true
+    kwExport?: true
+    kwImport?: true
+    kvaExport?: true
+    kvaImport?: true
+    voltageR?: true
+    voltageY?: true
+    voltageB?: true
+    currentR?: true
+    currentY?: true
+    currentB?: true
+    powerFactorR?: true
+    powerFactorY?: true
+    powerFactorB?: true
+    tamperCount?: true
+    param1?: true
+    param2?: true
+    param3?: true
+    param4?: true
+    param5?: true
+    isProcessed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TamperEventMaxAggregateInputType = {
+    id?: true
+    meterId?: true
+    tamperDatetime?: true
+    tamperType?: true
+    tamperStatus?: true
+    avgCurrent?: true
+    avgVoltage?: true
+    avgPowerFactor?: true
+    frequency?: true
+    kwh?: true
+    kwhExport?: true
+    kwhImport?: true
+    kwhNet?: true
+    kwhTotal?: true
+    kwExport?: true
+    kwImport?: true
+    kvaExport?: true
+    kvaImport?: true
+    voltageR?: true
+    voltageY?: true
+    voltageB?: true
+    currentR?: true
+    currentY?: true
+    currentB?: true
+    powerFactorR?: true
+    powerFactorY?: true
+    powerFactorB?: true
+    tamperCount?: true
+    param1?: true
+    param2?: true
+    param3?: true
+    param4?: true
+    param5?: true
+    isProcessed?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TamperEventCountAggregateInputType = {
+    id?: true
+    meterId?: true
+    tamperDatetime?: true
+    tamperType?: true
+    tamperStatus?: true
+    avgCurrent?: true
+    avgVoltage?: true
+    avgPowerFactor?: true
+    frequency?: true
+    kwh?: true
+    kwhExport?: true
+    kwhImport?: true
+    kwhNet?: true
+    kwhTotal?: true
+    kwExport?: true
+    kwImport?: true
+    kvaExport?: true
+    kvaImport?: true
+    voltageR?: true
+    voltageY?: true
+    voltageB?: true
+    currentR?: true
+    currentY?: true
+    currentB?: true
+    powerFactorR?: true
+    powerFactorY?: true
+    powerFactorB?: true
+    tamperCount?: true
+    param1?: true
+    param2?: true
+    param3?: true
+    param4?: true
+    param5?: true
+    isProcessed?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TamperEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TamperEvent to aggregate.
+     */
+    where?: TamperEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperEvents to fetch.
+     */
+    orderBy?: TamperEventOrderByWithRelationInput | TamperEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TamperEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TamperEvents
+    **/
+    _count?: true | TamperEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TamperEventAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TamperEventSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TamperEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TamperEventMaxAggregateInputType
+  }
+
+  export type GetTamperEventAggregateType<T extends TamperEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateTamperEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTamperEvent[P]>
+      : GetScalarType<T[P], AggregateTamperEvent[P]>
+  }
+
+
+
+
+  export type TamperEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TamperEventWhereInput
+    orderBy?: TamperEventOrderByWithAggregationInput | TamperEventOrderByWithAggregationInput[]
+    by: TamperEventScalarFieldEnum[] | TamperEventScalarFieldEnum
+    having?: TamperEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TamperEventCountAggregateInputType | true
+    _avg?: TamperEventAvgAggregateInputType
+    _sum?: TamperEventSumAggregateInputType
+    _min?: TamperEventMinAggregateInputType
+    _max?: TamperEventMaxAggregateInputType
+  }
+
+  export type TamperEventGroupByOutputType = {
+    id: number
+    meterId: number
+    tamperDatetime: Date
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+    avgCurrent: number | null
+    avgVoltage: number | null
+    avgPowerFactor: number | null
+    frequency: number | null
+    kwh: number | null
+    kwhExport: number | null
+    kwhImport: number | null
+    kwhNet: number | null
+    kwhTotal: number | null
+    kwExport: number | null
+    kwImport: number | null
+    kvaExport: number | null
+    kvaImport: number | null
+    voltageR: number | null
+    voltageY: number | null
+    voltageB: number | null
+    currentR: number | null
+    currentY: number | null
+    currentB: number | null
+    powerFactorR: number | null
+    powerFactorY: number | null
+    powerFactorB: number | null
+    tamperCount: number | null
+    param1: number | null
+    param2: number | null
+    param3: number | null
+    param4: number | null
+    param5: number | null
+    isProcessed: boolean
+    createdAt: Date
+    updatedAt: Date
+    _count: TamperEventCountAggregateOutputType | null
+    _avg: TamperEventAvgAggregateOutputType | null
+    _sum: TamperEventSumAggregateOutputType | null
+    _min: TamperEventMinAggregateOutputType | null
+    _max: TamperEventMaxAggregateOutputType | null
+  }
+
+  type GetTamperEventGroupByPayload<T extends TamperEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TamperEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TamperEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TamperEventGroupByOutputType[P]>
+            : GetScalarType<T[P], TamperEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TamperEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    meterId?: boolean
+    tamperDatetime?: boolean
+    tamperType?: boolean
+    tamperStatus?: boolean
+    avgCurrent?: boolean
+    avgVoltage?: boolean
+    avgPowerFactor?: boolean
+    frequency?: boolean
+    kwh?: boolean
+    kwhExport?: boolean
+    kwhImport?: boolean
+    kwhNet?: boolean
+    kwhTotal?: boolean
+    kwExport?: boolean
+    kwImport?: boolean
+    kvaExport?: boolean
+    kvaImport?: boolean
+    voltageR?: boolean
+    voltageY?: boolean
+    voltageB?: boolean
+    currentR?: boolean
+    currentY?: boolean
+    currentB?: boolean
+    powerFactorR?: boolean
+    powerFactorY?: boolean
+    powerFactorB?: boolean
+    tamperCount?: boolean
+    param1?: boolean
+    param2?: boolean
+    param3?: boolean
+    param4?: boolean
+    param5?: boolean
+    isProcessed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    meter?: boolean | MeterDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tamperEvent"]>
+
+  export type TamperEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    meterId?: boolean
+    tamperDatetime?: boolean
+    tamperType?: boolean
+    tamperStatus?: boolean
+    avgCurrent?: boolean
+    avgVoltage?: boolean
+    avgPowerFactor?: boolean
+    frequency?: boolean
+    kwh?: boolean
+    kwhExport?: boolean
+    kwhImport?: boolean
+    kwhNet?: boolean
+    kwhTotal?: boolean
+    kwExport?: boolean
+    kwImport?: boolean
+    kvaExport?: boolean
+    kvaImport?: boolean
+    voltageR?: boolean
+    voltageY?: boolean
+    voltageB?: boolean
+    currentR?: boolean
+    currentY?: boolean
+    currentB?: boolean
+    powerFactorR?: boolean
+    powerFactorY?: boolean
+    powerFactorB?: boolean
+    tamperCount?: boolean
+    param1?: boolean
+    param2?: boolean
+    param3?: boolean
+    param4?: boolean
+    param5?: boolean
+    isProcessed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    meter?: boolean | MeterDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["tamperEvent"]>
+
+  export type TamperEventSelectScalar = {
+    id?: boolean
+    meterId?: boolean
+    tamperDatetime?: boolean
+    tamperType?: boolean
+    tamperStatus?: boolean
+    avgCurrent?: boolean
+    avgVoltage?: boolean
+    avgPowerFactor?: boolean
+    frequency?: boolean
+    kwh?: boolean
+    kwhExport?: boolean
+    kwhImport?: boolean
+    kwhNet?: boolean
+    kwhTotal?: boolean
+    kwExport?: boolean
+    kwImport?: boolean
+    kvaExport?: boolean
+    kvaImport?: boolean
+    voltageR?: boolean
+    voltageY?: boolean
+    voltageB?: boolean
+    currentR?: boolean
+    currentY?: boolean
+    currentB?: boolean
+    powerFactorR?: boolean
+    powerFactorY?: boolean
+    powerFactorB?: boolean
+    tamperCount?: boolean
+    param1?: boolean
+    param2?: boolean
+    param3?: boolean
+    param4?: boolean
+    param5?: boolean
+    isProcessed?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TamperEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    meter?: boolean | MeterDefaultArgs<ExtArgs>
+  }
+  export type TamperEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    meter?: boolean | MeterDefaultArgs<ExtArgs>
+  }
+
+  export type $TamperEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TamperEvent"
+    objects: {
+      meter: Prisma.$MeterPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      meterId: number
+      tamperDatetime: Date
+      tamperType: $Enums.TamperType
+      tamperStatus: $Enums.TamperStatus
+      avgCurrent: number | null
+      avgVoltage: number | null
+      avgPowerFactor: number | null
+      frequency: number | null
+      kwh: number | null
+      kwhExport: number | null
+      kwhImport: number | null
+      kwhNet: number | null
+      kwhTotal: number | null
+      kwExport: number | null
+      kwImport: number | null
+      kvaExport: number | null
+      kvaImport: number | null
+      voltageR: number | null
+      voltageY: number | null
+      voltageB: number | null
+      currentR: number | null
+      currentY: number | null
+      currentB: number | null
+      powerFactorR: number | null
+      powerFactorY: number | null
+      powerFactorB: number | null
+      tamperCount: number | null
+      param1: number | null
+      param2: number | null
+      param3: number | null
+      param4: number | null
+      param5: number | null
+      isProcessed: boolean
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tamperEvent"]>
+    composites: {}
+  }
+
+  type TamperEventGetPayload<S extends boolean | null | undefined | TamperEventDefaultArgs> = $Result.GetResult<Prisma.$TamperEventPayload, S>
+
+  type TamperEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TamperEventFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TamperEventCountAggregateInputType | true
+    }
+
+  export interface TamperEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TamperEvent'], meta: { name: 'TamperEvent' } }
+    /**
+     * Find zero or one TamperEvent that matches the filter.
+     * @param {TamperEventFindUniqueArgs} args - Arguments to find a TamperEvent
+     * @example
+     * // Get one TamperEvent
+     * const tamperEvent = await prisma.tamperEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TamperEventFindUniqueArgs>(args: SelectSubset<T, TamperEventFindUniqueArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one TamperEvent that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {TamperEventFindUniqueOrThrowArgs} args - Arguments to find a TamperEvent
+     * @example
+     * // Get one TamperEvent
+     * const tamperEvent = await prisma.tamperEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TamperEventFindUniqueOrThrowArgs>(args: SelectSubset<T, TamperEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first TamperEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperEventFindFirstArgs} args - Arguments to find a TamperEvent
+     * @example
+     * // Get one TamperEvent
+     * const tamperEvent = await prisma.tamperEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TamperEventFindFirstArgs>(args?: SelectSubset<T, TamperEventFindFirstArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first TamperEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperEventFindFirstOrThrowArgs} args - Arguments to find a TamperEvent
+     * @example
+     * // Get one TamperEvent
+     * const tamperEvent = await prisma.tamperEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TamperEventFindFirstOrThrowArgs>(args?: SelectSubset<T, TamperEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more TamperEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TamperEvents
+     * const tamperEvents = await prisma.tamperEvent.findMany()
+     * 
+     * // Get first 10 TamperEvents
+     * const tamperEvents = await prisma.tamperEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tamperEventWithIdOnly = await prisma.tamperEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TamperEventFindManyArgs>(args?: SelectSubset<T, TamperEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a TamperEvent.
+     * @param {TamperEventCreateArgs} args - Arguments to create a TamperEvent.
+     * @example
+     * // Create one TamperEvent
+     * const TamperEvent = await prisma.tamperEvent.create({
+     *   data: {
+     *     // ... data to create a TamperEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends TamperEventCreateArgs>(args: SelectSubset<T, TamperEventCreateArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many TamperEvents.
+     * @param {TamperEventCreateManyArgs} args - Arguments to create many TamperEvents.
+     * @example
+     * // Create many TamperEvents
+     * const tamperEvent = await prisma.tamperEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TamperEventCreateManyArgs>(args?: SelectSubset<T, TamperEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TamperEvents and returns the data saved in the database.
+     * @param {TamperEventCreateManyAndReturnArgs} args - Arguments to create many TamperEvents.
+     * @example
+     * // Create many TamperEvents
+     * const tamperEvent = await prisma.tamperEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TamperEvents and only return the `id`
+     * const tamperEventWithIdOnly = await prisma.tamperEvent.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TamperEventCreateManyAndReturnArgs>(args?: SelectSubset<T, TamperEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a TamperEvent.
+     * @param {TamperEventDeleteArgs} args - Arguments to delete one TamperEvent.
+     * @example
+     * // Delete one TamperEvent
+     * const TamperEvent = await prisma.tamperEvent.delete({
+     *   where: {
+     *     // ... filter to delete one TamperEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TamperEventDeleteArgs>(args: SelectSubset<T, TamperEventDeleteArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one TamperEvent.
+     * @param {TamperEventUpdateArgs} args - Arguments to update one TamperEvent.
+     * @example
+     * // Update one TamperEvent
+     * const tamperEvent = await prisma.tamperEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TamperEventUpdateArgs>(args: SelectSubset<T, TamperEventUpdateArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more TamperEvents.
+     * @param {TamperEventDeleteManyArgs} args - Arguments to filter TamperEvents to delete.
+     * @example
+     * // Delete a few TamperEvents
+     * const { count } = await prisma.tamperEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TamperEventDeleteManyArgs>(args?: SelectSubset<T, TamperEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TamperEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TamperEvents
+     * const tamperEvent = await prisma.tamperEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TamperEventUpdateManyArgs>(args: SelectSubset<T, TamperEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TamperEvent.
+     * @param {TamperEventUpsertArgs} args - Arguments to update or create a TamperEvent.
+     * @example
+     * // Update or create a TamperEvent
+     * const tamperEvent = await prisma.tamperEvent.upsert({
+     *   create: {
+     *     // ... data to create a TamperEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TamperEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TamperEventUpsertArgs>(args: SelectSubset<T, TamperEventUpsertArgs<ExtArgs>>): Prisma__TamperEventClient<$Result.GetResult<Prisma.$TamperEventPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of TamperEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperEventCountArgs} args - Arguments to filter TamperEvents to count.
+     * @example
+     * // Count the number of TamperEvents
+     * const count = await prisma.tamperEvent.count({
+     *   where: {
+     *     // ... the filter for the TamperEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends TamperEventCountArgs>(
+      args?: Subset<T, TamperEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TamperEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TamperEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TamperEventAggregateArgs>(args: Subset<T, TamperEventAggregateArgs>): Prisma.PrismaPromise<GetTamperEventAggregateType<T>>
+
+    /**
+     * Group by TamperEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TamperEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TamperEventGroupByArgs['orderBy'] }
+        : { orderBy?: TamperEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TamperEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTamperEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TamperEvent model
+   */
+  readonly fields: TamperEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TamperEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TamperEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    meter<T extends MeterDefaultArgs<ExtArgs> = {}>(args?: Subset<T, MeterDefaultArgs<ExtArgs>>): Prisma__MeterClient<$Result.GetResult<Prisma.$MeterPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TamperEvent model
+   */ 
+  interface TamperEventFieldRefs {
+    readonly id: FieldRef<"TamperEvent", 'Int'>
+    readonly meterId: FieldRef<"TamperEvent", 'Int'>
+    readonly tamperDatetime: FieldRef<"TamperEvent", 'DateTime'>
+    readonly tamperType: FieldRef<"TamperEvent", 'TamperType'>
+    readonly tamperStatus: FieldRef<"TamperEvent", 'TamperStatus'>
+    readonly avgCurrent: FieldRef<"TamperEvent", 'Float'>
+    readonly avgVoltage: FieldRef<"TamperEvent", 'Float'>
+    readonly avgPowerFactor: FieldRef<"TamperEvent", 'Float'>
+    readonly frequency: FieldRef<"TamperEvent", 'Float'>
+    readonly kwh: FieldRef<"TamperEvent", 'Float'>
+    readonly kwhExport: FieldRef<"TamperEvent", 'Float'>
+    readonly kwhImport: FieldRef<"TamperEvent", 'Float'>
+    readonly kwhNet: FieldRef<"TamperEvent", 'Float'>
+    readonly kwhTotal: FieldRef<"TamperEvent", 'Float'>
+    readonly kwExport: FieldRef<"TamperEvent", 'Float'>
+    readonly kwImport: FieldRef<"TamperEvent", 'Float'>
+    readonly kvaExport: FieldRef<"TamperEvent", 'Float'>
+    readonly kvaImport: FieldRef<"TamperEvent", 'Float'>
+    readonly voltageR: FieldRef<"TamperEvent", 'Float'>
+    readonly voltageY: FieldRef<"TamperEvent", 'Float'>
+    readonly voltageB: FieldRef<"TamperEvent", 'Float'>
+    readonly currentR: FieldRef<"TamperEvent", 'Float'>
+    readonly currentY: FieldRef<"TamperEvent", 'Float'>
+    readonly currentB: FieldRef<"TamperEvent", 'Float'>
+    readonly powerFactorR: FieldRef<"TamperEvent", 'Float'>
+    readonly powerFactorY: FieldRef<"TamperEvent", 'Float'>
+    readonly powerFactorB: FieldRef<"TamperEvent", 'Float'>
+    readonly tamperCount: FieldRef<"TamperEvent", 'Int'>
+    readonly param1: FieldRef<"TamperEvent", 'Float'>
+    readonly param2: FieldRef<"TamperEvent", 'Float'>
+    readonly param3: FieldRef<"TamperEvent", 'Float'>
+    readonly param4: FieldRef<"TamperEvent", 'Float'>
+    readonly param5: FieldRef<"TamperEvent", 'Float'>
+    readonly isProcessed: FieldRef<"TamperEvent", 'Boolean'>
+    readonly createdAt: FieldRef<"TamperEvent", 'DateTime'>
+    readonly updatedAt: FieldRef<"TamperEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TamperEvent findUnique
+   */
+  export type TamperEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TamperEvent to fetch.
+     */
+    where: TamperEventWhereUniqueInput
+  }
+
+  /**
+   * TamperEvent findUniqueOrThrow
+   */
+  export type TamperEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TamperEvent to fetch.
+     */
+    where: TamperEventWhereUniqueInput
+  }
+
+  /**
+   * TamperEvent findFirst
+   */
+  export type TamperEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TamperEvent to fetch.
+     */
+    where?: TamperEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperEvents to fetch.
+     */
+    orderBy?: TamperEventOrderByWithRelationInput | TamperEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TamperEvents.
+     */
+    cursor?: TamperEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TamperEvents.
+     */
+    distinct?: TamperEventScalarFieldEnum | TamperEventScalarFieldEnum[]
+  }
+
+  /**
+   * TamperEvent findFirstOrThrow
+   */
+  export type TamperEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TamperEvent to fetch.
+     */
+    where?: TamperEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperEvents to fetch.
+     */
+    orderBy?: TamperEventOrderByWithRelationInput | TamperEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TamperEvents.
+     */
+    cursor?: TamperEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TamperEvents.
+     */
+    distinct?: TamperEventScalarFieldEnum | TamperEventScalarFieldEnum[]
+  }
+
+  /**
+   * TamperEvent findMany
+   */
+  export type TamperEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TamperEvents to fetch.
+     */
+    where?: TamperEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperEvents to fetch.
+     */
+    orderBy?: TamperEventOrderByWithRelationInput | TamperEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TamperEvents.
+     */
+    cursor?: TamperEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperEvents.
+     */
+    skip?: number
+    distinct?: TamperEventScalarFieldEnum | TamperEventScalarFieldEnum[]
+  }
+
+  /**
+   * TamperEvent create
+   */
+  export type TamperEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TamperEvent.
+     */
+    data: XOR<TamperEventCreateInput, TamperEventUncheckedCreateInput>
+  }
+
+  /**
+   * TamperEvent createMany
+   */
+  export type TamperEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TamperEvents.
+     */
+    data: TamperEventCreateManyInput | TamperEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TamperEvent createManyAndReturn
+   */
+  export type TamperEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many TamperEvents.
+     */
+    data: TamperEventCreateManyInput | TamperEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TamperEvent update
+   */
+  export type TamperEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TamperEvent.
+     */
+    data: XOR<TamperEventUpdateInput, TamperEventUncheckedUpdateInput>
+    /**
+     * Choose, which TamperEvent to update.
+     */
+    where: TamperEventWhereUniqueInput
+  }
+
+  /**
+   * TamperEvent updateMany
+   */
+  export type TamperEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TamperEvents.
+     */
+    data: XOR<TamperEventUpdateManyMutationInput, TamperEventUncheckedUpdateManyInput>
+    /**
+     * Filter which TamperEvents to update
+     */
+    where?: TamperEventWhereInput
+  }
+
+  /**
+   * TamperEvent upsert
+   */
+  export type TamperEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TamperEvent to update in case it exists.
+     */
+    where: TamperEventWhereUniqueInput
+    /**
+     * In case the TamperEvent found by the `where` argument doesn't exist, create a new TamperEvent with this data.
+     */
+    create: XOR<TamperEventCreateInput, TamperEventUncheckedCreateInput>
+    /**
+     * In case the TamperEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TamperEventUpdateInput, TamperEventUncheckedUpdateInput>
+  }
+
+  /**
+   * TamperEvent delete
+   */
+  export type TamperEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+    /**
+     * Filter which TamperEvent to delete.
+     */
+    where: TamperEventWhereUniqueInput
+  }
+
+  /**
+   * TamperEvent deleteMany
+   */
+  export type TamperEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TamperEvents to delete
+     */
+    where?: TamperEventWhereInput
+  }
+
+  /**
+   * TamperEvent without action
+   */
+  export type TamperEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperEvent
+     */
+    select?: TamperEventSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TamperEventInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TamperCodeDescription
+   */
+
+  export type AggregateTamperCodeDescription = {
+    _count: TamperCodeDescriptionCountAggregateOutputType | null
+    _avg: TamperCodeDescriptionAvgAggregateOutputType | null
+    _sum: TamperCodeDescriptionSumAggregateOutputType | null
+    _min: TamperCodeDescriptionMinAggregateOutputType | null
+    _max: TamperCodeDescriptionMaxAggregateOutputType | null
+  }
+
+  export type TamperCodeDescriptionAvgAggregateOutputType = {
+    id: number | null
+    tamperCode: number | null
+  }
+
+  export type TamperCodeDescriptionSumAggregateOutputType = {
+    id: number | null
+    tamperCode: number | null
+  }
+
+  export type TamperCodeDescriptionMinAggregateOutputType = {
+    id: number | null
+    tamperCode: number | null
+    tamperDesc: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TamperCodeDescriptionMaxAggregateOutputType = {
+    id: number | null
+    tamperCode: number | null
+    tamperDesc: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TamperCodeDescriptionCountAggregateOutputType = {
+    id: number
+    tamperCode: number
+    tamperDesc: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TamperCodeDescriptionAvgAggregateInputType = {
+    id?: true
+    tamperCode?: true
+  }
+
+  export type TamperCodeDescriptionSumAggregateInputType = {
+    id?: true
+    tamperCode?: true
+  }
+
+  export type TamperCodeDescriptionMinAggregateInputType = {
+    id?: true
+    tamperCode?: true
+    tamperDesc?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TamperCodeDescriptionMaxAggregateInputType = {
+    id?: true
+    tamperCode?: true
+    tamperDesc?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TamperCodeDescriptionCountAggregateInputType = {
+    id?: true
+    tamperCode?: true
+    tamperDesc?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TamperCodeDescriptionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TamperCodeDescription to aggregate.
+     */
+    where?: TamperCodeDescriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperCodeDescriptions to fetch.
+     */
+    orderBy?: TamperCodeDescriptionOrderByWithRelationInput | TamperCodeDescriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TamperCodeDescriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperCodeDescriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperCodeDescriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TamperCodeDescriptions
+    **/
+    _count?: true | TamperCodeDescriptionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: TamperCodeDescriptionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: TamperCodeDescriptionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TamperCodeDescriptionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TamperCodeDescriptionMaxAggregateInputType
+  }
+
+  export type GetTamperCodeDescriptionAggregateType<T extends TamperCodeDescriptionAggregateArgs> = {
+        [P in keyof T & keyof AggregateTamperCodeDescription]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTamperCodeDescription[P]>
+      : GetScalarType<T[P], AggregateTamperCodeDescription[P]>
+  }
+
+
+
+
+  export type TamperCodeDescriptionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TamperCodeDescriptionWhereInput
+    orderBy?: TamperCodeDescriptionOrderByWithAggregationInput | TamperCodeDescriptionOrderByWithAggregationInput[]
+    by: TamperCodeDescriptionScalarFieldEnum[] | TamperCodeDescriptionScalarFieldEnum
+    having?: TamperCodeDescriptionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TamperCodeDescriptionCountAggregateInputType | true
+    _avg?: TamperCodeDescriptionAvgAggregateInputType
+    _sum?: TamperCodeDescriptionSumAggregateInputType
+    _min?: TamperCodeDescriptionMinAggregateInputType
+    _max?: TamperCodeDescriptionMaxAggregateInputType
+  }
+
+  export type TamperCodeDescriptionGroupByOutputType = {
+    id: number
+    tamperCode: number
+    tamperDesc: string
+    createdAt: Date
+    updatedAt: Date
+    _count: TamperCodeDescriptionCountAggregateOutputType | null
+    _avg: TamperCodeDescriptionAvgAggregateOutputType | null
+    _sum: TamperCodeDescriptionSumAggregateOutputType | null
+    _min: TamperCodeDescriptionMinAggregateOutputType | null
+    _max: TamperCodeDescriptionMaxAggregateOutputType | null
+  }
+
+  type GetTamperCodeDescriptionGroupByPayload<T extends TamperCodeDescriptionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TamperCodeDescriptionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TamperCodeDescriptionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TamperCodeDescriptionGroupByOutputType[P]>
+            : GetScalarType<T[P], TamperCodeDescriptionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TamperCodeDescriptionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tamperCode?: boolean
+    tamperDesc?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tamperCodeDescription"]>
+
+  export type TamperCodeDescriptionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    tamperCode?: boolean
+    tamperDesc?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["tamperCodeDescription"]>
+
+  export type TamperCodeDescriptionSelectScalar = {
+    id?: boolean
+    tamperCode?: boolean
+    tamperDesc?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+
+  export type $TamperCodeDescriptionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TamperCodeDescription"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      tamperCode: number
+      tamperDesc: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["tamperCodeDescription"]>
+    composites: {}
+  }
+
+  type TamperCodeDescriptionGetPayload<S extends boolean | null | undefined | TamperCodeDescriptionDefaultArgs> = $Result.GetResult<Prisma.$TamperCodeDescriptionPayload, S>
+
+  type TamperCodeDescriptionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<TamperCodeDescriptionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: TamperCodeDescriptionCountAggregateInputType | true
+    }
+
+  export interface TamperCodeDescriptionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TamperCodeDescription'], meta: { name: 'TamperCodeDescription' } }
+    /**
+     * Find zero or one TamperCodeDescription that matches the filter.
+     * @param {TamperCodeDescriptionFindUniqueArgs} args - Arguments to find a TamperCodeDescription
+     * @example
+     * // Get one TamperCodeDescription
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TamperCodeDescriptionFindUniqueArgs>(args: SelectSubset<T, TamperCodeDescriptionFindUniqueArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one TamperCodeDescription that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {TamperCodeDescriptionFindUniqueOrThrowArgs} args - Arguments to find a TamperCodeDescription
+     * @example
+     * // Get one TamperCodeDescription
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TamperCodeDescriptionFindUniqueOrThrowArgs>(args: SelectSubset<T, TamperCodeDescriptionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first TamperCodeDescription that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperCodeDescriptionFindFirstArgs} args - Arguments to find a TamperCodeDescription
+     * @example
+     * // Get one TamperCodeDescription
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TamperCodeDescriptionFindFirstArgs>(args?: SelectSubset<T, TamperCodeDescriptionFindFirstArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first TamperCodeDescription that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperCodeDescriptionFindFirstOrThrowArgs} args - Arguments to find a TamperCodeDescription
+     * @example
+     * // Get one TamperCodeDescription
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TamperCodeDescriptionFindFirstOrThrowArgs>(args?: SelectSubset<T, TamperCodeDescriptionFindFirstOrThrowArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more TamperCodeDescriptions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperCodeDescriptionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TamperCodeDescriptions
+     * const tamperCodeDescriptions = await prisma.tamperCodeDescription.findMany()
+     * 
+     * // Get first 10 TamperCodeDescriptions
+     * const tamperCodeDescriptions = await prisma.tamperCodeDescription.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const tamperCodeDescriptionWithIdOnly = await prisma.tamperCodeDescription.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TamperCodeDescriptionFindManyArgs>(args?: SelectSubset<T, TamperCodeDescriptionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a TamperCodeDescription.
+     * @param {TamperCodeDescriptionCreateArgs} args - Arguments to create a TamperCodeDescription.
+     * @example
+     * // Create one TamperCodeDescription
+     * const TamperCodeDescription = await prisma.tamperCodeDescription.create({
+     *   data: {
+     *     // ... data to create a TamperCodeDescription
+     *   }
+     * })
+     * 
+     */
+    create<T extends TamperCodeDescriptionCreateArgs>(args: SelectSubset<T, TamperCodeDescriptionCreateArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many TamperCodeDescriptions.
+     * @param {TamperCodeDescriptionCreateManyArgs} args - Arguments to create many TamperCodeDescriptions.
+     * @example
+     * // Create many TamperCodeDescriptions
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TamperCodeDescriptionCreateManyArgs>(args?: SelectSubset<T, TamperCodeDescriptionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TamperCodeDescriptions and returns the data saved in the database.
+     * @param {TamperCodeDescriptionCreateManyAndReturnArgs} args - Arguments to create many TamperCodeDescriptions.
+     * @example
+     * // Create many TamperCodeDescriptions
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TamperCodeDescriptions and only return the `id`
+     * const tamperCodeDescriptionWithIdOnly = await prisma.tamperCodeDescription.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TamperCodeDescriptionCreateManyAndReturnArgs>(args?: SelectSubset<T, TamperCodeDescriptionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a TamperCodeDescription.
+     * @param {TamperCodeDescriptionDeleteArgs} args - Arguments to delete one TamperCodeDescription.
+     * @example
+     * // Delete one TamperCodeDescription
+     * const TamperCodeDescription = await prisma.tamperCodeDescription.delete({
+     *   where: {
+     *     // ... filter to delete one TamperCodeDescription
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TamperCodeDescriptionDeleteArgs>(args: SelectSubset<T, TamperCodeDescriptionDeleteArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one TamperCodeDescription.
+     * @param {TamperCodeDescriptionUpdateArgs} args - Arguments to update one TamperCodeDescription.
+     * @example
+     * // Update one TamperCodeDescription
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TamperCodeDescriptionUpdateArgs>(args: SelectSubset<T, TamperCodeDescriptionUpdateArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more TamperCodeDescriptions.
+     * @param {TamperCodeDescriptionDeleteManyArgs} args - Arguments to filter TamperCodeDescriptions to delete.
+     * @example
+     * // Delete a few TamperCodeDescriptions
+     * const { count } = await prisma.tamperCodeDescription.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TamperCodeDescriptionDeleteManyArgs>(args?: SelectSubset<T, TamperCodeDescriptionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TamperCodeDescriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperCodeDescriptionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TamperCodeDescriptions
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TamperCodeDescriptionUpdateManyArgs>(args: SelectSubset<T, TamperCodeDescriptionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one TamperCodeDescription.
+     * @param {TamperCodeDescriptionUpsertArgs} args - Arguments to update or create a TamperCodeDescription.
+     * @example
+     * // Update or create a TamperCodeDescription
+     * const tamperCodeDescription = await prisma.tamperCodeDescription.upsert({
+     *   create: {
+     *     // ... data to create a TamperCodeDescription
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TamperCodeDescription we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TamperCodeDescriptionUpsertArgs>(args: SelectSubset<T, TamperCodeDescriptionUpsertArgs<ExtArgs>>): Prisma__TamperCodeDescriptionClient<$Result.GetResult<Prisma.$TamperCodeDescriptionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of TamperCodeDescriptions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperCodeDescriptionCountArgs} args - Arguments to filter TamperCodeDescriptions to count.
+     * @example
+     * // Count the number of TamperCodeDescriptions
+     * const count = await prisma.tamperCodeDescription.count({
+     *   where: {
+     *     // ... the filter for the TamperCodeDescriptions we want to count
+     *   }
+     * })
+    **/
+    count<T extends TamperCodeDescriptionCountArgs>(
+      args?: Subset<T, TamperCodeDescriptionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TamperCodeDescriptionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TamperCodeDescription.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperCodeDescriptionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TamperCodeDescriptionAggregateArgs>(args: Subset<T, TamperCodeDescriptionAggregateArgs>): Prisma.PrismaPromise<GetTamperCodeDescriptionAggregateType<T>>
+
+    /**
+     * Group by TamperCodeDescription.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TamperCodeDescriptionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TamperCodeDescriptionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TamperCodeDescriptionGroupByArgs['orderBy'] }
+        : { orderBy?: TamperCodeDescriptionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TamperCodeDescriptionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTamperCodeDescriptionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TamperCodeDescription model
+   */
+  readonly fields: TamperCodeDescriptionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TamperCodeDescription.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TamperCodeDescriptionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TamperCodeDescription model
+   */ 
+  interface TamperCodeDescriptionFieldRefs {
+    readonly id: FieldRef<"TamperCodeDescription", 'Int'>
+    readonly tamperCode: FieldRef<"TamperCodeDescription", 'Int'>
+    readonly tamperDesc: FieldRef<"TamperCodeDescription", 'String'>
+    readonly createdAt: FieldRef<"TamperCodeDescription", 'DateTime'>
+    readonly updatedAt: FieldRef<"TamperCodeDescription", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TamperCodeDescription findUnique
+   */
+  export type TamperCodeDescriptionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * Filter, which TamperCodeDescription to fetch.
+     */
+    where: TamperCodeDescriptionWhereUniqueInput
+  }
+
+  /**
+   * TamperCodeDescription findUniqueOrThrow
+   */
+  export type TamperCodeDescriptionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * Filter, which TamperCodeDescription to fetch.
+     */
+    where: TamperCodeDescriptionWhereUniqueInput
+  }
+
+  /**
+   * TamperCodeDescription findFirst
+   */
+  export type TamperCodeDescriptionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * Filter, which TamperCodeDescription to fetch.
+     */
+    where?: TamperCodeDescriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperCodeDescriptions to fetch.
+     */
+    orderBy?: TamperCodeDescriptionOrderByWithRelationInput | TamperCodeDescriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TamperCodeDescriptions.
+     */
+    cursor?: TamperCodeDescriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperCodeDescriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperCodeDescriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TamperCodeDescriptions.
+     */
+    distinct?: TamperCodeDescriptionScalarFieldEnum | TamperCodeDescriptionScalarFieldEnum[]
+  }
+
+  /**
+   * TamperCodeDescription findFirstOrThrow
+   */
+  export type TamperCodeDescriptionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * Filter, which TamperCodeDescription to fetch.
+     */
+    where?: TamperCodeDescriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperCodeDescriptions to fetch.
+     */
+    orderBy?: TamperCodeDescriptionOrderByWithRelationInput | TamperCodeDescriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TamperCodeDescriptions.
+     */
+    cursor?: TamperCodeDescriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperCodeDescriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperCodeDescriptions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TamperCodeDescriptions.
+     */
+    distinct?: TamperCodeDescriptionScalarFieldEnum | TamperCodeDescriptionScalarFieldEnum[]
+  }
+
+  /**
+   * TamperCodeDescription findMany
+   */
+  export type TamperCodeDescriptionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * Filter, which TamperCodeDescriptions to fetch.
+     */
+    where?: TamperCodeDescriptionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TamperCodeDescriptions to fetch.
+     */
+    orderBy?: TamperCodeDescriptionOrderByWithRelationInput | TamperCodeDescriptionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TamperCodeDescriptions.
+     */
+    cursor?: TamperCodeDescriptionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TamperCodeDescriptions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TamperCodeDescriptions.
+     */
+    skip?: number
+    distinct?: TamperCodeDescriptionScalarFieldEnum | TamperCodeDescriptionScalarFieldEnum[]
+  }
+
+  /**
+   * TamperCodeDescription create
+   */
+  export type TamperCodeDescriptionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * The data needed to create a TamperCodeDescription.
+     */
+    data: XOR<TamperCodeDescriptionCreateInput, TamperCodeDescriptionUncheckedCreateInput>
+  }
+
+  /**
+   * TamperCodeDescription createMany
+   */
+  export type TamperCodeDescriptionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TamperCodeDescriptions.
+     */
+    data: TamperCodeDescriptionCreateManyInput | TamperCodeDescriptionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TamperCodeDescription createManyAndReturn
+   */
+  export type TamperCodeDescriptionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many TamperCodeDescriptions.
+     */
+    data: TamperCodeDescriptionCreateManyInput | TamperCodeDescriptionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TamperCodeDescription update
+   */
+  export type TamperCodeDescriptionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * The data needed to update a TamperCodeDescription.
+     */
+    data: XOR<TamperCodeDescriptionUpdateInput, TamperCodeDescriptionUncheckedUpdateInput>
+    /**
+     * Choose, which TamperCodeDescription to update.
+     */
+    where: TamperCodeDescriptionWhereUniqueInput
+  }
+
+  /**
+   * TamperCodeDescription updateMany
+   */
+  export type TamperCodeDescriptionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TamperCodeDescriptions.
+     */
+    data: XOR<TamperCodeDescriptionUpdateManyMutationInput, TamperCodeDescriptionUncheckedUpdateManyInput>
+    /**
+     * Filter which TamperCodeDescriptions to update
+     */
+    where?: TamperCodeDescriptionWhereInput
+  }
+
+  /**
+   * TamperCodeDescription upsert
+   */
+  export type TamperCodeDescriptionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * The filter to search for the TamperCodeDescription to update in case it exists.
+     */
+    where: TamperCodeDescriptionWhereUniqueInput
+    /**
+     * In case the TamperCodeDescription found by the `where` argument doesn't exist, create a new TamperCodeDescription with this data.
+     */
+    create: XOR<TamperCodeDescriptionCreateInput, TamperCodeDescriptionUncheckedCreateInput>
+    /**
+     * In case the TamperCodeDescription was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TamperCodeDescriptionUpdateInput, TamperCodeDescriptionUncheckedUpdateInput>
+  }
+
+  /**
+   * TamperCodeDescription delete
+   */
+  export type TamperCodeDescriptionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+    /**
+     * Filter which TamperCodeDescription to delete.
+     */
+    where: TamperCodeDescriptionWhereUniqueInput
+  }
+
+  /**
+   * TamperCodeDescription deleteMany
+   */
+  export type TamperCodeDescriptionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TamperCodeDescriptions to delete
+     */
+    where?: TamperCodeDescriptionWhereInput
+  }
+
+  /**
+   * TamperCodeDescription without action
+   */
+  export type TamperCodeDescriptionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TamperCodeDescription
+     */
+    select?: TamperCodeDescriptionSelect<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PrepaidAccount
+   */
+
+  export type AggregatePrepaidAccount = {
+    _count: PrepaidAccountCountAggregateOutputType | null
+    _avg: PrepaidAccountAvgAggregateOutputType | null
+    _sum: PrepaidAccountSumAggregateOutputType | null
+    _min: PrepaidAccountMinAggregateOutputType | null
+    _max: PrepaidAccountMaxAggregateOutputType | null
+  }
+
+  export type PrepaidAccountAvgAggregateOutputType = {
+    id: number | null
+    consumerId: number | null
+    currentBalance: number | null
+    totalRecharged: number | null
+    totalConsumed: number | null
+    blockedBy: number | null
+    lowBalanceThreshold: number | null
+    emergencyThreshold: number | null
+    autoRechargeAmount: number | null
+    autoRechargeThreshold: number | null
+  }
+
+  export type PrepaidAccountSumAggregateOutputType = {
+    id: number | null
+    consumerId: number | null
+    currentBalance: number | null
+    totalRecharged: number | null
+    totalConsumed: number | null
+    blockedBy: number | null
+    lowBalanceThreshold: number | null
+    emergencyThreshold: number | null
+    autoRechargeAmount: number | null
+    autoRechargeThreshold: number | null
+  }
+
+  export type PrepaidAccountMinAggregateOutputType = {
+    id: number | null
+    consumerId: number | null
+    accountNumber: string | null
+    currentBalance: number | null
+    totalRecharged: number | null
+    totalConsumed: number | null
+    isActive: boolean | null
+    isBlocked: boolean | null
+    blockReason: string | null
+    blockedAt: Date | null
+    blockedBy: number | null
+    lowBalanceThreshold: number | null
+    emergencyThreshold: number | null
+    autoRechargeEnabled: boolean | null
+    autoRechargeAmount: number | null
+    autoRechargeThreshold: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrepaidAccountMaxAggregateOutputType = {
+    id: number | null
+    consumerId: number | null
+    accountNumber: string | null
+    currentBalance: number | null
+    totalRecharged: number | null
+    totalConsumed: number | null
+    isActive: boolean | null
+    isBlocked: boolean | null
+    blockReason: string | null
+    blockedAt: Date | null
+    blockedBy: number | null
+    lowBalanceThreshold: number | null
+    emergencyThreshold: number | null
+    autoRechargeEnabled: boolean | null
+    autoRechargeAmount: number | null
+    autoRechargeThreshold: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrepaidAccountCountAggregateOutputType = {
+    id: number
+    consumerId: number
+    accountNumber: number
+    currentBalance: number
+    totalRecharged: number
+    totalConsumed: number
+    isActive: number
+    isBlocked: number
+    blockReason: number
+    blockedAt: number
+    blockedBy: number
+    lowBalanceThreshold: number
+    emergencyThreshold: number
+    autoRechargeEnabled: number
+    autoRechargeAmount: number
+    autoRechargeThreshold: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PrepaidAccountAvgAggregateInputType = {
+    id?: true
+    consumerId?: true
+    currentBalance?: true
+    totalRecharged?: true
+    totalConsumed?: true
+    blockedBy?: true
+    lowBalanceThreshold?: true
+    emergencyThreshold?: true
+    autoRechargeAmount?: true
+    autoRechargeThreshold?: true
+  }
+
+  export type PrepaidAccountSumAggregateInputType = {
+    id?: true
+    consumerId?: true
+    currentBalance?: true
+    totalRecharged?: true
+    totalConsumed?: true
+    blockedBy?: true
+    lowBalanceThreshold?: true
+    emergencyThreshold?: true
+    autoRechargeAmount?: true
+    autoRechargeThreshold?: true
+  }
+
+  export type PrepaidAccountMinAggregateInputType = {
+    id?: true
+    consumerId?: true
+    accountNumber?: true
+    currentBalance?: true
+    totalRecharged?: true
+    totalConsumed?: true
+    isActive?: true
+    isBlocked?: true
+    blockReason?: true
+    blockedAt?: true
+    blockedBy?: true
+    lowBalanceThreshold?: true
+    emergencyThreshold?: true
+    autoRechargeEnabled?: true
+    autoRechargeAmount?: true
+    autoRechargeThreshold?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrepaidAccountMaxAggregateInputType = {
+    id?: true
+    consumerId?: true
+    accountNumber?: true
+    currentBalance?: true
+    totalRecharged?: true
+    totalConsumed?: true
+    isActive?: true
+    isBlocked?: true
+    blockReason?: true
+    blockedAt?: true
+    blockedBy?: true
+    lowBalanceThreshold?: true
+    emergencyThreshold?: true
+    autoRechargeEnabled?: true
+    autoRechargeAmount?: true
+    autoRechargeThreshold?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrepaidAccountCountAggregateInputType = {
+    id?: true
+    consumerId?: true
+    accountNumber?: true
+    currentBalance?: true
+    totalRecharged?: true
+    totalConsumed?: true
+    isActive?: true
+    isBlocked?: true
+    blockReason?: true
+    blockedAt?: true
+    blockedBy?: true
+    lowBalanceThreshold?: true
+    emergencyThreshold?: true
+    autoRechargeEnabled?: true
+    autoRechargeAmount?: true
+    autoRechargeThreshold?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PrepaidAccountAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidAccount to aggregate.
+     */
+    where?: PrepaidAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAccounts to fetch.
+     */
+    orderBy?: PrepaidAccountOrderByWithRelationInput | PrepaidAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PrepaidAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PrepaidAccounts
+    **/
+    _count?: true | PrepaidAccountCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PrepaidAccountAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PrepaidAccountSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PrepaidAccountMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PrepaidAccountMaxAggregateInputType
+  }
+
+  export type GetPrepaidAccountAggregateType<T extends PrepaidAccountAggregateArgs> = {
+        [P in keyof T & keyof AggregatePrepaidAccount]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePrepaidAccount[P]>
+      : GetScalarType<T[P], AggregatePrepaidAccount[P]>
+  }
+
+
+
+
+  export type PrepaidAccountGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidAccountWhereInput
+    orderBy?: PrepaidAccountOrderByWithAggregationInput | PrepaidAccountOrderByWithAggregationInput[]
+    by: PrepaidAccountScalarFieldEnum[] | PrepaidAccountScalarFieldEnum
+    having?: PrepaidAccountScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PrepaidAccountCountAggregateInputType | true
+    _avg?: PrepaidAccountAvgAggregateInputType
+    _sum?: PrepaidAccountSumAggregateInputType
+    _min?: PrepaidAccountMinAggregateInputType
+    _max?: PrepaidAccountMaxAggregateInputType
+  }
+
+  export type PrepaidAccountGroupByOutputType = {
+    id: number
+    consumerId: number
+    accountNumber: string
+    currentBalance: number
+    totalRecharged: number
+    totalConsumed: number
+    isActive: boolean
+    isBlocked: boolean
+    blockReason: string | null
+    blockedAt: Date | null
+    blockedBy: number | null
+    lowBalanceThreshold: number
+    emergencyThreshold: number
+    autoRechargeEnabled: boolean
+    autoRechargeAmount: number | null
+    autoRechargeThreshold: number | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PrepaidAccountCountAggregateOutputType | null
+    _avg: PrepaidAccountAvgAggregateOutputType | null
+    _sum: PrepaidAccountSumAggregateOutputType | null
+    _min: PrepaidAccountMinAggregateOutputType | null
+    _max: PrepaidAccountMaxAggregateOutputType | null
+  }
+
+  type GetPrepaidAccountGroupByPayload<T extends PrepaidAccountGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PrepaidAccountGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PrepaidAccountGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PrepaidAccountGroupByOutputType[P]>
+            : GetScalarType<T[P], PrepaidAccountGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PrepaidAccountSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    consumerId?: boolean
+    accountNumber?: boolean
+    currentBalance?: boolean
+    totalRecharged?: boolean
+    totalConsumed?: boolean
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: boolean
+    blockedAt?: boolean
+    blockedBy?: boolean
+    lowBalanceThreshold?: boolean
+    emergencyThreshold?: boolean
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: boolean
+    autoRechargeThreshold?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    consumer?: boolean | ConsumerDefaultArgs<ExtArgs>
+    transactions?: boolean | PrepaidAccount$transactionsArgs<ExtArgs>
+    recharges?: boolean | PrepaidAccount$rechargesArgs<ExtArgs>
+    alerts?: boolean | PrepaidAccount$alertsArgs<ExtArgs>
+    _count?: boolean | PrepaidAccountCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidAccount"]>
+
+  export type PrepaidAccountSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    consumerId?: boolean
+    accountNumber?: boolean
+    currentBalance?: boolean
+    totalRecharged?: boolean
+    totalConsumed?: boolean
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: boolean
+    blockedAt?: boolean
+    blockedBy?: boolean
+    lowBalanceThreshold?: boolean
+    emergencyThreshold?: boolean
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: boolean
+    autoRechargeThreshold?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    consumer?: boolean | ConsumerDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidAccount"]>
+
+  export type PrepaidAccountSelectScalar = {
+    id?: boolean
+    consumerId?: boolean
+    accountNumber?: boolean
+    currentBalance?: boolean
+    totalRecharged?: boolean
+    totalConsumed?: boolean
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: boolean
+    blockedAt?: boolean
+    blockedBy?: boolean
+    lowBalanceThreshold?: boolean
+    emergencyThreshold?: boolean
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: boolean
+    autoRechargeThreshold?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PrepaidAccountInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    consumer?: boolean | ConsumerDefaultArgs<ExtArgs>
+    transactions?: boolean | PrepaidAccount$transactionsArgs<ExtArgs>
+    recharges?: boolean | PrepaidAccount$rechargesArgs<ExtArgs>
+    alerts?: boolean | PrepaidAccount$alertsArgs<ExtArgs>
+    _count?: boolean | PrepaidAccountCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PrepaidAccountIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    consumer?: boolean | ConsumerDefaultArgs<ExtArgs>
+  }
+
+  export type $PrepaidAccountPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PrepaidAccount"
+    objects: {
+      consumer: Prisma.$ConsumerPayload<ExtArgs>
+      transactions: Prisma.$PrepaidTransactionPayload<ExtArgs>[]
+      recharges: Prisma.$PrepaidRechargePayload<ExtArgs>[]
+      alerts: Prisma.$PrepaidAlertPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      consumerId: number
+      accountNumber: string
+      currentBalance: number
+      totalRecharged: number
+      totalConsumed: number
+      isActive: boolean
+      isBlocked: boolean
+      blockReason: string | null
+      blockedAt: Date | null
+      blockedBy: number | null
+      lowBalanceThreshold: number
+      emergencyThreshold: number
+      autoRechargeEnabled: boolean
+      autoRechargeAmount: number | null
+      autoRechargeThreshold: number | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["prepaidAccount"]>
+    composites: {}
+  }
+
+  type PrepaidAccountGetPayload<S extends boolean | null | undefined | PrepaidAccountDefaultArgs> = $Result.GetResult<Prisma.$PrepaidAccountPayload, S>
+
+  type PrepaidAccountCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PrepaidAccountFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PrepaidAccountCountAggregateInputType | true
+    }
+
+  export interface PrepaidAccountDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PrepaidAccount'], meta: { name: 'PrepaidAccount' } }
+    /**
+     * Find zero or one PrepaidAccount that matches the filter.
+     * @param {PrepaidAccountFindUniqueArgs} args - Arguments to find a PrepaidAccount
+     * @example
+     * // Get one PrepaidAccount
+     * const prepaidAccount = await prisma.prepaidAccount.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PrepaidAccountFindUniqueArgs>(args: SelectSubset<T, PrepaidAccountFindUniqueArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PrepaidAccount that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PrepaidAccountFindUniqueOrThrowArgs} args - Arguments to find a PrepaidAccount
+     * @example
+     * // Get one PrepaidAccount
+     * const prepaidAccount = await prisma.prepaidAccount.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PrepaidAccountFindUniqueOrThrowArgs>(args: SelectSubset<T, PrepaidAccountFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PrepaidAccount that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAccountFindFirstArgs} args - Arguments to find a PrepaidAccount
+     * @example
+     * // Get one PrepaidAccount
+     * const prepaidAccount = await prisma.prepaidAccount.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PrepaidAccountFindFirstArgs>(args?: SelectSubset<T, PrepaidAccountFindFirstArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PrepaidAccount that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAccountFindFirstOrThrowArgs} args - Arguments to find a PrepaidAccount
+     * @example
+     * // Get one PrepaidAccount
+     * const prepaidAccount = await prisma.prepaidAccount.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PrepaidAccountFindFirstOrThrowArgs>(args?: SelectSubset<T, PrepaidAccountFindFirstOrThrowArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PrepaidAccounts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAccountFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PrepaidAccounts
+     * const prepaidAccounts = await prisma.prepaidAccount.findMany()
+     * 
+     * // Get first 10 PrepaidAccounts
+     * const prepaidAccounts = await prisma.prepaidAccount.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const prepaidAccountWithIdOnly = await prisma.prepaidAccount.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PrepaidAccountFindManyArgs>(args?: SelectSubset<T, PrepaidAccountFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PrepaidAccount.
+     * @param {PrepaidAccountCreateArgs} args - Arguments to create a PrepaidAccount.
+     * @example
+     * // Create one PrepaidAccount
+     * const PrepaidAccount = await prisma.prepaidAccount.create({
+     *   data: {
+     *     // ... data to create a PrepaidAccount
+     *   }
+     * })
+     * 
+     */
+    create<T extends PrepaidAccountCreateArgs>(args: SelectSubset<T, PrepaidAccountCreateArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PrepaidAccounts.
+     * @param {PrepaidAccountCreateManyArgs} args - Arguments to create many PrepaidAccounts.
+     * @example
+     * // Create many PrepaidAccounts
+     * const prepaidAccount = await prisma.prepaidAccount.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PrepaidAccountCreateManyArgs>(args?: SelectSubset<T, PrepaidAccountCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PrepaidAccounts and returns the data saved in the database.
+     * @param {PrepaidAccountCreateManyAndReturnArgs} args - Arguments to create many PrepaidAccounts.
+     * @example
+     * // Create many PrepaidAccounts
+     * const prepaidAccount = await prisma.prepaidAccount.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PrepaidAccounts and only return the `id`
+     * const prepaidAccountWithIdOnly = await prisma.prepaidAccount.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PrepaidAccountCreateManyAndReturnArgs>(args?: SelectSubset<T, PrepaidAccountCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PrepaidAccount.
+     * @param {PrepaidAccountDeleteArgs} args - Arguments to delete one PrepaidAccount.
+     * @example
+     * // Delete one PrepaidAccount
+     * const PrepaidAccount = await prisma.prepaidAccount.delete({
+     *   where: {
+     *     // ... filter to delete one PrepaidAccount
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PrepaidAccountDeleteArgs>(args: SelectSubset<T, PrepaidAccountDeleteArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PrepaidAccount.
+     * @param {PrepaidAccountUpdateArgs} args - Arguments to update one PrepaidAccount.
+     * @example
+     * // Update one PrepaidAccount
+     * const prepaidAccount = await prisma.prepaidAccount.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PrepaidAccountUpdateArgs>(args: SelectSubset<T, PrepaidAccountUpdateArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PrepaidAccounts.
+     * @param {PrepaidAccountDeleteManyArgs} args - Arguments to filter PrepaidAccounts to delete.
+     * @example
+     * // Delete a few PrepaidAccounts
+     * const { count } = await prisma.prepaidAccount.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PrepaidAccountDeleteManyArgs>(args?: SelectSubset<T, PrepaidAccountDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PrepaidAccounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAccountUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PrepaidAccounts
+     * const prepaidAccount = await prisma.prepaidAccount.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PrepaidAccountUpdateManyArgs>(args: SelectSubset<T, PrepaidAccountUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PrepaidAccount.
+     * @param {PrepaidAccountUpsertArgs} args - Arguments to update or create a PrepaidAccount.
+     * @example
+     * // Update or create a PrepaidAccount
+     * const prepaidAccount = await prisma.prepaidAccount.upsert({
+     *   create: {
+     *     // ... data to create a PrepaidAccount
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PrepaidAccount we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PrepaidAccountUpsertArgs>(args: SelectSubset<T, PrepaidAccountUpsertArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PrepaidAccounts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAccountCountArgs} args - Arguments to filter PrepaidAccounts to count.
+     * @example
+     * // Count the number of PrepaidAccounts
+     * const count = await prisma.prepaidAccount.count({
+     *   where: {
+     *     // ... the filter for the PrepaidAccounts we want to count
+     *   }
+     * })
+    **/
+    count<T extends PrepaidAccountCountArgs>(
+      args?: Subset<T, PrepaidAccountCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PrepaidAccountCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PrepaidAccount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAccountAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PrepaidAccountAggregateArgs>(args: Subset<T, PrepaidAccountAggregateArgs>): Prisma.PrismaPromise<GetPrepaidAccountAggregateType<T>>
+
+    /**
+     * Group by PrepaidAccount.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAccountGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PrepaidAccountGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PrepaidAccountGroupByArgs['orderBy'] }
+        : { orderBy?: PrepaidAccountGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PrepaidAccountGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPrepaidAccountGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PrepaidAccount model
+   */
+  readonly fields: PrepaidAccountFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PrepaidAccount.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PrepaidAccountClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    consumer<T extends ConsumerDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ConsumerDefaultArgs<ExtArgs>>): Prisma__ConsumerClient<$Result.GetResult<Prisma.$ConsumerPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    transactions<T extends PrepaidAccount$transactionsArgs<ExtArgs> = {}>(args?: Subset<T, PrepaidAccount$transactionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "findMany"> | Null>
+    recharges<T extends PrepaidAccount$rechargesArgs<ExtArgs> = {}>(args?: Subset<T, PrepaidAccount$rechargesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "findMany"> | Null>
+    alerts<T extends PrepaidAccount$alertsArgs<ExtArgs> = {}>(args?: Subset<T, PrepaidAccount$alertsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "findMany"> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PrepaidAccount model
+   */ 
+  interface PrepaidAccountFieldRefs {
+    readonly id: FieldRef<"PrepaidAccount", 'Int'>
+    readonly consumerId: FieldRef<"PrepaidAccount", 'Int'>
+    readonly accountNumber: FieldRef<"PrepaidAccount", 'String'>
+    readonly currentBalance: FieldRef<"PrepaidAccount", 'Float'>
+    readonly totalRecharged: FieldRef<"PrepaidAccount", 'Float'>
+    readonly totalConsumed: FieldRef<"PrepaidAccount", 'Float'>
+    readonly isActive: FieldRef<"PrepaidAccount", 'Boolean'>
+    readonly isBlocked: FieldRef<"PrepaidAccount", 'Boolean'>
+    readonly blockReason: FieldRef<"PrepaidAccount", 'String'>
+    readonly blockedAt: FieldRef<"PrepaidAccount", 'DateTime'>
+    readonly blockedBy: FieldRef<"PrepaidAccount", 'Int'>
+    readonly lowBalanceThreshold: FieldRef<"PrepaidAccount", 'Float'>
+    readonly emergencyThreshold: FieldRef<"PrepaidAccount", 'Float'>
+    readonly autoRechargeEnabled: FieldRef<"PrepaidAccount", 'Boolean'>
+    readonly autoRechargeAmount: FieldRef<"PrepaidAccount", 'Float'>
+    readonly autoRechargeThreshold: FieldRef<"PrepaidAccount", 'Float'>
+    readonly createdAt: FieldRef<"PrepaidAccount", 'DateTime'>
+    readonly updatedAt: FieldRef<"PrepaidAccount", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PrepaidAccount findUnique
+   */
+  export type PrepaidAccountFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAccount to fetch.
+     */
+    where: PrepaidAccountWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAccount findUniqueOrThrow
+   */
+  export type PrepaidAccountFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAccount to fetch.
+     */
+    where: PrepaidAccountWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAccount findFirst
+   */
+  export type PrepaidAccountFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAccount to fetch.
+     */
+    where?: PrepaidAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAccounts to fetch.
+     */
+    orderBy?: PrepaidAccountOrderByWithRelationInput | PrepaidAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidAccounts.
+     */
+    cursor?: PrepaidAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidAccounts.
+     */
+    distinct?: PrepaidAccountScalarFieldEnum | PrepaidAccountScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAccount findFirstOrThrow
+   */
+  export type PrepaidAccountFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAccount to fetch.
+     */
+    where?: PrepaidAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAccounts to fetch.
+     */
+    orderBy?: PrepaidAccountOrderByWithRelationInput | PrepaidAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidAccounts.
+     */
+    cursor?: PrepaidAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAccounts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidAccounts.
+     */
+    distinct?: PrepaidAccountScalarFieldEnum | PrepaidAccountScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAccount findMany
+   */
+  export type PrepaidAccountFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAccounts to fetch.
+     */
+    where?: PrepaidAccountWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAccounts to fetch.
+     */
+    orderBy?: PrepaidAccountOrderByWithRelationInput | PrepaidAccountOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PrepaidAccounts.
+     */
+    cursor?: PrepaidAccountWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAccounts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAccounts.
+     */
+    skip?: number
+    distinct?: PrepaidAccountScalarFieldEnum | PrepaidAccountScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAccount create
+   */
+  export type PrepaidAccountCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PrepaidAccount.
+     */
+    data: XOR<PrepaidAccountCreateInput, PrepaidAccountUncheckedCreateInput>
+  }
+
+  /**
+   * PrepaidAccount createMany
+   */
+  export type PrepaidAccountCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PrepaidAccounts.
+     */
+    data: PrepaidAccountCreateManyInput | PrepaidAccountCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PrepaidAccount createManyAndReturn
+   */
+  export type PrepaidAccountCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PrepaidAccounts.
+     */
+    data: PrepaidAccountCreateManyInput | PrepaidAccountCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PrepaidAccount update
+   */
+  export type PrepaidAccountUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PrepaidAccount.
+     */
+    data: XOR<PrepaidAccountUpdateInput, PrepaidAccountUncheckedUpdateInput>
+    /**
+     * Choose, which PrepaidAccount to update.
+     */
+    where: PrepaidAccountWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAccount updateMany
+   */
+  export type PrepaidAccountUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PrepaidAccounts.
+     */
+    data: XOR<PrepaidAccountUpdateManyMutationInput, PrepaidAccountUncheckedUpdateManyInput>
+    /**
+     * Filter which PrepaidAccounts to update
+     */
+    where?: PrepaidAccountWhereInput
+  }
+
+  /**
+   * PrepaidAccount upsert
+   */
+  export type PrepaidAccountUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PrepaidAccount to update in case it exists.
+     */
+    where: PrepaidAccountWhereUniqueInput
+    /**
+     * In case the PrepaidAccount found by the `where` argument doesn't exist, create a new PrepaidAccount with this data.
+     */
+    create: XOR<PrepaidAccountCreateInput, PrepaidAccountUncheckedCreateInput>
+    /**
+     * In case the PrepaidAccount was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PrepaidAccountUpdateInput, PrepaidAccountUncheckedUpdateInput>
+  }
+
+  /**
+   * PrepaidAccount delete
+   */
+  export type PrepaidAccountDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+    /**
+     * Filter which PrepaidAccount to delete.
+     */
+    where: PrepaidAccountWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAccount deleteMany
+   */
+  export type PrepaidAccountDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidAccounts to delete
+     */
+    where?: PrepaidAccountWhereInput
+  }
+
+  /**
+   * PrepaidAccount.transactions
+   */
+  export type PrepaidAccount$transactionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    where?: PrepaidTransactionWhereInput
+    orderBy?: PrepaidTransactionOrderByWithRelationInput | PrepaidTransactionOrderByWithRelationInput[]
+    cursor?: PrepaidTransactionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrepaidTransactionScalarFieldEnum | PrepaidTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAccount.recharges
+   */
+  export type PrepaidAccount$rechargesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    where?: PrepaidRechargeWhereInput
+    orderBy?: PrepaidRechargeOrderByWithRelationInput | PrepaidRechargeOrderByWithRelationInput[]
+    cursor?: PrepaidRechargeWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrepaidRechargeScalarFieldEnum | PrepaidRechargeScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAccount.alerts
+   */
+  export type PrepaidAccount$alertsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    where?: PrepaidAlertWhereInput
+    orderBy?: PrepaidAlertOrderByWithRelationInput | PrepaidAlertOrderByWithRelationInput[]
+    cursor?: PrepaidAlertWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PrepaidAlertScalarFieldEnum | PrepaidAlertScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAccount without action
+   */
+  export type PrepaidAccountDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAccount
+     */
+    select?: PrepaidAccountSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAccountInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PrepaidTransaction
+   */
+
+  export type AggregatePrepaidTransaction = {
+    _count: PrepaidTransactionCountAggregateOutputType | null
+    _avg: PrepaidTransactionAvgAggregateOutputType | null
+    _sum: PrepaidTransactionSumAggregateOutputType | null
+    _min: PrepaidTransactionMinAggregateOutputType | null
+    _max: PrepaidTransactionMaxAggregateOutputType | null
+  }
+
+  export type PrepaidTransactionAvgAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    amount: number | null
+    balanceBefore: number | null
+    balanceAfter: number | null
+    consumptionKWh: number | null
+    ratePerUnit: number | null
+    fixedCharges: number | null
+    readingId: number | null
+  }
+
+  export type PrepaidTransactionSumAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    amount: number | null
+    balanceBefore: number | null
+    balanceAfter: number | null
+    consumptionKWh: number | null
+    ratePerUnit: number | null
+    fixedCharges: number | null
+    readingId: number | null
+  }
+
+  export type PrepaidTransactionMinAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    transactionId: string | null
+    transactionType: $Enums.PrepaidTransactionType | null
+    amount: number | null
+    balanceBefore: number | null
+    balanceAfter: number | null
+    consumptionKWh: number | null
+    ratePerUnit: number | null
+    fixedCharges: number | null
+    readingId: number | null
+    status: $Enums.PrepaidTransactionStatus | null
+    failureReason: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrepaidTransactionMaxAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    transactionId: string | null
+    transactionType: $Enums.PrepaidTransactionType | null
+    amount: number | null
+    balanceBefore: number | null
+    balanceAfter: number | null
+    consumptionKWh: number | null
+    ratePerUnit: number | null
+    fixedCharges: number | null
+    readingId: number | null
+    status: $Enums.PrepaidTransactionStatus | null
+    failureReason: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrepaidTransactionCountAggregateOutputType = {
+    id: number
+    accountId: number
+    transactionId: number
+    transactionType: number
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh: number
+    ratePerUnit: number
+    fixedCharges: number
+    taxes: number
+    readingId: number
+    status: number
+    failureReason: number
+    description: number
+    metadata: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PrepaidTransactionAvgAggregateInputType = {
+    id?: true
+    accountId?: true
+    amount?: true
+    balanceBefore?: true
+    balanceAfter?: true
+    consumptionKWh?: true
+    ratePerUnit?: true
+    fixedCharges?: true
+    readingId?: true
+  }
+
+  export type PrepaidTransactionSumAggregateInputType = {
+    id?: true
+    accountId?: true
+    amount?: true
+    balanceBefore?: true
+    balanceAfter?: true
+    consumptionKWh?: true
+    ratePerUnit?: true
+    fixedCharges?: true
+    readingId?: true
+  }
+
+  export type PrepaidTransactionMinAggregateInputType = {
+    id?: true
+    accountId?: true
+    transactionId?: true
+    transactionType?: true
+    amount?: true
+    balanceBefore?: true
+    balanceAfter?: true
+    consumptionKWh?: true
+    ratePerUnit?: true
+    fixedCharges?: true
+    readingId?: true
+    status?: true
+    failureReason?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrepaidTransactionMaxAggregateInputType = {
+    id?: true
+    accountId?: true
+    transactionId?: true
+    transactionType?: true
+    amount?: true
+    balanceBefore?: true
+    balanceAfter?: true
+    consumptionKWh?: true
+    ratePerUnit?: true
+    fixedCharges?: true
+    readingId?: true
+    status?: true
+    failureReason?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrepaidTransactionCountAggregateInputType = {
+    id?: true
+    accountId?: true
+    transactionId?: true
+    transactionType?: true
+    amount?: true
+    balanceBefore?: true
+    balanceAfter?: true
+    consumptionKWh?: true
+    ratePerUnit?: true
+    fixedCharges?: true
+    taxes?: true
+    readingId?: true
+    status?: true
+    failureReason?: true
+    description?: true
+    metadata?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PrepaidTransactionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidTransaction to aggregate.
+     */
+    where?: PrepaidTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidTransactions to fetch.
+     */
+    orderBy?: PrepaidTransactionOrderByWithRelationInput | PrepaidTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PrepaidTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PrepaidTransactions
+    **/
+    _count?: true | PrepaidTransactionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PrepaidTransactionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PrepaidTransactionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PrepaidTransactionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PrepaidTransactionMaxAggregateInputType
+  }
+
+  export type GetPrepaidTransactionAggregateType<T extends PrepaidTransactionAggregateArgs> = {
+        [P in keyof T & keyof AggregatePrepaidTransaction]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePrepaidTransaction[P]>
+      : GetScalarType<T[P], AggregatePrepaidTransaction[P]>
+  }
+
+
+
+
+  export type PrepaidTransactionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidTransactionWhereInput
+    orderBy?: PrepaidTransactionOrderByWithAggregationInput | PrepaidTransactionOrderByWithAggregationInput[]
+    by: PrepaidTransactionScalarFieldEnum[] | PrepaidTransactionScalarFieldEnum
+    having?: PrepaidTransactionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PrepaidTransactionCountAggregateInputType | true
+    _avg?: PrepaidTransactionAvgAggregateInputType
+    _sum?: PrepaidTransactionSumAggregateInputType
+    _min?: PrepaidTransactionMinAggregateInputType
+    _max?: PrepaidTransactionMaxAggregateInputType
+  }
+
+  export type PrepaidTransactionGroupByOutputType = {
+    id: number
+    accountId: number
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh: number | null
+    ratePerUnit: number | null
+    fixedCharges: number | null
+    taxes: JsonValue | null
+    readingId: number | null
+    status: $Enums.PrepaidTransactionStatus
+    failureReason: string | null
+    description: string | null
+    metadata: JsonValue | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PrepaidTransactionCountAggregateOutputType | null
+    _avg: PrepaidTransactionAvgAggregateOutputType | null
+    _sum: PrepaidTransactionSumAggregateOutputType | null
+    _min: PrepaidTransactionMinAggregateOutputType | null
+    _max: PrepaidTransactionMaxAggregateOutputType | null
+  }
+
+  type GetPrepaidTransactionGroupByPayload<T extends PrepaidTransactionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PrepaidTransactionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PrepaidTransactionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PrepaidTransactionGroupByOutputType[P]>
+            : GetScalarType<T[P], PrepaidTransactionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PrepaidTransactionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    transactionId?: boolean
+    transactionType?: boolean
+    amount?: boolean
+    balanceBefore?: boolean
+    balanceAfter?: boolean
+    consumptionKWh?: boolean
+    ratePerUnit?: boolean
+    fixedCharges?: boolean
+    taxes?: boolean
+    readingId?: boolean
+    status?: boolean
+    failureReason?: boolean
+    description?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+    meterReading?: boolean | PrepaidTransaction$meterReadingArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidTransaction"]>
+
+  export type PrepaidTransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    transactionId?: boolean
+    transactionType?: boolean
+    amount?: boolean
+    balanceBefore?: boolean
+    balanceAfter?: boolean
+    consumptionKWh?: boolean
+    ratePerUnit?: boolean
+    fixedCharges?: boolean
+    taxes?: boolean
+    readingId?: boolean
+    status?: boolean
+    failureReason?: boolean
+    description?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+    meterReading?: boolean | PrepaidTransaction$meterReadingArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidTransaction"]>
+
+  export type PrepaidTransactionSelectScalar = {
+    id?: boolean
+    accountId?: boolean
+    transactionId?: boolean
+    transactionType?: boolean
+    amount?: boolean
+    balanceBefore?: boolean
+    balanceAfter?: boolean
+    consumptionKWh?: boolean
+    ratePerUnit?: boolean
+    fixedCharges?: boolean
+    taxes?: boolean
+    readingId?: boolean
+    status?: boolean
+    failureReason?: boolean
+    description?: boolean
+    metadata?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PrepaidTransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+    meterReading?: boolean | PrepaidTransaction$meterReadingArgs<ExtArgs>
+  }
+  export type PrepaidTransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+    meterReading?: boolean | PrepaidTransaction$meterReadingArgs<ExtArgs>
+  }
+
+  export type $PrepaidTransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PrepaidTransaction"
+    objects: {
+      account: Prisma.$PrepaidAccountPayload<ExtArgs>
+      meterReading: Prisma.$MeterReadingPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      accountId: number
+      transactionId: string
+      transactionType: $Enums.PrepaidTransactionType
+      amount: number
+      balanceBefore: number
+      balanceAfter: number
+      consumptionKWh: number | null
+      ratePerUnit: number | null
+      fixedCharges: number | null
+      taxes: Prisma.JsonValue | null
+      readingId: number | null
+      status: $Enums.PrepaidTransactionStatus
+      failureReason: string | null
+      description: string | null
+      metadata: Prisma.JsonValue | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["prepaidTransaction"]>
+    composites: {}
+  }
+
+  type PrepaidTransactionGetPayload<S extends boolean | null | undefined | PrepaidTransactionDefaultArgs> = $Result.GetResult<Prisma.$PrepaidTransactionPayload, S>
+
+  type PrepaidTransactionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PrepaidTransactionFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PrepaidTransactionCountAggregateInputType | true
+    }
+
+  export interface PrepaidTransactionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PrepaidTransaction'], meta: { name: 'PrepaidTransaction' } }
+    /**
+     * Find zero or one PrepaidTransaction that matches the filter.
+     * @param {PrepaidTransactionFindUniqueArgs} args - Arguments to find a PrepaidTransaction
+     * @example
+     * // Get one PrepaidTransaction
+     * const prepaidTransaction = await prisma.prepaidTransaction.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PrepaidTransactionFindUniqueArgs>(args: SelectSubset<T, PrepaidTransactionFindUniqueArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PrepaidTransaction that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PrepaidTransactionFindUniqueOrThrowArgs} args - Arguments to find a PrepaidTransaction
+     * @example
+     * // Get one PrepaidTransaction
+     * const prepaidTransaction = await prisma.prepaidTransaction.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PrepaidTransactionFindUniqueOrThrowArgs>(args: SelectSubset<T, PrepaidTransactionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PrepaidTransaction that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidTransactionFindFirstArgs} args - Arguments to find a PrepaidTransaction
+     * @example
+     * // Get one PrepaidTransaction
+     * const prepaidTransaction = await prisma.prepaidTransaction.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PrepaidTransactionFindFirstArgs>(args?: SelectSubset<T, PrepaidTransactionFindFirstArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PrepaidTransaction that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidTransactionFindFirstOrThrowArgs} args - Arguments to find a PrepaidTransaction
+     * @example
+     * // Get one PrepaidTransaction
+     * const prepaidTransaction = await prisma.prepaidTransaction.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PrepaidTransactionFindFirstOrThrowArgs>(args?: SelectSubset<T, PrepaidTransactionFindFirstOrThrowArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PrepaidTransactions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidTransactionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PrepaidTransactions
+     * const prepaidTransactions = await prisma.prepaidTransaction.findMany()
+     * 
+     * // Get first 10 PrepaidTransactions
+     * const prepaidTransactions = await prisma.prepaidTransaction.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const prepaidTransactionWithIdOnly = await prisma.prepaidTransaction.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PrepaidTransactionFindManyArgs>(args?: SelectSubset<T, PrepaidTransactionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PrepaidTransaction.
+     * @param {PrepaidTransactionCreateArgs} args - Arguments to create a PrepaidTransaction.
+     * @example
+     * // Create one PrepaidTransaction
+     * const PrepaidTransaction = await prisma.prepaidTransaction.create({
+     *   data: {
+     *     // ... data to create a PrepaidTransaction
+     *   }
+     * })
+     * 
+     */
+    create<T extends PrepaidTransactionCreateArgs>(args: SelectSubset<T, PrepaidTransactionCreateArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PrepaidTransactions.
+     * @param {PrepaidTransactionCreateManyArgs} args - Arguments to create many PrepaidTransactions.
+     * @example
+     * // Create many PrepaidTransactions
+     * const prepaidTransaction = await prisma.prepaidTransaction.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PrepaidTransactionCreateManyArgs>(args?: SelectSubset<T, PrepaidTransactionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PrepaidTransactions and returns the data saved in the database.
+     * @param {PrepaidTransactionCreateManyAndReturnArgs} args - Arguments to create many PrepaidTransactions.
+     * @example
+     * // Create many PrepaidTransactions
+     * const prepaidTransaction = await prisma.prepaidTransaction.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PrepaidTransactions and only return the `id`
+     * const prepaidTransactionWithIdOnly = await prisma.prepaidTransaction.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PrepaidTransactionCreateManyAndReturnArgs>(args?: SelectSubset<T, PrepaidTransactionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PrepaidTransaction.
+     * @param {PrepaidTransactionDeleteArgs} args - Arguments to delete one PrepaidTransaction.
+     * @example
+     * // Delete one PrepaidTransaction
+     * const PrepaidTransaction = await prisma.prepaidTransaction.delete({
+     *   where: {
+     *     // ... filter to delete one PrepaidTransaction
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PrepaidTransactionDeleteArgs>(args: SelectSubset<T, PrepaidTransactionDeleteArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PrepaidTransaction.
+     * @param {PrepaidTransactionUpdateArgs} args - Arguments to update one PrepaidTransaction.
+     * @example
+     * // Update one PrepaidTransaction
+     * const prepaidTransaction = await prisma.prepaidTransaction.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PrepaidTransactionUpdateArgs>(args: SelectSubset<T, PrepaidTransactionUpdateArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PrepaidTransactions.
+     * @param {PrepaidTransactionDeleteManyArgs} args - Arguments to filter PrepaidTransactions to delete.
+     * @example
+     * // Delete a few PrepaidTransactions
+     * const { count } = await prisma.prepaidTransaction.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PrepaidTransactionDeleteManyArgs>(args?: SelectSubset<T, PrepaidTransactionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PrepaidTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidTransactionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PrepaidTransactions
+     * const prepaidTransaction = await prisma.prepaidTransaction.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PrepaidTransactionUpdateManyArgs>(args: SelectSubset<T, PrepaidTransactionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PrepaidTransaction.
+     * @param {PrepaidTransactionUpsertArgs} args - Arguments to update or create a PrepaidTransaction.
+     * @example
+     * // Update or create a PrepaidTransaction
+     * const prepaidTransaction = await prisma.prepaidTransaction.upsert({
+     *   create: {
+     *     // ... data to create a PrepaidTransaction
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PrepaidTransaction we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PrepaidTransactionUpsertArgs>(args: SelectSubset<T, PrepaidTransactionUpsertArgs<ExtArgs>>): Prisma__PrepaidTransactionClient<$Result.GetResult<Prisma.$PrepaidTransactionPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PrepaidTransactions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidTransactionCountArgs} args - Arguments to filter PrepaidTransactions to count.
+     * @example
+     * // Count the number of PrepaidTransactions
+     * const count = await prisma.prepaidTransaction.count({
+     *   where: {
+     *     // ... the filter for the PrepaidTransactions we want to count
+     *   }
+     * })
+    **/
+    count<T extends PrepaidTransactionCountArgs>(
+      args?: Subset<T, PrepaidTransactionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PrepaidTransactionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PrepaidTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidTransactionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PrepaidTransactionAggregateArgs>(args: Subset<T, PrepaidTransactionAggregateArgs>): Prisma.PrismaPromise<GetPrepaidTransactionAggregateType<T>>
+
+    /**
+     * Group by PrepaidTransaction.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidTransactionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PrepaidTransactionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PrepaidTransactionGroupByArgs['orderBy'] }
+        : { orderBy?: PrepaidTransactionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PrepaidTransactionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPrepaidTransactionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PrepaidTransaction model
+   */
+  readonly fields: PrepaidTransactionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PrepaidTransaction.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PrepaidTransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    account<T extends PrepaidAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PrepaidAccountDefaultArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    meterReading<T extends PrepaidTransaction$meterReadingArgs<ExtArgs> = {}>(args?: Subset<T, PrepaidTransaction$meterReadingArgs<ExtArgs>>): Prisma__MeterReadingClient<$Result.GetResult<Prisma.$MeterReadingPayload<ExtArgs>, T, "findUniqueOrThrow"> | null, null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PrepaidTransaction model
+   */ 
+  interface PrepaidTransactionFieldRefs {
+    readonly id: FieldRef<"PrepaidTransaction", 'Int'>
+    readonly accountId: FieldRef<"PrepaidTransaction", 'Int'>
+    readonly transactionId: FieldRef<"PrepaidTransaction", 'String'>
+    readonly transactionType: FieldRef<"PrepaidTransaction", 'PrepaidTransactionType'>
+    readonly amount: FieldRef<"PrepaidTransaction", 'Float'>
+    readonly balanceBefore: FieldRef<"PrepaidTransaction", 'Float'>
+    readonly balanceAfter: FieldRef<"PrepaidTransaction", 'Float'>
+    readonly consumptionKWh: FieldRef<"PrepaidTransaction", 'Float'>
+    readonly ratePerUnit: FieldRef<"PrepaidTransaction", 'Float'>
+    readonly fixedCharges: FieldRef<"PrepaidTransaction", 'Float'>
+    readonly taxes: FieldRef<"PrepaidTransaction", 'Json'>
+    readonly readingId: FieldRef<"PrepaidTransaction", 'Int'>
+    readonly status: FieldRef<"PrepaidTransaction", 'PrepaidTransactionStatus'>
+    readonly failureReason: FieldRef<"PrepaidTransaction", 'String'>
+    readonly description: FieldRef<"PrepaidTransaction", 'String'>
+    readonly metadata: FieldRef<"PrepaidTransaction", 'Json'>
+    readonly createdAt: FieldRef<"PrepaidTransaction", 'DateTime'>
+    readonly updatedAt: FieldRef<"PrepaidTransaction", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PrepaidTransaction findUnique
+   */
+  export type PrepaidTransactionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidTransaction to fetch.
+     */
+    where: PrepaidTransactionWhereUniqueInput
+  }
+
+  /**
+   * PrepaidTransaction findUniqueOrThrow
+   */
+  export type PrepaidTransactionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidTransaction to fetch.
+     */
+    where: PrepaidTransactionWhereUniqueInput
+  }
+
+  /**
+   * PrepaidTransaction findFirst
+   */
+  export type PrepaidTransactionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidTransaction to fetch.
+     */
+    where?: PrepaidTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidTransactions to fetch.
+     */
+    orderBy?: PrepaidTransactionOrderByWithRelationInput | PrepaidTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidTransactions.
+     */
+    cursor?: PrepaidTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidTransactions.
+     */
+    distinct?: PrepaidTransactionScalarFieldEnum | PrepaidTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidTransaction findFirstOrThrow
+   */
+  export type PrepaidTransactionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidTransaction to fetch.
+     */
+    where?: PrepaidTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidTransactions to fetch.
+     */
+    orderBy?: PrepaidTransactionOrderByWithRelationInput | PrepaidTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidTransactions.
+     */
+    cursor?: PrepaidTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidTransactions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidTransactions.
+     */
+    distinct?: PrepaidTransactionScalarFieldEnum | PrepaidTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidTransaction findMany
+   */
+  export type PrepaidTransactionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidTransactions to fetch.
+     */
+    where?: PrepaidTransactionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidTransactions to fetch.
+     */
+    orderBy?: PrepaidTransactionOrderByWithRelationInput | PrepaidTransactionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PrepaidTransactions.
+     */
+    cursor?: PrepaidTransactionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidTransactions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidTransactions.
+     */
+    skip?: number
+    distinct?: PrepaidTransactionScalarFieldEnum | PrepaidTransactionScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidTransaction create
+   */
+  export type PrepaidTransactionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PrepaidTransaction.
+     */
+    data: XOR<PrepaidTransactionCreateInput, PrepaidTransactionUncheckedCreateInput>
+  }
+
+  /**
+   * PrepaidTransaction createMany
+   */
+  export type PrepaidTransactionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PrepaidTransactions.
+     */
+    data: PrepaidTransactionCreateManyInput | PrepaidTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PrepaidTransaction createManyAndReturn
+   */
+  export type PrepaidTransactionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PrepaidTransactions.
+     */
+    data: PrepaidTransactionCreateManyInput | PrepaidTransactionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PrepaidTransaction update
+   */
+  export type PrepaidTransactionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PrepaidTransaction.
+     */
+    data: XOR<PrepaidTransactionUpdateInput, PrepaidTransactionUncheckedUpdateInput>
+    /**
+     * Choose, which PrepaidTransaction to update.
+     */
+    where: PrepaidTransactionWhereUniqueInput
+  }
+
+  /**
+   * PrepaidTransaction updateMany
+   */
+  export type PrepaidTransactionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PrepaidTransactions.
+     */
+    data: XOR<PrepaidTransactionUpdateManyMutationInput, PrepaidTransactionUncheckedUpdateManyInput>
+    /**
+     * Filter which PrepaidTransactions to update
+     */
+    where?: PrepaidTransactionWhereInput
+  }
+
+  /**
+   * PrepaidTransaction upsert
+   */
+  export type PrepaidTransactionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PrepaidTransaction to update in case it exists.
+     */
+    where: PrepaidTransactionWhereUniqueInput
+    /**
+     * In case the PrepaidTransaction found by the `where` argument doesn't exist, create a new PrepaidTransaction with this data.
+     */
+    create: XOR<PrepaidTransactionCreateInput, PrepaidTransactionUncheckedCreateInput>
+    /**
+     * In case the PrepaidTransaction was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PrepaidTransactionUpdateInput, PrepaidTransactionUncheckedUpdateInput>
+  }
+
+  /**
+   * PrepaidTransaction delete
+   */
+  export type PrepaidTransactionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+    /**
+     * Filter which PrepaidTransaction to delete.
+     */
+    where: PrepaidTransactionWhereUniqueInput
+  }
+
+  /**
+   * PrepaidTransaction deleteMany
+   */
+  export type PrepaidTransactionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidTransactions to delete
+     */
+    where?: PrepaidTransactionWhereInput
+  }
+
+  /**
+   * PrepaidTransaction.meterReading
+   */
+  export type PrepaidTransaction$meterReadingArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MeterReading
+     */
+    select?: MeterReadingSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MeterReadingInclude<ExtArgs> | null
+    where?: MeterReadingWhereInput
+  }
+
+  /**
+   * PrepaidTransaction without action
+   */
+  export type PrepaidTransactionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidTransaction
+     */
+    select?: PrepaidTransactionSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidTransactionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PrepaidRecharge
+   */
+
+  export type AggregatePrepaidRecharge = {
+    _count: PrepaidRechargeCountAggregateOutputType | null
+    _avg: PrepaidRechargeAvgAggregateOutputType | null
+    _sum: PrepaidRechargeSumAggregateOutputType | null
+    _min: PrepaidRechargeMinAggregateOutputType | null
+    _max: PrepaidRechargeMaxAggregateOutputType | null
+  }
+
+  export type PrepaidRechargeAvgAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    amount: number | null
+    discountAmount: number | null
+    bonusAmount: number | null
+  }
+
+  export type PrepaidRechargeSumAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    amount: number | null
+    discountAmount: number | null
+    bonusAmount: number | null
+  }
+
+  export type PrepaidRechargeMinAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    rechargeId: string | null
+    amount: number | null
+    paymentMethod: $Enums.PaymentMethod | null
+    paymentStatus: $Enums.PaymentStatus | null
+    gatewayName: string | null
+    gatewayTransactionId: string | null
+    rechargeType: $Enums.PrepaidRechargeType | null
+    rechargeSource: $Enums.PrepaidRechargeSource | null
+    isPromotional: boolean | null
+    promotionalCode: string | null
+    discountAmount: number | null
+    bonusAmount: number | null
+    receiptNumber: string | null
+    receiptUrl: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrepaidRechargeMaxAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    rechargeId: string | null
+    amount: number | null
+    paymentMethod: $Enums.PaymentMethod | null
+    paymentStatus: $Enums.PaymentStatus | null
+    gatewayName: string | null
+    gatewayTransactionId: string | null
+    rechargeType: $Enums.PrepaidRechargeType | null
+    rechargeSource: $Enums.PrepaidRechargeSource | null
+    isPromotional: boolean | null
+    promotionalCode: string | null
+    discountAmount: number | null
+    bonusAmount: number | null
+    receiptNumber: string | null
+    receiptUrl: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PrepaidRechargeCountAggregateOutputType = {
+    id: number
+    accountId: number
+    rechargeId: number
+    amount: number
+    paymentMethod: number
+    paymentStatus: number
+    gatewayName: number
+    gatewayTransactionId: number
+    gatewayResponse: number
+    rechargeType: number
+    rechargeSource: number
+    isPromotional: number
+    promotionalCode: number
+    discountAmount: number
+    bonusAmount: number
+    receiptNumber: number
+    receiptUrl: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PrepaidRechargeAvgAggregateInputType = {
+    id?: true
+    accountId?: true
+    amount?: true
+    discountAmount?: true
+    bonusAmount?: true
+  }
+
+  export type PrepaidRechargeSumAggregateInputType = {
+    id?: true
+    accountId?: true
+    amount?: true
+    discountAmount?: true
+    bonusAmount?: true
+  }
+
+  export type PrepaidRechargeMinAggregateInputType = {
+    id?: true
+    accountId?: true
+    rechargeId?: true
+    amount?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    gatewayName?: true
+    gatewayTransactionId?: true
+    rechargeType?: true
+    rechargeSource?: true
+    isPromotional?: true
+    promotionalCode?: true
+    discountAmount?: true
+    bonusAmount?: true
+    receiptNumber?: true
+    receiptUrl?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrepaidRechargeMaxAggregateInputType = {
+    id?: true
+    accountId?: true
+    rechargeId?: true
+    amount?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    gatewayName?: true
+    gatewayTransactionId?: true
+    rechargeType?: true
+    rechargeSource?: true
+    isPromotional?: true
+    promotionalCode?: true
+    discountAmount?: true
+    bonusAmount?: true
+    receiptNumber?: true
+    receiptUrl?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PrepaidRechargeCountAggregateInputType = {
+    id?: true
+    accountId?: true
+    rechargeId?: true
+    amount?: true
+    paymentMethod?: true
+    paymentStatus?: true
+    gatewayName?: true
+    gatewayTransactionId?: true
+    gatewayResponse?: true
+    rechargeType?: true
+    rechargeSource?: true
+    isPromotional?: true
+    promotionalCode?: true
+    discountAmount?: true
+    bonusAmount?: true
+    receiptNumber?: true
+    receiptUrl?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PrepaidRechargeAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidRecharge to aggregate.
+     */
+    where?: PrepaidRechargeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidRecharges to fetch.
+     */
+    orderBy?: PrepaidRechargeOrderByWithRelationInput | PrepaidRechargeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PrepaidRechargeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidRecharges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidRecharges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PrepaidRecharges
+    **/
+    _count?: true | PrepaidRechargeCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PrepaidRechargeAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PrepaidRechargeSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PrepaidRechargeMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PrepaidRechargeMaxAggregateInputType
+  }
+
+  export type GetPrepaidRechargeAggregateType<T extends PrepaidRechargeAggregateArgs> = {
+        [P in keyof T & keyof AggregatePrepaidRecharge]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePrepaidRecharge[P]>
+      : GetScalarType<T[P], AggregatePrepaidRecharge[P]>
+  }
+
+
+
+
+  export type PrepaidRechargeGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidRechargeWhereInput
+    orderBy?: PrepaidRechargeOrderByWithAggregationInput | PrepaidRechargeOrderByWithAggregationInput[]
+    by: PrepaidRechargeScalarFieldEnum[] | PrepaidRechargeScalarFieldEnum
+    having?: PrepaidRechargeScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PrepaidRechargeCountAggregateInputType | true
+    _avg?: PrepaidRechargeAvgAggregateInputType
+    _sum?: PrepaidRechargeSumAggregateInputType
+    _min?: PrepaidRechargeMinAggregateInputType
+    _max?: PrepaidRechargeMaxAggregateInputType
+  }
+
+  export type PrepaidRechargeGroupByOutputType = {
+    id: number
+    accountId: number
+    rechargeId: string
+    amount: number
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus: $Enums.PaymentStatus
+    gatewayName: string | null
+    gatewayTransactionId: string | null
+    gatewayResponse: JsonValue | null
+    rechargeType: $Enums.PrepaidRechargeType
+    rechargeSource: $Enums.PrepaidRechargeSource
+    isPromotional: boolean
+    promotionalCode: string | null
+    discountAmount: number
+    bonusAmount: number
+    receiptNumber: string | null
+    receiptUrl: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PrepaidRechargeCountAggregateOutputType | null
+    _avg: PrepaidRechargeAvgAggregateOutputType | null
+    _sum: PrepaidRechargeSumAggregateOutputType | null
+    _min: PrepaidRechargeMinAggregateOutputType | null
+    _max: PrepaidRechargeMaxAggregateOutputType | null
+  }
+
+  type GetPrepaidRechargeGroupByPayload<T extends PrepaidRechargeGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PrepaidRechargeGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PrepaidRechargeGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PrepaidRechargeGroupByOutputType[P]>
+            : GetScalarType<T[P], PrepaidRechargeGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PrepaidRechargeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    rechargeId?: boolean
+    amount?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    gatewayName?: boolean
+    gatewayTransactionId?: boolean
+    gatewayResponse?: boolean
+    rechargeType?: boolean
+    rechargeSource?: boolean
+    isPromotional?: boolean
+    promotionalCode?: boolean
+    discountAmount?: boolean
+    bonusAmount?: boolean
+    receiptNumber?: boolean
+    receiptUrl?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidRecharge"]>
+
+  export type PrepaidRechargeSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    rechargeId?: boolean
+    amount?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    gatewayName?: boolean
+    gatewayTransactionId?: boolean
+    gatewayResponse?: boolean
+    rechargeType?: boolean
+    rechargeSource?: boolean
+    isPromotional?: boolean
+    promotionalCode?: boolean
+    discountAmount?: boolean
+    bonusAmount?: boolean
+    receiptNumber?: boolean
+    receiptUrl?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidRecharge"]>
+
+  export type PrepaidRechargeSelectScalar = {
+    id?: boolean
+    accountId?: boolean
+    rechargeId?: boolean
+    amount?: boolean
+    paymentMethod?: boolean
+    paymentStatus?: boolean
+    gatewayName?: boolean
+    gatewayTransactionId?: boolean
+    gatewayResponse?: boolean
+    rechargeType?: boolean
+    rechargeSource?: boolean
+    isPromotional?: boolean
+    promotionalCode?: boolean
+    discountAmount?: boolean
+    bonusAmount?: boolean
+    receiptNumber?: boolean
+    receiptUrl?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PrepaidRechargeInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }
+  export type PrepaidRechargeIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }
+
+  export type $PrepaidRechargePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PrepaidRecharge"
+    objects: {
+      account: Prisma.$PrepaidAccountPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      accountId: number
+      rechargeId: string
+      amount: number
+      paymentMethod: $Enums.PaymentMethod
+      paymentStatus: $Enums.PaymentStatus
+      gatewayName: string | null
+      gatewayTransactionId: string | null
+      gatewayResponse: Prisma.JsonValue | null
+      rechargeType: $Enums.PrepaidRechargeType
+      rechargeSource: $Enums.PrepaidRechargeSource
+      isPromotional: boolean
+      promotionalCode: string | null
+      discountAmount: number
+      bonusAmount: number
+      receiptNumber: string | null
+      receiptUrl: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["prepaidRecharge"]>
+    composites: {}
+  }
+
+  type PrepaidRechargeGetPayload<S extends boolean | null | undefined | PrepaidRechargeDefaultArgs> = $Result.GetResult<Prisma.$PrepaidRechargePayload, S>
+
+  type PrepaidRechargeCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PrepaidRechargeFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PrepaidRechargeCountAggregateInputType | true
+    }
+
+  export interface PrepaidRechargeDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PrepaidRecharge'], meta: { name: 'PrepaidRecharge' } }
+    /**
+     * Find zero or one PrepaidRecharge that matches the filter.
+     * @param {PrepaidRechargeFindUniqueArgs} args - Arguments to find a PrepaidRecharge
+     * @example
+     * // Get one PrepaidRecharge
+     * const prepaidRecharge = await prisma.prepaidRecharge.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PrepaidRechargeFindUniqueArgs>(args: SelectSubset<T, PrepaidRechargeFindUniqueArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PrepaidRecharge that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PrepaidRechargeFindUniqueOrThrowArgs} args - Arguments to find a PrepaidRecharge
+     * @example
+     * // Get one PrepaidRecharge
+     * const prepaidRecharge = await prisma.prepaidRecharge.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PrepaidRechargeFindUniqueOrThrowArgs>(args: SelectSubset<T, PrepaidRechargeFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PrepaidRecharge that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidRechargeFindFirstArgs} args - Arguments to find a PrepaidRecharge
+     * @example
+     * // Get one PrepaidRecharge
+     * const prepaidRecharge = await prisma.prepaidRecharge.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PrepaidRechargeFindFirstArgs>(args?: SelectSubset<T, PrepaidRechargeFindFirstArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PrepaidRecharge that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidRechargeFindFirstOrThrowArgs} args - Arguments to find a PrepaidRecharge
+     * @example
+     * // Get one PrepaidRecharge
+     * const prepaidRecharge = await prisma.prepaidRecharge.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PrepaidRechargeFindFirstOrThrowArgs>(args?: SelectSubset<T, PrepaidRechargeFindFirstOrThrowArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PrepaidRecharges that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidRechargeFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PrepaidRecharges
+     * const prepaidRecharges = await prisma.prepaidRecharge.findMany()
+     * 
+     * // Get first 10 PrepaidRecharges
+     * const prepaidRecharges = await prisma.prepaidRecharge.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const prepaidRechargeWithIdOnly = await prisma.prepaidRecharge.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PrepaidRechargeFindManyArgs>(args?: SelectSubset<T, PrepaidRechargeFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PrepaidRecharge.
+     * @param {PrepaidRechargeCreateArgs} args - Arguments to create a PrepaidRecharge.
+     * @example
+     * // Create one PrepaidRecharge
+     * const PrepaidRecharge = await prisma.prepaidRecharge.create({
+     *   data: {
+     *     // ... data to create a PrepaidRecharge
+     *   }
+     * })
+     * 
+     */
+    create<T extends PrepaidRechargeCreateArgs>(args: SelectSubset<T, PrepaidRechargeCreateArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PrepaidRecharges.
+     * @param {PrepaidRechargeCreateManyArgs} args - Arguments to create many PrepaidRecharges.
+     * @example
+     * // Create many PrepaidRecharges
+     * const prepaidRecharge = await prisma.prepaidRecharge.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PrepaidRechargeCreateManyArgs>(args?: SelectSubset<T, PrepaidRechargeCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PrepaidRecharges and returns the data saved in the database.
+     * @param {PrepaidRechargeCreateManyAndReturnArgs} args - Arguments to create many PrepaidRecharges.
+     * @example
+     * // Create many PrepaidRecharges
+     * const prepaidRecharge = await prisma.prepaidRecharge.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PrepaidRecharges and only return the `id`
+     * const prepaidRechargeWithIdOnly = await prisma.prepaidRecharge.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PrepaidRechargeCreateManyAndReturnArgs>(args?: SelectSubset<T, PrepaidRechargeCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PrepaidRecharge.
+     * @param {PrepaidRechargeDeleteArgs} args - Arguments to delete one PrepaidRecharge.
+     * @example
+     * // Delete one PrepaidRecharge
+     * const PrepaidRecharge = await prisma.prepaidRecharge.delete({
+     *   where: {
+     *     // ... filter to delete one PrepaidRecharge
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PrepaidRechargeDeleteArgs>(args: SelectSubset<T, PrepaidRechargeDeleteArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PrepaidRecharge.
+     * @param {PrepaidRechargeUpdateArgs} args - Arguments to update one PrepaidRecharge.
+     * @example
+     * // Update one PrepaidRecharge
+     * const prepaidRecharge = await prisma.prepaidRecharge.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PrepaidRechargeUpdateArgs>(args: SelectSubset<T, PrepaidRechargeUpdateArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PrepaidRecharges.
+     * @param {PrepaidRechargeDeleteManyArgs} args - Arguments to filter PrepaidRecharges to delete.
+     * @example
+     * // Delete a few PrepaidRecharges
+     * const { count } = await prisma.prepaidRecharge.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PrepaidRechargeDeleteManyArgs>(args?: SelectSubset<T, PrepaidRechargeDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PrepaidRecharges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidRechargeUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PrepaidRecharges
+     * const prepaidRecharge = await prisma.prepaidRecharge.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PrepaidRechargeUpdateManyArgs>(args: SelectSubset<T, PrepaidRechargeUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PrepaidRecharge.
+     * @param {PrepaidRechargeUpsertArgs} args - Arguments to update or create a PrepaidRecharge.
+     * @example
+     * // Update or create a PrepaidRecharge
+     * const prepaidRecharge = await prisma.prepaidRecharge.upsert({
+     *   create: {
+     *     // ... data to create a PrepaidRecharge
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PrepaidRecharge we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PrepaidRechargeUpsertArgs>(args: SelectSubset<T, PrepaidRechargeUpsertArgs<ExtArgs>>): Prisma__PrepaidRechargeClient<$Result.GetResult<Prisma.$PrepaidRechargePayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PrepaidRecharges.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidRechargeCountArgs} args - Arguments to filter PrepaidRecharges to count.
+     * @example
+     * // Count the number of PrepaidRecharges
+     * const count = await prisma.prepaidRecharge.count({
+     *   where: {
+     *     // ... the filter for the PrepaidRecharges we want to count
+     *   }
+     * })
+    **/
+    count<T extends PrepaidRechargeCountArgs>(
+      args?: Subset<T, PrepaidRechargeCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PrepaidRechargeCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PrepaidRecharge.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidRechargeAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PrepaidRechargeAggregateArgs>(args: Subset<T, PrepaidRechargeAggregateArgs>): Prisma.PrismaPromise<GetPrepaidRechargeAggregateType<T>>
+
+    /**
+     * Group by PrepaidRecharge.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidRechargeGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PrepaidRechargeGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PrepaidRechargeGroupByArgs['orderBy'] }
+        : { orderBy?: PrepaidRechargeGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PrepaidRechargeGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPrepaidRechargeGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PrepaidRecharge model
+   */
+  readonly fields: PrepaidRechargeFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PrepaidRecharge.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PrepaidRechargeClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    account<T extends PrepaidAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PrepaidAccountDefaultArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PrepaidRecharge model
+   */ 
+  interface PrepaidRechargeFieldRefs {
+    readonly id: FieldRef<"PrepaidRecharge", 'Int'>
+    readonly accountId: FieldRef<"PrepaidRecharge", 'Int'>
+    readonly rechargeId: FieldRef<"PrepaidRecharge", 'String'>
+    readonly amount: FieldRef<"PrepaidRecharge", 'Float'>
+    readonly paymentMethod: FieldRef<"PrepaidRecharge", 'PaymentMethod'>
+    readonly paymentStatus: FieldRef<"PrepaidRecharge", 'PaymentStatus'>
+    readonly gatewayName: FieldRef<"PrepaidRecharge", 'String'>
+    readonly gatewayTransactionId: FieldRef<"PrepaidRecharge", 'String'>
+    readonly gatewayResponse: FieldRef<"PrepaidRecharge", 'Json'>
+    readonly rechargeType: FieldRef<"PrepaidRecharge", 'PrepaidRechargeType'>
+    readonly rechargeSource: FieldRef<"PrepaidRecharge", 'PrepaidRechargeSource'>
+    readonly isPromotional: FieldRef<"PrepaidRecharge", 'Boolean'>
+    readonly promotionalCode: FieldRef<"PrepaidRecharge", 'String'>
+    readonly discountAmount: FieldRef<"PrepaidRecharge", 'Float'>
+    readonly bonusAmount: FieldRef<"PrepaidRecharge", 'Float'>
+    readonly receiptNumber: FieldRef<"PrepaidRecharge", 'String'>
+    readonly receiptUrl: FieldRef<"PrepaidRecharge", 'String'>
+    readonly createdAt: FieldRef<"PrepaidRecharge", 'DateTime'>
+    readonly updatedAt: FieldRef<"PrepaidRecharge", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PrepaidRecharge findUnique
+   */
+  export type PrepaidRechargeFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidRecharge to fetch.
+     */
+    where: PrepaidRechargeWhereUniqueInput
+  }
+
+  /**
+   * PrepaidRecharge findUniqueOrThrow
+   */
+  export type PrepaidRechargeFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidRecharge to fetch.
+     */
+    where: PrepaidRechargeWhereUniqueInput
+  }
+
+  /**
+   * PrepaidRecharge findFirst
+   */
+  export type PrepaidRechargeFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidRecharge to fetch.
+     */
+    where?: PrepaidRechargeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidRecharges to fetch.
+     */
+    orderBy?: PrepaidRechargeOrderByWithRelationInput | PrepaidRechargeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidRecharges.
+     */
+    cursor?: PrepaidRechargeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidRecharges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidRecharges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidRecharges.
+     */
+    distinct?: PrepaidRechargeScalarFieldEnum | PrepaidRechargeScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidRecharge findFirstOrThrow
+   */
+  export type PrepaidRechargeFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidRecharge to fetch.
+     */
+    where?: PrepaidRechargeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidRecharges to fetch.
+     */
+    orderBy?: PrepaidRechargeOrderByWithRelationInput | PrepaidRechargeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidRecharges.
+     */
+    cursor?: PrepaidRechargeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidRecharges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidRecharges.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidRecharges.
+     */
+    distinct?: PrepaidRechargeScalarFieldEnum | PrepaidRechargeScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidRecharge findMany
+   */
+  export type PrepaidRechargeFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidRecharges to fetch.
+     */
+    where?: PrepaidRechargeWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidRecharges to fetch.
+     */
+    orderBy?: PrepaidRechargeOrderByWithRelationInput | PrepaidRechargeOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PrepaidRecharges.
+     */
+    cursor?: PrepaidRechargeWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidRecharges from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidRecharges.
+     */
+    skip?: number
+    distinct?: PrepaidRechargeScalarFieldEnum | PrepaidRechargeScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidRecharge create
+   */
+  export type PrepaidRechargeCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PrepaidRecharge.
+     */
+    data: XOR<PrepaidRechargeCreateInput, PrepaidRechargeUncheckedCreateInput>
+  }
+
+  /**
+   * PrepaidRecharge createMany
+   */
+  export type PrepaidRechargeCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PrepaidRecharges.
+     */
+    data: PrepaidRechargeCreateManyInput | PrepaidRechargeCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PrepaidRecharge createManyAndReturn
+   */
+  export type PrepaidRechargeCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PrepaidRecharges.
+     */
+    data: PrepaidRechargeCreateManyInput | PrepaidRechargeCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PrepaidRecharge update
+   */
+  export type PrepaidRechargeUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PrepaidRecharge.
+     */
+    data: XOR<PrepaidRechargeUpdateInput, PrepaidRechargeUncheckedUpdateInput>
+    /**
+     * Choose, which PrepaidRecharge to update.
+     */
+    where: PrepaidRechargeWhereUniqueInput
+  }
+
+  /**
+   * PrepaidRecharge updateMany
+   */
+  export type PrepaidRechargeUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PrepaidRecharges.
+     */
+    data: XOR<PrepaidRechargeUpdateManyMutationInput, PrepaidRechargeUncheckedUpdateManyInput>
+    /**
+     * Filter which PrepaidRecharges to update
+     */
+    where?: PrepaidRechargeWhereInput
+  }
+
+  /**
+   * PrepaidRecharge upsert
+   */
+  export type PrepaidRechargeUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PrepaidRecharge to update in case it exists.
+     */
+    where: PrepaidRechargeWhereUniqueInput
+    /**
+     * In case the PrepaidRecharge found by the `where` argument doesn't exist, create a new PrepaidRecharge with this data.
+     */
+    create: XOR<PrepaidRechargeCreateInput, PrepaidRechargeUncheckedCreateInput>
+    /**
+     * In case the PrepaidRecharge was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PrepaidRechargeUpdateInput, PrepaidRechargeUncheckedUpdateInput>
+  }
+
+  /**
+   * PrepaidRecharge delete
+   */
+  export type PrepaidRechargeDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+    /**
+     * Filter which PrepaidRecharge to delete.
+     */
+    where: PrepaidRechargeWhereUniqueInput
+  }
+
+  /**
+   * PrepaidRecharge deleteMany
+   */
+  export type PrepaidRechargeDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidRecharges to delete
+     */
+    where?: PrepaidRechargeWhereInput
+  }
+
+  /**
+   * PrepaidRecharge without action
+   */
+  export type PrepaidRechargeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidRecharge
+     */
+    select?: PrepaidRechargeSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidRechargeInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PrepaidAlert
+   */
+
+  export type AggregatePrepaidAlert = {
+    _count: PrepaidAlertCountAggregateOutputType | null
+    _avg: PrepaidAlertAvgAggregateOutputType | null
+    _sum: PrepaidAlertSumAggregateOutputType | null
+    _min: PrepaidAlertMinAggregateOutputType | null
+    _max: PrepaidAlertMaxAggregateOutputType | null
+  }
+
+  export type PrepaidAlertAvgAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    balanceAtAlert: number | null
+    consumptionAtAlert: number | null
+    thresholdValue: number | null
+  }
+
+  export type PrepaidAlertSumAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    balanceAtAlert: number | null
+    consumptionAtAlert: number | null
+    thresholdValue: number | null
+  }
+
+  export type PrepaidAlertMinAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    alertType: $Enums.PrepaidAlertType | null
+    alertLevel: $Enums.PrepaidAlertLevel | null
+    message: string | null
+    isRead: boolean | null
+    readAt: Date | null
+    balanceAtAlert: number | null
+    consumptionAtAlert: number | null
+    thresholdValue: number | null
+    createdAt: Date | null
+  }
+
+  export type PrepaidAlertMaxAggregateOutputType = {
+    id: number | null
+    accountId: number | null
+    alertType: $Enums.PrepaidAlertType | null
+    alertLevel: $Enums.PrepaidAlertLevel | null
+    message: string | null
+    isRead: boolean | null
+    readAt: Date | null
+    balanceAtAlert: number | null
+    consumptionAtAlert: number | null
+    thresholdValue: number | null
+    createdAt: Date | null
+  }
+
+  export type PrepaidAlertCountAggregateOutputType = {
+    id: number
+    accountId: number
+    alertType: number
+    alertLevel: number
+    message: number
+    isRead: number
+    readAt: number
+    balanceAtAlert: number
+    consumptionAtAlert: number
+    thresholdValue: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PrepaidAlertAvgAggregateInputType = {
+    id?: true
+    accountId?: true
+    balanceAtAlert?: true
+    consumptionAtAlert?: true
+    thresholdValue?: true
+  }
+
+  export type PrepaidAlertSumAggregateInputType = {
+    id?: true
+    accountId?: true
+    balanceAtAlert?: true
+    consumptionAtAlert?: true
+    thresholdValue?: true
+  }
+
+  export type PrepaidAlertMinAggregateInputType = {
+    id?: true
+    accountId?: true
+    alertType?: true
+    alertLevel?: true
+    message?: true
+    isRead?: true
+    readAt?: true
+    balanceAtAlert?: true
+    consumptionAtAlert?: true
+    thresholdValue?: true
+    createdAt?: true
+  }
+
+  export type PrepaidAlertMaxAggregateInputType = {
+    id?: true
+    accountId?: true
+    alertType?: true
+    alertLevel?: true
+    message?: true
+    isRead?: true
+    readAt?: true
+    balanceAtAlert?: true
+    consumptionAtAlert?: true
+    thresholdValue?: true
+    createdAt?: true
+  }
+
+  export type PrepaidAlertCountAggregateInputType = {
+    id?: true
+    accountId?: true
+    alertType?: true
+    alertLevel?: true
+    message?: true
+    isRead?: true
+    readAt?: true
+    balanceAtAlert?: true
+    consumptionAtAlert?: true
+    thresholdValue?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PrepaidAlertAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidAlert to aggregate.
+     */
+    where?: PrepaidAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAlerts to fetch.
+     */
+    orderBy?: PrepaidAlertOrderByWithRelationInput | PrepaidAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PrepaidAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PrepaidAlerts
+    **/
+    _count?: true | PrepaidAlertCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PrepaidAlertAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PrepaidAlertSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PrepaidAlertMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PrepaidAlertMaxAggregateInputType
+  }
+
+  export type GetPrepaidAlertAggregateType<T extends PrepaidAlertAggregateArgs> = {
+        [P in keyof T & keyof AggregatePrepaidAlert]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePrepaidAlert[P]>
+      : GetScalarType<T[P], AggregatePrepaidAlert[P]>
+  }
+
+
+
+
+  export type PrepaidAlertGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PrepaidAlertWhereInput
+    orderBy?: PrepaidAlertOrderByWithAggregationInput | PrepaidAlertOrderByWithAggregationInput[]
+    by: PrepaidAlertScalarFieldEnum[] | PrepaidAlertScalarFieldEnum
+    having?: PrepaidAlertScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PrepaidAlertCountAggregateInputType | true
+    _avg?: PrepaidAlertAvgAggregateInputType
+    _sum?: PrepaidAlertSumAggregateInputType
+    _min?: PrepaidAlertMinAggregateInputType
+    _max?: PrepaidAlertMaxAggregateInputType
+  }
+
+  export type PrepaidAlertGroupByOutputType = {
+    id: number
+    accountId: number
+    alertType: $Enums.PrepaidAlertType
+    alertLevel: $Enums.PrepaidAlertLevel
+    message: string
+    isRead: boolean
+    readAt: Date | null
+    balanceAtAlert: number | null
+    consumptionAtAlert: number | null
+    thresholdValue: number | null
+    createdAt: Date
+    _count: PrepaidAlertCountAggregateOutputType | null
+    _avg: PrepaidAlertAvgAggregateOutputType | null
+    _sum: PrepaidAlertSumAggregateOutputType | null
+    _min: PrepaidAlertMinAggregateOutputType | null
+    _max: PrepaidAlertMaxAggregateOutputType | null
+  }
+
+  type GetPrepaidAlertGroupByPayload<T extends PrepaidAlertGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PrepaidAlertGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PrepaidAlertGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PrepaidAlertGroupByOutputType[P]>
+            : GetScalarType<T[P], PrepaidAlertGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PrepaidAlertSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    alertType?: boolean
+    alertLevel?: boolean
+    message?: boolean
+    isRead?: boolean
+    readAt?: boolean
+    balanceAtAlert?: boolean
+    consumptionAtAlert?: boolean
+    thresholdValue?: boolean
+    createdAt?: boolean
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidAlert"]>
+
+  export type PrepaidAlertSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    accountId?: boolean
+    alertType?: boolean
+    alertLevel?: boolean
+    message?: boolean
+    isRead?: boolean
+    readAt?: boolean
+    balanceAtAlert?: boolean
+    consumptionAtAlert?: boolean
+    thresholdValue?: boolean
+    createdAt?: boolean
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["prepaidAlert"]>
+
+  export type PrepaidAlertSelectScalar = {
+    id?: boolean
+    accountId?: boolean
+    alertType?: boolean
+    alertLevel?: boolean
+    message?: boolean
+    isRead?: boolean
+    readAt?: boolean
+    balanceAtAlert?: boolean
+    consumptionAtAlert?: boolean
+    thresholdValue?: boolean
+    createdAt?: boolean
+  }
+
+  export type PrepaidAlertInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }
+  export type PrepaidAlertIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    account?: boolean | PrepaidAccountDefaultArgs<ExtArgs>
+  }
+
+  export type $PrepaidAlertPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PrepaidAlert"
+    objects: {
+      account: Prisma.$PrepaidAccountPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: number
+      accountId: number
+      alertType: $Enums.PrepaidAlertType
+      alertLevel: $Enums.PrepaidAlertLevel
+      message: string
+      isRead: boolean
+      readAt: Date | null
+      balanceAtAlert: number | null
+      consumptionAtAlert: number | null
+      thresholdValue: number | null
+      createdAt: Date
+    }, ExtArgs["result"]["prepaidAlert"]>
+    composites: {}
+  }
+
+  type PrepaidAlertGetPayload<S extends boolean | null | undefined | PrepaidAlertDefaultArgs> = $Result.GetResult<Prisma.$PrepaidAlertPayload, S>
+
+  type PrepaidAlertCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = 
+    Omit<PrepaidAlertFindManyArgs, 'select' | 'include' | 'distinct'> & {
+      select?: PrepaidAlertCountAggregateInputType | true
+    }
+
+  export interface PrepaidAlertDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PrepaidAlert'], meta: { name: 'PrepaidAlert' } }
+    /**
+     * Find zero or one PrepaidAlert that matches the filter.
+     * @param {PrepaidAlertFindUniqueArgs} args - Arguments to find a PrepaidAlert
+     * @example
+     * // Get one PrepaidAlert
+     * const prepaidAlert = await prisma.prepaidAlert.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PrepaidAlertFindUniqueArgs>(args: SelectSubset<T, PrepaidAlertFindUniqueArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "findUnique"> | null, null, ExtArgs>
+
+    /**
+     * Find one PrepaidAlert that matches the filter or throw an error with `error.code='P2025'` 
+     * if no matches were found.
+     * @param {PrepaidAlertFindUniqueOrThrowArgs} args - Arguments to find a PrepaidAlert
+     * @example
+     * // Get one PrepaidAlert
+     * const prepaidAlert = await prisma.prepaidAlert.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PrepaidAlertFindUniqueOrThrowArgs>(args: SelectSubset<T, PrepaidAlertFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "findUniqueOrThrow">, never, ExtArgs>
+
+    /**
+     * Find the first PrepaidAlert that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAlertFindFirstArgs} args - Arguments to find a PrepaidAlert
+     * @example
+     * // Get one PrepaidAlert
+     * const prepaidAlert = await prisma.prepaidAlert.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PrepaidAlertFindFirstArgs>(args?: SelectSubset<T, PrepaidAlertFindFirstArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "findFirst"> | null, null, ExtArgs>
+
+    /**
+     * Find the first PrepaidAlert that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAlertFindFirstOrThrowArgs} args - Arguments to find a PrepaidAlert
+     * @example
+     * // Get one PrepaidAlert
+     * const prepaidAlert = await prisma.prepaidAlert.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PrepaidAlertFindFirstOrThrowArgs>(args?: SelectSubset<T, PrepaidAlertFindFirstOrThrowArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "findFirstOrThrow">, never, ExtArgs>
+
+    /**
+     * Find zero or more PrepaidAlerts that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAlertFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PrepaidAlerts
+     * const prepaidAlerts = await prisma.prepaidAlert.findMany()
+     * 
+     * // Get first 10 PrepaidAlerts
+     * const prepaidAlerts = await prisma.prepaidAlert.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const prepaidAlertWithIdOnly = await prisma.prepaidAlert.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PrepaidAlertFindManyArgs>(args?: SelectSubset<T, PrepaidAlertFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "findMany">>
+
+    /**
+     * Create a PrepaidAlert.
+     * @param {PrepaidAlertCreateArgs} args - Arguments to create a PrepaidAlert.
+     * @example
+     * // Create one PrepaidAlert
+     * const PrepaidAlert = await prisma.prepaidAlert.create({
+     *   data: {
+     *     // ... data to create a PrepaidAlert
+     *   }
+     * })
+     * 
+     */
+    create<T extends PrepaidAlertCreateArgs>(args: SelectSubset<T, PrepaidAlertCreateArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "create">, never, ExtArgs>
+
+    /**
+     * Create many PrepaidAlerts.
+     * @param {PrepaidAlertCreateManyArgs} args - Arguments to create many PrepaidAlerts.
+     * @example
+     * // Create many PrepaidAlerts
+     * const prepaidAlert = await prisma.prepaidAlert.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PrepaidAlertCreateManyArgs>(args?: SelectSubset<T, PrepaidAlertCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PrepaidAlerts and returns the data saved in the database.
+     * @param {PrepaidAlertCreateManyAndReturnArgs} args - Arguments to create many PrepaidAlerts.
+     * @example
+     * // Create many PrepaidAlerts
+     * const prepaidAlert = await prisma.prepaidAlert.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PrepaidAlerts and only return the `id`
+     * const prepaidAlertWithIdOnly = await prisma.prepaidAlert.createManyAndReturn({ 
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PrepaidAlertCreateManyAndReturnArgs>(args?: SelectSubset<T, PrepaidAlertCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "createManyAndReturn">>
+
+    /**
+     * Delete a PrepaidAlert.
+     * @param {PrepaidAlertDeleteArgs} args - Arguments to delete one PrepaidAlert.
+     * @example
+     * // Delete one PrepaidAlert
+     * const PrepaidAlert = await prisma.prepaidAlert.delete({
+     *   where: {
+     *     // ... filter to delete one PrepaidAlert
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PrepaidAlertDeleteArgs>(args: SelectSubset<T, PrepaidAlertDeleteArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "delete">, never, ExtArgs>
+
+    /**
+     * Update one PrepaidAlert.
+     * @param {PrepaidAlertUpdateArgs} args - Arguments to update one PrepaidAlert.
+     * @example
+     * // Update one PrepaidAlert
+     * const prepaidAlert = await prisma.prepaidAlert.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PrepaidAlertUpdateArgs>(args: SelectSubset<T, PrepaidAlertUpdateArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "update">, never, ExtArgs>
+
+    /**
+     * Delete zero or more PrepaidAlerts.
+     * @param {PrepaidAlertDeleteManyArgs} args - Arguments to filter PrepaidAlerts to delete.
+     * @example
+     * // Delete a few PrepaidAlerts
+     * const { count } = await prisma.prepaidAlert.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PrepaidAlertDeleteManyArgs>(args?: SelectSubset<T, PrepaidAlertDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PrepaidAlerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAlertUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PrepaidAlerts
+     * const prepaidAlert = await prisma.prepaidAlert.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PrepaidAlertUpdateManyArgs>(args: SelectSubset<T, PrepaidAlertUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create or update one PrepaidAlert.
+     * @param {PrepaidAlertUpsertArgs} args - Arguments to update or create a PrepaidAlert.
+     * @example
+     * // Update or create a PrepaidAlert
+     * const prepaidAlert = await prisma.prepaidAlert.upsert({
+     *   create: {
+     *     // ... data to create a PrepaidAlert
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PrepaidAlert we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PrepaidAlertUpsertArgs>(args: SelectSubset<T, PrepaidAlertUpsertArgs<ExtArgs>>): Prisma__PrepaidAlertClient<$Result.GetResult<Prisma.$PrepaidAlertPayload<ExtArgs>, T, "upsert">, never, ExtArgs>
+
+
+    /**
+     * Count the number of PrepaidAlerts.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAlertCountArgs} args - Arguments to filter PrepaidAlerts to count.
+     * @example
+     * // Count the number of PrepaidAlerts
+     * const count = await prisma.prepaidAlert.count({
+     *   where: {
+     *     // ... the filter for the PrepaidAlerts we want to count
+     *   }
+     * })
+    **/
+    count<T extends PrepaidAlertCountArgs>(
+      args?: Subset<T, PrepaidAlertCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PrepaidAlertCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PrepaidAlert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAlertAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PrepaidAlertAggregateArgs>(args: Subset<T, PrepaidAlertAggregateArgs>): Prisma.PrismaPromise<GetPrepaidAlertAggregateType<T>>
+
+    /**
+     * Group by PrepaidAlert.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PrepaidAlertGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PrepaidAlertGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PrepaidAlertGroupByArgs['orderBy'] }
+        : { orderBy?: PrepaidAlertGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PrepaidAlertGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPrepaidAlertGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PrepaidAlert model
+   */
+  readonly fields: PrepaidAlertFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PrepaidAlert.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PrepaidAlertClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    account<T extends PrepaidAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PrepaidAccountDefaultArgs<ExtArgs>>): Prisma__PrepaidAccountClient<$Result.GetResult<Prisma.$PrepaidAccountPayload<ExtArgs>, T, "findUniqueOrThrow"> | Null, Null, ExtArgs>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PrepaidAlert model
+   */ 
+  interface PrepaidAlertFieldRefs {
+    readonly id: FieldRef<"PrepaidAlert", 'Int'>
+    readonly accountId: FieldRef<"PrepaidAlert", 'Int'>
+    readonly alertType: FieldRef<"PrepaidAlert", 'PrepaidAlertType'>
+    readonly alertLevel: FieldRef<"PrepaidAlert", 'PrepaidAlertLevel'>
+    readonly message: FieldRef<"PrepaidAlert", 'String'>
+    readonly isRead: FieldRef<"PrepaidAlert", 'Boolean'>
+    readonly readAt: FieldRef<"PrepaidAlert", 'DateTime'>
+    readonly balanceAtAlert: FieldRef<"PrepaidAlert", 'Float'>
+    readonly consumptionAtAlert: FieldRef<"PrepaidAlert", 'Float'>
+    readonly thresholdValue: FieldRef<"PrepaidAlert", 'Float'>
+    readonly createdAt: FieldRef<"PrepaidAlert", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PrepaidAlert findUnique
+   */
+  export type PrepaidAlertFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAlert to fetch.
+     */
+    where: PrepaidAlertWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAlert findUniqueOrThrow
+   */
+  export type PrepaidAlertFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAlert to fetch.
+     */
+    where: PrepaidAlertWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAlert findFirst
+   */
+  export type PrepaidAlertFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAlert to fetch.
+     */
+    where?: PrepaidAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAlerts to fetch.
+     */
+    orderBy?: PrepaidAlertOrderByWithRelationInput | PrepaidAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidAlerts.
+     */
+    cursor?: PrepaidAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidAlerts.
+     */
+    distinct?: PrepaidAlertScalarFieldEnum | PrepaidAlertScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAlert findFirstOrThrow
+   */
+  export type PrepaidAlertFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAlert to fetch.
+     */
+    where?: PrepaidAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAlerts to fetch.
+     */
+    orderBy?: PrepaidAlertOrderByWithRelationInput | PrepaidAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PrepaidAlerts.
+     */
+    cursor?: PrepaidAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAlerts.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PrepaidAlerts.
+     */
+    distinct?: PrepaidAlertScalarFieldEnum | PrepaidAlertScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAlert findMany
+   */
+  export type PrepaidAlertFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * Filter, which PrepaidAlerts to fetch.
+     */
+    where?: PrepaidAlertWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PrepaidAlerts to fetch.
+     */
+    orderBy?: PrepaidAlertOrderByWithRelationInput | PrepaidAlertOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PrepaidAlerts.
+     */
+    cursor?: PrepaidAlertWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PrepaidAlerts from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PrepaidAlerts.
+     */
+    skip?: number
+    distinct?: PrepaidAlertScalarFieldEnum | PrepaidAlertScalarFieldEnum[]
+  }
+
+  /**
+   * PrepaidAlert create
+   */
+  export type PrepaidAlertCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PrepaidAlert.
+     */
+    data: XOR<PrepaidAlertCreateInput, PrepaidAlertUncheckedCreateInput>
+  }
+
+  /**
+   * PrepaidAlert createMany
+   */
+  export type PrepaidAlertCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PrepaidAlerts.
+     */
+    data: PrepaidAlertCreateManyInput | PrepaidAlertCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PrepaidAlert createManyAndReturn
+   */
+  export type PrepaidAlertCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * The data used to create many PrepaidAlerts.
+     */
+    data: PrepaidAlertCreateManyInput | PrepaidAlertCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PrepaidAlert update
+   */
+  export type PrepaidAlertUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PrepaidAlert.
+     */
+    data: XOR<PrepaidAlertUpdateInput, PrepaidAlertUncheckedUpdateInput>
+    /**
+     * Choose, which PrepaidAlert to update.
+     */
+    where: PrepaidAlertWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAlert updateMany
+   */
+  export type PrepaidAlertUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PrepaidAlerts.
+     */
+    data: XOR<PrepaidAlertUpdateManyMutationInput, PrepaidAlertUncheckedUpdateManyInput>
+    /**
+     * Filter which PrepaidAlerts to update
+     */
+    where?: PrepaidAlertWhereInput
+  }
+
+  /**
+   * PrepaidAlert upsert
+   */
+  export type PrepaidAlertUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PrepaidAlert to update in case it exists.
+     */
+    where: PrepaidAlertWhereUniqueInput
+    /**
+     * In case the PrepaidAlert found by the `where` argument doesn't exist, create a new PrepaidAlert with this data.
+     */
+    create: XOR<PrepaidAlertCreateInput, PrepaidAlertUncheckedCreateInput>
+    /**
+     * In case the PrepaidAlert was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PrepaidAlertUpdateInput, PrepaidAlertUncheckedUpdateInput>
+  }
+
+  /**
+   * PrepaidAlert delete
+   */
+  export type PrepaidAlertDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+    /**
+     * Filter which PrepaidAlert to delete.
+     */
+    where: PrepaidAlertWhereUniqueInput
+  }
+
+  /**
+   * PrepaidAlert deleteMany
+   */
+  export type PrepaidAlertDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PrepaidAlerts to delete
+     */
+    where?: PrepaidAlertWhereInput
+  }
+
+  /**
+   * PrepaidAlert without action
+   */
+  export type PrepaidAlertDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PrepaidAlert
+     */
+    select?: PrepaidAlertSelect<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PrepaidAlertInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -34872,6 +42666,149 @@ export namespace Prisma {
   };
 
   export type DTRFaultScalarFieldEnum = (typeof DTRFaultScalarFieldEnum)[keyof typeof DTRFaultScalarFieldEnum]
+
+
+  export const TamperEventScalarFieldEnum: {
+    id: 'id',
+    meterId: 'meterId',
+    tamperDatetime: 'tamperDatetime',
+    tamperType: 'tamperType',
+    tamperStatus: 'tamperStatus',
+    avgCurrent: 'avgCurrent',
+    avgVoltage: 'avgVoltage',
+    avgPowerFactor: 'avgPowerFactor',
+    frequency: 'frequency',
+    kwh: 'kwh',
+    kwhExport: 'kwhExport',
+    kwhImport: 'kwhImport',
+    kwhNet: 'kwhNet',
+    kwhTotal: 'kwhTotal',
+    kwExport: 'kwExport',
+    kwImport: 'kwImport',
+    kvaExport: 'kvaExport',
+    kvaImport: 'kvaImport',
+    voltageR: 'voltageR',
+    voltageY: 'voltageY',
+    voltageB: 'voltageB',
+    currentR: 'currentR',
+    currentY: 'currentY',
+    currentB: 'currentB',
+    powerFactorR: 'powerFactorR',
+    powerFactorY: 'powerFactorY',
+    powerFactorB: 'powerFactorB',
+    tamperCount: 'tamperCount',
+    param1: 'param1',
+    param2: 'param2',
+    param3: 'param3',
+    param4: 'param4',
+    param5: 'param5',
+    isProcessed: 'isProcessed',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TamperEventScalarFieldEnum = (typeof TamperEventScalarFieldEnum)[keyof typeof TamperEventScalarFieldEnum]
+
+
+  export const TamperCodeDescriptionScalarFieldEnum: {
+    id: 'id',
+    tamperCode: 'tamperCode',
+    tamperDesc: 'tamperDesc',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TamperCodeDescriptionScalarFieldEnum = (typeof TamperCodeDescriptionScalarFieldEnum)[keyof typeof TamperCodeDescriptionScalarFieldEnum]
+
+
+  export const PrepaidAccountScalarFieldEnum: {
+    id: 'id',
+    consumerId: 'consumerId',
+    accountNumber: 'accountNumber',
+    currentBalance: 'currentBalance',
+    totalRecharged: 'totalRecharged',
+    totalConsumed: 'totalConsumed',
+    isActive: 'isActive',
+    isBlocked: 'isBlocked',
+    blockReason: 'blockReason',
+    blockedAt: 'blockedAt',
+    blockedBy: 'blockedBy',
+    lowBalanceThreshold: 'lowBalanceThreshold',
+    emergencyThreshold: 'emergencyThreshold',
+    autoRechargeEnabled: 'autoRechargeEnabled',
+    autoRechargeAmount: 'autoRechargeAmount',
+    autoRechargeThreshold: 'autoRechargeThreshold',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PrepaidAccountScalarFieldEnum = (typeof PrepaidAccountScalarFieldEnum)[keyof typeof PrepaidAccountScalarFieldEnum]
+
+
+  export const PrepaidTransactionScalarFieldEnum: {
+    id: 'id',
+    accountId: 'accountId',
+    transactionId: 'transactionId',
+    transactionType: 'transactionType',
+    amount: 'amount',
+    balanceBefore: 'balanceBefore',
+    balanceAfter: 'balanceAfter',
+    consumptionKWh: 'consumptionKWh',
+    ratePerUnit: 'ratePerUnit',
+    fixedCharges: 'fixedCharges',
+    taxes: 'taxes',
+    readingId: 'readingId',
+    status: 'status',
+    failureReason: 'failureReason',
+    description: 'description',
+    metadata: 'metadata',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PrepaidTransactionScalarFieldEnum = (typeof PrepaidTransactionScalarFieldEnum)[keyof typeof PrepaidTransactionScalarFieldEnum]
+
+
+  export const PrepaidRechargeScalarFieldEnum: {
+    id: 'id',
+    accountId: 'accountId',
+    rechargeId: 'rechargeId',
+    amount: 'amount',
+    paymentMethod: 'paymentMethod',
+    paymentStatus: 'paymentStatus',
+    gatewayName: 'gatewayName',
+    gatewayTransactionId: 'gatewayTransactionId',
+    gatewayResponse: 'gatewayResponse',
+    rechargeType: 'rechargeType',
+    rechargeSource: 'rechargeSource',
+    isPromotional: 'isPromotional',
+    promotionalCode: 'promotionalCode',
+    discountAmount: 'discountAmount',
+    bonusAmount: 'bonusAmount',
+    receiptNumber: 'receiptNumber',
+    receiptUrl: 'receiptUrl',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PrepaidRechargeScalarFieldEnum = (typeof PrepaidRechargeScalarFieldEnum)[keyof typeof PrepaidRechargeScalarFieldEnum]
+
+
+  export const PrepaidAlertScalarFieldEnum: {
+    id: 'id',
+    accountId: 'accountId',
+    alertType: 'alertType',
+    alertLevel: 'alertLevel',
+    message: 'message',
+    isRead: 'isRead',
+    readAt: 'readAt',
+    balanceAtAlert: 'balanceAtAlert',
+    consumptionAtAlert: 'consumptionAtAlert',
+    thresholdValue: 'thresholdValue',
+    createdAt: 'createdAt'
+  };
+
+  export type PrepaidAlertScalarFieldEnum = (typeof PrepaidAlertScalarFieldEnum)[keyof typeof PrepaidAlertScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -35456,6 +43393,118 @@ export namespace Prisma {
    * Reference to a field of type 'FaultStatus[]'
    */
   export type ListEnumFaultStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FaultStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TamperType'
+   */
+  export type EnumTamperTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TamperType'>
+    
+
+
+  /**
+   * Reference to a field of type 'TamperType[]'
+   */
+  export type ListEnumTamperTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TamperType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'TamperStatus'
+   */
+  export type EnumTamperStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TamperStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'TamperStatus[]'
+   */
+  export type ListEnumTamperStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TamperStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidTransactionType'
+   */
+  export type EnumPrepaidTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidTransactionType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidTransactionType[]'
+   */
+  export type ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidTransactionType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidTransactionStatus'
+   */
+  export type EnumPrepaidTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidTransactionStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidTransactionStatus[]'
+   */
+  export type ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidTransactionStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidRechargeType'
+   */
+  export type EnumPrepaidRechargeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidRechargeType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidRechargeType[]'
+   */
+  export type ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidRechargeType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidRechargeSource'
+   */
+  export type EnumPrepaidRechargeSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidRechargeSource'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidRechargeSource[]'
+   */
+  export type ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidRechargeSource[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidAlertType'
+   */
+  export type EnumPrepaidAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidAlertType'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidAlertType[]'
+   */
+  export type ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidAlertType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidAlertLevel'
+   */
+  export type EnumPrepaidAlertLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidAlertLevel'>
+    
+
+
+  /**
+   * Reference to a field of type 'PrepaidAlertLevel[]'
+   */
+  export type ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PrepaidAlertLevel[]'>
     
   /**
    * Deep Input Types
@@ -36500,6 +44549,7 @@ export namespace Prisma {
     bills?: BillListRelationFilter
     notifications?: NotificationListRelationFilter
     tickets?: TicketListRelationFilter
+    prepaidAccounts?: PrepaidAccountListRelationFilter
   }
 
   export type ConsumerOrderByWithRelationInput = {
@@ -36528,6 +44578,7 @@ export namespace Prisma {
     bills?: BillOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     tickets?: TicketOrderByRelationAggregateInput
+    prepaidAccounts?: PrepaidAccountOrderByRelationAggregateInput
   }
 
   export type ConsumerWhereUniqueInput = Prisma.AtLeast<{
@@ -36559,6 +44610,7 @@ export namespace Prisma {
     bills?: BillListRelationFilter
     notifications?: NotificationListRelationFilter
     tickets?: TicketListRelationFilter
+    prepaidAccounts?: PrepaidAccountListRelationFilter
   }, "id" | "consumerNumber" | "locationId">
 
   export type ConsumerOrderByWithAggregationInput = {
@@ -36711,6 +44763,7 @@ export namespace Prisma {
     location?: XOR<LocationRelationFilter, LocationWhereInput>
     readings?: MeterReadingListRelationFilter
     bills?: BillListRelationFilter
+    tamperEvents?: TamperEventListRelationFilter
     dtr?: XOR<DTRNullableRelationFilter, DTRWhereInput> | null
     currentTransformers?: CurrentTransformerListRelationFilter
     potentialTransformers?: PotentialTransformerListRelationFilter
@@ -36739,6 +44792,7 @@ export namespace Prisma {
     location?: LocationOrderByWithRelationInput
     readings?: MeterReadingOrderByRelationAggregateInput
     bills?: BillOrderByRelationAggregateInput
+    tamperEvents?: TamperEventOrderByRelationAggregateInput
     dtr?: DTROrderByWithRelationInput
     currentTransformers?: CurrentTransformerOrderByRelationAggregateInput
     potentialTransformers?: PotentialTransformerOrderByRelationAggregateInput
@@ -36770,6 +44824,7 @@ export namespace Prisma {
     location?: XOR<LocationRelationFilter, LocationWhereInput>
     readings?: MeterReadingListRelationFilter
     bills?: BillListRelationFilter
+    tamperEvents?: TamperEventListRelationFilter
     dtr?: XOR<DTRNullableRelationFilter, DTRWhereInput> | null
     currentTransformers?: CurrentTransformerListRelationFilter
     potentialTransformers?: PotentialTransformerListRelationFilter
@@ -36984,6 +45039,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"MeterReading"> | Date | string
     meter?: XOR<MeterRelationFilter, MeterWhereInput>
     bill?: XOR<BillNullableRelationFilter, BillWhereInput> | null
+    prepaidTransactions?: PrepaidTransactionListRelationFilter
   }
 
   export type MeterReadingOrderByWithRelationInput = {
@@ -37017,6 +45073,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     meter?: MeterOrderByWithRelationInput
     bill?: BillOrderByWithRelationInput
+    prepaidTransactions?: PrepaidTransactionOrderByRelationAggregateInput
   }
 
   export type MeterReadingWhereUniqueInput = Prisma.AtLeast<{
@@ -37053,6 +45110,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"MeterReading"> | Date | string
     meter?: XOR<MeterRelationFilter, MeterWhereInput>
     bill?: XOR<BillNullableRelationFilter, BillWhereInput> | null
+    prepaidTransactions?: PrepaidTransactionListRelationFilter
   }, "id">
 
   export type MeterReadingOrderByWithAggregationInput = {
@@ -38292,6 +46350,743 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"DTRFault"> | Date | string
   }
 
+  export type TamperEventWhereInput = {
+    AND?: TamperEventWhereInput | TamperEventWhereInput[]
+    OR?: TamperEventWhereInput[]
+    NOT?: TamperEventWhereInput | TamperEventWhereInput[]
+    id?: IntFilter<"TamperEvent"> | number
+    meterId?: IntFilter<"TamperEvent"> | number
+    tamperDatetime?: DateTimeFilter<"TamperEvent"> | Date | string
+    tamperType?: EnumTamperTypeFilter<"TamperEvent"> | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFilter<"TamperEvent"> | $Enums.TamperStatus
+    avgCurrent?: FloatNullableFilter<"TamperEvent"> | number | null
+    avgVoltage?: FloatNullableFilter<"TamperEvent"> | number | null
+    avgPowerFactor?: FloatNullableFilter<"TamperEvent"> | number | null
+    frequency?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwh?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhNet?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhTotal?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kvaExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kvaImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageR?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageY?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageB?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentR?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentY?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentB?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorR?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorY?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorB?: FloatNullableFilter<"TamperEvent"> | number | null
+    tamperCount?: IntNullableFilter<"TamperEvent"> | number | null
+    param1?: FloatNullableFilter<"TamperEvent"> | number | null
+    param2?: FloatNullableFilter<"TamperEvent"> | number | null
+    param3?: FloatNullableFilter<"TamperEvent"> | number | null
+    param4?: FloatNullableFilter<"TamperEvent"> | number | null
+    param5?: FloatNullableFilter<"TamperEvent"> | number | null
+    isProcessed?: BoolFilter<"TamperEvent"> | boolean
+    createdAt?: DateTimeFilter<"TamperEvent"> | Date | string
+    updatedAt?: DateTimeFilter<"TamperEvent"> | Date | string
+    meter?: XOR<MeterRelationFilter, MeterWhereInput>
+  }
+
+  export type TamperEventOrderByWithRelationInput = {
+    id?: SortOrder
+    meterId?: SortOrder
+    tamperDatetime?: SortOrder
+    tamperType?: SortOrder
+    tamperStatus?: SortOrder
+    avgCurrent?: SortOrderInput | SortOrder
+    avgVoltage?: SortOrderInput | SortOrder
+    avgPowerFactor?: SortOrderInput | SortOrder
+    frequency?: SortOrderInput | SortOrder
+    kwh?: SortOrderInput | SortOrder
+    kwhExport?: SortOrderInput | SortOrder
+    kwhImport?: SortOrderInput | SortOrder
+    kwhNet?: SortOrderInput | SortOrder
+    kwhTotal?: SortOrderInput | SortOrder
+    kwExport?: SortOrderInput | SortOrder
+    kwImport?: SortOrderInput | SortOrder
+    kvaExport?: SortOrderInput | SortOrder
+    kvaImport?: SortOrderInput | SortOrder
+    voltageR?: SortOrderInput | SortOrder
+    voltageY?: SortOrderInput | SortOrder
+    voltageB?: SortOrderInput | SortOrder
+    currentR?: SortOrderInput | SortOrder
+    currentY?: SortOrderInput | SortOrder
+    currentB?: SortOrderInput | SortOrder
+    powerFactorR?: SortOrderInput | SortOrder
+    powerFactorY?: SortOrderInput | SortOrder
+    powerFactorB?: SortOrderInput | SortOrder
+    tamperCount?: SortOrderInput | SortOrder
+    param1?: SortOrderInput | SortOrder
+    param2?: SortOrderInput | SortOrder
+    param3?: SortOrderInput | SortOrder
+    param4?: SortOrderInput | SortOrder
+    param5?: SortOrderInput | SortOrder
+    isProcessed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    meter?: MeterOrderByWithRelationInput
+  }
+
+  export type TamperEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    meterId_tamperDatetime_tamperType_tamperStatus?: TamperEventMeterIdTamperDatetimeTamperTypeTamperStatusCompoundUniqueInput
+    AND?: TamperEventWhereInput | TamperEventWhereInput[]
+    OR?: TamperEventWhereInput[]
+    NOT?: TamperEventWhereInput | TamperEventWhereInput[]
+    meterId?: IntFilter<"TamperEvent"> | number
+    tamperDatetime?: DateTimeFilter<"TamperEvent"> | Date | string
+    tamperType?: EnumTamperTypeFilter<"TamperEvent"> | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFilter<"TamperEvent"> | $Enums.TamperStatus
+    avgCurrent?: FloatNullableFilter<"TamperEvent"> | number | null
+    avgVoltage?: FloatNullableFilter<"TamperEvent"> | number | null
+    avgPowerFactor?: FloatNullableFilter<"TamperEvent"> | number | null
+    frequency?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwh?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhNet?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhTotal?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kvaExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kvaImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageR?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageY?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageB?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentR?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentY?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentB?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorR?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorY?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorB?: FloatNullableFilter<"TamperEvent"> | number | null
+    tamperCount?: IntNullableFilter<"TamperEvent"> | number | null
+    param1?: FloatNullableFilter<"TamperEvent"> | number | null
+    param2?: FloatNullableFilter<"TamperEvent"> | number | null
+    param3?: FloatNullableFilter<"TamperEvent"> | number | null
+    param4?: FloatNullableFilter<"TamperEvent"> | number | null
+    param5?: FloatNullableFilter<"TamperEvent"> | number | null
+    isProcessed?: BoolFilter<"TamperEvent"> | boolean
+    createdAt?: DateTimeFilter<"TamperEvent"> | Date | string
+    updatedAt?: DateTimeFilter<"TamperEvent"> | Date | string
+    meter?: XOR<MeterRelationFilter, MeterWhereInput>
+  }, "id" | "meterId_tamperDatetime_tamperType_tamperStatus">
+
+  export type TamperEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    meterId?: SortOrder
+    tamperDatetime?: SortOrder
+    tamperType?: SortOrder
+    tamperStatus?: SortOrder
+    avgCurrent?: SortOrderInput | SortOrder
+    avgVoltage?: SortOrderInput | SortOrder
+    avgPowerFactor?: SortOrderInput | SortOrder
+    frequency?: SortOrderInput | SortOrder
+    kwh?: SortOrderInput | SortOrder
+    kwhExport?: SortOrderInput | SortOrder
+    kwhImport?: SortOrderInput | SortOrder
+    kwhNet?: SortOrderInput | SortOrder
+    kwhTotal?: SortOrderInput | SortOrder
+    kwExport?: SortOrderInput | SortOrder
+    kwImport?: SortOrderInput | SortOrder
+    kvaExport?: SortOrderInput | SortOrder
+    kvaImport?: SortOrderInput | SortOrder
+    voltageR?: SortOrderInput | SortOrder
+    voltageY?: SortOrderInput | SortOrder
+    voltageB?: SortOrderInput | SortOrder
+    currentR?: SortOrderInput | SortOrder
+    currentY?: SortOrderInput | SortOrder
+    currentB?: SortOrderInput | SortOrder
+    powerFactorR?: SortOrderInput | SortOrder
+    powerFactorY?: SortOrderInput | SortOrder
+    powerFactorB?: SortOrderInput | SortOrder
+    tamperCount?: SortOrderInput | SortOrder
+    param1?: SortOrderInput | SortOrder
+    param2?: SortOrderInput | SortOrder
+    param3?: SortOrderInput | SortOrder
+    param4?: SortOrderInput | SortOrder
+    param5?: SortOrderInput | SortOrder
+    isProcessed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TamperEventCountOrderByAggregateInput
+    _avg?: TamperEventAvgOrderByAggregateInput
+    _max?: TamperEventMaxOrderByAggregateInput
+    _min?: TamperEventMinOrderByAggregateInput
+    _sum?: TamperEventSumOrderByAggregateInput
+  }
+
+  export type TamperEventScalarWhereWithAggregatesInput = {
+    AND?: TamperEventScalarWhereWithAggregatesInput | TamperEventScalarWhereWithAggregatesInput[]
+    OR?: TamperEventScalarWhereWithAggregatesInput[]
+    NOT?: TamperEventScalarWhereWithAggregatesInput | TamperEventScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TamperEvent"> | number
+    meterId?: IntWithAggregatesFilter<"TamperEvent"> | number
+    tamperDatetime?: DateTimeWithAggregatesFilter<"TamperEvent"> | Date | string
+    tamperType?: EnumTamperTypeWithAggregatesFilter<"TamperEvent"> | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusWithAggregatesFilter<"TamperEvent"> | $Enums.TamperStatus
+    avgCurrent?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    avgVoltage?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    avgPowerFactor?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    frequency?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kwh?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kwhExport?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kwhImport?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kwhNet?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kwhTotal?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kwExport?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kwImport?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kvaExport?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    kvaImport?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    voltageR?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    voltageY?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    voltageB?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    currentR?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    currentY?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    currentB?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    powerFactorR?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    powerFactorY?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    powerFactorB?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    tamperCount?: IntNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    param1?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    param2?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    param3?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    param4?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    param5?: FloatNullableWithAggregatesFilter<"TamperEvent"> | number | null
+    isProcessed?: BoolWithAggregatesFilter<"TamperEvent"> | boolean
+    createdAt?: DateTimeWithAggregatesFilter<"TamperEvent"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TamperEvent"> | Date | string
+  }
+
+  export type TamperCodeDescriptionWhereInput = {
+    AND?: TamperCodeDescriptionWhereInput | TamperCodeDescriptionWhereInput[]
+    OR?: TamperCodeDescriptionWhereInput[]
+    NOT?: TamperCodeDescriptionWhereInput | TamperCodeDescriptionWhereInput[]
+    id?: IntFilter<"TamperCodeDescription"> | number
+    tamperCode?: IntFilter<"TamperCodeDescription"> | number
+    tamperDesc?: StringFilter<"TamperCodeDescription"> | string
+    createdAt?: DateTimeFilter<"TamperCodeDescription"> | Date | string
+    updatedAt?: DateTimeFilter<"TamperCodeDescription"> | Date | string
+  }
+
+  export type TamperCodeDescriptionOrderByWithRelationInput = {
+    id?: SortOrder
+    tamperCode?: SortOrder
+    tamperDesc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TamperCodeDescriptionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    tamperCode?: number
+    AND?: TamperCodeDescriptionWhereInput | TamperCodeDescriptionWhereInput[]
+    OR?: TamperCodeDescriptionWhereInput[]
+    NOT?: TamperCodeDescriptionWhereInput | TamperCodeDescriptionWhereInput[]
+    tamperDesc?: StringFilter<"TamperCodeDescription"> | string
+    createdAt?: DateTimeFilter<"TamperCodeDescription"> | Date | string
+    updatedAt?: DateTimeFilter<"TamperCodeDescription"> | Date | string
+  }, "id" | "tamperCode">
+
+  export type TamperCodeDescriptionOrderByWithAggregationInput = {
+    id?: SortOrder
+    tamperCode?: SortOrder
+    tamperDesc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TamperCodeDescriptionCountOrderByAggregateInput
+    _avg?: TamperCodeDescriptionAvgOrderByAggregateInput
+    _max?: TamperCodeDescriptionMaxOrderByAggregateInput
+    _min?: TamperCodeDescriptionMinOrderByAggregateInput
+    _sum?: TamperCodeDescriptionSumOrderByAggregateInput
+  }
+
+  export type TamperCodeDescriptionScalarWhereWithAggregatesInput = {
+    AND?: TamperCodeDescriptionScalarWhereWithAggregatesInput | TamperCodeDescriptionScalarWhereWithAggregatesInput[]
+    OR?: TamperCodeDescriptionScalarWhereWithAggregatesInput[]
+    NOT?: TamperCodeDescriptionScalarWhereWithAggregatesInput | TamperCodeDescriptionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"TamperCodeDescription"> | number
+    tamperCode?: IntWithAggregatesFilter<"TamperCodeDescription"> | number
+    tamperDesc?: StringWithAggregatesFilter<"TamperCodeDescription"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"TamperCodeDescription"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TamperCodeDescription"> | Date | string
+  }
+
+  export type PrepaidAccountWhereInput = {
+    AND?: PrepaidAccountWhereInput | PrepaidAccountWhereInput[]
+    OR?: PrepaidAccountWhereInput[]
+    NOT?: PrepaidAccountWhereInput | PrepaidAccountWhereInput[]
+    id?: IntFilter<"PrepaidAccount"> | number
+    consumerId?: IntFilter<"PrepaidAccount"> | number
+    accountNumber?: StringFilter<"PrepaidAccount"> | string
+    currentBalance?: FloatFilter<"PrepaidAccount"> | number
+    totalRecharged?: FloatFilter<"PrepaidAccount"> | number
+    totalConsumed?: FloatFilter<"PrepaidAccount"> | number
+    isActive?: BoolFilter<"PrepaidAccount"> | boolean
+    isBlocked?: BoolFilter<"PrepaidAccount"> | boolean
+    blockReason?: StringNullableFilter<"PrepaidAccount"> | string | null
+    blockedAt?: DateTimeNullableFilter<"PrepaidAccount"> | Date | string | null
+    blockedBy?: IntNullableFilter<"PrepaidAccount"> | number | null
+    lowBalanceThreshold?: FloatFilter<"PrepaidAccount"> | number
+    emergencyThreshold?: FloatFilter<"PrepaidAccount"> | number
+    autoRechargeEnabled?: BoolFilter<"PrepaidAccount"> | boolean
+    autoRechargeAmount?: FloatNullableFilter<"PrepaidAccount"> | number | null
+    autoRechargeThreshold?: FloatNullableFilter<"PrepaidAccount"> | number | null
+    createdAt?: DateTimeFilter<"PrepaidAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidAccount"> | Date | string
+    consumer?: XOR<ConsumerRelationFilter, ConsumerWhereInput>
+    transactions?: PrepaidTransactionListRelationFilter
+    recharges?: PrepaidRechargeListRelationFilter
+    alerts?: PrepaidAlertListRelationFilter
+  }
+
+  export type PrepaidAccountOrderByWithRelationInput = {
+    id?: SortOrder
+    consumerId?: SortOrder
+    accountNumber?: SortOrder
+    currentBalance?: SortOrder
+    totalRecharged?: SortOrder
+    totalConsumed?: SortOrder
+    isActive?: SortOrder
+    isBlocked?: SortOrder
+    blockReason?: SortOrderInput | SortOrder
+    blockedAt?: SortOrderInput | SortOrder
+    blockedBy?: SortOrderInput | SortOrder
+    lowBalanceThreshold?: SortOrder
+    emergencyThreshold?: SortOrder
+    autoRechargeEnabled?: SortOrder
+    autoRechargeAmount?: SortOrderInput | SortOrder
+    autoRechargeThreshold?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    consumer?: ConsumerOrderByWithRelationInput
+    transactions?: PrepaidTransactionOrderByRelationAggregateInput
+    recharges?: PrepaidRechargeOrderByRelationAggregateInput
+    alerts?: PrepaidAlertOrderByRelationAggregateInput
+  }
+
+  export type PrepaidAccountWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    consumerId?: number
+    accountNumber?: string
+    AND?: PrepaidAccountWhereInput | PrepaidAccountWhereInput[]
+    OR?: PrepaidAccountWhereInput[]
+    NOT?: PrepaidAccountWhereInput | PrepaidAccountWhereInput[]
+    currentBalance?: FloatFilter<"PrepaidAccount"> | number
+    totalRecharged?: FloatFilter<"PrepaidAccount"> | number
+    totalConsumed?: FloatFilter<"PrepaidAccount"> | number
+    isActive?: BoolFilter<"PrepaidAccount"> | boolean
+    isBlocked?: BoolFilter<"PrepaidAccount"> | boolean
+    blockReason?: StringNullableFilter<"PrepaidAccount"> | string | null
+    blockedAt?: DateTimeNullableFilter<"PrepaidAccount"> | Date | string | null
+    blockedBy?: IntNullableFilter<"PrepaidAccount"> | number | null
+    lowBalanceThreshold?: FloatFilter<"PrepaidAccount"> | number
+    emergencyThreshold?: FloatFilter<"PrepaidAccount"> | number
+    autoRechargeEnabled?: BoolFilter<"PrepaidAccount"> | boolean
+    autoRechargeAmount?: FloatNullableFilter<"PrepaidAccount"> | number | null
+    autoRechargeThreshold?: FloatNullableFilter<"PrepaidAccount"> | number | null
+    createdAt?: DateTimeFilter<"PrepaidAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidAccount"> | Date | string
+    consumer?: XOR<ConsumerRelationFilter, ConsumerWhereInput>
+    transactions?: PrepaidTransactionListRelationFilter
+    recharges?: PrepaidRechargeListRelationFilter
+    alerts?: PrepaidAlertListRelationFilter
+  }, "id" | "consumerId" | "accountNumber">
+
+  export type PrepaidAccountOrderByWithAggregationInput = {
+    id?: SortOrder
+    consumerId?: SortOrder
+    accountNumber?: SortOrder
+    currentBalance?: SortOrder
+    totalRecharged?: SortOrder
+    totalConsumed?: SortOrder
+    isActive?: SortOrder
+    isBlocked?: SortOrder
+    blockReason?: SortOrderInput | SortOrder
+    blockedAt?: SortOrderInput | SortOrder
+    blockedBy?: SortOrderInput | SortOrder
+    lowBalanceThreshold?: SortOrder
+    emergencyThreshold?: SortOrder
+    autoRechargeEnabled?: SortOrder
+    autoRechargeAmount?: SortOrderInput | SortOrder
+    autoRechargeThreshold?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PrepaidAccountCountOrderByAggregateInput
+    _avg?: PrepaidAccountAvgOrderByAggregateInput
+    _max?: PrepaidAccountMaxOrderByAggregateInput
+    _min?: PrepaidAccountMinOrderByAggregateInput
+    _sum?: PrepaidAccountSumOrderByAggregateInput
+  }
+
+  export type PrepaidAccountScalarWhereWithAggregatesInput = {
+    AND?: PrepaidAccountScalarWhereWithAggregatesInput | PrepaidAccountScalarWhereWithAggregatesInput[]
+    OR?: PrepaidAccountScalarWhereWithAggregatesInput[]
+    NOT?: PrepaidAccountScalarWhereWithAggregatesInput | PrepaidAccountScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PrepaidAccount"> | number
+    consumerId?: IntWithAggregatesFilter<"PrepaidAccount"> | number
+    accountNumber?: StringWithAggregatesFilter<"PrepaidAccount"> | string
+    currentBalance?: FloatWithAggregatesFilter<"PrepaidAccount"> | number
+    totalRecharged?: FloatWithAggregatesFilter<"PrepaidAccount"> | number
+    totalConsumed?: FloatWithAggregatesFilter<"PrepaidAccount"> | number
+    isActive?: BoolWithAggregatesFilter<"PrepaidAccount"> | boolean
+    isBlocked?: BoolWithAggregatesFilter<"PrepaidAccount"> | boolean
+    blockReason?: StringNullableWithAggregatesFilter<"PrepaidAccount"> | string | null
+    blockedAt?: DateTimeNullableWithAggregatesFilter<"PrepaidAccount"> | Date | string | null
+    blockedBy?: IntNullableWithAggregatesFilter<"PrepaidAccount"> | number | null
+    lowBalanceThreshold?: FloatWithAggregatesFilter<"PrepaidAccount"> | number
+    emergencyThreshold?: FloatWithAggregatesFilter<"PrepaidAccount"> | number
+    autoRechargeEnabled?: BoolWithAggregatesFilter<"PrepaidAccount"> | boolean
+    autoRechargeAmount?: FloatNullableWithAggregatesFilter<"PrepaidAccount"> | number | null
+    autoRechargeThreshold?: FloatNullableWithAggregatesFilter<"PrepaidAccount"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"PrepaidAccount"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PrepaidAccount"> | Date | string
+  }
+
+  export type PrepaidTransactionWhereInput = {
+    AND?: PrepaidTransactionWhereInput | PrepaidTransactionWhereInput[]
+    OR?: PrepaidTransactionWhereInput[]
+    NOT?: PrepaidTransactionWhereInput | PrepaidTransactionWhereInput[]
+    id?: IntFilter<"PrepaidTransaction"> | number
+    accountId?: IntFilter<"PrepaidTransaction"> | number
+    transactionId?: StringFilter<"PrepaidTransaction"> | string
+    transactionType?: EnumPrepaidTransactionTypeFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionType
+    amount?: FloatFilter<"PrepaidTransaction"> | number
+    balanceBefore?: FloatFilter<"PrepaidTransaction"> | number
+    balanceAfter?: FloatFilter<"PrepaidTransaction"> | number
+    consumptionKWh?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    ratePerUnit?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    fixedCharges?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    taxes?: JsonNullableFilter<"PrepaidTransaction">
+    readingId?: IntNullableFilter<"PrepaidTransaction"> | number | null
+    status?: EnumPrepaidTransactionStatusFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionStatus
+    failureReason?: StringNullableFilter<"PrepaidTransaction"> | string | null
+    description?: StringNullableFilter<"PrepaidTransaction"> | string | null
+    metadata?: JsonNullableFilter<"PrepaidTransaction">
+    createdAt?: DateTimeFilter<"PrepaidTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidTransaction"> | Date | string
+    account?: XOR<PrepaidAccountRelationFilter, PrepaidAccountWhereInput>
+    meterReading?: XOR<MeterReadingNullableRelationFilter, MeterReadingWhereInput> | null
+  }
+
+  export type PrepaidTransactionOrderByWithRelationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    transactionId?: SortOrder
+    transactionType?: SortOrder
+    amount?: SortOrder
+    balanceBefore?: SortOrder
+    balanceAfter?: SortOrder
+    consumptionKWh?: SortOrderInput | SortOrder
+    ratePerUnit?: SortOrderInput | SortOrder
+    fixedCharges?: SortOrderInput | SortOrder
+    taxes?: SortOrderInput | SortOrder
+    readingId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    account?: PrepaidAccountOrderByWithRelationInput
+    meterReading?: MeterReadingOrderByWithRelationInput
+  }
+
+  export type PrepaidTransactionWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    transactionId?: string
+    AND?: PrepaidTransactionWhereInput | PrepaidTransactionWhereInput[]
+    OR?: PrepaidTransactionWhereInput[]
+    NOT?: PrepaidTransactionWhereInput | PrepaidTransactionWhereInput[]
+    accountId?: IntFilter<"PrepaidTransaction"> | number
+    transactionType?: EnumPrepaidTransactionTypeFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionType
+    amount?: FloatFilter<"PrepaidTransaction"> | number
+    balanceBefore?: FloatFilter<"PrepaidTransaction"> | number
+    balanceAfter?: FloatFilter<"PrepaidTransaction"> | number
+    consumptionKWh?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    ratePerUnit?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    fixedCharges?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    taxes?: JsonNullableFilter<"PrepaidTransaction">
+    readingId?: IntNullableFilter<"PrepaidTransaction"> | number | null
+    status?: EnumPrepaidTransactionStatusFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionStatus
+    failureReason?: StringNullableFilter<"PrepaidTransaction"> | string | null
+    description?: StringNullableFilter<"PrepaidTransaction"> | string | null
+    metadata?: JsonNullableFilter<"PrepaidTransaction">
+    createdAt?: DateTimeFilter<"PrepaidTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidTransaction"> | Date | string
+    account?: XOR<PrepaidAccountRelationFilter, PrepaidAccountWhereInput>
+    meterReading?: XOR<MeterReadingNullableRelationFilter, MeterReadingWhereInput> | null
+  }, "id" | "transactionId">
+
+  export type PrepaidTransactionOrderByWithAggregationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    transactionId?: SortOrder
+    transactionType?: SortOrder
+    amount?: SortOrder
+    balanceBefore?: SortOrder
+    balanceAfter?: SortOrder
+    consumptionKWh?: SortOrderInput | SortOrder
+    ratePerUnit?: SortOrderInput | SortOrder
+    fixedCharges?: SortOrderInput | SortOrder
+    taxes?: SortOrderInput | SortOrder
+    readingId?: SortOrderInput | SortOrder
+    status?: SortOrder
+    failureReason?: SortOrderInput | SortOrder
+    description?: SortOrderInput | SortOrder
+    metadata?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PrepaidTransactionCountOrderByAggregateInput
+    _avg?: PrepaidTransactionAvgOrderByAggregateInput
+    _max?: PrepaidTransactionMaxOrderByAggregateInput
+    _min?: PrepaidTransactionMinOrderByAggregateInput
+    _sum?: PrepaidTransactionSumOrderByAggregateInput
+  }
+
+  export type PrepaidTransactionScalarWhereWithAggregatesInput = {
+    AND?: PrepaidTransactionScalarWhereWithAggregatesInput | PrepaidTransactionScalarWhereWithAggregatesInput[]
+    OR?: PrepaidTransactionScalarWhereWithAggregatesInput[]
+    NOT?: PrepaidTransactionScalarWhereWithAggregatesInput | PrepaidTransactionScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PrepaidTransaction"> | number
+    accountId?: IntWithAggregatesFilter<"PrepaidTransaction"> | number
+    transactionId?: StringWithAggregatesFilter<"PrepaidTransaction"> | string
+    transactionType?: EnumPrepaidTransactionTypeWithAggregatesFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionType
+    amount?: FloatWithAggregatesFilter<"PrepaidTransaction"> | number
+    balanceBefore?: FloatWithAggregatesFilter<"PrepaidTransaction"> | number
+    balanceAfter?: FloatWithAggregatesFilter<"PrepaidTransaction"> | number
+    consumptionKWh?: FloatNullableWithAggregatesFilter<"PrepaidTransaction"> | number | null
+    ratePerUnit?: FloatNullableWithAggregatesFilter<"PrepaidTransaction"> | number | null
+    fixedCharges?: FloatNullableWithAggregatesFilter<"PrepaidTransaction"> | number | null
+    taxes?: JsonNullableWithAggregatesFilter<"PrepaidTransaction">
+    readingId?: IntNullableWithAggregatesFilter<"PrepaidTransaction"> | number | null
+    status?: EnumPrepaidTransactionStatusWithAggregatesFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionStatus
+    failureReason?: StringNullableWithAggregatesFilter<"PrepaidTransaction"> | string | null
+    description?: StringNullableWithAggregatesFilter<"PrepaidTransaction"> | string | null
+    metadata?: JsonNullableWithAggregatesFilter<"PrepaidTransaction">
+    createdAt?: DateTimeWithAggregatesFilter<"PrepaidTransaction"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PrepaidTransaction"> | Date | string
+  }
+
+  export type PrepaidRechargeWhereInput = {
+    AND?: PrepaidRechargeWhereInput | PrepaidRechargeWhereInput[]
+    OR?: PrepaidRechargeWhereInput[]
+    NOT?: PrepaidRechargeWhereInput | PrepaidRechargeWhereInput[]
+    id?: IntFilter<"PrepaidRecharge"> | number
+    accountId?: IntFilter<"PrepaidRecharge"> | number
+    rechargeId?: StringFilter<"PrepaidRecharge"> | string
+    amount?: FloatFilter<"PrepaidRecharge"> | number
+    paymentMethod?: EnumPaymentMethodFilter<"PrepaidRecharge"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"PrepaidRecharge"> | $Enums.PaymentStatus
+    gatewayName?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    gatewayTransactionId?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    gatewayResponse?: JsonNullableFilter<"PrepaidRecharge">
+    rechargeType?: EnumPrepaidRechargeTypeFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFilter<"PrepaidRecharge"> | boolean
+    promotionalCode?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    discountAmount?: FloatFilter<"PrepaidRecharge"> | number
+    bonusAmount?: FloatFilter<"PrepaidRecharge"> | number
+    receiptNumber?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    receiptUrl?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    createdAt?: DateTimeFilter<"PrepaidRecharge"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidRecharge"> | Date | string
+    account?: XOR<PrepaidAccountRelationFilter, PrepaidAccountWhereInput>
+  }
+
+  export type PrepaidRechargeOrderByWithRelationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    rechargeId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gatewayName?: SortOrderInput | SortOrder
+    gatewayTransactionId?: SortOrderInput | SortOrder
+    gatewayResponse?: SortOrderInput | SortOrder
+    rechargeType?: SortOrder
+    rechargeSource?: SortOrder
+    isPromotional?: SortOrder
+    promotionalCode?: SortOrderInput | SortOrder
+    discountAmount?: SortOrder
+    bonusAmount?: SortOrder
+    receiptNumber?: SortOrderInput | SortOrder
+    receiptUrl?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    account?: PrepaidAccountOrderByWithRelationInput
+  }
+
+  export type PrepaidRechargeWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    rechargeId?: string
+    AND?: PrepaidRechargeWhereInput | PrepaidRechargeWhereInput[]
+    OR?: PrepaidRechargeWhereInput[]
+    NOT?: PrepaidRechargeWhereInput | PrepaidRechargeWhereInput[]
+    accountId?: IntFilter<"PrepaidRecharge"> | number
+    amount?: FloatFilter<"PrepaidRecharge"> | number
+    paymentMethod?: EnumPaymentMethodFilter<"PrepaidRecharge"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"PrepaidRecharge"> | $Enums.PaymentStatus
+    gatewayName?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    gatewayTransactionId?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    gatewayResponse?: JsonNullableFilter<"PrepaidRecharge">
+    rechargeType?: EnumPrepaidRechargeTypeFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFilter<"PrepaidRecharge"> | boolean
+    promotionalCode?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    discountAmount?: FloatFilter<"PrepaidRecharge"> | number
+    bonusAmount?: FloatFilter<"PrepaidRecharge"> | number
+    receiptNumber?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    receiptUrl?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    createdAt?: DateTimeFilter<"PrepaidRecharge"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidRecharge"> | Date | string
+    account?: XOR<PrepaidAccountRelationFilter, PrepaidAccountWhereInput>
+  }, "id" | "rechargeId">
+
+  export type PrepaidRechargeOrderByWithAggregationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    rechargeId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gatewayName?: SortOrderInput | SortOrder
+    gatewayTransactionId?: SortOrderInput | SortOrder
+    gatewayResponse?: SortOrderInput | SortOrder
+    rechargeType?: SortOrder
+    rechargeSource?: SortOrder
+    isPromotional?: SortOrder
+    promotionalCode?: SortOrderInput | SortOrder
+    discountAmount?: SortOrder
+    bonusAmount?: SortOrder
+    receiptNumber?: SortOrderInput | SortOrder
+    receiptUrl?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PrepaidRechargeCountOrderByAggregateInput
+    _avg?: PrepaidRechargeAvgOrderByAggregateInput
+    _max?: PrepaidRechargeMaxOrderByAggregateInput
+    _min?: PrepaidRechargeMinOrderByAggregateInput
+    _sum?: PrepaidRechargeSumOrderByAggregateInput
+  }
+
+  export type PrepaidRechargeScalarWhereWithAggregatesInput = {
+    AND?: PrepaidRechargeScalarWhereWithAggregatesInput | PrepaidRechargeScalarWhereWithAggregatesInput[]
+    OR?: PrepaidRechargeScalarWhereWithAggregatesInput[]
+    NOT?: PrepaidRechargeScalarWhereWithAggregatesInput | PrepaidRechargeScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PrepaidRecharge"> | number
+    accountId?: IntWithAggregatesFilter<"PrepaidRecharge"> | number
+    rechargeId?: StringWithAggregatesFilter<"PrepaidRecharge"> | string
+    amount?: FloatWithAggregatesFilter<"PrepaidRecharge"> | number
+    paymentMethod?: EnumPaymentMethodWithAggregatesFilter<"PrepaidRecharge"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusWithAggregatesFilter<"PrepaidRecharge"> | $Enums.PaymentStatus
+    gatewayName?: StringNullableWithAggregatesFilter<"PrepaidRecharge"> | string | null
+    gatewayTransactionId?: StringNullableWithAggregatesFilter<"PrepaidRecharge"> | string | null
+    gatewayResponse?: JsonNullableWithAggregatesFilter<"PrepaidRecharge">
+    rechargeType?: EnumPrepaidRechargeTypeWithAggregatesFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceWithAggregatesFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolWithAggregatesFilter<"PrepaidRecharge"> | boolean
+    promotionalCode?: StringNullableWithAggregatesFilter<"PrepaidRecharge"> | string | null
+    discountAmount?: FloatWithAggregatesFilter<"PrepaidRecharge"> | number
+    bonusAmount?: FloatWithAggregatesFilter<"PrepaidRecharge"> | number
+    receiptNumber?: StringNullableWithAggregatesFilter<"PrepaidRecharge"> | string | null
+    receiptUrl?: StringNullableWithAggregatesFilter<"PrepaidRecharge"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"PrepaidRecharge"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PrepaidRecharge"> | Date | string
+  }
+
+  export type PrepaidAlertWhereInput = {
+    AND?: PrepaidAlertWhereInput | PrepaidAlertWhereInput[]
+    OR?: PrepaidAlertWhereInput[]
+    NOT?: PrepaidAlertWhereInput | PrepaidAlertWhereInput[]
+    id?: IntFilter<"PrepaidAlert"> | number
+    accountId?: IntFilter<"PrepaidAlert"> | number
+    alertType?: EnumPrepaidAlertTypeFilter<"PrepaidAlert"> | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFilter<"PrepaidAlert"> | $Enums.PrepaidAlertLevel
+    message?: StringFilter<"PrepaidAlert"> | string
+    isRead?: BoolFilter<"PrepaidAlert"> | boolean
+    readAt?: DateTimeNullableFilter<"PrepaidAlert"> | Date | string | null
+    balanceAtAlert?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    consumptionAtAlert?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    thresholdValue?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    createdAt?: DateTimeFilter<"PrepaidAlert"> | Date | string
+    account?: XOR<PrepaidAccountRelationFilter, PrepaidAccountWhereInput>
+  }
+
+  export type PrepaidAlertOrderByWithRelationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    alertType?: SortOrder
+    alertLevel?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    balanceAtAlert?: SortOrderInput | SortOrder
+    consumptionAtAlert?: SortOrderInput | SortOrder
+    thresholdValue?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    account?: PrepaidAccountOrderByWithRelationInput
+  }
+
+  export type PrepaidAlertWhereUniqueInput = Prisma.AtLeast<{
+    id?: number
+    AND?: PrepaidAlertWhereInput | PrepaidAlertWhereInput[]
+    OR?: PrepaidAlertWhereInput[]
+    NOT?: PrepaidAlertWhereInput | PrepaidAlertWhereInput[]
+    accountId?: IntFilter<"PrepaidAlert"> | number
+    alertType?: EnumPrepaidAlertTypeFilter<"PrepaidAlert"> | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFilter<"PrepaidAlert"> | $Enums.PrepaidAlertLevel
+    message?: StringFilter<"PrepaidAlert"> | string
+    isRead?: BoolFilter<"PrepaidAlert"> | boolean
+    readAt?: DateTimeNullableFilter<"PrepaidAlert"> | Date | string | null
+    balanceAtAlert?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    consumptionAtAlert?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    thresholdValue?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    createdAt?: DateTimeFilter<"PrepaidAlert"> | Date | string
+    account?: XOR<PrepaidAccountRelationFilter, PrepaidAccountWhereInput>
+  }, "id">
+
+  export type PrepaidAlertOrderByWithAggregationInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    alertType?: SortOrder
+    alertLevel?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrderInput | SortOrder
+    balanceAtAlert?: SortOrderInput | SortOrder
+    consumptionAtAlert?: SortOrderInput | SortOrder
+    thresholdValue?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: PrepaidAlertCountOrderByAggregateInput
+    _avg?: PrepaidAlertAvgOrderByAggregateInput
+    _max?: PrepaidAlertMaxOrderByAggregateInput
+    _min?: PrepaidAlertMinOrderByAggregateInput
+    _sum?: PrepaidAlertSumOrderByAggregateInput
+  }
+
+  export type PrepaidAlertScalarWhereWithAggregatesInput = {
+    AND?: PrepaidAlertScalarWhereWithAggregatesInput | PrepaidAlertScalarWhereWithAggregatesInput[]
+    OR?: PrepaidAlertScalarWhereWithAggregatesInput[]
+    NOT?: PrepaidAlertScalarWhereWithAggregatesInput | PrepaidAlertScalarWhereWithAggregatesInput[]
+    id?: IntWithAggregatesFilter<"PrepaidAlert"> | number
+    accountId?: IntWithAggregatesFilter<"PrepaidAlert"> | number
+    alertType?: EnumPrepaidAlertTypeWithAggregatesFilter<"PrepaidAlert"> | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelWithAggregatesFilter<"PrepaidAlert"> | $Enums.PrepaidAlertLevel
+    message?: StringWithAggregatesFilter<"PrepaidAlert"> | string
+    isRead?: BoolWithAggregatesFilter<"PrepaidAlert"> | boolean
+    readAt?: DateTimeNullableWithAggregatesFilter<"PrepaidAlert"> | Date | string | null
+    balanceAtAlert?: FloatNullableWithAggregatesFilter<"PrepaidAlert"> | number | null
+    consumptionAtAlert?: FloatNullableWithAggregatesFilter<"PrepaidAlert"> | number | null
+    thresholdValue?: FloatNullableWithAggregatesFilter<"PrepaidAlert"> | number | null
+    createdAt?: DateTimeWithAggregatesFilter<"PrepaidAlert"> | Date | string
+  }
+
   export type DepartmentCreateInput = {
     name: string
     code: string
@@ -39382,6 +48177,7 @@ export namespace Prisma {
     bills?: BillCreateNestedManyWithoutConsumerInput
     notifications?: NotificationCreateNestedManyWithoutConsumerInput
     tickets?: TicketCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUncheckedCreateInput = {
@@ -39409,6 +48205,7 @@ export namespace Prisma {
     bills?: BillUncheckedCreateNestedManyWithoutConsumerInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConsumerInput
     tickets?: TicketUncheckedCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUpdateInput = {
@@ -39435,6 +48232,7 @@ export namespace Prisma {
     bills?: BillUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerUncheckedUpdateInput = {
@@ -39462,6 +48260,7 @@ export namespace Prisma {
     bills?: BillUncheckedUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerCreateManyInput = {
@@ -39620,6 +48419,7 @@ export namespace Prisma {
     location: LocationCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
@@ -39646,6 +48446,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
@@ -39669,6 +48470,7 @@ export namespace Prisma {
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
@@ -39695,6 +48497,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
@@ -39933,6 +48736,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     meter: MeterCreateNestedOneWithoutReadingsInput
     bill?: BillCreateNestedOneWithoutReadingsInput
+    prepaidTransactions?: PrepaidTransactionCreateNestedManyWithoutMeterReadingInput
   }
 
   export type MeterReadingUncheckedCreateInput = {
@@ -39964,6 +48768,7 @@ export namespace Prisma {
     billId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    prepaidTransactions?: PrepaidTransactionUncheckedCreateNestedManyWithoutMeterReadingInput
   }
 
   export type MeterReadingUpdateInput = {
@@ -39994,6 +48799,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     meter?: MeterUpdateOneRequiredWithoutReadingsNestedInput
     bill?: BillUpdateOneWithoutReadingsNestedInput
+    prepaidTransactions?: PrepaidTransactionUpdateManyWithoutMeterReadingNestedInput
   }
 
   export type MeterReadingUncheckedUpdateInput = {
@@ -40025,6 +48831,7 @@ export namespace Prisma {
     billId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prepaidTransactions?: PrepaidTransactionUncheckedUpdateManyWithoutMeterReadingNestedInput
   }
 
   export type MeterReadingCreateManyInput = {
@@ -41456,6 +50263,869 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TamperEventCreateInput = {
+    tamperDatetime?: Date | string
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+    avgCurrent?: number | null
+    avgVoltage?: number | null
+    avgPowerFactor?: number | null
+    frequency?: number | null
+    kwh?: number | null
+    kwhExport?: number | null
+    kwhImport?: number | null
+    kwhNet?: number | null
+    kwhTotal?: number | null
+    kwExport?: number | null
+    kwImport?: number | null
+    kvaExport?: number | null
+    kvaImport?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    powerFactorR?: number | null
+    powerFactorY?: number | null
+    powerFactorB?: number | null
+    tamperCount?: number | null
+    param1?: number | null
+    param2?: number | null
+    param3?: number | null
+    param4?: number | null
+    param5?: number | null
+    isProcessed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    meter: MeterCreateNestedOneWithoutTamperEventsInput
+  }
+
+  export type TamperEventUncheckedCreateInput = {
+    id?: number
+    meterId: number
+    tamperDatetime?: Date | string
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+    avgCurrent?: number | null
+    avgVoltage?: number | null
+    avgPowerFactor?: number | null
+    frequency?: number | null
+    kwh?: number | null
+    kwhExport?: number | null
+    kwhImport?: number | null
+    kwhNet?: number | null
+    kwhTotal?: number | null
+    kwExport?: number | null
+    kwImport?: number | null
+    kvaExport?: number | null
+    kvaImport?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    powerFactorR?: number | null
+    powerFactorY?: number | null
+    powerFactorB?: number | null
+    tamperCount?: number | null
+    param1?: number | null
+    param2?: number | null
+    param3?: number | null
+    param4?: number | null
+    param5?: number | null
+    isProcessed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperEventUpdateInput = {
+    tamperDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    tamperType?: EnumTamperTypeFieldUpdateOperationsInput | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFieldUpdateOperationsInput | $Enums.TamperStatus
+    avgCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgPowerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    frequency?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwh?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhNet?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorR?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorY?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorB?: NullableFloatFieldUpdateOperationsInput | number | null
+    tamperCount?: NullableIntFieldUpdateOperationsInput | number | null
+    param1?: NullableFloatFieldUpdateOperationsInput | number | null
+    param2?: NullableFloatFieldUpdateOperationsInput | number | null
+    param3?: NullableFloatFieldUpdateOperationsInput | number | null
+    param4?: NullableFloatFieldUpdateOperationsInput | number | null
+    param5?: NullableFloatFieldUpdateOperationsInput | number | null
+    isProcessed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    meter?: MeterUpdateOneRequiredWithoutTamperEventsNestedInput
+  }
+
+  export type TamperEventUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    meterId?: IntFieldUpdateOperationsInput | number
+    tamperDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    tamperType?: EnumTamperTypeFieldUpdateOperationsInput | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFieldUpdateOperationsInput | $Enums.TamperStatus
+    avgCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgPowerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    frequency?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwh?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhNet?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorR?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorY?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorB?: NullableFloatFieldUpdateOperationsInput | number | null
+    tamperCount?: NullableIntFieldUpdateOperationsInput | number | null
+    param1?: NullableFloatFieldUpdateOperationsInput | number | null
+    param2?: NullableFloatFieldUpdateOperationsInput | number | null
+    param3?: NullableFloatFieldUpdateOperationsInput | number | null
+    param4?: NullableFloatFieldUpdateOperationsInput | number | null
+    param5?: NullableFloatFieldUpdateOperationsInput | number | null
+    isProcessed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperEventCreateManyInput = {
+    id?: number
+    meterId: number
+    tamperDatetime?: Date | string
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+    avgCurrent?: number | null
+    avgVoltage?: number | null
+    avgPowerFactor?: number | null
+    frequency?: number | null
+    kwh?: number | null
+    kwhExport?: number | null
+    kwhImport?: number | null
+    kwhNet?: number | null
+    kwhTotal?: number | null
+    kwExport?: number | null
+    kwImport?: number | null
+    kvaExport?: number | null
+    kvaImport?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    powerFactorR?: number | null
+    powerFactorY?: number | null
+    powerFactorB?: number | null
+    tamperCount?: number | null
+    param1?: number | null
+    param2?: number | null
+    param3?: number | null
+    param4?: number | null
+    param5?: number | null
+    isProcessed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperEventUpdateManyMutationInput = {
+    tamperDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    tamperType?: EnumTamperTypeFieldUpdateOperationsInput | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFieldUpdateOperationsInput | $Enums.TamperStatus
+    avgCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgPowerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    frequency?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwh?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhNet?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorR?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorY?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorB?: NullableFloatFieldUpdateOperationsInput | number | null
+    tamperCount?: NullableIntFieldUpdateOperationsInput | number | null
+    param1?: NullableFloatFieldUpdateOperationsInput | number | null
+    param2?: NullableFloatFieldUpdateOperationsInput | number | null
+    param3?: NullableFloatFieldUpdateOperationsInput | number | null
+    param4?: NullableFloatFieldUpdateOperationsInput | number | null
+    param5?: NullableFloatFieldUpdateOperationsInput | number | null
+    isProcessed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperEventUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    meterId?: IntFieldUpdateOperationsInput | number
+    tamperDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    tamperType?: EnumTamperTypeFieldUpdateOperationsInput | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFieldUpdateOperationsInput | $Enums.TamperStatus
+    avgCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgPowerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    frequency?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwh?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhNet?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorR?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorY?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorB?: NullableFloatFieldUpdateOperationsInput | number | null
+    tamperCount?: NullableIntFieldUpdateOperationsInput | number | null
+    param1?: NullableFloatFieldUpdateOperationsInput | number | null
+    param2?: NullableFloatFieldUpdateOperationsInput | number | null
+    param3?: NullableFloatFieldUpdateOperationsInput | number | null
+    param4?: NullableFloatFieldUpdateOperationsInput | number | null
+    param5?: NullableFloatFieldUpdateOperationsInput | number | null
+    isProcessed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperCodeDescriptionCreateInput = {
+    tamperCode: number
+    tamperDesc: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperCodeDescriptionUncheckedCreateInput = {
+    id?: number
+    tamperCode: number
+    tamperDesc: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperCodeDescriptionUpdateInput = {
+    tamperCode?: IntFieldUpdateOperationsInput | number
+    tamperDesc?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperCodeDescriptionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tamperCode?: IntFieldUpdateOperationsInput | number
+    tamperDesc?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperCodeDescriptionCreateManyInput = {
+    id?: number
+    tamperCode: number
+    tamperDesc: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperCodeDescriptionUpdateManyMutationInput = {
+    tamperCode?: IntFieldUpdateOperationsInput | number
+    tamperDesc?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperCodeDescriptionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tamperCode?: IntFieldUpdateOperationsInput | number
+    tamperDesc?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAccountCreateInput = {
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    consumer: ConsumerCreateNestedOneWithoutPrepaidAccountsInput
+    transactions?: PrepaidTransactionCreateNestedManyWithoutAccountInput
+    recharges?: PrepaidRechargeCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountUncheckedCreateInput = {
+    id?: number
+    consumerId: number
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    transactions?: PrepaidTransactionUncheckedCreateNestedManyWithoutAccountInput
+    recharges?: PrepaidRechargeUncheckedCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountUpdateInput = {
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumer?: ConsumerUpdateOneRequiredWithoutPrepaidAccountsNestedInput
+    transactions?: PrepaidTransactionUpdateManyWithoutAccountNestedInput
+    recharges?: PrepaidRechargeUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    consumerId?: IntFieldUpdateOperationsInput | number
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: PrepaidTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    recharges?: PrepaidRechargeUncheckedUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountCreateManyInput = {
+    id?: number
+    consumerId: number
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidAccountUpdateManyMutationInput = {
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAccountUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    consumerId?: IntFieldUpdateOperationsInput | number
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidTransactionCreateInput = {
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    account: PrepaidAccountCreateNestedOneWithoutTransactionsInput
+    meterReading?: MeterReadingCreateNestedOneWithoutPrepaidTransactionsInput
+  }
+
+  export type PrepaidTransactionUncheckedCreateInput = {
+    id?: number
+    accountId: number
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: number | null
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidTransactionUpdateInput = {
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    account?: PrepaidAccountUpdateOneRequiredWithoutTransactionsNestedInput
+    meterReading?: MeterReadingUpdateOneWithoutPrepaidTransactionsNestedInput
+  }
+
+  export type PrepaidTransactionUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidTransactionCreateManyInput = {
+    id?: number
+    accountId: number
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: number | null
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidTransactionUpdateManyMutationInput = {
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidTransactionUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidRechargeCreateInput = {
+    rechargeId: string
+    amount: number
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    gatewayName?: string | null
+    gatewayTransactionId?: string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: $Enums.PrepaidRechargeType
+    rechargeSource?: $Enums.PrepaidRechargeSource
+    isPromotional?: boolean
+    promotionalCode?: string | null
+    discountAmount?: number
+    bonusAmount?: number
+    receiptNumber?: string | null
+    receiptUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    account: PrepaidAccountCreateNestedOneWithoutRechargesInput
+  }
+
+  export type PrepaidRechargeUncheckedCreateInput = {
+    id?: number
+    accountId: number
+    rechargeId: string
+    amount: number
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    gatewayName?: string | null
+    gatewayTransactionId?: string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: $Enums.PrepaidRechargeType
+    rechargeSource?: $Enums.PrepaidRechargeSource
+    isPromotional?: boolean
+    promotionalCode?: string | null
+    discountAmount?: number
+    bonusAmount?: number
+    receiptNumber?: string | null
+    receiptUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidRechargeUpdateInput = {
+    rechargeId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: EnumPrepaidRechargeTypeFieldUpdateOperationsInput | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFieldUpdateOperationsInput | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFieldUpdateOperationsInput | boolean
+    promotionalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: FloatFieldUpdateOperationsInput | number
+    bonusAmount?: FloatFieldUpdateOperationsInput | number
+    receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    account?: PrepaidAccountUpdateOneRequiredWithoutRechargesNestedInput
+  }
+
+  export type PrepaidRechargeUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    rechargeId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: EnumPrepaidRechargeTypeFieldUpdateOperationsInput | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFieldUpdateOperationsInput | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFieldUpdateOperationsInput | boolean
+    promotionalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: FloatFieldUpdateOperationsInput | number
+    bonusAmount?: FloatFieldUpdateOperationsInput | number
+    receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidRechargeCreateManyInput = {
+    id?: number
+    accountId: number
+    rechargeId: string
+    amount: number
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    gatewayName?: string | null
+    gatewayTransactionId?: string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: $Enums.PrepaidRechargeType
+    rechargeSource?: $Enums.PrepaidRechargeSource
+    isPromotional?: boolean
+    promotionalCode?: string | null
+    discountAmount?: number
+    bonusAmount?: number
+    receiptNumber?: string | null
+    receiptUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidRechargeUpdateManyMutationInput = {
+    rechargeId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: EnumPrepaidRechargeTypeFieldUpdateOperationsInput | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFieldUpdateOperationsInput | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFieldUpdateOperationsInput | boolean
+    promotionalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: FloatFieldUpdateOperationsInput | number
+    bonusAmount?: FloatFieldUpdateOperationsInput | number
+    receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidRechargeUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    rechargeId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: EnumPrepaidRechargeTypeFieldUpdateOperationsInput | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFieldUpdateOperationsInput | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFieldUpdateOperationsInput | boolean
+    promotionalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: FloatFieldUpdateOperationsInput | number
+    bonusAmount?: FloatFieldUpdateOperationsInput | number
+    receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAlertCreateInput = {
+    alertType: $Enums.PrepaidAlertType
+    alertLevel: $Enums.PrepaidAlertLevel
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    balanceAtAlert?: number | null
+    consumptionAtAlert?: number | null
+    thresholdValue?: number | null
+    createdAt?: Date | string
+    account: PrepaidAccountCreateNestedOneWithoutAlertsInput
+  }
+
+  export type PrepaidAlertUncheckedCreateInput = {
+    id?: number
+    accountId: number
+    alertType: $Enums.PrepaidAlertType
+    alertLevel: $Enums.PrepaidAlertLevel
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    balanceAtAlert?: number | null
+    consumptionAtAlert?: number | null
+    thresholdValue?: number | null
+    createdAt?: Date | string
+  }
+
+  export type PrepaidAlertUpdateInput = {
+    alertType?: EnumPrepaidAlertTypeFieldUpdateOperationsInput | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFieldUpdateOperationsInput | $Enums.PrepaidAlertLevel
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    balanceAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    consumptionAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    thresholdValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    account?: PrepaidAccountUpdateOneRequiredWithoutAlertsNestedInput
+  }
+
+  export type PrepaidAlertUncheckedUpdateInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    alertType?: EnumPrepaidAlertTypeFieldUpdateOperationsInput | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFieldUpdateOperationsInput | $Enums.PrepaidAlertLevel
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    balanceAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    consumptionAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    thresholdValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAlertCreateManyInput = {
+    id?: number
+    accountId: number
+    alertType: $Enums.PrepaidAlertType
+    alertLevel: $Enums.PrepaidAlertLevel
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    balanceAtAlert?: number | null
+    consumptionAtAlert?: number | null
+    thresholdValue?: number | null
+    createdAt?: Date | string
+  }
+
+  export type PrepaidAlertUpdateManyMutationInput = {
+    alertType?: EnumPrepaidAlertTypeFieldUpdateOperationsInput | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFieldUpdateOperationsInput | $Enums.PrepaidAlertLevel
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    balanceAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    consumptionAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    thresholdValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAlertUncheckedUpdateManyInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    alertType?: EnumPrepaidAlertTypeFieldUpdateOperationsInput | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFieldUpdateOperationsInput | $Enums.PrepaidAlertLevel
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    balanceAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    consumptionAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    thresholdValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type IntFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -42559,6 +52229,12 @@ export namespace Prisma {
     none?: NotificationWhereInput
   }
 
+  export type PrepaidAccountListRelationFilter = {
+    every?: PrepaidAccountWhereInput
+    some?: PrepaidAccountWhereInput
+    none?: PrepaidAccountWhereInput
+  }
+
   export type ConsumerDocumentOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -42568,6 +52244,10 @@ export namespace Prisma {
   }
 
   export type NotificationOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PrepaidAccountOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -42822,6 +52502,12 @@ export namespace Prisma {
     none?: MeterReadingWhereInput
   }
 
+  export type TamperEventListRelationFilter = {
+    every?: TamperEventWhereInput
+    some?: TamperEventWhereInput
+    none?: TamperEventWhereInput
+  }
+
   export type DTRNullableRelationFilter = {
     is?: DTRWhereInput | null
     isNot?: DTRWhereInput | null
@@ -42840,6 +52526,10 @@ export namespace Prisma {
   }
 
   export type MeterReadingOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TamperEventOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -43063,6 +52753,16 @@ export namespace Prisma {
   export type BillNullableRelationFilter = {
     is?: BillWhereInput | null
     isNot?: BillWhereInput | null
+  }
+
+  export type PrepaidTransactionListRelationFilter = {
+    every?: PrepaidTransactionWhereInput
+    some?: PrepaidTransactionWhereInput
+    none?: PrepaidTransactionWhereInput
+  }
+
+  export type PrepaidTransactionOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type MeterReadingCountOrderByAggregateInput = {
@@ -44436,6 +54136,706 @@ export namespace Prisma {
     _max?: NestedEnumFaultStatusFilter<$PrismaModel>
   }
 
+  export type EnumTamperTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperType | EnumTamperTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperTypeFilter<$PrismaModel> | $Enums.TamperType
+  }
+
+  export type EnumTamperStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperStatus | EnumTamperStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperStatusFilter<$PrismaModel> | $Enums.TamperStatus
+  }
+
+  export type TamperEventMeterIdTamperDatetimeTamperTypeTamperStatusCompoundUniqueInput = {
+    meterId: number
+    tamperDatetime: Date | string
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+  }
+
+  export type TamperEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    meterId?: SortOrder
+    tamperDatetime?: SortOrder
+    tamperType?: SortOrder
+    tamperStatus?: SortOrder
+    avgCurrent?: SortOrder
+    avgVoltage?: SortOrder
+    avgPowerFactor?: SortOrder
+    frequency?: SortOrder
+    kwh?: SortOrder
+    kwhExport?: SortOrder
+    kwhImport?: SortOrder
+    kwhNet?: SortOrder
+    kwhTotal?: SortOrder
+    kwExport?: SortOrder
+    kwImport?: SortOrder
+    kvaExport?: SortOrder
+    kvaImport?: SortOrder
+    voltageR?: SortOrder
+    voltageY?: SortOrder
+    voltageB?: SortOrder
+    currentR?: SortOrder
+    currentY?: SortOrder
+    currentB?: SortOrder
+    powerFactorR?: SortOrder
+    powerFactorY?: SortOrder
+    powerFactorB?: SortOrder
+    tamperCount?: SortOrder
+    param1?: SortOrder
+    param2?: SortOrder
+    param3?: SortOrder
+    param4?: SortOrder
+    param5?: SortOrder
+    isProcessed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TamperEventAvgOrderByAggregateInput = {
+    id?: SortOrder
+    meterId?: SortOrder
+    avgCurrent?: SortOrder
+    avgVoltage?: SortOrder
+    avgPowerFactor?: SortOrder
+    frequency?: SortOrder
+    kwh?: SortOrder
+    kwhExport?: SortOrder
+    kwhImport?: SortOrder
+    kwhNet?: SortOrder
+    kwhTotal?: SortOrder
+    kwExport?: SortOrder
+    kwImport?: SortOrder
+    kvaExport?: SortOrder
+    kvaImport?: SortOrder
+    voltageR?: SortOrder
+    voltageY?: SortOrder
+    voltageB?: SortOrder
+    currentR?: SortOrder
+    currentY?: SortOrder
+    currentB?: SortOrder
+    powerFactorR?: SortOrder
+    powerFactorY?: SortOrder
+    powerFactorB?: SortOrder
+    tamperCount?: SortOrder
+    param1?: SortOrder
+    param2?: SortOrder
+    param3?: SortOrder
+    param4?: SortOrder
+    param5?: SortOrder
+  }
+
+  export type TamperEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    meterId?: SortOrder
+    tamperDatetime?: SortOrder
+    tamperType?: SortOrder
+    tamperStatus?: SortOrder
+    avgCurrent?: SortOrder
+    avgVoltage?: SortOrder
+    avgPowerFactor?: SortOrder
+    frequency?: SortOrder
+    kwh?: SortOrder
+    kwhExport?: SortOrder
+    kwhImport?: SortOrder
+    kwhNet?: SortOrder
+    kwhTotal?: SortOrder
+    kwExport?: SortOrder
+    kwImport?: SortOrder
+    kvaExport?: SortOrder
+    kvaImport?: SortOrder
+    voltageR?: SortOrder
+    voltageY?: SortOrder
+    voltageB?: SortOrder
+    currentR?: SortOrder
+    currentY?: SortOrder
+    currentB?: SortOrder
+    powerFactorR?: SortOrder
+    powerFactorY?: SortOrder
+    powerFactorB?: SortOrder
+    tamperCount?: SortOrder
+    param1?: SortOrder
+    param2?: SortOrder
+    param3?: SortOrder
+    param4?: SortOrder
+    param5?: SortOrder
+    isProcessed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TamperEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    meterId?: SortOrder
+    tamperDatetime?: SortOrder
+    tamperType?: SortOrder
+    tamperStatus?: SortOrder
+    avgCurrent?: SortOrder
+    avgVoltage?: SortOrder
+    avgPowerFactor?: SortOrder
+    frequency?: SortOrder
+    kwh?: SortOrder
+    kwhExport?: SortOrder
+    kwhImport?: SortOrder
+    kwhNet?: SortOrder
+    kwhTotal?: SortOrder
+    kwExport?: SortOrder
+    kwImport?: SortOrder
+    kvaExport?: SortOrder
+    kvaImport?: SortOrder
+    voltageR?: SortOrder
+    voltageY?: SortOrder
+    voltageB?: SortOrder
+    currentR?: SortOrder
+    currentY?: SortOrder
+    currentB?: SortOrder
+    powerFactorR?: SortOrder
+    powerFactorY?: SortOrder
+    powerFactorB?: SortOrder
+    tamperCount?: SortOrder
+    param1?: SortOrder
+    param2?: SortOrder
+    param3?: SortOrder
+    param4?: SortOrder
+    param5?: SortOrder
+    isProcessed?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TamperEventSumOrderByAggregateInput = {
+    id?: SortOrder
+    meterId?: SortOrder
+    avgCurrent?: SortOrder
+    avgVoltage?: SortOrder
+    avgPowerFactor?: SortOrder
+    frequency?: SortOrder
+    kwh?: SortOrder
+    kwhExport?: SortOrder
+    kwhImport?: SortOrder
+    kwhNet?: SortOrder
+    kwhTotal?: SortOrder
+    kwExport?: SortOrder
+    kwImport?: SortOrder
+    kvaExport?: SortOrder
+    kvaImport?: SortOrder
+    voltageR?: SortOrder
+    voltageY?: SortOrder
+    voltageB?: SortOrder
+    currentR?: SortOrder
+    currentY?: SortOrder
+    currentB?: SortOrder
+    powerFactorR?: SortOrder
+    powerFactorY?: SortOrder
+    powerFactorB?: SortOrder
+    tamperCount?: SortOrder
+    param1?: SortOrder
+    param2?: SortOrder
+    param3?: SortOrder
+    param4?: SortOrder
+    param5?: SortOrder
+  }
+
+  export type EnumTamperTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperType | EnumTamperTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperTypeWithAggregatesFilter<$PrismaModel> | $Enums.TamperType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTamperTypeFilter<$PrismaModel>
+    _max?: NestedEnumTamperTypeFilter<$PrismaModel>
+  }
+
+  export type EnumTamperStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperStatus | EnumTamperStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperStatusWithAggregatesFilter<$PrismaModel> | $Enums.TamperStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTamperStatusFilter<$PrismaModel>
+    _max?: NestedEnumTamperStatusFilter<$PrismaModel>
+  }
+
+  export type TamperCodeDescriptionCountOrderByAggregateInput = {
+    id?: SortOrder
+    tamperCode?: SortOrder
+    tamperDesc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TamperCodeDescriptionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    tamperCode?: SortOrder
+  }
+
+  export type TamperCodeDescriptionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    tamperCode?: SortOrder
+    tamperDesc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TamperCodeDescriptionMinOrderByAggregateInput = {
+    id?: SortOrder
+    tamperCode?: SortOrder
+    tamperDesc?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TamperCodeDescriptionSumOrderByAggregateInput = {
+    id?: SortOrder
+    tamperCode?: SortOrder
+  }
+
+  export type PrepaidRechargeListRelationFilter = {
+    every?: PrepaidRechargeWhereInput
+    some?: PrepaidRechargeWhereInput
+    none?: PrepaidRechargeWhereInput
+  }
+
+  export type PrepaidAlertListRelationFilter = {
+    every?: PrepaidAlertWhereInput
+    some?: PrepaidAlertWhereInput
+    none?: PrepaidAlertWhereInput
+  }
+
+  export type PrepaidRechargeOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PrepaidAlertOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PrepaidAccountCountOrderByAggregateInput = {
+    id?: SortOrder
+    consumerId?: SortOrder
+    accountNumber?: SortOrder
+    currentBalance?: SortOrder
+    totalRecharged?: SortOrder
+    totalConsumed?: SortOrder
+    isActive?: SortOrder
+    isBlocked?: SortOrder
+    blockReason?: SortOrder
+    blockedAt?: SortOrder
+    blockedBy?: SortOrder
+    lowBalanceThreshold?: SortOrder
+    emergencyThreshold?: SortOrder
+    autoRechargeEnabled?: SortOrder
+    autoRechargeAmount?: SortOrder
+    autoRechargeThreshold?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidAccountAvgOrderByAggregateInput = {
+    id?: SortOrder
+    consumerId?: SortOrder
+    currentBalance?: SortOrder
+    totalRecharged?: SortOrder
+    totalConsumed?: SortOrder
+    blockedBy?: SortOrder
+    lowBalanceThreshold?: SortOrder
+    emergencyThreshold?: SortOrder
+    autoRechargeAmount?: SortOrder
+    autoRechargeThreshold?: SortOrder
+  }
+
+  export type PrepaidAccountMaxOrderByAggregateInput = {
+    id?: SortOrder
+    consumerId?: SortOrder
+    accountNumber?: SortOrder
+    currentBalance?: SortOrder
+    totalRecharged?: SortOrder
+    totalConsumed?: SortOrder
+    isActive?: SortOrder
+    isBlocked?: SortOrder
+    blockReason?: SortOrder
+    blockedAt?: SortOrder
+    blockedBy?: SortOrder
+    lowBalanceThreshold?: SortOrder
+    emergencyThreshold?: SortOrder
+    autoRechargeEnabled?: SortOrder
+    autoRechargeAmount?: SortOrder
+    autoRechargeThreshold?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidAccountMinOrderByAggregateInput = {
+    id?: SortOrder
+    consumerId?: SortOrder
+    accountNumber?: SortOrder
+    currentBalance?: SortOrder
+    totalRecharged?: SortOrder
+    totalConsumed?: SortOrder
+    isActive?: SortOrder
+    isBlocked?: SortOrder
+    blockReason?: SortOrder
+    blockedAt?: SortOrder
+    blockedBy?: SortOrder
+    lowBalanceThreshold?: SortOrder
+    emergencyThreshold?: SortOrder
+    autoRechargeEnabled?: SortOrder
+    autoRechargeAmount?: SortOrder
+    autoRechargeThreshold?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidAccountSumOrderByAggregateInput = {
+    id?: SortOrder
+    consumerId?: SortOrder
+    currentBalance?: SortOrder
+    totalRecharged?: SortOrder
+    totalConsumed?: SortOrder
+    blockedBy?: SortOrder
+    lowBalanceThreshold?: SortOrder
+    emergencyThreshold?: SortOrder
+    autoRechargeAmount?: SortOrder
+    autoRechargeThreshold?: SortOrder
+  }
+
+  export type EnumPrepaidTransactionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionType | EnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionTypeFilter<$PrismaModel> | $Enums.PrepaidTransactionType
+  }
+
+  export type EnumPrepaidTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionStatus | EnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionStatusFilter<$PrismaModel> | $Enums.PrepaidTransactionStatus
+  }
+
+  export type PrepaidAccountRelationFilter = {
+    is?: PrepaidAccountWhereInput
+    isNot?: PrepaidAccountWhereInput
+  }
+
+  export type MeterReadingNullableRelationFilter = {
+    is?: MeterReadingWhereInput | null
+    isNot?: MeterReadingWhereInput | null
+  }
+
+  export type PrepaidTransactionCountOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    transactionId?: SortOrder
+    transactionType?: SortOrder
+    amount?: SortOrder
+    balanceBefore?: SortOrder
+    balanceAfter?: SortOrder
+    consumptionKWh?: SortOrder
+    ratePerUnit?: SortOrder
+    fixedCharges?: SortOrder
+    taxes?: SortOrder
+    readingId?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrder
+    description?: SortOrder
+    metadata?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidTransactionAvgOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    amount?: SortOrder
+    balanceBefore?: SortOrder
+    balanceAfter?: SortOrder
+    consumptionKWh?: SortOrder
+    ratePerUnit?: SortOrder
+    fixedCharges?: SortOrder
+    readingId?: SortOrder
+  }
+
+  export type PrepaidTransactionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    transactionId?: SortOrder
+    transactionType?: SortOrder
+    amount?: SortOrder
+    balanceBefore?: SortOrder
+    balanceAfter?: SortOrder
+    consumptionKWh?: SortOrder
+    ratePerUnit?: SortOrder
+    fixedCharges?: SortOrder
+    readingId?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidTransactionMinOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    transactionId?: SortOrder
+    transactionType?: SortOrder
+    amount?: SortOrder
+    balanceBefore?: SortOrder
+    balanceAfter?: SortOrder
+    consumptionKWh?: SortOrder
+    ratePerUnit?: SortOrder
+    fixedCharges?: SortOrder
+    readingId?: SortOrder
+    status?: SortOrder
+    failureReason?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidTransactionSumOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    amount?: SortOrder
+    balanceBefore?: SortOrder
+    balanceAfter?: SortOrder
+    consumptionKWh?: SortOrder
+    ratePerUnit?: SortOrder
+    fixedCharges?: SortOrder
+    readingId?: SortOrder
+  }
+
+  export type EnumPrepaidTransactionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionType | EnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidTransactionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidTransactionTypeFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidTransactionTypeFilter<$PrismaModel>
+  }
+
+  export type EnumPrepaidTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionStatus | EnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidTransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidTransactionStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPrepaidRechargeTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeType | EnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeTypeFilter<$PrismaModel> | $Enums.PrepaidRechargeType
+  }
+
+  export type EnumPrepaidRechargeSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeSource | EnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeSourceFilter<$PrismaModel> | $Enums.PrepaidRechargeSource
+  }
+
+  export type PrepaidRechargeCountOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    rechargeId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gatewayName?: SortOrder
+    gatewayTransactionId?: SortOrder
+    gatewayResponse?: SortOrder
+    rechargeType?: SortOrder
+    rechargeSource?: SortOrder
+    isPromotional?: SortOrder
+    promotionalCode?: SortOrder
+    discountAmount?: SortOrder
+    bonusAmount?: SortOrder
+    receiptNumber?: SortOrder
+    receiptUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidRechargeAvgOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    amount?: SortOrder
+    discountAmount?: SortOrder
+    bonusAmount?: SortOrder
+  }
+
+  export type PrepaidRechargeMaxOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    rechargeId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gatewayName?: SortOrder
+    gatewayTransactionId?: SortOrder
+    rechargeType?: SortOrder
+    rechargeSource?: SortOrder
+    isPromotional?: SortOrder
+    promotionalCode?: SortOrder
+    discountAmount?: SortOrder
+    bonusAmount?: SortOrder
+    receiptNumber?: SortOrder
+    receiptUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidRechargeMinOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    rechargeId?: SortOrder
+    amount?: SortOrder
+    paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
+    gatewayName?: SortOrder
+    gatewayTransactionId?: SortOrder
+    rechargeType?: SortOrder
+    rechargeSource?: SortOrder
+    isPromotional?: SortOrder
+    promotionalCode?: SortOrder
+    discountAmount?: SortOrder
+    bonusAmount?: SortOrder
+    receiptNumber?: SortOrder
+    receiptUrl?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PrepaidRechargeSumOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    amount?: SortOrder
+    discountAmount?: SortOrder
+    bonusAmount?: SortOrder
+  }
+
+  export type EnumPrepaidRechargeTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeType | EnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidRechargeType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidRechargeTypeFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidRechargeTypeFilter<$PrismaModel>
+  }
+
+  export type EnumPrepaidRechargeSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeSource | EnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeSourceWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidRechargeSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidRechargeSourceFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidRechargeSourceFilter<$PrismaModel>
+  }
+
+  export type EnumPrepaidAlertTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertType | EnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertTypeFilter<$PrismaModel> | $Enums.PrepaidAlertType
+  }
+
+  export type EnumPrepaidAlertLevelFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertLevel | EnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertLevelFilter<$PrismaModel> | $Enums.PrepaidAlertLevel
+  }
+
+  export type PrepaidAlertCountOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    alertType?: SortOrder
+    alertLevel?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrder
+    balanceAtAlert?: SortOrder
+    consumptionAtAlert?: SortOrder
+    thresholdValue?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PrepaidAlertAvgOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    balanceAtAlert?: SortOrder
+    consumptionAtAlert?: SortOrder
+    thresholdValue?: SortOrder
+  }
+
+  export type PrepaidAlertMaxOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    alertType?: SortOrder
+    alertLevel?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrder
+    balanceAtAlert?: SortOrder
+    consumptionAtAlert?: SortOrder
+    thresholdValue?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PrepaidAlertMinOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    alertType?: SortOrder
+    alertLevel?: SortOrder
+    message?: SortOrder
+    isRead?: SortOrder
+    readAt?: SortOrder
+    balanceAtAlert?: SortOrder
+    consumptionAtAlert?: SortOrder
+    thresholdValue?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PrepaidAlertSumOrderByAggregateInput = {
+    id?: SortOrder
+    accountId?: SortOrder
+    balanceAtAlert?: SortOrder
+    consumptionAtAlert?: SortOrder
+    thresholdValue?: SortOrder
+  }
+
+  export type EnumPrepaidAlertTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertType | EnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidAlertType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidAlertTypeFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidAlertTypeFilter<$PrismaModel>
+  }
+
+  export type EnumPrepaidAlertLevelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertLevel | EnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertLevelWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidAlertLevel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidAlertLevelFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidAlertLevelFilter<$PrismaModel>
+  }
+
   export type DepartmentCreateNestedOneWithoutChildrenInput = {
     create?: XOR<DepartmentCreateWithoutChildrenInput, DepartmentUncheckedCreateWithoutChildrenInput>
     connectOrCreate?: DepartmentCreateOrConnectWithoutChildrenInput
@@ -45463,6 +55863,13 @@ export namespace Prisma {
     connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
   }
 
+  export type PrepaidAccountCreateNestedManyWithoutConsumerInput = {
+    create?: XOR<PrepaidAccountCreateWithoutConsumerInput, PrepaidAccountUncheckedCreateWithoutConsumerInput> | PrepaidAccountCreateWithoutConsumerInput[] | PrepaidAccountUncheckedCreateWithoutConsumerInput[]
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutConsumerInput | PrepaidAccountCreateOrConnectWithoutConsumerInput[]
+    createMany?: PrepaidAccountCreateManyConsumerInputEnvelope
+    connect?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+  }
+
   export type MeterUncheckedCreateNestedManyWithoutConsumerInput = {
     create?: XOR<MeterCreateWithoutConsumerInput, MeterUncheckedCreateWithoutConsumerInput> | MeterCreateWithoutConsumerInput[] | MeterUncheckedCreateWithoutConsumerInput[]
     connectOrCreate?: MeterCreateOrConnectWithoutConsumerInput | MeterCreateOrConnectWithoutConsumerInput[]
@@ -45496,6 +55903,13 @@ export namespace Prisma {
     connectOrCreate?: TicketCreateOrConnectWithoutConsumerInput | TicketCreateOrConnectWithoutConsumerInput[]
     createMany?: TicketCreateManyConsumerInputEnvelope
     connect?: TicketWhereUniqueInput | TicketWhereUniqueInput[]
+  }
+
+  export type PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput = {
+    create?: XOR<PrepaidAccountCreateWithoutConsumerInput, PrepaidAccountUncheckedCreateWithoutConsumerInput> | PrepaidAccountCreateWithoutConsumerInput[] | PrepaidAccountUncheckedCreateWithoutConsumerInput[]
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutConsumerInput | PrepaidAccountCreateOrConnectWithoutConsumerInput[]
+    createMany?: PrepaidAccountCreateManyConsumerInputEnvelope
+    connect?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
   }
 
   export type EnumIdTypeFieldUpdateOperationsInput = {
@@ -45609,6 +56023,20 @@ export namespace Prisma {
     deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
   }
 
+  export type PrepaidAccountUpdateManyWithoutConsumerNestedInput = {
+    create?: XOR<PrepaidAccountCreateWithoutConsumerInput, PrepaidAccountUncheckedCreateWithoutConsumerInput> | PrepaidAccountCreateWithoutConsumerInput[] | PrepaidAccountUncheckedCreateWithoutConsumerInput[]
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutConsumerInput | PrepaidAccountCreateOrConnectWithoutConsumerInput[]
+    upsert?: PrepaidAccountUpsertWithWhereUniqueWithoutConsumerInput | PrepaidAccountUpsertWithWhereUniqueWithoutConsumerInput[]
+    createMany?: PrepaidAccountCreateManyConsumerInputEnvelope
+    set?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    disconnect?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    delete?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    connect?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    update?: PrepaidAccountUpdateWithWhereUniqueWithoutConsumerInput | PrepaidAccountUpdateWithWhereUniqueWithoutConsumerInput[]
+    updateMany?: PrepaidAccountUpdateManyWithWhereWithoutConsumerInput | PrepaidAccountUpdateManyWithWhereWithoutConsumerInput[]
+    deleteMany?: PrepaidAccountScalarWhereInput | PrepaidAccountScalarWhereInput[]
+  }
+
   export type MeterUncheckedUpdateManyWithoutConsumerNestedInput = {
     create?: XOR<MeterCreateWithoutConsumerInput, MeterUncheckedCreateWithoutConsumerInput> | MeterCreateWithoutConsumerInput[] | MeterUncheckedCreateWithoutConsumerInput[]
     connectOrCreate?: MeterCreateOrConnectWithoutConsumerInput | MeterCreateOrConnectWithoutConsumerInput[]
@@ -45679,6 +56107,20 @@ export namespace Prisma {
     deleteMany?: TicketScalarWhereInput | TicketScalarWhereInput[]
   }
 
+  export type PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput = {
+    create?: XOR<PrepaidAccountCreateWithoutConsumerInput, PrepaidAccountUncheckedCreateWithoutConsumerInput> | PrepaidAccountCreateWithoutConsumerInput[] | PrepaidAccountUncheckedCreateWithoutConsumerInput[]
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutConsumerInput | PrepaidAccountCreateOrConnectWithoutConsumerInput[]
+    upsert?: PrepaidAccountUpsertWithWhereUniqueWithoutConsumerInput | PrepaidAccountUpsertWithWhereUniqueWithoutConsumerInput[]
+    createMany?: PrepaidAccountCreateManyConsumerInputEnvelope
+    set?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    disconnect?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    delete?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    connect?: PrepaidAccountWhereUniqueInput | PrepaidAccountWhereUniqueInput[]
+    update?: PrepaidAccountUpdateWithWhereUniqueWithoutConsumerInput | PrepaidAccountUpdateWithWhereUniqueWithoutConsumerInput[]
+    updateMany?: PrepaidAccountUpdateManyWithWhereWithoutConsumerInput | PrepaidAccountUpdateManyWithWhereWithoutConsumerInput[]
+    deleteMany?: PrepaidAccountScalarWhereInput | PrepaidAccountScalarWhereInput[]
+  }
+
   export type ConsumerCreateNestedOneWithoutDocumentsInput = {
     create?: XOR<ConsumerCreateWithoutDocumentsInput, ConsumerUncheckedCreateWithoutDocumentsInput>
     connectOrCreate?: ConsumerCreateOrConnectWithoutDocumentsInput
@@ -45733,6 +56175,13 @@ export namespace Prisma {
     connect?: BillWhereUniqueInput | BillWhereUniqueInput[]
   }
 
+  export type TamperEventCreateNestedManyWithoutMeterInput = {
+    create?: XOR<TamperEventCreateWithoutMeterInput, TamperEventUncheckedCreateWithoutMeterInput> | TamperEventCreateWithoutMeterInput[] | TamperEventUncheckedCreateWithoutMeterInput[]
+    connectOrCreate?: TamperEventCreateOrConnectWithoutMeterInput | TamperEventCreateOrConnectWithoutMeterInput[]
+    createMany?: TamperEventCreateManyMeterInputEnvelope
+    connect?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+  }
+
   export type DTRCreateNestedOneWithoutMetersInput = {
     create?: XOR<DTRCreateWithoutMetersInput, DTRUncheckedCreateWithoutMetersInput>
     connectOrCreate?: DTRCreateOrConnectWithoutMetersInput
@@ -45771,6 +56220,13 @@ export namespace Prisma {
     connectOrCreate?: BillCreateOrConnectWithoutMeterInput | BillCreateOrConnectWithoutMeterInput[]
     createMany?: BillCreateManyMeterInputEnvelope
     connect?: BillWhereUniqueInput | BillWhereUniqueInput[]
+  }
+
+  export type TamperEventUncheckedCreateNestedManyWithoutMeterInput = {
+    create?: XOR<TamperEventCreateWithoutMeterInput, TamperEventUncheckedCreateWithoutMeterInput> | TamperEventCreateWithoutMeterInput[] | TamperEventUncheckedCreateWithoutMeterInput[]
+    connectOrCreate?: TamperEventCreateOrConnectWithoutMeterInput | TamperEventCreateOrConnectWithoutMeterInput[]
+    createMany?: TamperEventCreateManyMeterInputEnvelope
+    connect?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
   }
 
   export type CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput = {
@@ -45849,6 +56305,20 @@ export namespace Prisma {
     deleteMany?: BillScalarWhereInput | BillScalarWhereInput[]
   }
 
+  export type TamperEventUpdateManyWithoutMeterNestedInput = {
+    create?: XOR<TamperEventCreateWithoutMeterInput, TamperEventUncheckedCreateWithoutMeterInput> | TamperEventCreateWithoutMeterInput[] | TamperEventUncheckedCreateWithoutMeterInput[]
+    connectOrCreate?: TamperEventCreateOrConnectWithoutMeterInput | TamperEventCreateOrConnectWithoutMeterInput[]
+    upsert?: TamperEventUpsertWithWhereUniqueWithoutMeterInput | TamperEventUpsertWithWhereUniqueWithoutMeterInput[]
+    createMany?: TamperEventCreateManyMeterInputEnvelope
+    set?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    disconnect?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    delete?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    connect?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    update?: TamperEventUpdateWithWhereUniqueWithoutMeterInput | TamperEventUpdateWithWhereUniqueWithoutMeterInput[]
+    updateMany?: TamperEventUpdateManyWithWhereWithoutMeterInput | TamperEventUpdateManyWithWhereWithoutMeterInput[]
+    deleteMany?: TamperEventScalarWhereInput | TamperEventScalarWhereInput[]
+  }
+
   export type DTRUpdateOneWithoutMetersNestedInput = {
     create?: XOR<DTRCreateWithoutMetersInput, DTRUncheckedCreateWithoutMetersInput>
     connectOrCreate?: DTRCreateOrConnectWithoutMetersInput
@@ -45925,6 +56395,20 @@ export namespace Prisma {
     deleteMany?: BillScalarWhereInput | BillScalarWhereInput[]
   }
 
+  export type TamperEventUncheckedUpdateManyWithoutMeterNestedInput = {
+    create?: XOR<TamperEventCreateWithoutMeterInput, TamperEventUncheckedCreateWithoutMeterInput> | TamperEventCreateWithoutMeterInput[] | TamperEventUncheckedCreateWithoutMeterInput[]
+    connectOrCreate?: TamperEventCreateOrConnectWithoutMeterInput | TamperEventCreateOrConnectWithoutMeterInput[]
+    upsert?: TamperEventUpsertWithWhereUniqueWithoutMeterInput | TamperEventUpsertWithWhereUniqueWithoutMeterInput[]
+    createMany?: TamperEventCreateManyMeterInputEnvelope
+    set?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    disconnect?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    delete?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    connect?: TamperEventWhereUniqueInput | TamperEventWhereUniqueInput[]
+    update?: TamperEventUpdateWithWhereUniqueWithoutMeterInput | TamperEventUpdateWithWhereUniqueWithoutMeterInput[]
+    updateMany?: TamperEventUpdateManyWithWhereWithoutMeterInput | TamperEventUpdateManyWithWhereWithoutMeterInput[]
+    deleteMany?: TamperEventScalarWhereInput | TamperEventScalarWhereInput[]
+  }
+
   export type CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput = {
     create?: XOR<CurrentTransformerCreateWithoutMeterInput, CurrentTransformerUncheckedCreateWithoutMeterInput> | CurrentTransformerCreateWithoutMeterInput[] | CurrentTransformerUncheckedCreateWithoutMeterInput[]
     connectOrCreate?: CurrentTransformerCreateOrConnectWithoutMeterInput | CurrentTransformerCreateOrConnectWithoutMeterInput[]
@@ -45979,6 +56463,20 @@ export namespace Prisma {
     connect?: BillWhereUniqueInput
   }
 
+  export type PrepaidTransactionCreateNestedManyWithoutMeterReadingInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutMeterReadingInput, PrepaidTransactionUncheckedCreateWithoutMeterReadingInput> | PrepaidTransactionCreateWithoutMeterReadingInput[] | PrepaidTransactionUncheckedCreateWithoutMeterReadingInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutMeterReadingInput | PrepaidTransactionCreateOrConnectWithoutMeterReadingInput[]
+    createMany?: PrepaidTransactionCreateManyMeterReadingInputEnvelope
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+  }
+
+  export type PrepaidTransactionUncheckedCreateNestedManyWithoutMeterReadingInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutMeterReadingInput, PrepaidTransactionUncheckedCreateWithoutMeterReadingInput> | PrepaidTransactionCreateWithoutMeterReadingInput[] | PrepaidTransactionUncheckedCreateWithoutMeterReadingInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutMeterReadingInput | PrepaidTransactionCreateOrConnectWithoutMeterReadingInput[]
+    createMany?: PrepaidTransactionCreateManyMeterReadingInputEnvelope
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+  }
+
   export type EnumReadingTypeFieldUpdateOperationsInput = {
     set?: $Enums.ReadingType
   }
@@ -46003,6 +56501,34 @@ export namespace Prisma {
     delete?: BillWhereInput | boolean
     connect?: BillWhereUniqueInput
     update?: XOR<XOR<BillUpdateToOneWithWhereWithoutReadingsInput, BillUpdateWithoutReadingsInput>, BillUncheckedUpdateWithoutReadingsInput>
+  }
+
+  export type PrepaidTransactionUpdateManyWithoutMeterReadingNestedInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutMeterReadingInput, PrepaidTransactionUncheckedCreateWithoutMeterReadingInput> | PrepaidTransactionCreateWithoutMeterReadingInput[] | PrepaidTransactionUncheckedCreateWithoutMeterReadingInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutMeterReadingInput | PrepaidTransactionCreateOrConnectWithoutMeterReadingInput[]
+    upsert?: PrepaidTransactionUpsertWithWhereUniqueWithoutMeterReadingInput | PrepaidTransactionUpsertWithWhereUniqueWithoutMeterReadingInput[]
+    createMany?: PrepaidTransactionCreateManyMeterReadingInputEnvelope
+    set?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    disconnect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    delete?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    update?: PrepaidTransactionUpdateWithWhereUniqueWithoutMeterReadingInput | PrepaidTransactionUpdateWithWhereUniqueWithoutMeterReadingInput[]
+    updateMany?: PrepaidTransactionUpdateManyWithWhereWithoutMeterReadingInput | PrepaidTransactionUpdateManyWithWhereWithoutMeterReadingInput[]
+    deleteMany?: PrepaidTransactionScalarWhereInput | PrepaidTransactionScalarWhereInput[]
+  }
+
+  export type PrepaidTransactionUncheckedUpdateManyWithoutMeterReadingNestedInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutMeterReadingInput, PrepaidTransactionUncheckedCreateWithoutMeterReadingInput> | PrepaidTransactionCreateWithoutMeterReadingInput[] | PrepaidTransactionUncheckedCreateWithoutMeterReadingInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutMeterReadingInput | PrepaidTransactionCreateOrConnectWithoutMeterReadingInput[]
+    upsert?: PrepaidTransactionUpsertWithWhereUniqueWithoutMeterReadingInput | PrepaidTransactionUpsertWithWhereUniqueWithoutMeterReadingInput[]
+    createMany?: PrepaidTransactionCreateManyMeterReadingInputEnvelope
+    set?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    disconnect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    delete?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    update?: PrepaidTransactionUpdateWithWhereUniqueWithoutMeterReadingInput | PrepaidTransactionUpdateWithWhereUniqueWithoutMeterReadingInput[]
+    updateMany?: PrepaidTransactionUpdateManyWithWhereWithoutMeterReadingInput | PrepaidTransactionUpdateManyWithWhereWithoutMeterReadingInput[]
+    deleteMany?: PrepaidTransactionScalarWhereInput | PrepaidTransactionScalarWhereInput[]
   }
 
   export type MeterCreateNestedOneWithoutCurrentTransformersInput = {
@@ -46528,6 +57054,250 @@ export namespace Prisma {
     upsert?: DTRUpsertWithoutFaultsInput
     connect?: DTRWhereUniqueInput
     update?: XOR<XOR<DTRUpdateToOneWithWhereWithoutFaultsInput, DTRUpdateWithoutFaultsInput>, DTRUncheckedUpdateWithoutFaultsInput>
+  }
+
+  export type MeterCreateNestedOneWithoutTamperEventsInput = {
+    create?: XOR<MeterCreateWithoutTamperEventsInput, MeterUncheckedCreateWithoutTamperEventsInput>
+    connectOrCreate?: MeterCreateOrConnectWithoutTamperEventsInput
+    connect?: MeterWhereUniqueInput
+  }
+
+  export type EnumTamperTypeFieldUpdateOperationsInput = {
+    set?: $Enums.TamperType
+  }
+
+  export type EnumTamperStatusFieldUpdateOperationsInput = {
+    set?: $Enums.TamperStatus
+  }
+
+  export type MeterUpdateOneRequiredWithoutTamperEventsNestedInput = {
+    create?: XOR<MeterCreateWithoutTamperEventsInput, MeterUncheckedCreateWithoutTamperEventsInput>
+    connectOrCreate?: MeterCreateOrConnectWithoutTamperEventsInput
+    upsert?: MeterUpsertWithoutTamperEventsInput
+    connect?: MeterWhereUniqueInput
+    update?: XOR<XOR<MeterUpdateToOneWithWhereWithoutTamperEventsInput, MeterUpdateWithoutTamperEventsInput>, MeterUncheckedUpdateWithoutTamperEventsInput>
+  }
+
+  export type ConsumerCreateNestedOneWithoutPrepaidAccountsInput = {
+    create?: XOR<ConsumerCreateWithoutPrepaidAccountsInput, ConsumerUncheckedCreateWithoutPrepaidAccountsInput>
+    connectOrCreate?: ConsumerCreateOrConnectWithoutPrepaidAccountsInput
+    connect?: ConsumerWhereUniqueInput
+  }
+
+  export type PrepaidTransactionCreateNestedManyWithoutAccountInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutAccountInput, PrepaidTransactionUncheckedCreateWithoutAccountInput> | PrepaidTransactionCreateWithoutAccountInput[] | PrepaidTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutAccountInput | PrepaidTransactionCreateOrConnectWithoutAccountInput[]
+    createMany?: PrepaidTransactionCreateManyAccountInputEnvelope
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+  }
+
+  export type PrepaidRechargeCreateNestedManyWithoutAccountInput = {
+    create?: XOR<PrepaidRechargeCreateWithoutAccountInput, PrepaidRechargeUncheckedCreateWithoutAccountInput> | PrepaidRechargeCreateWithoutAccountInput[] | PrepaidRechargeUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidRechargeCreateOrConnectWithoutAccountInput | PrepaidRechargeCreateOrConnectWithoutAccountInput[]
+    createMany?: PrepaidRechargeCreateManyAccountInputEnvelope
+    connect?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+  }
+
+  export type PrepaidAlertCreateNestedManyWithoutAccountInput = {
+    create?: XOR<PrepaidAlertCreateWithoutAccountInput, PrepaidAlertUncheckedCreateWithoutAccountInput> | PrepaidAlertCreateWithoutAccountInput[] | PrepaidAlertUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidAlertCreateOrConnectWithoutAccountInput | PrepaidAlertCreateOrConnectWithoutAccountInput[]
+    createMany?: PrepaidAlertCreateManyAccountInputEnvelope
+    connect?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+  }
+
+  export type PrepaidTransactionUncheckedCreateNestedManyWithoutAccountInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutAccountInput, PrepaidTransactionUncheckedCreateWithoutAccountInput> | PrepaidTransactionCreateWithoutAccountInput[] | PrepaidTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutAccountInput | PrepaidTransactionCreateOrConnectWithoutAccountInput[]
+    createMany?: PrepaidTransactionCreateManyAccountInputEnvelope
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+  }
+
+  export type PrepaidRechargeUncheckedCreateNestedManyWithoutAccountInput = {
+    create?: XOR<PrepaidRechargeCreateWithoutAccountInput, PrepaidRechargeUncheckedCreateWithoutAccountInput> | PrepaidRechargeCreateWithoutAccountInput[] | PrepaidRechargeUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidRechargeCreateOrConnectWithoutAccountInput | PrepaidRechargeCreateOrConnectWithoutAccountInput[]
+    createMany?: PrepaidRechargeCreateManyAccountInputEnvelope
+    connect?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+  }
+
+  export type PrepaidAlertUncheckedCreateNestedManyWithoutAccountInput = {
+    create?: XOR<PrepaidAlertCreateWithoutAccountInput, PrepaidAlertUncheckedCreateWithoutAccountInput> | PrepaidAlertCreateWithoutAccountInput[] | PrepaidAlertUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidAlertCreateOrConnectWithoutAccountInput | PrepaidAlertCreateOrConnectWithoutAccountInput[]
+    createMany?: PrepaidAlertCreateManyAccountInputEnvelope
+    connect?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+  }
+
+  export type ConsumerUpdateOneRequiredWithoutPrepaidAccountsNestedInput = {
+    create?: XOR<ConsumerCreateWithoutPrepaidAccountsInput, ConsumerUncheckedCreateWithoutPrepaidAccountsInput>
+    connectOrCreate?: ConsumerCreateOrConnectWithoutPrepaidAccountsInput
+    upsert?: ConsumerUpsertWithoutPrepaidAccountsInput
+    connect?: ConsumerWhereUniqueInput
+    update?: XOR<XOR<ConsumerUpdateToOneWithWhereWithoutPrepaidAccountsInput, ConsumerUpdateWithoutPrepaidAccountsInput>, ConsumerUncheckedUpdateWithoutPrepaidAccountsInput>
+  }
+
+  export type PrepaidTransactionUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutAccountInput, PrepaidTransactionUncheckedCreateWithoutAccountInput> | PrepaidTransactionCreateWithoutAccountInput[] | PrepaidTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutAccountInput | PrepaidTransactionCreateOrConnectWithoutAccountInput[]
+    upsert?: PrepaidTransactionUpsertWithWhereUniqueWithoutAccountInput | PrepaidTransactionUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: PrepaidTransactionCreateManyAccountInputEnvelope
+    set?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    disconnect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    delete?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    update?: PrepaidTransactionUpdateWithWhereUniqueWithoutAccountInput | PrepaidTransactionUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: PrepaidTransactionUpdateManyWithWhereWithoutAccountInput | PrepaidTransactionUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: PrepaidTransactionScalarWhereInput | PrepaidTransactionScalarWhereInput[]
+  }
+
+  export type PrepaidRechargeUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<PrepaidRechargeCreateWithoutAccountInput, PrepaidRechargeUncheckedCreateWithoutAccountInput> | PrepaidRechargeCreateWithoutAccountInput[] | PrepaidRechargeUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidRechargeCreateOrConnectWithoutAccountInput | PrepaidRechargeCreateOrConnectWithoutAccountInput[]
+    upsert?: PrepaidRechargeUpsertWithWhereUniqueWithoutAccountInput | PrepaidRechargeUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: PrepaidRechargeCreateManyAccountInputEnvelope
+    set?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    disconnect?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    delete?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    connect?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    update?: PrepaidRechargeUpdateWithWhereUniqueWithoutAccountInput | PrepaidRechargeUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: PrepaidRechargeUpdateManyWithWhereWithoutAccountInput | PrepaidRechargeUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: PrepaidRechargeScalarWhereInput | PrepaidRechargeScalarWhereInput[]
+  }
+
+  export type PrepaidAlertUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<PrepaidAlertCreateWithoutAccountInput, PrepaidAlertUncheckedCreateWithoutAccountInput> | PrepaidAlertCreateWithoutAccountInput[] | PrepaidAlertUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidAlertCreateOrConnectWithoutAccountInput | PrepaidAlertCreateOrConnectWithoutAccountInput[]
+    upsert?: PrepaidAlertUpsertWithWhereUniqueWithoutAccountInput | PrepaidAlertUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: PrepaidAlertCreateManyAccountInputEnvelope
+    set?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    disconnect?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    delete?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    connect?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    update?: PrepaidAlertUpdateWithWhereUniqueWithoutAccountInput | PrepaidAlertUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: PrepaidAlertUpdateManyWithWhereWithoutAccountInput | PrepaidAlertUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: PrepaidAlertScalarWhereInput | PrepaidAlertScalarWhereInput[]
+  }
+
+  export type PrepaidTransactionUncheckedUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<PrepaidTransactionCreateWithoutAccountInput, PrepaidTransactionUncheckedCreateWithoutAccountInput> | PrepaidTransactionCreateWithoutAccountInput[] | PrepaidTransactionUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidTransactionCreateOrConnectWithoutAccountInput | PrepaidTransactionCreateOrConnectWithoutAccountInput[]
+    upsert?: PrepaidTransactionUpsertWithWhereUniqueWithoutAccountInput | PrepaidTransactionUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: PrepaidTransactionCreateManyAccountInputEnvelope
+    set?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    disconnect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    delete?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    connect?: PrepaidTransactionWhereUniqueInput | PrepaidTransactionWhereUniqueInput[]
+    update?: PrepaidTransactionUpdateWithWhereUniqueWithoutAccountInput | PrepaidTransactionUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: PrepaidTransactionUpdateManyWithWhereWithoutAccountInput | PrepaidTransactionUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: PrepaidTransactionScalarWhereInput | PrepaidTransactionScalarWhereInput[]
+  }
+
+  export type PrepaidRechargeUncheckedUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<PrepaidRechargeCreateWithoutAccountInput, PrepaidRechargeUncheckedCreateWithoutAccountInput> | PrepaidRechargeCreateWithoutAccountInput[] | PrepaidRechargeUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidRechargeCreateOrConnectWithoutAccountInput | PrepaidRechargeCreateOrConnectWithoutAccountInput[]
+    upsert?: PrepaidRechargeUpsertWithWhereUniqueWithoutAccountInput | PrepaidRechargeUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: PrepaidRechargeCreateManyAccountInputEnvelope
+    set?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    disconnect?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    delete?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    connect?: PrepaidRechargeWhereUniqueInput | PrepaidRechargeWhereUniqueInput[]
+    update?: PrepaidRechargeUpdateWithWhereUniqueWithoutAccountInput | PrepaidRechargeUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: PrepaidRechargeUpdateManyWithWhereWithoutAccountInput | PrepaidRechargeUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: PrepaidRechargeScalarWhereInput | PrepaidRechargeScalarWhereInput[]
+  }
+
+  export type PrepaidAlertUncheckedUpdateManyWithoutAccountNestedInput = {
+    create?: XOR<PrepaidAlertCreateWithoutAccountInput, PrepaidAlertUncheckedCreateWithoutAccountInput> | PrepaidAlertCreateWithoutAccountInput[] | PrepaidAlertUncheckedCreateWithoutAccountInput[]
+    connectOrCreate?: PrepaidAlertCreateOrConnectWithoutAccountInput | PrepaidAlertCreateOrConnectWithoutAccountInput[]
+    upsert?: PrepaidAlertUpsertWithWhereUniqueWithoutAccountInput | PrepaidAlertUpsertWithWhereUniqueWithoutAccountInput[]
+    createMany?: PrepaidAlertCreateManyAccountInputEnvelope
+    set?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    disconnect?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    delete?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    connect?: PrepaidAlertWhereUniqueInput | PrepaidAlertWhereUniqueInput[]
+    update?: PrepaidAlertUpdateWithWhereUniqueWithoutAccountInput | PrepaidAlertUpdateWithWhereUniqueWithoutAccountInput[]
+    updateMany?: PrepaidAlertUpdateManyWithWhereWithoutAccountInput | PrepaidAlertUpdateManyWithWhereWithoutAccountInput[]
+    deleteMany?: PrepaidAlertScalarWhereInput | PrepaidAlertScalarWhereInput[]
+  }
+
+  export type PrepaidAccountCreateNestedOneWithoutTransactionsInput = {
+    create?: XOR<PrepaidAccountCreateWithoutTransactionsInput, PrepaidAccountUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutTransactionsInput
+    connect?: PrepaidAccountWhereUniqueInput
+  }
+
+  export type MeterReadingCreateNestedOneWithoutPrepaidTransactionsInput = {
+    create?: XOR<MeterReadingCreateWithoutPrepaidTransactionsInput, MeterReadingUncheckedCreateWithoutPrepaidTransactionsInput>
+    connectOrCreate?: MeterReadingCreateOrConnectWithoutPrepaidTransactionsInput
+    connect?: MeterReadingWhereUniqueInput
+  }
+
+  export type EnumPrepaidTransactionTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PrepaidTransactionType
+  }
+
+  export type EnumPrepaidTransactionStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PrepaidTransactionStatus
+  }
+
+  export type PrepaidAccountUpdateOneRequiredWithoutTransactionsNestedInput = {
+    create?: XOR<PrepaidAccountCreateWithoutTransactionsInput, PrepaidAccountUncheckedCreateWithoutTransactionsInput>
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutTransactionsInput
+    upsert?: PrepaidAccountUpsertWithoutTransactionsInput
+    connect?: PrepaidAccountWhereUniqueInput
+    update?: XOR<XOR<PrepaidAccountUpdateToOneWithWhereWithoutTransactionsInput, PrepaidAccountUpdateWithoutTransactionsInput>, PrepaidAccountUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type MeterReadingUpdateOneWithoutPrepaidTransactionsNestedInput = {
+    create?: XOR<MeterReadingCreateWithoutPrepaidTransactionsInput, MeterReadingUncheckedCreateWithoutPrepaidTransactionsInput>
+    connectOrCreate?: MeterReadingCreateOrConnectWithoutPrepaidTransactionsInput
+    upsert?: MeterReadingUpsertWithoutPrepaidTransactionsInput
+    disconnect?: MeterReadingWhereInput | boolean
+    delete?: MeterReadingWhereInput | boolean
+    connect?: MeterReadingWhereUniqueInput
+    update?: XOR<XOR<MeterReadingUpdateToOneWithWhereWithoutPrepaidTransactionsInput, MeterReadingUpdateWithoutPrepaidTransactionsInput>, MeterReadingUncheckedUpdateWithoutPrepaidTransactionsInput>
+  }
+
+  export type PrepaidAccountCreateNestedOneWithoutRechargesInput = {
+    create?: XOR<PrepaidAccountCreateWithoutRechargesInput, PrepaidAccountUncheckedCreateWithoutRechargesInput>
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutRechargesInput
+    connect?: PrepaidAccountWhereUniqueInput
+  }
+
+  export type EnumPrepaidRechargeTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PrepaidRechargeType
+  }
+
+  export type EnumPrepaidRechargeSourceFieldUpdateOperationsInput = {
+    set?: $Enums.PrepaidRechargeSource
+  }
+
+  export type PrepaidAccountUpdateOneRequiredWithoutRechargesNestedInput = {
+    create?: XOR<PrepaidAccountCreateWithoutRechargesInput, PrepaidAccountUncheckedCreateWithoutRechargesInput>
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutRechargesInput
+    upsert?: PrepaidAccountUpsertWithoutRechargesInput
+    connect?: PrepaidAccountWhereUniqueInput
+    update?: XOR<XOR<PrepaidAccountUpdateToOneWithWhereWithoutRechargesInput, PrepaidAccountUpdateWithoutRechargesInput>, PrepaidAccountUncheckedUpdateWithoutRechargesInput>
+  }
+
+  export type PrepaidAccountCreateNestedOneWithoutAlertsInput = {
+    create?: XOR<PrepaidAccountCreateWithoutAlertsInput, PrepaidAccountUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutAlertsInput
+    connect?: PrepaidAccountWhereUniqueInput
+  }
+
+  export type EnumPrepaidAlertTypeFieldUpdateOperationsInput = {
+    set?: $Enums.PrepaidAlertType
+  }
+
+  export type EnumPrepaidAlertLevelFieldUpdateOperationsInput = {
+    set?: $Enums.PrepaidAlertLevel
+  }
+
+  export type PrepaidAccountUpdateOneRequiredWithoutAlertsNestedInput = {
+    create?: XOR<PrepaidAccountCreateWithoutAlertsInput, PrepaidAccountUncheckedCreateWithoutAlertsInput>
+    connectOrCreate?: PrepaidAccountCreateOrConnectWithoutAlertsInput
+    upsert?: PrepaidAccountUpsertWithoutAlertsInput
+    connect?: PrepaidAccountWhereUniqueInput
+    update?: XOR<XOR<PrepaidAccountUpdateToOneWithWhereWithoutAlertsInput, PrepaidAccountUpdateWithoutAlertsInput>, PrepaidAccountUncheckedUpdateWithoutAlertsInput>
   }
 
   export type NestedIntFilter<$PrismaModel = never> = {
@@ -47349,6 +58119,142 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumFaultStatusFilter<$PrismaModel>
     _max?: NestedEnumFaultStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTamperTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperType | EnumTamperTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperTypeFilter<$PrismaModel> | $Enums.TamperType
+  }
+
+  export type NestedEnumTamperStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperStatus | EnumTamperStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperStatusFilter<$PrismaModel> | $Enums.TamperStatus
+  }
+
+  export type NestedEnumTamperTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperType | EnumTamperTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperType[] | ListEnumTamperTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperTypeWithAggregatesFilter<$PrismaModel> | $Enums.TamperType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTamperTypeFilter<$PrismaModel>
+    _max?: NestedEnumTamperTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumTamperStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.TamperStatus | EnumTamperStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.TamperStatus[] | ListEnumTamperStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumTamperStatusWithAggregatesFilter<$PrismaModel> | $Enums.TamperStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumTamperStatusFilter<$PrismaModel>
+    _max?: NestedEnumTamperStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPrepaidTransactionTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionType | EnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionTypeFilter<$PrismaModel> | $Enums.PrepaidTransactionType
+  }
+
+  export type NestedEnumPrepaidTransactionStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionStatus | EnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionStatusFilter<$PrismaModel> | $Enums.PrepaidTransactionStatus
+  }
+
+  export type NestedEnumPrepaidTransactionTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionType | EnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionType[] | ListEnumPrepaidTransactionTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidTransactionType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidTransactionTypeFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidTransactionTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPrepaidTransactionStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidTransactionStatus | EnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidTransactionStatus[] | ListEnumPrepaidTransactionStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidTransactionStatusWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidTransactionStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidTransactionStatusFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidTransactionStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPrepaidRechargeTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeType | EnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeTypeFilter<$PrismaModel> | $Enums.PrepaidRechargeType
+  }
+
+  export type NestedEnumPrepaidRechargeSourceFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeSource | EnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeSourceFilter<$PrismaModel> | $Enums.PrepaidRechargeSource
+  }
+
+  export type NestedEnumPrepaidRechargeTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeType | EnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeType[] | ListEnumPrepaidRechargeTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidRechargeType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidRechargeTypeFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidRechargeTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPrepaidRechargeSourceWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidRechargeSource | EnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidRechargeSource[] | ListEnumPrepaidRechargeSourceFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidRechargeSourceWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidRechargeSource
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidRechargeSourceFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidRechargeSourceFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPrepaidAlertTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertType | EnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertTypeFilter<$PrismaModel> | $Enums.PrepaidAlertType
+  }
+
+  export type NestedEnumPrepaidAlertLevelFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertLevel | EnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertLevelFilter<$PrismaModel> | $Enums.PrepaidAlertLevel
+  }
+
+  export type NestedEnumPrepaidAlertTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertType | EnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertType[] | ListEnumPrepaidAlertTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertTypeWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidAlertType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidAlertTypeFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidAlertTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPrepaidAlertLevelWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PrepaidAlertLevel | EnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    in?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PrepaidAlertLevel[] | ListEnumPrepaidAlertLevelFieldRefInput<$PrismaModel>
+    not?: NestedEnumPrepaidAlertLevelWithAggregatesFilter<$PrismaModel> | $Enums.PrepaidAlertLevel
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPrepaidAlertLevelFilter<$PrismaModel>
+    _max?: NestedEnumPrepaidAlertLevelFilter<$PrismaModel>
   }
 
   export type DepartmentCreateWithoutChildrenInput = {
@@ -49385,6 +60291,7 @@ export namespace Prisma {
     bills?: BillCreateNestedManyWithoutConsumerInput
     notifications?: NotificationCreateNestedManyWithoutConsumerInput
     tickets?: TicketCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUncheckedCreateWithoutLocationInput = {
@@ -49411,6 +60318,7 @@ export namespace Prisma {
     bills?: BillUncheckedCreateNestedManyWithoutConsumerInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConsumerInput
     tickets?: TicketUncheckedCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerCreateOrConnectWithoutLocationInput = {
@@ -49436,6 +60344,7 @@ export namespace Prisma {
     consumer: ConsumerCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
@@ -49461,6 +60370,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
@@ -49676,6 +60586,7 @@ export namespace Prisma {
     bills?: BillUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerUncheckedUpdateWithoutLocationInput = {
@@ -49702,6 +60613,7 @@ export namespace Prisma {
     bills?: BillUncheckedUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput
   }
 
   export type MeterUpsertWithWhereUniqueWithoutLocationInput = {
@@ -49849,6 +60761,7 @@ export namespace Prisma {
     location: LocationCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
@@ -49874,6 +60787,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
@@ -50055,6 +60969,61 @@ export namespace Prisma {
 
   export type TicketCreateManyConsumerInputEnvelope = {
     data: TicketCreateManyConsumerInput | TicketCreateManyConsumerInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PrepaidAccountCreateWithoutConsumerInput = {
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    transactions?: PrepaidTransactionCreateNestedManyWithoutAccountInput
+    recharges?: PrepaidRechargeCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountUncheckedCreateWithoutConsumerInput = {
+    id?: number
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    transactions?: PrepaidTransactionUncheckedCreateNestedManyWithoutAccountInput
+    recharges?: PrepaidRechargeUncheckedCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountCreateOrConnectWithoutConsumerInput = {
+    where: PrepaidAccountWhereUniqueInput
+    create: XOR<PrepaidAccountCreateWithoutConsumerInput, PrepaidAccountUncheckedCreateWithoutConsumerInput>
+  }
+
+  export type PrepaidAccountCreateManyConsumerInputEnvelope = {
+    data: PrepaidAccountCreateManyConsumerInput | PrepaidAccountCreateManyConsumerInput[]
     skipDuplicates?: boolean
   }
 
@@ -50243,6 +61212,46 @@ export namespace Prisma {
     data: XOR<TicketUpdateManyMutationInput, TicketUncheckedUpdateManyWithoutConsumerInput>
   }
 
+  export type PrepaidAccountUpsertWithWhereUniqueWithoutConsumerInput = {
+    where: PrepaidAccountWhereUniqueInput
+    update: XOR<PrepaidAccountUpdateWithoutConsumerInput, PrepaidAccountUncheckedUpdateWithoutConsumerInput>
+    create: XOR<PrepaidAccountCreateWithoutConsumerInput, PrepaidAccountUncheckedCreateWithoutConsumerInput>
+  }
+
+  export type PrepaidAccountUpdateWithWhereUniqueWithoutConsumerInput = {
+    where: PrepaidAccountWhereUniqueInput
+    data: XOR<PrepaidAccountUpdateWithoutConsumerInput, PrepaidAccountUncheckedUpdateWithoutConsumerInput>
+  }
+
+  export type PrepaidAccountUpdateManyWithWhereWithoutConsumerInput = {
+    where: PrepaidAccountScalarWhereInput
+    data: XOR<PrepaidAccountUpdateManyMutationInput, PrepaidAccountUncheckedUpdateManyWithoutConsumerInput>
+  }
+
+  export type PrepaidAccountScalarWhereInput = {
+    AND?: PrepaidAccountScalarWhereInput | PrepaidAccountScalarWhereInput[]
+    OR?: PrepaidAccountScalarWhereInput[]
+    NOT?: PrepaidAccountScalarWhereInput | PrepaidAccountScalarWhereInput[]
+    id?: IntFilter<"PrepaidAccount"> | number
+    consumerId?: IntFilter<"PrepaidAccount"> | number
+    accountNumber?: StringFilter<"PrepaidAccount"> | string
+    currentBalance?: FloatFilter<"PrepaidAccount"> | number
+    totalRecharged?: FloatFilter<"PrepaidAccount"> | number
+    totalConsumed?: FloatFilter<"PrepaidAccount"> | number
+    isActive?: BoolFilter<"PrepaidAccount"> | boolean
+    isBlocked?: BoolFilter<"PrepaidAccount"> | boolean
+    blockReason?: StringNullableFilter<"PrepaidAccount"> | string | null
+    blockedAt?: DateTimeNullableFilter<"PrepaidAccount"> | Date | string | null
+    blockedBy?: IntNullableFilter<"PrepaidAccount"> | number | null
+    lowBalanceThreshold?: FloatFilter<"PrepaidAccount"> | number
+    emergencyThreshold?: FloatFilter<"PrepaidAccount"> | number
+    autoRechargeEnabled?: BoolFilter<"PrepaidAccount"> | boolean
+    autoRechargeAmount?: FloatNullableFilter<"PrepaidAccount"> | number | null
+    autoRechargeThreshold?: FloatNullableFilter<"PrepaidAccount"> | number | null
+    createdAt?: DateTimeFilter<"PrepaidAccount"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidAccount"> | Date | string
+  }
+
   export type ConsumerCreateWithoutDocumentsInput = {
     consumerNumber: string
     name: string
@@ -50266,6 +61275,7 @@ export namespace Prisma {
     bills?: BillCreateNestedManyWithoutConsumerInput
     notifications?: NotificationCreateNestedManyWithoutConsumerInput
     tickets?: TicketCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUncheckedCreateWithoutDocumentsInput = {
@@ -50292,6 +61302,7 @@ export namespace Prisma {
     bills?: BillUncheckedCreateNestedManyWithoutConsumerInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConsumerInput
     tickets?: TicketUncheckedCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerCreateOrConnectWithoutDocumentsInput = {
@@ -50333,6 +61344,7 @@ export namespace Prisma {
     bills?: BillUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerUncheckedUpdateWithoutDocumentsInput = {
@@ -50359,6 +61371,7 @@ export namespace Prisma {
     bills?: BillUncheckedUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput
   }
 
   export type MeterConfigurationCreateWithoutMeterInput = {
@@ -50430,6 +61443,7 @@ export namespace Prisma {
     bills?: BillCreateNestedManyWithoutConsumerInput
     notifications?: NotificationCreateNestedManyWithoutConsumerInput
     tickets?: TicketCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUncheckedCreateWithoutMetersInput = {
@@ -50456,6 +61470,7 @@ export namespace Prisma {
     bills?: BillUncheckedCreateNestedManyWithoutConsumerInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConsumerInput
     tickets?: TicketUncheckedCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerCreateOrConnectWithoutMetersInput = {
@@ -50528,6 +61543,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     bill?: BillCreateNestedOneWithoutReadingsInput
+    prepaidTransactions?: PrepaidTransactionCreateNestedManyWithoutMeterReadingInput
   }
 
   export type MeterReadingUncheckedCreateWithoutMeterInput = {
@@ -50558,6 +61574,7 @@ export namespace Prisma {
     billId?: number | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    prepaidTransactions?: PrepaidTransactionUncheckedCreateNestedManyWithoutMeterReadingInput
   }
 
   export type MeterReadingCreateOrConnectWithoutMeterInput = {
@@ -50632,6 +61649,91 @@ export namespace Prisma {
 
   export type BillCreateManyMeterInputEnvelope = {
     data: BillCreateManyMeterInput | BillCreateManyMeterInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TamperEventCreateWithoutMeterInput = {
+    tamperDatetime?: Date | string
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+    avgCurrent?: number | null
+    avgVoltage?: number | null
+    avgPowerFactor?: number | null
+    frequency?: number | null
+    kwh?: number | null
+    kwhExport?: number | null
+    kwhImport?: number | null
+    kwhNet?: number | null
+    kwhTotal?: number | null
+    kwExport?: number | null
+    kwImport?: number | null
+    kvaExport?: number | null
+    kvaImport?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    powerFactorR?: number | null
+    powerFactorY?: number | null
+    powerFactorB?: number | null
+    tamperCount?: number | null
+    param1?: number | null
+    param2?: number | null
+    param3?: number | null
+    param4?: number | null
+    param5?: number | null
+    isProcessed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperEventUncheckedCreateWithoutMeterInput = {
+    id?: number
+    tamperDatetime?: Date | string
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+    avgCurrent?: number | null
+    avgVoltage?: number | null
+    avgPowerFactor?: number | null
+    frequency?: number | null
+    kwh?: number | null
+    kwhExport?: number | null
+    kwhImport?: number | null
+    kwhNet?: number | null
+    kwhTotal?: number | null
+    kwExport?: number | null
+    kwImport?: number | null
+    kvaExport?: number | null
+    kvaImport?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    powerFactorR?: number | null
+    powerFactorY?: number | null
+    powerFactorB?: number | null
+    tamperCount?: number | null
+    param1?: number | null
+    param2?: number | null
+    param3?: number | null
+    param4?: number | null
+    param5?: number | null
+    isProcessed?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperEventCreateOrConnectWithoutMeterInput = {
+    where: TamperEventWhereUniqueInput
+    create: XOR<TamperEventCreateWithoutMeterInput, TamperEventUncheckedCreateWithoutMeterInput>
+  }
+
+  export type TamperEventCreateManyMeterInputEnvelope = {
+    data: TamperEventCreateManyMeterInput | TamperEventCreateManyMeterInput[]
     skipDuplicates?: boolean
   }
 
@@ -50875,6 +61977,7 @@ export namespace Prisma {
     bills?: BillUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerUncheckedUpdateWithoutMetersInput = {
@@ -50901,6 +62004,7 @@ export namespace Prisma {
     bills?: BillUncheckedUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput
   }
 
   export type LocationUpsertWithoutMetersInput = {
@@ -51011,6 +62115,64 @@ export namespace Prisma {
   export type BillUpdateManyWithWhereWithoutMeterInput = {
     where: BillScalarWhereInput
     data: XOR<BillUpdateManyMutationInput, BillUncheckedUpdateManyWithoutMeterInput>
+  }
+
+  export type TamperEventUpsertWithWhereUniqueWithoutMeterInput = {
+    where: TamperEventWhereUniqueInput
+    update: XOR<TamperEventUpdateWithoutMeterInput, TamperEventUncheckedUpdateWithoutMeterInput>
+    create: XOR<TamperEventCreateWithoutMeterInput, TamperEventUncheckedCreateWithoutMeterInput>
+  }
+
+  export type TamperEventUpdateWithWhereUniqueWithoutMeterInput = {
+    where: TamperEventWhereUniqueInput
+    data: XOR<TamperEventUpdateWithoutMeterInput, TamperEventUncheckedUpdateWithoutMeterInput>
+  }
+
+  export type TamperEventUpdateManyWithWhereWithoutMeterInput = {
+    where: TamperEventScalarWhereInput
+    data: XOR<TamperEventUpdateManyMutationInput, TamperEventUncheckedUpdateManyWithoutMeterInput>
+  }
+
+  export type TamperEventScalarWhereInput = {
+    AND?: TamperEventScalarWhereInput | TamperEventScalarWhereInput[]
+    OR?: TamperEventScalarWhereInput[]
+    NOT?: TamperEventScalarWhereInput | TamperEventScalarWhereInput[]
+    id?: IntFilter<"TamperEvent"> | number
+    meterId?: IntFilter<"TamperEvent"> | number
+    tamperDatetime?: DateTimeFilter<"TamperEvent"> | Date | string
+    tamperType?: EnumTamperTypeFilter<"TamperEvent"> | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFilter<"TamperEvent"> | $Enums.TamperStatus
+    avgCurrent?: FloatNullableFilter<"TamperEvent"> | number | null
+    avgVoltage?: FloatNullableFilter<"TamperEvent"> | number | null
+    avgPowerFactor?: FloatNullableFilter<"TamperEvent"> | number | null
+    frequency?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwh?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhNet?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwhTotal?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kwImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kvaExport?: FloatNullableFilter<"TamperEvent"> | number | null
+    kvaImport?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageR?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageY?: FloatNullableFilter<"TamperEvent"> | number | null
+    voltageB?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentR?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentY?: FloatNullableFilter<"TamperEvent"> | number | null
+    currentB?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorR?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorY?: FloatNullableFilter<"TamperEvent"> | number | null
+    powerFactorB?: FloatNullableFilter<"TamperEvent"> | number | null
+    tamperCount?: IntNullableFilter<"TamperEvent"> | number | null
+    param1?: FloatNullableFilter<"TamperEvent"> | number | null
+    param2?: FloatNullableFilter<"TamperEvent"> | number | null
+    param3?: FloatNullableFilter<"TamperEvent"> | number | null
+    param4?: FloatNullableFilter<"TamperEvent"> | number | null
+    param5?: FloatNullableFilter<"TamperEvent"> | number | null
+    isProcessed?: BoolFilter<"TamperEvent"> | boolean
+    createdAt?: DateTimeFilter<"TamperEvent"> | Date | string
+    updatedAt?: DateTimeFilter<"TamperEvent"> | Date | string
   }
 
   export type DTRUpsertWithoutMetersInput = {
@@ -51181,6 +62343,7 @@ export namespace Prisma {
     location: LocationCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
@@ -51206,6 +62369,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
@@ -51244,6 +62408,7 @@ export namespace Prisma {
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
@@ -51269,6 +62434,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
@@ -51291,6 +62457,7 @@ export namespace Prisma {
     consumer: ConsumerCreateNestedOneWithoutMetersInput
     location: LocationCreateNestedOneWithoutMetersInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
@@ -51316,6 +62483,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
@@ -51385,6 +62553,55 @@ export namespace Prisma {
     create: XOR<BillCreateWithoutReadingsInput, BillUncheckedCreateWithoutReadingsInput>
   }
 
+  export type PrepaidTransactionCreateWithoutMeterReadingInput = {
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    account: PrepaidAccountCreateNestedOneWithoutTransactionsInput
+  }
+
+  export type PrepaidTransactionUncheckedCreateWithoutMeterReadingInput = {
+    id?: number
+    accountId: number
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidTransactionCreateOrConnectWithoutMeterReadingInput = {
+    where: PrepaidTransactionWhereUniqueInput
+    create: XOR<PrepaidTransactionCreateWithoutMeterReadingInput, PrepaidTransactionUncheckedCreateWithoutMeterReadingInput>
+  }
+
+  export type PrepaidTransactionCreateManyMeterReadingInputEnvelope = {
+    data: PrepaidTransactionCreateManyMeterReadingInput | PrepaidTransactionCreateManyMeterReadingInput[]
+    skipDuplicates?: boolean
+  }
+
   export type MeterUpsertWithoutReadingsInput = {
     update: XOR<MeterUpdateWithoutReadingsInput, MeterUncheckedUpdateWithoutReadingsInput>
     create: XOR<MeterCreateWithoutReadingsInput, MeterUncheckedCreateWithoutReadingsInput>
@@ -51414,6 +62631,7 @@ export namespace Prisma {
     consumer?: ConsumerUpdateOneRequiredWithoutMetersNestedInput
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
@@ -51439,6 +62657,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
@@ -51509,6 +62728,46 @@ export namespace Prisma {
     payments?: PaymentUncheckedUpdateManyWithoutBillNestedInput
   }
 
+  export type PrepaidTransactionUpsertWithWhereUniqueWithoutMeterReadingInput = {
+    where: PrepaidTransactionWhereUniqueInput
+    update: XOR<PrepaidTransactionUpdateWithoutMeterReadingInput, PrepaidTransactionUncheckedUpdateWithoutMeterReadingInput>
+    create: XOR<PrepaidTransactionCreateWithoutMeterReadingInput, PrepaidTransactionUncheckedCreateWithoutMeterReadingInput>
+  }
+
+  export type PrepaidTransactionUpdateWithWhereUniqueWithoutMeterReadingInput = {
+    where: PrepaidTransactionWhereUniqueInput
+    data: XOR<PrepaidTransactionUpdateWithoutMeterReadingInput, PrepaidTransactionUncheckedUpdateWithoutMeterReadingInput>
+  }
+
+  export type PrepaidTransactionUpdateManyWithWhereWithoutMeterReadingInput = {
+    where: PrepaidTransactionScalarWhereInput
+    data: XOR<PrepaidTransactionUpdateManyMutationInput, PrepaidTransactionUncheckedUpdateManyWithoutMeterReadingInput>
+  }
+
+  export type PrepaidTransactionScalarWhereInput = {
+    AND?: PrepaidTransactionScalarWhereInput | PrepaidTransactionScalarWhereInput[]
+    OR?: PrepaidTransactionScalarWhereInput[]
+    NOT?: PrepaidTransactionScalarWhereInput | PrepaidTransactionScalarWhereInput[]
+    id?: IntFilter<"PrepaidTransaction"> | number
+    accountId?: IntFilter<"PrepaidTransaction"> | number
+    transactionId?: StringFilter<"PrepaidTransaction"> | string
+    transactionType?: EnumPrepaidTransactionTypeFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionType
+    amount?: FloatFilter<"PrepaidTransaction"> | number
+    balanceBefore?: FloatFilter<"PrepaidTransaction"> | number
+    balanceAfter?: FloatFilter<"PrepaidTransaction"> | number
+    consumptionKWh?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    ratePerUnit?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    fixedCharges?: FloatNullableFilter<"PrepaidTransaction"> | number | null
+    taxes?: JsonNullableFilter<"PrepaidTransaction">
+    readingId?: IntNullableFilter<"PrepaidTransaction"> | number | null
+    status?: EnumPrepaidTransactionStatusFilter<"PrepaidTransaction"> | $Enums.PrepaidTransactionStatus
+    failureReason?: StringNullableFilter<"PrepaidTransaction"> | string | null
+    description?: StringNullableFilter<"PrepaidTransaction"> | string | null
+    metadata?: JsonNullableFilter<"PrepaidTransaction">
+    createdAt?: DateTimeFilter<"PrepaidTransaction"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidTransaction"> | Date | string
+  }
+
   export type MeterCreateWithoutCurrentTransformersInput = {
     meterNumber: string
     serialNumber: string
@@ -51528,6 +62787,7 @@ export namespace Prisma {
     location: LocationCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
   }
@@ -51553,6 +62813,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
 
@@ -51591,6 +62852,7 @@ export namespace Prisma {
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
   }
@@ -51616,6 +62878,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
 
@@ -51638,6 +62901,7 @@ export namespace Prisma {
     location: LocationCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
   }
@@ -51663,6 +62927,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
 
@@ -51701,6 +62966,7 @@ export namespace Prisma {
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
   }
@@ -51726,6 +62992,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
 
@@ -51747,6 +63014,7 @@ export namespace Prisma {
     consumer: ConsumerCreateNestedOneWithoutMetersInput
     location: LocationCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     dtr?: DTRCreateNestedOneWithoutMetersInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
@@ -51772,6 +63040,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
@@ -51804,6 +63073,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentCreateNestedManyWithoutConsumerInput
     notifications?: NotificationCreateNestedManyWithoutConsumerInput
     tickets?: TicketCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUncheckedCreateWithoutBillsInput = {
@@ -51830,6 +63100,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUncheckedCreateNestedManyWithoutConsumerInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConsumerInput
     tickets?: TicketUncheckedCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerCreateOrConnectWithoutBillsInput = {
@@ -51897,6 +63168,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     meter: MeterCreateNestedOneWithoutReadingsInput
+    prepaidTransactions?: PrepaidTransactionCreateNestedManyWithoutMeterReadingInput
   }
 
   export type MeterReadingUncheckedCreateWithoutBillInput = {
@@ -51927,6 +63199,7 @@ export namespace Prisma {
     validatedAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    prepaidTransactions?: PrepaidTransactionUncheckedCreateNestedManyWithoutMeterReadingInput
   }
 
   export type MeterReadingCreateOrConnectWithoutBillInput = {
@@ -51968,6 +63241,7 @@ export namespace Prisma {
     consumer?: ConsumerUpdateOneRequiredWithoutMetersNestedInput
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
@@ -51993,6 +63267,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
@@ -52031,6 +63306,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerUncheckedUpdateWithoutBillsInput = {
@@ -52057,6 +63333,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUncheckedUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput
   }
 
   export type PaymentUpsertWithWhereUniqueWithoutBillInput = {
@@ -52256,6 +63533,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentCreateNestedManyWithoutConsumerInput
     bills?: BillCreateNestedManyWithoutConsumerInput
     tickets?: TicketCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUncheckedCreateWithoutNotificationsInput = {
@@ -52282,6 +63560,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUncheckedCreateNestedManyWithoutConsumerInput
     bills?: BillUncheckedCreateNestedManyWithoutConsumerInput
     tickets?: TicketUncheckedCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerCreateOrConnectWithoutNotificationsInput = {
@@ -52323,6 +63602,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUpdateManyWithoutConsumerNestedInput
     bills?: BillUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerUncheckedUpdateWithoutNotificationsInput = {
@@ -52349,6 +63629,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUncheckedUpdateManyWithoutConsumerNestedInput
     bills?: BillUncheckedUpdateManyWithoutConsumerNestedInput
     tickets?: TicketUncheckedUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerCreateWithoutTicketsInput = {
@@ -52374,6 +63655,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentCreateNestedManyWithoutConsumerInput
     bills?: BillCreateNestedManyWithoutConsumerInput
     notifications?: NotificationCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerUncheckedCreateWithoutTicketsInput = {
@@ -52400,6 +63682,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUncheckedCreateNestedManyWithoutConsumerInput
     bills?: BillUncheckedCreateNestedManyWithoutConsumerInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutConsumerInput
+    prepaidAccounts?: PrepaidAccountUncheckedCreateNestedManyWithoutConsumerInput
   }
 
   export type ConsumerCreateOrConnectWithoutTicketsInput = {
@@ -52565,6 +63848,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUpdateManyWithoutConsumerNestedInput
     bills?: BillUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUpdateManyWithoutConsumerNestedInput
   }
 
   export type ConsumerUncheckedUpdateWithoutTicketsInput = {
@@ -52591,6 +63875,7 @@ export namespace Prisma {
     documents?: ConsumerDocumentUncheckedUpdateManyWithoutConsumerNestedInput
     bills?: BillUncheckedUpdateManyWithoutConsumerNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutConsumerNestedInput
+    prepaidAccounts?: PrepaidAccountUncheckedUpdateManyWithoutConsumerNestedInput
   }
 
   export type UserUpsertWithoutRaisedTicketsInput = {
@@ -52786,6 +64071,7 @@ export namespace Prisma {
     location: LocationCreateNestedOneWithoutMetersInput
     readings?: MeterReadingCreateNestedManyWithoutMeterInput
     bills?: BillCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
   }
@@ -52810,6 +64096,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
     readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
     bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    tamperEvents?: TamperEventUncheckedCreateNestedManyWithoutMeterInput
     currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
     potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
   }
@@ -53584,6 +64871,923 @@ export namespace Prisma {
     meters?: MeterUncheckedUpdateManyWithoutDtrNestedInput
     readings?: DTRReadingUncheckedUpdateManyWithoutDtrNestedInput
     maintenanceLogs?: DTRMaintenanceUncheckedUpdateManyWithoutDtrNestedInput
+  }
+
+  export type MeterCreateWithoutTamperEventsInput = {
+    meterNumber: string
+    serialNumber: string
+    manufacturer: string
+    model: string
+    type: $Enums.MeterType
+    phase: number
+    status?: $Enums.MeterStatus
+    isInUse?: boolean
+    installationDate: Date | string
+    lastMaintenanceDate?: Date | string | null
+    decommissionDate?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    config?: MeterConfigurationCreateNestedOneWithoutMeterInput
+    consumer: ConsumerCreateNestedOneWithoutMetersInput
+    location: LocationCreateNestedOneWithoutMetersInput
+    readings?: MeterReadingCreateNestedManyWithoutMeterInput
+    bills?: BillCreateNestedManyWithoutMeterInput
+    dtr?: DTRCreateNestedOneWithoutMetersInput
+    currentTransformers?: CurrentTransformerCreateNestedManyWithoutMeterInput
+    potentialTransformers?: PotentialTransformerCreateNestedManyWithoutMeterInput
+  }
+
+  export type MeterUncheckedCreateWithoutTamperEventsInput = {
+    id?: number
+    meterNumber: string
+    serialNumber: string
+    manufacturer: string
+    model: string
+    type: $Enums.MeterType
+    phase: number
+    status?: $Enums.MeterStatus
+    isInUse?: boolean
+    installationDate: Date | string
+    lastMaintenanceDate?: Date | string | null
+    decommissionDate?: Date | string | null
+    consumerId: number
+    locationId: number
+    dtrId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    config?: MeterConfigurationUncheckedCreateNestedOneWithoutMeterInput
+    readings?: MeterReadingUncheckedCreateNestedManyWithoutMeterInput
+    bills?: BillUncheckedCreateNestedManyWithoutMeterInput
+    currentTransformers?: CurrentTransformerUncheckedCreateNestedManyWithoutMeterInput
+    potentialTransformers?: PotentialTransformerUncheckedCreateNestedManyWithoutMeterInput
+  }
+
+  export type MeterCreateOrConnectWithoutTamperEventsInput = {
+    where: MeterWhereUniqueInput
+    create: XOR<MeterCreateWithoutTamperEventsInput, MeterUncheckedCreateWithoutTamperEventsInput>
+  }
+
+  export type MeterUpsertWithoutTamperEventsInput = {
+    update: XOR<MeterUpdateWithoutTamperEventsInput, MeterUncheckedUpdateWithoutTamperEventsInput>
+    create: XOR<MeterCreateWithoutTamperEventsInput, MeterUncheckedCreateWithoutTamperEventsInput>
+    where?: MeterWhereInput
+  }
+
+  export type MeterUpdateToOneWithWhereWithoutTamperEventsInput = {
+    where?: MeterWhereInput
+    data: XOR<MeterUpdateWithoutTamperEventsInput, MeterUncheckedUpdateWithoutTamperEventsInput>
+  }
+
+  export type MeterUpdateWithoutTamperEventsInput = {
+    meterNumber?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    type?: EnumMeterTypeFieldUpdateOperationsInput | $Enums.MeterType
+    phase?: IntFieldUpdateOperationsInput | number
+    status?: EnumMeterStatusFieldUpdateOperationsInput | $Enums.MeterStatus
+    isInUse?: BoolFieldUpdateOperationsInput | boolean
+    installationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastMaintenanceDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decommissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    config?: MeterConfigurationUpdateOneWithoutMeterNestedInput
+    consumer?: ConsumerUpdateOneRequiredWithoutMetersNestedInput
+    location?: LocationUpdateOneRequiredWithoutMetersNestedInput
+    readings?: MeterReadingUpdateManyWithoutMeterNestedInput
+    bills?: BillUpdateManyWithoutMeterNestedInput
+    dtr?: DTRUpdateOneWithoutMetersNestedInput
+    currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
+    potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
+  }
+
+  export type MeterUncheckedUpdateWithoutTamperEventsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    meterNumber?: StringFieldUpdateOperationsInput | string
+    serialNumber?: StringFieldUpdateOperationsInput | string
+    manufacturer?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    type?: EnumMeterTypeFieldUpdateOperationsInput | $Enums.MeterType
+    phase?: IntFieldUpdateOperationsInput | number
+    status?: EnumMeterStatusFieldUpdateOperationsInput | $Enums.MeterStatus
+    isInUse?: BoolFieldUpdateOperationsInput | boolean
+    installationDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastMaintenanceDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    decommissionDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    consumerId?: IntFieldUpdateOperationsInput | number
+    locationId?: IntFieldUpdateOperationsInput | number
+    dtrId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
+    readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
+    bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
+    potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
+  }
+
+  export type ConsumerCreateWithoutPrepaidAccountsInput = {
+    consumerNumber: string
+    name: string
+    email?: string | null
+    primaryPhone: string
+    alternatePhone?: string | null
+    idType: $Enums.IdType
+    idNumber: string
+    connectionType: $Enums.ConnectionType
+    category: $Enums.ConsumerCategory
+    sanctionedLoad: number
+    connectionDate: Date | string
+    billingCycle: $Enums.BillingCycle
+    billDeliveryMode?: ConsumerCreatebillDeliveryModeInput | $Enums.BillDeliveryMode[]
+    defaultPaymentMethod?: $Enums.PaymentMethod | null
+    creditScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    location: LocationCreateNestedOneWithoutConsumerInput
+    meters?: MeterCreateNestedManyWithoutConsumerInput
+    documents?: ConsumerDocumentCreateNestedManyWithoutConsumerInput
+    bills?: BillCreateNestedManyWithoutConsumerInput
+    notifications?: NotificationCreateNestedManyWithoutConsumerInput
+    tickets?: TicketCreateNestedManyWithoutConsumerInput
+  }
+
+  export type ConsumerUncheckedCreateWithoutPrepaidAccountsInput = {
+    id?: number
+    consumerNumber: string
+    name: string
+    email?: string | null
+    primaryPhone: string
+    alternatePhone?: string | null
+    idType: $Enums.IdType
+    idNumber: string
+    connectionType: $Enums.ConnectionType
+    category: $Enums.ConsumerCategory
+    sanctionedLoad: number
+    connectionDate: Date | string
+    locationId: number
+    billingCycle: $Enums.BillingCycle
+    billDeliveryMode?: ConsumerCreatebillDeliveryModeInput | $Enums.BillDeliveryMode[]
+    defaultPaymentMethod?: $Enums.PaymentMethod | null
+    creditScore?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    meters?: MeterUncheckedCreateNestedManyWithoutConsumerInput
+    documents?: ConsumerDocumentUncheckedCreateNestedManyWithoutConsumerInput
+    bills?: BillUncheckedCreateNestedManyWithoutConsumerInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutConsumerInput
+    tickets?: TicketUncheckedCreateNestedManyWithoutConsumerInput
+  }
+
+  export type ConsumerCreateOrConnectWithoutPrepaidAccountsInput = {
+    where: ConsumerWhereUniqueInput
+    create: XOR<ConsumerCreateWithoutPrepaidAccountsInput, ConsumerUncheckedCreateWithoutPrepaidAccountsInput>
+  }
+
+  export type PrepaidTransactionCreateWithoutAccountInput = {
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    meterReading?: MeterReadingCreateNestedOneWithoutPrepaidTransactionsInput
+  }
+
+  export type PrepaidTransactionUncheckedCreateWithoutAccountInput = {
+    id?: number
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: number | null
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidTransactionCreateOrConnectWithoutAccountInput = {
+    where: PrepaidTransactionWhereUniqueInput
+    create: XOR<PrepaidTransactionCreateWithoutAccountInput, PrepaidTransactionUncheckedCreateWithoutAccountInput>
+  }
+
+  export type PrepaidTransactionCreateManyAccountInputEnvelope = {
+    data: PrepaidTransactionCreateManyAccountInput | PrepaidTransactionCreateManyAccountInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PrepaidRechargeCreateWithoutAccountInput = {
+    rechargeId: string
+    amount: number
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    gatewayName?: string | null
+    gatewayTransactionId?: string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: $Enums.PrepaidRechargeType
+    rechargeSource?: $Enums.PrepaidRechargeSource
+    isPromotional?: boolean
+    promotionalCode?: string | null
+    discountAmount?: number
+    bonusAmount?: number
+    receiptNumber?: string | null
+    receiptUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidRechargeUncheckedCreateWithoutAccountInput = {
+    id?: number
+    rechargeId: string
+    amount: number
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    gatewayName?: string | null
+    gatewayTransactionId?: string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: $Enums.PrepaidRechargeType
+    rechargeSource?: $Enums.PrepaidRechargeSource
+    isPromotional?: boolean
+    promotionalCode?: string | null
+    discountAmount?: number
+    bonusAmount?: number
+    receiptNumber?: string | null
+    receiptUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidRechargeCreateOrConnectWithoutAccountInput = {
+    where: PrepaidRechargeWhereUniqueInput
+    create: XOR<PrepaidRechargeCreateWithoutAccountInput, PrepaidRechargeUncheckedCreateWithoutAccountInput>
+  }
+
+  export type PrepaidRechargeCreateManyAccountInputEnvelope = {
+    data: PrepaidRechargeCreateManyAccountInput | PrepaidRechargeCreateManyAccountInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PrepaidAlertCreateWithoutAccountInput = {
+    alertType: $Enums.PrepaidAlertType
+    alertLevel: $Enums.PrepaidAlertLevel
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    balanceAtAlert?: number | null
+    consumptionAtAlert?: number | null
+    thresholdValue?: number | null
+    createdAt?: Date | string
+  }
+
+  export type PrepaidAlertUncheckedCreateWithoutAccountInput = {
+    id?: number
+    alertType: $Enums.PrepaidAlertType
+    alertLevel: $Enums.PrepaidAlertLevel
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    balanceAtAlert?: number | null
+    consumptionAtAlert?: number | null
+    thresholdValue?: number | null
+    createdAt?: Date | string
+  }
+
+  export type PrepaidAlertCreateOrConnectWithoutAccountInput = {
+    where: PrepaidAlertWhereUniqueInput
+    create: XOR<PrepaidAlertCreateWithoutAccountInput, PrepaidAlertUncheckedCreateWithoutAccountInput>
+  }
+
+  export type PrepaidAlertCreateManyAccountInputEnvelope = {
+    data: PrepaidAlertCreateManyAccountInput | PrepaidAlertCreateManyAccountInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ConsumerUpsertWithoutPrepaidAccountsInput = {
+    update: XOR<ConsumerUpdateWithoutPrepaidAccountsInput, ConsumerUncheckedUpdateWithoutPrepaidAccountsInput>
+    create: XOR<ConsumerCreateWithoutPrepaidAccountsInput, ConsumerUncheckedCreateWithoutPrepaidAccountsInput>
+    where?: ConsumerWhereInput
+  }
+
+  export type ConsumerUpdateToOneWithWhereWithoutPrepaidAccountsInput = {
+    where?: ConsumerWhereInput
+    data: XOR<ConsumerUpdateWithoutPrepaidAccountsInput, ConsumerUncheckedUpdateWithoutPrepaidAccountsInput>
+  }
+
+  export type ConsumerUpdateWithoutPrepaidAccountsInput = {
+    consumerNumber?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryPhone?: StringFieldUpdateOperationsInput | string
+    alternatePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    idType?: EnumIdTypeFieldUpdateOperationsInput | $Enums.IdType
+    idNumber?: StringFieldUpdateOperationsInput | string
+    connectionType?: EnumConnectionTypeFieldUpdateOperationsInput | $Enums.ConnectionType
+    category?: EnumConsumerCategoryFieldUpdateOperationsInput | $Enums.ConsumerCategory
+    sanctionedLoad?: FloatFieldUpdateOperationsInput | number
+    connectionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
+    billDeliveryMode?: ConsumerUpdatebillDeliveryModeInput | $Enums.BillDeliveryMode[]
+    defaultPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+    creditScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    location?: LocationUpdateOneRequiredWithoutConsumerNestedInput
+    meters?: MeterUpdateManyWithoutConsumerNestedInput
+    documents?: ConsumerDocumentUpdateManyWithoutConsumerNestedInput
+    bills?: BillUpdateManyWithoutConsumerNestedInput
+    notifications?: NotificationUpdateManyWithoutConsumerNestedInput
+    tickets?: TicketUpdateManyWithoutConsumerNestedInput
+  }
+
+  export type ConsumerUncheckedUpdateWithoutPrepaidAccountsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    consumerNumber?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    primaryPhone?: StringFieldUpdateOperationsInput | string
+    alternatePhone?: NullableStringFieldUpdateOperationsInput | string | null
+    idType?: EnumIdTypeFieldUpdateOperationsInput | $Enums.IdType
+    idNumber?: StringFieldUpdateOperationsInput | string
+    connectionType?: EnumConnectionTypeFieldUpdateOperationsInput | $Enums.ConnectionType
+    category?: EnumConsumerCategoryFieldUpdateOperationsInput | $Enums.ConsumerCategory
+    sanctionedLoad?: FloatFieldUpdateOperationsInput | number
+    connectionDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    locationId?: IntFieldUpdateOperationsInput | number
+    billingCycle?: EnumBillingCycleFieldUpdateOperationsInput | $Enums.BillingCycle
+    billDeliveryMode?: ConsumerUpdatebillDeliveryModeInput | $Enums.BillDeliveryMode[]
+    defaultPaymentMethod?: NullableEnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod | null
+    creditScore?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    meters?: MeterUncheckedUpdateManyWithoutConsumerNestedInput
+    documents?: ConsumerDocumentUncheckedUpdateManyWithoutConsumerNestedInput
+    bills?: BillUncheckedUpdateManyWithoutConsumerNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutConsumerNestedInput
+    tickets?: TicketUncheckedUpdateManyWithoutConsumerNestedInput
+  }
+
+  export type PrepaidTransactionUpsertWithWhereUniqueWithoutAccountInput = {
+    where: PrepaidTransactionWhereUniqueInput
+    update: XOR<PrepaidTransactionUpdateWithoutAccountInput, PrepaidTransactionUncheckedUpdateWithoutAccountInput>
+    create: XOR<PrepaidTransactionCreateWithoutAccountInput, PrepaidTransactionUncheckedCreateWithoutAccountInput>
+  }
+
+  export type PrepaidTransactionUpdateWithWhereUniqueWithoutAccountInput = {
+    where: PrepaidTransactionWhereUniqueInput
+    data: XOR<PrepaidTransactionUpdateWithoutAccountInput, PrepaidTransactionUncheckedUpdateWithoutAccountInput>
+  }
+
+  export type PrepaidTransactionUpdateManyWithWhereWithoutAccountInput = {
+    where: PrepaidTransactionScalarWhereInput
+    data: XOR<PrepaidTransactionUpdateManyMutationInput, PrepaidTransactionUncheckedUpdateManyWithoutAccountInput>
+  }
+
+  export type PrepaidRechargeUpsertWithWhereUniqueWithoutAccountInput = {
+    where: PrepaidRechargeWhereUniqueInput
+    update: XOR<PrepaidRechargeUpdateWithoutAccountInput, PrepaidRechargeUncheckedUpdateWithoutAccountInput>
+    create: XOR<PrepaidRechargeCreateWithoutAccountInput, PrepaidRechargeUncheckedCreateWithoutAccountInput>
+  }
+
+  export type PrepaidRechargeUpdateWithWhereUniqueWithoutAccountInput = {
+    where: PrepaidRechargeWhereUniqueInput
+    data: XOR<PrepaidRechargeUpdateWithoutAccountInput, PrepaidRechargeUncheckedUpdateWithoutAccountInput>
+  }
+
+  export type PrepaidRechargeUpdateManyWithWhereWithoutAccountInput = {
+    where: PrepaidRechargeScalarWhereInput
+    data: XOR<PrepaidRechargeUpdateManyMutationInput, PrepaidRechargeUncheckedUpdateManyWithoutAccountInput>
+  }
+
+  export type PrepaidRechargeScalarWhereInput = {
+    AND?: PrepaidRechargeScalarWhereInput | PrepaidRechargeScalarWhereInput[]
+    OR?: PrepaidRechargeScalarWhereInput[]
+    NOT?: PrepaidRechargeScalarWhereInput | PrepaidRechargeScalarWhereInput[]
+    id?: IntFilter<"PrepaidRecharge"> | number
+    accountId?: IntFilter<"PrepaidRecharge"> | number
+    rechargeId?: StringFilter<"PrepaidRecharge"> | string
+    amount?: FloatFilter<"PrepaidRecharge"> | number
+    paymentMethod?: EnumPaymentMethodFilter<"PrepaidRecharge"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"PrepaidRecharge"> | $Enums.PaymentStatus
+    gatewayName?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    gatewayTransactionId?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    gatewayResponse?: JsonNullableFilter<"PrepaidRecharge">
+    rechargeType?: EnumPrepaidRechargeTypeFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFilter<"PrepaidRecharge"> | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFilter<"PrepaidRecharge"> | boolean
+    promotionalCode?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    discountAmount?: FloatFilter<"PrepaidRecharge"> | number
+    bonusAmount?: FloatFilter<"PrepaidRecharge"> | number
+    receiptNumber?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    receiptUrl?: StringNullableFilter<"PrepaidRecharge"> | string | null
+    createdAt?: DateTimeFilter<"PrepaidRecharge"> | Date | string
+    updatedAt?: DateTimeFilter<"PrepaidRecharge"> | Date | string
+  }
+
+  export type PrepaidAlertUpsertWithWhereUniqueWithoutAccountInput = {
+    where: PrepaidAlertWhereUniqueInput
+    update: XOR<PrepaidAlertUpdateWithoutAccountInput, PrepaidAlertUncheckedUpdateWithoutAccountInput>
+    create: XOR<PrepaidAlertCreateWithoutAccountInput, PrepaidAlertUncheckedCreateWithoutAccountInput>
+  }
+
+  export type PrepaidAlertUpdateWithWhereUniqueWithoutAccountInput = {
+    where: PrepaidAlertWhereUniqueInput
+    data: XOR<PrepaidAlertUpdateWithoutAccountInput, PrepaidAlertUncheckedUpdateWithoutAccountInput>
+  }
+
+  export type PrepaidAlertUpdateManyWithWhereWithoutAccountInput = {
+    where: PrepaidAlertScalarWhereInput
+    data: XOR<PrepaidAlertUpdateManyMutationInput, PrepaidAlertUncheckedUpdateManyWithoutAccountInput>
+  }
+
+  export type PrepaidAlertScalarWhereInput = {
+    AND?: PrepaidAlertScalarWhereInput | PrepaidAlertScalarWhereInput[]
+    OR?: PrepaidAlertScalarWhereInput[]
+    NOT?: PrepaidAlertScalarWhereInput | PrepaidAlertScalarWhereInput[]
+    id?: IntFilter<"PrepaidAlert"> | number
+    accountId?: IntFilter<"PrepaidAlert"> | number
+    alertType?: EnumPrepaidAlertTypeFilter<"PrepaidAlert"> | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFilter<"PrepaidAlert"> | $Enums.PrepaidAlertLevel
+    message?: StringFilter<"PrepaidAlert"> | string
+    isRead?: BoolFilter<"PrepaidAlert"> | boolean
+    readAt?: DateTimeNullableFilter<"PrepaidAlert"> | Date | string | null
+    balanceAtAlert?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    consumptionAtAlert?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    thresholdValue?: FloatNullableFilter<"PrepaidAlert"> | number | null
+    createdAt?: DateTimeFilter<"PrepaidAlert"> | Date | string
+  }
+
+  export type PrepaidAccountCreateWithoutTransactionsInput = {
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    consumer: ConsumerCreateNestedOneWithoutPrepaidAccountsInput
+    recharges?: PrepaidRechargeCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountUncheckedCreateWithoutTransactionsInput = {
+    id?: number
+    consumerId: number
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    recharges?: PrepaidRechargeUncheckedCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountCreateOrConnectWithoutTransactionsInput = {
+    where: PrepaidAccountWhereUniqueInput
+    create: XOR<PrepaidAccountCreateWithoutTransactionsInput, PrepaidAccountUncheckedCreateWithoutTransactionsInput>
+  }
+
+  export type MeterReadingCreateWithoutPrepaidTransactionsInput = {
+    readingDate: Date | string
+    readingType: $Enums.ReadingType
+    readingSource: $Enums.ReadingSource
+    currentReading: number
+    previousReading: number
+    consumption: number
+    kWh: number
+    kVAh: number
+    kVARh?: number | null
+    powerFactor?: number | null
+    averagePF?: number | null
+    minimumPF?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    averageVoltage?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    averageCurrent?: number | null
+    isValid?: boolean
+    validatedBy?: string | null
+    validatedAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    meter: MeterCreateNestedOneWithoutReadingsInput
+    bill?: BillCreateNestedOneWithoutReadingsInput
+  }
+
+  export type MeterReadingUncheckedCreateWithoutPrepaidTransactionsInput = {
+    id?: number
+    meterId: number
+    readingDate: Date | string
+    readingType: $Enums.ReadingType
+    readingSource: $Enums.ReadingSource
+    currentReading: number
+    previousReading: number
+    consumption: number
+    kWh: number
+    kVAh: number
+    kVARh?: number | null
+    powerFactor?: number | null
+    averagePF?: number | null
+    minimumPF?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    averageVoltage?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    averageCurrent?: number | null
+    isValid?: boolean
+    validatedBy?: string | null
+    validatedAt?: Date | string | null
+    billId?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MeterReadingCreateOrConnectWithoutPrepaidTransactionsInput = {
+    where: MeterReadingWhereUniqueInput
+    create: XOR<MeterReadingCreateWithoutPrepaidTransactionsInput, MeterReadingUncheckedCreateWithoutPrepaidTransactionsInput>
+  }
+
+  export type PrepaidAccountUpsertWithoutTransactionsInput = {
+    update: XOR<PrepaidAccountUpdateWithoutTransactionsInput, PrepaidAccountUncheckedUpdateWithoutTransactionsInput>
+    create: XOR<PrepaidAccountCreateWithoutTransactionsInput, PrepaidAccountUncheckedCreateWithoutTransactionsInput>
+    where?: PrepaidAccountWhereInput
+  }
+
+  export type PrepaidAccountUpdateToOneWithWhereWithoutTransactionsInput = {
+    where?: PrepaidAccountWhereInput
+    data: XOR<PrepaidAccountUpdateWithoutTransactionsInput, PrepaidAccountUncheckedUpdateWithoutTransactionsInput>
+  }
+
+  export type PrepaidAccountUpdateWithoutTransactionsInput = {
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumer?: ConsumerUpdateOneRequiredWithoutPrepaidAccountsNestedInput
+    recharges?: PrepaidRechargeUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountUncheckedUpdateWithoutTransactionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    consumerId?: IntFieldUpdateOperationsInput | number
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    recharges?: PrepaidRechargeUncheckedUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type MeterReadingUpsertWithoutPrepaidTransactionsInput = {
+    update: XOR<MeterReadingUpdateWithoutPrepaidTransactionsInput, MeterReadingUncheckedUpdateWithoutPrepaidTransactionsInput>
+    create: XOR<MeterReadingCreateWithoutPrepaidTransactionsInput, MeterReadingUncheckedCreateWithoutPrepaidTransactionsInput>
+    where?: MeterReadingWhereInput
+  }
+
+  export type MeterReadingUpdateToOneWithWhereWithoutPrepaidTransactionsInput = {
+    where?: MeterReadingWhereInput
+    data: XOR<MeterReadingUpdateWithoutPrepaidTransactionsInput, MeterReadingUncheckedUpdateWithoutPrepaidTransactionsInput>
+  }
+
+  export type MeterReadingUpdateWithoutPrepaidTransactionsInput = {
+    readingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingType?: EnumReadingTypeFieldUpdateOperationsInput | $Enums.ReadingType
+    readingSource?: EnumReadingSourceFieldUpdateOperationsInput | $Enums.ReadingSource
+    currentReading?: FloatFieldUpdateOperationsInput | number
+    previousReading?: FloatFieldUpdateOperationsInput | number
+    consumption?: FloatFieldUpdateOperationsInput | number
+    kWh?: FloatFieldUpdateOperationsInput | number
+    kVAh?: FloatFieldUpdateOperationsInput | number
+    kVARh?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    averagePF?: NullableFloatFieldUpdateOperationsInput | number | null
+    minimumPF?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    averageVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    averageCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    isValid?: BoolFieldUpdateOperationsInput | boolean
+    validatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    meter?: MeterUpdateOneRequiredWithoutReadingsNestedInput
+    bill?: BillUpdateOneWithoutReadingsNestedInput
+  }
+
+  export type MeterReadingUncheckedUpdateWithoutPrepaidTransactionsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    meterId?: IntFieldUpdateOperationsInput | number
+    readingDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    readingType?: EnumReadingTypeFieldUpdateOperationsInput | $Enums.ReadingType
+    readingSource?: EnumReadingSourceFieldUpdateOperationsInput | $Enums.ReadingSource
+    currentReading?: FloatFieldUpdateOperationsInput | number
+    previousReading?: FloatFieldUpdateOperationsInput | number
+    consumption?: FloatFieldUpdateOperationsInput | number
+    kWh?: FloatFieldUpdateOperationsInput | number
+    kVAh?: FloatFieldUpdateOperationsInput | number
+    kVARh?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    averagePF?: NullableFloatFieldUpdateOperationsInput | number | null
+    minimumPF?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    averageVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    averageCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    isValid?: BoolFieldUpdateOperationsInput | boolean
+    validatedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    billId?: NullableIntFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAccountCreateWithoutRechargesInput = {
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    consumer: ConsumerCreateNestedOneWithoutPrepaidAccountsInput
+    transactions?: PrepaidTransactionCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountUncheckedCreateWithoutRechargesInput = {
+    id?: number
+    consumerId: number
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    transactions?: PrepaidTransactionUncheckedCreateNestedManyWithoutAccountInput
+    alerts?: PrepaidAlertUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountCreateOrConnectWithoutRechargesInput = {
+    where: PrepaidAccountWhereUniqueInput
+    create: XOR<PrepaidAccountCreateWithoutRechargesInput, PrepaidAccountUncheckedCreateWithoutRechargesInput>
+  }
+
+  export type PrepaidAccountUpsertWithoutRechargesInput = {
+    update: XOR<PrepaidAccountUpdateWithoutRechargesInput, PrepaidAccountUncheckedUpdateWithoutRechargesInput>
+    create: XOR<PrepaidAccountCreateWithoutRechargesInput, PrepaidAccountUncheckedCreateWithoutRechargesInput>
+    where?: PrepaidAccountWhereInput
+  }
+
+  export type PrepaidAccountUpdateToOneWithWhereWithoutRechargesInput = {
+    where?: PrepaidAccountWhereInput
+    data: XOR<PrepaidAccountUpdateWithoutRechargesInput, PrepaidAccountUncheckedUpdateWithoutRechargesInput>
+  }
+
+  export type PrepaidAccountUpdateWithoutRechargesInput = {
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumer?: ConsumerUpdateOneRequiredWithoutPrepaidAccountsNestedInput
+    transactions?: PrepaidTransactionUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountUncheckedUpdateWithoutRechargesInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    consumerId?: IntFieldUpdateOperationsInput | number
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: PrepaidTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountCreateWithoutAlertsInput = {
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    consumer: ConsumerCreateNestedOneWithoutPrepaidAccountsInput
+    transactions?: PrepaidTransactionCreateNestedManyWithoutAccountInput
+    recharges?: PrepaidRechargeCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountUncheckedCreateWithoutAlertsInput = {
+    id?: number
+    consumerId: number
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    transactions?: PrepaidTransactionUncheckedCreateNestedManyWithoutAccountInput
+    recharges?: PrepaidRechargeUncheckedCreateNestedManyWithoutAccountInput
+  }
+
+  export type PrepaidAccountCreateOrConnectWithoutAlertsInput = {
+    where: PrepaidAccountWhereUniqueInput
+    create: XOR<PrepaidAccountCreateWithoutAlertsInput, PrepaidAccountUncheckedCreateWithoutAlertsInput>
+  }
+
+  export type PrepaidAccountUpsertWithoutAlertsInput = {
+    update: XOR<PrepaidAccountUpdateWithoutAlertsInput, PrepaidAccountUncheckedUpdateWithoutAlertsInput>
+    create: XOR<PrepaidAccountCreateWithoutAlertsInput, PrepaidAccountUncheckedCreateWithoutAlertsInput>
+    where?: PrepaidAccountWhereInput
+  }
+
+  export type PrepaidAccountUpdateToOneWithWhereWithoutAlertsInput = {
+    where?: PrepaidAccountWhereInput
+    data: XOR<PrepaidAccountUpdateWithoutAlertsInput, PrepaidAccountUncheckedUpdateWithoutAlertsInput>
+  }
+
+  export type PrepaidAccountUpdateWithoutAlertsInput = {
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    consumer?: ConsumerUpdateOneRequiredWithoutPrepaidAccountsNestedInput
+    transactions?: PrepaidTransactionUpdateManyWithoutAccountNestedInput
+    recharges?: PrepaidRechargeUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountUncheckedUpdateWithoutAlertsInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    consumerId?: IntFieldUpdateOperationsInput | number
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: PrepaidTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    recharges?: PrepaidRechargeUncheckedUpdateManyWithoutAccountNestedInput
   }
 
   export type DepartmentCreateManyParentInput = {
@@ -54412,6 +66616,7 @@ export namespace Prisma {
     consumer?: ConsumerUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
@@ -54437,6 +66642,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
@@ -54641,6 +66847,26 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
+  export type PrepaidAccountCreateManyConsumerInput = {
+    id?: number
+    accountNumber: string
+    currentBalance?: number
+    totalRecharged?: number
+    totalConsumed?: number
+    isActive?: boolean
+    isBlocked?: boolean
+    blockReason?: string | null
+    blockedAt?: Date | string | null
+    blockedBy?: number | null
+    lowBalanceThreshold?: number
+    emergencyThreshold?: number
+    autoRechargeEnabled?: boolean
+    autoRechargeAmount?: number | null
+    autoRechargeThreshold?: number | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type MeterUpdateWithoutConsumerInput = {
     meterNumber?: StringFieldUpdateOperationsInput | string
     serialNumber?: StringFieldUpdateOperationsInput | string
@@ -54659,6 +66885,7 @@ export namespace Prisma {
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     dtr?: DTRUpdateOneWithoutMetersNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
@@ -54684,6 +66911,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
@@ -54902,6 +67130,71 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PrepaidAccountUpdateWithoutConsumerInput = {
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: PrepaidTransactionUpdateManyWithoutAccountNestedInput
+    recharges?: PrepaidRechargeUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountUncheckedUpdateWithoutConsumerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    transactions?: PrepaidTransactionUncheckedUpdateManyWithoutAccountNestedInput
+    recharges?: PrepaidRechargeUncheckedUpdateManyWithoutAccountNestedInput
+    alerts?: PrepaidAlertUncheckedUpdateManyWithoutAccountNestedInput
+  }
+
+  export type PrepaidAccountUncheckedUpdateManyWithoutConsumerInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountNumber?: StringFieldUpdateOperationsInput | string
+    currentBalance?: FloatFieldUpdateOperationsInput | number
+    totalRecharged?: FloatFieldUpdateOperationsInput | number
+    totalConsumed?: FloatFieldUpdateOperationsInput | number
+    isActive?: BoolFieldUpdateOperationsInput | boolean
+    isBlocked?: BoolFieldUpdateOperationsInput | boolean
+    blockReason?: NullableStringFieldUpdateOperationsInput | string | null
+    blockedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    blockedBy?: NullableIntFieldUpdateOperationsInput | number | null
+    lowBalanceThreshold?: FloatFieldUpdateOperationsInput | number
+    emergencyThreshold?: FloatFieldUpdateOperationsInput | number
+    autoRechargeEnabled?: BoolFieldUpdateOperationsInput | boolean
+    autoRechargeAmount?: NullableFloatFieldUpdateOperationsInput | number | null
+    autoRechargeThreshold?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type MeterReadingCreateManyMeterInput = {
     id?: number
     readingDate: Date | string
@@ -54954,6 +67247,44 @@ export namespace Prisma {
     status?: $Enums.BillStatus
     isPaid?: boolean
     paidAmount?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TamperEventCreateManyMeterInput = {
+    id?: number
+    tamperDatetime?: Date | string
+    tamperType: $Enums.TamperType
+    tamperStatus: $Enums.TamperStatus
+    avgCurrent?: number | null
+    avgVoltage?: number | null
+    avgPowerFactor?: number | null
+    frequency?: number | null
+    kwh?: number | null
+    kwhExport?: number | null
+    kwhImport?: number | null
+    kwhNet?: number | null
+    kwhTotal?: number | null
+    kwExport?: number | null
+    kwImport?: number | null
+    kvaExport?: number | null
+    kvaImport?: number | null
+    voltageR?: number | null
+    voltageY?: number | null
+    voltageB?: number | null
+    currentR?: number | null
+    currentY?: number | null
+    currentB?: number | null
+    powerFactorR?: number | null
+    powerFactorY?: number | null
+    powerFactorB?: number | null
+    tamperCount?: number | null
+    param1?: number | null
+    param2?: number | null
+    param3?: number | null
+    param4?: number | null
+    param5?: number | null
+    isProcessed?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -55017,6 +67348,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     bill?: BillUpdateOneWithoutReadingsNestedInput
+    prepaidTransactions?: PrepaidTransactionUpdateManyWithoutMeterReadingNestedInput
   }
 
   export type MeterReadingUncheckedUpdateWithoutMeterInput = {
@@ -55047,6 +67379,7 @@ export namespace Prisma {
     billId?: NullableIntFieldUpdateOperationsInput | number | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prepaidTransactions?: PrepaidTransactionUncheckedUpdateManyWithoutMeterReadingNestedInput
   }
 
   export type MeterReadingUncheckedUpdateManyWithoutMeterInput = {
@@ -55160,6 +67493,119 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TamperEventUpdateWithoutMeterInput = {
+    tamperDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    tamperType?: EnumTamperTypeFieldUpdateOperationsInput | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFieldUpdateOperationsInput | $Enums.TamperStatus
+    avgCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgPowerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    frequency?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwh?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhNet?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorR?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorY?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorB?: NullableFloatFieldUpdateOperationsInput | number | null
+    tamperCount?: NullableIntFieldUpdateOperationsInput | number | null
+    param1?: NullableFloatFieldUpdateOperationsInput | number | null
+    param2?: NullableFloatFieldUpdateOperationsInput | number | null
+    param3?: NullableFloatFieldUpdateOperationsInput | number | null
+    param4?: NullableFloatFieldUpdateOperationsInput | number | null
+    param5?: NullableFloatFieldUpdateOperationsInput | number | null
+    isProcessed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperEventUncheckedUpdateWithoutMeterInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tamperDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    tamperType?: EnumTamperTypeFieldUpdateOperationsInput | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFieldUpdateOperationsInput | $Enums.TamperStatus
+    avgCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgPowerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    frequency?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwh?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhNet?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorR?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorY?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorB?: NullableFloatFieldUpdateOperationsInput | number | null
+    tamperCount?: NullableIntFieldUpdateOperationsInput | number | null
+    param1?: NullableFloatFieldUpdateOperationsInput | number | null
+    param2?: NullableFloatFieldUpdateOperationsInput | number | null
+    param3?: NullableFloatFieldUpdateOperationsInput | number | null
+    param4?: NullableFloatFieldUpdateOperationsInput | number | null
+    param5?: NullableFloatFieldUpdateOperationsInput | number | null
+    isProcessed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TamperEventUncheckedUpdateManyWithoutMeterInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    tamperDatetime?: DateTimeFieldUpdateOperationsInput | Date | string
+    tamperType?: EnumTamperTypeFieldUpdateOperationsInput | $Enums.TamperType
+    tamperStatus?: EnumTamperStatusFieldUpdateOperationsInput | $Enums.TamperStatus
+    avgCurrent?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgVoltage?: NullableFloatFieldUpdateOperationsInput | number | null
+    avgPowerFactor?: NullableFloatFieldUpdateOperationsInput | number | null
+    frequency?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwh?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhNet?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwhTotal?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kwImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaExport?: NullableFloatFieldUpdateOperationsInput | number | null
+    kvaImport?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageR?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageY?: NullableFloatFieldUpdateOperationsInput | number | null
+    voltageB?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentR?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentY?: NullableFloatFieldUpdateOperationsInput | number | null
+    currentB?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorR?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorY?: NullableFloatFieldUpdateOperationsInput | number | null
+    powerFactorB?: NullableFloatFieldUpdateOperationsInput | number | null
+    tamperCount?: NullableIntFieldUpdateOperationsInput | number | null
+    param1?: NullableFloatFieldUpdateOperationsInput | number | null
+    param2?: NullableFloatFieldUpdateOperationsInput | number | null
+    param3?: NullableFloatFieldUpdateOperationsInput | number | null
+    param4?: NullableFloatFieldUpdateOperationsInput | number | null
+    param5?: NullableFloatFieldUpdateOperationsInput | number | null
+    isProcessed?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type CurrentTransformerUpdateWithoutMeterInput = {
     serialNumber?: StringFieldUpdateOperationsInput | string
     manufacturer?: StringFieldUpdateOperationsInput | string
@@ -55250,6 +67696,85 @@ export namespace Prisma {
     installationDate?: DateTimeFieldUpdateOperationsInput | Date | string
     lastTestedDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     nextTestDue?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidTransactionCreateManyMeterReadingInput = {
+    id?: number
+    accountId: number
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidTransactionUpdateWithoutMeterReadingInput = {
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    account?: PrepaidAccountUpdateOneRequiredWithoutTransactionsNestedInput
+  }
+
+  export type PrepaidTransactionUncheckedUpdateWithoutMeterReadingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidTransactionUncheckedUpdateManyWithoutMeterReadingInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    accountId?: IntFieldUpdateOperationsInput | number
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -55358,6 +67883,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     meter?: MeterUpdateOneRequiredWithoutReadingsNestedInput
+    prepaidTransactions?: PrepaidTransactionUpdateManyWithoutMeterReadingNestedInput
   }
 
   export type MeterReadingUncheckedUpdateWithoutBillInput = {
@@ -55388,6 +67914,7 @@ export namespace Prisma {
     validatedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    prepaidTransactions?: PrepaidTransactionUncheckedUpdateManyWithoutMeterReadingNestedInput
   }
 
   export type MeterReadingUncheckedUpdateManyWithoutBillInput = {
@@ -55513,6 +68040,7 @@ export namespace Prisma {
     location?: LocationUpdateOneRequiredWithoutMetersNestedInput
     readings?: MeterReadingUpdateManyWithoutMeterNestedInput
     bills?: BillUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUpdateManyWithoutMeterNestedInput
   }
@@ -55537,6 +68065,7 @@ export namespace Prisma {
     config?: MeterConfigurationUncheckedUpdateOneWithoutMeterNestedInput
     readings?: MeterReadingUncheckedUpdateManyWithoutMeterNestedInput
     bills?: BillUncheckedUpdateManyWithoutMeterNestedInput
+    tamperEvents?: TamperEventUncheckedUpdateManyWithoutMeterNestedInput
     currentTransformers?: CurrentTransformerUncheckedUpdateManyWithoutMeterNestedInput
     potentialTransformers?: PotentialTransformerUncheckedUpdateManyWithoutMeterNestedInput
   }
@@ -55722,6 +68251,219 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PrepaidTransactionCreateManyAccountInput = {
+    id?: number
+    transactionId: string
+    transactionType: $Enums.PrepaidTransactionType
+    amount: number
+    balanceBefore: number
+    balanceAfter: number
+    consumptionKWh?: number | null
+    ratePerUnit?: number | null
+    fixedCharges?: number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: number | null
+    status?: $Enums.PrepaidTransactionStatus
+    failureReason?: string | null
+    description?: string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidRechargeCreateManyAccountInput = {
+    id?: number
+    rechargeId: string
+    amount: number
+    paymentMethod: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    gatewayName?: string | null
+    gatewayTransactionId?: string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: $Enums.PrepaidRechargeType
+    rechargeSource?: $Enums.PrepaidRechargeSource
+    isPromotional?: boolean
+    promotionalCode?: string | null
+    discountAmount?: number
+    bonusAmount?: number
+    receiptNumber?: string | null
+    receiptUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PrepaidAlertCreateManyAccountInput = {
+    id?: number
+    alertType: $Enums.PrepaidAlertType
+    alertLevel: $Enums.PrepaidAlertLevel
+    message: string
+    isRead?: boolean
+    readAt?: Date | string | null
+    balanceAtAlert?: number | null
+    consumptionAtAlert?: number | null
+    thresholdValue?: number | null
+    createdAt?: Date | string
+  }
+
+  export type PrepaidTransactionUpdateWithoutAccountInput = {
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    meterReading?: MeterReadingUpdateOneWithoutPrepaidTransactionsNestedInput
+  }
+
+  export type PrepaidTransactionUncheckedUpdateWithoutAccountInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidTransactionUncheckedUpdateManyWithoutAccountInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    transactionId?: StringFieldUpdateOperationsInput | string
+    transactionType?: EnumPrepaidTransactionTypeFieldUpdateOperationsInput | $Enums.PrepaidTransactionType
+    amount?: FloatFieldUpdateOperationsInput | number
+    balanceBefore?: FloatFieldUpdateOperationsInput | number
+    balanceAfter?: FloatFieldUpdateOperationsInput | number
+    consumptionKWh?: NullableFloatFieldUpdateOperationsInput | number | null
+    ratePerUnit?: NullableFloatFieldUpdateOperationsInput | number | null
+    fixedCharges?: NullableFloatFieldUpdateOperationsInput | number | null
+    taxes?: NullableJsonNullValueInput | InputJsonValue
+    readingId?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumPrepaidTransactionStatusFieldUpdateOperationsInput | $Enums.PrepaidTransactionStatus
+    failureReason?: NullableStringFieldUpdateOperationsInput | string | null
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidRechargeUpdateWithoutAccountInput = {
+    rechargeId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: EnumPrepaidRechargeTypeFieldUpdateOperationsInput | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFieldUpdateOperationsInput | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFieldUpdateOperationsInput | boolean
+    promotionalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: FloatFieldUpdateOperationsInput | number
+    bonusAmount?: FloatFieldUpdateOperationsInput | number
+    receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidRechargeUncheckedUpdateWithoutAccountInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    rechargeId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: EnumPrepaidRechargeTypeFieldUpdateOperationsInput | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFieldUpdateOperationsInput | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFieldUpdateOperationsInput | boolean
+    promotionalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: FloatFieldUpdateOperationsInput | number
+    bonusAmount?: FloatFieldUpdateOperationsInput | number
+    receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidRechargeUncheckedUpdateManyWithoutAccountInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    rechargeId?: StringFieldUpdateOperationsInput | string
+    amount?: FloatFieldUpdateOperationsInput | number
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    gatewayName?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayTransactionId?: NullableStringFieldUpdateOperationsInput | string | null
+    gatewayResponse?: NullableJsonNullValueInput | InputJsonValue
+    rechargeType?: EnumPrepaidRechargeTypeFieldUpdateOperationsInput | $Enums.PrepaidRechargeType
+    rechargeSource?: EnumPrepaidRechargeSourceFieldUpdateOperationsInput | $Enums.PrepaidRechargeSource
+    isPromotional?: BoolFieldUpdateOperationsInput | boolean
+    promotionalCode?: NullableStringFieldUpdateOperationsInput | string | null
+    discountAmount?: FloatFieldUpdateOperationsInput | number
+    bonusAmount?: FloatFieldUpdateOperationsInput | number
+    receiptNumber?: NullableStringFieldUpdateOperationsInput | string | null
+    receiptUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAlertUpdateWithoutAccountInput = {
+    alertType?: EnumPrepaidAlertTypeFieldUpdateOperationsInput | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFieldUpdateOperationsInput | $Enums.PrepaidAlertLevel
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    balanceAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    consumptionAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    thresholdValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAlertUncheckedUpdateWithoutAccountInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    alertType?: EnumPrepaidAlertTypeFieldUpdateOperationsInput | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFieldUpdateOperationsInput | $Enums.PrepaidAlertLevel
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    balanceAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    consumptionAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    thresholdValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PrepaidAlertUncheckedUpdateManyWithoutAccountInput = {
+    id?: IntFieldUpdateOperationsInput | number
+    alertType?: EnumPrepaidAlertTypeFieldUpdateOperationsInput | $Enums.PrepaidAlertType
+    alertLevel?: EnumPrepaidAlertLevelFieldUpdateOperationsInput | $Enums.PrepaidAlertLevel
+    message?: StringFieldUpdateOperationsInput | string
+    isRead?: BoolFieldUpdateOperationsInput | boolean
+    readAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    balanceAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    consumptionAtAlert?: NullableFloatFieldUpdateOperationsInput | number | null
+    thresholdValue?: NullableFloatFieldUpdateOperationsInput | number | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
 
 
   /**
@@ -55760,6 +68502,10 @@ export namespace Prisma {
      */
     export type MeterCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MeterCountOutputTypeDefaultArgs<ExtArgs>
     /**
+     * @deprecated Use MeterReadingCountOutputTypeDefaultArgs instead
+     */
+    export type MeterReadingCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = MeterReadingCountOutputTypeDefaultArgs<ExtArgs>
+    /**
      * @deprecated Use BillCountOutputTypeDefaultArgs instead
      */
     export type BillCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = BillCountOutputTypeDefaultArgs<ExtArgs>
@@ -55767,6 +68513,10 @@ export namespace Prisma {
      * @deprecated Use DTRCountOutputTypeDefaultArgs instead
      */
     export type DTRCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DTRCountOutputTypeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PrepaidAccountCountOutputTypeDefaultArgs instead
+     */
+    export type PrepaidAccountCountOutputTypeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PrepaidAccountCountOutputTypeDefaultArgs<ExtArgs>
     /**
      * @deprecated Use DepartmentDefaultArgs instead
      */
@@ -55875,6 +68625,30 @@ export namespace Prisma {
      * @deprecated Use DTRFaultDefaultArgs instead
      */
     export type DTRFaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = DTRFaultDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use TamperEventDefaultArgs instead
+     */
+    export type TamperEventArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TamperEventDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use TamperCodeDescriptionDefaultArgs instead
+     */
+    export type TamperCodeDescriptionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = TamperCodeDescriptionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PrepaidAccountDefaultArgs instead
+     */
+    export type PrepaidAccountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PrepaidAccountDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PrepaidTransactionDefaultArgs instead
+     */
+    export type PrepaidTransactionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PrepaidTransactionDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PrepaidRechargeDefaultArgs instead
+     */
+    export type PrepaidRechargeArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PrepaidRechargeDefaultArgs<ExtArgs>
+    /**
+     * @deprecated Use PrepaidAlertDefaultArgs instead
+     */
+    export type PrepaidAlertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = PrepaidAlertDefaultArgs<ExtArgs>
 
   /**
    * Batch Payload for updateMany & deleteMany & createMany
