@@ -150,6 +150,38 @@ export default function DataLogger() {
             sections={[
                 {
                     layout: {
+                        type: 'row',
+                        className: 'mb-6'
+                    },
+                    components: [
+                        {
+                            name: 'PageHeader',
+                            props: {
+                                title: "Data Logger Management",
+                                onBackClick: () => window.history.back(),
+                                backButtonText: "Back to Dashboard",
+                                buttonsLabel: "Add Data Logger",
+                                variant: "primary",
+                                onClick: () => console.log('Adding new data logger...'),
+                                showMenu: true,
+                                showDropdown: true,
+                                menuItems: [
+                                    { id: 'all', label: 'All Devices' },
+                                    { id: 'online', label: 'Online Devices' },
+                                    { id: 'offline', label: 'Offline Devices' },
+                                    { id: 'standby', label: 'Standby Devices' },
+                                    { id: 'maintenance', label: 'Maintenance Required' },
+                                    { id: 'low-battery', label: 'Low Battery' }
+                                ],
+                                onMenuItemClick: (itemId: string) => {
+                                    console.log(`Filter by: ${itemId}`);
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    layout: {
                         type: 'grid',
                         columns: 1,
                         gap: 'gap-6',
