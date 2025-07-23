@@ -3,9 +3,16 @@ import ConsumerDB from '../models/ConsumerDB.js';
 export const getAllConsumers = async (req, res) => {
     try {
         const consumers = await ConsumerDB.getAllConsumers();
+        const formatted = consumers.map((c, idx) => ({
+            sNo: idx + 1,
+            consumerNumber: c.consumerNumber,
+            name: c.name,
+            meter: c.meters && c.meters[0] ? c.meters[0].serialNumber : '',
+            reading: c.meters && c.meters[0] ? c.meters[0].currentReading : '',
+        }));
         res.json({
             success: true,
-            data: consumers,
+            data: formatted,
             message: 'Consumers retrieved successfully'
         });
     } catch (error) {

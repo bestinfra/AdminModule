@@ -476,6 +476,7 @@ export const getAllApps = async (req, res) => {
 export const getAppById = async (req, res) => {
     try {
         const { id } = req.params;
+        console.log('getAppById called with id:', id);
 
         const app = await prisma.generatedApps.findUnique({
             where: { id: parseInt(id) },
@@ -487,7 +488,7 @@ export const getAppById = async (req, res) => {
                         firstName: true,
                         lastName: true
                     }
-                },
+                },  
                 managedBy: {
                     select: {
                         id: true,

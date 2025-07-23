@@ -4,10 +4,16 @@ import { getDateTime } from '../utils/utils.js';
 export const getTicketStats = async (req, res) => {
     try {
         const stats = await TicketDB.getTicketStats();
-        
+        // Only send relevant stats fields
         res.json({
             success: true,
-            data: stats
+            data: {
+                total: stats.total,
+                open: stats.open,
+                inProgress: stats.inProgress,
+                resolved: stats.resolved,
+                closed: stats.closed
+            }
         });
     } catch (error) {
         console.error(' getTicketStats: Error fetching ticket stats:', error);
@@ -33,10 +39,22 @@ export const getTicketsTable = async (req, res) => {
         };
 
         const ticketsData = await TicketDB.getTicketsTable(page, limit, filters);
-        
+        // Format for frontend table: sNo, ticketNumber, subject, status, priority, consumerName, raisedBy, assignedTo, createdAt
+        const formatted = ticketsData.data.map((t, idx) => ({
+            sNo: (page - 1) * limit + idx + 1,
+            ticketNumber: t.ticketNumber,
+            subject: t.subject,
+            status: t.status,
+            priority: t.priority,
+            consumerName: t.consumerName,
+            raisedBy: t.raisedBy,
+            assignedTo: t.assignedTo,
+            createdAt: t.createdAt
+        }));
         res.json({
             success: true,
-            data: ticketsData
+            data: formatted,
+            pagination: ticketsData.pagination
         });
     } catch (error) {
         console.error(' getTicketsTable: Error fetching tickets table:', error);
@@ -51,7 +69,7 @@ export const getTicketsTable = async (req, res) => {
 export const getTicketTrends = async (req, res) => {
     try {
         const trendsData = await TicketDB.getLastTwelveMonthsTrends();
-
+        // Only send xAxisData and seriesData as before
         const formattedData = trendsData.map(row => ({
             month: row.month,
             open_count: parseInt(row.open_count),
@@ -59,7 +77,6 @@ export const getTicketTrends = async (req, res) => {
             resolved_count: parseInt(row.resolved_count),
             closed_count: parseInt(row.closed_count)
         }));
-
         const result = {
             xAxisData: formattedData.map((row) => row.month),
             seriesData: [
@@ -81,9 +98,8 @@ export const getTicketTrends = async (req, res) => {
                 },
             ],
         };
-
         res.status(200).json({
-            status: 'success',
+            success: true,
             data: result,
         });
     } catch (error) {
@@ -93,7 +109,7 @@ export const getTicketTrends = async (req, res) => {
             timestamp: getDateTime(),
         });
         res.status(500).json({
-            status: 'error',
+            success: false,
             message: 'Internal Server Error',
             errorId: error.code || 'INTERNAL_SERVER_ERROR',
         });

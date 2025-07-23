@@ -75,10 +75,21 @@ const defaultMenus: MenuCategory[] = [
                 link: '/super-admin',
             },
             {
-                title: 'App Management',
-                icon: '/icons/apps-icon.svg',
-                link: '/apps',
+                            title: 'App Management',
+                            icon: '/icons/apps-icon.svg',
+                            link: '/apps',
+                        },
+                        {
+                            title: 'User Management',
+                            icon: '/icons/user-management.svg',
+                            link: '/user-management',
+                        },
+                        {
+                title: 'DTR Dashboard',
+                icon: '/icons/dtr.svg',
+                link: '/dtr-dashboard',
             },
+            
         ],
     },
     // {
@@ -283,6 +294,16 @@ const defaultMenus: MenuCategory[] = [
                 title: 'Users',
                 icon: '/icons/user.svg',
                 link: '/users',
+            },
+            {
+                title: 'Add Ticket',
+                icon: '/icons/ticket-add.svg',
+                link: '/add-ticket',
+            },
+            {
+                title: 'Role Management',
+                icon: '/icons/role-management.svg',
+                link: '/role-management',
             },
         ],
     },

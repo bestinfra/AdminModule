@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
+import BACKEND_URL from '../config';
 
 export default function Meters() {
-    const [meterData] = useState([
+    const [meterData, setMeterData] = useState([
         {
             id: 1,
             title: 'Total Meters',
@@ -55,7 +56,7 @@ export default function Meters() {
         },
     ]);
 
-    const [tableData] = useState([
+    const [tableData, setTableData] = useState([
         {
             id: 'MTR-001',
             meterNumber: 'MTR-001',
@@ -193,7 +194,7 @@ export default function Meters() {
         { key: 'powerFactor', label: 'Power Factor' },
     ]);
 
-    const [serverPagination] = useState({
+    const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
         totalPages: 4,
         totalCount: 32,
@@ -240,6 +241,67 @@ export default function Meters() {
     const handleLocationChange = (value: string) => {
         console.log('Location filter changed:', value);
     };
+
+    useEffect(() => {
+        // Fetch meter stats for cards
+        fetch(`${BACKEND_URL}/meters/stats`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    const stats = data.data;
+                    // Map stats to cards with subtitles as in the dummy data
+                    const cards = [
+                        {
+                            id: 1,
+                            title: 'Total Meters',
+                            value: stats.totalMeters,
+                            icon: 'icons/meter.svg',
+                            showTrend: true,
+                            comparisonValue: 12,
+                            subtitle1: 'Active meters',
+                            subtitle2: '+12 this month',
+                        },
+                        ...stats.makes.map((make: any, idx: number) => ({
+                            id: 2 + idx,
+                            title: `Make: ${make.manufacturer}`,
+                            value: make.count,
+                            icon: 'icons/meter-make.svg',
+                            showTrend: true,
+                            comparisonValue: 8,
+                            subtitle1: 'Connected devices',
+                            subtitle2: '+8 this week',
+                        })),
+                        ...stats.types.map((type: any, idx: number) => ({
+                            id: 10 + idx,
+                            title: `Type: ${type.type}`,
+                            value: type.count,
+                            icon: 'icons/meter.svg',
+                            showTrend: false,
+                            comparisonValue: 12,
+                            subtitle1: 'Per household',
+                            subtitle2: 'This month',
+                        })),
+                    ];
+                    setMeterData(cards);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch meter stats');
+                }
+            })
+            .catch((err) => console.error(err.message || 'Failed to fetch meter stats'));
+        // Fetch meter table data
+        fetch(`${BACKEND_URL}/meters?page=1&limit=8`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setTableData(data.data);
+                    setServerPagination(data.pagination);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch meter table');
+                }
+            })
+            .catch((err) => console.error(err.message || 'Failed to fetch meter table'))
+            .finally(() => {});
+    }, []);
 
     return (
         <Page

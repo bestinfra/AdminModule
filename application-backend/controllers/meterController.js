@@ -4,10 +4,27 @@ import MeterDB from '../models/MeterDB.js';
 export const getAllMeters = async (req, res) => {
     try {
         const meters = await MeterDB.getAllMeters();
-        
+        // Map all required fields for the frontend table from the latest reading
+        const formatted = meters.map((m) => {
+            const latestReading = m.readings && m.readings[0] ? m.readings[0] : {};
+            return {
+                meterNumber: m.meterNumber,
+                customerName: m.consumer?.name || 'NA',
+                location: m.location?.name || 'NA',
+                meterType: m.type || 'NA',
+                status: m.status || 'NA',
+                lastReading: latestReading.readingDate || 'NA',
+                currentReading: latestReading.kWh || 'NA',
+                previousReading: latestReading.previousReading || 'NA', // If not present, use 'NA'
+                consumption: latestReading.consumption || 'NA', // If not present, use 'NA'
+                voltage: latestReading.averageVoltage || 'NA',
+                current: latestReading.averageCurrent || 'NA',
+                powerFactor: latestReading.powerFactor || 'NA',
+            };
+        });
         res.json({
             success: true,
-            data: meters,
+            data: formatted,
             message: 'Meters retrieved successfully'
         });
     } catch (error) {
@@ -113,9 +130,15 @@ export const deleteMeter = async (req, res) => {
 export const getMeterStats = async (req, res) => {
     try {
         const stats = await MeterDB.getMeterStats();
+        // Only send relevant stats fields
         res.json({
             success: true,
-            data: stats
+            data: {
+                totalMeters: stats.totalMeters,
+                makes: stats.makes,
+                types: stats.types,
+                connectionTypes: stats.connectionTypes
+            }
         });
     } catch (error) {
         console.error('❌ getMeterStats: Error fetching meter stats:', error);

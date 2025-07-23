@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useMemo, useCallback, useRef } from "react";
 import type {
   FormInputProps,
   FormInputEvent,
@@ -27,6 +27,8 @@ const FormInput: React.FC<FormInputProps> = ({
   onInputChange,
   fileInputRefs,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+  
   const {
     name,
     type,
@@ -56,41 +58,57 @@ const FormInput: React.FC<FormInputProps> = ({
     return target.value;
   };
 
-  const handleInputChange = (event: FormInputEvent) => {
+  const handleInputChange = useCallback((event: FormInputEvent) => {
     const extractedValue = extractValueFromEvent(event);
     onInputChange(name, extractedValue, input);
     input.onChange?.(extractedValue);
-  };
+  }, [onInputChange, name, input]);
 
-  const commonProps: CommonInputProps = {
-    id: name,
-    name,
-    required,
-    disabled,
-    className: `w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer bg-white dark:bg-gray-800 border-primary-border dark:border-dark-border text-base font-medium focus:border-primary-border focus:outline-none [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:dark:bg-gray-800 [&:-webkit-autofill]:shadow-[0_0_0_1000px_white_inset] dark:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#1f2937_inset] ${
-      showError ? "border-red-500" : "border-gray-300"
-    } ${inputClassName || ""}`,
-    onChange: handleInputChange,
-    "aria-invalid": showError ? "true" : "false",
-    "aria-describedby": showError
-      ? errorId
-      : description
-      ? descriptionId
-      : undefined,
-    "aria-required": required ? "true" : "false",
-  };
+  const commonProps: CommonInputProps = useMemo(() => {
+    const isTextarea = type === "textarea";
+    const baseClassName = `w-full flex items-center justify-between px-4 py-3.5 bg-white dark:bg-gray-800 text-base font-medium focus:outline-none [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:dark:bg-gray-800 [&:-webkit-autofill]:shadow-[0_0_0_1000px_white_inset] dark:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#1f2937_inset]`;
+    
+    const borderClassName = isTextarea 
+      ? `border border-primary-border dark:border-dark-border focus:border-primary-border ${
+          showError ? "border-red-500" : "border-gray-300"
+        }`
+      : `border px-4 py-3.5 rounded-full cursor-pointer border-primary-border dark:border-dark-border focus:border-primary-border ${
+          showError ? "border-red-500" : "border-gray-300"
+        }`;
 
-  const renderInput = () => {
+    return {
+      id: name,
+      name,
+      required,
+      disabled,
+      className: `${baseClassName} ${borderClassName} ${inputClassName || ""}`,
+      onChange: handleInputChange,
+      "aria-invalid": showError ? "true" : "false",
+      "aria-describedby": showError
+        ? errorId
+        : description
+        ? descriptionId
+        : undefined,
+      "aria-required": required ? "true" : "false",
+    };
+  }, [name, required, disabled, showError, inputClassName, handleInputChange, errorId, description, descriptionId, type]);
+
+  const renderInput = useMemo(() => {
     const stringValue = value === null ? "" : (value as string);
     const booleanValue = value === null ? false : (value as boolean);
     const fileValue = value === null ? null : (value as FileList);
     const fileSingleValue = value === null ? null : (value as File);
+
+    const finalClassName = `${commonProps.className} ${icon ? "pr-12" : ""} ${
+      showError ? "border-red-500" : ""
+    }`.trim();
 
     switch (type) {
       case "textarea":
         return (
           <TextareaInput
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             placeholder={placeholder || label}
           />
@@ -99,6 +117,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <SelectInput
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             placeholder={placeholder || `Select ${label}`}
             options={options}
@@ -108,6 +127,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <FileInput
             {...commonProps}
+            className={finalClassName}
             value={fileValue}
             icon={icon}
             fileInputRefs={fileInputRefs}
@@ -118,6 +138,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <CheckboxInput
             {...commonProps}
+            className={finalClassName}
             value={booleanValue}
             label={label || ""}
             description={description}
@@ -128,6 +149,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <RadioInput
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             options={options}
             label={label || ""}
@@ -139,6 +161,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <SwitchInput
             {...commonProps}
+            className={finalClassName}
             value={!!value}
             label={label || ""}
             description={description}
@@ -231,6 +254,7 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <TextareaField
             {...commonProps}
+            className={finalClassName}
             value={stringValue}
             label={label}
             placeholder={placeholder}
@@ -254,14 +278,16 @@ const FormInput: React.FC<FormInputProps> = ({
         return (
           <input
             {...commonProps}
+            ref={inputRef}
+            key={name}
             type={textInputType}
             value={stringValue}
             placeholder={placeholder || label}
-            className={`${commonProps.className} ${icon ? "pr-12" : ""}`}
+            className={finalClassName}
           />
         );
     }
-  };
+  }, [type, value, commonProps, placeholder, label, options, icon, fileInputRefs, description, name, onInputChange, input, showError, error, required, disabled, inputClassName, showError]);
 
   return (
     <div className={`w-full  ${inputClassName || ""}`}>
@@ -289,11 +315,7 @@ const FormInput: React.FC<FormInputProps> = ({
               {error}
             </span>
           )}
-          {React.cloneElement(renderInput(), {
-            className: `${renderInput().props.className || ""} ${
-              showError ? "border-red-500" : ""
-            }`.trim(),
-          })}
+          {renderInput}
         </div>
         {description && !showError && (
           <p id={descriptionId} className="text-sm text-gray-500" role="note">

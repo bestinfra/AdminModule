@@ -35,16 +35,41 @@ function generateFrontend(baseDir, formData) {
     companyName: companyName || 'Company',
     adminFirstName: adminFirstName || 'Admin',
     adminLastName: adminLastName || 'User',
-    primaryColor: primaryColor || '#163b7c',
-    secondaryColor: secondaryColor || '#55b56c',
-    textPrimaryColor: textPrimaryColor || '#262626',
-    textSecondaryColor: textSecondaryColor || '#7e7e7e',
-    backgroundColor: backgroundColor || '#f5f8fc',
-    borderColor: borderColor || '#e9efff',
-    shadowColor: shadowColor || '#dce4ef',
-    iconColor: iconColor || '#476189',
-    gradientColor: gradientColor || '#163b7c',
+    // New color variables from BrandPersonalization
+    colorPrimaryBg: formData.colorPrimaryBg || '#efefef',
+    colorPrimaryBgLight: formData.colorPrimaryBgLight || '#dce7ec',
+    colorPrimaryLightest: formData.colorPrimaryLightest || '#f5f8fc',
+    colorSecondary: formData.colorSecondary || '#55b56c',
+    colorSecondaryLight: formData.colorSecondaryLight || '#bbe1c4',
+    colorSecondaryPositive: formData.colorSecondaryPositive || '#029447',
+    colorSecondaryPositiveLight: formData.colorSecondaryPositiveLight || 'rgba(52, 199, 89, 0.15)',
+    colorTextPrimary: formData.colorTextPrimary || '#262626',
+    colorTextSecondary: formData.colorTextSecondary || '#7e7e7e',
+    colorPrimaryBorder: formData.colorPrimaryBorder || '#e9efff',
+    colorWarning: formData.colorWarning || '#ed8c22',
+    colorWarningAlt: formData.colorWarningAlt || '#ffd108',
+    colorWarningLight: formData.colorWarningLight || 'rgba(255, 180, 0, 0.15)',
+    colorDanger: formData.colorDanger || '#dc272c',
+    colorDangerAlt: formData.colorDangerAlt || '#ff7c5c',
+    colorDangerLight: formData.colorDangerLight || 'rgba(231, 45, 63, 0.1)',
+    colorInfo: formData.colorInfo || 'none',
+    colorNeutralDark: formData.colorNeutralDark || '#3c3c3c',
+    colorNeutralDarker: formData.colorNeutralDarker || '#262626',
+    colorNeutralLightest: formData.colorNeutralLightest || '#ffffff',
+    colorAccentLight: formData.colorAccentLight || 'rgba(0, 209, 178, 0.05)',
+    colorShadowPrimary: formData.colorShadowPrimary || '#dce4ef',
+    colorShadowSecondary: formData.colorShadowSecondary || '#dce4ef',
+    colorPrimaryDark: formData.colorPrimaryDark || '#041328',
+    colorPrimaryDarkLight: formData.colorPrimaryDarkLight || '#06152d',
+    colorDarkPrimary: formData.colorDarkPrimary || '#476189',
+    colorDarkSecondary: formData.colorDarkSecondary || '#476189',
+    colorDarkBorder: formData.colorDarkBorder || '#091b3b',
+    colorPrimaryGradient: formData.colorPrimaryGradient || 'linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))',
+    colorPrimaryDarkGradient: formData.colorPrimaryDarkGradient || 'linear-gradient(135deg, var(--colorPrimaryLight), var(--colorSecondaryLightestTransperent))',
+    colorGradientSecondary: formData.colorGradientSecondary || 'linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))',
+    colorStatIconGradient: formData.colorStatIconGradient || 'linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))',
     modules: modules || [],
+    modulesArray: JSON.stringify(modules || []),
     backendPort: backendPort || 4000
   };
 
@@ -69,8 +94,117 @@ function generateFrontend(baseDir, formData) {
  * Generate the main App.tsx component
  */
 function generateAppComponent(frontendDir, variables) {
+  // Calculate conditional cases based on selected modules
+  const modules = variables.modules || [];
+  
+  // Ensure modulesArray is properly set for template replacement
+  variables.modulesArray = JSON.stringify(modules);
+  
+  // Set basic app variables
+  variables.appName = variables.appName || 'Admin App';
+  variables.companyName = variables.companyName || 'Company';
+  
+  variables.userManagementCase = modules.includes('user_management_default') ? `
+      case '/users':
+        return 'Users';` : '';
+  
+  variables.roleManagementCase = modules.includes('role_management') ? `
+      case '/role-management':
+        return 'Role Management';` : '';
+  
+  variables.consumerCase = modules.includes('consumer') ? `
+      case '/consumers':
+        return 'Consumers';` : '';
+  
+  variables.billsPrepaidCase = (modules.includes('bills') || modules.includes('prepaid')) ? `
+      case '/bills/prepaid':
+        return 'Prepaid Bills';` : '';
+  
+  variables.billsPostpaidCase = (modules.includes('bills') || modules.includes('postpaid')) ? `
+      case '/bills/postpaid':
+        return 'Postpaid Bills';` : '';
+  
+  variables.ticketsCase = modules.includes('tickets') ? `
+      case '/all-tickets':
+        return 'All Tickets';` : '';
+  
+  variables.assetManagementCase = modules.includes('asset_management') ? `
+      case '/asset-management':
+        return 'Asset Management';` : '';
+  
+  variables.meterManagementCase = modules.includes('meter_management') ? `
+      case '/meters':
+        return 'Meters';
+      case '/data-logger-master':
+        return 'Data Logger Master';` : '';
+
+  // Calculate route variables
+  variables.billsPrepaidRoute = (modules.includes('bills') || modules.includes('prepaid')) ? 
+    '<Route path="/bills/prepaid" element={<BillsPrepaid />} />' : '';
+  
+  variables.billsPostpaidRoute = (modules.includes('bills') || modules.includes('postpaid')) ? 
+    '<Route path="/bills/postpaid" element={<BillsPostpaid />} />' : '';
+  
+  variables.assetManagementRoute = modules.includes('asset_management') ? 
+    '<Route path="/asset-management" element={<Assets />} />' : '';
+  
+  variables.meterManagementRoute = modules.includes('meter_management') ? 
+    '<Route path="/meters" element={<Meters />} />' : '';
+  
+  variables.dataLoggerRoute = modules.includes('meter_management') ? 
+    '<Route path="/data-logger-master" element={<DataLoggerMaster />} />' : '';
+  
+  variables.ticketsRoute = modules.includes('tickets') ? 
+    '<Route path="/all-tickets" element={<AllTickets />} />' : '';
+  
+  variables.usersRoute = modules.includes('user_management_default') ? 
+    '<Route path="/users" element={<Users />} />' : '';
+  
+  variables.roleManagementRoute = modules.includes('role_management') ? 
+    '<Route path="/role-management" element={<RoleManagement />} />' : '';
+  
+  variables.consumerRoute = modules.includes('consumer') ? 
+    '<Route path="/consumers" element={<Consumers />} />' : '';
+
+  // Calculate error page variables
+  variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
+    '<li>/bills/prepaid - Bills Prepaid</li>' : '';
+  
+  variables.billsPostpaidError = (modules.includes('bills') || modules.includes('postpaid')) ? 
+    '<li>/bills/postpaid - Bills Postpaid</li>' : '';
+  
+  variables.assetManagementError = modules.includes('asset_management') ? 
+    '<li>/asset-management - Asset Management</li>' : '';
+  
+  variables.meterManagementError = modules.includes('meter_management') ? 
+    '<li>/meters - Meters List</li>' : '';
+  
+  variables.dataLoggerError = modules.includes('meter_management') ? 
+    '<li>/data-logger-master - Data Logger Master</li>' : '';
+  
+  variables.ticketsError = modules.includes('tickets') ? 
+    '<li>/all-tickets - All Tickets</li>' : '';
+  
+  variables.usersError = modules.includes('user_management_default') ? 
+    '<li>/users - Users</li>' : '';
+  
+  variables.roleManagementError = modules.includes('role_management') ? 
+    '<li>/role-management - Role Management</li>' : '';
+  
+  variables.consumerError = modules.includes('consumer') ? 
+    '<li>/consumers - Consumers</li>' : '';
+
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
+  
+  // Debug: Check if any placeholders were not replaced
+  const placeholders = appContent.match(/{{[^}]+}}/g);
+  if (placeholders && placeholders.length > 0) {
+    console.error('Warning: Template placeholders were not replaced!');
+    console.error('Unreplaced placeholders:', placeholders);
+    console.error('Available variables:', Object.keys(variables));
+  }
+  
   const appPath = path.join(frontendDir, 'src', 'App.tsx');
   fs.writeFileSync(appPath, appContent);
 }

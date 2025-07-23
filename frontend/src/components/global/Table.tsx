@@ -277,7 +277,7 @@ const Table: React.FC<TableProps> = ({
         
         if (uid) {
             // Navigate to ConsumerView page with the UID
-            navigate(`/consumers/${uid}`);
+            navigate(`/consumer-view/${uid}`);
         } else {
             // Fallback to alert if no UID found
             alert(`Viewing: ${JSON.stringify(row, null, 2)}`);

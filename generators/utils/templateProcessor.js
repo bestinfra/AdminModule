@@ -13,8 +13,12 @@ function processTemplate(templateContent, variables) {
   // Replace all {{variable}} placeholders with actual values
   Object.entries(variables).forEach(([key, value]) => {
     const placeholder = new RegExp(`{{${key}}}`, 'g');
-    processedContent = processedContent.replace(placeholder, value || '');
+    const replacement = value !== undefined && value !== null ? String(value) : '';
+    processedContent = processedContent.replace(placeholder, replacement);
   });
+  
+  // Remove any remaining empty lines that might have been left by empty replacements
+  processedContent = processedContent.replace(/^\s*[\r\n]/gm, '');
   
   return processedContent;
 }

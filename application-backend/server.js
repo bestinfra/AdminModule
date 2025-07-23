@@ -11,19 +11,19 @@ import billing from './routes/billing.js';
 import dashboard from './routes/dashboard.js';
 import tickets from './routes/tickets.js';
 import dtrs from './routes/dtrs.js';
+import apiRoutes from './routes/apiRoutes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Initialize Prisma client
 const prisma = new PrismaClient();
 
-// Middleware
 const corsOptions = {
     origin: process.env.CORS_ORIGIN || '*',
 };
+console.log(corsOptions);
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -34,19 +34,8 @@ app.use((req, res, next) => {
     next();
 });
 
-// Group all routes under '/api'
-app.use('/api', [
-    meters,
-    consumers,
-    assets,
-    users,
-    roles,
-    billing,
-    dashboard,
-    tickets,
-    dtrs
-]);
-// Health check endpoint
+app.use('/api', apiRoutes);
+
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',
     timestamp: new Date().toISOString(),

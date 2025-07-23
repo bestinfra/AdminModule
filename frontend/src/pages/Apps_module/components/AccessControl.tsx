@@ -450,72 +450,44 @@ const AccessControl: React.FC<AccessControlProps> = ({
                                     </button>
                                 </div>
 
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                    <div>
-                                        <FormInput
-                                            input={{
-                                                name: `newAccount-${account.id}-firstName`,
-                                                type: 'text',
-                                                label: '',
-                                                placeholder: 'First Name',
-                                                required: false,
-                                            }}
-                                            value={account.firstName}
-                                            error={getNewAccountError(
-                                                index,
-                                                'firstName'
-                                            )}
-                                            showError={
-                                                !!getNewAccountError(
-                                                    index,
-                                                    'firstName'
-                                                )
-                                            }
-                                            disabled={loading}
-                                            onInputChange={(_name, value) =>
-                                                handleNewAccountChange(
-                                                    account.id,
-                                                    'firstName',
-                                                    value as string
-                                                )
-                                            }
-                                            onInputBlur={handleFormInputBlur}
-                                            fileInputRefs={fileInputRefs}
-                                        />
-                                    </div>
-                                    <div>
-                                        <FormInput
-                                            input={{
-                                                name: `newAccount-${account.id}-lastName`,
-                                                type: 'text',
-                                                label: '',
-                                                placeholder: 'Last Name',
-                                                required: false,
-                                            }}
-                                            value={account.lastName}
-                                            error={getNewAccountError(
-                                                index,
-                                                'lastName'
-                                            )}
-                                            showError={
-                                                !!getNewAccountError(
-                                                    index,
-                                                    'lastName'
-                                                )
-                                            }
-                                            disabled={loading}
-                                            onInputChange={(_name, value) =>
-                                                handleNewAccountChange(
-                                                    account.id,
-                                                    'lastName',
-                                                    value as string
-                                                )
-                                            }
-                                            onInputBlur={handleFormInputBlur}
-                                            fileInputRefs={fileInputRefs}
-                                        />
-                                    </div>
-                                </div>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div>
+                <FormInput
+                  input={{
+                    name: `newAccount-${account.id}-firstName`,
+                    type: 'text',
+                    label: '',
+                    placeholder: 'First Name',
+                    required: false,
+                  }}
+                  value={account.firstName}
+                  error={getNewAccountError(index, 'firstName')}
+                  showError={!!getNewAccountError(index, 'firstName')}
+                  disabled={loading}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'firstName', value as string)}
+                  onInputBlur={handleFormInputBlur}
+                  fileInputRefs={fileInputRefs}
+                />
+              </div>
+              <div>
+                <FormInput
+                  input={{
+                    name: `newAccount-${account.id}-lastName`,
+                    type: 'text',
+                    label: '',
+                    placeholder: 'Last Name',
+                    required: false,
+                  }}
+                  value={account.lastName}
+                  error={getNewAccountError(index, 'lastName')}
+                  showError={!!getNewAccountError(index, 'lastName')}
+                  disabled={loading}
+                  onInputChange={(_name, value) => handleNewAccountChange(account.id, 'lastName', value as string)}
+                  onInputBlur={handleFormInputBlur}
+                  fileInputRefs={fileInputRefs}
+                />
+              </div>
+            </div>
 
                                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
                                     <div>
@@ -860,56 +832,45 @@ const AccessControl: React.FC<AccessControlProps> = ({
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
-                                <div>
-                                    <FormInput
-                                        input={{
-                                            name: 'newAccountPassword',
-                                            type: 'password',
-                                            label: '',
-                                            placeholder: 'Password',
-                                            required: false,
-                                        }}
-                                        value={
-                                            formData.newAccountPassword || ''
-                                        }
-                                        error={allErrors.newAccountPassword}
-                                        showError={
-                                            !!allErrors.newAccountPassword
-                                        }
-                                        disabled={loading}
-                                        onInputChange={handleFormInputChange}
-                                        onInputBlur={handleFormInputBlur}
-                                        fileInputRefs={fileInputRefs}
-                                    />
-                                </div>
-                                <div>
-                                    <FormInput
-                                        input={{
-                                            name: 'newAccountConfirmPassword',
-                                            type: 'password',
-                                            label: '',
-                                            placeholder: 'Confirm Password',
-                                            required: false,
-                                        }}
-                                        value={
-                                            formData.newAccountConfirmPassword ||
-                                            ''
-                                        }
-                                        error={
-                                            allErrors.newAccountConfirmPassword
-                                        }
-                                        showError={
-                                            !!allErrors.newAccountConfirmPassword
-                                        }
-                                        disabled={loading}
-                                        onInputChange={handleFormInputChange}
-                                        onInputBlur={handleFormInputBlur}
-                                        fileInputRefs={fileInputRefs}
-                                    />
-                                </div>
-                            </div>
-                        </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+            <div>
+              <FormInput
+                input={{
+                  name: 'newAccountPassword',
+                  type: 'password',
+                  label: '',
+                  placeholder: 'Password',
+                  required: false,
+                }}
+                value={formData.newAccountPassword || ''}
+                error={allErrors.newAccountPassword}
+                showError={!!allErrors.newAccountPassword}
+                disabled={loading}
+                onInputChange={handleFormInputChange}
+                onInputBlur={handleFormInputBlur}
+                fileInputRefs={fileInputRefs}
+              />
+            </div>
+            <div>
+              <FormInput
+                input={{
+                  name: 'newAccountConfirmPassword',
+                  type: 'password',
+                  label: '',
+                  placeholder: 'Confirm Password',  
+                  required: false,
+                }}
+                value={formData.newAccountConfirmPassword || ''}
+                error={allErrors.newAccountConfirmPassword}
+                showError={!!allErrors.newAccountConfirmPassword}
+                disabled={loading}
+                onInputChange={handleFormInputChange}
+                onInputBlur={handleFormInputBlur}
+                fileInputRefs={fileInputRefs}
+              />
+            </div>
+          </div>
+        </div>
 
                         {/* mail check box */}
                         <div className="flex items-center gap-2">
