@@ -488,7 +488,7 @@ export const getAppById = async (req, res) => {
                         firstName: true,
                         lastName: true
                     }
-                },
+                },  
                 managedBy: {
                     select: {
                         id: true,
