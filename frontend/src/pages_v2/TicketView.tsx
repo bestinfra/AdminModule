@@ -535,12 +535,12 @@ const TicketView: React.FC = () => {
 
     // Fetch ticket data
     useEffect(() => {
-        const fetchTicketDetails = async () => {
+            const fetchTicketDetails = async () => {
             if (!id) return;
             
-            try {
-                setIsLoading(true);
-                setError(null);
+                try {
+                    setIsLoading(true);
+                    setError(null);
 
                 // API call to fetch ticket details
                 const response = await fetch(`/api/tickets/${id}`);
@@ -553,21 +553,21 @@ const TicketView: React.FC = () => {
                 
                 if (ticketData.status === 'success') {
                     const ticket = ticketData.data;
-                    setTicket({
+                        setTicket({
                         ...ticket,
                         conversation: ticket.conversation || [],
-                    });
+                        });
 
                     // Generate activity log from ticket data
-                    const activityLog: Activity[] = [
-                        {
-                            id: 1,
+                        const activityLog: Activity[] = [
+                            {
+                                id: 1,
                             type: 'status' as const,
-                            description: 'Ticket created',
+                                description: 'Ticket created',
                             timestamp: ticket.created_at,
                             author: ticket.UnitName || 'N/A',
-                            status: 'Open',
-                        },
+                                status: 'Open',
+                            },
                         // Add more activities based on ticket updates
                         ...(ticket.updated_at !== ticket.created_at ? [{
                             id: 2,
@@ -577,25 +577,25 @@ const TicketView: React.FC = () => {
                             author: 'System',
                             status: ticket.status,
                         }] : []),
-                    ];
+                        ];
 
-                    setActivities(activityLog);
-                } else {
+                        setActivities(activityLog);
+                    } else {
                     throw new Error(ticketData.message || 'Failed to fetch ticket details');
-                }
-            } catch (err) {
-                console.error('Error fetching ticket details:', err);
-                setError(err instanceof Error ? err.message : 'Failed to fetch ticket details');
+                    }
+                } catch (err) {
+                    console.error('Error fetching ticket details:', err);
+                    setError(err instanceof Error ? err.message : 'Failed to fetch ticket details');
                 
                 // Fallback to dummy data for development
                 setTicket(dummyTicket);
                 setActivities(dummyActivities);
-            } finally {
-                setIsLoading(false);
-            }
-        };
+                } finally {
+                    setIsLoading(false);
+                }
+            };
 
-        fetchTicketDetails();
+            fetchTicketDetails();
     }, [id]);
 
     // Handle chat message sending
@@ -650,9 +650,9 @@ const TicketView: React.FC = () => {
     if (error) {
         return (
             <div className="p-4">
-                <Page
-                    sections={[
-                        {
+            <Page
+                sections={[
+                    {
                             layout: {
                                 type: 'column',
                                 gap: 'gap-6',
@@ -694,9 +694,9 @@ const TicketView: React.FC = () => {
     if (isLoading) {
         return (
             <div className="p-4">
-                <Page
-                    sections={[
-                        {
+            <Page
+                sections={[
+                    {
                             layout: {
                                 type: 'column',
                                 gap: 'gap-6',

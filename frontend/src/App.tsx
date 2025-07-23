@@ -19,10 +19,10 @@ import AddTicket from './pages_v2/AddTicket';
 import RoleManagement from './pages_v2/RoleManagement';
 import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import UserManagement from './pages/UserManagment';
-import AllTickets from './pages/AllTickets';import ConsumerView from './pages/ConsumerView';
+import AllTickets from './pages/AllTickets';import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
-import MeterDetails from './pages/MeterDetails';
-import TicketView from './pages/TicketView';
+import MeterDetails from './pages_v2/MeterDetails';
+import TicketView from './pages_v2/TicketView';
 
 const App: React.FC = () => {
     return (
