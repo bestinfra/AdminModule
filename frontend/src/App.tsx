@@ -16,10 +16,10 @@ import AddConsumer from './pages/AddConsumer';
 import ComponentsDocumentation from './pages/ComponentsDocumentation';
 import Connect from './pages_v2/ConnectDisconnect';
 import EmpDashboard from './pages/NewDashboard';
-import ConsumerView from './pages/ConsumerView';
+import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
-import MeterDetails from './pages/MeterDetails';
-import TicketView from './pages/TicketView';
+import MeterDetails from './pages_v2/MeterDetails';
+import TicketView from './pages_v2/TicketView';
 
 const App: React.FC = () => {
     return (
