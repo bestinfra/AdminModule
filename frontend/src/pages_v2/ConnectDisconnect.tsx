@@ -287,7 +287,7 @@ const ConnectDisconnect: React.FC = () => {
       label: 'View Consumer',
       icon: '/icons/eye.svg',
       onClick: (row: any) => {
-        navigate(`/consumers/${row.uid}`);
+                    navigate(`/consumer-view/${row.uid}`);
       },
     },
     {

@@ -1,38 +1,31 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Card from '@components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
 import Table from '@components/global/Table';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
-import PageHeader from '@components/global/PageHeader';
-
-
-// Mock data (should be shared or moved to a common location in real app)
-const consumersData = [
-  { uid: 'BI25GMRA001', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17, balance: 0, address: 'GHASL, GMR', mobile: '+91********49', email: '***************@gmail.com', occupancy: 'Occupied' },
-  { uid: 'BI25GMRA002', name: 'Neo Travels', meter: 'A9345417', reading: 10157.62, balance: 1250.50, address: 'Airport Road, GMR', mobile: '+91********78', email: 'neo.travels@gmail.com', occupancy: 'Occupied' },
-  { uid: 'BI25GMRA003', name: 'Dormitory', meter: 'A9345418', reading: 1108.34, balance: 450.75, address: 'Campus Area, GMR', mobile: '+91********23', email: 'dormitory.admin@gmail.com', occupancy: 'Occupied' },
-  { uid: 'BI25GMRA004', name: 'Mobikins', meter: 'A9211433', reading: 1271.76, balance: 890.25, address: 'Tech Park, GMR', mobile: '+91********56', email: 'mobikins.tech@gmail.com', occupancy: 'Vacant' },
-  { uid: 'BI25GMRA005', name: 'Airborne General Store', meter: 'A9211434', reading: 145.17, balance: 0, address: 'GHASL, GMR', mobile: '+91********49', email: '***************@gmail.com', occupancy: 'Occupied' },
-];
+import Page from '@components/global/PageC';
+import BACKEND_URL from '../config';
 
 const ConsumerView: React.FC = () => {
-  // Try to get uid from useParams first, then fallback to URL parsing
-  const params = useParams<{ uid: string }>();
+  // Try to get unitId from useParams first, then fallback to URL parsing
+  const params = useParams<{ unitId: string }>();
 
-  const uidFromParams = params?.uid;
+  const uidFromParams = params?.unitId;
   
   // Fallback: extract uid from URL path if useParams doesn't work
   const getUidFromUrl = () => {
     const pathSegments = window.location.pathname.split('/');
-    const uidIndex = pathSegments.findIndex(segment => segment === 'consumers') + 1;
+    const uidIndex = pathSegments.findIndex(segment => segment === 'consumer-view') + 1;
     return uidIndex > 0 && uidIndex < pathSegments.length ? pathSegments[uidIndex] : null;
   };
   
   const uid = uidFromParams || getUidFromUrl();
-  const consumer = consumersData.find(c => c.uid === uid);
+
+  // State for consumer data
+  const [consumer, setConsumer] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Menu items for PageHeader
   const menuItems = [
@@ -57,437 +50,647 @@ const ConsumerView: React.FC = () => {
     // Add your refresh logic here
   };
 
-  // Debug information
-  console.log('ConsumerView: uid from params:', uidFromParams);
-  console.log('ConsumerView: uid from URL fallback:', getUidFromUrl());
-  console.log('ConsumerView: final uid:', uid);
-  console.log('ConsumerView: found consumer:', consumer);
-  console.log('ConsumerView: available consumers:', consumersData.map(c => c.uid));
+  // Fetch consumer data
+  useEffect(() => {
+    if (!uid) {
+      setError('No consumer ID provided');
+      setLoading(false);
+      return;
+    }
 
-  if (!consumer) {
+    setLoading(true);
+    setError(null);
+
+    // Fetch consumer details
+    console.log('Fetching consumer data from:', `${BACKEND_URL}/consumers/${uid}`);
+    fetch(`${BACKEND_URL}/consumers/${uid}`)
+      .then(async (res) => {
+        console.log('Response status:', res.status);
+        if (!res.ok) {
+          const errorText = await res.text();
+          console.error('Response error:', errorText);
+          throw new Error(`Failed to fetch consumer data: ${res.status} ${res.statusText}`);
+        }
+        const result = await res.json();
+        console.log('Response data:', result);
+        if (!result.success) throw new Error(result.message || 'Failed to fetch consumer data');
+        
+        // Handle the backend response structure
+        // Backend returns: { success: true, consumer, meter, dailyConsumption, monthlyConsumption }
+        // Frontend expects: { success: true, data: { ... } }
+        const consumerData = {
+          ...result.consumer,
+          meter: result.meter,
+          dailyConsumption: result.dailyConsumption,
+          monthlyConsumption: result.monthlyConsumption,
+          // Map consumer fields to expected UI fields
+          name: result.consumer.name,
+          uid: result.consumer.consumerNumber,
+          consumerNumber: result.consumer.consumerNumber,
+          balance: result.consumer.creditScore || 0,
+          address: result.consumer.location?.address || 'N/A',
+          location: result.consumer.location?.name || 'N/A',
+          mobile: result.consumer.primaryPhone || 'N/A',
+          mobileNumber: result.consumer.primaryPhone || 'N/A',
+          email: result.consumer.email || 'N/A',
+          emailAddress: result.consumer.email || 'N/A',
+          occupancy: 'Occupied', // Default value
+          status: 'Active', // Default value
+          lastReading: result.meter?.currentReading || 'N/A',
+          voltage: { 
+            rPhase: result.meter?.voltageR || '0.0', 
+            yPhase: result.meter?.voltageY || '0.0', 
+            bPhase: result.meter?.voltageB || '0.0' 
+          },
+          current: { 
+            rPhase: result.meter?.currentR || '0.0', 
+            yPhase: result.meter?.currentY || '0.0', 
+            bPhase: result.meter?.currentB || '0.0' 
+          },
+          powerAnalysis: {
+            apparentPower: result.meter?.apparentPower || 0.042,
+            activePower: result.meter?.activePower || 0.041,
+            reactivePower: result.meter?.reactivePower || 0
+          },
+          powerMetrics: [
+            result.meter?.kVAh || 185,
+            result.meter?.kWh || 180,
+            result.meter?.kWhE || 0,
+            result.meter?.kVArhLag || 0,
+            result.meter?.kVArhLd || 30
+          ]
+        };
+        console.log('Raw API response:', result);
+        console.log('Processed consumer data:', consumerData);
+        setConsumer(consumerData);
+      })
+      .catch((err) => {
+        console.error('Error fetching consumer data:', err);
+        
+        // Set error state instead of using mock data
+        setError(err.message || 'Failed to fetch consumer data');
+      })
+      .finally(() => setLoading(false));
+  }, [uid]);
+
+  if (loading) {
     return (
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Consumer not found</h1>
-        <div className="bg-danger-light border border-danger rounded-lg p-4">
-          <h3 className="font-semibold text-danger mb-2">Debug Information:</h3>
-          <p className="text-sm text-danger mb-2">UID from URL: <strong>{uid}</strong></p>
-          <p className="text-sm text-danger mb-2">Available UIDs: <strong>{consumersData.map(c => c.uid).join(', ')}</strong></p>
-          <p className="text-sm text-danger">Please check the URL parameter and ensure it matches one of the available consumer UIDs.</p>
+        <div className="flex items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         </div>
       </div>
     );
   }
 
-  // Header component
-  const headerComponent = (
-    <PageHeader
-      title={consumer.name}
-      menuItems={menuItems}
-      onMenuItemClick={handleMenuItemClick}
-      showMenu={true}
-      showDropdown={true}
-      buttonsLabel="Recharge"
-      variant="primary"
-      onClick={() => alert('Recharge')}
-      onBackClick={handleBackClick}
-      backButtonText="Back to Consumers"
-      onRightImageClick={handleRefreshClick}
-    />
-  );
-
-
-
-  // Consumer Info Section
-  const consumerInfoSection: Section = {
-    id: 'consumer-info',
-    component: (
-      <div className="bg-white rounded-lg shadow p-6">
-        <div className="grid grid-cols-4 gap-4 mb-4">
-          <div>
-            <div className="text-xs text-neutral">Current Balance (₹)</div>
-            <div className="text-secondary text-lg font-bold">₹{consumer.balance.toFixed(2)}</div>
-          </div>
-          <div>
-            <div className="text-xs text-neutral">Unique Identification No</div>
-            <div className="text-md font-medium">{consumer.uid}</div>
-          </div>
-          <div>
-            <div className="text-xs text-neutral">Meter Serial Number</div>
-            <div className="flex items-center gap-2"><span className="h-2 w-2 bg-secondary rounded-full inline-block"></span>{consumer.meter}</div>
-          </div>
-          <div>
-            <div className="text-xs text-neutral">Occupancy Status</div>
-            <div className="text-md font-medium">{consumer.occupancy}</div>
-          </div>
-        </div>
-        <div className="grid grid-cols-4 gap-4">
-          <div>
-            <div className="font-semibold">Permanent Address</div>
-            <div className="text-sm text-neutral">{consumer.address}</div>
-          </div>
-          <div>
-            <div className="font-semibold">Billing Address</div>
-            <div className="text-sm text-neutral">{consumer.address}</div>
-          </div>
-          <div>
-            <div className="font-semibold">Mobile No</div>
-            <div className="text-sm text-neutral">{consumer.mobile}</div>
-          </div>
-          <div>
-            <div className="font-semibold">Email ID</div>
-            <div className="text-sm text-neutral">{consumer.email}</div>
-          </div>
+  if (error || !consumer) {
+    return (
+      <div className="p-6">
+        <h1 className="text-2xl font-bold mb-4">Consumer not found</h1>
+        <div className="bg-danger-light border border-danger rounded-lg p-4">
+          <h3 className="font-semibold text-danger mb-2">Error:</h3>
+          <p className="text-sm text-danger mb-2">{error || 'Consumer data not available'}</p>
+          <p className="text-sm text-danger mb-2">UID from URL: <strong>{uid}</strong></p>
+          <p className="text-sm text-danger">Please check the URL parameter and ensure it matches a valid consumer UID.</p>
         </div>
       </div>
-    )
-  };
-
-  // Instantaneous Data Section
-  const instantaneousDataSection: Section = {
-    id: 'instantaneous-data',
-    component: (
-      <div className="bg-primary-lightest rounded-[var(--radius-2xl)] p-6">
-        <div className="flex items-center justify-between bg-primary-lightest rounded-t-lg px-4 py-2">
-          <div className="font-semibold">Instantaneous Data</div>
-          <div className="text-sm text-neutral">Last Comm Date: 10/07/2025 07:00:00</div>
-        </div>
-        <div className="grid grid-cols-3 gap-4">
-          <Card
-            title="R-Phase Voltage"
-            value={"233.52"}
-            icon="/icons/consumption.svg"
-            subtitle1="Volts"
-          />
-          <Card
-            title="Y-Phase Voltage"
-            value={"0.0"}
-            icon="/icons/consumption.svg"
-            subtitle1="Volts"
-          />
-          <Card
-            title="B-Phase Voltage"
-            value={"0.0"}
-            icon="/icons/consumption.svg"
-            subtitle1="Volts"
-          />
-        </div>
-        <div className="grid grid-cols-3 gap-4 mt-4">
-          <Card
-            title="R-Phase Current"
-            value={"0.47"}
-            icon="/icons/consumption.svg"
-            subtitle1="Amps"
-          />
-          <Card
-            title="Y-Phase Current"
-            value={"0.0"}
-            icon="/icons/consumption.svg"
-            subtitle1="Amps"
-          />
-          <Card
-            title="B-Phase Current"
-            value={"0.0"}
-            icon="/icons/consumption.svg"
-            subtitle1="Amps"
-          />
-        </div>
-      </div>
-    )
-  };
-
-  // Power Analysis Section
-  const powerAnalysisSection: Section = {
-    id: 'power-analysis',
-    component: (
-      <div className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold">Power Analysis</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Power Distribution Card */}
-          <div className="rounded-2xl shadow p-0 flex flex-col h-full">
-            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
-              <div className="font-semibold text-base">Power Distribution</div>
-              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Distribution')}>
-                <img
-                  alt="Download chart"
-                  src="icons/download-icon.svg"
-                  className="w-4 h-4 [filter:var(--icon-color)]"
-                />
-              </span>
-            </div>
-            <div className="flex flex-col md:flex-row items-center justify-between px-6 pb-6 pt-2 gap-4">
-              <div className="flex flex-col items-center w-full md:w-2/3">
-                {/* Legend above chart */}
-                <div className="flex items-center gap-6 mb-2">
-                  <span className="flex items-center gap-1 text-secondary font-medium text-sm"><span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>Apparent Power</span>
-                  <span className="flex items-center gap-1 text-accent font-medium text-sm"><span className="w-3 h-3 rounded-full bg-accent inline-block"></span>Active Power</span>
-                  <span className="flex items-center gap-1 text-danger font-medium text-sm"><span className="w-3 h-3 rounded-full bg-danger inline-block"></span>Reactive Power</span>
-                </div>
-                <PieChart
-                  data={[
-                    { value: 0.109, name: 'Apparent Power' },
-                    { value: 0.109, name: 'Active Power' },
-                    { value: 0, name: 'Reactive Power' },
-                  ]}
-                  colors={["#22c55e", "#3b82f6", "#ef4444"]}
-                  height={220}
-                  showNoDataMessage={false}
-                  title={''}
-                />
-              </div>
-              {/* Value/percentage box to the right of chart */}
-              <div className="flex flex-col items-center w-full md:w-1/3 mt-4 md:mt-0">
-                <div className="bg-white rounded-xl p-4 shadow flex flex-col items-start w-full max-w-xs">
-                  <div className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2 text-secondary"><span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>0.109kVA <span className="text-neutral">50.0%</span></div>
-                    <div className="flex items-center gap-2 text-accent"><span className="w-3 h-3 rounded-full bg-accent inline-block"></span>0.109kVA <span className="text-neutral">50.0%</span></div>
-                    <div className="flex items-center gap-2 text-danger"><span className="w-3 h-3 rounded-full bg-danger inline-block"></span>0kVA <span className="text-neutral">0.0%</span></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* Power Metrics Card */}
-          <div className="rounded-2xl shadow p-0 flex flex-col h-full">
-            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-3xl">
-              <div className="font-semibold text-base">Power Metrics</div>
-              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Metrics')}>
-                <img
-                  alt="Download chart"
-                  src="icons/download-icon.svg"
-                  className="w-4 h-4 [filter:var(--icon-color)]"
-                />
-              </span>
-            </div>
-            <div className="w-full h-64 px-6 pb-6 pt-2">
-              <BarChart
-                xAxisData={["kVAh- (i)", "kWh(i)", "kWh(E)", "kVArh-lag(i)", "kVArh-Ld(i)"]}
-                seriesData={[{ name: 'Power', data: [150, 145, 0, 0, 30] }]}
-                seriesColors={["#1e3a8a"]}
-                height={220}
-                showLegendInteractions={false}
-                showXAxisLabel={false}
-                title={''}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  };
-
-  // Reports Section
-  const reportsSection: Section = {
-    id: 'reports',
-    component: (
-      <div className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold">Reports</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Daily Consumption Card */}
-          <div className="rounded-2xl shadow p-0 flex flex-col h-full">
-            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
-              <div className="font-semibold text-base">Daily Consumption <span className="text-neutral font-normal text-sm">(9 May, 2025 - 10 Jul, 2025)</span></div>
-              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Daily Consumption')}>
-                <img
-                  alt="Download chart"
-                  src="icons/download-icon.svg"
-                  className="w-4 h-4 [filter:var(--icon-color)]"
-                />
-              </span>
-            </div>
-            <div className="w-full h-64 px-6 pb-6 pt-2">
-              <BarChart
-                xAxisData={Array.from({length: 63}, (_, i) => {
-                  const start = new Date(2025, 4, 9); // 9 May 2025
-                  const d = new Date(start.getTime() + i * 24 * 60 * 60 * 1000);
-                  return `${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}`;
-                })}
-                seriesData={[{ name: 'Consumption', data: Array(63).fill(0).map(() => Number((Math.random() * 2 + 1.1).toFixed(2))) }]}
-                seriesColors={["#1e3a8a"]}
-                height={220}
-                showLegendInteractions={false}
-                showXAxisLabel={false}
-                title={''}
-              />
-            </div>
-          </div>
-          {/* Monthly Consumption Card */}
-          <div className="rounded-2xl shadow p-0 flex flex-col h-full">
-            <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
-              <div className="font-semibold text-base">Monthly Consumption <span className="text-neutral font-normal text-sm">(Jul 2024 - Jul 2025)</span></div>
-              <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Monthly Consumption')}>
-                <img
-                  alt="Download chart"
-                  src="icons/download-icon.svg"
-                  className="w-4 h-4 [filter:var(--icon-color)]"
-                />
-              </span>
-            </div>
-            <div className="w-full h-64 px-6 pb-6 pt-2">
-              <BarChart
-                xAxisData={["Jul 2024", "Aug 2024", "Sep 2024", "Oct 2024", "Nov 2024", "Dec 2024", "Jan 2025", "Feb 2025", "Mar 2025", "Apr 2025", "May 2025", "Jun 2025", "Jul 2025"]}
-                seriesData={[{ name: 'Consumption', data: [0,0,0,0,0,0,0,0,0,0,60,65,20] }]}
-                seriesColors={["#1e3a8a"]}
-                height={220}
-                showLegendInteractions={false}
-                showXAxisLabel={false}
-                title={''}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  };
-
-  // History Section
-  const historySection: Section = {
-    id: 'history',
-    component: (
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <div className="font-semibold text-base">Unit History</div>
-          <div className="bg-white rounded-2xl shadow p-0">
-            <Table
-              data={[{ uid: 'BI25GMRA001', meter: 'A9211434', company: 'GHASL', unit: 'Airborne General Store', created: '05/05/2025' }]}
-              columns={[
-                { key: 'uid', label: 'UID' },
-                { key: 'meter', label: 'Meter Serial No' },
-                { key: 'company', label: 'Company Name' },
-                { key: 'unit', label: 'Unit Name' },
-                { key: 'created', label: 'Created On' },
-              ]}
-              showActions={false}
-              pagination
-              searchable={false}
-              emptyMessage="No unit history found"
-            />
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <div className="font-semibold text-base">Transaction History</div>
-          <div className="bg-white rounded-2xl shadow p-0">
-            <Table
-              data={[
-                { id: 'QoZdA2e76ouhhz', credit: '₹1', balance: '₹9426.24', date: '03/07/2025 16:42:16' },
-                { id: 'QeDoCcKBdmwoSJ', credit: '₹1', balance: '₹9425.24', date: '07/06/2025 12:51:25' },
-                { id: 'QZW4ErZPxJdOUD', credit: '₹1', balance: '₹9424.24', date: '26/05/2025 15:28:06' },
-                { id: 'QYN7jRAKNqDYL', credit: '₹1', balance: '₹9496.53', date: '23/05/2025 18:04:07' },
-                { id: 'QYHxztpQCUuEa1', credit: '₹1', balance: '₹9495.53', date: '23/05/2025 13:01:27' },
-                { id: 'QYHWSWlvVUeYiE', credit: '₹1', balance: '₹9494.53', date: '23/05/2025 12:35:22' },
-                { id: '', credit: '₹10,000', balance: '₹9598.39', date: '19/05/2025 11:06:34' },
-              ]}
-              columns={[
-                { key: 'id', label: 'Transaction ID' },
-                { key: 'credit', label: 'Credit Amount' },
-                { key: 'balance', label: 'Current Balance Amount' },
-                { key: 'date', label: 'Payment Date' },
-              ]}
-              showActions={false}
-              pagination
-              searchable={false}
-              emptyMessage="No transaction history found"
-            />
-          </div>
-        </div>
-      </div>
-    )
-  };
-
-  // Events Section
-  const eventsSection: Section = {
-    id: 'events',
-    component: (
-      <div className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold">Events</h2>
-        <div className="bg-white rounded-2xl">
-          <Table
-            data={Array.from({ length: 46 }, (_, i) => ({
-              sNo: i + 1,
-              description: 'Meter Power Fail',
-              status: i % 2 === 0 ? 'Start' : 'End',
-              date: [
-                '10/07/2025 00:49:00', '10/07/2025 00:44:00', '05/07/2025 13:08:00', '05/07/2025 13:01:00',
-                '05/07/2025 13:00:00', '05/07/2025 12:57:00', '04/07/2025 14:23:00', '04/07/2025 14:08:00',
-                '25/06/2025 07:29:00', '25/06/2025 07:16:00',
-              ][i % 10] || '01/07/2025 12:00:00',
-            }))}
-            columns={[
-              { key: 'sNo', label: 'S.No' },
-              { key: 'description', label: 'Event Description' },
-              { key: 'status', label: 'Status' },
-              { key: 'date', label: 'Event Date' },
-            ]}
-            showActions={false}
-            pagination
-            searchable={false}
-            emptyMessage="No events found"
-          />
-        </div>
-      </div>
-    )
-  };
-
-  // Connection Activity History Section
-  const connectionActivitySection: Section = {
-    id: 'connection-activity-history',
-    component: (
-      <div className="flex flex-col gap-4">
-        <h2 className="text-lg font-semibold">Connection Activity History</h2>
-        <div className="bg-white rounded-2xl shadow ">
-          <Table
-            data={[
-              { sNo: 1, action: 'Connect', performedBy: 'Admin', dateTime: '10/07/2025 09:00:00', remarks: 'Routine connection' },
-              { sNo: 2, action: 'Disconnect', performedBy: 'Operator', dateTime: '12/07/2025 14:30:00', remarks: 'Non-payment' },
-              { sNo: 3, action: 'Connect', performedBy: 'Admin', dateTime: '15/07/2025 10:15:00', remarks: 'Payment received' },
-            ]}
-            columns={[
-              { key: 'sNo', label: 'S.No' },
-              { key: 'action', label: 'Action' },
-              { key: 'performedBy', label: 'Performed By' },
-              { key: 'dateTime', label: 'Date & Time' },
-              { key: 'remarks', label: 'Remarks' },
-            ]}
-            showActions={false}
-            pagination
-            searchable={false}
-            emptyMessage="No connection activity found"
-          />
-        </div>
-      </div>
-    )
-  };
-
-  // Debug Section
-  const debugSection: Section = {
-    id: 'debug',
-    component: (
-      <div className="bg-neutral-light rounded-lg p-4 mb-4">
-        <h3 className="font-semibold text-neutral-darker mb-2">Debug Information:</h3>
-        <p className="text-sm text-neutral mb-1">UID from URL: <strong>{uid}</strong></p>
-        <p className="text-sm text-neutral mb-1">Consumer found: <strong>{consumer ? 'Yes' : 'No'}</strong></p>
-        <p className="text-sm text-neutral">Total consumers: <strong>{consumersData.length}</strong></p>
-      </div>
-    )
-  };
+    );
+  }
 
   return (
     <Page
-      layout="single-column"
       sections={[
-        debugSection,
-        consumerInfoSection, 
-        instantaneousDataSection, 
-        powerAnalysisSection, 
-        reportsSection, 
-        historySection, 
-        eventsSection,
-        connectionActivitySection
+        // Header Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'PageHeader',
+              props: {
+                title: consumer.name || 'Consumer Details',
+                menuItems: menuItems,
+                onMenuItemClick: handleMenuItemClick,
+                showMenu: true,
+                showDropdown: true,
+                buttonsLabel: "Recharge",
+                variant: "primary",
+                onClick: () => alert('Recharge'),
+                onBackClick: handleBackClick,
+                backButtonText: "Back to Consumers",
+                onRightImageClick: handleRefreshClick,
+              },
+            },
+          ],
+        },
+        // Consumer Info Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'Holder',
+              props: {
+                title: 'Basic Information',
+                DateRange: '',
+                availableTimeRanges: [],
+                selectedTimeRange: '',
+                handleTimeRangeChange: () => {},
+                handleDownload: () => {},
+                loading: false,
+                children: (
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <div className="grid grid-cols-4 gap-4 mb-4">
+                      <div>
+                        <div className="text-xs text-neutral">Current Balance (₹)</div>
+                        <div className="text-secondary text-lg font-bold">₹{consumer.balance?.toFixed(2) || '0.00'}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-neutral">Unique Identification No</div>
+                        <div className="text-md font-medium">{consumer.uid || consumer.consumerNumber}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-neutral">Meter Serial Number</div>
+                        <div className="flex items-center gap-2"><span className="h-2 w-2 bg-secondary rounded-full inline-block"></span>{consumer.meter || consumer.meterNumber}</div>
+                      </div>
+                      <div>
+                        <div className="text-xs text-neutral">Occupancy Status</div>
+                        <div className="text-md font-medium">{consumer.occupancy || consumer.status || 'Unknown'}</div>
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 gap-4">
+                      <div>
+                        <div className="font-semibold">Permanent Address</div>
+                        <div className="text-sm text-neutral">{consumer.address || consumer.location || 'N/A'}</div>
+                      </div>
+                      <div>
+                        <div className="font-semibold">Billing Address</div>
+                        <div className="text-sm text-neutral">{consumer.billingAddress || consumer.address || 'N/A'}</div>
+                      </div>
+                      <div>
+                        <div className="font-semibold">Mobile No</div>
+                        <div className="text-sm text-neutral">{consumer.mobile || consumer.mobileNumber || 'N/A'}</div>
+                      </div>
+                      <div>
+                        <div className="font-semibold">Email ID</div>
+                        <div className="text-sm text-neutral">{consumer.email || consumer.emailAddress || 'N/A'}</div>
+                      </div>
+                    </div>
+                  </div>
+                ),
+              },
+            },
+          ],
+        },
+        // Instantaneous Data Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'Holder',
+              props: {
+                title: 'Instantaneous Data',
+                DateRange: consumer.lastReading ? `Last Comm Date: ${consumer.lastReading}` : '',
+                availableTimeRanges: [],
+                selectedTimeRange: '',
+                handleTimeRangeChange: () => {},
+                handleDownload: () => {},
+                loading: false,
+                children: (
+                  <div className="bg-primary-lightest rounded-[var(--radius-2xl)] p-6">
+                    <div className="grid grid-cols-3 gap-4">
+                      <Card
+                        title="R-Phase Voltage"
+                        value={consumer.voltage?.rPhase || "0.0"}
+                        icon="/icons/consumption.svg"
+                        subtitle1="Volts"
+                      />
+                      <Card
+                        title="Y-Phase Voltage"
+                        value={consumer.voltage?.yPhase || "0.0"}
+                        icon="/icons/consumption.svg"
+                        subtitle1="Volts"
+                      />
+                      <Card
+                        title="B-Phase Voltage"
+                        value={consumer.voltage?.bPhase || "0.0"}
+                        icon="/icons/consumption.svg"
+                        subtitle1="Volts"
+                      />
+                    </div>
+                    <div className="grid grid-cols-3 gap-4 mt-4">
+                      <Card
+                        title="R-Phase Current"
+                        value={consumer.current?.rPhase || "0.0"}
+                        icon="/icons/consumption.svg"
+                        subtitle1="Amps"
+                      />
+                      <Card
+                        title="Y-Phase Current"
+                        value={consumer.current?.yPhase || "0.0"}
+                        icon="/icons/consumption.svg"
+                        subtitle1="Amps"
+                      />
+                      <Card
+                        title="B-Phase Current"
+                        value={consumer.current?.bPhase || "0.0"}
+                        icon="/icons/consumption.svg"
+                        subtitle1="Amps"
+                      />
+                    </div>
+                  </div>
+                ),
+              },
+            },
+          ],
+        },
+        // Power Analysis Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'Heading',
+              props: {
+                text: 'Power Analysis',
+                level: 2,
+                size: 'lg',
+                variant: 'primary',
+                weight: 'bold',
+                align: 'left',
+              },
+            },
+            {
+              name: 'Holder',
+              props: {
+                title: 'Power Analysis',
+                DateRange: '',
+                availableTimeRanges: [],
+                selectedTimeRange: '',
+                handleTimeRangeChange: () => {},
+                handleDownload: () => {},
+                loading: false,
+                children: (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Power Distribution Card */}
+                    <div className="rounded-2xl shadow p-0 flex flex-col h-full">
+                      <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
+                        <div className="font-semibold text-base">Power Distribution</div>
+                        <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Distribution')}>
+                          <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                          />
+                        </span>
+                      </div>
+                      <div className="flex flex-col md:flex-row items-center justify-between px-6 pb-6 pt-2 gap-4">
+                        <div className="flex flex-col items-center w-full md:w-2/3">
+                          {/* Legend above chart */}
+                          <div className="flex items-center gap-6 mb-2">
+                            <span className="flex items-center gap-1 text-secondary font-medium text-sm"><span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>Apparent Power</span>
+                            <span className="flex items-center gap-1 text-accent font-medium text-sm"><span className="w-3 h-3 rounded-full bg-accent inline-block"></span>Active Power</span>
+                            <span className="flex items-center gap-1 text-danger font-medium text-sm"><span className="w-3 h-3 rounded-full bg-danger inline-block"></span>Reactive Power</span>
+                          </div>
+                          {consumer?.powerAnalysis && (
+                            <PieChart
+                              data={[
+                                { value: consumer.powerAnalysis.apparentPower, name: 'Apparent Power' },
+                                { value: consumer.powerAnalysis.activePower, name: 'Active Power' },
+                                { value: consumer.powerAnalysis.reactivePower, name: 'Reactive Power' },
+                              ]}
+                              colors={["#22c55e", "#3b82f6", "#ef4444"]}
+                              height={220}
+                              showNoDataMessage={false}
+                              title={''}
+                            />
+                          )}
+                        </div>
+                        {/* Value/percentage box to the right of chart */}
+                        <div className="flex flex-col items-center w-full md:w-1/3 mt-4 md:mt-0">
+                          <div className="bg-white rounded-xl p-4 shadow flex flex-col items-start w-full max-w-xs">
+                            <div className="flex flex-col gap-2">
+                              <div className="flex items-center gap-2 text-secondary"><span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>{consumer.powerAnalysis?.apparentPower || 0.109}kVA <span className="text-neutral">50.0%</span></div>
+                              <div className="flex items-center gap-2 text-accent"><span className="w-3 h-3 rounded-full bg-accent inline-block"></span>{consumer.powerAnalysis?.activePower || 0.109}kVA <span className="text-neutral">50.0%</span></div>
+                              <div className="flex items-center gap-2 text-danger"><span className="w-3 h-3 rounded-full bg-danger inline-block"></span>{consumer.powerAnalysis?.reactivePower || 0}kVA <span className="text-neutral">0.0%</span></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {/* Power Metrics Card */}
+                    <div className="rounded-2xl shadow p-0 flex flex-col h-full">
+                      <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-3xl">
+                        <div className="font-semibold text-base">Power Metrics</div>
+                        <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Power Metrics')}>
+                          <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                          />
+                        </span>
+                      </div>
+                      <div className="w-full h-64 px-6 pb-6 pt-2">
+                        {consumer?.powerMetrics && (
+                          <BarChart
+                            xAxisData={["kVAh- (i)", "kWh(i)", "kWh(E)", "kVArh-lag(i)", "kVArh-Ld(i)"]}
+                            seriesData={[{ name: 'Power', data: consumer.powerMetrics }]}
+                            seriesColors={["#1e3a8a"]}
+                            height={220}
+                            showLegendInteractions={false}
+                            showXAxisLabel={false}
+                            title={''}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ),
+              },
+            },
+          ],
+        },
+        // Reports Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'Heading',
+              props: {
+                text: 'Reports',
+                level: 2,
+                size: 'lg',
+                variant: 'primary',
+                weight: 'bold',
+                align: 'left',
+              },
+            },
+            {
+              name: 'Holder',
+              props: {
+                title: 'Reports',
+                DateRange: '',
+                availableTimeRanges: [],
+                selectedTimeRange: '',
+                handleTimeRangeChange: () => {},
+                handleDownload: () => {},
+                loading: false,
+                children: (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Daily Consumption Card */}
+                    <div className="rounded-2xl shadow p-0 flex flex-col h-full">
+                      <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
+                        <div className="font-semibold text-base">Daily Consumption <span className="text-neutral font-normal text-sm">(9 May, 2025 - 10 Jul, 2025)</span></div>
+                        <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Daily Consumption')}>
+                          <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                          />
+                        </span>
+                      </div>
+                      <div className="w-full h-64 px-6 pb-6 pt-2">
+                        {consumer?.dailyConsumption && (
+                          <BarChart
+                            xAxisData={consumer.dailyConsumption.dates}
+                            seriesData={[{ name: 'Consumption', data: consumer.dailyConsumption.values }]}
+                            seriesColors={["#1e3a8a"]}
+                            height={220}
+                            showLegendInteractions={false}
+                            showXAxisLabel={false}
+                            title={''}
+                          />
+                        )}
+                      </div>
+                    </div>
+                    {/* Monthly Consumption Card */}
+                    <div className="rounded-2xl shadow p-0 flex flex-col h-full">
+                      <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
+                        <div className="font-semibold text-base">Monthly Consumption <span className="text-neutral font-normal text-sm">(Jul 2024 - Jul 2025)</span></div>
+                        <span className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border" onClick={() => alert('Download Monthly Consumption')}>
+                          <img
+                            alt="Download chart"
+                            src="icons/download-icon.svg"
+                            className="w-4 h-4 [filter:var(--icon-color)]"
+                          />
+                        </span>
+                      </div>
+                      <div className="w-full h-64 px-6 pb-6 pt-2">
+                        {consumer?.monthlyConsumption && (
+                          <BarChart
+                            xAxisData={consumer.monthlyConsumption.months}
+                            seriesData={[{ name: 'Consumption', data: consumer.monthlyConsumption.values }]}
+                            seriesColors={["#1e3a8a"]}
+                            height={220}
+                            showLegendInteractions={false}
+                            showXAxisLabel={false}
+                            title={''}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ),
+              },
+            },
+          ],
+        },
+        // History Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-6',
+          },
+          components: [
+            {
+              name: 'Holder',
+              props: {
+                title: 'History',
+                DateRange: '',
+                availableTimeRanges: [],
+                selectedTimeRange: '',
+                handleTimeRangeChange: () => {},
+                handleDownload: () => {},
+                loading: false,
+                children: (
+                  <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                      <div className="font-semibold text-base">Unit History</div>
+                      <div className="bg-white rounded-2xl shadow p-0">
+                        <Table
+                          data={consumer.unitHistory || [{ uid: consumer.uid || consumer.consumerNumber, meter: consumer.meter || consumer.meterNumber, company: 'GHASL', unit: consumer.name, created: consumer.createdAt || '05/05/2025' }]}
+                          columns={[
+                            { key: 'uid', label: 'UID' },
+                            { key: 'meter', label: 'Meter Serial No' },
+                            { key: 'company', label: 'Company Name' },
+                            { key: 'unit', label: 'Unit Name' },
+                            { key: 'created', label: 'Created On' },
+                          ]}
+                          showActions={false}
+                          pagination
+                          searchable={false}
+                          emptyMessage="No unit history found"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <div className="font-semibold text-base">Transaction History</div>
+                      <div className="bg-white rounded-2xl shadow p-0">
+                        <Table
+                          data={consumer.transactionHistory || [
+                            { id: 'QoZdA2e76ouhhz', credit: '₹1', balance: '₹9426.24', date: '03/07/2025 16:42:16' },
+                            { id: 'QeDoCcKBdmwoSJ', credit: '₹1', balance: '₹9425.24', date: '07/06/2025 12:51:25' },
+                            { id: 'QZW4ErZPxJdOUD', credit: '₹1', balance: '₹9424.24', date: '26/05/2025 15:28:06' },
+                            { id: 'QYN7jRAKNqDYL', credit: '₹1', balance: '₹9496.53', date: '23/05/2025 18:04:07' },
+                            { id: 'QYHxztpQCUuEa1', credit: '₹1', balance: '₹9495.53', date: '23/05/2025 13:01:27' },
+                            { id: 'QYHWSWlvVUeYiE', credit: '₹1', balance: '₹9494.53', date: '23/05/2025 12:35:22' },
+                            { id: '', credit: '₹10,000', balance: '₹9598.39', date: '19/05/2025 11:06:34' },
+                          ]}
+                          columns={[
+                            { key: 'id', label: 'Transaction ID' },
+                            { key: 'credit', label: 'Credit Amount' },
+                            { key: 'balance', label: 'Current Balance Amount' },
+                            { key: 'date', label: 'Payment Date' },
+                          ]}
+                          showActions={false}
+                          pagination
+                          searchable={false}
+                          emptyMessage="No transaction history found"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ),
+              },
+            },
+          ],
+        },
+        // Events Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'Heading',
+              props: {
+                text: 'Events',
+                level: 2,
+                size: 'lg',
+                variant: 'primary',
+                weight: 'bold',
+                align: 'left',
+              },
+            },
+            {
+              name: 'Holder',
+              props: {
+                title: 'Events',
+                DateRange: '',
+                availableTimeRanges: [],
+                selectedTimeRange: '',
+                handleTimeRangeChange: () => {},
+                handleDownload: () => {},
+                loading: false,
+                children: (
+                  <div className="bg-white rounded-2xl">
+                    <Table
+                      data={consumer.events || Array.from({ length: 46 }, (_, i) => ({
+                        sNo: i + 1,
+                        description: 'Meter Power Fail',
+                        status: i % 2 === 0 ? 'Start' : 'End',
+                        date: [
+                          '10/07/2025 00:49:00', '10/07/2025 00:44:00', '05/07/2025 13:08:00', '05/07/2025 13:01:00',
+                          '05/07/2025 13:00:00', '05/07/2025 12:57:00', '04/07/2025 14:23:00', '04/07/2025 14:08:00',
+                          '25/06/2025 07:29:00', '25/06/2025 07:16:00',
+                        ][i % 10] || '01/07/2025 12:00:00',
+                      }))}
+                      columns={[
+                        { key: 'sNo', label: 'S.No' },
+                        { key: 'description', label: 'Event Description' },
+                        { key: 'status', label: 'Status' },
+                        { key: 'date', label: 'Event Date' },
+                      ]}
+                      showActions={false}
+                      pagination
+                      searchable={false}
+                      emptyMessage="No events found"
+                    />
+                  </div>
+                ),
+              },
+            },
+          ],
+        },
+        // Connection Activity History Section
+        {
+          layout: {
+            type: 'column',
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'Heading',
+              props: {
+                text: 'Connection Activity History',
+                level: 2,
+                size: 'lg',
+                variant: 'primary',
+                weight: 'bold',
+                align: 'left',
+              },
+            },
+            {
+              name: 'Holder',
+              props: {
+                title: 'Connection Activity History',
+                DateRange: '',
+                availableTimeRanges: [],
+                selectedTimeRange: '',
+                handleTimeRangeChange: () => {},
+                handleDownload: () => {},
+                loading: false,
+                children: (
+                  <div className="bg-white rounded-2xl shadow">
+                    <Table
+                      data={consumer.connectionActivity || [
+                        { sNo: 1, action: 'Connect', performedBy: 'Admin', dateTime: '10/07/2025 09:00:00', remarks: 'Routine connection' },
+                        { sNo: 2, action: 'Disconnect', performedBy: 'Operator', dateTime: '12/07/2025 14:30:00', remarks: 'Non-payment' },
+                        { sNo: 3, action: 'Connect', performedBy: 'Admin', dateTime: '15/07/2025 10:15:00', remarks: 'Payment received' },
+                      ]}
+                      columns={[
+                        { key: 'sNo', label: 'S.No' },
+                        { key: 'action', label: 'Action' },
+                        { key: 'performedBy', label: 'Performed By' },
+                        { key: 'dateTime', label: 'Date & Time' },
+                        { key: 'remarks', label: 'Remarks' },
+                      ]}
+                      showActions={false}
+                      pagination
+                      searchable={false}
+                      emptyMessage="No connection activity found"
+                    />
+                  </div>
+                ),
+              },
+            },
+          ],
+        },
       ]}
-      header={headerComponent}
-      sidebarPosition="right"
-      className=" flex flex-col gap-8"
-      sectionClassName=""
-
+      sectionWrapperClassName="mb-8"
     />
   );
 };
