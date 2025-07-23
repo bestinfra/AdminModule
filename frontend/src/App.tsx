@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import DataLogger from './pages_v2/DataLogger';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
+import AssetManagment from './pages_v2/AssetManagment';
 
 const App: React.FC = () => {
     return (
@@ -30,6 +31,7 @@ const App: React.FC = () => {
                             />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/users" element={<Users />} />
+                            <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/" element={<PageDemo />} />
                         </Route>
                     </Routes>
