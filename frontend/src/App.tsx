@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import DataLogger from './pages_v2/DataLogger';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
+import AssetManagment from './pages_v2/AssetManagment';
 import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';
@@ -44,6 +45,7 @@ const App: React.FC = () => {
                             />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/users" element={<Users />} />
+                            <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
                             <Route path="/" element={<Dashboard />} />
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />

@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const BILLING_VIEW_OPTIONS = ['Daily', 'Monthly'];
 
 const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)'
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
 };
 
 
@@ -59,7 +59,8 @@ const Dashboard: React.FC = () => {
                                                 title: 'Overdue Amount',
                                                 value: '2590925.47',
                                                 icon: '/icons/bills.svg',
-                                                subtitle1: '1395 Overdue Consumers',
+                                                subtitle1:
+                                                    '1395 Overdue Consumers',
                                                 subtitle2: '',
                                                 iconStyle: ICON_FILTER_STYLE
                                         },
@@ -68,7 +69,8 @@ const Dashboard: React.FC = () => {
                                                 title: 'Total Outstanding (Rs.)',
                                                 value: '2590925.47',
                                                 icon: '/icons/bills.svg',
-                                                subtitle1: '614.98% of Total Billed Amount',
+                                                subtitle1:
+                                                    '614.98% of Total Billed Amount',
                                                 subtitle2: '',
                                                 iconStyle: ICON_FILTER_STYLE
                                         },
@@ -77,7 +79,8 @@ const Dashboard: React.FC = () => {
                                                 title: 'High-Usage Consumers',
                                                 value: '139',
                                                 icon: '/icons/graph-bar.svg',
-                                                subtitle1: '140.09 kWh Average Consumption',
+                                                subtitle1:
+                                                    '140.09 kWh Average Consumption',
                                                 subtitle2: '',
                                                 iconStyle: ICON_FILTER_STYLE,
                                                 onValueClick: handleHighUsageConsumersClick
@@ -310,9 +313,18 @@ const Dashboard: React.FC = () => {
                                         {
                                             name: 'TimeRangeSelector',
                                             props: {
-                                                availableTimeRanges: BILLING_VIEW_OPTIONS,
+                                                availableTimeRanges: [
+                                                    'Daily',
+                                                    'Monthly',
+                                                    'Yearly',
+                                                ],
                                                 selectedTimeRange: billingView,
-                                                handleTimeRangeChange: (v: string) => setBillingView(v as 'Daily' | 'Monthly'),
+                                                handleTimeRangeChange: (
+                                                    v: string
+                                                ) =>
+                                                    setBillingView(
+                                                        v as 'Daily' | 'Monthly'
+                                                    ),
                                             },
                                             span: { col: 1, row: 1 },
                                             align: 'end',
@@ -344,14 +356,16 @@ const Dashboard: React.FC = () => {
                                 {
                                     layout: 'column',
                                     gap: 'gap-0',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
+                                    className:
+                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
                                     columns: [
                                         {
                                             name: 'Holder',
                                             props: {
                                                 title: 'Meter Communication Status',
-                                                className: 'border-none rounded-t-3xl'
-                                            }
+                                                className:
+                                                    'border-none rounded-t-3xl',
+                                            },
                                         },
                                         {
                                             name: 'PieChart',
@@ -360,21 +374,39 @@ const Dashboard: React.FC = () => {
                                                 height: 250,
                                                 showNoDataMessage: false,
                                                 showHeader: false,
-                                                className: "p-6",
-                                                title: "",
-                                                onClick: (segmentName?: string) => {
-                                                    if (segmentName === 'Communicating') navigate('/connect-disconnect/communicating');
-                                                    else if (segmentName === 'Non-Communicating') navigate('/connect-disconnect/non-communicating');
-                                                    else navigate('/connect-disconnect');
-                                                }
-                                            }
-                                        }
-                                    ]
+                                                className: 'p-6',
+                                                title: '',
+                                                onClick: (
+                                                    segmentName?: string
+                                                ) => {
+                                                    if (
+                                                        segmentName ===
+                                                        'Communicating'
+                                                    )
+                                                        navigate(
+                                                            '/connect-disconnect/communicating'
+                                                        );
+                                                    else if (
+                                                        segmentName ===
+                                                        'Non-Communicating'
+                                                    )
+                                                        navigate(
+                                                            '/connect-disconnect/non-communicating'
+                                                        );
+                                                    else
+                                                        navigate(
+                                                            '/connect-disconnect'
+                                                        );
+                                                },
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     layout: 'column',
                                     gap: 'gap-0',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
+                                    className:
+                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
                                     columns: [
                                         {
                                             name: 'BarChart',
@@ -392,13 +424,13 @@ const Dashboard: React.FC = () => {
                                                 showTableView: true,
                                                 ariaLabel: 'Monthly billing statistics chart',
                                                 yAxisMax: 300,
-                                                yAxisStep: 50
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                                                yAxisStep: 50,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     },
                     {
                         layout: {
@@ -409,14 +441,16 @@ const Dashboard: React.FC = () => {
                                 {
                                     layout: 'column',
                                     gap: 'gap-0',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
+                                    className:
+                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
                                         {
                                             name: 'Holder',
                                             props: {
                                                 title: 'Overdue Consumers',
-                                                className: 'border-none rounded-t-3xl'
-                                            }
+                                                className:
+                                                    'border-none rounded-t-3xl',
+                                            },
                                         },
                                         {
                                             name: 'Table',
@@ -428,7 +462,8 @@ const Dashboard: React.FC = () => {
                                                 pagination: true,
                                                 title: 'Overdue Consumers',
                                                 showActions: true,
-                                                className: "p-4 [&_.relative]:mt-0",
+                                                className:
+                                                    'p-4 [&_.relative]:mt-0',
                                                 totalItems: 1395,
                                                 itemsPerPage: 5,
                                                 currentPage: 1,
@@ -437,34 +472,48 @@ const Dashboard: React.FC = () => {
                                                     {
                                                         label: 'Send Notice',
                                                         icon: '/icons/paper-plane.svg',
-                                                        onClick: (row: any) => console.log('Send notice to', row.uid)
+                                                        onClick: (row: any) =>
+                                                            console.log(
+                                                                'Send notice to',
+                                                                row.uid
+                                                            ),
                                                     },
                                                     {
                                                         label: 'View Details',
                                                         icon: '/icons/document.svg',
-                                                        onClick: (row: any) => console.log('View details for', row.uid)
+                                                        onClick: (row: any) =>
+                                                            console.log(
+                                                                'View details for',
+                                                                row.uid
+                                                            ),
                                                     },
                                                     {
                                                         label: 'Disconnect',
                                                         icon: '/icons/close.svg',
-                                                        onClick: (row: any) => console.log('Disconnect', row.uid)
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
+                                                        onClick: (row: any) =>
+                                                            console.log(
+                                                                'Disconnect',
+                                                                row.uid
+                                                            ),
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     layout: 'column',
                                     gap: 'gap-0',
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
+                                    className:
+                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
                                     columns: [
                                         {
                                             name: 'Holder',
                                             props: {
                                                 title: 'Disconnected Consumers',
-                                                className: 'border-none rounded-t-3xl'
-                                            }
+                                                className:
+                                                    'border-none rounded-t-3xl',
+                                            },
                                         },
                                         {
                                             name: 'Table',
@@ -476,7 +525,8 @@ const Dashboard: React.FC = () => {
                                                 pagination: true,
                                                 title: 'Disconnected Consumers',
                                                 showActions: true,
-                                                className: "p-4 [&_.relative]:mt-0",
+                                                className:
+                                                    'p-4 [&_.relative]:mt-0',
                                                 totalItems: 11,
                                                 itemsPerPage: 5,
                                                 currentPage: 1,
@@ -485,26 +535,38 @@ const Dashboard: React.FC = () => {
                                                     {
                                                         label: 'Send Notice',
                                                         icon: '/icons/paper-plane.svg',
-                                                        onClick: (row: any) => console.log('Send notice to', row.uid)
+                                                        onClick: (row: any) =>
+                                                            console.log(
+                                                                'Send notice to',
+                                                                row.uid
+                                                            ),
                                                     },
                                                     {
                                                         label: 'View Details',
                                                         icon: '/icons/document.svg',
-                                                        onClick: (row: any) => console.log('View details for', row.uid)
+                                                        onClick: (row: any) =>
+                                                            console.log(
+                                                                'View details for',
+                                                                row.uid
+                                                            ),
                                                     },
                                                     {
                                                         label: 'Reconnect',
                                                         icon: '/icons/connect.svg',
-                                                        onClick: (row: any) => console.log('Reconnect', row.uid)
-                                                    }
-                                                ]
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    }
+                                                        onClick: (row: any) =>
+                                                            console.log(
+                                                                'Reconnect',
+                                                                row.uid
+                                                            ),
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
                 ]}
             />
     );
