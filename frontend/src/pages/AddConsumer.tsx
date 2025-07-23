@@ -178,7 +178,7 @@ const AddConsumer = () => {
                 gps_coordinates: gps,
             });
             alert('Consumer created successfully!');
-            navigate(isAdmin() ? '/admin/consumers' : '/user/consumers');
+            navigate('/consumers');
             setIsSubmitting(false);
         }, 1000);
     };
@@ -282,7 +282,7 @@ const AddConsumer = () => {
                                             size: 'medium',
                                             backButtonText: 'Back to Consumers',
                                             onClick: () => {
-                                                navigate(isAdmin() ? '/admin/consumers' : '/user/consumers');
+                                                navigate('/consumers');
                                             },
                                         },
                                     },
