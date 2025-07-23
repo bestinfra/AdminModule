@@ -28,12 +28,13 @@ const moduleConfig = {
       label: 'Bills', 
       description: 'Billing and payment management',
       nested: [
-        { key: 'prepaid', label: 'Prepaid', description: 'Prepaid billing system' },
-        { key: 'postpaid', label: 'Postpaid', description: 'Postpaid billing system' }
+        { key: 'prepaid', label: 'Prepaid' },
+        { key: 'postpaid', label: 'Postpaid' }
       ]
     },
     { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
     { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
+    { key: 'dtr', label: 'DTR', description: 'Distribution Transformer Management' },
   ]
 };
 
@@ -49,117 +50,86 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
   // Only show validation errors if form has been submitted
   const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
 
-  const handleModuleToggle = (moduleKey: string) => {
-    if (moduleKey === 'bills') {
-      const isBillsCurrentlyEnabled = enabledModules.includes('bills');
-      if (!isBillsCurrentlyEnabled) {
-        // Toggling Bills ON: remove prepaid and postpaid from enabledModules
-        const newModules = [
-          ...enabledModules.filter((m: string) => m !== 'prepaid' && m !== 'postpaid'),
-          'bills'
-        ];
-        onModuleToggle('bills', newModules);
-        return;
-      }
-    }
-    onModuleToggle(moduleKey);
-  };
-
-  const handleNestedModuleToggle = (nestedKey: string) => {
-    onModuleToggle(nestedKey);
-  };
+  // Remove unused functions: handleModuleToggle, handleNestedModuleToggle, isNestedModuleEnabled
 
   const isModuleEnabled = (moduleKey: string) => enabledModules.includes(moduleKey);
-  const isNestedModuleEnabled = (nestedKey: string) => enabledModules.includes(nestedKey);
 
-  const billsModule = moduleConfig.optional.find(m => m.key === 'bills');
-  const otherModules = moduleConfig.optional.filter(m => m.key !== 'bills');
-  const nestedModules = billsModule?.nested || [];
-
-  let gridModules;
-  if (isModuleEnabled('bills')) {
-    gridModules = [
-      billsModule,
-      ...nestedModules.map(nm => ({ ...nm, isNested: true })),
-      ...otherModules
-    ];
-  } else {
-    gridModules = [
-      billsModule,
-      ...otherModules
-    ];
-  }
-
-  // Check if sections are completed
-  // const isDefaultSectionCompleted = moduleConfig.default.every(module => module && isModuleEnabled(module.key));
-  // const isOptionalSectionCompleted = gridModules.filter(m => m && !('isNested' in m)).every(optModule => optModule && isModuleEnabled(optModule.key));
-
+  // Remove all optional module logic and UI
+  // Only render the core modules section
   // Render default modules as selectable
-  const renderDefaultModuleItem = (module: any) => (
-    <div key={module.key} className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
-      <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
-        <input
-          type="checkbox"
-          checked={isModuleEnabled(module.key)}
-          onChange={() => onModuleToggle(module.key)}
-          className="peer sr-only"
-        />
-        <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
-          isModuleEnabled(module.key) 
-            ? 'border-primary bg-primary' 
-            : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
-        }`}>
-          {isModuleEnabled(module.key) && (
-            <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-            </svg>
-          )}
-        </span>
-      </label>
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-semibold text-main dark:text-white">{module.label}</div>
-        <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
-      </div>
-    </div>
-  );
-
-  const renderModuleItem = (module: any) => {
-    if (module.isNested) {
+  const renderDefaultModuleItem = (module: any) => {
+    if (module.key === 'bills' && module.nested) {
+      // Render the main 'bills' module
       return (
-        <div key={module.key} className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all bg-blue-50 dark:bg-blue-900/10">
-          <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
-            <input
-              type="checkbox"
-              checked={isNestedModuleEnabled(module.key)}
-              onChange={() => handleNestedModuleToggle(module.key)}
-              className="peer sr-only"
-            />
-            <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
-              isNestedModuleEnabled(module.key) 
-                ? 'border-primary bg-primary' 
-                : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
-            }`}>
-              {isNestedModuleEnabled(module.key) && (
-                <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                </svg>
-              )}
-            </span>
-          </label>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-semibold text-main dark:text-white ">{module.label}</div>
-            <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
+        <div key={module.key} className="flex flex-col gap-2">
+          <div className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
+            <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
+              <input
+                type="checkbox"
+                checked={isModuleEnabled(module.key)}
+                onChange={() => onModuleToggle(module.key)}
+                className="peer sr-only"
+              />
+              <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
+                isModuleEnabled(module.key) 
+                  ? 'border-primary bg-primary' 
+                  : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
+              }`}>
+                {isModuleEnabled(module.key) && (
+                  <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </span>
+            </label>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold text-main dark:text-white">{module.label}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
+            </div>
           </div>
+          {/* Render nested modules if 'bills' is enabled */}
+          {isModuleEnabled(module.key) && (
+            <div className="ml-8 flex  gap-2">
+              {module.nested.map((nested: any) => (
+                <div key={nested.key} className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/10 border border-gray-200 dark:border-dark-border rounded-lg transition-all">
+                  <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
+                    <input
+                      type="checkbox"
+                      checked={isModuleEnabled(nested.key)}
+                      onChange={() => onModuleToggle(nested.key)}
+                      className="peer sr-only"
+                    />
+                    <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
+                      isModuleEnabled(nested.key) 
+                        ? 'border-primary bg-primary' 
+                        : 'border-gray-300 dark:border-dark-border bg-white dark:bg-primary-dark hover:border-primary'
+                    }`}>
+                      {isModuleEnabled(nested.key) && (
+                        <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      )}
+                    </span>
+                  </label>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-sm font-semibold text-main dark:text-white ">{nested.label}</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">{nested.description}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       );
     }
+    // Render all other modules
     return (
-      <div key={module.key} className="flex items-start justify-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
+      <div key={module.key} className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
         <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
           <input
             type="checkbox"
             checked={isModuleEnabled(module.key)}
-            onChange={() => handleModuleToggle(module.key)}
+            onChange={() => onModuleToggle(module.key)}
             className="peer sr-only"
           />
           <span className={`w-5 h-5 border-2 rounded flex items-center justify-center transition-all ${
@@ -175,7 +145,7 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
           </span>
         </label>
         <div className="flex-1 min-w-0">
-          <div className="text-sm font-semibold text-main dark:text-white ">{module.label}</div>
+          <div className="text-sm font-semibold text-main dark:text-white">{module.label}</div>
           <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
         </div>
       </div>
@@ -203,32 +173,14 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
         <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 flex flex-col gap-3 flex flex-col gap-2">
           <div className="flex items-start gap-4">
             <div>
-              <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Core Modules</h3>
+              <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Modules</h3>
             </div>
-         
             <span className="text-xs px-4 py-1 rounded-full bg-primary-lightest">
-              Core
+              All Modules
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {moduleConfig.default.map(renderDefaultModuleItem)}
-          </div>
-        </div>
-
-        {/* Optional Modules Section */}
-        <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 flex flex-col gap-3">
-          <div className="flex  items-start gap-4">
-            <div>
-              <h3 className="text-sm font-semibold text-primary dark:text-white">Optional Modules</h3>
-           
-            </div>
-           
-            <span className="text-xs bg-secondary-light px-4 py-1 rounded-full">
-              Optional
-            </span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4" style={{ transition: 'all 0.3s' }}>
-            {gridModules.map(renderModuleItem)}
           </div>
           {allErrors.modules && (
             <div className="text-error text-sm font-medium mt-4 p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
