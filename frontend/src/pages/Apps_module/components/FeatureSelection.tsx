@@ -20,6 +20,7 @@ const moduleConfig = {
     { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions' },
     { key: 'role_management', label: 'Role Management', description: 'Role-based access control' },
     { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
+    { key: 'dtr', label: 'DTR Dashboard', description: 'DTR Dashboard' },
   ],
   optional: [
     { 

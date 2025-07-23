@@ -15,8 +15,11 @@ import AppManagement from './pages/Apps_module/AppManagement';
 import AddConsumer from './pages/AddConsumer';
 import ComponentsDocumentation from './pages/ComponentsDocumentation';
 import Connect from './pages_v2/ConnectDisconnect';
-import EmpDashboard from './pages/NewDashboard';
-import ConsumerView from './pages/ConsumerView';
+import AddTicket from './pages_v2/AddTicket';
+import RoleManagement from './pages_v2/RoleManagement';
+import SuperAdminDashboard from './pages/SuperAdminDashboard';
+import UserManagement from './pages/UserManagment';
+import AllTickets from './pages/AllTickets';import ConsumerView from './pages/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages/MeterDetails';
 import TicketView from './pages/TicketView';
@@ -48,7 +51,11 @@ const App: React.FC = () => {
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
                             <Route path="/connect-consumer" element={<Connect />} />
-                            <Route path="/empdashboard" element={<EmpDashboard />} />
+                            <Route path="/add-ticket" element={<AddTicket/>} />
+                            <Route path="/role-management" element={<RoleManagement/>} />
+                            <Route path="/super-admin" element={<SuperAdminDashboard/>} />
+                            <Route path="/user-management" element={<UserManagement/>} />
+                            <Route path="/all-tickets" element={<AllTickets/>} />
                             <Route path="/consumers" element={<Consumers />} />
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
