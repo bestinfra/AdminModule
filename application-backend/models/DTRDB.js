@@ -35,8 +35,21 @@ class DTRDB {
             })
         ]);
 
+        // Get feeders count for each DTR
+        const dtrsWithFeedersCount = await Promise.all(
+            data.map(async (dtr) => {
+                const feedersCount = await prisma.meter.count({
+                    where: { dtrId: dtr.id }
+                });
+                return {
+                    ...dtr,
+                    feedersCount
+                };
+            })
+        );
+
         return {
-            data,
+            data: dtrsWithFeedersCount,
             total,
             page,
             pageSize
