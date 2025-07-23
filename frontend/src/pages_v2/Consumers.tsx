@@ -69,7 +69,7 @@ const Consumers: React.FC = () => {
         : consumers;
 
     const handleRowClick = (row: any) => {
-        navigate(`/consumers/${row.consumerNumber}`);
+        navigate(`/consumer-view/${row.consumerNumber}`);
     };
 
     const headerConfig = {
