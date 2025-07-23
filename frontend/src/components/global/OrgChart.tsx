@@ -1,158 +1,187 @@
+import  { useCallback, useRef, useEffect } from 'react';
+import ReactFlow, {
+    MiniMap,
+    Controls,
+    Background,
+    useNodesState,
+    useEdgesState,
+    addEdge,
+    Position,
+} from 'reactflow';
+import type { Node, Edge, Connection } from 'reactflow';
+import 'reactflow/dist/style.css';
 
-import React from "react";
-import ReactFlow, { Position, Background, Controls } from "reactflow";
-import type { Node, Edge } from "reactflow";
-
-interface OrgChartNode {
-  hierarchy_id: string;
-  hierarchy_name: string;
-  hierarchy_type_title: string;
-  children?: OrgChartNode[];
+interface HierarchyNode {
+    hierarchy_id: string | number;
+    hierarchy_name: string;
+    hierarchy_type_title: string;
+    level?: number;
+    icon?: string;
+    children?: HierarchyNode[];
 }
 
-const dummyData: OrgChartNode[] = [
-  {
-    hierarchy_id: '1',
-    hierarchy_name: 'GMR',
-    hierarchy_type_title: 'Main Location',
-    children: [
-      { hierarchy_id: '2', hierarchy_name: 'Airborne General Store', hierarchy_type_title: 'Meter Location' },
-      { hierarchy_id: '3', hierarchy_name: 'Neo Travels', hierarchy_type_title: 'Meter Location' },
-      { hierarchy_id: '4', hierarchy_name: 'Mobikins', hierarchy_type_title: 'Meter Location' },
-      { hierarchy_id: '5', hierarchy_name: 'Dormitary', hierarchy_type_title: 'Meter Location' },
-      { hierarchy_id: '6', hierarchy_name: '10 MGW - Solar Plant', hierarchy_type_title: 'Meter Location' },
-    ],
-  },
-  {
-    hierarchy_id: '7',
-    hierarchy_name: 'Chennai',
-    hierarchy_type_title: 'Main Location',
-    children: [
-      {
-        hierarchy_id: '8',
-        hierarchy_name: 'Hyderabad',
-        hierarchy_type_title: 'Main Location',
-        children: [
-          { hierarchy_id: '9', hierarchy_name: 'Hitech City', hierarchy_type_title: 'Meter Location' },
-          { hierarchy_id: '10', hierarchy_name: 'Gachibowli', hierarchy_type_title: 'Meter Location' },
-        ],
-      },
-      { hierarchy_id: '11', hierarchy_name: 'Egmore', hierarchy_type_title: 'Meter Location' },
-      {
-        hierarchy_id: '12',
-        hierarchy_name: 'Vizag',
-        hierarchy_type_title: 'Main Location',
-        children: [
-          { hierarchy_id: '13', hierarchy_name: 'RK Beach', hierarchy_type_title: 'Meter Location' },
-          { hierarchy_id: '14', hierarchy_name: 'Warangal', hierarchy_type_title: 'Meter Location' },
-        ],
-      },
-    ],
-  },
-];
+interface OrgChartProps {
+    data?: HierarchyNode[];
+    height?: string;
+    className?: string;
+    loading?: boolean;
+}
 
-const computeSubtreeHeight = (node: OrgChartNode): number => {
-  if (!node.children || node.children.length === 0) return 1;
-  return node.children.reduce((sum: number, child: OrgChartNode) => sum + computeSubtreeHeight(child), 0);
-};
+const OrgChart = ({
+    data = [],
+    height = '100%',
+    className,
+    loading = false,
+}: OrgChartProps) => {
+    const chartRef = useRef(null);
+    const containerRef = useRef<HTMLDivElement>(null);
 
-const getNodesAndEdges = (data: OrgChartNode[]): { nodes: Node[]; edges: Edge[] } => {
-  const nodes: Node[] = [];
-  const edges: Edge[] = [];
-  const childSpacing = 60;
-  const horizontalSpacing = 370;
+    const computeSubtreeHeight = (node: HierarchyNode): number => {
+        if (!node.children || node.children.length === 0) return 1;
+        return node.children.reduce(
+            (sum: number, child: HierarchyNode) =>
+                sum + computeSubtreeHeight(child),
+            0
+        );
+    };
 
-  const createNode = (item: OrgChartNode, x: number, y: number): void => {
-    const nodeType = (item.hierarchy_type_title || "main-location").toLowerCase().replace(/\s+/g, '-');
-    nodes.push({
-      id: `${item.hierarchy_id}`,
-      data: { label: item.hierarchy_name || '' }, // Always provide a label
-      position: { x, y },
-      sourcePosition: Position.Right,
-      targetPosition: Position.Left,
-      style: {
-        padding: '0.5rem 0.75rem',
-        borderRadius: '0.375rem',
-        backgroundColor: nodeType === 'main-location' ? '#e3f2fd' : '#f8f9fa',
-        border: nodeType === 'main-location' ? '1px solid #90caf9' : '1px solid #E5E5E5',
-        color: nodeType === 'main-location' ? '#163b7c' : '#424242',
-        fontWeight: nodeType === 'main-location' ? 'bold' : 'normal',
-        minWidth: 120,
-        maxWidth: 220,
-        fontFamily: 'Manrope, sans-serif',
-        fontSize: '0.9rem',
-        boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        textAlign: 'center',
-      },
-    });
-  };
+    const generateNodes = () => {
+        const nodes: Node[] = [];
+        const nodeMap = new Map();
+        const childSpacing = 60;
+        const horizontalSpacing = 370;
 
-  const processNode = (item: OrgChartNode, x: number, y: number): void => {
-    const subtreeHeight = computeSubtreeHeight(item);
-    const nodeY = y + (subtreeHeight * childSpacing) / 2 - childSpacing / 2;
-    createNode(item, x, nodeY);
-    if (item.children && item.children.length > 0) {
-      let childY = y;
-      item.children.forEach((child: OrgChartNode) => {
-        const childSubtreeHeight = computeSubtreeHeight(child);
-        edges.push({
-          id: `e${item.hierarchy_id}-${child.hierarchy_id}`,
-          source: `${item.hierarchy_id}`,
-          target: `${child.hierarchy_id}`,
-          type: 'bezier',
-          animated: true,
-          style: {
-            stroke: '#b0b8c1',
-            strokeWidth: 2,
-          },
-          markerEnd: undefined,
+        const createNode = (item: HierarchyNode, x: number, y: number) => {
+            const node = {
+                id: `${item.hierarchy_id}`,
+                data: {
+                    label: item.hierarchy_name,
+                    type: item.hierarchy_type_title
+                        .toLowerCase()
+                        .replace(/\s+/g, '-'),
+                    title: item.hierarchy_type_title,
+                    name: item.hierarchy_name,
+                    level: item.level || 0,
+                    icon: item.icon,
+                },
+                position: { x, y },
+                sourcePosition: Position.Right,
+                targetPosition: Position.Left,
+                draggable: false,
+                className: `rounded-lg shadow-md bg-white border border-gray-200 px-4 py-2 text-center text-xs font-medium`,
+            };
+            nodeMap.set(item.hierarchy_id, node);
+            nodes.push(node);
+            return node;
+        };
+
+        const processNode = (item: HierarchyNode, x: number, y: number) => {
+            const subtreeHeight = computeSubtreeHeight(item);
+            const nodeY =
+                y + (subtreeHeight * childSpacing) / 2 - childSpacing / 2;
+            createNode(item, x, nodeY);
+            if (item.children && item.children.length > 0) {
+                let childY = y;
+                item.children.forEach((child: HierarchyNode) => {
+                    const childSubtreeHeight = computeSubtreeHeight(child);
+                    processNode(child, x + horizontalSpacing, childY);
+                    childY += childSubtreeHeight * childSpacing;
+                });
+            }
+        };
+
+        let currentY = 0;
+        data.forEach((item: HierarchyNode) => {
+            const subtreeHeight = computeSubtreeHeight(item);
+            processNode(item, 0, currentY);
+            currentY += subtreeHeight * childSpacing + 40;
         });
-        processNode(child, x + horizontalSpacing, childY);
-        childY += childSubtreeHeight * childSpacing;
-      });
-    }
-  };
 
-  let currentY = 0;
-  data.forEach((item: OrgChartNode) => {
-    const subtreeHeight = computeSubtreeHeight(item);
-    processNode(item, 0, currentY);
-    currentY += subtreeHeight * childSpacing + 40;
-  });
+        return nodes;
+    };
 
-  return { nodes, edges };
+    const generateEdges = () => {
+        const edges: Edge[] = [];
+        const processNode = (item: HierarchyNode) => {
+            if (item.children && item.children.length > 0) {
+                item.children.forEach((child: HierarchyNode) => {
+                    edges.push({
+                        id: `e${item.hierarchy_id}-${child.hierarchy_id}`,
+                        source: `${item.hierarchy_id}`,
+                        target: `${child.hierarchy_id}`,
+                        animated: true,
+                        className: 'stroke-blue-400',
+                    });
+                    processNode(child);
+                });
+            }
+        };
+        data.forEach(processNode);
+        return edges;
+    };
+
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+    useEffect(() => {
+        if (data && data.length > 0) {
+            setNodes(generateNodes());
+            setEdges(generateEdges());
+        }
+    }, [data]);
+
+    const onConnect = useCallback(
+        (params: Connection) =>
+            setEdges((eds) =>
+                addEdge(
+                    {
+                        ...params,
+                        type: 'smoothstep',
+                        className: 'stroke-blue-400',
+                    },
+                    eds
+                )
+            ),
+        [setEdges]
+    );
+
+    return (
+        <div
+            className={`w-full ${className || ''}`}
+            style={{ height, fontFamily: 'Manrope, sans-serif' }}>
+            <div
+                className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 overflow-auto"
+                ref={containerRef}>
+                {loading ? (
+                    <div className="flex items-center justify-center h-full min-h-[200px]">
+                        <div className="w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+                    </div>
+                ) : (
+                    <ReactFlow
+                        ref={chartRef}
+                        nodes={nodes}
+                        edges={edges}
+                        onNodesChange={onNodesChange}
+                        onEdgesChange={onEdgesChange}
+                        onConnect={onConnect}
+                        fitView
+                        className="w-full h-full"
+                        minZoom={0.1}
+                        maxZoom={2}
+                        fitViewOptions={{
+                            padding: 0.1,
+                            includeHiddenNodes: true,
+                            minZoom: 0.1,
+                            maxZoom: 2,
+                        }}>
+                        <MiniMap className="!bg-gray-100 !border !border-gray-300" />
+                        <Controls className="!bg-white !border !border-gray-300" />
+                        <Background className="!bg-gray-50" />
+                    </ReactFlow>
+                )}
+            </div>
+        </div>
+    );
 };
 
-const OrgChart: React.FC = () => {
-  const { nodes, edges } = getNodesAndEdges(dummyData);
-
-  return (
-    <div className="w-full h-[700px] bg-white rounded-2xl min-h-[600px] flex items-center justify-center">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        fitView
-        panOnDrag
-        zoomOnScroll
-        zoomOnPinch
-        minZoom={0.1}
-        maxZoom={2}
-        fitViewOptions={{
-          padding: 0.1,
-          includeHiddenNodes: true,
-          minZoom: 0.1,
-          maxZoom: 2,
-        }}
-        proOptions={{ hideAttribution: true }}
-      >
-        <Background gap={20} size={2} color="#b0b8c1" />
-        <Controls position="bottom-left" />
-      </ReactFlow>
-    </div>
-  );
-};
-
-export default OrgChart; 
+export default OrgChart;
