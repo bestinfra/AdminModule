@@ -46,6 +46,38 @@ export default function Users() {
                 sections={[
                     {
                         layout: {
+                            type: 'row',
+                            className: 'mb-6'
+                        },
+                        components: [
+                            {
+                                name: 'PageHeader',
+                                props: {
+                                    title: "User Management",
+                                    onBackClick: () => window.history.back(),
+                                    backButtonText: "Back to Dashboard",
+                                    buttonsLabel: "Add User",
+                                    variant: "primary",
+                                    onClick: () => console.log('Adding new user...'),
+                                    showMenu: true,
+                                    showDropdown: true,
+                                    menuItems: [
+                                        { id: 'all', label: 'All Users' },
+                                        { id: 'active', label: 'Active Users' },
+                                        { id: 'inactive', label: 'Inactive Users' },
+                                        { id: 'admin', label: 'Administrators' },
+                                        { id: 'moderator', label: 'Moderators' },
+                                        { id: 'user', label: 'Regular Users' }
+                                    ],
+                                    onMenuItemClick: (itemId: string) => {
+                                        console.log(`Filter by: ${itemId}`);
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        layout: {
                             type: 'column',
                             rows: [
                                 {

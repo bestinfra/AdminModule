@@ -10,6 +10,7 @@ export default function Meters() {
         title: string;
         value: string | number;
         icon: string;
+        subtitle1: string;
     }[]>([]);
 
     const [tableData, setTableData] = useState([
@@ -208,24 +209,28 @@ export default function Meters() {
                             id: 1,
                             title: 'Total Meters',
                             value: stats.totalMeters,
+                            subtitle1: 'Total number of meters',
                             icon: 'icons/meter.svg',
                         },
                         {
                             id: 2,
                             title: 'Meter Makes',
-                            value: stats.meterMakes,
+                            value: stats.makes?.length ?? 0,
+                            subtitle1: 'Unique Makes',
                             icon: 'icons/meter-make.svg',
                         },
                         {
                             id: 3,
-                            title: 'Mapped Meters',
-                            value: stats.mappedMeters,
+                            title: 'Meter Types',
+                            value: stats.types?.length ?? 0,
+                            subtitle1: 'Unique Types',
                             icon: 'icons/meter.svg',
                         },
                         {
                             id: 4,
-                            title: 'Connection Type',
-                            value: stats.connectionType,
+                            title: 'Connection Types',
+                            value: Object.keys(stats.connectionTypes || {}).length,
+                            subtitle1: 'Unique Connection Types',
                             icon: 'icons/connection-type.svg',
                         },
                     ];
@@ -255,6 +260,38 @@ export default function Meters() {
             sections={[
                 {
                     layout: {
+                        type: 'row',
+                        className: 'mb-6'
+                    },
+                    components: [
+                        {
+                            name: 'PageHeader',
+                            props: {
+                                title: "Meter Management",
+                                onBackClick: () => window.history.back(),
+                                backButtonText: "Back to Dashboard",
+                                buttonsLabel: "Add Meter",
+                                variant: "primary",
+                                onClick: () => console.log('Adding new meter...'),
+                                showMenu: true,
+                                showDropdown: true,
+                                menuItems: [
+                                    { id: 'all', label: 'All Meters' },
+                                    { id: 'active', label: 'Active Meters' },
+                                    { id: 'inactive', label: 'Inactive Meters' },
+                                    { id: 'maintenance', label: 'Maintenance' },
+                                    { id: 'smart', label: 'Smart Meters' },
+                                    { id: 'digital', label: 'Digital Meters' }
+                                ],
+                                onMenuItemClick: (itemId: string) => {
+                                    console.log(`Filter by: ${itemId}`);
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    layout: {
                         type: 'column',
                         rows: [
                             {
@@ -265,6 +302,7 @@ export default function Meters() {
                                         title: meter.title,
                                         value: meter.value,
                                         icon: meter.icon,
+                                        subtitle1: meter.subtitle1,
                                     },
                                 })),
                             },

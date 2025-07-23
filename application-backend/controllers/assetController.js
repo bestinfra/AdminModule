@@ -3,9 +3,19 @@ import AssetDB from '../models/AssetDB.js';
 export const getAllAssets = async (req, res) => {
     try {
         const assets = await AssetDB.getAllAssets();
+        // Map to clean structure
+        const mappedAssets = assets.map(asset => ({
+            id: asset.id,
+            name: asset.name,
+            code: asset.code,
+            type: asset.locationType?.name || null,
+            parentId: asset.parentId,
+            createdAt: asset.createdAt,
+            updatedAt: asset.updatedAt,
+        }));
         res.json({
             success: true,
-            data: assets,
+            data: mappedAssets,
             message: 'Assets retrieved successfully'
         });
     } catch (error) {
