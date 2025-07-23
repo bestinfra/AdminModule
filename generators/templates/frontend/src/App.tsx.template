@@ -377,11 +377,6 @@ const generateMenuItems = (modules = []) => {
         },
       ],
     },
-    role_management: {
-      title: 'Role Management',
-      icon: '/icons/roles.svg',
-      link: '/role-management',
-    },
     dtr: {
       title: 'DTR Dashboard',
       icon: '/icons/transformer.svg',

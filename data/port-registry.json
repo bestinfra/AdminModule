@@ -1,5 +1,5 @@
 {
-  "nextPort": 4057,
+  "nextPort": 4058,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -165,6 +165,11 @@
       "port": 4056,
       "deployedAt": "2025-07-23T12:40:03.022Z",
       "path": "C:\\xampp\\htdocs\\saiharikiran-backend"
+    },
+    "harikiran": {
+      "port": 4057,
+      "deployedAt": "2025-07-23T13:05:33.384Z",
+      "path": "C:\\xampp\\htdocs\\harikiran-backend"
     }
   }
 }
