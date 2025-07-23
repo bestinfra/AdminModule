@@ -9,7 +9,7 @@ function testTemplateProcessor() {
   const variables = {
     consumerRoute: '',
     consumerError: '',
-    modulesArray: JSON.stringify(['dashboard', 'role_management']),
+    modulesArray: JSON.stringify(['dashboard', 'role_management', 'dtr']),
     appName: 'Test App',
     companyName: 'Test Company',
     userManagementCase: '',
@@ -20,6 +20,7 @@ function testTemplateProcessor() {
     ticketsCase: '',
     assetManagementCase: '',
     meterManagementCase: '',
+    dtrCase: 'case \'/dtr-dashboard\':\n        return \'DTR Dashboard\';',
     billsPrepaidRoute: '',
     billsPostpaidRoute: '',
     assetManagementRoute: '',
@@ -28,6 +29,7 @@ function testTemplateProcessor() {
     ticketsRoute: '',
     usersRoute: '',
     roleManagementRoute: '<Route path="/role-management" element={<RoleManagement />} />',
+    dtrRoute: '<Route path="/dtr-dashboard" element={<Transformer />} />',
     billsPrepaidError: '',
     billsPostpaidError: '',
     assetManagementError: '',
@@ -35,7 +37,8 @@ function testTemplateProcessor() {
     dataLoggerError: '',
     ticketsError: '',
     usersError: '',
-    roleManagementError: '<li>/role-management - Role Management</li>'
+    roleManagementError: '<li>/role-management - Role Management</li>',
+    dtrError: '<li>/dtr-dashboard - DTR Dashboard</li>'
   };
   
   console.log('Variables count:', Object.keys(variables).length);
@@ -85,6 +88,24 @@ function testTemplateProcessor() {
       console.error('❌ companyName placeholder still exists');
     } else {
       console.log('✅ companyName placeholder replaced');
+    }
+    
+    if (result.includes('{{dtrCase}}')) {
+      console.error('❌ dtrCase placeholder still exists');
+    } else {
+      console.log('✅ dtrCase placeholder replaced');
+    }
+    
+    if (result.includes('{{dtrRoute}}')) {
+      console.error('❌ dtrRoute placeholder still exists');
+    } else {
+      console.log('✅ dtrRoute placeholder replaced');
+    }
+    
+    if (result.includes('{{dtrError}}')) {
+      console.error('❌ dtrError placeholder still exists');
+    } else {
+      console.log('✅ dtrError placeholder replaced');
     }
     
   } catch (error) {

@@ -1,5 +1,5 @@
 {
-  "nextPort": 4053,
+  "nextPort": 4054,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -37,8 +37,8 @@
       "path": "C:\\xampp\\htdocs\\pehhh-backend"
     },
     "krishna": {
-      "port": 4015,
-      "deployedAt": "2025-07-19T11:36:53.448Z",
+      "port": 4053,
+      "deployedAt": "2025-07-23T11:36:37.769Z",
       "path": "C:\\xampp\\htdocs\\krishna-backend"
     },
     "pooo": {
@@ -150,36 +150,6 @@
       "port": 4046,
       "deployedAt": "2025-07-23T07:13:10.918Z",
       "path": "C:\\xampp\\htdocs\\aimd-backend"
-    },
-    "ykt": {
-      "port": 4047,
-      "deployedAt": "2025-07-23T07:56:39.108Z",
-      "path": "C:\\xampp\\htdocs\\ykt-backend"
-    },
-    "prd": {
-      "port": 4048,
-      "deployedAt": "2025-07-23T08:20:48.824Z",
-      "path": "C:\\xampp\\htdocs\\prd-backend"
-    },
-    "kio": {
-      "port": 4049,
-      "deployedAt": "2025-07-23T08:43:07.616Z",
-      "path": "C:\\xampp\\htdocs\\kio-backend"
-    },
-    "moi": {
-      "port": 4050,
-      "deployedAt": "2025-07-23T10:09:07.404Z",
-      "path": "C:\\xampp\\htdocs\\moi-backend"
-    },
-    "srf": {
-      "port": 4051,
-      "deployedAt": "2025-07-23T10:24:03.576Z",
-      "path": "C:\\xampp\\htdocs\\srf-backend"
-    },
-    "wer": {
-      "port": 4052,
-      "deployedAt": "2025-07-23T10:35:11.404Z",
-      "path": "C:\\xampp\\htdocs\\wer-backend"
     }
   }
 }

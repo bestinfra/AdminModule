@@ -137,6 +137,10 @@ function generateAppComponent(frontendDir, variables) {
         return 'Meters';
       case '/data-logger-master':
         return 'Data Logger Master';` : '';
+  
+  variables.dtrCase = modules.includes('dtr') ? `
+      case '/dtr-dashboard':
+        return 'DTR Dashboard';` : '';
 
   // Calculate route variables
   variables.billsPrepaidRoute = (modules.includes('bills') || modules.includes('prepaid')) ? 
@@ -165,6 +169,11 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.consumerRoute = modules.includes('consumer') ? 
     '<Route path="/consumers" element={<Consumers />} />' : '';
+  
+  variables.dtrRoute = modules.includes('dtr') ? 
+    '<Route path="/dtr-dashboard" element={<Transformer />} />' : '';
+  
+
 
   // Calculate error page variables
   variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
@@ -193,6 +202,11 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.consumerError = modules.includes('consumer') ? 
     '<li>/consumers - Consumers</li>' : '';
+  
+  variables.dtrError = modules.includes('dtr') ? 
+    '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
+  
+
 
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
