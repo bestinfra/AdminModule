@@ -80,21 +80,21 @@ const defaultMenus: MenuCategory[] = [
                 link: '/consumers',
             },
             {
-                            title: 'App Management',
-                            icon: '/icons/apps-icon.svg',
-                            link: '/apps',
-                        },
-                        {
-                            title: 'User Management',
-                            icon: '/icons/user-management.svg',
-                            link: '/user-management',
-                        },
-                        {
+                title: 'App Management',
+                icon: '/icons/apps-icon.svg',
+                link: '/apps',
+            },
+            {
+                title: 'User Management',
+                icon: '/icons/user-gear.svg',
+                link: '/user-management',
+            },
+            {
                 title: 'DTR Dashboard',
                 icon: '/icons/dtr.svg',
                 link: '/dtr-dashboard',
             },
-            
+
         ],
     },
     // {
@@ -282,7 +282,7 @@ const defaultMenus: MenuCategory[] = [
         items: [
             {
                 title: 'Meters',
-                icon: '/icons/meter.svg',
+                icon: '/icons/meter-make.svg',
                 link: '/meters',
             },
             {
@@ -299,16 +299,6 @@ const defaultMenus: MenuCategory[] = [
                 title: 'Users',
                 icon: '/icons/user.svg',
                 link: '/users',
-            },
-            {
-                title: 'Add Ticket',
-                icon: '/icons/ticket-add.svg',
-                link: '/add-ticket',
-            },
-            {
-                title: 'Role Management',
-                icon: '/icons/role-management.svg',
-                link: '/role-management',
             },
         ],
     },
@@ -450,21 +440,18 @@ const Sidebar = ({
 
     return (
         <div
-            className={`transition-[width] duration-300 ease-in-out ${
-                isSidebarCollapsed ? 'w-20' : 'w-72'
-            }`}>
+            className={`transition-[width] duration-300 ease-in-out ${isSidebarCollapsed ? 'w-20' : 'w-72'
+                }`}>
             <nav
-                className={`h-screen flex flex-col justify-between items-center w-full bg-background-secondary dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
-                    isSidebarCollapsed ? 'w-20' : 'w-72'
-                } ${className}`}
+                className={`h-screen flex flex-col justify-between items-center w-full bg-background-secondary dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${isSidebarCollapsed ? 'w-20' : 'w-72'
+                    } ${className}`}
                 aria-label="Main navigation">
                 <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
                     <header
-                        className={` dark:bg-primary-dark flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${
-                            isSidebarCollapsed
+                        className={` dark:bg-primary-dark flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${isSidebarCollapsed
                                 ? 'bg-primary px-4'
                                 : 'bg-white px-10'
-                        } py-6`}>
+                            } py-6`}>
                         <img
                             src={
                                 isSidebarCollapsed
@@ -472,13 +459,12 @@ const Sidebar = ({
                                         ? '/images/bi-white-logo.svg'
                                         : logo?.collapsedSrc || logo?.src
                                     : isDarkMode
-                                    ? '/images/bi-white-logo.svg'
-                                    : logo?.src
+                                        ? '/images/bi-white-logo.svg'
+                                        : logo?.src
                             }
                             alt={logo?.alt}
-                            className={`md:block ${
-                                isSidebarCollapsed ? 'w-8' : 'w-[170px]'
-                            }`}
+                            className={`md:block ${isSidebarCollapsed ? 'w-8' : 'w-[170px]'
+                                }`}
                         />
                     </header>
                     <main className="flex p-4 flex-col w-full md:block dark:bg-primary-dark-light">
@@ -504,16 +490,15 @@ const Sidebar = ({
                                                                     menuItem.title
                                                                 )
                                                             }
-                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
-                                                                pathname ===
-                                                                menuItem.link
+                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${pathname ===
+                                                                    menuItem.link
                                                                     ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white custom-shadow'
                                                                     : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
-                                                            }`}
+                                                                }`}
                                                             aria-expanded={
                                                                 expandedMenus[
-                                                                    menuItem
-                                                                        .title
+                                                                menuItem
+                                                                    .title
                                                                 ]
                                                             }
                                                             aria-controls={`submenu-${menuItem.title}`}>
@@ -523,12 +508,11 @@ const Sidebar = ({
                                                                         menuItem.icon
                                                                     }
                                                                     alt=""
-                                                                    className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
-                                                                        pathname ===
-                                                                        menuItem.link
+                                                                    className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${pathname ===
+                                                                            menuItem.link
                                                                             ? 'icon-filter'
                                                                             : 'group-hover:icon-filter'
-                                                                    }`}
+                                                                        }`}
                                                                     aria-hidden="true"
                                                                 />
                                                             </span>
@@ -540,14 +524,13 @@ const Sidebar = ({
                                                                         }
                                                                     </span>
                                                                     <span
-                                                                        className={`transition-transform ${
-                                                                            expandedMenus[
+                                                                        className={`transition-transform ${expandedMenus[
                                                                                 menuItem
                                                                                     .title
                                                                             ]
                                                                                 ? 'rotate-180'
                                                                                 : ''
-                                                                        }`}>
+                                                                            }`}>
                                                                         <img
                                                                             src="/icons/arrow-down.svg"
                                                                             alt=""
@@ -561,14 +544,13 @@ const Sidebar = ({
                                                         {!isSidebarCollapsed && (
                                                             <ul
                                                                 id={`submenu-${menuItem.title}`}
-                                                                className={`relative flex flex-col overflow-hidden transition-all duration-300 ease-in-out pl-0 ${
-                                                                    expandedMenus[
+                                                                className={`relative flex flex-col overflow-hidden transition-all duration-300 ease-in-out pl-0 ${expandedMenus[
                                                                         menuItem
                                                                             .title
                                                                     ]
                                                                         ? 'max-h-[500px] opacity-100'
                                                                         : 'max-h-0 opacity-0'
-                                                                }`}>
+                                                                    }`}>
                                                                 {/* Vertical line for submenu */}
                                                                 <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200"></span>
                                                                 {menuItem.submenu?.map(
@@ -590,12 +572,11 @@ const Sidebar = ({
                                                                                         subItem.link
                                                                                     )
                                                                                 }
-                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left ${
-                                                                                    pathname ===
-                                                                                    subItem.link
+                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left ${pathname ===
+                                                                                        subItem.link
                                                                                         ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow'
                                                                                         : 'text-gray-400 hover:text-primary'
-                                                                                }`}>
+                                                                                    }`}>
                                                                                 {
                                                                                     subItem.title
                                                                                 }
@@ -611,7 +592,7 @@ const Sidebar = ({
                                                         onClick={() => {
                                                             if (
                                                                 menuItem.title ===
-                                                                    'Logout' &&
+                                                                'Logout' &&
                                                                 onLogout
                                                             ) {
                                                                 onLogout();
@@ -623,24 +604,22 @@ const Sidebar = ({
                                                                 );
                                                             }
                                                         }}
-                                                        className={`flex items-center gap-4 py-3 px-4  text-sm cursor-pointer group rounded-lg w-full text-left ${
-                                                            pathname ===
-                                                            menuItem.link
+                                                        className={`flex items-center gap-4 py-3 px-4  text-sm cursor-pointer group rounded-lg w-full text-left ${pathname ===
+                                                                menuItem.link
                                                                 ? 'text-primary bg-white dark:bg-primary dark:text-white custom-shadow'
                                                                 : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
-                                                        }`}>
+                                                            }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
                                                             <img
                                                                 src={
                                                                     menuItem.icon
                                                                 }
                                                                 alt=""
-                                                                className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
-                                                                    pathname ===
-                                                                    menuItem.link
+                                                                className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${pathname ===
+                                                                        menuItem.link
                                                                         ? 'icon-filter'
                                                                         : ''
-                                                                }`}
+                                                                    }`}
                                                                 aria-hidden="true"
                                                             />
                                                         </span>
@@ -653,12 +632,11 @@ const Sidebar = ({
                                                                 </span>
                                                                 {menuItem.count && (
                                                                     <span
-                                                                        className={`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center group-hover:bg-brand items-center ${
-                                                                            pathname ===
-                                                                            menuItem.link
+                                                                        className={`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center group-hover:bg-brand items-center ${pathname ===
+                                                                                menuItem.link
                                                                                 ? 'bg-primary dark:bg-secondary'
                                                                                 : 'bg-primary dark:bg-secondary'
-                                                                        }`}>
+                                                                            }`}>
                                                                         {
                                                                             menuItem.count
                                                                         }
