@@ -75,6 +75,11 @@ const defaultMenus: MenuCategory[] = [
                 link: '/super-admin',
             },
             {
+                title: 'Consumers',
+                icon: '/icons/user.svg',
+                link: '/consumers',
+            },
+            {
                             title: 'App Management',
                             icon: '/icons/apps-icon.svg',
                             link: '/apps',

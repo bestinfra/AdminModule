@@ -308,6 +308,38 @@ export default function Meters() {
             sections={[
                 {
                     layout: {
+                        type: 'row',
+                        className: 'mb-6'
+                    },
+                    components: [
+                        {
+                            name: 'PageHeader',
+                            props: {
+                                title: "Meter Management",
+                                onBackClick: () => window.history.back(),
+                                backButtonText: "Back to Dashboard",
+                                buttonsLabel: "Add Meter",
+                                variant: "primary",
+                                onClick: () => console.log('Adding new meter...'),
+                                showMenu: true,
+                                showDropdown: true,
+                                menuItems: [
+                                    { id: 'all', label: 'All Meters' },
+                                    { id: 'active', label: 'Active Meters' },
+                                    { id: 'inactive', label: 'Inactive Meters' },
+                                    { id: 'maintenance', label: 'Maintenance' },
+                                    { id: 'smart', label: 'Smart Meters' },
+                                    { id: 'digital', label: 'Digital Meters' }
+                                ],
+                                onMenuItemClick: (itemId: string) => {
+                                    console.log(`Filter by: ${itemId}`);
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    layout: {
                         type: 'column',
                         rows: [
                             {

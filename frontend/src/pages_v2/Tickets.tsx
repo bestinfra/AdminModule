@@ -79,6 +79,38 @@ export default function Tickets() {
             sections={[
                 {
                     layout: {
+                        type: 'row',
+                        className: 'mb-6'
+                    },
+                    components: [
+                        {
+                            name: 'PageHeader',
+                            props: {
+                                title: "Ticket Management",
+                                onBackClick: () => window.history.back(),
+                                backButtonText: "Back to Dashboard",
+                                buttonsLabel: "Add Ticket",
+                                variant: "primary",
+                                onClick: () => console.log('Adding new ticket...'),
+                                showMenu: true,
+                                showDropdown: true,
+                                menuItems: [
+                                    { id: 'all', label: 'All Tickets' },
+                                    { id: 'open', label: 'Open Tickets' },
+                                    { id: 'in-progress', label: 'In Progress' },
+                                    { id: 'resolved', label: 'Resolved' },
+                                    { id: 'closed', label: 'Closed' },
+                                    { id: 'escalated', label: 'Escalated' }
+                                ],
+                                onMenuItemClick: (itemId: string) => {
+                                    console.log(`Filter by: ${itemId}`);
+                                }
+                            }
+                        }
+                    ]
+                },
+                {
+                    layout: {
                         type: 'column',
                         rows: [
                             {
