@@ -259,6 +259,7 @@ function AppContent() {
       {{ticketsCase}}
       {{assetManagementCase}}
       {{meterManagementCase}}
+      {{dtrCase}}
       default:
         return 'Dashboard';
     }
@@ -381,6 +382,11 @@ const generateMenuItems = (modules = []) => {
       icon: '/icons/roles.svg',
       link: '/role-management',
     },
+    dtr: {
+      title: 'DTR Dashboard',
+      icon: '/icons/transformer.svg',
+      link: '/dtr-dashboard',
+    },
   };
 
   const selectedModuleMenus = modules
@@ -442,6 +448,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                       {{ticketsRoute}}
                       {{usersRoute}}
                       {{roleManagementRoute}}
+                      {{dtrRoute}}
                       <Route path="*" element={
                         <div className="p-6">
                           <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -462,6 +469,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                                 {{ticketsError}}
                                 {{usersError}}
                                 {{roleManagementError}}
+                                {{dtrError}}
                               </ul>
                             </div>
                           </div>
