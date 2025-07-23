@@ -141,6 +141,14 @@ function generateAppComponent(frontendDir, variables) {
   variables.dtrCase = modules.includes('dtr') ? `
       case '/dtr-dashboard':
         return 'DTR Dashboard';` : '';
+  
+  variables.consumerCase = modules.includes('consumer') ? `
+      case '/consumers':
+        return 'Consumers';` : '';
+  
+  variables.userManagementCase = modules.includes('user_management_default') ? `
+      case '/users':
+        return 'Users';` : '';
 
   // Calculate route variables
   variables.billsPrepaidRoute = (modules.includes('bills') || modules.includes('prepaid')) ? 

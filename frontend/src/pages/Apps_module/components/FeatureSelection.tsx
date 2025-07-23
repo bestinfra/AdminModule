@@ -16,13 +16,15 @@ interface FeatureSelectionProps {
 const moduleConfig = {
   default: [
     { key: 'dashboard', label: 'Dashboard', description: 'Overview and analytics dashboard' },
-    { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
-    { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions' },
-    { key: 'role_management', label: 'Role Management', description: 'Role-based access control' },
-    { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
     { key: 'dtr', label: 'DTR Dashboard', description: 'DTR Dashboard' },
+    { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
+    { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
+    { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions' },
+    { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
+    { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
   ],
   optional: [
+    { key: 'role_management', label: 'Role Management', description: 'Role-based access control' },
     { 
       key: 'bills', 
       label: 'Bills', 
@@ -32,9 +34,6 @@ const moduleConfig = {
         { key: 'postpaid', label: 'Postpaid' }
       ]
     },
-    { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
-    { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
-    { key: 'dtr', label: 'DTR', description: 'Distribution Transformer Management' },
   ]
 };
 
