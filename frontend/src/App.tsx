@@ -18,6 +18,8 @@ import Connect from './pages_v2/ConnectDisconnect';
 import EmpDashboard from './pages/NewDashboard';
 import ConsumerView from './pages/ConsumerView';
 import Consumers from './pages_v2/Consumers';
+import MeterDetails from './pages/MeterDetails';
+import TicketView from './pages/TicketView';
 
 const App: React.FC = () => {
     return (
@@ -51,6 +53,8 @@ const App: React.FC = () => {
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
+                            <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
+                            <Route path="/tickets/:ticketId" element={<TicketView />} />
                         </Route>
                     </Routes>
                 </Router>
