@@ -7,9 +7,13 @@ export const getAllUsers = async (req, res) => {
         const formatted = users.map((u, idx) => ({
             sNo: idx + 1,
             userId: u.userId || u.id,
-            name: u.name,
+            name: u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim(),
             email: u.email,
-            role: u.role || (u.roles && u.roles[0] ? u.roles[0].name : ''),
+            phone: u.phone || u.phoneNumber || '-',
+            role: u.roles && u.roles.length > 0 ? u.roles.map(r => r.role?.name).join(', ') : '',
+            client:u.department?.name || '-',
+            lastActive: u.lastActive || '-',
+            createdDate: u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-',
         }));
         res.json({
             success: true,

@@ -60,10 +60,12 @@ export default function Tickets() {
         { key: 'priority', label: 'Priority' },
         { key: 'status', label: 'Status' },
         { key: 'assignedTo', label: 'Assigned To' },
+        { key: 'raisedBy', label: 'Raised By' },
         { key: 'createdAt', label: 'Created' },
         { key: 'lastUpdated', label: 'Updated' },
         { key: 'category', label: 'Category' },
         { key: 'responseTime', label: 'Response Time' },
+        // Add actions column if you want to show action buttons
     ]);
 
     const statsArray = [

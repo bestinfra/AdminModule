@@ -21,6 +21,7 @@ export default defineConfig({
         './DataLogger': './src/pages_v2/DataLogger.tsx',
         './Meters': './src/pages_v2/Meters.tsx',
         './Transformer': './src/pages_v2/DTRDashboard.tsx',
+        './DTRDashboard': './src/pages_v2/DTRDashboard.tsx',
         // Components and context exports remain unchanged
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',

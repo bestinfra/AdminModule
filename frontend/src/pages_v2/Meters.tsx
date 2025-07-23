@@ -4,57 +4,13 @@ import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
 export default function Meters() {
-    const [meterData, setMeterData] = useState([
-        {
-            id: 1,
-            title: 'Total Meters',
-            value: '1,247',
-            icon: 'icons/meter.svg',
-            showTrend: true,
-            comparisonValue: 12,
-            subtitle1: 'Active meters',
-            subtitle2: '+12 this month',
-        },
-        {
-            id: 2,
-            title: 'Smart Meters',
-            value: '892',
-            icon: 'icons/meter-bolt.svg',
-            showTrend: true,
-            comparisonValue: 8,
-            subtitle1: 'Connected devices',
-            subtitle2: '+8 this week',
-        },
-        {
-            id: 3,
-            title: 'Average Consumption',
-            value: '245 kWh',
-            icon: 'icons/consumption.svg',
-            showTrend: false,
-            subtitle1: 'Per household',
-            subtitle2: 'This month',
-        },
-        {
-            id: 4,
-            title: 'Meter Readings',
-            value: '98.5%',
-            icon: 'icons/current-reading.svg',
-            showTrend: true,
-            comparisonValue: -2.1,
-            subtitle1: 'Accuracy rate',
-            subtitle2: 'Last 24 hours',
-        },
-        {
-            id: 5,
-            title: 'Maintenance Due',
-            value: '23',
-            icon: 'icons/maintenance.svg',
-            showTrend: true,
-            comparisonValue: -5,
-            subtitle1: 'Meters requiring',
-            subtitle2: 'Service this week',
-        },
-    ]);
+    // Update meterData type to match new widget structure
+    const [meterData, setMeterData] = useState<{
+        id: number;
+        title: string;
+        value: string | number;
+        icon: string;
+    }[]>([]);
 
     const [tableData, setTableData] = useState([
         {
@@ -179,19 +135,17 @@ export default function Meters() {
         },
     ]);
 
+    // Table columns to match the first image
     const [tableColumns] = useState([
-        { key: 'meterNumber', label: 'Meter #' },
-        { key: 'customerName', label: 'Customer' },
+        { key: 'sNo', label: 'Sl No' },
+        { key: 'meterSerialNumber', label: 'Meter SI No' },
+        { key: 'modemSerialNumber', label: 'Modem SI No' },
+        { key: 'meterType', label: 'Meter Type' },
+        { key: 'manufacturer', label: 'Meter Make' },
+        { key: 'consumerName', label: 'Consumer Name' },
         { key: 'location', label: 'Location' },
-        { key: 'meterType', label: 'Type' },
-        { key: 'status', label: 'Status' },
-        { key: 'lastReading', label: 'Last Reading' },
-        { key: 'currentReading', label: 'Current' },
-        { key: 'previousReading', label: 'Previous' },
-        { key: 'consumption', label: 'Consumption' },
-        { key: 'voltage', label: 'Voltage' },
-        { key: 'current', label: 'Current' },
-        { key: 'powerFactor', label: 'Power Factor' },
+        { key: 'installationDate', label: 'Installation Date' },
+        // Actions column is handled by showActions: true
     ]);
 
     const [serverPagination, setServerPagination] = useState({
@@ -242,45 +196,38 @@ export default function Meters() {
         console.log('Location filter changed:', value);
     };
 
+    // Widgets to match the third image
     useEffect(() => {
-        // Fetch meter stats for cards
         fetch(`${BACKEND_URL}/meters/stats`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     const stats = data.data;
-                    // Map stats to cards with subtitles as in the dummy data
                     const cards = [
                         {
                             id: 1,
                             title: 'Total Meters',
                             value: stats.totalMeters,
                             icon: 'icons/meter.svg',
-                            showTrend: true,
-                            comparisonValue: 12,
-                            subtitle1: 'Active meters',
-                            subtitle2: '+12 this month',
                         },
-                        ...stats.makes.map((make: any, idx: number) => ({
-                            id: 2 + idx,
-                            title: `Make: ${make.manufacturer}`,
-                            value: make.count,
+                        {
+                            id: 2,
+                            title: 'Meter Makes',
+                            value: stats.meterMakes,
                             icon: 'icons/meter-make.svg',
-                            showTrend: true,
-                            comparisonValue: 8,
-                            subtitle1: 'Connected devices',
-                            subtitle2: '+8 this week',
-                        })),
-                        ...stats.types.map((type: any, idx: number) => ({
-                            id: 10 + idx,
-                            title: `Type: ${type.type}`,
-                            value: type.count,
+                        },
+                        {
+                            id: 3,
+                            title: 'Mapped Meters',
+                            value: stats.mappedMeters,
                             icon: 'icons/meter.svg',
-                            showTrend: false,
-                            comparisonValue: 12,
-                            subtitle1: 'Per household',
-                            subtitle2: 'This month',
-                        })),
+                        },
+                        {
+                            id: 4,
+                            title: 'Connection Type',
+                            value: stats.connectionType,
+                            icon: 'icons/connection-type.svg',
+                        },
                     ];
                     setMeterData(cards);
                 } else {
@@ -318,10 +265,6 @@ export default function Meters() {
                                         title: meter.title,
                                         value: meter.value,
                                         icon: meter.icon,
-                                        showTrend: meter.showTrend,
-                                        comparisonValue: meter.comparisonValue,
-                                        subtitle1: meter.subtitle1,
-                                        subtitle2: meter.subtitle2,
                                     },
                                 })),
                             },

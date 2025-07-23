@@ -4,10 +4,14 @@ import BACKEND_URL from '../config';
 
 const tableColumns = [
     { key: 'sNo', label: 'S.No' },
-    { key: 'userId', label: 'User ID' },
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
+    { key: 'name', label: 'Full Name' },
+    { key: 'email', label: 'Email Address' },
+    { key: 'phone', label: 'Phone Number' },
     { key: 'role', label: 'Role' },
+    { key: 'client', label: 'Client' },
+    { key: 'lastActive', label: 'Last Active' },
+    { key: 'createdDate', label: 'Created Date' },
+    // Add actions column if you want to show action buttons
 ];
 
 export default function Users() {

@@ -4,22 +4,17 @@ import MeterDB from '../models/MeterDB.js';
 export const getAllMeters = async (req, res) => {
     try {
         const meters = await MeterDB.getAllMeters();
-        // Map all required fields for the frontend table from the latest reading
-        const formatted = meters.map((m) => {
-            const latestReading = m.readings && m.readings[0] ? m.readings[0] : {};
+        // Map all required fields for the frontend table
+        const formatted = meters.map((m, idx) => {
             return {
-                meterNumber: m.meterNumber,
-                customerName: m.consumer?.name || 'NA',
+                sNo: idx + 1,
+                meterSerialNumber: m.meterNumber || 'NA',
+                modemSerialNumber: m.serialNumber || 'NA',
+                meterType: m.type || m.meterType || 'NA',
+                meterMake: m.manufacturer || m.meterMake || 'NA',
+                consumerName: m.consumer?.name || 'NA',
                 location: m.location?.name || 'NA',
-                meterType: m.type || 'NA',
-                status: m.status || 'NA',
-                lastReading: latestReading.readingDate || 'NA',
-                currentReading: latestReading.kWh || 'NA',
-                previousReading: latestReading.previousReading || 'NA', // If not present, use 'NA'
-                consumption: latestReading.consumption || 'NA', // If not present, use 'NA'
-                voltage: latestReading.averageVoltage || 'NA',
-                current: latestReading.averageCurrent || 'NA',
-                powerFactor: latestReading.powerFactor || 'NA',
+                installationDate: m.installationDate || m.createdAt || 'NA',
             };
         });
         res.json({

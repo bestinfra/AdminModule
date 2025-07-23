@@ -39,17 +39,20 @@ export const getTicketsTable = async (req, res) => {
         };
 
         const ticketsData = await TicketDB.getTicketsTable(page, limit, filters);
-        // Format for frontend table: sNo, ticketNumber, subject, status, priority, consumerName, raisedBy, assignedTo, createdAt
+        // Always return consumer name (from t.consumer.name or t.consumer.consumerNumber)
         const formatted = ticketsData.data.map((t, idx) => ({
             sNo: (page - 1) * limit + idx + 1,
             ticketNumber: t.ticketNumber,
+            consumerName: t.consumer?.name || t.consumer?.consumerNumber || 'NA',
             subject: t.subject,
-            status: t.status,
             priority: t.priority,
-            consumerName: t.consumerName,
-            raisedBy: t.raisedBy,
+            status: t.status,
             assignedTo: t.assignedTo,
-            createdAt: t.createdAt
+            raisedBy: t.raisedBy,
+            createdAt: t.createdAt,
+            lastUpdated: t.updatedAt || 'NA',
+            category: t.category || 'NA',
+            responseTime: t.responseTime || 'NA',
         }));
         res.json({
             success: true,
