@@ -10,35 +10,45 @@ import DragDropFileUpload from "@components/global/DragDropFileUpload";
 import TimeRangeSelector from "@/components/global/TimeRangeSelector";
 
 interface BrandPersonalizationProps {
-  formData: any;
-  errors: Record<string, string>;
-  onInputChange: (
-    e: React.ChangeEvent<any> | { target: { name: string; value: any } }
-  ) => void;
-  onNext: (e: React.FormEvent<HTMLFormElement>) => void;
-  currentStep?: number;
-  onBack?: () => void;
+    formData: any;
+    errors: Record<string, string>;
+    onInputChange: (
+        e: React.ChangeEvent<any> | { target: { name: string; value: any } }
+    ) => void;
+    onNext: (e: React.FormEvent<HTMLFormElement>) => void;
+    currentStep?: number;
+    onBack?: () => void;
 }
 
 const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
-  formData,
-  errors,
-  onInputChange,
-  onNext,
-  currentStep = 1,
-  onBack,
+    formData,
+    errors,
+    onInputChange,
+    onNext,
+    currentStep = 1,
+    onBack,
 }) => {
-  const [hasSubmitted, setHasSubmitted] = useState(false);
-  const [isLogoDragOver, setIsLogoDragOver] = useState(false);
-  const [isFaviconDragOver, setIsFaviconDragOver] = useState(false);
-  const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
-  const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
+    const [hasSubmitted, setHasSubmitted] = useState(false);
+    const [isLogoDragOver, setIsLogoDragOver] = useState(false);
+    const [isFaviconDragOver, setIsFaviconDragOver] = useState(false);
+    const [faviconPreview, setFaviconPreview] = useState<string | null>(null);
+    const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>(
+        {}
+    );
 
-  // Individual preview states for each upload area
-  const [darkModeLogo1Preview, setDarkModeLogo1Preview] = useState<string | null>(null);
-  const [darkModeLogo2Preview, setDarkModeLogo2Preview] = useState<string | null>(null);
-  const [lightModeLogo1Preview, setLightModeLogo1Preview] = useState<string | null>(null);
-  const [lightModeLogo2Preview, setLightModeLogo2Preview] = useState<string | null>(null);
+    // Individual preview states for each upload area
+    const [darkModeLogo1Preview, setDarkModeLogo1Preview] = useState<
+        string | null
+    >(null);
+    const [darkModeLogo2Preview, setDarkModeLogo2Preview] = useState<
+        string | null
+    >(null);
+    const [lightModeLogo1Preview, setLightModeLogo1Preview] = useState<
+        string | null
+    >(null);
+    const [lightModeLogo2Preview, setLightModeLogo2Preview] = useState<
+        string | null
+    >(null);
 
   // Log form data changes
   useEffect(() => {
@@ -92,94 +102,100 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     formData.colorStatIconGradient
   ]);
 
-  const handleFormInputChange = (name: string, value: FormInputValue) => {
-    onInputChange({ target: { name, value } } as any);
-    if (hasSubmitted) setHasSubmitted(false);
-  };
-
-  const handleFormInputBlur = () => {
-    // Handle blur if needed
-  };
-
-  // Validate form data and generate remarks
-  const {
-    isValid,
-    errors: validationErrors,
-    remarks,
-  } = useMemo(() => {
-    const validationResult = validateBrandPersonalization(formData);
-    console.log(' BrandPersonalization - Validation Result:', {
-      isValid: validationResult.isValid,
-      errors: validationResult.errors,
-      remarks: validationResult.remarks,
-      formDataKeys: Object.keys(formData)
-    });
-    return validationResult;
-  }, [formData]);
-
-  // Only show validation errors if form has been submitted
-  const allErrors = hasSubmitted ? { ...errors, ...validationErrors } : errors;
-
-  const handleFileUpload = (file: File, type: 'logo' | 'favicon', uploadArea?: string) => {
-    console.log('BrandPersonalization - File Upload:', { 
-      type, 
-      fileName: file.name, 
-      fileSize: file.size, 
-      fileType: file.type,
-      uploadArea
-    });
-    
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      if (type === 'logo') {
-        // Handle individual logo upload areas
-        switch (uploadArea) {
-          case 'darkMode1':
-            setDarkModeLogo1Preview(e.target?.result as string);
-            break;
-          case 'darkMode2':
-            setDarkModeLogo2Preview(e.target?.result as string);
-            break;
-          case 'lightMode1':
-            setLightModeLogo1Preview(e.target?.result as string);
-            break;
-          case 'lightMode2':
-            setLightModeLogo2Preview(e.target?.result as string);
-            break;
-        }
-      } else {
-        setFaviconPreview(e.target?.result as string);
-      }
+    const handleFormInputChange = (name: string, value: FormInputValue) => {
+        onInputChange({ target: { name, value } } as any);
+        if (hasSubmitted) setHasSubmitted(false);
     };
-    reader.readAsDataURL(file);
-    
-    // Create a synthetic event for the form handler
-    const syntheticEvent = {
-      target: {
-        name: type === 'logo' ? 'appLogo' : 'appFavicon',
-        files: [file]
-      }
-    } as any;
-    onInputChange(syntheticEvent);
-  };
 
-  const handleDragOver = (e: React.DragEvent, type: 'logo' | 'favicon') => {
-    e.preventDefault();
-    if (type === 'logo') {
-      setIsLogoDragOver(true);
-    } else {
-      setIsFaviconDragOver(true);
-    }
-  };
+    const handleFormInputBlur = () => {
+        // Handle blur if needed
+    };
 
-  const handleDragLeave = (e: React.DragEvent, type: 'logo' | 'favicon') => {
-    e.preventDefault();
-    if (type === 'logo') {
-      setIsLogoDragOver(false);
-    } else {
-      setIsFaviconDragOver(false);
-    }
-  };
+    // Validate form data and generate remarks
+    const {
+        isValid,
+        errors: validationErrors,
+        remarks,
+    } = useMemo(() => {
+        const validationResult = validateBrandPersonalization(formData);
+        console.log(' BrandPersonalization - Validation Result:', {
+            isValid: validationResult.isValid,
+            errors: validationResult.errors,
+            remarks: validationResult.remarks,
+            formDataKeys: Object.keys(formData),
+        });
+        return validationResult;
+    }, [formData]);
+
+    // Only show validation errors if form has been submitted
+    const allErrors = hasSubmitted
+        ? { ...errors, ...validationErrors }
+        : errors;
+
+    const handleFileUpload = (
+        file: File,
+        type: 'logo' | 'favicon',
+        uploadArea?: string
+    ) => {
+        console.log('BrandPersonalization - File Upload:', {
+            type,
+            fileName: file.name,
+            fileSize: file.size,
+            fileType: file.type,
+            uploadArea,
+        });
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            if (type === 'logo') {
+                // Handle individual logo upload areas
+                switch (uploadArea) {
+                    case 'darkMode1':
+                        setDarkModeLogo1Preview(e.target?.result as string);
+                        break;
+                    case 'darkMode2':
+                        setDarkModeLogo2Preview(e.target?.result as string);
+                        break;
+                    case 'lightMode1':
+                        setLightModeLogo1Preview(e.target?.result as string);
+                        break;
+                    case 'lightMode2':
+                        setLightModeLogo2Preview(e.target?.result as string);
+                        break;
+                }
+            } else {
+                setFaviconPreview(e.target?.result as string);
+            }
+        };
+        reader.readAsDataURL(file);
+
+        // Create a synthetic event for the form handler
+        const syntheticEvent = {
+            target: {
+                name: type === 'logo' ? 'appLogo' : 'appFavicon',
+                files: [file],
+            },
+        } as any;
+        onInputChange(syntheticEvent);
+    };
+
+    const handleDragOver = (e: React.DragEvent, type: 'logo' | 'favicon') => {
+        e.preventDefault();
+        if (type === 'logo') {
+            setIsLogoDragOver(true);
+        } else {
+            setIsFaviconDragOver(true);
+        }
+    };
+
+    const handleDragLeave = (e: React.DragEvent, type: 'logo' | 'favicon') => {
+        e.preventDefault();
+        if (type === 'logo') {
+            setIsLogoDragOver(false);
+        } else {
+            setIsFaviconDragOver(false);
+        }
+    };
 
   const handleDrop = (e: React.DragEvent, type: 'logo' | 'favicon', uploadArea?: string) => {
     e.preventDefault();
@@ -190,7 +206,15 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     }
     
     const files = Array.from(e.dataTransfer.files);
-    const imageFile = files.find(file => file.type.startsWith('image/'));
+    let imageFile;
+    
+    if (type === 'favicon') {
+      // For favicon, only accept PNG files
+      imageFile = files.find(file => file.type === 'image/png');
+    } else {
+      // For logo, accept any image type
+      imageFile = files.find(file => file.type.startsWith('image/'));
+    }
     
     if (imageFile) {
       handleFileUpload(imageFile, type, uploadArea);
@@ -320,6 +344,23 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                     fileInputRefs={fileInputRefs}
                   />
                 </div>
+                <div className="mt-6">
+                  <FormInput
+                    input={{
+                      name: "appDescription",
+                      type: "textarea",
+                      placeholder: "Enter app description",
+                      required: true,
+                    }}
+                    value={formData.appDescription}
+                    error={allErrors.appDescription}
+                    showError={!!allErrors.appDescription}
+                    disabled={false}
+                    onInputChange={handleFormInputChange}
+                    onInputBlur={handleFormInputBlur}
+                    fileInputRefs={fileInputRefs}
+                  />
+                </div>
               </div>
 
               {/* Branding Assets Section */}
@@ -409,9 +450,9 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                         onDragOver={(e) => handleDragOver(e, 'favicon')}
                         onDragLeave={(e) => handleDragLeave(e, 'favicon')}
                         onDrop={(e) => handleDrop(e, 'favicon')}
-                        accept="image/*"
+                        accept="image/png"
                         browseLabel="browse"
-                        helperText="ICO, PNG up to 1MB"
+                        helperText="PNG format only, up to 1MB"
                         imgClassName="w-24 h-24 dark:border-dark-border rounded object-contain dark:bg-primary-dark-light p-1"
                         previewOnClick={() => document.getElementById('appFavicon')?.click()}
                       />

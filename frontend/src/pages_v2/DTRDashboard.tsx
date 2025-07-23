@@ -16,16 +16,86 @@ const DTRDashboard: React.FC = () => {
         { key: 'commStatus', label: 'Comm-Status' },
     ];
     const dtrTableData = [
-        { dtrId: 'TRANSFORMER-01', dtrName: 'TGNP_DTR-01', feedersCount: 1, streetName: 'Waddepally', city: 'Warangal', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-02', dtrName: 'TGNP_DTR-02', feedersCount: 1, streetName: 'Sun city', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-03', dtrName: 'TGNP_DTR-03', feedersCount: 4, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-04', dtrName: 'TGNP_DTR-04', feedersCount: 1, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-05', dtrName: 'TGNP_DTR-05', feedersCount: 1, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-06', dtrName: 'TGNP_DTR-06', feedersCount: 1, streetName: 'Prashanth Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-07', dtrName: 'TGNP_DTR-07', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-08', dtrName: 'TGNP_DTR-08', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-09', dtrName: 'TGNP_DTR-09', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
-        { dtrId: 'TRANSFORMER-10', dtrName: 'TGNP_DTR-10', feedersCount: 1, streetName: 'Hyder Nagar', city: 'Hyderabad', commStatus: 'Active' },
+        {
+            dtrId: 'TRANSFORMER-01',
+            dtrName: 'TGNP_DTR-01',
+            feedersCount: 1,
+            streetName: 'Waddepally',
+            city: 'Warangal',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-02',
+            dtrName: 'TGNP_DTR-02',
+            feedersCount: 1,
+            streetName: 'Sun city',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-03',
+            dtrName: 'TGNP_DTR-03',
+            feedersCount: 4,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-04',
+            dtrName: 'TGNP_DTR-04',
+            feedersCount: 1,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-05',
+            dtrName: 'TGNP_DTR-05',
+            feedersCount: 1,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-06',
+            dtrName: 'TGNP_DTR-06',
+            feedersCount: 1,
+            streetName: 'Prashanth Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-07',
+            dtrName: 'TGNP_DTR-07',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-08',
+            dtrName: 'TGNP_DTR-08',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-09',
+            dtrName: 'TGNP_DTR-09',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
+        {
+            dtrId: 'TRANSFORMER-10',
+            dtrName: 'TGNP_DTR-10',
+            feedersCount: 1,
+            streetName: 'Hyder Nagar',
+            city: 'Hyderabad',
+            commStatus: 'Active',
+        },
     ];
     const dtrTableActions = [
         {
@@ -42,7 +112,11 @@ const DTRDashboard: React.FC = () => {
         { key: 'status', label: 'Status' },
     ];
     const alertsTableData = [
-        { alert: 'Overload detected', date: '2024-07-01 10:00', status: 'Active' },
+        {
+            alert: 'Overload detected',
+            date: '2024-07-01 10:00',
+            status: 'Active',
+        },
         { alert: 'Fuse blown', date: '2024-07-01 09:30', status: 'Resolved' },
         { alert: 'Power failure', date: '2024-07-01 08:45', status: 'Active' },
     ];
@@ -63,12 +137,22 @@ const DTRDashboard: React.FC = () => {
         { name: 'LT Fuse Blown (B - Phase)', color: '#e67e22' },
         { name: 'R-L-P', color: '#9b59b6' },
     ];
-    const months = ['May 2025', 'Apr 2025', 'Mar 2025', 'Feb 2025', 'Jan 2025', 'Dec 2024', 'Nov 2024', 'Oct 2024', 'Sept 2024'];
+    const months = [
+        'May 2025',
+        'Apr 2025',
+        'Mar 2025',
+        'Feb 2025',
+        'Jan 2025',
+        'Dec 2024',
+        'Nov 2024',
+        'Oct 2024',
+        'Sept 2024',
+    ];
     const alertSeries = alertTypes.map((type) => ({
         name: type.name,
         data: months.map(() => Math.floor(Math.random() * 350)),
     }));
-    const alertColors = alertTypes.map(type => type.color);
+    const alertColors = alertTypes.map((type) => type.color);
 
     return (
         <div className="p-2 min-h-screen">
@@ -400,4 +484,4 @@ const DTRDashboard: React.FC = () => {
     );
 };
 
-export default DTRDashboard; 
+export default DTRDashboard;

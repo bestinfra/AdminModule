@@ -16,8 +16,10 @@ import Heading from './Heading';
 import TimeRangeSelector from './TimeRangeSelector';
 import BarChart from '../../graphs/BarChart';
 import PieChart from '../../graphs/PieChart';
+import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
+import { Form } from '../Form';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
@@ -38,8 +40,10 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     TimeRangeSelector,
     BarChart,
     PieChart,
+    TopLevelHierarchy,
     Stepper,
     FormContainer,
+    Form,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

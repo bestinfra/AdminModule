@@ -64,23 +64,34 @@ const FormInput: React.FC<FormInputProps> = ({
     input.onChange?.(extractedValue);
   }, [onInputChange, name, input]);
 
-  const commonProps: CommonInputProps = useMemo(() => ({
-    id: name,
-    name,
-    required,
-    disabled,
-    className: `w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer bg-white dark:bg-gray-800 border-primary-border dark:border-dark-border text-base font-medium focus:border-primary-border focus:outline-none [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:dark:bg-gray-800 [&:-webkit-autofill]:shadow-[0_0_0_1000px_white_inset] dark:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#1f2937_inset] ${
-      showError ? "border-red-500" : "border-gray-300"
-    } ${inputClassName || ""}`,
-    onChange: handleInputChange,
-    "aria-invalid": showError ? "true" : "false",
-    "aria-describedby": showError
-      ? errorId
-      : description
-      ? descriptionId
-      : undefined,
-    "aria-required": required ? "true" : "false",
-  }), [name, required, disabled, showError, inputClassName, handleInputChange, errorId, description, descriptionId]);
+  const commonProps: CommonInputProps = useMemo(() => {
+    const isTextarea = type === "textarea";
+    const baseClassName = `w-full flex items-center justify-between px-4 py-3.5 bg-white dark:bg-gray-800 text-base font-medium focus:outline-none [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:dark:bg-gray-800 [&:-webkit-autofill]:shadow-[0_0_0_1000px_white_inset] dark:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#1f2937_inset]`;
+    
+    const borderClassName = isTextarea 
+      ? `border border-primary-border dark:border-dark-border focus:border-primary-border ${
+          showError ? "border-red-500" : "border-gray-300"
+        }`
+      : `border px-4 py-3.5 rounded-full cursor-pointer border-primary-border dark:border-dark-border focus:border-primary-border ${
+          showError ? "border-red-500" : "border-gray-300"
+        }`;
+
+    return {
+      id: name,
+      name,
+      required,
+      disabled,
+      className: `${baseClassName} ${borderClassName} ${inputClassName || ""}`,
+      onChange: handleInputChange,
+      "aria-invalid": showError ? "true" : "false",
+      "aria-describedby": showError
+        ? errorId
+        : description
+        ? descriptionId
+        : undefined,
+      "aria-required": required ? "true" : "false",
+    };
+  }, [name, required, disabled, showError, inputClassName, handleInputChange, errorId, description, descriptionId, type]);
 
   const renderInput = useMemo(() => {
     const stringValue = value === null ? "" : (value as string);
