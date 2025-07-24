@@ -699,11 +699,16 @@ export const validateFeatureSelection = (formData: any): { isValid: boolean; err
   }
 
   // Check for required default modules
-  const requiredModules = ['dashboard', 'consumer', 'user_management_default', 'role_management'];
+  const requiredModules = ['dashboard', 'consumer', 'user_management_default'];
   const missingRequired = requiredModules.filter(module => !formData.modules?.includes(module));
   
   if (missingRequired.length > 0) {
     remarks.push(`💡 Consider enabling: ${missingRequired.join(', ')}`);
+  }
+
+  // Add remark about role management being included with user management
+  if (formData.modules?.includes('user_management_default')) {
+    remarks.push('✓ User Management enabled (includes Role Management)');
   }
 
   // Generate remarks based on form data
