@@ -40,6 +40,7 @@ export default function Users() {
             .then(async (res) => {
                 // if (!res.ok) throw new Error('Failed to fetch users');
                 const result = await res.json();
+                console.log(result);
                 // if (!result.success)
                 //     throw new Error(result.message || 'Failed to fetch users');
                 // setUsers(result.data);
