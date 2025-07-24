@@ -24,6 +24,8 @@ import AllTickets from './pages/AllTickets';import ConsumerView from './pages_v2
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
+import Prepaid from './pages_v2/Prepaid';
+import Postpaid from './pages_v2/Postpaid';
 
 const App: React.FC = () => {
     return (
@@ -64,6 +66,8 @@ const App: React.FC = () => {
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
+                            <Route path="/prepaid" element={<Prepaid />} />
+                            <Route path="/postpaid" element={<Postpaid />} />
                         </Route>
                     </Routes>
                 </Router>
