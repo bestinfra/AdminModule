@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 
 // Context
-import { useAuth } from '@context/AuthContext';
+// import { useAuth } from '@context/AuthContext';
 
 // Interfaces
 interface Ticket {
@@ -461,22 +461,11 @@ const TicketView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    // Safe auth usage for federated environments
-    let user = null;
-    let isAdmin = false;
-    let basePath = '/tickets';
-    let userDashboardPath = '/';
-
-    try {
-        const authResult = useAuth();
-        user = authResult?.user;
-        isAdmin = user?.role?.toLowerCase().includes('admin') || false;
-        basePath = isAdmin ? '/admin/tickets' : '/user/tickets';
-        userDashboardPath = '/user';
-    } catch (error) {
-        // Fallback for federated environments where AuthProvider might not be available
-        console.log('Auth context not available, using fallback values');
-    }
+    // Hardcoded demo values (disable useAuth logic)
+    // const user = null;
+    const isAdmin = false;
+    const basePath = '/user/tickets';
+    const userDashboardPath = '/user';
 
     // Generate dummy data based on ticket ID
     const generateDummyTicket = (ticketId: string): Ticket => {
@@ -776,8 +765,8 @@ const TicketView: React.FC = () => {
     const [chatAttachments, setChatAttachments] = useState<File[]>([]);
 
     // Dummy data for fallback
-    const dummyTicket = generateDummyTicket(id || 'TICKET-001');
-    const dummyActivities: Activity[] = [
+    const [demoTicket] = useState(generateDummyTicket(id || 'TICKET-001'));
+    const [demoActivities] = useState<Activity[]>([
         {
             id: 1,
             type: 'status',
@@ -795,15 +784,13 @@ const TicketView: React.FC = () => {
             author: 'Technical Team',
             note: 'Scheduled meter reading verification for January 17, 2024, between 10 AM - 2 PM.',
         },
-    ];
+    ]);
 
-    // Set activities immediately for development
     useEffect(() => {
         const fetchTicketDetails = async () => {
             if (!id) return;
             try {
                 setIsLoading(true);
-                // setError(null); // Removed: error state
                 // API call to fetch ticket details
                 const response = await fetch(
                     `${process.env.REACT_APP_BACKEND_URL || ''}/tickets/${id}`
@@ -849,16 +836,15 @@ const TicketView: React.FC = () => {
                 }
             } catch (err) {
                 console.error('Error fetching ticket details:', err);
-                // setError(err instanceof Error ? err.message : 'Failed to fetch ticket details'); // Removed: error state
-                // Fallback to dummy data for development
-                setTicket(dummyTicket);
-                setActivities(dummyActivities);
+                // Fallback to demo data for development
+                setTicket(demoTicket);
+                setActivities(demoActivities);
             } finally {
                 setIsLoading(false);
             }
         };
         fetchTicketDetails();
-    }, [id]);
+    }, [id, demoTicket, demoActivities]);
 
     // Handle chat message sending
     const handleSendMessage = () => {
@@ -869,7 +855,7 @@ const TicketView: React.FC = () => {
             sender_type: isAdmin ? 'admin' : 'user',
             sender_name: isAdmin
                 ? 'Support Agent'
-                : ticket?.UnitName || user?.username || 'Customer',
+                : ticket?.UnitName || 'Customer',
             message: chatMessage.trim(),
             timestamp: new Date().toISOString(),
             attachments: chatAttachments.map((file) => ({
@@ -903,9 +889,7 @@ const TicketView: React.FC = () => {
                 ? 'Support team responded'
                 : 'Customer responded',
             timestamp: new Date().toISOString(),
-            author: isAdmin
-                ? 'Support Agent'
-                : ticket?.UnitName || user?.username || 'Customer',
+            author: isAdmin ? 'Support Agent' : ticket?.UnitName || 'Customer',
         };
 
         setActivities((prev) => [...prev, newActivity]);

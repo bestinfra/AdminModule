@@ -21,6 +21,7 @@ import PieChart from '../../graphs/PieChart';
 import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
+import SectionHeader from './SectionHeader';
 import { Form } from '../Form';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -47,6 +48,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Stepper,
     FormContainer,
     Form,
+    SectionHeader,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

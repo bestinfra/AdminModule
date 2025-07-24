@@ -163,8 +163,9 @@ function generateAppComponent(frontendDir, variables) {
   variables.billsPostpaidRoute = (modules.includes('bills') || modules.includes('postpaid')) ? 
     '<Route path="/bills/postpaid" element={<BillsPostpaid />} />' : '';
   
-  variables.assetManagementRoute = modules.includes('asset_management') ? 
-    '<Route path="/asset-management" element={<Assets />} />' : '';
+  variables.assetManagementRoute = modules.includes('asset_management')
+      ? '<Route path="/asset-management" element={<AssetManagment />} />'
+      : '';
   
   variables.meterManagementRoute = modules.includes('meter_management') ? 
     '<Route path="/meters" element={<Meters />} />' : '';
@@ -173,7 +174,7 @@ function generateAppComponent(frontendDir, variables) {
     '<Route path="/data-logger-master" element={<DataLoggerMaster />} />' : '';
   
   variables.ticketsRoute = modules.includes('tickets') ? 
-    '<Route path="/all-tickets" element={<AllTickets />} />' : '';
+    '<Route path="/all-tickets" element={<Tickets />} />' : '';
   
   variables.usersRoute = modules.includes('user_management_default') ? 
     '<Route path="/users" element={<Users />} />' : '';
@@ -184,8 +185,9 @@ function generateAppComponent(frontendDir, variables) {
   variables.consumerRoute = modules.includes('consumer') ? 
     '<Route path="/consumers" element={<Consumers />} />' : '';
   
-  variables.dtrRoute = modules.includes('dtr') ? 
-    '<Route path="/dtr-dashboard" element={<Transformer />} />\n                          <Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
+  variables.dtrRoute = modules.includes('dtr')
+      ? '<Route path="/dtr-dashboard" element={<DTRDashboard />} />\n                          <Route path="/dtr/:dtrId" element={<Feeders />} />'
+      : '';
   
   variables.meterDetailsRoute = modules.includes('meter_management') ? 
     '<Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />' : '';

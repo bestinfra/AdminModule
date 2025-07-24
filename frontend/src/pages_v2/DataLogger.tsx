@@ -4,7 +4,7 @@ import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
 export default function DataLogger() {
-    const [dataLoggerData, setDataLoggerData] = useState([]);
+    const [dataLoggerData, setDataLoggerData] = useState<TableData[]>([]);
     const [loading, setLoading] = useState(true);
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
@@ -16,6 +16,32 @@ export default function DataLogger() {
     });
 
     // Fetch data loggers from API
+    const demoDataLoggerData = [
+        {
+            sNo: 1,
+            modemSlNo: 'DL-1001',
+            hwVersion: 'HW-1.0',
+            fwVersion: 'FW-2.1',
+            mobile: '+1-555-0101',
+            installationDate: '2024-01-01',
+        },
+        {
+            sNo: 2,
+            modemSlNo: 'DL-1002',
+            hwVersion: 'HW-1.1',
+            fwVersion: 'FW-2.2',
+            mobile: '+1-555-0102',
+            installationDate: '2024-02-15',
+        },
+        {
+            sNo: 3,
+            modemSlNo: 'DL-1003',
+            hwVersion: 'HW-1.2',
+            fwVersion: 'FW-2.3',
+            mobile: '+1-555-0103',
+            installationDate: '2024-03-10',
+        },
+    ];
     const fetchDataLoggers = (page = 1, limit = 8) => {
         setLoading(true);
         fetch(`${BACKEND_URL}/meters/dataloggers?page=${page}&limit=${limit}`)
@@ -33,6 +59,16 @@ export default function DataLogger() {
             })
             .catch((err) => {
                 console.error('Failed to fetch data loggers:', err);
+                // Fallback to demo data
+                setDataLoggerData(demoDataLoggerData);
+                setServerPagination({
+                    currentPage: 1,
+                    totalPages: 1,
+                    totalCount: demoDataLoggerData.length,
+                    limit: demoDataLoggerData.length,
+                    hasNextPage: false,
+                    hasPrevPage: false,
+                });
             })
             .finally(() => setLoading(false));
     };

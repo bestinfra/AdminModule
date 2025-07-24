@@ -19,7 +19,17 @@ const ICON_FILTER_STYLE = {
 };
 
 export default function Users() {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<
+        Array<{
+            sNo: number;
+            name: string;
+            email: string;
+            phone: string;
+            role: string;
+            client: string;
+            createdDate: string;
+        }>
+    >([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -39,6 +49,45 @@ export default function Users() {
             })
             .catch((err) => {
                 setError(err.message || 'Failed to fetch users');
+                // Demo users fallback
+                setUsers([
+                    {
+                        sNo: 1,
+                        name: 'John Doe',
+                        email: 'john.doe@email.com',
+                        phone: '+1-555-0101',
+                        role: 'Admin',
+                        client: 'Acme Corp',
+                        createdDate: '2024-01-01',
+                    },
+                    {
+                        sNo: 2,
+                        name: 'Jane Smith',
+                        email: 'jane.smith@email.com',
+                        phone: '+1-555-0102',
+                        role: 'User',
+                        client: 'Beta Inc',
+                        createdDate: '2024-02-15',
+                    },
+                    {
+                        sNo: 3,
+                        name: 'Alice Brown',
+                        email: 'alice.brown@email.com',
+                        phone: '+1-555-0103',
+                        role: 'Accountant',
+                        client: 'Gamma LLC',
+                        createdDate: '2024-03-10',
+                    },
+                    {
+                        sNo: 4,
+                        name: 'Mike Wilson',
+                        email: 'mike.wilson@email.com',
+                        phone: '+1-555-0104',
+                        role: 'Moderator',
+                        client: 'Delta Ltd',
+                        createdDate: '2024-04-05',
+                    },
+                ]);
             })
             .finally(() => setLoading(false));
     }, []);
@@ -55,7 +104,18 @@ export default function Users() {
                     );
                 setUserStats(result.data);
             })
-            .catch(() => setUserStats(null))
+            .catch(() => {
+                // Demo user stats fallback
+                setUserStats({
+                    totalUsers: 4,
+                    activeUsers: 3,
+                    inactiveUsers: 1,
+                    totalAdmins: 1,
+                    totalAccountants: 1,
+                    totalModerators: 1,
+                    totalRoles: 4,
+                });
+            })
             .finally(() => {});
     }, []);
 
