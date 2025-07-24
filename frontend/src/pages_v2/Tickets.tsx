@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
@@ -11,7 +11,6 @@ export default function Tickets() {
     const [tickets, setTickets] = useState<any[]>([]);
     const [pagination, setPagination] = useState<any>(null);
 
-    // Fetch ticket stats
     useEffect(() => {
         fetch(`${BACKEND_URL}/tickets/stats`)
             .then(res => res.json())
@@ -33,7 +32,6 @@ export default function Tickets() {
             });
     }, []);
 
-    // Fetch ticket trends
     useEffect(() => {
         fetch(`${BACKEND_URL}/tickets/trends`)
             .then(res => res.json())
@@ -66,7 +64,6 @@ export default function Tickets() {
             });
     }, []);
 
-    // Fetch ticket table (with pagination)
     const fetchTicketsTable = (page: number = 1, limit: number = 10) => {
         fetch(`${BACKEND_URL}/tickets/table?page=${page}&limit=${limit}`)
             .then(res => res.json())
@@ -186,27 +183,25 @@ export default function Tickets() {
     };
 
     const [tableColumns] = useState([
-        { key: 'ticketNumber', label: 'Ticket #' },
-        { key: 'customerName', label: 'Customer' },
+        { key: 'ticketNumber', label: 'Ticket ID' },
+        { key: 'consumerUid', label: 'Consumer UID' },
         { key: 'subject', label: 'Subject' },
+        { key: 'meterSerialNo', label: 'Meter Serial No' },
+        { key: 'category', label: 'Category' },
         { key: 'priority', label: 'Priority' },
         { key: 'status', label: 'Status' },
-        { key: 'assignedTo', label: 'Assigned To' },
-        { key: 'createdAt', label: 'Created' },
-        { key: 'lastUpdated', label: 'Updated' },
-        { key: 'category', label: 'Category' },
-        { key: 'responseTime', label: 'Response Time' },
     ]);
 
     const statsArray = [
-        { key: 'total', label: 'Open Tickets', icon: 'icons/open-tickets.svg', subtitle1: 'Total active tickets', subtitle2: 'Last 24 hours' },
-        { key: 'open', label: 'Resolved Today', icon: 'icons/check-circle.svg', subtitle1: 'Successfully resolved', subtitle2: 'Today' },
-        { key: 'inProgress', label: 'Average Response Time', icon: 'icons/clock.svg', subtitle1: 'Customer satisfaction', subtitle2: 'Target: 4h' },
-        { key: 'resolved', label: 'Pending Escalations', icon: 'icons/alert-triggered.svg', subtitle1: 'Requires attention', subtitle2: 'High priority' },
-        { key: 'closed', label: 'Customer Satisfaction', icon: 'icons/star.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month' },
+        { key: 'total', label: 'Total Tickets', icon: 'icons/open-tickets.svg', subtitle1: 'Total active tickets', subtitle2: 'Last 24 hours' },
+        { key: 'open', label: 'Open Tickets', icon: 'icons/check-circle.svg', subtitle1: 'Successfully resolved', subtitle2: 'Today' },
+        { key: 'inProgress', label: 'In Progress Tickets', icon: 'icons/clock.svg', subtitle1: 'Customer satisfaction', subtitle2: 'Target: 4h' },
+        { key: 'resolved', label: 'Resolved Tickets', icon: 'icons/alert-triggered.svg', subtitle1: 'Requires attention', subtitle2: 'High priority' },
+        { key: 'closed', label: 'Closed Tickets', icon: 'icons/star.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month' },
     ];
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <Page
             sections={[
                 {
@@ -338,5 +333,6 @@ export default function Tickets() {
                 },
             ]}
         />
+        </Suspense>
     );
 }

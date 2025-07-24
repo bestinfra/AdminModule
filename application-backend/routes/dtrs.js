@@ -4,11 +4,11 @@ import { getDTRTable, getFeedersForDTR, getDTRAlerts, getDTRAlertsTrends, getDTR
 const router = express.Router();
 
 router.get('/', getDTRTable);
-router.get('/:dtrId', getFeedersForDTR);
-router.get('/alerts', getDTRAlerts);
-router.get('/alerts/trends', getDTRAlertsTrends);
 router.get('/stats', getDTRStats);
 router.get('/consumptionStats', getConsumptionStats);
+router.get('/alerts', getDTRAlerts);
+router.get('/alerts/trends', getDTRAlertsTrends);
+router.get('/:dtrId', getFeedersForDTR);
 router.get('/:dtrId/feederStats', getFeederStats);
 router.get('/:meterId/instantaneousStats', getInstantaneousStats);
 

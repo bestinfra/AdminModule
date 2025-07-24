@@ -11,6 +11,7 @@ import Search from './Search';
 import DatePicker from './DatePicker';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
+// import OrgChartAlt from './OrgChartAlt';
 import Holder from './Holder';
 import LoadingSpinner from './LoadingSpinner';
 import Heading from './Heading';

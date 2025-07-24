@@ -3,9 +3,29 @@ import RoleDB from '../models/RoleDB.js';
 export const getAllRoles = async (req, res) => {
     try {
         const roles = await RoleDB.getAllRoles();
+        // Map to clean structure
+        const mappedRoles = roles.map(role => ({
+            id: role.id,
+            name: role.name,
+            users: (role.users || []).map(u => ({
+                id: u.user.id,
+                username: u.user.username,
+                firstName: u.user.firstName,
+                lastName: u.user.lastName,
+                email: u.user.email,
+                isActive: u.user.isActive,
+            })),
+            permissions: (role.permissions || []).map(p => ({
+                id: p.permission.id,
+                name: p.permission.name,
+                description: p.permission.description,
+            })),
+            createdAt: role.createdAt,
+            updatedAt: role.updatedAt,
+        }));
         res.json({
             success: true,
-            data: roles,
+            data: mappedRoles,
             message: 'Roles retrieved successfully'
         });
     } catch (error) {

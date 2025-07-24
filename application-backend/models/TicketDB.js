@@ -84,7 +84,12 @@ class TicketDB {
                             consumerNumber: true,
                             name: true,
                             primaryPhone: true,
-                            email: true
+                            email: true,
+                            meters: {
+                                select: {
+                                    serialNumber: true
+                                }
+                            }
                         }
                     },
                     raisedBy: {
@@ -123,6 +128,7 @@ class TicketDB {
                 consumerName: ticket.consumer?.name,
                 consumerPhone: ticket.consumer?.primaryPhone,
                 consumerEmail: ticket.consumer?.email,
+                meterSerialNo: ticket.consumer?.meters?.[0]?.serialNumber || 'NA',
                 raisedBy: ticket.raisedBy ? `${ticket.raisedBy.firstName} ${ticket.raisedBy.lastName}` : null,
                 assignedTo: ticket.assignedTo ? `${ticket.assignedTo.firstName} ${ticket.assignedTo.lastName}` : null,
                 createdAt: ticket.createdAt,

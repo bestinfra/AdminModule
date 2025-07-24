@@ -1,11 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Page from '@/components/global/PageC';
+import BACKEND_URL from '../config';
+
+// Constants
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
 
 const tableColumns = [
     { key: 'sNo', label: 'S.No' },
-    { key: 'userId', label: 'User ID' },
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
+    { key: 'name', label: 'Full Name' },
+    { key: 'email', label: 'Email Address' },
+    { key: 'phone', label: 'Phone Number' },
     { key: 'role', label: 'Role' },
 ];
 
@@ -188,45 +194,13 @@ const dummyUsers = [
     }
 ];
 
-// Card data for user statistics
-const cardData = [
-    {
-        title: 'Total Users',
-        value: '25',
-        icon: '/icons/users.svg',
-        subtitle1: '20 Active Users',
-        subtitle2: '5 Inactive Users',
-    },
-    {
-        title: 'Total Admins',
-        value: '5',
-        icon: '/icons/admin.svg',
-        subtitle1: 'This Month',
-    },
-    {
-        title: 'Total Accountants',
-        value: '5',
-        icon: '/icons/accountant.svg',
-        subtitle1: 'This Month',
-    },
-    {
-        title: 'Total Moderators',
-        value: '5',
-        icon: '/icons/moderator.svg',
-        subtitle1: '5 Active Users',
-    },
-    {
-        title: 'Total Users',
-        value: '10',
-        icon: '/icons/user.svg',
-        subtitle1: '10 Regular Users',
-    },
-];
+
 
 export default function Users() {
     const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [userStats, setUserStats] = useState<any>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -239,8 +213,66 @@ export default function Users() {
         }, 500);
     }, []);
 
+    // Fetch user stats (widgets)
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/users/stats`)
+            .then(async (res) => {
+                if (!res.ok) throw new Error('Failed to fetch user stats');
+                const result = await res.json();
+                if (!result.success)
+                    throw new Error(
+                        result.message || 'Failed to fetch user stats'
+                    );
+                setUserStats(result.data);
+            })
+            .catch(() => setUserStats(null))
+            .finally(() => {});
+    }, []);
+
+    // Widget cards array (same style as meters/tickets)
+    const userWidgets = userStats
+        ? [
+              {
+                  title: 'Total Users',
+                  value: userStats.totalUsers,
+                  icon: '/icons/account.svg',
+                  subtitle1: `${userStats.activeUsers} Active Users`,
+                  subtitle2: `${userStats.inactiveUsers} Inactive Users`,
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Admins',
+                  value: userStats.totalAdmins,
+                  icon: '/icons/admin.svg',
+                  subtitle1: 'This Month',
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Accountants',
+                  value: userStats.totalAccountants,
+                  icon: '/icons/accountant.svg',
+                  subtitle1: 'This Month',
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Moderators',
+                  value: userStats.totalModerators,
+                  icon: '/icons/moderator.svg',
+                  subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Roles',
+                  value: userStats.totalRoles,
+                  icon: '/icons/apps-icon.svg',
+                  subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+          ]
+        : [];
+
     return (
-        <>
+        <Suspense fallback={<div>Loading...</div>}>
             {error && (
                 <div className="mb-4 p-4 bg-danger-light border border-danger rounded-md text-danger">
                     {error}
@@ -260,31 +292,58 @@ export default function Users() {
                                         {
                                             name: 'PageHeader',
                                             props: {
-                                                title: "User Management",
-                                                onBackClick: () => window.history.back(),
-                                                backButtonText: "Back to Dashboard",
-                                                buttonsLabel: "Add User",
-                                                variant: "primary",
-                                                onClick: () => console.log('Adding new user...'),
+                                                title: 'User Management',
+                                                onBackClick: () =>
+                                                    window.history.back(),
+                                                backButtonText:
+                                                    'Back to Dashboard',
+                                                buttonsLabel: 'Add User',
+                                                variant: 'primary',
+                                                onClick: () =>
+                                                    console.log(
+                                                        'Adding new user...'
+                                                    ),
                                                 showMenu: true,
                                                 showDropdown: true,
                                                 menuItems: [
-                                                    { id: 'all', label: 'All Users' },
-                                                    { id: 'active', label: 'Active Users' },
-                                                    { id: 'inactive', label: 'Inactive Users' },
-                                                    { id: 'admin', label: 'Administrators' },
-                                                    { id: 'moderator', label: 'Moderators' },
-                                                    { id: 'user', label: 'Regular Users' }
+                                                    {
+                                                        id: 'all',
+                                                        label: 'All Users',
+                                                    },
+                                                    {
+                                                        id: 'active',
+                                                        label: 'Active Users',
+                                                    },
+                                                    {
+                                                        id: 'inactive',
+                                                        label: 'Inactive Users',
+                                                    },
+                                                    {
+                                                        id: 'admin',
+                                                        label: 'Administrators',
+                                                    },
+                                                    {
+                                                        id: 'moderator',
+                                                        label: 'Moderators',
+                                                    },
+                                                    {
+                                                        id: 'user',
+                                                        label: 'Regular Users',
+                                                    },
                                                 ],
-                                                onMenuItemClick: (itemId: string) => {
-                                                    console.log(`Filter by: ${itemId}`);
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                                                onMenuItemClick: (
+                                                    itemId: string
+                                                ) => {
+                                                    console.log(
+                                                        `Filter by: ${itemId}`
+                                                    );
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     },
                     // Overview Cards Section
                     {
@@ -296,13 +355,13 @@ export default function Users() {
                                     layout: 'grid' as const,
                                     gridColumns: 5,
                                     gap: 'gap-6',
-                                    columns: cardData.map(card => ({
+                                    columns: userWidgets.map((card) => ({
                                         name: 'Card',
-                                        props: card
-                                    }))
-                                }
-                            ]
-                        }
+                                        props: card,
+                                    })),
+                                },
+                            ],
+                        },
                     },
                     // Users Table Section
                     {
@@ -311,9 +370,7 @@ export default function Users() {
                             gap: 'gap-6',
                             rows: [
                                 {
-                                    layout: 'grid' as const,
-                                    gridColumns: 1,
-                                    gap: 'gap-6',
+                                    layout: 'column',
                                     columns: [
                                         {
                                             name: 'Table',
@@ -324,7 +381,9 @@ export default function Users() {
                                                 searchable: true,
                                                 pagination: true,
                                                 showActions: false,
-                                                emptyMessage: loading ? 'Loading users...' : 'No users found',
+                                                emptyMessage: loading
+                                                    ? 'Loading users...'
+                                                    : 'No users found',
                                             },
                                         },
                                     ],
@@ -334,6 +393,6 @@ export default function Users() {
                     },
                 ]}
             />
-        </>
+        </Suspense>
     );
 }

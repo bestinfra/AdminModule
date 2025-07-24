@@ -71,6 +71,7 @@ const App: React.FC = () => {
                             <Route path="/" element={<PageDemo />} />
                             <Route path="/prepaid" element={<Prepaid />} />
                             <Route path="/postpaid" element={<Postpaid />} />
+                            <Route path="/asset-managment" element={<AssetManagment />} />  
                         </Route>
                     </Routes>
                 </Router>

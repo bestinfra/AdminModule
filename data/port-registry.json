@@ -1,5 +1,5 @@
 {
-  "nextPort": 4081,
+  "nextPort": 4071,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -196,7 +196,7 @@
       "deployedAt": "2025-07-23T17:32:55.230Z",
       "path": "C:\\xampp\\htdocs\\best-infra-apps3-backend"
     },
-    "tnspdcl": {
+    "madhu5": {
       "port": 4063,
       "deployedAt": "2025-07-24T04:49:14.881Z",
       "path": "C:\\xampp\\htdocs\\tnspdcl-backend"
@@ -216,70 +216,25 @@
       "deployedAt": "2025-07-24T07:52:54.415Z",
       "path": "C:\\xampp\\htdocs\\manager-backend"
     },
-    "sub-app": {
+    "zxcvb": {
       "port": 4067,
-      "deployedAt": "2025-07-24T09:54:43.216Z",
-      "path": "C:\\xampp\\htdocs\\sub-app-backend"
+      "deployedAt": "2025-07-24T12:03:30.859Z",
+      "path": "C:\\xampp\\htdocs\\zxcvb-backend"
     },
-    "krishn": {
+    "asdfg": {
       "port": 4068,
-      "deployedAt": "2025-07-24T10:04:08.396Z",
-      "path": "C:\\xampp\\htdocs\\krishn-backend"
+      "deployedAt": "2025-07-24T12:20:44.356Z",
+      "path": "C:\\xampp\\htdocs\\asdfg-backend"
     },
-    "dhayabi": {
+    "shiva": {
       "port": 4069,
-      "deployedAt": "2025-07-24T10:08:53.419Z",
-      "path": "C:\\xampp\\htdocs\\dhayabi-backend"
+      "deployedAt": "2025-07-24T12:41:52.906Z",
+      "path": "C:\\xampp\\htdocs\\shiva-backend"
     },
-    "adminapp": {
-      "port": 4071,
-      "deployedAt": "2025-07-24T10:18:20.753Z",
-      "path": "C:\\xampp\\htdocs\\adminapp-backend"
-    },
-    "adminapps": {
-      "port": 4072,
-      "deployedAt": "2025-07-24T10:30:43.323Z",
-      "path": "C:\\xampp\\htdocs\\adminapps-backend"
-    },
-    "applis": {
-      "port": 4073,
-      "deployedAt": "2025-07-24T10:40:25.370Z",
-      "path": "C:\\xampp\\htdocs\\applis-backend"
-    },
-    "appli": {
-      "port": 4074,
-      "deployedAt": "2025-07-24T10:46:37.893Z",
-      "path": "C:\\xampp\\htdocs\\appli-backend"
-    },
-    "api": {
-      "port": 4075,
-      "deployedAt": "2025-07-24T10:50:28.109Z",
-      "path": "C:\\xampp\\htdocs\\api-backend"
-    },
-    "chitti": {
-      "port": 4076,
-      "deployedAt": "2025-07-24T11:01:56.269Z",
-      "path": "C:\\xampp\\htdocs\\chitti-backend"
-    },
-    "harikirankittu": {
-      "port": 4077,
-      "deployedAt": "2025-07-24T11:08:12.710Z",
-      "path": "C:\\xampp\\htdocs\\harikirankittu-backend"
-    },
-    "harikirankit": {
-      "port": 4078,
-      "deployedAt": "2025-07-24T11:14:11.064Z",
-      "path": "C:\\xampp\\htdocs\\harikirankit-backend"
-    },
-    "appinfo": {
-      "port": 4079,
-      "deployedAt": "2025-07-24T11:23:41.726Z",
-      "path": "C:\\xampp\\htdocs\\appinfo-backend"
-    },
-    "warangal": {
-      "port": 4080,
-      "deployedAt": "2025-07-24T11:27:36.543Z",
-      "path": "C:\\xampp\\htdocs\\warangal-backend"
+    "care": {
+      "port": 4070,
+      "deployedAt": "2025-07-24T12:56:55.822Z",
+      "path": "C:\\xampp\\htdocs\\care-backend"
     }
   }
 }
