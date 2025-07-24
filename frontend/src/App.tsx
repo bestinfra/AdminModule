@@ -47,7 +47,7 @@ const App: React.FC = () => {
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            <Route path="/" element={<Dashboard />} />
+                            {/* <Route path="/" element={<Dashboard />} /> */}
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
@@ -64,6 +64,7 @@ const App: React.FC = () => {
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
+                            <Route path="/" element={<PageDemo />} />
                         </Route>
                     </Routes>
                 </Router>
