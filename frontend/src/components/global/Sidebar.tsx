@@ -64,31 +64,32 @@ const defaultMenus: MenuCategory[] = [
     {
         category: 'DASHBOARD',
         items: [
-            {
-                title: 'Dashboard',
-                icon: '/icons/dashboard.svg',
-                link: '/',
-            },
-            {
-                title: 'Super Admin Dashboard',
-                icon: '/icons/admin.svg',
-                link: '/super-admin',
-            },
-            {
-                title: 'Consumers',
-                icon: '/icons/user.svg',
-                link: '/consumers',
-            },
+            // {
+            //     title: 'Dashboard',
+            //     icon: '/icons/dashboard.svg',
+            //     link: '/',
+            // },
+            // {
+            //     title: 'Super Admin Dashboard',
+            //     icon: '/icons/admin.svg',
+            //     link: '/super-admin',
+            // },
+            // {
+            //     title: 'Consumers',
+            //     icon: '/icons/user.svg',
+            //     link: '/consumers',
+            // },
             {
                 title: 'App Management',
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
-            {
-                title: 'User Management',
-                icon: '/icons/user-gear.svg',
-                link: '/user-management',
-            },
+            // {
+            //     title: 'User Management',
+            //     icon: '/icons/user-gear.svg',
+            //     link: '/user-management',
+            // },
+           
             {
                 title: 'DTR Dashboard',
                 icon: '/icons/dtr.svg',
@@ -147,21 +148,21 @@ const defaultMenus: MenuCategory[] = [
     //         },
     //     ],
     // },
-    {
-        category: 'BILLING',
-        items: [
-            {
-                title: 'Bills Postpaid',
-                icon: '/icons/bills.svg',
-                link: '/postpaid',
-            },
-            {
-                title: 'Bills Prepaid',
-                icon: '/icons/bills2.svg',
-                link: '/prepaid',
-            },
-        ],
-    },
+    // {
+    //     category: 'BILLING',
+    //     items: [
+    //         {
+    //             title: 'Bills Postpaid',
+    //             icon: '/icons/bills.svg',
+    //             link: '/postpaid',
+    //         },
+    //         {
+    //             title: 'Bills Prepaid',
+    //             icon: '/icons/bills2.svg',
+    //             link: '/prepaid',
+    //         },
+    //     ],
+    // },
     // {
     //     category: 'DTR MANAGEMENT',
     //     items: [
@@ -299,6 +300,11 @@ const defaultMenus: MenuCategory[] = [
                 title: 'Users',
                 icon: '/icons/user.svg',
                 link: '/users',
+            },
+            {
+                title: 'Role Management',
+                icon: '/icons/user-gear.svg',
+                link: '/role-management',
             },
         ],
     },
