@@ -169,3 +169,58 @@ export const getMeterView = async (req, res) => {
     }
 }; 
 
+export const getDataLoggersList = async (req, res) => {
+    try {
+        const dataLoggers = await MeterDB.getDataLoggersList();
+        
+        // Format the data for frontend table
+        const formatted = dataLoggers.map((logger, idx) => ({
+            sNo: idx + 1,
+            modemId: logger.modem_id,
+            modemSlNo: logger.modem_sl_no,
+            hwVersion: logger.hw_version || 'NA',
+            fwVersion: logger.fw_version || 'NA',
+            mobile: logger.mobile || 'NA',
+            deliveryDate: logger.delivery_date ? new Date(logger.delivery_date).toLocaleDateString() : 'NA',
+            imei: logger.imei || 'NA',
+            simno: logger.simno || 'NA',
+            changedBy: logger.changed_by || 'NA',
+            changedDatetime: logger.changed_datetime || 'NA',
+            ip: logger.ip || 'NA',
+            logTimestamp: logger.log_timestamp ? new Date(logger.log_timestamp).toLocaleString() : 'NA',
+            simNo: logger.sim_no || 'NA',
+            // Meter details
+            meterId: logger.meter?.id,
+            meterNumber: logger.meter?.meterNumber || 'NA',
+            serialNumber: logger.meter?.serialNumber || 'NA',
+            manufacturer: logger.meter?.manufacturer || 'NA',
+            model: logger.meter?.model || 'NA',
+            type: logger.meter?.type || 'NA',
+            status: logger.meter?.status || 'NA',
+            installationDate: logger.meter?.installationDate ? new Date(logger.meter.installationDate).toLocaleDateString() : 'NA',
+            // Consumer details
+            consumerNumber: logger.meter?.consumer?.consumerNumber || 'NA',
+            consumerName: logger.meter?.consumer?.name || 'NA',
+            consumerPhone: logger.meter?.consumer?.primaryPhone || 'NA',
+            consumerEmail: logger.meter?.consumer?.email || 'NA',
+            // Location details
+            locationName: logger.meter?.location?.name || 'NA',
+            locationCode: logger.meter?.location?.code || 'NA',
+            locationAddress: logger.meter?.location?.address || 'NA'
+        }));
+
+        res.json({
+            success: true,
+            data: formatted,
+            message: 'Data loggers retrieved successfully'
+        });
+    } catch (error) {
+        console.error('❌ getDataLoggersList: Error fetching data loggers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch data loggers',
+            error: error.message
+        });
+    }
+}; 
+

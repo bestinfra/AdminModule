@@ -163,6 +163,7 @@ model Meter {
   dtr             DTR? @relation(fields: [dtrId], references: [id])
   dtrId           Int?
   connectionEvents MeterConnectionEvent[]
+  modem           Modem?
   
   // CT/PT Details
   currentTransformers CurrentTransformer[]
@@ -172,6 +173,27 @@ model Meter {
   updatedAt       DateTime @updatedAt
 
   @@map("meters")
+}
+
+model Modem {
+  modem_id           Int      @id @default(autoincrement())
+  modem_sl_no        String   @unique @map("modem_sl_no")
+  hw_version         String?  @map("hw_version")
+  fw_version         String?  @map("fw_version")
+  mobile             String?  @map("mobile")
+  delivery_date      DateTime? @map("delivery_date")
+  imei               String?  @map("imei")
+  simno              String?  @map("simno")
+  changed_by         String?  @map("changed_by")
+  changed_datetime   String?  @map("changed_datetime")
+  ip                 String?  @map("ip")
+  log_timestamp      DateTime? @map("log_timestamp")
+  sim_no             String?  @map("sim_no")
+
+  // Relation to Meter via modem_sl_no <-> Meter.serialNumber
+  meter              Meter?   @relation(fields: [modem_sl_no], references: [serialNumber])
+  
+  @@map("modems")
 }
 
 model MeterConfiguration {

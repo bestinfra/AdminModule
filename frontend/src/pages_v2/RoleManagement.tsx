@@ -151,6 +151,7 @@ export default function RoleManagement() {
             hour12: true,
         });
     };
+    console.log(formatDate);
 
     // Table data for the Table component
     const tableData = roles.map(role => ({

@@ -308,6 +308,55 @@ class MeterDB {
             throw error;
         }
     }
+
+    static async getDataLoggersList() {
+        try {
+            const dataLoggers = await prisma.modem.findMany({
+                where: {
+                    meter: {
+                        isNot: null
+                    }
+                },
+                include: {
+                    meter: {
+                        select: {
+                            id: true,
+                            meterNumber: true,
+                            serialNumber: true,
+                            manufacturer: true,
+                            model: true,
+                            type: true,
+                            status: true,
+                            installationDate: true,
+                            consumer: {
+                                select: {
+                                    id: true,
+                                    consumerNumber: true,
+                                    name: true,
+                                    primaryPhone: true,
+                                    email: true
+                                }
+                            },
+                            location: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    code: true,
+                                    address: true
+                                }
+                            }
+                        }
+                    }
+                },
+                orderBy: { modem_id: 'desc' }
+            });
+
+            return dataLoggers;
+        } catch (error) {
+            console.error(' MeterDB.getDataLoggersList: Database error:', error);
+            throw error;
+        }
+    }
 }
 
 export default MeterDB; 
