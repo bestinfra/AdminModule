@@ -11,7 +11,7 @@ export const getAllMeters = async (req, res) => {
                 meterSerialNumber: m.meterNumber || 'NA',
                 modemSerialNumber: m.serialNumber || 'NA',
                 meterType: m.type || m.meterType || 'NA',
-                meterMake: m.manufacturer || m.meterMake || 'NA',
+                meterMake: m.manufacturer || 'NA',
                 consumerName: m.consumer?.name || 'NA',
                 location: m.location?.name || 'NA',
                 installationDate: m.installationDate || m.createdAt || 'NA',

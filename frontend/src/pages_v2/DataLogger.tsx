@@ -6,23 +6,36 @@ import BACKEND_URL from '../config';
 export default function DataLogger() {
     const [dataLoggerData, setDataLoggerData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [serverPagination, setServerPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        limit: 8,
+        hasNextPage: false,
+        hasPrevPage: false,
+    });
 
     // Fetch data loggers from API
-    useEffect(() => {
+    const fetchDataLoggers = (page = 1, limit = 8) => {
         setLoading(true);
-        setError(null);
-        fetch(`${BACKEND_URL}/meters/dataloggers`)
+        fetch(`${BACKEND_URL}/meters/dataloggers?page=${page}&limit=${limit}`)
             .then(async (res) => {
                 if (!res.ok) throw new Error('Failed to fetch data loggers');
                 const result = await res.json();
                 if (!result.success) throw new Error(result.message || 'Failed to fetch data loggers');
                 setDataLoggerData(result.data);
+                if (result.pagination) {
+                    setServerPagination(result.pagination);
+                }
             })
             .catch((err) => {
-                setError(err.message || 'Failed to fetch data loggers');
+                console.error('Failed to fetch data loggers:', err);
             })
             .finally(() => setLoading(false));
+    };
+
+    useEffect(() => {
+        fetchDataLoggers();
     }, []);
 
     const [tableColumns] = useState([
@@ -34,17 +47,8 @@ export default function DataLogger() {
         { key: 'installationDate', label: 'Installation Date' },
     ]);
 
-    const [serverPagination] = useState({
-        currentPage: 1,
-        totalPages: 5,
-        totalCount: 42,
-        limit: 8,
-        hasNextPage: true,
-        hasPrevPage: false,
-    });
-
     const handlePageChange = (page: number, limit: number) => {
-        console.log('Page changed:', { page, limit });
+        fetchDataLoggers(page, limit);
     };
 
     return (

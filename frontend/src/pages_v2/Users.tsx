@@ -9,7 +9,7 @@ const tableColumns = [
     { key: 'phone', label: 'Phone Number' },
     { key: 'role', label: 'Role' },
     { key: 'client', label: 'Client' },
-    { key: 'lastActive', label: 'Last Active' },
+   // { key: 'lastActive', label: 'Last Active' },
     { key: 'createdDate', label: 'Created Date' },
     // Add actions column if you want to show action buttons
 ];
@@ -145,8 +145,8 @@ export default function Users() {
                                 {
                                     layout: 'row',
                                     columns: statsLoading
-                                        ? Array.from({ length: 5 }).map((_, i) => ({ name: 'Card', props: { loading: true } }))
-                                        : userWidgets.map((widget, i) => ({ name: 'Card', props: widget })),
+                                        ? Array.from({ length: 5 }).map(() => ({ name: 'Card', props: { loading: true } }))
+                                        : userWidgets.map((widget) => ({ name: 'Card', props: widget })),
                                 },
                                 {
                                     layout: 'column',

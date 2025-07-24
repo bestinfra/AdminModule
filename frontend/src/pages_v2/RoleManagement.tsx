@@ -168,7 +168,7 @@ export default function RoleManagement() {
         { key: 'name', label: 'Role Name' },
         { key: 'users', label: 'Users' },
         { key: 'permissions', label: 'Permissions' },
-        { key: 'createdAt', label: 'Created Date' }
+        //{ key: 'createdAt', label: 'Created Date' }
     ];
 
     // Custom action handlers for the table

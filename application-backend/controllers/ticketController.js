@@ -43,16 +43,12 @@ export const getTicketsTable = async (req, res) => {
         const formatted = ticketsData.data.map((t, idx) => ({
             sNo: (page - 1) * limit + idx + 1,
             ticketNumber: t.ticketNumber,
-            consumerName: t.consumer?.name || t.consumer?.consumerNumber || 'NA',
+            consumerUid: t.consumerNumber,
             subject: t.subject,
+            meterSerialNo: t.meterSerialNo,
+            category: t.category || 'NA',
             priority: t.priority,
             status: t.status,
-            assignedTo: t.assignedTo,
-            raisedBy: t.raisedBy,
-            createdAt: t.createdAt,
-            lastUpdated: t.updatedAt || 'NA',
-            category: t.category || 'NA',
-            responseTime: t.responseTime || 'NA',
         }));
         res.json({
             success: true,
