@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Page from '@components/global/PageC';
+import Page from '@/components/global/PageC';
 
 const cardData = [
     {
@@ -75,10 +75,38 @@ const rechargeData = [
 ];
 
 const tableData = [
-    { sNo: 1, consumer: 'Airborne General Store', transactionId: 'TXN12345', amount: '₹1,000.00', date: '2025-07-05', status: 'Success' },
-    { sNo: 2, consumer: 'Neo Travels', transactionId: 'TXN12346', amount: '₹2,000.00', date: '2025-07-05', status: 'Success' },
-    { sNo: 3, consumer: 'Dormitory', transactionId: 'TXN12347', amount: '₹500.00', date: '2025-07-05', status: 'Failed' },
-    { sNo: 4, consumer: 'Mobikins', transactionId: 'TXN12348', amount: '₹1,500.00', date: '2025-07-05', status: 'Success' },
+    {
+        sNo: 1,
+        consumer: 'Airborne General Store',
+        transactionId: 'TXN12345',
+        amount: '₹1,000.00',
+        date: '2025-07-05',
+        status: 'Success',
+    },
+    {
+        sNo: 2,
+        consumer: 'Neo Travels',
+        transactionId: 'TXN12346',
+        amount: '₹2,000.00',
+        date: '2025-07-05',
+        status: 'Success',
+    },
+    {
+        sNo: 3,
+        consumer: 'Dormitory',
+        transactionId: 'TXN12347',
+        amount: '₹500.00',
+        date: '2025-07-05',
+        status: 'Failed',
+    },
+    {
+        sNo: 4,
+        consumer: 'Mobikins',
+        transactionId: 'TXN12348',
+        amount: '₹1,500.00',
+        date: '2025-07-05',
+        status: 'Success',
+    },
 ];
 
 const tableColumns = [
@@ -87,18 +115,19 @@ const tableColumns = [
     { key: 'transactionId', label: 'Transaction ID' },
     { key: 'amount', label: 'Amount' },
     { key: 'date', label: 'Date' },
-    { 
-        key: 'status', 
+    {
+        key: 'status',
         label: 'Status',
         render: (value: string) => (
-            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                value === 'Success' 
-                    ? 'bg-positive-light text-positive' 
-                    : 'bg-danger-light text-danger'
-            }`}>
+            <span
+                className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    value === 'Success'
+                        ? 'bg-positive-light text-positive'
+                        : 'bg-danger-light text-danger'
+                }`}>
                 {value}
             </span>
-        )
+        ),
     },
 ];
 
@@ -132,176 +161,224 @@ export default function Prepaid() {
     };
 
     return (
-        <Page
-            sections={[
-                // Page Header Section
-                {
-                    layout: {
-                        type: 'column',
-                        gap: 'gap-6',
-                        rows: [
-                            {
-                                layout: 'row',
-                                columns: [
-                                    {
-                                        name: 'PageHeader',
-                                        props: {
-                                            title: "Prepaid Overview",
-                                            onBackClick: () => navigate('/dashboard'),
-                                            backButtonText: "Back to Dashboard",
-                                            buttonsLabel: "Generate Report",
-                                            variant: "primary",
-                                            onClick: handleGenerateReport,
-                                            showMenu: true,
-                                            showDropdown: true,
-                                            menuItems: [
-                                                { id: 'all', label: 'All Transactions' },
-                                                { id: 'success', label: 'Success' },
-                                                { id: 'failed', label: 'Failed' },
-                                                { id: 'pending', label: 'Pending' },
-                                                { id: 'low-balance', label: 'Low Balance' },
-                                                { id: 'recharge', label: 'Recharge' },
-                                                { id: 'consumption', label: 'Consumption' }
-                                            ],
-                                            onMenuItemClick: handleFilterChange
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                // Overview Cards Section
-                {
-                    layout: {
-                        type: 'column',
-                        gap: 'gap-6',
-                        rows: [
-                            {
-                                layout: 'grid',
-                                gridColumns: 4,
-                                gap: 'gap-6',
-                                columns: cardData.map(card => ({
-                                    name: 'Card',
-                                    props: card
-                                }))
-                            }
-                        ]
-                    }
-                },
-                // Recharge & Usage Section
-                {
-                    layout: {
-                        type: 'column',
-                        gap: 'gap-6',
-                        rows: [
-                            {
-                                layout: 'row',
-                                className: 'items-center justify-between',
-                                columns: [
-                                    {
-                                        name: 'Heading',
-                                        props: {
-                                            className: 'text-lg font-semibold',
-                                            children: 'Recharge & Usage (Today)'
-                                        }
-                                    },
-                                    {
-                                        name: 'TimeRangeSelector',
-                                        props: {
-                                            availableTimeRanges: ['Daily', 'Monthly'],
-                                            selectedTimeRange: selectedTimeRange,
-                                            handleTimeRangeChange: handleTimeRangeChange
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                layout: 'grid',
-                                gridColumns: 4,
-                                gap: 'gap-6',
-                                columns: rechargeData.map(card => ({
-                                    name: 'Card',
-                                    props: card
-                                }))
-                            }
-                        ]
-                    }
-                },
-                // Search Section
-                {
-                    layout: {
-                        type: 'column',
-                        gap: 'gap-6',
-                        rows: [
-                            {
-                                layout: 'row',
-                                columns: [
-                                    {
-                                        name: 'Search',
-                                        props: {
-                                            value: '',
-                                            onChange: (e: React.ChangeEvent<HTMLInputElement>) => console.log('Search:', e.target.value),
-                                            placeholder: "Search transactions by consumer name, transaction ID, or amount...",
-                                            className: "w-full",
-                                            showShortcut: true,
-                                            isLoading: false
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                },
-                // Transactions Table Section
-                {
-                    layout: {
-                        type: 'column',
-                        gap: 'gap-6',
-                        rows: [
-                            {
-                                layout: 'grid',
-                                gridColumns: 1,
-                                columns: [
-                                    {
-                                        name: 'Table',
-                                        props: {
-                                            data: tableData,
-                                            columns: tableColumns,
-                                            actions: [
-                                                {
-                                                    label: 'View',
-                                                    icon: '/icons/eye.svg',
-                                                    onClick: handleViewTransaction,
-                                                },
-                                                {
-                                                    label: 'Download',
-                                                    icon: '/icons/download.svg',
-                                                    onClick: handleDownloadTransaction,
-                                                },
-                                                {
-                                                    label: 'Share',
-                                                    icon: '/icons/share.svg',
-                                                    onClick: handleShareTransaction,
-                                                },
-                                            ],
-                                            showActions: true,
-                                            searchable: false, // Disable table search since we have dedicated search component
-                                            pagination: true,
-                                            rowsPerPageOptions: [5, 10, 15, 25],
-                                            initialRowsPerPage: 10,
-                                            emptyMessage: "No transactions found",
-                                            showHeader: true,
-                                            headerTitle: "Recent Transactions",
-                                            dateRange: "Jan 2024 - Dec 2024"
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+            <Page
+                sections={[
+                    // Page Header Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: 'Prepaid Overview',
+                                                onBackClick: () =>
+                                                    navigate('/dashboard'),
+                                                backButtonText:
+                                                    'Back to Dashboard',
+                                                buttonsLabel: 'Generate Report',
+                                                variant: 'primary',
+                                                onClick: handleGenerateReport,
+                                                showMenu: true,
+                                                showDropdown: true,
+                                                menuItems: [
+                                                    {
+                                                        id: 'all',
+                                                        label: 'All Transactions',
+                                                    },
+                                                    {
+                                                        id: 'success',
+                                                        label: 'Success',
+                                                    },
+                                                    {
+                                                        id: 'failed',
+                                                        label: 'Failed',
+                                                    },
+                                                    {
+                                                        id: 'pending',
+                                                        label: 'Pending',
+                                                    },
+                                                    {
+                                                        id: 'low-balance',
+                                                        label: 'Low Balance',
+                                                    },
+                                                    {
+                                                        id: 'recharge',
+                                                        label: 'Recharge',
+                                                    },
+                                                    {
+                                                        id: 'consumption',
+                                                        label: 'Consumption',
+                                                    },
+                                                ],
+                                                onMenuItemClick:
+                                                    handleFilterChange,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Overview Cards Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'grid',
+                                    gridColumns: 4,
+                                    gap: 'gap-6',
+                                    columns: cardData.map((card) => ({
+                                        name: 'Card',
+                                        props: card,
+                                    })),
+                                },
+                            ],
+                        },
+                    },
+                    // Recharge & Usage Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    className: 'items-center justify-between',
+                                    columns: [
+                                        {
+                                            name: 'Heading',
+                                            props: {
+                                                className:
+                                                    'text-lg font-semibold',
+                                                children:
+                                                    'Recharge & Usage (Today)',
+                                            },
+                                        },
+                                        {
+                                            name: 'TimeRangeSelector',
+                                            props: {
+                                                availableTimeRanges: [
+                                                    'Daily',
+                                                    'Monthly',
+                                                ],
+                                                selectedTimeRange:
+                                                    selectedTimeRange,
+                                                handleTimeRangeChange:
+                                                    handleTimeRangeChange,
+                                            },
+                                        },
+                                    ],
+                                },
+                                {
+                                    layout: 'grid',
+                                    gridColumns: 4,
+                                    gap: 'gap-6',
+                                    columns: rechargeData.map((card) => ({
+                                        name: 'Card',
+                                        props: card,
+                                    })),
+                                },
+                            ],
+                        },
+                    },
+                    // Search Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'Search',
+                                            props: {
+                                                value: '',
+                                                onChange: (
+                                                    e: React.ChangeEvent<HTMLInputElement>
+                                                ) =>
+                                                    console.log(
+                                                        'Search:',
+                                                        e.target.value
+                                                    ),
+                                                placeholder:
+                                                    'Search transactions by consumer name, transaction ID, or amount...',
+                                                className: 'w-full',
+                                                showShortcut: true,
+                                                isLoading: false,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Transactions Table Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'grid',
+                                    gridColumns: 1,
+                                    columns: [
+                                        {
+                                            name: 'Table',
+                                            props: {
+                                                data: tableData,
+                                                columns: tableColumns,
+                                                actions: [
+                                                    {
+                                                        label: 'View',
+                                                        icon: '/icons/eye.svg',
+                                                        onClick:
+                                                            handleViewTransaction,
+                                                    },
+                                                    {
+                                                        label: 'Download',
+                                                        icon: '/icons/download.svg',
+                                                        onClick:
+                                                            handleDownloadTransaction,
+                                                    },
+                                                    {
+                                                        label: 'Share',
+                                                        icon: '/icons/share.svg',
+                                                        onClick:
+                                                            handleShareTransaction,
+                                                    },
+                                                ],
+                                                showActions: true,
+                                                searchable: false, // Disable table search since we have dedicated search component
+                                                pagination: true,
+                                                rowsPerPageOptions: [
+                                                    5, 10, 15, 25,
+                                                ],
+                                                initialRowsPerPage: 10,
+                                                emptyMessage:
+                                                    'No transactions found',
+                                                showHeader: true,
+                                                headerTitle:
+                                                    'Recent Transactions',
+                                                dateRange:
+                                                    'Jan 2024 - Dec 2024',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                ]}
+            />
+        </Suspense>
     );
-} 
+}

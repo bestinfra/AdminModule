@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import type { Column } from '@components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import Page from '@components/global/PageC';
+import Page from '@/components/global/PageC';
 
 const columns: Column[] = [
     { key: 'sNo', label: 'S.No' },
@@ -132,58 +132,61 @@ const Consumers: React.FC = () => {
     };
 
     return (
-        <div className="p-2 min-h-screen">
-            <Page
-                sections={[
-                    {
-                        layout: {
-                            type: 'column',
-                            gap: 'gap-4',
-                            rows: [
-                                {
-                                    layout: 'column',
-                                    gap: 'gap-4',
-                                    columns: [
-                                        {
-                                            name: 'PageHeader',
-                                            props: headerConfig,
-                                        },
-                                    ],
-                                },
-                                {
-                                    layout: 'column',
-                                    gap: 'gap-4',
-                                    columns: [
-                                        {
-                                            name: 'Table',
-                                            props: {
-                                                data: filteredConsumers,
-                                                columns: columns,
-                                                loading: loading,
-                                                searchable: true,
-                                                pagination: true,
-                                                showActions: true,
-                                                actions: [
-                                                    {
-                                                        label: 'View',
-                                                        icon: '/icons/eye.svg',
-                                                        onClick: handleRowClick,
-                                                    },
-                                                ],
-                                                onRowClick: handleRowClick,
-                                                emptyMessage: loading
-                                                    ? 'Loading consumers...'
-                                                    : 'No consumers found',
+        <Suspense fallback={<div>Loading...</div>}>
+            <div className="p-2 min-h-screen">
+                <Page
+                    sections={[
+                        {
+                            layout: {
+                                type: 'column',
+                                gap: 'gap-4',
+                                rows: [
+                                    {
+                                        layout: 'column',
+                                        gap: 'gap-4',
+                                        columns: [
+                                            {
+                                                name: 'PageHeader',
+                                                props: headerConfig,
                                             },
-                                        },
-                                    ],
-                                },
-                            ],
+                                        ],
+                                    },
+                                    {
+                                        layout: 'column',
+                                        gap: 'gap-4',
+                                        columns: [
+                                            {
+                                                name: 'Table',
+                                                props: {
+                                                    data: filteredConsumers,
+                                                    columns: columns,
+                                                    loading: loading,
+                                                    searchable: true,
+                                                    pagination: true,
+                                                    showActions: true,
+                                                    actions: [
+                                                        {
+                                                            label: 'View',
+                                                            icon: '/icons/eye.svg',
+                                                            onClick:
+                                                                handleRowClick,
+                                                        },
+                                                    ],
+                                                    onRowClick: handleRowClick,
+                                                    emptyMessage: loading
+                                                        ? 'Loading consumers...'
+                                                        : 'No consumers found',
+                                                },
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
                         },
-                    },
-                ]}
-            />
-        </div>
+                    ]}
+                />
+            </div>
+        </Suspense>
     );
 };
 

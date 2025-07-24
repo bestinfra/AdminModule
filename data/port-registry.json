@@ -1,5 +1,5 @@
 {
-  "nextPort": 4067,
+  "nextPort": 4069,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -215,6 +215,16 @@
       "port": 4066,
       "deployedAt": "2025-07-24T07:52:54.415Z",
       "path": "C:\\xampp\\htdocs\\manager-backend"
+    },
+    "zxcvb": {
+      "port": 4067,
+      "deployedAt": "2025-07-24T12:03:30.859Z",
+      "path": "C:\\xampp\\htdocs\\zxcvb-backend"
+    },
+    "asdfg": {
+      "port": 4068,
+      "deployedAt": "2025-07-24T12:20:44.356Z",
+      "path": "C:\\xampp\\htdocs\\asdfg-backend"
     }
   }
 }

@@ -2,11 +2,11 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import { z } from 'zod';
-import Page from '@components/global/PageC';
+import Page from '@/components/global/PageC';
 import Step1 from '@/pages_v2/AddConsumer/Step1';
 import Step2 from '@/pages_v2/AddConsumer/Step2';
 import Step3 from '@/pages_v2/AddConsumer/Step3';
-    
+
 // Validation schemas for each step
 const personalInfoSchema = z.object({
     first_name: z.string().min(1, 'First name is required'),
@@ -30,9 +30,18 @@ const meterLocationSchema = z.object({
 
 // Step labels for the stepper
 const stepLabels = [
-    { label: 'Consumer & Property', sub: 'Provide all the details about the consumer and property' },
-    { label: 'Meter & Location', sub: 'Provide the meter details and location details' },
-    { label: 'Review & Submit', sub: 'Review all the details and submit the form' },
+    {
+        label: 'Consumer & Property',
+        sub: 'Provide all the details about the consumer and property',
+    },
+    {
+        label: 'Meter & Location',
+        sub: 'Provide the meter details and location details',
+    },
+    {
+        label: 'Review & Submit',
+        sub: 'Review all the details and submit the form',
+    },
 ];
 
 const initialFormState = {
@@ -52,10 +61,10 @@ const initialFormState = {
 const AddConsumer = () => {
     const navigate = useNavigate();
     const { user } = useAuth();
-    
+
     // Helper function to check if user is admin
     const isAdmin = () => user?.role?.toLowerCase().includes('admin') || false;
-    
+
     const [currentStep, setCurrentStep] = useState(1);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [buildingSearch, setBuildingSearch] = useState('');
@@ -72,37 +81,39 @@ const AddConsumer = () => {
     const [valid, setValid] = useState<Record<string, boolean>>({});
 
     // Simple form handler
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleInputChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    ) => {
         const { name, value } = e.target;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [name]: value
+            [name]: value,
         }));
         // Clear error when user starts typing
         if (errors[name]) {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                 ...prev,
-                [name]: ''
+                [name]: '',
             }));
         }
         // Simple validation for demonstration
         if (value.trim() !== '') {
-            setValid(prev => ({
+            setValid((prev) => ({
                 ...prev,
-                [name]: true
+                [name]: true,
             }));
         } else {
-            setValid(prev => ({
+            setValid((prev) => ({
                 ...prev,
-                [name]: false
+                [name]: false,
             }));
         }
     };
 
     const setFieldFocus = (field: string, focused: boolean) => {
-        setFocus(prev => ({
+        setFocus((prev) => ({
             ...prev,
-            [field]: focused
+            [field]: focused,
         }));
     };
 
@@ -168,7 +179,7 @@ const AddConsumer = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
+
         // Simulate API call
         setTimeout(() => {
             console.log('Consumer data:', {
@@ -297,18 +308,23 @@ const AddConsumer = () => {
                                         name: 'Stepper',
                                         props: {
                                             steps: stepperSteps,
-                                            className: 'w-full lg:w-auto lg:min-w-fit lg:max-w-md flex-shrink-0',
+                                            className:
+                                                'w-full lg:w-auto lg:min-w-fit lg:max-w-md flex-shrink-0',
                                         },
                                     },
                                     {
                                         name: 'FormContainer',
                                         props: {
                                             children: (
-                                                <form onSubmit={handleSubmit} className="w-full">
+                                                <form
+                                                    onSubmit={handleSubmit}
+                                                    className="w-full">
                                                     {getFormContent()}
                                                     {errors.submit && (
                                                         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md">
-                                                            <p className="text-red-600">{errors.submit}</p>
+                                                            <p className="text-red-600">
+                                                                {errors.submit}
+                                                            </p>
                                                         </div>
                                                     )}
                                                 </form>

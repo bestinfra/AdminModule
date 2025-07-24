@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
 import Card from '@components/global/Card';
 import BarChart from '../graphs/BarChart';
 import Table from '@components/global/Table';
@@ -436,6 +436,7 @@ const Feeders = () => {
     };
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <Page
             layout="single-column"
             sections={[
@@ -451,8 +452,9 @@ const Feeders = () => {
             footer={footerComponent}
             sidebarPosition="right"
             className="p-2 flex flex-col gap-6"
-            sectionClassName=""
-        />
+                sectionClassName=""
+            />
+        </Suspense>
     );
 };
 
