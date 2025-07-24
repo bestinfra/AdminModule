@@ -671,7 +671,6 @@ const ConnectDisconnect: React.FC = () => {
         }
     };
 
-    // Reset selection state when component mounts or when navigating back
     React.useEffect(() => {
         setSelectedMeters([]);
         setBulkActionType(null);

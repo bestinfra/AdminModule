@@ -17,6 +17,9 @@ import AssetManagment from './pages/AssetManagment';
 import Tickets from './pages/Tickets';
 import Prepaid from './pages/Prepaid';
 import Postpaid from './pages/Postpaid';
+import MeterDetails from './pages/MeterDetails'
+import TicketView from './pages/TicketView';
+import Feeders from './pages/Feeders';
 
 // Create safe lazy loading with error handling
 const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
@@ -276,17 +279,18 @@ const menuItems = generateMenuItems({{modulesArray}});
                   <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
                     {/* All protected routes here */}
                     <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
-                      <Route path="/asset-management" element={<AssetManagment />} />
-                      <Route path="/meters" element={<Meters />} />
-                      <Route path="/data-logger-master" element={<DataLoggerMaster />} />
-                      <Route path="/all-tickets" element={<Tickets />} />
-                      <Route path="/users" element={<Users />} />
-                      <Route path="/role-management" element={<RoleManagement />} />
-                      <Route path="/dtr-dashboard" element={<DTRDashboard />} />
+                      {{consumerRoute}}
+                      {{billsPrepaidRoute}}
+                      {{billsPostpaidRoute}}
+                      {{assetManagementRoute}}
+                      {{meterManagementRoute}}
+                      {{meterDetailsRoute}}
+                      {{dataLoggerRoute}}
+                      {{ticketsRoute}}
+                      {{ticketViewRoute}}
+                      {{usersRoute}}
+                      {{roleManagementRoute}}
+                      {{dtrRoute}}
                       <Route path="*" element={
                         <div className="p-6">
                           <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
