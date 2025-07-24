@@ -706,6 +706,18 @@ export const validateFeatureSelection = (formData: any): { isValid: boolean; err
     remarks.push(`💡 Consider enabling: ${missingRequired.join(', ')}`);
   }
 
+  // Check for dashboard nested modules
+  if (formData.modules?.includes('dashboard')) {
+    const dashboardNestedModules = ['consumer_dashboard', 'dtr_dashboard'];
+    const enabledDashboardModules = dashboardNestedModules.filter(module => formData.modules?.includes(module));
+    
+    if (enabledDashboardModules.length === 0) {
+      remarks.push('💡 Dashboard module selected - consider enabling Consumer Dashboard or DTR Dashboard');
+    } else {
+      remarks.push(`✓ Dashboard enabled with: ${enabledDashboardModules.join(', ')}`);
+    }
+  }
+
   // Add remark about role management being included with user management
   if (formData.modules?.includes('user_management_default')) {
     remarks.push('✓ User Management enabled (includes Role Management)');

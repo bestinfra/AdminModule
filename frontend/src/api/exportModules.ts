@@ -507,20 +507,103 @@ const Sidebar = () => {
     }));
   };
 
+  // Define parent-child relationships
+  const parentChildMap: Record<string, string[]> = {
+    'dashboard': ['consumer_dashboard', 'dtr_dashboard'],
+    'bills': ['prepaid', 'postpaid']
+  };
+  
+  // Helper: check if a module is a parent
+  const isParent = (module: string) => parentChildMap[module] !== undefined;
+  
+  // Helper: check if a module is a child
+  const isChild = (module: string) => {
+    return Object.values(parentChildMap).some(children => children.includes(module));
+  };
+  
+  // Helper: get parent of a child module
+  const getParent = (childModule: string) => {
+    for (const [parent, children] of Object.entries(parentChildMap)) {
+      if (children.includes(childModule)) return parent;
+    }
+    return null;
+  };
+  
+  // Helper: get children of a parent module
+  const getChildren = (parentModule: string) => parentChildMap[parentModule] || [];
+  
+  // Filter out children from top-level list if their parent is selected
+  const mainModules = (modules || []).filter((module: string) => {
+    if (isChild(module)) {
+      const parent = getParent(module);
+      return parent ? !modules.includes(parent) : true;
+    }
+    return true;
+  });
+  
+  // Generate menu items with parent-child logic
+  const generateMenuItems = () => {
+    const items: any[] = [];
+    
+    console.log('Debug - All modules:', modules);
+    console.log('Debug - Main modules after filtering:', mainModules);
+    
+    mainModules.forEach((module: string) => {
+      console.log('Debug - Processing module:', module);
+      console.log('Debug - Is parent?', isParent(module));
+      console.log('Debug - Is child?', isChild(module));
+      
+      if (isParent(module)) {
+        const children = getChildren(module);
+        const selectedChildren = children.filter(child => modules.includes(child));
+        
+        if (selectedChildren.length > 0) {
+          // Create parent menu with submenu
+          const menuItem = {
+            title: module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' '),
+            icon: '📋',
+            hasSubmenu: true,
+            submenu: selectedChildren.map((child: string) => ({
+              title: child.charAt(0).toUpperCase() + child.slice(1).replace(/_/g, ' '),
+              link: '/' + child.replace(/_/g, '-'),
+            }))
+          };
+          console.log('Debug - Creating parent menu with submenu:', menuItem);
+          items.push(menuItem);
+        } else {
+          // Create parent menu without submenu
+          items.push({
+            title: module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' '),
+            icon: '📋',
+            link: '/' + module,
+          });
+        }
+      } else if (isChild(module)) {
+        // Show child as main menu if parent is not selected
+        items.push({
+          title: module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' '),
+          icon: '📋',
+          link: '/' + module,
+        });
+      } else {
+        // Show other modules as main menu
+        items.push({
+          title: module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' '),
+          icon: '📋',
+          link: '/' + module,
+        });
+      }
+    });
+    
+    console.log('Debug - Generated menu items:', JSON.stringify(items, null, 2));
+    return items;
+  };
+
   const menuItems: MenuCategory[] = [
     {
       category: 'MANAGEMENT',
       items: [
-        {
-          title: 'Dashboard',
-          icon: '📊',
-          link: '/',
-        },
-        ${modules?.map((module: string) => `{
-          title: '${module.charAt(0).toUpperCase() + module.slice(1)}',
-          icon: '📋',
-          link: '/${module}',
-        }`).join(',\n        ') || ''}
+        ...generateMenuItems()
       ],
     },
     {

@@ -716,7 +716,7 @@ const TicketView: React.FC = () => {
         setChatMessage('');
         setChatAttachments([]);
     };
-
+ 
 
 
     // Loading state

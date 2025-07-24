@@ -148,6 +148,15 @@ function generateAppComponent(frontendDir, variables) {
       case '/dtr/:dtrId':
         return 'Feeders';` : '';
   
+  // Dashboard submenu case variables
+  variables.consumerDashboardCase = modules.includes('consumer_dashboard') ? `
+      case '/consumer-dashboard':
+        return 'Consumer Dashboard';` : '';
+  
+  variables.dtrDashboardCase = modules.includes('dtr_dashboard') ? `
+      case '/dtr-dashboard':
+        return 'DTR Dashboard';` : '';
+  
   variables.consumerCase = modules.includes('consumer') ? `
       case '/consumers':
         return 'Consumers';` : '';
@@ -193,6 +202,13 @@ function generateAppComponent(frontendDir, variables) {
   variables.ticketViewRoute = modules.includes('tickets') ? 
     '<Route path="/tickets/:ticketId" element={<TicketView />} />' : '';
   
+  // Dashboard submenu routes
+  variables.consumerDashboardRoute = modules.includes('consumer_dashboard') ? 
+    '<Route path="/consumer-dashboard" element={<ConsumerDashboard />} />' : '';
+  
+  variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ? 
+    '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
+  
 
 
   // Calculate error page variables
@@ -225,6 +241,13 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.dtrError = modules.includes('dtr') ? 
     '<li>/dtr-dashboard - DTR Dashboard</li>\n                                <li>/dtr/:dtrId - Feeders</li>' : '';
+  
+  // Dashboard submenu error variables
+  variables.consumerDashboardError = modules.includes('consumer_dashboard') ? 
+    '<li>/consumer-dashboard - Consumer Dashboard</li>' : '';
+  
+  variables.dtrDashboardError = modules.includes('dtr_dashboard') ? 
+    '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
   
 
 
