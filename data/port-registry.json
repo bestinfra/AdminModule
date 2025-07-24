@@ -1,5 +1,5 @@
 {
-  "nextPort": 4068,
+  "nextPort": 4064,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -196,30 +196,10 @@
       "deployedAt": "2025-07-23T17:32:55.230Z",
       "path": "C:\\xampp\\htdocs\\best-infra-apps3-backend"
     },
-    "abcdabcd": {
+    "tnspdcl": {
       "port": 4063,
-      "deployedAt": "2025-07-24T05:42:20.340Z",
-      "path": "C:\\xampp\\htdocs\\abcdabcd-backend"
-    },
-    "abcabc": {
-      "port": 4064,
-      "deployedAt": "2025-07-24T05:55:42.269Z",
-      "path": "C:\\xampp\\htdocs\\abcabc-backend"
-    },
-    "ababab": {
-      "port": 4065,
-      "deployedAt": "2025-07-24T06:32:56.229Z",
-      "path": "C:\\xampp\\htdocs\\ababab-backend"
-    },
-    "anze": {
-      "port": 4066,
-      "deployedAt": "2025-07-24T06:47:02.456Z",
-      "path": "C:\\xampp\\htdocs\\anze-backend"
-    },
-    "abababab": {
-      "port": 4067,
-      "deployedAt": "2025-07-24T06:58:26.991Z",
-      "path": "C:\\xampp\\htdocs\\abababab-backend"
+      "deployedAt": "2025-07-24T04:49:14.881Z",
+      "path": "C:\\xampp\\htdocs\\tnspdcl-backend"
     }
   }
 }
