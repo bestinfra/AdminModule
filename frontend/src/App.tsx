@@ -10,7 +10,7 @@ import DataLogger from './pages_v2/DataLogger';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import AssetManagment from './pages_v2/AssetManagment';
-import Dashboard from './pages_v2/Dashboard';
+// import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';
 import AddConsumer from './pages/AddConsumer';
@@ -26,6 +26,7 @@ import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
 import Prepaid from './pages_v2/Prepaid';
 import Postpaid from './pages_v2/Postpaid';
+import Feeders from './pages_v2/Feeders';
 
 const App: React.FC = () => {
     return (
@@ -49,7 +50,7 @@ const App: React.FC = () => {
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            <Route path="/" element={<Dashboard />} />
+                            {/* <Route path="/" element={<Dashboard />} /> */}
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
@@ -65,7 +66,9 @@ const App: React.FC = () => {
                             <Route path="/consumers/add" element={<AddConsumer />} />
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
+                            <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
+                            <Route path="/" element={<PageDemo />} />
                             <Route path="/prepaid" element={<Prepaid />} />
                             <Route path="/postpaid" element={<Postpaid />} />
                         </Route>

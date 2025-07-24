@@ -98,7 +98,7 @@ export default function Users() {
     ] : [];
 
     return (
-        <div className="p-2 min-h-screen">
+        <>
             {error && (
                 <div className="mb-4 p-4 bg-danger-light border border-danger rounded-md text-danger">
                     {error}
@@ -106,41 +106,67 @@ export default function Users() {
             )}
             <Page
                 sections={[
+                    // Page Header Section
                     {
                         layout: {
-                            type: 'row',
-                            className: 'mb-6'
-                        },
-                        components: [
-                            {
-                                name: 'PageHeader',
-                                props: {
-                                    title: "User Management",
-                                    onBackClick: () => window.history.back(),
-                                    backButtonText: "Back to Dashboard",
-                                    buttonsLabel: "Add User",
-                                    variant: "primary",
-                                    onClick: () => console.log('Adding new user...'),
-                                    showMenu: true,
-                                    showDropdown: true,
-                                    menuItems: [
-                                        { id: 'all', label: 'All Users' },
-                                        { id: 'active', label: 'Active Users' },
-                                        { id: 'inactive', label: 'Inactive Users' },
-                                        { id: 'admin', label: 'Administrators' },
-                                        { id: 'moderator', label: 'Moderators' },
-                                        { id: 'user', label: 'Regular Users' }
-                                    ],
-                                    onMenuItemClick: (itemId: string) => {
-                                        console.log(`Filter by: ${itemId}`);
-                                    }
+                            type: 'column' as const,
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: "User Management",
+                                                onBackClick: () => window.history.back(),
+                                                backButtonText: "Back to Dashboard",
+                                                buttonsLabel: "Add User",
+                                                variant: "primary",
+                                                onClick: () => console.log('Adding new user...'),
+                                                showMenu: true,
+                                                showDropdown: true,
+                                                menuItems: [
+                                                    { id: 'all', label: 'All Users' },
+                                                    { id: 'active', label: 'Active Users' },
+                                                    { id: 'inactive', label: 'Inactive Users' },
+                                                    { id: 'admin', label: 'Administrators' },
+                                                    { id: 'moderator', label: 'Moderators' },
+                                                    { id: 'user', label: 'Regular Users' }
+                                                ],
+                                                onMenuItemClick: (itemId: string) => {
+                                                    console.log(`Filter by: ${itemId}`);
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
-                            }
-                        ]
+                            ]
+                        }
                     },
+                    // Overview Cards Section
                     {
                         layout: {
-                            type: 'column',
+                            type: 'column' as const,
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'grid' as const,
+                                    gridColumns: 5,
+                                    gap: 'gap-6',
+                                    columns: cardData.map(card => ({
+                                        name: 'Card',
+                                        props: card
+                                    }))
+                                }
+                            ]
+                        }
+                    },
+                    // Users Table Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-6',
                             rows: [
                                 {
                                     layout: 'row',
@@ -170,6 +196,6 @@ export default function Users() {
                     },
                 ]}
             />
-        </div>
+        </>
     );
 }
