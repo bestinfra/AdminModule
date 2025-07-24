@@ -127,15 +127,16 @@ const PageDemo: React.FC = () => {
                     {
                         layout: {
                             type: 'grid',
-                            columns: 2,
+                            columns: 5,
                             gap: 'gap-6',
                             rows: [
                                 {
                                     layout: 'grid',
-                                    gridColumns: 2,
+                                    gridColumns: 3,
                                     gridRows: 2,
                                     bg: 'bg-primary-lightest p-4 rounded-lg',
                                     gap: 'gap-4',
+                                    span: { col: 3, row: 1 },   
                                     columns: [
                                         {
                                             name: 'Heading',
@@ -151,6 +152,7 @@ const PageDemo: React.FC = () => {
                                         },
                                         {
                                             name: 'TimeRangeSelector',
+                                            
                                             props: {
                                                 availableTimeRanges:
                                                     timeRangeOptions,
@@ -176,6 +178,7 @@ const PageDemo: React.FC = () => {
                                     gridRows: 1,
                                     bg: 'bg-primary-lightest p-4 rounded-lg',
                                     gap: 'gap-4',
+                                    span: { col: 2, row: 1 },
                                     columns: [
                                         {
                                             name: 'Heading',
