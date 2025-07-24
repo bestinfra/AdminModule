@@ -9,7 +9,6 @@ export default function Tickets() {
     const [tickets, setTickets] = useState<any[]>([]);
     const [pagination, setPagination] = useState<any>(null);
 
-    // Fetch ticket stats
     useEffect(() => {
         fetch(`${BACKEND_URL}/tickets/stats`)
             .then(res => res.json())
@@ -20,7 +19,6 @@ export default function Tickets() {
             });
     }, []);
 
-    // Fetch ticket trends
     useEffect(() => {
         fetch(`${BACKEND_URL}/tickets/trends`)
             .then(res => res.json())
@@ -31,7 +29,6 @@ export default function Tickets() {
             });
     }, []);
 
-    // Fetch ticket table (with pagination)
     const fetchTicketsTable = (page: number = 1, limit: number = 10) => {
         fetch(`${BACKEND_URL}/tickets/table?page=${page}&limit=${limit}`)
             .then(res => res.json())
@@ -61,7 +58,6 @@ export default function Tickets() {
         { key: 'category', label: 'Category' },
         { key: 'priority', label: 'Priority' },
         { key: 'status', label: 'Status' },
-        // Actions column is handled by showActions: true
     ]);
 
     const statsArray = [

@@ -25,7 +25,6 @@ export default function Users() {
 
     // User stats state
     const [userStats, setUserStats] = useState<any>(null);
-    const [statsLoading, setStatsLoading] = useState(true);
 
     useEffect(() => {
         setLoading(true);
@@ -45,7 +44,6 @@ export default function Users() {
 
     // Fetch user stats (widgets)
     useEffect(() => {
-        setStatsLoading(true);
         fetch(`${BACKEND_URL}/users/stats`)
             .then(async (res) => {
                 if (!res.ok) throw new Error('Failed to fetch user stats');
@@ -54,7 +52,7 @@ export default function Users() {
                 setUserStats(result.data);
             })
             .catch(() => setUserStats(null))
-            .finally(() => setStatsLoading(false));
+            .finally(() => {});
     }, []);
 
     // Widget cards array (same style as meters/tickets)
@@ -154,7 +152,7 @@ export default function Users() {
                                     layout: 'grid' as const,
                                     gridColumns: 5,
                                     gap: 'gap-6',
-                                    columns: cardData.map(card => ({
+                                    columns: userWidgets.map(card => ({
                                         name: 'Card',
                                         props: card
                                     }))
@@ -168,12 +166,6 @@ export default function Users() {
                             type: 'column' as const,
                             gap: 'gap-6',
                             rows: [
-                                {
-                                    layout: 'row',
-                                    columns: statsLoading
-                                        ? Array.from({ length: 5 }).map(() => ({ name: 'Card', props: { loading: true } }))
-                                        : userWidgets.map((widget) => ({ name: 'Card', props: widget })),
-                                },
                                 {
                                     layout: 'column',
                                     columns: [

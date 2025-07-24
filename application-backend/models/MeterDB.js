@@ -264,6 +264,11 @@ class MeterDB {
                     consumerNumber: { contains: filters.consumerNumber, mode: 'insensitive' }
                 };
             }
+            if (filters.location) {
+                whereClause.location = {
+                    name: { contains: filters.location, mode: 'insensitive' }
+                };
+            }
             const totalCount = await prisma.meter.count({ where: whereClause });
 
             const meters = await prisma.meter.findMany({

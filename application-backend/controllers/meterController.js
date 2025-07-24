@@ -3,11 +3,18 @@ import MeterDB from '../models/MeterDB.js';
 // Get all meters
 export const getAllMeters = async (req, res) => {
     try {
-        const meters = await MeterDB.getAllMeters();
-        // Map all required fields for the frontend table
-        const formatted = meters.map((m, idx) => {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const filters = {
+            status: req.query.status && req.query.status !== 'all' ? req.query.status : undefined,
+            type: req.query.type && req.query.type !== 'all' ? req.query.type : undefined,
+            manufacturer: req.query.manufacturer && req.query.manufacturer !== 'all' ? req.query.manufacturer : undefined,
+            location: req.query.location && req.query.location !== 'all' ? req.query.location : undefined,
+        };
+        const metersData = await MeterDB.getMetersTable(page, limit, filters);
+        const formatted = metersData.data.map((m, idx) => {
             return {
-                sNo: idx + 1,
+                sNo: (page - 1) * limit + idx + 1,
                 meterSerialNumber: m.meterNumber || 'NA',
                 modemSerialNumber: m.serialNumber || 'NA',
                 meterType: m.type || m.meterType || 'NA',
@@ -20,7 +27,7 @@ export const getAllMeters = async (req, res) => {
         res.json({
             success: true,
             data: formatted,
-            message: 'Meters retrieved successfully'
+            pagination: metersData.pagination
         });
     } catch (error) {
         console.error('Error fetching meters:', error);
@@ -61,7 +68,6 @@ export const getMeterById = async (req, res) => {
 
 export const createMeter = async (req, res) => {
     try {
-        // Use validated data from middleware
         const meterData = req.validatedData;
 
         const newMeter = await MeterDB.create(meterData);
@@ -125,7 +131,6 @@ export const deleteMeter = async (req, res) => {
 export const getMeterStats = async (req, res) => {
     try {
         const stats = await MeterDB.getMeterStats();
-        // Only send relevant stats fields
         res.json({
             success: true,
             data: {
@@ -173,7 +178,6 @@ export const getDataLoggersList = async (req, res) => {
     try {
         const dataLoggers = await MeterDB.getDataLoggersList();
         
-        // Format the data for frontend table
         const formatted = dataLoggers.map((logger, idx) => ({
             sNo: idx + 1,
             modemId: logger.modem_id,
