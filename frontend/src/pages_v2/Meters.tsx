@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
 export default function Meters() {
+    const navigate = useNavigate();
     const [meterData, setMeterData] = useState([
         {
             id: 1,
@@ -437,7 +439,7 @@ export default function Meters() {
                                             onDelete: (row: TableData) =>
                                                 console.log('Delete:', row),
                                             onView: (row: TableData) =>
-                                                console.log('View:', row),
+                                                navigate(`/meter-details/${row.meterNumber}`),
                                         },
                                     },
                                 ],

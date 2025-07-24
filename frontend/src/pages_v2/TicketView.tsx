@@ -382,94 +382,225 @@ const TicketView: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
 
-    const { user } = useAuth();
-    const isAdmin = user?.role?.toLowerCase().includes('admin');
-    const basePath = isAdmin ? '/admin/tickets' : '/user/tickets';
-    const userDashboardPath = '/user';
+    // Safe auth usage for federated environments
+    let user = null;
+    let isAdmin = false;
+    let basePath = '/tickets';
+    let userDashboardPath = '/';
+    
+    try {
+        const authResult = useAuth();
+        user = authResult?.user;
+        isAdmin = user?.role?.toLowerCase().includes('admin') || false;
+        basePath = isAdmin ? '/admin/tickets' : '/user/tickets';
+        userDashboardPath = '/user';
+    } catch (error) {
+        // Fallback for federated environments where AuthProvider might not be available
+        console.log('Auth context not available, using fallback values');
+    }
 
-    // Dummy data
-    const dummyTicket: Ticket = {
-        id: id || '12345',
-        ticket_id: `TKT-${id || '12345'}`,
-        title: 'Billing Issue - Incorrect Meter Reading',
-        description: 'I have noticed that my last month electricity bill shows an unusually high consumption reading. The meter reading seems to be incorrect as my usage pattern has not changed significantly. I would like to request a manual meter reading verification and correction of the billing amount if necessary.',
-        status: 'Open',
-        priority: 'High',
-        category: 'Billing',
-        created_at: '2024-01-15T10:30:00Z',
-        updated_at: '2024-01-16T14:20:00Z',
-        assigned_to: 'Support Team',
-        resolution_notes: '',
-        resolution_date: '',
-        closed_date: '',
-        uid: 'UID123456789',
-        UnitName: 'John Doe',
-        Email_Id: 'john.doe@example.com',
-        MobileNumber: '+91-9876543210',
-        meter_no: 'MTR-789456123',
-        hierarchy_name: 'Building A, Floor 3, Unit 301',
-        connection_type: 'Residential',
-        UnityId: 'UNIT-301-A3',
-        conversation: [
-            {
-                sender_type: 'user',
-                sender_name: 'John Doe',
-                message: 'Hello, I have an issue with my electricity bill. The reading seems to be much higher than usual.',
-                timestamp: '2024-01-15T10:30:00Z',
-                metadata: {
-                    role: 'consumer',
-                    department: 'billing',
-                    isInternal: false,
-                },
+    // Generate dummy data based on ticket ID
+    const generateDummyTicket = (ticketId: string): Ticket => {
+        const ticketData = {
+            'TICKET-001': {
+                title: 'Power Outage in Downtown Area',
+                description: 'Complete power outage affecting 50+ customers in downtown area. Emergency response required. Multiple businesses and residential units affected.',
+                status: 'Open',
+                priority: 'High',
+                category: 'Power Outage',
+                assigned_to: 'Sarah Johnson',
+                UnitName: 'John Smith',
+                Email_Id: 'john.smith@email.com',
+                MobileNumber: '+1-555-0123',
+                meter_no: 'MTR-001',
+                hierarchy_name: 'Downtown District, Building 1',
+                connection_type: 'Commercial',
+                UnityId: 'UNIT-DT-001',
+                                 conversation: [
+                     {
+                         sender_type: 'user' as const,
+                         sender_name: 'John Smith',
+                         message: 'There is a complete power outage in the downtown area. Multiple businesses are affected.',
+                         timestamp: '2024-01-15T09:30:00Z',
+                         metadata: { role: 'consumer', department: 'emergency', isInternal: false },
+                     },
+                     {
+                         sender_type: 'admin' as const,
+                         sender_name: 'Sarah Johnson',
+                         message: 'Thank you for reporting this. We have dispatched our emergency response team. ETA is 30 minutes.',
+                         timestamp: '2024-01-15T09:45:00Z',
+                         metadata: { role: 'support', department: 'emergency', isInternal: false },
+                     },
+                 ] as ChatMessage[],
+                attachments: [
+                    { name: 'outage_location_map.pdf', size: 512000, type: 'application/pdf', url: '/attachments/outage_location_map.pdf' },
+                ],
             },
-            {
-                sender_type: 'admin',
-                sender_name: 'Support Agent',
-                message: 'Thank you for contacting us. I understand your concern about the high meter reading. Let me check your consumption history and schedule a meter verification.',
-                timestamp: '2024-01-15T11:15:00Z',
-                metadata: {
-                    role: 'support',
-                    department: 'customer_service',
-                    isInternal: false,
-                },
+            'TICKET-002': {
+                title: 'Meter Reading Issue',
+                description: 'Customer reports incorrect meter readings. Investigation needed to verify the accuracy of the meter data.',
+                status: 'In Progress',
+                priority: 'Medium',
+                category: 'Meter Issues',
+                assigned_to: 'Mike Chen',
+                UnitName: 'Emily Davis',
+                Email_Id: 'emily.davis@email.com',
+                MobileNumber: '+1-555-0456',
+                meter_no: 'MTR-002',
+                hierarchy_name: 'Suburb Area, House 456',
+                connection_type: 'Residential',
+                UnityId: 'UNIT-SUB-002',
+                                 conversation: [
+                     {
+                         sender_type: 'user' as const,
+                         sender_name: 'Emily Davis',
+                         message: 'My meter readings seem to be incorrect this month. The consumption is much higher than usual.',
+                         timestamp: '2024-01-14T11:45:00Z',
+                         metadata: { role: 'consumer', department: 'billing', isInternal: false },
+                     },
+                     {
+                         sender_type: 'admin' as const,
+                         sender_name: 'Mike Chen',
+                         message: 'I will investigate this issue. Let me check your meter history and schedule a verification.',
+                         timestamp: '2024-01-14T12:15:00Z',
+                         metadata: { role: 'support', department: 'technical', isInternal: false },
+                     },
+                 ] as ChatMessage[],
+                attachments: [
+                    { name: 'meter_reading_report.pdf', size: 256000, type: 'application/pdf', url: '/attachments/meter_reading_report.pdf' },
+                ],
             },
-            {
-                sender_type: 'user',
-                sender_name: 'John Doe',
-                message: 'Thank you for the quick response. When can I expect the meter verification to be completed?',
-                timestamp: '2024-01-15T11:30:00Z',
-                metadata: {
-                    role: 'consumer',
-                    department: 'billing',
-                    isInternal: false,
-                },
+            'TICKET-003': {
+                title: 'Billing Dispute',
+                description: 'Customer disputing monthly bill amount. Investigation completed and resolution provided.',
+                status: 'Resolved',
+                priority: 'Low',
+                category: 'Billing',
+                assigned_to: 'Lisa Park',
+                UnitName: 'Robert Wilson',
+                Email_Id: 'robert.wilson@email.com',
+                MobileNumber: '+1-555-0789',
+                meter_no: 'MTR-003',
+                hierarchy_name: 'Village Area, Unit 789',
+                connection_type: 'Residential',
+                UnityId: 'UNIT-VIL-003',
+                                 conversation: [
+                     {
+                         sender_type: 'user' as const,
+                         sender_name: 'Robert Wilson',
+                         message: 'I believe there is an error in my monthly bill. The amount seems incorrect.',
+                         timestamp: '2024-01-13T16:20:00Z',
+                         metadata: { role: 'consumer', department: 'billing', isInternal: false },
+                     },
+                     {
+                         sender_type: 'admin' as const,
+                         sender_name: 'Lisa Park',
+                         message: 'I have reviewed your bill and found the discrepancy. A credit has been applied to your account.',
+                         timestamp: '2024-01-15T09:45:00Z',
+                         metadata: { role: 'support', department: 'billing', isInternal: false },
+                     },
+                 ] as ChatMessage[],
+                attachments: [
+                    { name: 'billing_correction.pdf', size: 128000, type: 'application/pdf', url: '/attachments/billing_correction.pdf' },
+                ],
             },
-            {
-                sender_type: 'admin',
-                sender_name: 'Technical Team',
-                message: 'We have scheduled a meter reading verification for tomorrow between 10 AM - 2 PM. Our technician will visit your premises and conduct a thorough check.',
-                timestamp: '2024-01-16T09:00:00Z',
-                metadata: {
-                    role: 'technician',
-                    department: 'technical',
-                    isInternal: false,
-                },
+            'TICKET-004': {
+                title: 'Service Connection Request',
+                description: 'New customer requesting service connection for residential property.',
+                status: 'Open',
+                priority: 'Medium',
+                category: 'New Connection',
+                assigned_to: 'David Kim',
+                UnitName: 'Maria Garcia',
+                Email_Id: 'maria.garcia@email.com',
+                MobileNumber: '+1-555-0321',
+                meter_no: 'MTR-004',
+                hierarchy_name: 'New District, Building 321',
+                connection_type: 'Residential',
+                UnityId: 'UNIT-NEW-004',
+                                 conversation: [
+                     {
+                         sender_type: 'user' as const,
+                         sender_name: 'Maria Garcia',
+                         message: 'I would like to request a new service connection for my residential property.',
+                         timestamp: '2024-01-16T08:15:00Z',
+                         metadata: { role: 'consumer', department: 'connections', isInternal: false },
+                     },
+                     {
+                         sender_type: 'admin' as const,
+                         sender_name: 'David Kim',
+                         message: 'Thank you for your request. I will process your application and contact you within 24 hours.',
+                         timestamp: '2024-01-16T08:30:00Z',
+                         metadata: { role: 'support', department: 'connections', isInternal: false },
+                     },
+                 ] as ChatMessage[],
+                attachments: [
+                    { name: 'property_documents.pdf', size: 1024000, type: 'application/pdf', url: '/attachments/property_documents.pdf' },
+                ],
             },
-        ],
-        attachments: [
-            {
-                name: 'electricity_bill_december.pdf',
-                size: 245760,
-                type: 'application/pdf',
-                url: '/attachments/electricity_bill_december.pdf',
+            'TICKET-005': {
+                title: 'Equipment Maintenance',
+                description: 'Critical equipment failure at substation. Immediate attention required.',
+                status: 'Escalated',
+                priority: 'High',
+                category: 'Equipment',
+                assigned_to: 'Technical Team',
+                UnitName: 'James Brown',
+                Email_Id: 'james.brown@email.com',
+                MobileNumber: '+1-555-0654',
+                meter_no: 'MTR-005',
+                hierarchy_name: 'Industrial Zone, Substation Alpha',
+                connection_type: 'Industrial',
+                UnityId: 'UNIT-IND-005',
+                                 conversation: [
+                     {
+                         sender_type: 'user' as const,
+                         sender_name: 'James Brown',
+                         message: 'There is a critical equipment failure at Substation Alpha. Immediate attention required.',
+                         timestamp: '2024-01-15T13:00:00Z',
+                         metadata: { role: 'consumer', department: 'emergency', isInternal: false },
+                     },
+                     {
+                         sender_type: 'admin' as const,
+                         sender_name: 'Technical Team',
+                         message: 'Emergency response team dispatched. ETA is 15 minutes. Safety protocols activated.',
+                         timestamp: '2024-01-15T13:15:00Z',
+                         metadata: { role: 'technician', department: 'emergency', isInternal: false },
+                     },
+                 ] as ChatMessage[],
+                attachments: [
+                    { name: 'equipment_failure_report.pdf', size: 2048000, type: 'application/pdf', url: '/attachments/equipment_failure_report.pdf' },
+                ],
             },
-            {
-                name: 'meter_photo.jpg',
-                size: 1024000,
-                type: 'image/jpeg',
-                url: '/attachments/meter_photo.jpg',
-            },
-        ],
+        };
+
+        const ticketInfo = ticketData[ticketId as keyof typeof ticketData] || ticketData['TICKET-001'];
+        
+        return {
+            id: ticketId,
+            ticket_id: ticketId,
+            title: ticketInfo.title,
+            description: ticketInfo.description,
+            status: ticketInfo.status,
+            priority: ticketInfo.priority,
+            category: ticketInfo.category,
+            created_at: '2024-01-15T10:30:00Z',
+            updated_at: '2024-01-16T14:20:00Z',
+            assigned_to: ticketInfo.assigned_to,
+            resolution_notes: '',
+            resolution_date: '',
+            closed_date: '',
+            uid: `UID${ticketId.replace('TICKET-', '')}`,
+            UnitName: ticketInfo.UnitName,
+            Email_Id: ticketInfo.Email_Id,
+            MobileNumber: ticketInfo.MobileNumber,
+            meter_no: ticketInfo.meter_no,
+            hierarchy_name: ticketInfo.hierarchy_name,
+            connection_type: ticketInfo.connection_type,
+            UnityId: ticketInfo.UnityId,
+            conversation: ticketInfo.conversation,
+            attachments: ticketInfo.attachments,
+        };
     };
 
     const dummyActivities: Activity[] = [
@@ -523,80 +654,20 @@ const TicketView: React.FC = () => {
     ];
 
     // State
-    const [ticket, setTicket] = useState<Ticket | null>(null);
+    const [ticket, setTicket] = useState<Ticket | null>(generateDummyTicket(id || 'TICKET-001'));
     const [activities, setActivities] = useState<Activity[]>([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    const [isLoading] = useState(false);
 
     // Chat state
     const [chatMessage, setChatMessage] = useState('');
     const [chatAttachments, setChatAttachments] = useState<File[]>([]);
     const [isSubmittingResponse] = useState(false);
 
-    // Fetch ticket data
+    // Set activities immediately for development
     useEffect(() => {
-            const fetchTicketDetails = async () => {
-            if (!id) return;
-            
-                try {
-                    setIsLoading(true);
-                    setError(null);
-
-                // API call to fetch ticket details
-                const response = await fetch(`/api/tickets/${id}`);
-                
-                if (!response.ok) {
-                    throw new Error('Failed to fetch ticket details');
-                }
-
-                const ticketData = await response.json();
-                
-                if (ticketData.status === 'success') {
-                    const ticket = ticketData.data;
-                        setTicket({
-                        ...ticket,
-                        conversation: ticket.conversation || [],
-                        });
-
-                    // Generate activity log from ticket data
-                        const activityLog: Activity[] = [
-                            {
-                                id: 1,
-                            type: 'status' as const,
-                                description: 'Ticket created',
-                            timestamp: ticket.created_at,
-                            author: ticket.UnitName || 'N/A',
-                                status: 'Open',
-                            },
-                        // Add more activities based on ticket updates
-                        ...(ticket.updated_at !== ticket.created_at ? [{
-                            id: 2,
-                            type: 'status' as const,
-                            description: 'Ticket updated',
-                            timestamp: ticket.updated_at,
-                            author: 'System',
-                            status: ticket.status,
-                        }] : []),
-                        ];
-
-                        setActivities(activityLog);
-                    } else {
-                    throw new Error(ticketData.message || 'Failed to fetch ticket details');
-                    }
-                } catch (err) {
-                    console.error('Error fetching ticket details:', err);
-                    setError(err instanceof Error ? err.message : 'Failed to fetch ticket details');
-                
-                // Fallback to dummy data for development
-                setTicket(dummyTicket);
-                setActivities(dummyActivities);
-                } finally {
-                    setIsLoading(false);
-                }
-            };
-
-            fetchTicketDetails();
-    }, [id]);
+        if (!id) return;
+        setActivities(dummyActivities);
+    }, [id, dummyActivities]);
 
     // Handle chat message sending
     const handleSendMessage = () => {
@@ -605,7 +676,7 @@ const TicketView: React.FC = () => {
 
         const newMessage: ChatMessage = {
             sender_type: isAdmin ? 'admin' : 'user',
-            sender_name: isAdmin ? 'Support Agent' : ticket?.UnitName || user?.username || 'You',
+            sender_name: isAdmin ? 'Support Agent' : ticket?.UnitName || user?.username || 'Customer',
             message: chatMessage.trim(),
             timestamp: new Date().toISOString(),
             attachments: chatAttachments.map(file => ({
@@ -637,7 +708,7 @@ const TicketView: React.FC = () => {
             type: 'response',
             description: isAdmin ? 'Support team responded' : 'Customer responded',
             timestamp: new Date().toISOString(),
-            author: isAdmin ? 'Support Agent' : ticket?.UnitName || user?.username || 'You',
+            author: isAdmin ? 'Support Agent' : ticket?.UnitName || user?.username || 'Customer',
         };
 
         setActivities(prev => [...prev, newActivity]);
@@ -646,49 +717,7 @@ const TicketView: React.FC = () => {
         setChatAttachments([]);
     };
 
-    // Error handling
-    if (error) {
-        return (
-            <div className="p-4">
-            <Page
-                sections={[
-                    {
-                            layout: {
-                                type: 'column',
-                                gap: 'gap-6',
-                            },
-                            components: [
-                                {
-                                    name: 'PageHeader',
-                                    props: {
-                                        title: 'Ticket Details',
-                                        onBackClick: () => {
-                                            if (isAdmin) {
-                                                navigate(basePath);
-                                            } else {
-                                                navigate(userDashboardPath);
-                                            }
-                                        },
-                                        backButtonText: isAdmin ? "Back to Tickets" : "Back to Dashboard",
-                                    },
-                                },
-                                {
-                                    name: 'Card',
-                                    props: {
-                                        title: 'Error Loading Ticket',
-                                        value: error,
-                                        icon: '/icons/error-mark.svg',
-                                        subtitle1: 'Please try again or contact support',
-                                        subtitle2: 'Error occurred while loading ticket details',
-                                    },
-                                },
-                            ],
-                        },
-                    ]}
-                />
-            </div>
-        );
-    }
+
 
     // Loading state
     if (isLoading) {
