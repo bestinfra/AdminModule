@@ -2,45 +2,215 @@ import { useState, useEffect, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
 
+// Constants
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
+
 const tableColumns = [
     { key: 'sNo', label: 'S.No' },
     { key: 'name', label: 'Full Name' },
     { key: 'email', label: 'Email Address' },
     { key: 'phone', label: 'Phone Number' },
     { key: 'role', label: 'Role' },
-    { key: 'client', label: 'Client' },
-    // { key: 'lastActive', label: 'Last Active' },
-    { key: 'createdDate', label: 'Created Date' },
-    // Add actions column if you want to show action buttons
 ];
 
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
+// Dummy users data for table
+const dummyUsers = [
+    {
+        sNo: 1,
+        userId: 'USR001',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        role: 'Administrator'
+    },
+    {
+        sNo: 2,
+        userId: 'USR002',
+        name: 'Jane Smith',
+        email: 'jane.smith@example.com',
+        role: 'Accountant'
+    },
+    {
+        sNo: 3,
+        userId: 'USR003',
+        name: 'Mike Johnson',
+        email: 'mike.johnson@example.com',
+        role: 'Moderator'
+    },
+    {
+        sNo: 4,
+        userId: 'USR004',
+        name: 'Sarah Wilson',
+        email: 'sarah.wilson@example.com',
+        role: 'Administrator'
+    },
+    {
+        sNo: 5,
+        userId: 'USR005',
+        name: 'David Brown',
+        email: 'david.brown@example.com',
+        role: 'Accountant'
+    },
+    {
+        sNo: 6,
+        userId: 'USR006',
+        name: 'Emily Davis',
+        email: 'emily.davis@example.com',
+        role: 'Moderator'
+    },
+    {
+        sNo: 7,
+        userId: 'USR007',
+        name: 'Robert Miller',
+        email: 'robert.miller@example.com',
+        role: 'Administrator'
+    },
+    {
+        sNo: 8,
+        userId: 'USR008',
+        name: 'Lisa Garcia',
+        email: 'lisa.garcia@example.com',
+        role: 'Accountant'
+    },
+    {
+        sNo: 9,
+        userId: 'USR009',
+        name: 'James Taylor',
+        email: 'james.taylor@example.com',
+        role: 'Moderator'
+    },
+    {
+        sNo: 10,
+        userId: 'USR010',
+        name: 'Amanda Anderson',
+        email: 'amanda.anderson@example.com',
+        role: 'Administrator'
+    },
+    {
+        sNo: 11,
+        userId: 'USR011',
+        name: 'Christopher Martinez',
+        email: 'christopher.martinez@example.com',
+        role: 'Accountant'
+    },
+    {
+        sNo: 12,
+        userId: 'USR012',
+        name: 'Jessica Rodriguez',
+        email: 'jessica.rodriguez@example.com',
+        role: 'Moderator'
+    },
+    {
+        sNo: 13,
+        userId: 'USR013',
+        name: 'Daniel Thompson',
+        email: 'daniel.thompson@example.com',
+        role: 'Administrator'
+    },
+    {
+        sNo: 14,
+        userId: 'USR014',
+        name: 'Nicole White',
+        email: 'nicole.white@example.com',
+        role: 'Accountant'
+    },
+    {
+        sNo: 15,
+        userId: 'USR015',
+        name: 'Kevin Lee',
+        email: 'kevin.lee@example.com',
+        role: 'Moderator'
+    },
+    {
+        sNo: 16,
+        userId: 'USR016',
+        name: 'Rachel Green',
+        email: 'rachel.green@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 17,
+        userId: 'USR017',
+        name: 'Michael Chen',
+        email: 'michael.chen@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 18,
+        userId: 'USR018',
+        name: 'Sophie Turner',
+        email: 'sophie.turner@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 19,
+        userId: 'USR019',
+        name: 'Alex Rodriguez',
+        email: 'alex.rodriguez@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 20,
+        userId: 'USR020',
+        name: 'Maria Garcia',
+        email: 'maria.garcia@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 21,
+        userId: 'USR021',
+        name: 'Thomas Anderson',
+        email: 'thomas.anderson@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 22,
+        userId: 'USR022',
+        name: 'Olivia Johnson',
+        email: 'olivia.johnson@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 23,
+        userId: 'USR023',
+        name: 'William Davis',
+        email: 'william.davis@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 24,
+        userId: 'USR024',
+        name: 'Isabella Wilson',
+        email: 'isabella.wilson@example.com',
+        role: 'User'
+    },
+    {
+        sNo: 25,
+        userId: 'USR025',
+        name: 'Ethan Brown',
+        email: 'ethan.brown@example.com',
+        role: 'User'
+    }
+];
+
+
 
 export default function Users() {
-    const [users, setUsers] = useState([]);
+    const [users, setUsers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    // User stats state
+    const [error, setError] = useState<string | null>(null);
     const [userStats, setUserStats] = useState<any>(null);
 
     useEffect(() => {
         setLoading(true);
         setError(null);
-        fetch(`${BACKEND_URL}/users`)
-            .then(async (res) => {
-                if (!res.ok) throw new Error('Failed to fetch users');
-                const result = await res.json();
-                if (!result.success)
-                    throw new Error(result.message || 'Failed to fetch users');
-                setUsers(result.data);
-            })
-            .catch((err) => {
-                setError(err.message || 'Failed to fetch users');
-            })
-            .finally(() => setLoading(false));
+        
+        // Simulate API delay with dummy data
+        setTimeout(() => {
+            setUsers(dummyUsers);
+            setLoading(false);
+        }, 500);
     }, []);
 
     // Fetch user stats (widgets)

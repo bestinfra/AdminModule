@@ -1,5 +1,5 @@
 {
-  "nextPort": 4069,
+  "nextPort": 4071,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -72,8 +72,8 @@
       "path": "C:\\xampp\\htdocs\\kittu-backend"
     },
     "akhil": {
-      "port": 4027,
-      "deployedAt": "2025-07-21T07:17:51.113Z",
+      "port": 4070,
+      "deployedAt": "2025-07-24T10:15:44.810Z",
       "path": "C:\\xampp\\htdocs\\akhil-backend"
     },
     "dhaya": {
@@ -225,6 +225,16 @@
       "port": 4068,
       "deployedAt": "2025-07-24T12:20:44.356Z",
       "path": "C:\\xampp\\htdocs\\asdfg-backend"
+    },
+    "shiva": {
+      "port": 4069,
+      "deployedAt": "2025-07-24T12:41:52.906Z",
+      "path": "C:\\xampp\\htdocs\\shiva-backend"
+    },
+    "care": {
+      "port": 4070,
+      "deployedAt": "2025-07-24T12:56:55.822Z",
+      "path": "C:\\xampp\\htdocs\\care-backend"
     }
   }
 }
