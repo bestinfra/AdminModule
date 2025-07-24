@@ -8,7 +8,7 @@ const summaryCards = [
     title: 'Current Reading',
     value: '12950.11 kWh',
     icon: '/icons/reading.svg',
-    subtitle1: 'Last Reading: 12790.97 kWh Consumption: 159.14 kWh',
+    subtitle1: 'Last Reading: 12790.97 kWh Con: 159.14 kWh',
     subtitle2: '',
   },
   {
@@ -27,7 +27,7 @@ const summaryCards = [
   },
   {
     title: 'Location',
-    value: '',
+    value: '19.678 19.678',
     icon: '/icons/location.svg',
     subtitle1: 'Installation Date: N/A',
     subtitle2: '',

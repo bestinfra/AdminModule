@@ -190,6 +190,21 @@ const Transformer = createSafeLazyComponent(
   )
 );
 
+const Feeders = createSafeLazyComponent(
+  () => import('SuperAdmin/Feeders'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Feeders</h1>
+      <p className="text-gray-600">Loading feeders...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote Feeders component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
 const Assets = createSafeLazyComponent(
   () => import('SuperAdmin/Assets'),
   () => (

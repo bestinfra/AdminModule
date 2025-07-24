@@ -775,6 +775,7 @@ function AppContent() {
                       <Route path="/bills/prepaid" element={<BillsPrepaid />} />
                       <Route path="/bills/postpaid" element={<BillsPostpaid />} />
                       <Route path="/dtr-dashboard" element={<Transformer />} />
+                      <Route path="/dtr/:dtrId" element={<DTRDetailPage />} />
                       <Route path="/asset-management" element={<Assets />} />
                       <Route path="/meters" element={<Meters />} />
                       <Route path="/data-logger-master" element={<DataLoggerMaster />} />
@@ -796,6 +797,7 @@ function AppContent() {
                                 <li>/bills/prepaid - Bills Prepaid</li>
                                 <li>/bills/postpaid - Bills Postpaid</li>
                                 <li>/dtr-dashboard - DTR Dashboard</li>
+                                <li>/dtr/:dtrId - DTR Details</li>
                                 <li>/asset-management - Asset Management</li>
                                 <li>/meters - Meters List</li>
                                 <li>/data-logger-master - Data Logger Master</li>
