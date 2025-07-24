@@ -1,6 +1,5 @@
 {
-  "nextPort": 4064,
-  "nextPort": 4064,
+  "nextPort": 4067,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -199,8 +198,23 @@
     },
     "madhu5": {
       "port": 4063,
-      "deployedAt": "2025-07-24T05:19:34.371Z",
-      "path": "C:\\xampp\\htdocs\\madhu5-backend"
+      "deployedAt": "2025-07-24T04:49:14.881Z",
+      "path": "C:\\xampp\\htdocs\\tnspdcl-backend"
+    },
+    "abcdabcdee": {
+      "port": 4064,
+      "deployedAt": "2025-07-24T07:14:00.603Z",
+      "path": "C:\\xampp\\htdocs\\abcdabcdee-backend"
+    },
+    "barre": {
+      "port": 4065,
+      "deployedAt": "2025-07-24T07:24:53.846Z",
+      "path": "C:\\xampp\\htdocs\\barre-backend"
+    },
+    "manager": {
+      "port": 4066,
+      "deployedAt": "2025-07-24T07:52:54.415Z",
+      "path": "C:\\xampp\\htdocs\\manager-backend"
     }
   }
 }

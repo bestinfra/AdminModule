@@ -205,6 +205,36 @@ const Feeders = createSafeLazyComponent(
   )
 );
 
+const MeterDetails = createSafeLazyComponent(
+  () => import('SuperAdmin/MeterDetails'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Meter Details</h1>
+      <p className="text-gray-600">Loading meter details...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote MeterDetails component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
+const TicketView = createSafeLazyComponent(
+  () => import('SuperAdmin/TicketView'),
+  () => (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Ticket View</h1>
+      <p className="text-gray-600">Loading ticket view...</p>
+      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+        <p className="text-sm text-blue-700">This is the fallback component. The remote TicketView component failed to load.</p>
+        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+      </div>
+    </div>
+  )
+);
+
 const Assets = createSafeLazyComponent(
   () => import('SuperAdmin/Assets'),
   () => (
@@ -455,8 +485,10 @@ const menuItems = generateMenuItems({{modulesArray}});
                       {{billsPostpaidRoute}}
                       {{assetManagementRoute}}
                       {{meterManagementRoute}}
+                      {{meterDetailsRoute}}
                       {{dataLoggerRoute}}
                       {{ticketsRoute}}
+                      {{ticketViewRoute}}
                       {{usersRoute}}
                       {{roleManagementRoute}}
                       {{dtrRoute}}

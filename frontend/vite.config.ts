@@ -23,6 +23,8 @@ export default defineConfig({
         './Transformer': './src/pages_v2/DTRDashboard.tsx',
         './DTRDashboard': './src/pages_v2/DTRDashboard.tsx',
         './Feeders': './src/pages_v2/Feeders.tsx',
+        './MeterDetails': './src/pages_v2/MeterDetails.tsx',
+        './TicketView': './src/pages_v2/TicketView.tsx',
         // Components and context exports remain unchanged
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',
