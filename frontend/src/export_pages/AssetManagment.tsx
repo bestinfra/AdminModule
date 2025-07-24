@@ -1,4 +1,6 @@
-import Page from '@components/global/PageC';
+import { lazy, Suspense } from 'react';
+
+const Page = lazy(() => import('SuperAdmin/Page'));
 
 const mockHierarchyData = [
     {
@@ -117,6 +119,7 @@ function flattenHierarchy(
 
 export default function AssetManagment() {
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <Page
             sections={[
                 {
@@ -157,7 +160,8 @@ export default function AssetManagment() {
                         ],
                     },
                 },
-            ]}
-        />
+                ]}
+            />
+        </Suspense>
     );
 }
