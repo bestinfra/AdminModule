@@ -98,9 +98,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                 <div className="mt-4">
                   <p className="font-medium text-gray-700 dark:text-gray-300 mb-2">Custom Colors:</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                    {/* Primary Background */}
+                    {/* Main Page Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Page Background:</span> 
                       {formData.colorPrimaryBg ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -111,9 +111,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Primary BG Light */}
+                    {/* Card/Panel Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary BG Light:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Panel Background:</span> 
                       {formData.colorPrimaryBgLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -124,9 +124,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Primary Lightest */}
+                    {/* Section Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary Lightest:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Section Background:</span> 
                       {formData.colorPrimaryLightest ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -137,9 +137,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Secondary */}
+                    {/* Success Button Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Secondary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success Button Background:</span> 
                       {formData.colorSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -150,9 +150,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Secondary Light */}
+                    {/* Success Button Hover */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Secondary Light:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success Button Hover:</span> 
                       {formData.colorSecondaryLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -163,9 +163,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Secondary Positive */}
+                    {/* Success State Highlight */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Secondary Positive:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success State Highlight:</span> 
                       {formData.colorSecondaryPositive ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -176,9 +176,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Secondary Positive Light */}
+                    {/* Success State Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Secondary Positive Light:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success State Background:</span> 
                       {formData.colorSecondaryPositiveLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -189,9 +189,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Text Primary */}
+                    {/* Main Text Color */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Text Primary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Text Color:</span> 
                       {formData.colorTextPrimary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -202,9 +202,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Text Secondary */}
+                    {/* Description Text Color */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Text Secondary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Description Text Color:</span> 
                       {formData.colorTextSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -215,9 +215,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Primary Border */}
+                    {/* Card/Section Border */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary Border:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Section Border:</span> 
                       {formData.colorPrimaryBorder ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -228,9 +228,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Warning */}
+                    {/* Warning/Alert Icon */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Icon:</span> 
                       {formData.colorWarning ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -241,9 +241,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Warning Alt */}
+                    {/* Warning/Alert Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning Alt:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Background:</span> 
                       {formData.colorWarningAlt ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -254,9 +254,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Warning Light */}
+                    {/* Warning/Alert Highlight */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning Light:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Highlight:</span> 
                       {formData.colorWarningLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -267,9 +267,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Danger */}
+                    {/* Error/Remove Button */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Danger:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Button:</span> 
                       {formData.colorDanger ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -280,9 +280,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Danger Alt */}
+                    {/* Error/Remove Hover */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Danger Alt:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Hover:</span> 
                       {formData.colorDangerAlt ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -293,9 +293,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Danger Light */}
+                    {/* Error/Remove Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Danger Light:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Background:</span> 
                       {formData.colorDangerLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -306,9 +306,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Info */}
+                    {/* Info/Notification Icon */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Info:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Info/Notification Icon:</span> 
                       {formData.colorInfo ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -319,9 +319,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Neutral Dark */}
+                    {/* Neutral Text */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Dark:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Text:</span> 
                       {formData.colorNeutralDark ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -332,9 +332,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Neutral Darker */}
+                    {/* Neutral Subtext */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Darker:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Subtext:</span> 
                       {formData.colorNeutralDarker ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -345,9 +345,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Neutral Lightest */}
+                    {/* Page/Panel Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Lightest:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Page/Panel Background:</span> 
                       {formData.colorNeutralLightest ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -358,9 +358,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Accent Light */}
+                    {/* Highlight/Selection Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Accent Light:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Highlight/Selection Background:</span> 
                       {formData.colorAccentLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -371,9 +371,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Shadow Primary */}
+                    {/* Card Shadow */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Shadow Primary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card Shadow:</span> 
                       {formData.colorShadowPrimary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -384,9 +384,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Shadow Secondary */}
+                    {/* Panel Shadow */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Shadow Secondary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Panel Shadow:</span> 
                       {formData.colorShadowSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -397,9 +397,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Primary Dark */}
+                    {/* Main Background (Dark Mode) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary Dark:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Background (Dark Mode):</span> 
                       {formData.colorPrimaryDark ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -410,9 +410,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Primary Dark Light */}
+                    {/* Card/Panel Background (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary Dark Light:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Panel Background (Dark):</span> 
                       {formData.colorPrimaryDarkLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -423,9 +423,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Dark Primary */}
+                    {/* Main Text (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Dark Primary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Text (Dark):</span> 
                       {formData.colorDarkPrimary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -436,9 +436,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Dark Secondary */}
+                    {/* Subtext (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Dark Secondary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Subtext (Dark):</span> 
                       {formData.colorDarkSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -449,9 +449,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Dark Border */}
+                    {/* Border (Dark Mode) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Dark Border:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Border (Dark Mode):</span> 
                       {formData.colorDarkBorder ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -462,9 +462,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Primary Gradient */}
+                    {/* Main Gradient Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary Gradient:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Gradient Background:</span> 
                       {formData.colorPrimaryGradient ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -475,9 +475,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Primary Dark Gradient */}
+                    {/* Main Gradient (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Primary Dark Gradient:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Gradient (Dark):</span> 
                       {formData.colorPrimaryDarkGradient ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -488,9 +488,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Gradient Secondary */}
+                    {/* Panel Gradient (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Gradient Secondary:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Panel Gradient (Dark):</span> 
                       {formData.colorGradientSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 
@@ -501,9 +501,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                         </span>
                       ) : 'Not specified'}
                     </p>
-                    {/* Stat Icon Gradient */}
+                    {/* Statistics Icon Gradient */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Stat Icon Gradient:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Statistics Icon Gradient:</span> 
                       {formData.colorStatIconGradient ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
                           <div 

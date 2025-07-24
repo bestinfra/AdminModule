@@ -94,7 +94,7 @@ const HeaderFallback = () => (
 
 // Safe lazy components with fallbacks - using federated components from SuperAdmin
 const Dashboard = createSafeLazyComponent(
-  () => import('SuperAdmin/NewDashboard'),
+  () => import('SuperAdmin/Dashboard'),
   DashboardFallback
 );
 
@@ -211,7 +211,7 @@ const Meters = createSafeLazyComponent(
 );
 
 const DataLoggerMaster = createSafeLazyComponent(
-  () => import('SuperAdmin/DataLoggerMaster'),
+  () => import('SuperAdmin/DataLogger'),
   () => (
     <div className="p-6">
       <h1 className="text-2xl font-bold">Data Logger Master</h1>
@@ -259,6 +259,7 @@ function AppContent() {
       {{ticketsCase}}
       {{assetManagementCase}}
       {{meterManagementCase}}
+      {{dtrCase}}
       default:
         return 'Dashboard';
     }
@@ -376,10 +377,10 @@ const generateMenuItems = (modules = []) => {
         },
       ],
     },
-    role_management: {
-      title: 'Role Management',
-      icon: '/icons/roles.svg',
-      link: '/role-management',
+    dtr: {
+      title: 'DTR Dashboard',
+      icon: '/icons/transformer.svg',
+      link: '/dtr-dashboard',
     },
   };
 
@@ -434,6 +435,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                     <Routes>
                       <Route path="/" element={<Dashboard />} />
                       <Route path="/dashboard" element={<Dashboard />} />
+                      {{consumerRoute}}
                       {{billsPrepaidRoute}}
                       {{billsPostpaidRoute}}
                       {{assetManagementRoute}}
@@ -442,6 +444,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                       {{ticketsRoute}}
                       {{usersRoute}}
                       {{roleManagementRoute}}
+                      {{dtrRoute}}
                       <Route path="*" element={
                         <div className="p-6">
                           <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -454,6 +457,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                               <ul className="text-sm text-red-700 space-y-1">
                                 <li>/ - Dashboard</li>
                                 <li>/dashboard - Dashboard</li>
+                                {{consumerError}}
                                 {{billsPrepaidError}}
                                 {{billsPostpaidError}}
                                 {{assetManagementError}}
@@ -462,6 +466,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                                 {{ticketsError}}
                                 {{usersError}}
                                 {{roleManagementError}}
+                                {{dtrError}}
                               </ul>
                             </div>
                           </div>

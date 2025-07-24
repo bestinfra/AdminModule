@@ -3,7 +3,6 @@ import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
 
 // Constants
-const BILLING_VIEW_OPTIONS = ['Daily', 'Monthly'];
 
 const ICON_FILTER_STYLE = {
     filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',

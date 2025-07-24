@@ -108,7 +108,7 @@ function generateAppComponent(frontendDir, variables) {
       case '/users':
         return 'Users';` : '';
   
-  variables.roleManagementCase = modules.includes('role_management') ? `
+  variables.roleManagementCase = (modules.includes('role_management') || modules.includes('user_management_default')) ? `
       case '/role-management':
         return 'Role Management';` : '';
   
@@ -137,6 +137,18 @@ function generateAppComponent(frontendDir, variables) {
         return 'Meters';
       case '/data-logger-master':
         return 'Data Logger Master';` : '';
+  
+  variables.dtrCase = modules.includes('dtr') ? `
+      case '/dtr-dashboard':
+        return 'DTR Dashboard';` : '';
+  
+  variables.consumerCase = modules.includes('consumer') ? `
+      case '/consumers':
+        return 'Consumers';` : '';
+  
+  variables.userManagementCase = modules.includes('user_management_default') ? `
+      case '/users':
+        return 'Users';` : '';
 
   // Calculate route variables
   variables.billsPrepaidRoute = (modules.includes('bills') || modules.includes('prepaid')) ? 
@@ -160,11 +172,16 @@ function generateAppComponent(frontendDir, variables) {
   variables.usersRoute = modules.includes('user_management_default') ? 
     '<Route path="/users" element={<Users />} />' : '';
   
-  variables.roleManagementRoute = modules.includes('role_management') ? 
+  variables.roleManagementRoute = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
     '<Route path="/role-management" element={<RoleManagement />} />' : '';
   
   variables.consumerRoute = modules.includes('consumer') ? 
     '<Route path="/consumers" element={<Consumers />} />' : '';
+  
+  variables.dtrRoute = modules.includes('dtr') ? 
+    '<Route path="/dtr-dashboard" element={<Transformer />} />' : '';
+  
+
 
   // Calculate error page variables
   variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
@@ -188,11 +205,16 @@ function generateAppComponent(frontendDir, variables) {
   variables.usersError = modules.includes('user_management_default') ? 
     '<li>/users - Users</li>' : '';
   
-  variables.roleManagementError = modules.includes('role_management') ? 
+  variables.roleManagementError = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
     '<li>/role-management - Role Management</li>' : '';
   
   variables.consumerError = modules.includes('consumer') ? 
     '<li>/consumers - Consumers</li>' : '';
+  
+  variables.dtrError = modules.includes('dtr') ? 
+    '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
+  
+
 
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);

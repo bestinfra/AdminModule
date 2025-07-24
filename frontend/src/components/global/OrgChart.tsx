@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect } from 'react';
 import ReactFlow, {
     MiniMap,
     Controls,
@@ -7,6 +7,7 @@ import ReactFlow, {
     useEdgesState,
     addEdge,
     Position,
+    ReactFlowProvider,
 } from 'reactflow';
 import type { Node, Edge, Connection } from 'reactflow';
 import 'reactflow/dist/style.css';
@@ -157,27 +158,29 @@ const OrgChart = ({
                         <div className="w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
                     </div>
                 ) : (
-                    <ReactFlow
-                        ref={chartRef}
-                        nodes={nodes}
-                        edges={edges}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        onConnect={onConnect}
-                        fitView
-                        className="w-full h-full"
-                        minZoom={0.1}
-                        maxZoom={2}
-                        fitViewOptions={{
-                            padding: 0.1,
-                            includeHiddenNodes: true,
-                            minZoom: 0.1,
-                            maxZoom: 2,
-                        }}>
-                        <MiniMap className="!bg-gray-100 !border !border-gray-300" />
-                        <Controls className="!bg-white !border !border-gray-300" />
-                        <Background className="!bg-gray-50" />
-                    </ReactFlow>
+                    <ReactFlowProvider>
+                        <ReactFlow
+                            ref={chartRef}
+                            nodes={nodes}
+                            edges={edges}
+                            onNodesChange={onNodesChange}
+                            onEdgesChange={onEdgesChange}
+                            onConnect={onConnect}
+                            fitView
+                            className="w-full h-full"
+                            minZoom={0.1}
+                            maxZoom={2}
+                            fitViewOptions={{
+                                padding: 0.1,
+                                includeHiddenNodes: true,
+                                minZoom: 0.1,
+                                maxZoom: 2,
+                            }}>
+                            <MiniMap className="!bg-gray-100 !border !border-gray-300" />
+                            <Controls className="!bg-white !border !border-gray-300" />
+                            <Background className="!bg-gray-50" />
+                        </ReactFlow>
+                    </ReactFlowProvider>
                 )}
             </div>
         </div>

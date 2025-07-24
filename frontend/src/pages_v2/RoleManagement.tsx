@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Page from '@components/global/PageC';
+import Page from '@/components/global/PageC';
 
 // Types
 interface Role {
@@ -296,14 +296,25 @@ export default function RoleManagement() {
                                     {
                                         name: 'PageHeader',
                                         props: {
-                                            title: "Roles Management",
+                                            title: "Role Management",
                                             onBackClick: () => navigate('/'),
-                                            backButtonText: "Back",
+                                            backButtonText: "Back to Dashboard",
                                             buttonsLabel: "Add Role",
                                             variant: "primary",
                                             onClick: handleAddRole,
-                                            showMenu: false,
-                                            showDropdown: false,
+                                            showMenu: true,
+                                            showDropdown: true,
+                                            menuItems: [
+                                                { id: 'all', label: 'All Roles' },
+                                                { id: 'admin', label: 'Administrative Roles' },
+                                                { id: 'user', label: 'User Roles' },
+                                                { id: 'support', label: 'Support Roles' },
+                                                { id: 'financial', label: 'Financial Roles' },
+                                                { id: 'system', label: 'System Roles' }
+                                            ],
+                                            onMenuItemClick: (itemId: string) => {
+                                                console.log(`Filter by: ${itemId}`);
+                                            }
                                         }
                                     }
                                 ]

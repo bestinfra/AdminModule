@@ -229,6 +229,44 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
     }
   };
 
+  // Build color options for gradient dropdowns
+  const lightModeColors = [
+    { value: formData.colorPrimaryBg || "#efefef", label: "Main Page Background", color: formData.colorPrimaryBg || "#efefef" },
+    { value: formData.colorPrimaryBgLight || "#dce7ec", label: "Card/Panel Background", color: formData.colorPrimaryBgLight || "#dce7ec" },
+    { value: formData.colorPrimaryLightest || "#f5f8fc", label: "Section Background", color: formData.colorPrimaryLightest || "#f5f8fc" },
+    { value: formData.colorSecondary || "#55b56c", label: "Success Button Background", color: formData.colorSecondary || "#55b56c" },
+    { value: formData.colorSecondaryLight || "#bbe1c4", label: "Success Button Hover", color: formData.colorSecondaryLight || "#bbe1c4" },
+    { value: formData.colorSecondaryPositive || "#029447", label: "Success State Highlight", color: formData.colorSecondaryPositive || "#029447" },
+    { value: formData.colorSecondaryPositiveLight || "rgba(52, 199, 89, 0.15)", label: "Success State Background", color: formData.colorSecondaryPositiveLight || "rgba(52, 199, 89, 0.15)" },
+    { value: formData.colorTextPrimary || "#262626", label: "Main Text Color", color: formData.colorTextPrimary || "#262626" },
+    { value: formData.colorTextSecondary || "#7e7e7e", label: "Description Text Color", color: formData.colorTextSecondary || "#7e7e7e" },
+    { value: formData.colorPrimaryBorder || "#e9efff", label: "Card/Section Border", color: formData.colorPrimaryBorder || "#e9efff" },
+    { value: formData.colorWarning || "#ed8c22", label: "Warning/Alert Icon", color: formData.colorWarning || "#ed8c22" },
+    { value: formData.colorWarningAlt || "#ffd108", label: "Warning/Alert Background", color: formData.colorWarningAlt || "#ffd108" },
+    { value: formData.colorWarningLight || "rgba(255, 180, 0, 0.15)", label: "Warning/Alert Highlight", color: formData.colorWarningLight || "rgba(255, 180, 0, 0.15)" },
+    { value: formData.colorDanger || "#dc272c", label: "Error/Remove Button", color: formData.colorDanger || "#dc272c" },
+    { value: formData.colorDangerAlt || "#ff7c5c", label: "Error/Remove Hover", color: formData.colorDangerAlt || "#ff7c5c" },
+    { value: formData.colorDangerLight || "rgba(231, 45, 63, 0.1)", label: "Error/Remove Background", color: formData.colorDangerLight || "rgba(231, 45, 63, 0.1)" },
+    { value: formData.colorInfo || "none", label: "Info/Notification Icon", color: formData.colorInfo || "none" },
+    { value: formData.colorNeutralDark || "#3c3c3c", label: "Neutral Text", color: formData.colorNeutralDark || "#3c3c3c" },
+    { value: formData.colorNeutralDarker || "#262626", label: "Neutral Subtext", color: formData.colorNeutralDarker || "#262626" },
+    { value: formData.colorNeutralLightest || "#ffffff", label: "Page/Panel Background", color: formData.colorNeutralLightest || "#ffffff" },
+    { value: formData.colorAccentLight || "rgba(0, 209, 178, 0.05)", label: "Highlight/Selection Background", color: formData.colorAccentLight || "rgba(0, 209, 178, 0.05)" },
+    { value: formData.colorShadowPrimary || "#dce4ef", label: "Card Shadow", color: formData.colorShadowPrimary || "#dce4ef" },
+    { value: formData.colorShadowSecondary || "#dce4ef", label: "Panel Shadow", color: formData.colorShadowSecondary || "#dce4ef" },
+  ];
+  const darkModeColors = [
+    { value: formData.colorPrimaryDark || "#041328", label: "Main Background (Dark Mode)", color: formData.colorPrimaryDark || "#041328" },
+    { value: formData.colorPrimaryDarkLight || "#06152d", label: "Card/Panel Background (Dark)", color: formData.colorPrimaryDarkLight || "#06152d" },
+    { value: formData.colorDarkPrimary || "#476189", label: "Main Text (Dark)", color: formData.colorDarkPrimary || "#476189" },
+    { value: formData.colorDarkSecondary || "#476189", label: "Subtext (Dark)", color: formData.colorDarkSecondary || "#476189" },
+    { value: formData.colorDarkBorder || "#091b3b", label: "Border (Dark Mode)", color: formData.colorDarkBorder || "#091b3b" },
+    { value: formData.colorPrimaryGradient || "linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))", label: "Main Gradient Background", color: formData.colorPrimaryGradient || "#163b7c" },
+    { value: formData.colorPrimaryDarkGradient || "linear-gradient(135deg, var(--colorPrimaryLight), var(--colorSecondaryLightestTransperent))", label: "Main Gradient (Dark)", color: formData.colorPrimaryDarkGradient || "#041328" },
+    { value: formData.colorGradientSecondary || "linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))", label: "Panel Gradient (Dark)", color: formData.colorGradientSecondary || "#bbe1c4" },
+    { value: formData.colorStatIconGradient || "linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))", label: "Statistics Icon Gradient", color: formData.colorStatIconGradient || "#bbe1c4" },
+  ];
+
 
   return (
     <>
@@ -438,49 +476,49 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                   {/* Light Mode Colors */}
                   {selectedMode === "Light" && <>
                     {/* Primary Colors */}
-                    <ColorPicker label="Primary Background" name="colorPrimaryBg" value={formData.colorPrimaryBg || "#efefef"} onChange={onInputChange} options={[{ value: "#efefef", label: "Primary Background", color: "#efefef" }]} width={48} />
-                    <ColorPicker label="Primary BG Light" name="colorPrimaryBgLight" value={formData.colorPrimaryBgLight || "#dce7ec"} onChange={onInputChange} options={[{ value: "#dce7ec", label: "Primary BG Light", color: "#dce7ec" }]} width={48} />
-                    <ColorPicker label="Primary Lightest" name="colorPrimaryLightest" value={formData.colorPrimaryLightest || "#f5f8fc"} onChange={onInputChange} options={[{ value: "#f5f8fc", label: "Primary Lightest", color: "#f5f8fc" }]} width={48} />
+                    <ColorPicker label="Main Page Background" name="colorPrimaryBg" value={formData.colorPrimaryBg || "#efefef"} onChange={onInputChange} options={[{ value: "#efefef", label: "Main Page Background", color: "#efefef" }]} width={48} />
+                    <ColorPicker label="Card/Panel Background" name="colorPrimaryBgLight" value={formData.colorPrimaryBgLight || "#dce7ec"} onChange={onInputChange} options={[{ value: "#dce7ec", label: "Card/Panel Background", color: "#dce7ec" }]} width={48} />
+                    <ColorPicker label="Section Background" name="colorPrimaryLightest" value={formData.colorPrimaryLightest || "#f5f8fc"} onChange={onInputChange} options={[{ value: "#f5f8fc", label: "Section Background", color: "#f5f8fc" }]} width={48} />
                     {/* Secondary Colors */}
-                    <ColorPicker label="Secondary Color" name="colorSecondary" value={formData.colorSecondary || "#55b56c"} onChange={onInputChange} options={[{ value: "#55b56c", label: "Secondary Green", color: "#55b56c" }]} width={48} />
-                    <ColorPicker label="Secondary Light" name="colorSecondaryLight" value={formData.colorSecondaryLight || "#bbe1c4"} onChange={onInputChange} options={[{ value: "#bbe1c4", label: "Secondary Light", color: "#bbe1c4" }]} width={48} />
-                    <ColorPicker label="Secondary Positive" name="colorSecondaryPositive" value={formData.colorSecondaryPositive || "#029447"} onChange={onInputChange} options={[{ value: "#029447", label: "Secondary Positive", color: "#029447" }]} width={48} />
-                    <ColorPicker label="Secondary Positive Light" name="colorSecondaryPositiveLight" value={formData.colorSecondaryPositiveLight || "rgba(52, 199, 89, 0.15)"} onChange={onInputChange} options={[{ value: "rgba(52, 199, 89, 0.15)", label: "Secondary Positive Light", color: "rgba(52, 199, 89, 0.15)" }]} allowGradient={true} width={48} />
+                    <ColorPicker label="Success Button Background" name="colorSecondary" value={formData.colorSecondary || "#55b56c"} onChange={onInputChange} options={[{ value: "#55b56c", label: "Success Button Background", color: "#55b56c" }]} width={48} />
+                    <ColorPicker label="Success Button Hover" name="colorSecondaryLight" value={formData.colorSecondaryLight || "#bbe1c4"} onChange={onInputChange} options={[{ value: "#bbe1c4", label: "Success Button Hover", color: "#bbe1c4" }]} width={48} />
+                    <ColorPicker label="Success State Highlight" name="colorSecondaryPositive" value={formData.colorSecondaryPositive || "#029447"} onChange={onInputChange} options={[{ value: "#029447", label: "Success State Highlight", color: "#029447" }]} width={48} />
+                    <ColorPicker label="Success State Background" name="colorSecondaryPositiveLight" value={formData.colorSecondaryPositiveLight || "rgba(52, 199, 89, 0.15)"} onChange={onInputChange} options={[{ value: "rgba(52, 199, 89, 0.15)", label: "Success State Background", color: "rgba(52, 199, 89, 0.15)" }]} allowGradient={true} width={48} gradientColorOptions={{ light: lightModeColors, dark: darkModeColors }} currentMode={selectedMode.toLowerCase() === 'light' ? 'light' : 'dark'} />
                     {/* Text Colors */}
-                    <ColorPicker label="Text Primary" name="colorTextPrimary" value={formData.colorTextPrimary || "#262626"} onChange={onInputChange} options={[{ value: "#262626", label: "Text Primary", color: "#262626" }]} width={48} />
-                    <ColorPicker label="Text Secondary" name="colorTextSecondary" value={formData.colorTextSecondary || "#7e7e7e"} onChange={onInputChange} options={[{ value: "#7e7e7e", label: "Text Secondary", color: "#7e7e7e" }]} width={48} />
+                    <ColorPicker label="Main Text Color" name="colorTextPrimary" value={formData.colorTextPrimary || "#262626"} onChange={onInputChange} options={[{ value: "#262626", label: "Main Text Color", color: "#262626" }]} width={48} />
+                    <ColorPicker label="Description Text Color" name="colorTextSecondary" value={formData.colorTextSecondary || "#7e7e7e"} onChange={onInputChange} options={[{ value: "#7e7e7e", label: "Description Text Color", color: "#7e7e7e" }]} width={48} />
                     {/* Border Colors */}
-                    <ColorPicker label="Primary Border" name="colorPrimaryBorder" value={formData.colorPrimaryBorder || "#e9efff"} onChange={onInputChange} options={[{ value: "#e9efff", label: "Primary Border", color: "#e9efff" }]} width={48} />
+                    <ColorPicker label="Card/Section Border" name="colorPrimaryBorder" value={formData.colorPrimaryBorder || "#e9efff"} onChange={onInputChange} options={[{ value: "#e9efff", label: "Card/Section Border", color: "#e9efff" }]} width={48} />
                     {/* Status Colors */}
-                    <ColorPicker label="Warning Color" name="colorWarning" value={formData.colorWarning || "#ed8c22"} onChange={onInputChange} options={[{ value: "#ed8c22", label: "Warning Orange", color: "#ed8c22" }]} width={48} />
-                    <ColorPicker label="Warning Alt" name="colorWarningAlt" value={formData.colorWarningAlt || "#ffd108"} onChange={onInputChange} options={[{ value: "#ffd108", label: "Warning Alt", color: "#ffd108" }]} width={48} />
-                    <ColorPicker label="Warning Light" name="colorWarningLight" value={formData.colorWarningLight || "rgba(255, 180, 0, 0.15)"} onChange={onInputChange} options={[{ value: "rgba(255, 180, 0, 0.15)", label: "Warning Light", color: "rgba(255, 180, 0, 0.15)" }]} allowGradient={true} width={48} />
-                    <ColorPicker label="Danger Color" name="colorDanger" value={formData.colorDanger || "#dc272c"} onChange={onInputChange} options={[{ value: "#dc272c", label: "Danger Red", color: "#dc272c" }]} width={48} />
-                    <ColorPicker label="Danger Alt" name="colorDangerAlt" value={formData.colorDangerAlt || "#ff7c5c"} onChange={onInputChange} options={[{ value: "#ff7c5c", label: "Danger Alt", color: "#ff7c5c" }]} width={48} />
-                    <ColorPicker label="Danger Light" name="colorDangerLight" value={formData.colorDangerLight || "rgba(231, 45, 63, 0.1)"} onChange={onInputChange} options={[{ value: "rgba(231, 45, 63, 0.1)", label: "Danger Light", color: "rgba(231, 45, 63, 0.1)" }]} allowGradient={true} width={48} />
-                    <ColorPicker label="Info Color" name="colorInfo" value={formData.colorInfo || "none"} onChange={onInputChange} options={[{ value: "none", label: "Info Color", color: "none" }]} width={48} />
+                    <ColorPicker label="Warning/Alert Icon" name="colorWarning" value={formData.colorWarning || "#ed8c22"} onChange={onInputChange} options={[{ value: "#ed8c22", label: "Warning/Alert Icon", color: "#ed8c22" }]} width={48} />
+                    <ColorPicker label="Warning/Alert Background" name="colorWarningAlt" value={formData.colorWarningAlt || "#ffd108"} onChange={onInputChange} options={[{ value: "#ffd108", label: "Warning/Alert Background", color: "#ffd108" }]} width={48} />
+                    <ColorPicker label="Warning/Alert Highlight" name="colorWarningLight" value={formData.colorWarningLight || "rgba(255, 180, 0, 0.15)"} onChange={onInputChange} options={[{ value: "rgba(255, 180, 0, 0.15)", label: "Warning/Alert Highlight", color: "rgba(255, 180, 0, 0.15)" }]} allowGradient={true} width={48} />
+                    <ColorPicker label="Error/Remove Button" name="colorDanger" value={formData.colorDanger || "#dc272c"} onChange={onInputChange} options={[{ value: "#dc272c", label: "Error/Remove Button", color: "#dc272c" }]} width={48} />
+                    <ColorPicker label="Error/Remove Hover" name="colorDangerAlt" value={formData.colorDangerAlt || "#ff7c5c"} onChange={onInputChange} options={[{ value: "#ff7c5c", label: "Error/Remove Hover", color: "#ff7c5c" }]} width={48} />
+                    <ColorPicker label="Error/Remove Background" name="colorDangerLight" value={formData.colorDangerLight || "rgba(231, 45, 63, 0.1)"} onChange={onInputChange} options={[{ value: "rgba(231, 45, 63, 0.1)", label: "Error/Remove Background", color: "rgba(231, 45, 63, 0.1)" }]} allowGradient={true} width={48} />
+                    <ColorPicker label="Info/Notification Icon" name="colorInfo" value={formData.colorInfo || "none"} onChange={onInputChange} options={[{ value: "none", label: "Info/Notification Icon", color: "none" }]} width={48} />
                     {/* Neutral Colors */}
-                    <ColorPicker label="Neutral Dark" name="colorNeutralDark" value={formData.colorNeutralDark || "#3c3c3c"} onChange={onInputChange} options={[{ value: "#3c3c3c", label: "Neutral Dark", color: "#3c3c3c" }]} width={48} />
-                    <ColorPicker label="Neutral Darker" name="colorNeutralDarker" value={formData.colorNeutralDarker || "#262626"} onChange={onInputChange} options={[{ value: "#262626", label: "Neutral Darker", color: "#262626" }]} width={48} />
-                    <ColorPicker label="Neutral Lightest" name="colorNeutralLightest" value={formData.colorNeutralLightest || "#ffffff"} onChange={onInputChange} options={[{ value: "#ffffff", label: "Neutral Lightest", color: "#ffffff" }]} width={48} />
+                    <ColorPicker label="Neutral Text" name="colorNeutralDark" value={formData.colorNeutralDark || "#3c3c3c"} onChange={onInputChange} options={[{ value: "#3c3c3c", label: "Neutral Text", color: "#3c3c3c" }]} width={48} />
+                    <ColorPicker label="Neutral Subtext" name="colorNeutralDarker" value={formData.colorNeutralDarker || "#262626"} onChange={onInputChange} options={[{ value: "#262626", label: "Neutral Subtext", color: "#262626" }]} width={48} />
+                    <ColorPicker label="Page/Panel Background" name="colorNeutralLightest" value={formData.colorNeutralLightest || "#ffffff"} onChange={onInputChange} options={[{ value: "#ffffff", label: "Page/Panel Background", color: "#ffffff" }]} width={48} />
                     {/* Accent Colors */}
-                    <ColorPicker label="Accent Light" name="colorAccentLight" value={formData.colorAccentLight || "rgba(0, 209, 178, 0.05)"} onChange={onInputChange} options={[{ value: "rgba(0, 209, 178, 0.05)", label: "Accent Light", color: "rgba(0, 209, 178, 0.05)" }]} allowGradient={true} width={48} />
+                    <ColorPicker label="Highlight/Selection Background" name="colorAccentLight" value={formData.colorAccentLight || "rgba(0, 209, 178, 0.05)"} onChange={onInputChange} options={[{ value: "rgba(0, 209, 178, 0.05)", label: "Highlight/Selection Background", color: "rgba(0, 209, 178, 0.05)" }]} allowGradient={true} width={48} />
                     {/* Shadow Colors */}
-                    <ColorPicker label="Shadow Primary" name="colorShadowPrimary" value={formData.colorShadowPrimary || "#dce4ef"} onChange={onInputChange} options={[{ value: "#dce4ef", label: "Shadow Primary", color: "#dce4ef" }]} width={48} />
-                    <ColorPicker label="Shadow Secondary" name="colorShadowSecondary" value={formData.colorShadowSecondary || "#dce4ef"} onChange={onInputChange} options={[{ value: "#dce4ef", label: "Shadow Secondary", color: "#dce4ef" }]} width={48} />
+                    <ColorPicker label="Card Shadow" name="colorShadowPrimary" value={formData.colorShadowPrimary || "#dce4ef"} onChange={onInputChange} options={[{ value: "#dce4ef", label: "Card Shadow", color: "#dce4ef" }]} width={48} />
+                    <ColorPicker label="Panel Shadow" name="colorShadowSecondary" value={formData.colorShadowSecondary || "#dce4ef"} onChange={onInputChange} options={[{ value: "#dce4ef", label: "Panel Shadow", color: "#dce4ef" }]} width={48} />
                   </>}
                   {/* Dark Mode Colors */}
                   {selectedMode === "Dark" && <>
-                    <ColorPicker label="Primary Dark" name="colorPrimaryDark" value={formData.colorPrimaryDark || "#041328"} onChange={onInputChange} options={[{ value: "#041328", label: "Primary Dark", color: "#041328" }]} width={48} />
-                    <ColorPicker label="Primary Dark Light" name="colorPrimaryDarkLight" value={formData.colorPrimaryDarkLight || "#06152d"} onChange={onInputChange} options={[{ value: "#06152d", label: "Primary Dark Light", color: "#06152d" }]} width={48} />
-                    <ColorPicker label="Dark Primary Text" name="colorDarkPrimary" value={formData.colorDarkPrimary || "#476189"} onChange={onInputChange} options={[{ value: "#476189", label: "Dark Primary Text", color: "#476189" }]} width={48} />
-                    <ColorPicker label="Dark Secondary Text" name="colorDarkSecondary" value={formData.colorDarkSecondary || "#476189"} onChange={onInputChange} options={[{ value: "#476189", label: "Dark Secondary Text", color: "#476189" }]} width={48} />
-                    <ColorPicker label="Dark Border" name="colorDarkBorder" value={formData.colorDarkBorder || "#091b3b"} onChange={onInputChange} options={[{ value: "#091b3b", label: "Dark Border", color: "#091b3b" }]} width={48} />
+                    <ColorPicker label="Main Background (Dark Mode)" name="colorPrimaryDark" value={formData.colorPrimaryDark || "#041328"} onChange={onInputChange} options={[{ value: "#041328", label: "Main Background (Dark Mode)", color: "#041328" }]} width={48} />
+                    <ColorPicker label="Card/Panel Background (Dark)" name="colorPrimaryDarkLight" value={formData.colorPrimaryDarkLight || "#06152d"} onChange={onInputChange} options={[{ value: "#06152d", label: "Card/Panel Background (Dark)", color: "#06152d" }]} width={48} />
+                    <ColorPicker label="Main Text (Dark)" name="colorDarkPrimary" value={formData.colorDarkPrimary || "#476189"} onChange={onInputChange} options={[{ value: "#476189", label: "Main Text (Dark)", color: "#476189" }]} width={48} />
+                    <ColorPicker label="Subtext (Dark)" name="colorDarkSecondary" value={formData.colorDarkSecondary || "#476189"} onChange={onInputChange} options={[{ value: "#476189", label: "Subtext (Dark)", color: "#476189" }]} width={48} />
+                    <ColorPicker label="Border (Dark Mode)" name="colorDarkBorder" value={formData.colorDarkBorder || "#091b3b"} onChange={onInputChange} options={[{ value: "#091b3b", label: "Border (Dark Mode)", color: "#091b3b" }]} width={48} />
                     {/* Gradients (optional, can be removed if not needed) */}
-                    <ColorPicker label="Primary Gradient" name="colorPrimaryGradient" value={formData.colorPrimaryGradient || "linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))"} onChange={onInputChange} options={[{ value: "linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))", label: "Primary Gradient", color: "#163b7c" }]} allowGradient={true}  gradientInputWidth="full" />
-                    <ColorPicker label="Primary Dark Gradient" name="colorPrimaryDarkGradient" value={formData.colorPrimaryDarkGradient || "linear-gradient(135deg, var(--colorPrimaryLight), var(--colorSecondaryLightestTransperent))"} onChange={onInputChange} options={[{ value: "linear-gradient(135deg, var(--colorPrimaryLight), var(--colorSecondaryLightestTransperent))", label: "Primary Dark Gradient", color: "#041328" }]} allowGradient={true} width={48} gradientInputWidth="full" />
-                    <ColorPicker label="Gradient Secondary" name="colorGradientSecondary" value={formData.colorGradientSecondary || "linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))"} onChange={onInputChange} options={[{ value: "linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))", label: "Gradient Secondary", color: "#bbe1c4" }]} allowGradient={true} width={48}  gradientInputWidth="full" />
-                    <ColorPicker label="Stat Icon Gradient" name="colorStatIconGradient" value={formData.colorStatIconGradient || "linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))"} onChange={onInputChange} options={[{ value: "linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))", label: "Stat Icon Gradient", color: "#bbe1c4" }]} allowGradient={true} width={48}  gradientInputWidth="full"/>
+                    <ColorPicker label="Main Gradient Background" name="colorPrimaryGradient" value={formData.colorPrimaryGradient || "linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))"} onChange={onInputChange} options={[{ value: "linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))", label: "Main Gradient Background", color: "#163b7c" }]} allowGradient={true} gradientInputWidth="full" gradientColorOptions={{ light: lightModeColors, dark: darkModeColors }} currentMode={selectedMode.toLowerCase() === 'light' ? 'light' : 'dark'} />
+                    <ColorPicker label="Main Gradient (Dark)" name="colorPrimaryDarkGradient" value={formData.colorPrimaryDarkGradient || "linear-gradient(135deg, var(--colorPrimaryLight), var(--colorSecondaryLightestTransperent))"} onChange={onInputChange} options={[{ value: "linear-gradient(135deg, var(--colorPrimaryLight), var(--colorSecondaryLightestTransperent))", label: "Main Gradient (Dark)", color: "#041328" }]} allowGradient={true} width={48} gradientInputWidth="full" gradientColorOptions={{ light: lightModeColors, dark: darkModeColors }} currentMode={selectedMode.toLowerCase() === 'light' ? 'light' : 'dark'} />
+                    <ColorPicker label="Panel Gradient (Dark)" name="colorGradientSecondary" value={formData.colorGradientSecondary || "linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))"} onChange={onInputChange} options={[{ value: "linear-gradient(135deg, var(--color-secondary), var(--color-secondary-light))", label: "Panel Gradient (Dark)", color: "#bbe1c4" }]} allowGradient={true} width={48}  gradientInputWidth="full" gradientColorOptions={{ light: lightModeColors, dark: darkModeColors }} currentMode={selectedMode.toLowerCase() === 'light' ? 'light' : 'dark'} />
+                    <ColorPicker label="Statistics Icon Gradient" name="colorStatIconGradient" value={formData.colorStatIconGradient || "linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))"} onChange={onInputChange} options={[{ value: "linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))", label: "Statistics Icon Gradient", color: "#bbe1c4" }]} allowGradient={true} width={48}  gradientInputWidth="full" gradientColorOptions={{ light: lightModeColors, dark: darkModeColors }} currentMode={selectedMode.toLowerCase() === 'light' ? 'light' : 'dark'}/>
                   </>}
                 </div>
               </div>
