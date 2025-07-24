@@ -140,7 +140,9 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.dtrCase = modules.includes('dtr') ? `
       case '/dtr-dashboard':
-        return 'DTR Dashboard';` : '';
+        return 'DTR Dashboard';
+      case '/dtr/:dtrId':
+        return 'Feeders';` : '';
   
   variables.consumerCase = modules.includes('consumer') ? `
       case '/consumers':
@@ -179,7 +181,7 @@ function generateAppComponent(frontendDir, variables) {
     '<Route path="/consumers" element={<Consumers />} />' : '';
   
   variables.dtrRoute = modules.includes('dtr') ? 
-    '<Route path="/dtr-dashboard" element={<Transformer />} />' : '';
+    '<Route path="/dtr-dashboard" element={<Transformer />} />\n                          <Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
   
 
 
@@ -212,7 +214,7 @@ function generateAppComponent(frontendDir, variables) {
     '<li>/consumers - Consumers</li>' : '';
   
   variables.dtrError = modules.includes('dtr') ? 
-    '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
+    '<li>/dtr-dashboard - DTR Dashboard</li>\n                                <li>/dtr/:dtrId - Feeders</li>' : '';
   
 
 
