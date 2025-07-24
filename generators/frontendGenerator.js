@@ -148,6 +148,15 @@ function generateAppComponent(frontendDir, variables) {
       case '/dtr/:dtrId':
         return 'Feeders';` : '';
   
+  // Dashboard submenu case variables
+  variables.consumerDashboardCase = modules.includes('consumer_dashboard') ? `
+      case '/consumer-dashboard':
+        return 'Consumer Dashboard';` : '';
+  
+  variables.dtrDashboardCase = modules.includes('dtr_dashboard') ? `
+      case '/dtr-dashboard':
+        return 'DTR Dashboard';` : '';
+  
   variables.consumerCase = modules.includes('consumer') ? `
       case '/consumers':
         return 'Consumers';` : '';
@@ -163,10 +172,9 @@ function generateAppComponent(frontendDir, variables) {
   variables.billsPostpaidRoute = (modules.includes('bills') || modules.includes('postpaid')) ? 
     '<Route path="/bills/postpaid" element={<BillsPostpaid />} />' : '';
   
-  variables.assetManagementRoute = modules.includes('asset_management')
-      ? '<Route path="/asset-management" element={<AssetManagment />} />'
-      : '';
-  
+  variables.assetManagementRoute = modules.includes('asset_management') ? 
+    '<Route path="/asset-management" element={<AssetManagment />} />' : '';
+   
   variables.meterManagementRoute = modules.includes('meter_management') ? 
     '<Route path="/meters" element={<Meters />} />' : '';
   
@@ -185,17 +193,26 @@ function generateAppComponent(frontendDir, variables) {
   variables.consumerRoute = modules.includes('consumer') ? 
     '<Route path="/consumers" element={<Consumers />} />' : '';
   
-  variables.dtrRoute = modules.includes('dtr')
-      ? '<Route path="/dtr-dashboard" element={<DTRDashboard />} />\n                          <Route path="/dtr/:dtrId" element={<Feeders />} />'
-      : '';
-  
+  variables.dtrRoute = modules.includes('dtr') ? 
+    '<Route path="/dtr-dashboard" element={<Transformer />} />\n                          <Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
+   
   variables.meterDetailsRoute = modules.includes('meter_management') ? 
     '<Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />' : '';
   
   variables.ticketViewRoute = modules.includes('tickets') ? 
     '<Route path="/tickets/:ticketId" element={<TicketView />} />' : '';
   
+ // Dashboard submenu routes
 
+ variables.consumerDashboardRoute = modules.includes('consumer_dashboard') ? 
+
+ '<Route path="/consumer-dashboard" element={<Dashboard />} />' : '';
+
+
+
+variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ? 
+
+ '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
 
   // Calculate error page variables
   variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
@@ -228,7 +245,17 @@ function generateAppComponent(frontendDir, variables) {
   variables.dtrError = modules.includes('dtr') ? 
     '<li>/dtr-dashboard - DTR Dashboard</li>\n                                <li>/dtr/:dtrId - Feeders</li>' : '';
   
+ // Dashboard submenu error variables
 
+ variables.consumerDashboardError = modules.includes('consumer_dashboard') ? 
+
+ '<li>/consumer-dashboard - Consumer Dashboard</li>' : '';
+
+
+
+variables.dtrDashboardError = modules.includes('dtr_dashboard') ? 
+
+ '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
 
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
