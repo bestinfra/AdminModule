@@ -8,6 +8,7 @@ import Tabs from './Tabs';
 import PageHeader from './PageHeader';
 import RecentActivities from './RecentActivities';
 import Search from './Search';
+import DatePicker from './DatePicker';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
 import Holder from './Holder';
@@ -32,6 +33,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     PageHeader,
     RecentActivities,
     Search,
+    DatePicker,
     ExpandableTable,
     OrgChart,
     Holder,
