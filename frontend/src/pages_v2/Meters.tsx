@@ -6,283 +6,89 @@ import BACKEND_URL from '../config';
 
 export default function Meters() {
     const navigate = useNavigate();
-    const [meterData, setMeterData] = useState([
-        {
-            id: 1,
-            title: 'Total Meters',
-            value: '1,247',
-            icon: 'icons/meter.svg',
-            showTrend: true,
-            comparisonValue: 12,
-            subtitle1: 'Active meters',
-            subtitle2: '+12 this month',
-        },
-        {
-            id: 2,
-            title: 'Smart Meters',
-            value: '892',
-            icon: 'icons/meter-bolt.svg',
-            showTrend: true,
-            comparisonValue: 8,
-            subtitle1: 'Connected devices',
-            subtitle2: '+8 this week',
-        },
-        {
-            id: 3,
-            title: 'Average Consumption',
-            value: '245 kWh',
-            icon: 'icons/consumption.svg',
-            showTrend: false,
-            subtitle1: 'Per household',
-            subtitle2: 'This month',
-        },
-        {
-            id: 4,
-            title: 'Meter Readings',
-            value: '98.5%',
-            icon: 'icons/current-reading.svg',
-            showTrend: true,
-            comparisonValue: -2.1,
-            subtitle1: 'Accuracy rate',
-            subtitle2: 'Last 24 hours',
-        },
-        {
-            id: 5,
-            title: 'Maintenance Due',
-            value: '23',
-            icon: 'icons/maintenance.svg',
-            showTrend: true,
-            comparisonValue: -5,
-            subtitle1: 'Meters requiring',
-            subtitle2: 'Service this week',
-        },
-    ]);
+    const [meterData, setMeterData] = useState<{
+        id: number;
+        title: string;
+        value: string | number;
+        icon: string;
+        subtitle1: string;
+    }[]>([]);
 
-    const [tableData, setTableData] = useState([
-        {
-            id: 'MTR-001',
-            meterNumber: 'MTR-001',
-            customerName: 'John Smith',
-            location: '123 Main St, City',
-            meterType: 'Smart Meter',
-            status: 'Active',
-            lastReading: '2024-01-16 14:30:00',
-            currentReading: '1,245.67 kWh',
-            previousReading: '1,198.32 kWh',
-            consumption: '47.35 kWh',
-            voltage: '220V',
-            current: '15A',
-            powerFactor: '0.95',
-        },
-        {
-            id: 'MTR-002',
-            meterNumber: 'MTR-002',
-            customerName: 'Emily Davis',
-            location: '456 Oak Ave, Town',
-            meterType: 'Digital Meter',
-            status: 'Active',
-            lastReading: '2024-01-16 14:29:00',
-            currentReading: '892.45 kWh',
-            previousReading: '856.78 kWh',
-            consumption: '35.67 kWh',
-            voltage: '110V',
-            current: '8A',
-            powerFactor: '0.92',
-        },
-        {
-            id: 'MTR-003',
-            meterNumber: 'MTR-003',
-            customerName: 'Robert Chen',
-            location: '789 Pine Rd, Village',
-            meterType: 'Smart Meter',
-            status: 'Inactive',
-            lastReading: '2024-01-15 10:15:00',
-            currentReading: '0.00 kWh',
-            previousReading: '0.00 kWh',
-            consumption: '0.00 kWh',
-            voltage: '0V',
-            current: '0A',
-            powerFactor: '0.00',
-        },
-        {
-            id: 'MTR-004',
-            meterNumber: 'MTR-004',
-            customerName: 'Maria Garcia',
-            location: '321 Elm St, Borough',
-            meterType: 'Smart Meter',
-            status: 'Active',
-            lastReading: '2024-01-16 14:28:00',
-            currentReading: '2,156.89 kWh',
-            previousReading: '2,098.45 kWh',
-            consumption: '58.44 kWh',
-            voltage: '220V',
-            current: '22A',
-            powerFactor: '0.98',
-        },
-        {
-            id: 'MTR-005',
-            meterNumber: 'MTR-005',
-            customerName: 'James Wilson',
-            location: '654 Maple Dr, District',
-            meterType: 'Digital Meter',
-            status: 'Maintenance',
-            lastReading: '2024-01-16 12:00:00',
-            currentReading: '567.23 kWh',
-            previousReading: '545.67 kWh',
-            consumption: '21.56 kWh',
-            voltage: '110V',
-            current: '6A',
-            powerFactor: '0.89',
-        },
-        {
-            id: 'MTR-006',
-            meterNumber: 'MTR-006',
-            customerName: 'Anna Thompson',
-            location: '987 Cedar Ln, County',
-            meterType: 'Smart Meter',
-            status: 'Active',
-            lastReading: '2024-01-16 14:31:00',
-            currentReading: '1,789.34 kWh',
-            previousReading: '1,745.12 kWh',
-            consumption: '44.22 kWh',
-            voltage: '220V',
-            current: '18A',
-            powerFactor: '0.96',
-        },
-        {
-            id: 'MTR-007',
-            meterNumber: 'MTR-007',
-            customerName: 'Michael Rodriguez',
-            location: '147 Birch Way, Township',
-            meterType: 'Smart Meter',
-            status: 'Active',
-            lastReading: '2024-01-16 14:27:00',
-            currentReading: '3,456.78 kWh',
-            previousReading: '3,412.45 kWh',
-            consumption: '44.33 kWh',
-            voltage: '380V',
-            current: '25A',
-            powerFactor: '0.94',
-        },
-        {
-            id: 'MTR-008',
-            meterNumber: 'MTR-008',
-            customerName: 'Jennifer White',
-            location: '258 Spruce Ct, Municipality',
-            meterType: 'Digital Meter',
-            status: 'Active',
-            lastReading: '2024-01-16 14:32:00',
-            currentReading: '678.90 kWh',
-            previousReading: '645.23 kWh',
-            consumption: '33.67 kWh',
-            voltage: '110V',
-            current: '9A',
-            powerFactor: '0.91',
-        },
-    ]);
-
-    const [tableColumns] = useState([
-        { key: 'meterNumber', label: 'Meter #' },
-        { key: 'customerName', label: 'Customer' },
-        { key: 'location', label: 'Location' },
-        { key: 'meterType', label: 'Type' },
-        { key: 'status', label: 'Status' },
-        { key: 'lastReading', label: 'Last Reading' },
-        { key: 'currentReading', label: 'Current' },
-        { key: 'previousReading', label: 'Previous' },
-        { key: 'consumption', label: 'Consumption' },
-        { key: 'voltage', label: 'Voltage' },
-        { key: 'current', label: 'Current' },
-        { key: 'powerFactor', label: 'Power Factor' },
-    ]);
-
+    const [tableData, setTableData] = useState<any[]>([]);
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
-        totalPages: 4,
-        totalCount: 32,
+        totalPages: 1,
+        totalCount: 0,
         limit: 8,
-        hasNextPage: true,
+        hasNextPage: false,
         hasPrevPage: false,
     });
 
-    const handlePageChange = (page: number, limit: number) => {
-        console.log('Page changed:', { page, limit });
-    };
-
-    const [filterOptions] = useState({
-        statusOptions: [
-            { value: 'all', label: 'All Status' },
-            { value: 'active', label: 'Active' },
-            { value: 'inactive', label: 'Inactive' },
-            { value: 'maintenance', label: 'Maintenance' },
-        ],
-        meterTypeOptions: [
-            { value: 'all', label: 'All Types' },
-            { value: 'smart', label: 'Smart Meter' },
-            { value: 'digital', label: 'Digital Meter' },
-            { value: 'analog', label: 'Analog Meter' },
-        ],
-        locationOptions: [
-            { value: 'all', label: 'All Locations' },
-            { value: 'city', label: 'City' },
-            { value: 'town', label: 'Town' },
-            { value: 'village', label: 'Village' },
-            { value: 'borough', label: 'Borough' },
-            { value: 'district', label: 'District' },
-        ],
+    const [filters, setFilters] = useState({
+        status: 'all',
+        meterType: 'all',
+        meterMake: 'all',
+        location: 'all',
     });
 
-    const handleStatusChange = (value: string) => {
-        console.log('Status filter changed:', value);
-    };
+    const [allMeters, setAllMeters] = useState<any[]>([]);
 
-    const handleTypeChange = (value: string) => {
-        console.log('Meter type filter changed:', value);
-    };
-
-    const handleLocationChange = (value: string) => {
-        console.log('Location filter changed:', value);
+    const fetchMeters = (page = 1, limit = 8, filtersOverride = filters) => {
+        const params = new URLSearchParams();
+        params.append('page', String(page));
+        params.append('limit', String(limit));
+        if (filtersOverride.status && filtersOverride.status !== 'all') params.append('status', filtersOverride.status);
+        if (filtersOverride.meterType && filtersOverride.meterType !== 'all') params.append('type', filtersOverride.meterType);
+        if (filtersOverride.meterMake && filtersOverride.meterMake !== 'all') params.append('manufacturer', filtersOverride.meterMake);
+        if (filtersOverride.location && filtersOverride.location !== 'all') params.append('location', filtersOverride.location);
+        fetch(`${BACKEND_URL}/meters?${params.toString()}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setTableData(data.data.map((row: any) => ({ ...row, meterMake: row.meterMake || row.manufacturer || '' })));
+                    setServerPagination(data.pagination);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch meter table');
+                }
+            })
+            .catch((err) => console.error(err.message || 'Failed to fetch meter table'));
     };
 
     useEffect(() => {
-        // Fetch meter stats for cards
         fetch(`${BACKEND_URL}/meters/stats`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     const stats = data.data;
-                    // Map stats to cards with subtitles as in the dummy data
                     const cards = [
                         {
                             id: 1,
                             title: 'Total Meters',
                             value: stats.totalMeters,
+                            subtitle1: 'Total number of meters',
                             icon: 'icons/meter.svg',
-                            showTrend: true,
-                            comparisonValue: 12,
-                            subtitle1: 'Active meters',
-                            subtitle2: '+12 this month',
                         },
-                        ...stats.makes.map((make: any, idx: number) => ({
-                            id: 2 + idx,
-                            title: `Make: ${make.manufacturer}`,
-                            value: make.count,
+                        {
+                            id: 2,
+                            title: 'Meter Makes',
+                            value: stats.makes?.length ?? 0,
+                            subtitle1: 'Unique Makes',
                             icon: 'icons/meter-make.svg',
-                            showTrend: true,
-                            comparisonValue: 8,
-                            subtitle1: 'Connected devices',
-                            subtitle2: '+8 this week',
-                        })),
-                        ...stats.types.map((type: any, idx: number) => ({
-                            id: 10 + idx,
-                            title: `Type: ${type.type}`,
-                            value: type.count,
+                        },
+                        {
+                            id: 3,
+                            title: 'Meter Types',
+                            value: stats.types?.length ?? 0,
+                            subtitle1: 'Unique Types',
                             icon: 'icons/meter.svg',
-                            showTrend: false,
-                            comparisonValue: 12,
-                            subtitle1: 'Per household',
-                            subtitle2: 'This month',
-                        })),
+                        },
+                        {
+                            id: 4,
+                            title: 'Connection Types',
+                            value: Object.keys(stats.connectionTypes || {}).length,
+                            subtitle1: 'Unique Connection Types',
+                            icon: 'icons/connection-type.svg',
+                        },
                     ];
                     setMeterData(cards);
                 } else {
@@ -290,20 +96,63 @@ export default function Meters() {
                 }
             })
             .catch((err) => console.error(err.message || 'Failed to fetch meter stats'));
-        // Fetch meter table data
-        fetch(`${BACKEND_URL}/meters?page=1&limit=8`)
+        fetchMeters();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/meters?page=1&limit=10`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    setTableData(data.data);
-                    setServerPagination(data.pagination);
-                } else {
-                    throw new Error(data.message || 'Failed to fetch meter table');
+                    setAllMeters(data.data.map((row: any) => ({ ...row, meterMake: row.meterMake || row.manufacturer || '' })));
                 }
             })
-            .catch((err) => console.error(err.message || 'Failed to fetch meter table'))
-            .finally(() => {});
+            .catch((err) => console.error(err.message || 'Failed to fetch all meters for filters'));
     }, []);
+
+    const handleFilterChange = (e: { target: { name: string; value: string } }) => {
+        setFilters(f => {
+            const newFilters = { ...f, [e.target.name]: e.target.value };
+            fetchMeters(1, 8, newFilters);
+            return newFilters;
+        });
+    };
+
+    const handlePageChange = (page: number, limit: number) => {
+        fetchMeters(page, limit);
+    };
+
+    const [tableColumns] = useState([
+        { key: 'sNo', label: 'Sl No' },
+        { key: 'meterSerialNumber', label: 'Meter SI No' },
+        { key: 'modemSerialNumber', label: 'Modem SI No' },
+        { key: 'meterType', label: 'Meter Type' },
+        { key: 'meterMake', label: 'Meter Make' },
+        { key: 'consumerName', label: 'Consumer Name' },
+        { key: 'location', label: 'Location' },
+        { key: 'installationDate', label: 'Installation Date' },
+    ]);
+
+    // Generate filter options from allMeters
+    const meterTypeOptions = [
+        { value: 'all', label: 'All Types' },
+        ...Array.from(new Set(allMeters.map(row => row.meterType)))
+            .filter(Boolean)
+            .map(type => ({ value: type, label: type }))
+    ];
+    const meterMakeOptions = [
+        { value: 'all', label: 'All Makes' },
+        ...Array.from(new Set(allMeters.map(row => row.meterMake)))
+            .filter(Boolean)
+            .map(make => ({ value: make, label: make }))
+    ];
+    const locationOptions = [
+        { value: 'all', label: 'All Locations' },
+        ...Array.from(new Set(allMeters.map(row => row.location)))
+            .filter(Boolean)
+            .map(loc => ({ value: loc, label: loc }))
+    ];
 
     return (
         <Page
@@ -352,10 +201,7 @@ export default function Meters() {
                                         title: meter.title,
                                         value: meter.value,
                                         icon: meter.icon,
-                                        showTrend: meter.showTrend,
-                                        comparisonValue: meter.comparisonValue,
                                         subtitle1: meter.subtitle1,
-                                        subtitle2: meter.subtitle2,
                                     },
                                 })),
                             },
@@ -376,33 +222,33 @@ export default function Meters() {
                                     {
                                         name: 'Dropdown',
                                         props: {
-                                            options:
-                                                filterOptions.statusOptions,
-                                            placeholder: 'Filter by Status',
-                                            value: 'all',
-                                            onChange: handleStatusChange,
-                                            className: 'w-48',
-                                        },
-                                    },
-                                    {
-                                        name: 'Dropdown',
-                                        props: {
-                                            options:
-                                                filterOptions.meterTypeOptions,
+                                            name: 'meterType',
+                                            options: meterTypeOptions,
                                             placeholder: 'Filter by Type',
-                                            value: 'all',
-                                            onChange: handleTypeChange,
+                                            value: filters.meterType,
+                                            onChange: handleFilterChange,
                                             className: 'w-48',
                                         },
                                     },
                                     {
                                         name: 'Dropdown',
                                         props: {
-                                            options:
-                                                filterOptions.locationOptions,
+                                            name: 'meterMake',
+                                            options: meterMakeOptions,
+                                            placeholder: 'Filter by Make',
+                                            value: filters.meterMake,
+                                            onChange: handleFilterChange,
+                                            className: 'w-48',
+                                        },
+                                    },
+                                    {
+                                        name: 'Dropdown',
+                                        props: {
+                                            name: 'location',
+                                            options: locationOptions,
                                             placeholder: 'Filter by Location',
-                                            value: 'all',
-                                            onChange: handleLocationChange,
+                                            value: filters.location,
+                                            onChange: handleFilterChange,
                                             className: 'w-48',
                                         },
                                     },
@@ -415,9 +261,11 @@ export default function Meters() {
                     layout: {
                         type: 'row',
                         gap: 'gap-6',
+                        className: 'w-full',
                         rows: [
                             {
                                 layout: 'row',
+                                className: 'w-full',
                                 columns: [
                                     {
                                         name: 'Table',
@@ -440,6 +288,7 @@ export default function Meters() {
                                                 console.log('Delete:', row),
                                             onView: (row: TableData) =>
                                                 navigate(`/meter-details/${row.meterNumber}`),
+                                            className: 'w-full',
                                         },
                                     },
                                 ],

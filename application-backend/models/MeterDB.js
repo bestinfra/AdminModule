@@ -264,6 +264,11 @@ class MeterDB {
                     consumerNumber: { contains: filters.consumerNumber, mode: 'insensitive' }
                 };
             }
+            if (filters.location) {
+                whereClause.location = {
+                    name: { contains: filters.location, mode: 'insensitive' }
+                };
+            }
             const totalCount = await prisma.meter.count({ where: whereClause });
 
             const meters = await prisma.meter.findMany({
@@ -305,6 +310,55 @@ class MeterDB {
             return result;
         } catch (error) {
             console.error(' MeterDB.getMetersTable: Database error:', error);
+            throw error;
+        }
+    }
+
+    static async getDataLoggersList() {
+        try {
+            const dataLoggers = await prisma.modem.findMany({
+                where: {
+                    meter: {
+                        isNot: null
+                    }
+                },
+                include: {
+                    meter: {
+                        select: {
+                            id: true,
+                            meterNumber: true,
+                            serialNumber: true,
+                            manufacturer: true,
+                            model: true,
+                            type: true,
+                            status: true,
+                            installationDate: true,
+                            consumer: {
+                                select: {
+                                    id: true,
+                                    consumerNumber: true,
+                                    name: true,
+                                    primaryPhone: true,
+                                    email: true
+                                }
+                            },
+                            location: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    code: true,
+                                    address: true
+                                }
+                            }
+                        }
+                    }
+                },
+                orderBy: { modem_id: 'desc' }
+            });
+
+            return dataLoggers;
+        } catch (error) {
+            console.error(' MeterDB.getDataLoggersList: Database error:', error);
             throw error;
         }
     }

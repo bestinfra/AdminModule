@@ -3,29 +3,31 @@ import MeterDB from '../models/MeterDB.js';
 // Get all meters
 export const getAllMeters = async (req, res) => {
     try {
-        const meters = await MeterDB.getAllMeters();
-        // Map all required fields for the frontend table from the latest reading
-        const formatted = meters.map((m) => {
-            const latestReading = m.readings && m.readings[0] ? m.readings[0] : {};
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const filters = {
+            status: req.query.status && req.query.status !== 'all' ? req.query.status : undefined,
+            type: req.query.type && req.query.type !== 'all' ? req.query.type : undefined,
+            manufacturer: req.query.manufacturer && req.query.manufacturer !== 'all' ? req.query.manufacturer : undefined,
+            location: req.query.location && req.query.location !== 'all' ? req.query.location : undefined,
+        };
+        const metersData = await MeterDB.getMetersTable(page, limit, filters);
+        const formatted = metersData.data.map((m, idx) => {
             return {
-                meterNumber: m.meterNumber,
-                customerName: m.consumer?.name || 'NA',
+                sNo: (page - 1) * limit + idx + 1,
+                meterSerialNumber: m.meterNumber || 'NA',
+                modemSerialNumber: m.serialNumber || 'NA',
+                meterType: m.type || m.meterType || 'NA',
+                meterMake: m.manufacturer || 'NA',
+                consumerName: m.consumer?.name || 'NA',
                 location: m.location?.name || 'NA',
-                meterType: m.type || 'NA',
-                status: m.status || 'NA',
-                lastReading: latestReading.readingDate || 'NA',
-                currentReading: latestReading.kWh || 'NA',
-                previousReading: latestReading.previousReading || 'NA', // If not present, use 'NA'
-                consumption: latestReading.consumption || 'NA', // If not present, use 'NA'
-                voltage: latestReading.averageVoltage || 'NA',
-                current: latestReading.averageCurrent || 'NA',
-                powerFactor: latestReading.powerFactor || 'NA',
+                installationDate: m.installationDate || m.createdAt || 'NA',
             };
         });
         res.json({
             success: true,
             data: formatted,
-            message: 'Meters retrieved successfully'
+            pagination: metersData.pagination
         });
     } catch (error) {
         console.error('Error fetching meters:', error);
@@ -66,7 +68,6 @@ export const getMeterById = async (req, res) => {
 
 export const createMeter = async (req, res) => {
     try {
-        // Use validated data from middleware
         const meterData = req.validatedData;
 
         const newMeter = await MeterDB.create(meterData);
@@ -130,7 +131,6 @@ export const deleteMeter = async (req, res) => {
 export const getMeterStats = async (req, res) => {
     try {
         const stats = await MeterDB.getMeterStats();
-        // Only send relevant stats fields
         res.json({
             success: true,
             data: {
@@ -169,6 +169,60 @@ export const getMeterView = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to fetch meter',
+            error: error.message
+        });
+    }
+}; 
+
+export const getDataLoggersList = async (req, res) => {
+    try {
+        const dataLoggers = await MeterDB.getDataLoggersList();
+        
+        const formatted = dataLoggers.map((logger, idx) => ({
+            sNo: idx + 1,
+            modemId: logger.modem_id,
+            modemSlNo: logger.modem_sl_no,
+            hwVersion: logger.hw_version || 'NA',
+            fwVersion: logger.fw_version || 'NA',
+            mobile: logger.mobile || 'NA',
+            deliveryDate: logger.delivery_date ? new Date(logger.delivery_date).toLocaleDateString() : 'NA',
+            imei: logger.imei || 'NA',
+            simno: logger.simno || 'NA',
+            changedBy: logger.changed_by || 'NA',
+            changedDatetime: logger.changed_datetime || 'NA',
+            ip: logger.ip || 'NA',
+            logTimestamp: logger.log_timestamp ? new Date(logger.log_timestamp).toLocaleString() : 'NA',
+            simNo: logger.sim_no || 'NA',
+            // Meter details
+            meterId: logger.meter?.id,
+            meterNumber: logger.meter?.meterNumber || 'NA',
+            serialNumber: logger.meter?.serialNumber || 'NA',
+            manufacturer: logger.meter?.manufacturer || 'NA',
+            model: logger.meter?.model || 'NA',
+            type: logger.meter?.type || 'NA',
+            status: logger.meter?.status || 'NA',
+            installationDate: logger.meter?.installationDate ? new Date(logger.meter.installationDate).toLocaleDateString() : 'NA',
+            // Consumer details
+            consumerNumber: logger.meter?.consumer?.consumerNumber || 'NA',
+            consumerName: logger.meter?.consumer?.name || 'NA',
+            consumerPhone: logger.meter?.consumer?.primaryPhone || 'NA',
+            consumerEmail: logger.meter?.consumer?.email || 'NA',
+            // Location details
+            locationName: logger.meter?.location?.name || 'NA',
+            locationCode: logger.meter?.location?.code || 'NA',
+            locationAddress: logger.meter?.location?.address || 'NA'
+        }));
+
+        res.json({
+            success: true,
+            data: formatted,
+            message: 'Data loggers retrieved successfully'
+        });
+    } catch (error) {
+        console.error('❌ getDataLoggersList: Error fetching data loggers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch data loggers',
             error: error.message
         });
     }

@@ -71,7 +71,7 @@ const Button = React.memo<ButtonProps>(({
             'hover:border-[var(--color-secondary)]',
         ],
         secondary: [
-            'bg-[var(--color-primary)]',
+            'bg-primary',
             'text-white',
             'border-[var(--color-primary)]',
             'hover:bg-white',
