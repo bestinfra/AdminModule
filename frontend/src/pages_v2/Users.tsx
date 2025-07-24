@@ -31,24 +31,21 @@ export default function Users() {
         }>
     >([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
     // User stats state
     const [userStats, setUserStats] = useState<any>(null);
 
     useEffect(() => {
         setLoading(true);
-        setError(null);
         fetch(`${BACKEND_URL}/users`)
             .then(async (res) => {
-                if (!res.ok) throw new Error('Failed to fetch users');
+                // if (!res.ok) throw new Error('Failed to fetch users');
                 const result = await res.json();
-                if (!result.success)
-                    throw new Error(result.message || 'Failed to fetch users');
-                setUsers(result.data);
+                // if (!result.success)
+                //     throw new Error(result.message || 'Failed to fetch users');
+                // setUsers(result.data);
             })
             .catch((err) => {
-                setError(err.message || 'Failed to fetch users');
+                console.log(err);
                 // Demo users fallback
                 setUsers([
                     {
@@ -163,11 +160,6 @@ export default function Users() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            {error && (
-                <div className="mb-4 p-4 bg-danger-light border border-danger rounded-md text-danger">
-                    {error}
-                </div>
-            )}
             <Page
                 sections={[
                     // Page Header Section

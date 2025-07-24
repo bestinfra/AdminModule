@@ -1,15 +1,30 @@
 import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-// import Table from '@components/global/Table';
+
 // Removed: import BACKEND_URL from '../config';
 
 const MeterDetails: React.FC = () => {
     const navigate = useNavigate();
+    const meterDetailAction = [
+        {
+          label: "View",
+          icon: "/icons/eye.svg",
+        },
+        {
+            label:'edit',
+            icon:'/icons/edit.svg'
 
+        },
+        {
+            label:'delete',
+            icon:'/icons/delete.svg'
+            
+        }
+      ];
     // Always use demo data
     const DEMO_METER = {
-        serialNumber: 'A9211434',
+            serialNumber: 'A9211434',
         meterNumber: 'BI25GMRA001',
         readings: [
             {
@@ -80,34 +95,108 @@ const MeterDetails: React.FC = () => {
         },
     ];
 
-    const meterInfo = [
-        { label: 'Meter SI No.', value: meter.serialNumber || 'N/A' },
-        {
-            label: 'Modem SI No',
-            value: meter.modem?.modem_sl_no || 'N/A',
+    // Dummy columns and data for Meter Information Table
+    const meterInfoColumns = [
+        { key: 'slNo', label: 'Sl No' },
+        { key: 'meterSlNo', label: 'Meter SI No' },
+        { key: 'modemSlNo', label: 'Modem SI No' },
+        { key: 'meterType', label: 'Meter Type' },
+        { key: 'meterMake', label: 'Meter Make' },
+        { key: 'consumerName', label: 'Consumer Name' },
+        { key: 'location', label: 'Location' },
+        { key: 'installationDate', label: 'Installation Date' },
+    ];
+    // Example data showing differences for demonstration
+    const meterInfoData = [
+        { 
+            slNo: 1, 
+            meterSlNo: meter.serialNumber, 
+            modemSlNo: meter.modem?.modem_sl_no, 
+            meterType: meter.type, 
+            meterMake: meter.manufacturer, 
+            consumerName: meter.consumer?.name, 
+            location: meter.location?.name, 
+            installationDate: meter.installationDate 
         },
-        { label: 'UID', value: meter.meterNumber || 'N/A' },
-        { label: 'Assigned To', value: meter.consumer?.name || 'N/A' },
-        { label: 'Meter Make', value: meter.manufacturer || 'N/A' },
-        {
-            label: 'Meter CT Ratio',
-            value: meter.config?.ctRatio || 'N/A',
+        { 
+            slNo: 2, 
+            meterSlNo: "A9345417", 
+            modemSlNo: "RFDCU_DCU101", 
+            meterType: "Prepaid", 
+            meterMake: "LnT DLMS", 
+            consumerName: "Neo Travels", 
+            location: "NA", 
+            installationDate: "NA" 
         },
-        {
-            label: 'Meter PT Ratio',
-            value: meter.config?.ptRatio || 'N/A',
+        { 
+            slNo: 3, 
+            meterSlNo: "A9211433", 
+            modemSlNo: "RFDCU_DCU101", 
+            meterType: "Prepaid", 
+            meterMake: "LnT DLMS", 
+            consumerName: "Mobikins", 
+            location: "NA", 
+            installationDate: "NA" 
         },
-        {
-            label: 'External CT Ratio',
-            value: meter.config?.adoptedCTRatio || 'N/A',
+        { 
+            slNo: 4, 
+            meterSlNo: "A9211434", 
+            modemSlNo: "RFDCU_DCU101", 
+            meterType: "Prepaid", 
+            meterMake: "LnT DLMS", 
+            consumerName: "Airborne General Store", 
+            location: "NA", 
+            installationDate: "NA" 
         },
-        {
-            label: 'External PT Ratio',
-            value: meter.config?.adoptedPTRatio || 'N/A',
+        { 
+            slNo: 5, 
+            meterSlNo: "A9211435", 
+            modemSlNo: "RFDCU_DCU102", 
+            meterType: "Postpaid", 
+            meterMake: "Genus", 
+            consumerName: "Test Consumer", 
+            location: "Test Location", 
+            installationDate: "2023-12-01" 
         },
-        {
-            label: 'Multiplication Factor',
-            value: meter.config?.mf || 'N/A',
+        { 
+            slNo: 6, 
+            meterSlNo: "A9211436", 
+            modemSlNo: "RFDCU_DCU103", 
+            meterType: "Prepaid", 
+            meterMake: "Genus", 
+            consumerName: "Another Consumer", 
+            location: "Another Location", 
+            installationDate: "2024-01-15" 
+        },
+        { 
+            slNo: 7, 
+            meterSlNo: "A9211437", 
+            modemSlNo: "RFDCU_DCU104", 
+            meterType: "Postpaid", 
+            meterMake: "Secure", 
+            consumerName: "Sample Name", 
+            location: "Sample Location", 
+            installationDate: "2024-02-20" 
+        },
+        { 
+            slNo: 8, 
+            meterSlNo: "A9211438", 
+            modemSlNo: "RFDCU_DCU105", 
+            meterType: "Prepaid", 
+            meterMake: "Secure", 
+            consumerName: "Demo User", 
+            location: "Demo Location", 
+            installationDate: "2024-03-10" 
+        },
+        { 
+            slNo: 9, 
+            meterSlNo: "A9211439", 
+            modemSlNo: "RFDCU_DCU106", 
+            meterType: "Prepaid", 
+            meterMake: "Genus", 
+            consumerName: "Test User", 
+            location: "Test Area", 
+            installationDate: "2024-04-05" 
         },
     ];
 
@@ -179,12 +268,47 @@ const MeterDetails: React.FC = () => {
                                 },
                             })),
                         },
+                        {
+                            layout:{
+                                type:"column" as const,
+                                className:"mb-8"
+                            },
+                            components:[
+                                {
+                                    name:"Heading",
+                                    props:{
+                                        text:"Meter Information",
+                                        level:2,
+                                        className:"text-lg font-semibold mb-4"
+                                    }
+                                },
+                                {
+                                    name:'Table',
+                                    props:{
+                                        data:meterInfoData,
+                                        columns:meterInfoColumns,
+                                        actions:meterDetailAction,
+                                        showActions:true,
+                                        searchable:true,
+                                        pagination:true,
+                                        initialRowsPerPage:10,
+                                        className:"[&_.relative]:mt-0",
+                                        emptyMessage:"No Meter Information Found",
+                                        onRowClick:()=>{
+                                            navigate(`/meters/${meter.serialNumber}`)
+                                        }
+                                        
+                                    }
+                                }
+                            ]
+                        }
+                        
                     ]}
                 />
                 {/* Custom sections outside of PageC */}
-                <div className="mt-6 space-y-6">
+                {/* <div className="mt-6 space-y-6"> */}
                     {/* Meter Information Section */}
-                    <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-6">
+                    {/* <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-6">
                         <h2 className="text-xl font-semibold text-neutral-darker mb-4">
                             Meter Information
                         </h2>
@@ -200,14 +324,14 @@ const MeterDetails: React.FC = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </div> */}
                     {/* Meter History Section */}
-                    <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-4">
+                    {/* <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-4">
                         <h2 className="text-xl font-semibold text-neutral-darker mb-4">
                             Meter History
                         </h2>
                         <div className="bg-white dark:bg-primary-dark">
-                            <div className="p-4">
+                            <div className="p-4"> */}
                                 {/* <Table
                                     data={historyData}
                                     columns={historyColumns}
@@ -218,10 +342,10 @@ const MeterDetails: React.FC = () => {
                                     className="[&_.relative]:mt-0"
                                 /> */}
                             </div>
-                        </div>
+                        {/* </div>
                     </div>
-                </div>
-            </div>
+                </div> */}
+            {/* </div> */}
         </Suspense>
     );
 };
