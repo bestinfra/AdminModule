@@ -259,9 +259,11 @@ export default function Meters() {
                     layout: {
                         type: 'row',
                         gap: 'gap-6',
+                        className: 'w-full',
                         rows: [
                             {
                                 layout: 'row',
+                                className: 'w-full',
                                 columns: [
                                     {
                                         name: 'Table',
@@ -284,6 +286,7 @@ export default function Meters() {
                                                 console.log('Delete:', row),
                                             onView: (row: TableData) =>
                                                 console.log('View:', row),
+                                            className: 'w-full',
                                         },
                                     },
                                 ],
