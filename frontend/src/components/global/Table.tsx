@@ -481,7 +481,7 @@ const Table: React.FC<TableProps> = ({
                         onChange={handleSearch}
                         className="w-full h-12 px-4 py-4 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border placeholder-dark-border dark:text-white dark:placeholder-white rounded-full font-manrope text-base outline-none mb-4"
                     />
-                    <span className="absolute right-2 top-6 transform -translate-y-1/2 bg-primary-lightest dark:bg-primary-dark rounded-full w-8 h-8 flex justify-center items-center">
+                    <span className="absolute right-2 top-2 bg-primary-lightest dark:bg-primary-dark rounded-full w-8 h-8 flex justify-center items-center">
                         <img src="/icons/search-icon.svg" alt="search" />
                     </span>
                 </div>
@@ -489,7 +489,7 @@ const Table: React.FC<TableProps> = ({
 
             <div className="w-full overflow-x-auto">
                 <table
-                    className="w-full rounded-2xl border dark:border-dark-border border-primary-border border-separate border-spacing-0 overflow-hidden"
+                    className="w-full rounded-2xl border bg-white border-primary-border dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border  border-spacing-0 border-separate overflow-hidden"
                     role="grid"
                     aria-label={text || 'Data Table'}>
                     <thead className="dark:bg-primary-dark-light bg-background-secondary overflow-hidden">
