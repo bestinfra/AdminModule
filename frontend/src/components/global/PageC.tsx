@@ -21,6 +21,11 @@ import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
 import { Form } from '../Form';
+import IssueDetailsCard from '../Ticket/IssueDetailsCard';
+import ChatInput from '../Ticket/ChatInput';
+import TicketInfoCard from '../Ticket/TicketInfoCard';
+import UnitDetailsCard from '../Ticket/UnitDetailsCard';
+import ActivityLogCard from '../Ticket/ActivityLogCard';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
@@ -46,6 +51,11 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Stepper,
     FormContainer,
     Form,
+    IssueDetailsCard,
+    ChatInput,
+    TicketInfoCard,
+    UnitDetailsCard,
+    ActivityLogCard,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

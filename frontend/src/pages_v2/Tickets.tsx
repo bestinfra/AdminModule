@@ -1,13 +1,198 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
 export default function Tickets() {
+    const navigate = useNavigate();
     const [ticketStats, setTicketStats] = useState<any>(null);
     const [ticketTrends, setTicketTrends] = useState<any>(null);
     const [tickets, setTickets] = useState<any[]>([]);
     const [pagination, setPagination] = useState<any>(null);
+
+    // Dummy data for development
+    const dummyTickets = [
+        {
+            id: 336,
+            ticketNumber: '336',
+            customerName: 'BI25GMRA001',
+            subject: 'Testing',
+            priority: 'High',
+            status: 'Open',
+            assignedTo: 'Support Team',
+            createdAt: '2024-01-15T10:30:00Z',
+            lastUpdated: '2024-01-16T14:20:00Z',
+            category: 'Connection Issue',
+            responseTime: '2h 15m',
+            meterSerialNo: 'A9211434',
+            email: 'customer1@example.com',
+            phone: '+91-9876543210',
+            description: 'Testing connection issue with meter.',
+        },
+        {
+            id: 335,
+            ticketNumber: '335',
+            customerName: 'BI25GMRA001',
+            subject: 'Issue',
+            priority: 'High',
+            status: 'Open',
+            assignedTo: 'Technical Team',
+            createdAt: '2024-01-14T09:15:00Z',
+            lastUpdated: '2024-01-16T11:45:00Z',
+            category: 'Meter Issue',
+            responseTime: '1h 30m',
+            meterSerialNo: 'A9211434',
+            email: 'customer1@example.com',
+            phone: '+91-9876543210',
+            description: 'Meter showing connection error.',
+        },
+        {
+            id: 333,
+            ticketNumber: '333',
+            customerName: 'BI25GMRA001',
+            subject: 'Communication Issue',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'IT Team',
+            createdAt: '2024-01-13T16:45:00Z',
+            lastUpdated: '2024-01-16T08:30:00Z',
+            category: 'Billing',
+            responseTime: '45m',
+            meterSerialNo: 'A9211434',
+            email: 'customer1@example.com',
+            phone: '+91-9876543210',
+            description: 'Communication issue with billing system.',
+        },
+        {
+            id: 332,
+            ticketNumber: '332',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Customer Service',
+            createdAt: '2024-01-12T13:20:00Z',
+            lastUpdated: '2024-01-15T17:10:00Z',
+            category: 'Connection Issue',
+            responseTime: '3h 20m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Meter maintenance request.',
+        },
+        {
+            id: 327,
+            ticketNumber: '327',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Installation Team',
+            createdAt: '2024-01-11T08:00:00Z',
+            lastUpdated: '2024-01-16T08:00:00Z',
+            category: 'Meter Issue',
+            responseTime: '1h 45m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Meter installation verification needed.',
+        },
+        {
+            id: 326,
+            ticketNumber: '326',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Emergency Team',
+            createdAt: '2024-01-10T06:30:00Z',
+            lastUpdated: '2024-01-16T10:15:00Z',
+            category: 'Billing',
+            responseTime: '30m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Billing discrepancy report.',
+        },
+        {
+            id: 325,
+            ticketNumber: '325',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Support Team',
+            createdAt: '2024-01-09T14:20:00Z',
+            lastUpdated: '2024-01-16T09:30:00Z',
+            category: 'Connection Issue',
+            responseTime: '2h 10m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Connection stability issue.',
+        },
+        {
+            id: 324,
+            ticketNumber: '324',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Billing Team',
+            createdAt: '2024-01-08T11:00:00Z',
+            lastUpdated: '2024-01-16T11:00:00Z',
+            category: 'Meter Issue',
+            responseTime: '1h 20m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Meter reading accuracy check.',
+        },
+        {
+            id: 323,
+            ticketNumber: '323',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Customer Service',
+            createdAt: '2024-01-07T16:45:00Z',
+            lastUpdated: '2024-01-16T12:20:00Z',
+            category: 'Billing',
+            responseTime: '4h 15m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Billing query resolution.',
+        },
+        {
+            id: 322,
+            ticketNumber: '322',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Investigation Team',
+            createdAt: '2024-01-06T10:30:00Z',
+            lastUpdated: '2024-01-16T07:45:00Z',
+            category: 'Connection Issue',
+            responseTime: '1h 5m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Connection investigation request.',
+        },
+    ];
+
+    const dummyPagination = {
+        currentPage: 1,
+        totalPages: 3,
+        totalItems: 24,
+        itemsPerPage: 10,
+        hasNextPage: true,
+        hasPrevPage: false,
+    };
 
     // Fetch ticket stats
     useEffect(() => {
@@ -39,9 +224,18 @@ export default function Tickets() {
                 if (data.success) {
                     setTickets(data.data);
                     setPagination(data.pagination);
+                } else {
+                    // Fallback to dummy data
+                    setTickets(dummyTickets);
+                    setPagination(dummyPagination);
                 }
             })
-            .catch((err) => console.error('Failed to fetch ticket data:', err))
+            .catch((err) => {
+                console.error('Failed to fetch ticket data:', err);
+                // Fallback to dummy data
+                setTickets(dummyTickets);
+                setPagination(dummyPagination);
+            })
             .finally(() => {});
     };
 
@@ -53,17 +247,33 @@ export default function Tickets() {
         fetchTicketsTable(page, limit);
     };
 
+    // Handle ticket actions
+    const handleViewTicket = (row: TableData) => {
+        console.log('Viewing ticket:', row);
+        navigate(`/tickets/${row.id}`);
+    };
+
+    const handleEditTicket = (row: TableData) => {
+        console.log('Editing ticket:', row);
+        navigate(`/tickets/${row.id}/edit`);
+    };
+
+    const handleDeleteTicket = (row: TableData) => {
+        console.log('Deleting ticket:', row);
+        if (confirm(`Are you sure you want to delete ticket ${row.ticketNumber}?`)) {
+            console.log('Ticket deleted:', row.id);
+        }
+    };
+
     const [tableColumns] = useState([
-        { key: 'ticketNumber', label: 'Ticket #' },
-        { key: 'customerName', label: 'Customer' },
+        { key: 'ticketNumber', label: 'Ticket ID' },
+        { key: 'customerName', label: 'Consumer UID' },
         { key: 'subject', label: 'Subject' },
+        { key: 'meterSerialNo', label: 'Meter Serial No' },
+        { key: 'category', label: 'Category' },
         { key: 'priority', label: 'Priority' },
         { key: 'status', label: 'Status' },
-        { key: 'assignedTo', label: 'Assigned To' },
-        { key: 'createdAt', label: 'Created' },
-        { key: 'lastUpdated', label: 'Updated' },
-        { key: 'category', label: 'Category' },
-        { key: 'responseTime', label: 'Response Time' },
+        { key: 'actions', label: 'Actions' },
     ]);
 
     const statsArray = [
@@ -191,12 +401,9 @@ export default function Tickets() {
                                             text: 'Ticket Management Table',
                                             serverPagination: pagination,
                                             onPageChange: handleTicketPageChange,
-                                            onEdit: (row: TableData) =>
-                                                console.log('Edit:', row),
-                                            onDelete: (row: TableData) =>
-                                                console.log('Delete:', row),
-                                            onView: (row: TableData) =>
-                                                console.log('View:', row),
+                                                                                         onEdit: handleEditTicket,
+                                             onDelete: handleDeleteTicket,
+                                             onView: handleViewTicket,
                                         },
                                     },
                                 ],
