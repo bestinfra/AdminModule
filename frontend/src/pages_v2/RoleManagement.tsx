@@ -287,11 +287,11 @@ export default function RoleManagement() {
                 // Page Header Section
                 {
                     layout: {
-                        type: 'row' as const,
+                        type: 'column',
                         gap: 'gap-6',
                         rows: [
                             {
-                                layout: 'row' as const,
+                                layout: 'row',
                                 columns: [
                                     {
                                         name: 'PageHeader',
@@ -325,14 +325,11 @@ export default function RoleManagement() {
                 // Error Section (if any)
                 ...(error ? [{
                     layout: {
-                        type: 'grid' as const,
-                        columns: 1,
+                        type: 'column' as const,
                         gap: 'gap-6',
                         rows: [
                             {
-                                layout: 'grid' as const,
-                                gridColumns: 1,
-                                gap: 'gap-6',
+                                layout: 'row' as const,
                                 columns: [
                                     {
                                         name: 'Card',
@@ -359,14 +356,11 @@ export default function RoleManagement() {
                 // Main Content Section
                 {
                     layout: {
-                        type: 'grid' as const,
-                        columns: 1,
+                        type: 'column' as const,
                         gap: 'gap-6',
                         rows: [
                             {
-                                layout: 'grid' as const,
-                                gridColumns: 1,
-                                gap: 'gap-6',
+                                layout: 'row' as const,
                                 columns: [
                                     {
                                         name: isAddingRole ? 'Card' : 'Table',
