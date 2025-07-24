@@ -300,6 +300,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/user.svg',
                 link: '/users',
             },
+            {
+                title: 'Role Management',
+                icon: '/icons/roles.svg',
+                link: '/role-management',
+            },
         ],
     },
     // {

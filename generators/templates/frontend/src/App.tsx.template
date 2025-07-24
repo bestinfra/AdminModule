@@ -191,7 +191,7 @@ const Transformer = createSafeLazyComponent(
 );
 
 const Assets = createSafeLazyComponent(
-  () => import('SuperAdmin/AssetManagment'),
+  () => import('SuperAdmin/Assets'),
   () => (
     <div className="p-6">
       <h1 className="text-2xl font-bold">Asset Management</h1>

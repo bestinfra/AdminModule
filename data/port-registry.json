@@ -1,5 +1,5 @@
 {
-  "nextPort": 4058,
+  "nextPort": 4063,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -170,6 +170,31 @@
       "port": 4057,
       "deployedAt": "2025-07-23T13:05:33.384Z",
       "path": "C:\\xampp\\htdocs\\harikiran-backend"
+    },
+    "application": {
+      "port": 4058,
+      "deployedAt": "2025-07-23T14:16:11.888Z",
+      "path": "C:\\xampp\\htdocs\\application-backend"
+    },
+    "application-app": {
+      "port": 4059,
+      "deployedAt": "2025-07-23T14:17:19.018Z",
+      "path": "C:\\xampp\\htdocs\\application-app-backend"
+    },
+    "appname": {
+      "port": 4060,
+      "deployedAt": "2025-07-23T14:28:20.094Z",
+      "path": "C:\\xampp\\htdocs\\appname-backend"
+    },
+    "best-dhaya": {
+      "port": 4061,
+      "deployedAt": "2025-07-23T14:44:46.807Z",
+      "path": "C:\\xampp\\htdocs\\best-dhaya-backend"
+    },
+    "best-infra-apps3": {
+      "port": 4062,
+      "deployedAt": "2025-07-23T17:32:55.230Z",
+      "path": "C:\\xampp\\htdocs\\best-infra-apps3-backend"
     }
   }
 }
