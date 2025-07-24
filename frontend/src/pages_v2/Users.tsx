@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
 
@@ -9,7 +9,7 @@ const tableColumns = [
     { key: 'phone', label: 'Phone Number' },
     { key: 'role', label: 'Role' },
     { key: 'client', label: 'Client' },
-   // { key: 'lastActive', label: 'Last Active' },
+    // { key: 'lastActive', label: 'Last Active' },
     { key: 'createdDate', label: 'Created Date' },
     // Add actions column if you want to show action buttons
 ];
@@ -33,7 +33,8 @@ export default function Users() {
             .then(async (res) => {
                 if (!res.ok) throw new Error('Failed to fetch users');
                 const result = await res.json();
-                if (!result.success) throw new Error(result.message || 'Failed to fetch users');
+                if (!result.success)
+                    throw new Error(result.message || 'Failed to fetch users');
                 setUsers(result.data);
             })
             .catch((err) => {
@@ -48,7 +49,10 @@ export default function Users() {
             .then(async (res) => {
                 if (!res.ok) throw new Error('Failed to fetch user stats');
                 const result = await res.json();
-                if (!result.success) throw new Error(result.message || 'Failed to fetch user stats');
+                if (!result.success)
+                    throw new Error(
+                        result.message || 'Failed to fetch user stats'
+                    );
                 setUserStats(result.data);
             })
             .catch(() => setUserStats(null))
@@ -56,47 +60,49 @@ export default function Users() {
     }, []);
 
     // Widget cards array (same style as meters/tickets)
-    const userWidgets = userStats ? [
-        {
-            title: 'Total Users',
-            value: userStats.totalUsers,
-            icon: '/icons/account.svg',
-            subtitle1: `${userStats.activeUsers} Active Users`,
-            subtitle2: `${userStats.inactiveUsers} Inactive Users`,
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: 'Total Admins',
-            value: userStats.totalAdmins,
-            icon: '/icons/admin.svg',
-            subtitle1: 'This Month',
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: 'Total Accountants',
-            value: userStats.totalAccountants,
-            icon: '/icons/accountant.svg',
-            subtitle1: 'This Month',
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: 'Total Moderators',
-            value: userStats.totalModerators,
-            icon: '/icons/moderator.svg',
-            subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: 'Total Roles',
-            value: userStats.totalRoles,
-            icon: '/icons/apps-icon.svg',
-            subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
-            iconStyle: ICON_FILTER_STYLE,
-        },
-    ] : [];
+    const userWidgets = userStats
+        ? [
+              {
+                  title: 'Total Users',
+                  value: userStats.totalUsers,
+                  icon: '/icons/account.svg',
+                  subtitle1: `${userStats.activeUsers} Active Users`,
+                  subtitle2: `${userStats.inactiveUsers} Inactive Users`,
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Admins',
+                  value: userStats.totalAdmins,
+                  icon: '/icons/admin.svg',
+                  subtitle1: 'This Month',
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Accountants',
+                  value: userStats.totalAccountants,
+                  icon: '/icons/accountant.svg',
+                  subtitle1: 'This Month',
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Moderators',
+                  value: userStats.totalModerators,
+                  icon: '/icons/moderator.svg',
+                  subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+              {
+                  title: 'Total Roles',
+                  value: userStats.totalRoles,
+                  icon: '/icons/apps-icon.svg',
+                  subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
+                  iconStyle: ICON_FILTER_STYLE,
+              },
+          ]
+        : [];
 
     return (
-        <>
+        <Suspense fallback={<div>Loading...</div>}>
             {error && (
                 <div className="mb-4 p-4 bg-danger-light border border-danger rounded-md text-danger">
                     {error}
@@ -116,31 +122,58 @@ export default function Users() {
                                         {
                                             name: 'PageHeader',
                                             props: {
-                                                title: "User Management",
-                                                onBackClick: () => window.history.back(),
-                                                backButtonText: "Back to Dashboard",
-                                                buttonsLabel: "Add User",
-                                                variant: "primary",
-                                                onClick: () => console.log('Adding new user...'),
+                                                title: 'User Management',
+                                                onBackClick: () =>
+                                                    window.history.back(),
+                                                backButtonText:
+                                                    'Back to Dashboard',
+                                                buttonsLabel: 'Add User',
+                                                variant: 'primary',
+                                                onClick: () =>
+                                                    console.log(
+                                                        'Adding new user...'
+                                                    ),
                                                 showMenu: true,
                                                 showDropdown: true,
                                                 menuItems: [
-                                                    { id: 'all', label: 'All Users' },
-                                                    { id: 'active', label: 'Active Users' },
-                                                    { id: 'inactive', label: 'Inactive Users' },
-                                                    { id: 'admin', label: 'Administrators' },
-                                                    { id: 'moderator', label: 'Moderators' },
-                                                    { id: 'user', label: 'Regular Users' }
+                                                    {
+                                                        id: 'all',
+                                                        label: 'All Users',
+                                                    },
+                                                    {
+                                                        id: 'active',
+                                                        label: 'Active Users',
+                                                    },
+                                                    {
+                                                        id: 'inactive',
+                                                        label: 'Inactive Users',
+                                                    },
+                                                    {
+                                                        id: 'admin',
+                                                        label: 'Administrators',
+                                                    },
+                                                    {
+                                                        id: 'moderator',
+                                                        label: 'Moderators',
+                                                    },
+                                                    {
+                                                        id: 'user',
+                                                        label: 'Regular Users',
+                                                    },
                                                 ],
-                                                onMenuItemClick: (itemId: string) => {
-                                                    console.log(`Filter by: ${itemId}`);
-                                                }
-                                            }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
+                                                onMenuItemClick: (
+                                                    itemId: string
+                                                ) => {
+                                                    console.log(
+                                                        `Filter by: ${itemId}`
+                                                    );
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     },
                     // Overview Cards Section
                     {
@@ -152,13 +185,13 @@ export default function Users() {
                                     layout: 'grid' as const,
                                     gridColumns: 5,
                                     gap: 'gap-6',
-                                    columns: userWidgets.map(card => ({
+                                    columns: userWidgets.map((card) => ({
                                         name: 'Card',
-                                        props: card
-                                    }))
-                                }
-                            ]
-                        }
+                                        props: card,
+                                    })),
+                                },
+                            ],
+                        },
                     },
                     // Users Table Section
                     {
@@ -178,7 +211,9 @@ export default function Users() {
                                                 searchable: true,
                                                 pagination: true,
                                                 showActions: false,
-                                                emptyMessage: loading ? 'Loading users...' : 'No users found',
+                                                emptyMessage: loading
+                                                    ? 'Loading users...'
+                                                    : 'No users found',
                                             },
                                         },
                                     ],
@@ -188,6 +223,6 @@ export default function Users() {
                     },
                 ]}
             />
-        </>
+        </Suspense>
     );
 }

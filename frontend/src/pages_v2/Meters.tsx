@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
@@ -155,6 +155,7 @@ export default function Meters() {
     ];
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <Page
             sections={[
                 {
@@ -298,5 +299,6 @@ export default function Meters() {
                 },
             ]}
         />
+        </Suspense>
     );
 }

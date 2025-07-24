@@ -111,17 +111,12 @@ function createAppProjectOptimized(formData) {
     return baseDir;
 }
 
-
 function copyAssets(baseDir) {
     const frontendDir = path.join(baseDir, 'frontend');
     const sourceFrontendDir = path.join(__dirname, '..', 'frontend');
 
     // Prefer pages_v2 as the source for pages
-    const sourcePagesV2Dir = path.join(
-        sourceFrontendDir,
-        'src',
-        'export_pages'
-    );
+    const sourcePagesV2Dir = path.join(sourceFrontendDir, 'src', 'pages_v2');
     const destPagesDir = path.join(frontendDir, 'src', 'pages');
     if (fs.existsSync(sourcePagesV2Dir)) {
         // Remove existing destPagesDir if it exists to avoid mixing old files
@@ -133,7 +128,6 @@ function copyAssets(baseDir) {
 
     copyPublicAssets(sourceFrontendDir, frontendDir);
 }
-
 
 function copyDirectoryRecursive(source, dest) {
     if (!fs.existsSync(dest)) {
@@ -148,7 +142,24 @@ function copyDirectoryRecursive(source, dest) {
         if (fs.statSync(sourcePath).isDirectory()) {
             copyDirectoryRecursive(sourcePath, destPath);
         } else {
-            fs.copyFileSync(sourcePath, destPath);
+            if (/\.(js|jsx|ts|tsx)$/.test(item)) {
+                let content = fs.readFileSync(sourcePath, 'utf8');
+                const importToReplace = `import Page from '@/components/global/PageC';`;
+                const lazyImport = `const Page = lazy(() => import('SuperAdmin/Page'));`;
+                if (content.includes(importToReplace)) {
+                    content = content.replace(importToReplace, lazyImport);
+                    if (
+                        !/import\s+\{\s*lazy\s*\}\s+from\s+['"]react['"]/.test(
+                            content
+                        )
+                    ) {
+                        content = `import { lazy } from 'react';\n` + content;
+                    }
+                }
+                fs.writeFileSync(destPath, content, 'utf8');
+            } else {
+                fs.copyFileSync(sourcePath, destPath);
+            }
         }
     });
 }

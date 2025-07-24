@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
@@ -213,6 +213,7 @@ export default function RoleManagement() {
     ];
 
     return (
+        <Suspense fallback={<div>Loading...</div>}>
         <Page
             sections={[
                 // Page Header Section
@@ -375,5 +376,6 @@ export default function RoleManagement() {
                 }
             ]}
         />
+        </Suspense>
     );
 } 
