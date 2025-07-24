@@ -126,7 +126,9 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.ticketsCase = modules.includes('tickets') ? `
       case '/all-tickets':
-        return 'All Tickets';` : '';
+        return 'All Tickets';
+      case '/tickets/:ticketId':
+        return 'Ticket View';` : '';
   
   variables.assetManagementCase = modules.includes('asset_management') ? `
       case '/asset-management':
@@ -136,11 +138,15 @@ function generateAppComponent(frontendDir, variables) {
       case '/meters':
         return 'Meters';
       case '/data-logger-master':
-        return 'Data Logger Master';` : '';
+        return 'Data Logger Master';
+      case '/meter-details/:meterSlNo':
+        return 'Meter Details';` : '';
   
   variables.dtrCase = modules.includes('dtr') ? `
       case '/dtr-dashboard':
-        return 'DTR Dashboard';` : '';
+        return 'DTR Dashboard';
+      case '/dtr/:dtrId':
+        return 'Feeders';` : '';
   
   variables.consumerCase = modules.includes('consumer') ? `
       case '/consumers':
@@ -179,7 +185,13 @@ function generateAppComponent(frontendDir, variables) {
     '<Route path="/consumers" element={<Consumers />} />' : '';
   
   variables.dtrRoute = modules.includes('dtr') ? 
-    '<Route path="/dtr-dashboard" element={<Transformer />} />' : '';
+    '<Route path="/dtr-dashboard" element={<Transformer />} />\n                          <Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
+  
+  variables.meterDetailsRoute = modules.includes('meter_management') ? 
+    '<Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />' : '';
+  
+  variables.ticketViewRoute = modules.includes('tickets') ? 
+    '<Route path="/tickets/:ticketId" element={<TicketView />} />' : '';
   
 
 
@@ -194,13 +206,13 @@ function generateAppComponent(frontendDir, variables) {
     '<li>/asset-management - Asset Management</li>' : '';
   
   variables.meterManagementError = modules.includes('meter_management') ? 
-    '<li>/meters - Meters List</li>' : '';
+    '<li>/meters - Meters List</li>\n                                <li>/meter-details/:meterSlNo - Meter Details</li>' : '';
   
   variables.dataLoggerError = modules.includes('meter_management') ? 
     '<li>/data-logger-master - Data Logger Master</li>' : '';
   
   variables.ticketsError = modules.includes('tickets') ? 
-    '<li>/all-tickets - All Tickets</li>' : '';
+    '<li>/all-tickets - All Tickets</li>\n                                <li>/tickets/:ticketId - Ticket View</li>' : '';
   
   variables.usersError = modules.includes('user_management_default') ? 
     '<li>/users - Users</li>' : '';
@@ -212,7 +224,7 @@ function generateAppComponent(frontendDir, variables) {
     '<li>/consumers - Consumers</li>' : '';
   
   variables.dtrError = modules.includes('dtr') ? 
-    '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
+    '<li>/dtr-dashboard - DTR Dashboard</li>\n                                <li>/dtr/:dtrId - Feeders</li>' : '';
   
 
 

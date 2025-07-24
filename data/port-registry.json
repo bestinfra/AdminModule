@@ -1,5 +1,5 @@
 {
-  "nextPort": 4073,
+  "nextPort": 4067,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -196,55 +196,25 @@
       "deployedAt": "2025-07-23T17:32:55.230Z",
       "path": "C:\\xampp\\htdocs\\best-infra-apps3-backend"
     },
-    "qwerty": {
+    "madhu5": {
       "port": 4063,
-      "deployedAt": "2025-07-24T05:25:25.391Z",
-      "path": "C:\\xampp\\htdocs\\qwerty-backend"
+      "deployedAt": "2025-07-24T04:49:14.881Z",
+      "path": "C:\\xampp\\htdocs\\tnspdcl-backend"
     },
-    "qwerty2": {
+    "abcdabcdee": {
       "port": 4064,
-      "deployedAt": "2025-07-24T07:29:50.125Z",
-      "path": "C:\\xampp\\htdocs\\qwerty2-backend"
+      "deployedAt": "2025-07-24T07:14:00.603Z",
+      "path": "C:\\xampp\\htdocs\\abcdabcdee-backend"
     },
-    "qwerty3": {
+    "barre": {
       "port": 4065,
-      "deployedAt": "2025-07-24T09:31:29.004Z",
-      "path": "C:\\xampp\\htdocs\\qwerty3-backend"
+      "deployedAt": "2025-07-24T07:24:53.846Z",
+      "path": "C:\\xampp\\htdocs\\barre-backend"
     },
-    "qwerty6": {
+    "manager": {
       "port": 4066,
-      "deployedAt": "2025-07-24T09:47:27.214Z",
-      "path": "C:\\xampp\\htdocs\\qwerty6-backend"
-    },
-    "qwerty0": {
-      "port": 4067,
-      "deployedAt": "2025-07-24T10:03:36.135Z",
-      "path": "C:\\xampp\\htdocs\\qwerty0-backend"
-    },
-    "qwerty90": {
-      "port": 4068,
-      "deployedAt": "2025-07-24T10:13:24.387Z",
-      "path": "C:\\xampp\\htdocs\\qwerty90-backend"
-    },
-    "qwerty1234": {
-      "port": 4069,
-      "deployedAt": "2025-07-24T10:30:26.462Z",
-      "path": "C:\\xampp\\htdocs\\qwerty1234-backend"
-    },
-    "qwerty12345": {
-      "port": 4070,
-      "deployedAt": "2025-07-24T10:35:37.896Z",
-      "path": "C:\\xampp\\htdocs\\qwerty12345-backend"
-    },
-    "poiuyt": {
-      "port": 4071,
-      "deployedAt": "2025-07-24T10:39:29.635Z",
-      "path": "C:\\xampp\\htdocs\\poiuyt-backend"
-    },
-    "poiuyt1": {
-      "port": 4072,
-      "deployedAt": "2025-07-24T10:42:26.721Z",
-      "path": "C:\\xampp\\htdocs\\poiuyt1-backend"
+      "deployedAt": "2025-07-24T07:52:54.415Z",
+      "path": "C:\\xampp\\htdocs\\manager-backend"
     }
   }
 }

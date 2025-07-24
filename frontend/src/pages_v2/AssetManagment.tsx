@@ -1,121 +1,51 @@
+import { useEffect, useState } from 'react';
 import Page from '@components/global/PageC';
+import BACKEND_URL from '../config';
 
-const mockHierarchyData = [
-    {
-        hierarchy_id: 1,
-        hierarchy_name: 'GMR',
-        hierarchy_type_title: 'Root',
-        children: [
-            {
-                hierarchy_id: 2,
-                hierarchy_name: 'Airborne General Store',
-                hierarchy_type_title: 'Node',
-            },
-            {
-                hierarchy_id: 3,
-                hierarchy_name: 'Neo Travels',
-                hierarchy_type_title: 'Node',
-            },
-            {
-                hierarchy_id: 4,
-                hierarchy_name: 'Mobikins',
-                hierarchy_type_title: 'Node',
-            },
-            {
-                hierarchy_id: 5,
-                hierarchy_name: 'Dormitary',
-                hierarchy_type_title: 'Node',
-            },
-            {
-                hierarchy_id: 6,
-                hierarchy_name: '10 MGW - Solar Plant',
-                hierarchy_type_title: 'Node',
-            },
-        ],
-    },
-    {
-        hierarchy_id: 7,
-        hierarchy_name: 'Chennai',
-        hierarchy_type_title: 'Root',
-        children: [
-            {
-                hierarchy_id: 8,
-                hierarchy_name: 'Hyderabad',
-                hierarchy_type_title: 'City',
-                children: [
-                    {
-                        hierarchy_id: 9,
-                        hierarchy_name: 'Hitech City',
-                        hierarchy_type_title: 'Area',
-                    },
-                    {
-                        hierarchy_id: 10,
-                        hierarchy_name: 'Gachibowli',
-                        hierarchy_type_title: 'Area',
-                    },
-                ],
-            },
-            {
-                hierarchy_id: 11,
-                hierarchy_name: 'Egmore',
-                hierarchy_type_title: 'City',
-            },
-            {
-                hierarchy_id: 12,
-                hierarchy_name: 'Vizag',
-                hierarchy_type_title: 'City',
-                children: [
-                    {
-                        hierarchy_id: 13,
-                        hierarchy_name: 'RK Beach',
-                        hierarchy_type_title: 'Area',
-                    },
-                    {
-                        hierarchy_id: 14,
-                        hierarchy_name: 'Warangal',
-                        hierarchy_type_title: 'Area',
-                    },
-                ],
-            },
-        ],
-    },
-    {
-        hierarchy_id: 15,
-        hierarchy_name: 'Ameerpet',
-        hierarchy_type_title: 'Area',
-    },
-];
-
-interface FlatHierarchyNode {
-    hierarchy_id: string | number;
-    hierarchy_name: string;
-    hierarchy_type_title: string;
-    children?: FlatHierarchyNode[];
+interface AssetNode {
+    id: number | string;
+    name: string;
+    code: string;
+    type: string;
+    parentId: number | string | null;
+    createdAt: string;
+    updatedAt?: string;
+    children?: AssetNode[];
 }
 
-function flattenHierarchy(
-    nodes: FlatHierarchyNode[]
-): Array<{ id: string | number; name: string; hierarchy_type_title: string }> {
-    const flat: Array<{
-        id: string | number;
-        name: string;
-        hierarchy_type_title: string;
-    }> = [];
-    function recurse(node: FlatHierarchyNode) {
-        flat.push({
-            id: node.hierarchy_id,
-            name: node.hierarchy_name,
-            hierarchy_type_title: node.hierarchy_type_title,
-        });
-        if (node.children) {
-            node.children.forEach(recurse);
+function buildHierarchy(flat: AssetNode[]): AssetNode[] {
+    const idMap: Record<string, AssetNode> = {};
+    const roots: AssetNode[] = [];
+    flat.forEach(node => {
+        idMap[node.id] = { ...node, children: [] };
+    });
+    flat.forEach(node => {
+        if (node.parentId && idMap[node.parentId]) {
+            idMap[node.parentId].children!.push(idMap[node.id]);
+        } else {
+            roots.push(idMap[node.id]);
         }
-    }
-    nodes.forEach(recurse);
-    return flat;
+    });
+    return roots;
 }
 
 export default function AssetManagment() {
+    const [assets, setAssets] = useState<AssetNode[]>([]);
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/assets`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    setAssets(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch assets');
+                }
+            })
+            .catch(err => console.error(err.message || 'Failed to fetch assets'));
+    }, []);
+
+    const hierarchy = buildHierarchy(assets);
+
     return (
         <Page
             sections={[
@@ -133,27 +63,25 @@ export default function AssetManagment() {
                                     {
                                         name: 'TopLevelHierarchy',
                                         props: {
-                                            nodes: flattenHierarchy(
-                                                mockHierarchyData
-                                            ),
+                                            nodes: assets,
                                         },
                                     },
                                 ],
                             },
-                            // {
-                            //     layout: 'row',
-                            //     span: { col: 3, row: 1 },
-                            //     className: 'h-full',
-                            //     columns: [
-                            //         {
-                            //             name: 'OrgChart',
-                            //             props: {
-                            //                 data: mockHierarchyData,
-                            //                 height: '100%',
-                            //             },
-                            //         },
-                            //     ],
-                            // },
+                            {
+                                layout: 'row',
+                                span: { col: 3, row: 1 },
+                                className: 'h-full',
+                                columns: [
+                                    {
+                                        name: 'OrgChart',
+                                        props: {
+                                            data: hierarchy,
+                                            height: '100%',
+                                        },
+                                    },
+                                ],
+                            },
                         ],
                     },
                 },

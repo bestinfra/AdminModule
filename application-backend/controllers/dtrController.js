@@ -10,9 +10,23 @@ export const getDTRTable = async (req, res) => {
             status: status || undefined,
             locationId: locationId ? parseInt(locationId) : undefined
         });
+
+        // Map the data to match frontend table columns exactly
+        const mappedData = result.data.map(dtr => ({
+            dtrId: dtr.dtrNumber || 'NA',
+            dtrName: dtr.serialNumber || 'NA',
+            feedersCount: dtr.feedersCount || 0,
+            streetName: dtr.location?.name || 'NA',
+            city: dtr.location?.city || 'NA',
+            commStatus: dtr.status || 'NA'
+        }));
+
         res.json({
             success: true,
-            ...result,
+            data: mappedData,
+            total: result.total,
+            page: result.page,
+            pageSize: result.pageSize,
             message: 'DTR table fetched successfully'
         });
     } catch (error) {
@@ -47,9 +61,17 @@ export const getFeedersForDTR = async (req, res) => {
 export const getDTRAlerts = async (req, res) => {
     try {
         const alerts = await DTRDB.getDTRAlerts();
+        
+        // Map alerts to match frontend table columns exactly
+        const mappedAlerts = alerts.map(alert => ({
+            alert: alert.faultType || 'NA',
+            date: alert.createdAt ? new Date(alert.createdAt).toLocaleString() : 'NA',
+            status: alert.status || 'NA'
+        }));
+
         res.json({
             success: true,
-            data: alerts,
+            data: mappedAlerts,
             message: 'DTR alerts fetched successfully'
         });
     } catch (error) {
@@ -83,9 +105,32 @@ export const getDTRAlertsTrends = async (req, res) => {
 export const getDTRStats = async (req, res) => {
     try {
         const stats = await DTRDB.getDTRStats();
+        
+        // Map stats to match frontend card field names exactly
+        const mappedStats = {
+            totalDtrs: stats.totalDTRs || 0,
+            totalLtFeeders: stats.totalLTFeeders || 0,
+            totalFuseBlown: stats.totalFuseBlown || 0,
+            fuseBlownPercentage: stats.percentTotalFuseBlown || 0,
+            overloadedFeeders: stats.overloadedDTRs || 0,
+            overloadedPercentage: stats.percentOverloadedFeeders || 0,
+            underloadedFeeders: stats.underloadedDTRs || 0,
+            underloadedPercentage: stats.percentUnderloadedFeeders || 0,
+            ltSideFuseBlown: stats.ltFuseBlown || 0,
+            unbalancedDtrs: stats.unbalancedDTRs || 0,
+            unbalancedPercentage: stats.percentUnbalancedDTRs || 0,
+            powerFailureFeeders: stats.powerFailureFeeders || 0,
+            powerFailurePercentage: stats.percentPowerFailureFeeders || 0,
+            htSideFuseBlown: stats.htFuseBlown || 0,
+            activeDtrs: stats.activeDTRs || 0,
+            activePercentage: stats.activeDTRs && stats.totalDTRs ? ((stats.activeDTRs / stats.totalDTRs) * 100).toFixed(2) : 0,
+            inactiveDtrs: stats.inactiveDTRs || 0,
+            inactivePercentage: stats.inactiveDTRs && stats.totalDTRs ? ((stats.inactiveDTRs / stats.totalDTRs) * 100).toFixed(2) : 0
+        };
+
         res.json({
             success: true,
-            data: stats,
+            data: mappedStats,
             message: 'DTR stats fetched successfully'
         });
     } catch (error) {
@@ -101,9 +146,18 @@ export const getDTRStats = async (req, res) => {
 export const getConsumptionStats = async (req, res) => {
     try {
         const stats = await DTRDB.getConsumptionStats();
+        
+        // Map consumption stats to match frontend card field names exactly
+        const mappedStats = {
+            totalKwh: stats.totalKWh || '0',
+            totalKvah: stats.totalKVAh || '0',
+            totalKw: stats.totalKW || '0',
+            totalKva: stats.totalKVA || '0'
+        };
+
         res.json({
             success: true,
-            data: stats,
+            data: mappedStats,
             message: 'Consumption stats fetched successfully'
         });
     } catch (error) {

@@ -72,7 +72,7 @@ interface ThemeContextType {  /*Total 38 colors*/
         // gradient dark mode
         colorPrimaryDarkGradient: string;      // Primary gradient
 
-    
+        colorBackgroundSecondary: string;
 
     };
     updateTheme: (newTheme: Partial<ThemeContextType['theme']>) => void;
@@ -123,6 +123,7 @@ const defaultTheme = {
         'linear-gradient(0deg, rgb(187 225 196), rgba(22, 59, 124, 0))',
     colorShadowPrimary: 'rgba(220, 228, 239, 1)',
     colorShadowSecondary: 'rgba(220, 228, 239, 1)',
+    colorBackgroundSecondary: 'rgb(0, 106, 255)',
 
 
 

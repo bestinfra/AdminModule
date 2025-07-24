@@ -4,16 +4,27 @@ import BACKEND_URL from '../config';
 
 const tableColumns = [
     { key: 'sNo', label: 'S.No' },
-    { key: 'userId', label: 'User ID' },
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
+    { key: 'name', label: 'Full Name' },
+    { key: 'email', label: 'Email Address' },
+    { key: 'phone', label: 'Phone Number' },
     { key: 'role', label: 'Role' },
+    { key: 'client', label: 'Client' },
+   // { key: 'lastActive', label: 'Last Active' },
+    { key: 'createdDate', label: 'Created Date' },
+    // Add actions column if you want to show action buttons
 ];
+
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
 
 export default function Users() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // User stats state
+    const [userStats, setUserStats] = useState<any>(null);
 
     useEffect(() => {
         setLoading(true);
@@ -31,8 +42,61 @@ export default function Users() {
             .finally(() => setLoading(false));
     }, []);
 
+    // Fetch user stats (widgets)
+    useEffect(() => {
+        fetch(`${BACKEND_URL}/users/stats`)
+            .then(async (res) => {
+                if (!res.ok) throw new Error('Failed to fetch user stats');
+                const result = await res.json();
+                if (!result.success) throw new Error(result.message || 'Failed to fetch user stats');
+                setUserStats(result.data);
+            })
+            .catch(() => setUserStats(null))
+            .finally(() => {});
+    }, []);
+
+    // Widget cards array (same style as meters/tickets)
+    const userWidgets = userStats ? [
+        {
+            title: 'Total Users',
+            value: userStats.totalUsers,
+            icon: '/icons/account.svg',
+            subtitle1: `${userStats.activeUsers} Active Users`,
+            subtitle2: `${userStats.inactiveUsers} Inactive Users`,
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Admins',
+            value: userStats.totalAdmins,
+            icon: '/icons/admin.svg',
+            subtitle1: 'This Month',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Accountants',
+            value: userStats.totalAccountants,
+            icon: '/icons/accountant.svg',
+            subtitle1: 'This Month',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Moderators',
+            value: userStats.totalModerators,
+            icon: '/icons/moderator.svg',
+            subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Roles',
+            value: userStats.totalRoles,
+            icon: '/icons/apps-icon.svg',
+            subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
+            iconStyle: ICON_FILTER_STYLE,
+        },
+    ] : [];
+
     return (
-        <div className="p-2 min-h-screen">
+        <>
             {error && (
                 <div className="mb-4 p-4 bg-danger-light border border-danger rounded-md text-danger">
                     {error}
@@ -40,41 +104,67 @@ export default function Users() {
             )}
             <Page
                 sections={[
+                    // Page Header Section
                     {
                         layout: {
-                            type: 'row',
-                            className: 'mb-6'
-                        },
-                        components: [
-                            {
-                                name: 'PageHeader',
-                                props: {
-                                    title: "User Management",
-                                    onBackClick: () => window.history.back(),
-                                    backButtonText: "Back to Dashboard",
-                                    buttonsLabel: "Add User",
-                                    variant: "primary",
-                                    onClick: () => console.log('Adding new user...'),
-                                    showMenu: true,
-                                    showDropdown: true,
-                                    menuItems: [
-                                        { id: 'all', label: 'All Users' },
-                                        { id: 'active', label: 'Active Users' },
-                                        { id: 'inactive', label: 'Inactive Users' },
-                                        { id: 'admin', label: 'Administrators' },
-                                        { id: 'moderator', label: 'Moderators' },
-                                        { id: 'user', label: 'Regular Users' }
-                                    ],
-                                    onMenuItemClick: (itemId: string) => {
-                                        console.log(`Filter by: ${itemId}`);
-                                    }
+                            type: 'column' as const,
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: "User Management",
+                                                onBackClick: () => window.history.back(),
+                                                backButtonText: "Back to Dashboard",
+                                                buttonsLabel: "Add User",
+                                                variant: "primary",
+                                                onClick: () => console.log('Adding new user...'),
+                                                showMenu: true,
+                                                showDropdown: true,
+                                                menuItems: [
+                                                    { id: 'all', label: 'All Users' },
+                                                    { id: 'active', label: 'Active Users' },
+                                                    { id: 'inactive', label: 'Inactive Users' },
+                                                    { id: 'admin', label: 'Administrators' },
+                                                    { id: 'moderator', label: 'Moderators' },
+                                                    { id: 'user', label: 'Regular Users' }
+                                                ],
+                                                onMenuItemClick: (itemId: string) => {
+                                                    console.log(`Filter by: ${itemId}`);
+                                                }
+                                            }
+                                        }
+                                    ]
                                 }
-                            }
-                        ]
+                            ]
+                        }
                     },
+                    // Overview Cards Section
                     {
                         layout: {
-                            type: 'column',
+                            type: 'column' as const,
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'grid' as const,
+                                    gridColumns: 5,
+                                    gap: 'gap-6',
+                                    columns: userWidgets.map(card => ({
+                                        name: 'Card',
+                                        props: card
+                                    }))
+                                }
+                            ]
+                        }
+                    },
+                    // Users Table Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-6',
                             rows: [
                                 {
                                     layout: 'column',
@@ -98,6 +188,6 @@ export default function Users() {
                     },
                 ]}
             />
-        </div>
+        </>
     );
 }
