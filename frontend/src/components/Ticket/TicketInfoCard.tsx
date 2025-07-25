@@ -71,29 +71,29 @@ const TicketInfoCard: React.FC<TicketInfoCardProps> = ({ ticket, className = '' 
     const getStatusBadgeClasses = (status: string): string => {
         switch (status?.toLowerCase()) {
             case 'open':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-warning-alt text-warning';
+                return 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-warning-alt text-warning';
             case 'in progress':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-accent-light text-accent';
+                return 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-accent-light text-accent';
             case 'resolved':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-secondary-light text-secondary';
+                return 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-secondary-light text-secondary';
             case 'closed':
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-neutral-light text-neutral';
+                return 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-neutral-light text-neutral';
             default:
-                return 'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-neutral-light text-neutral';
+                return 'inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-neutral-light text-neutral';
         }
     };
 
     return (
-        <div className={`bg-white rounded-lg shadow p-6 h-fit ${className}`}>
-            <div className="flex justify-between items-start mb-6">
-                <h2 className="text-xl font-semibold text-neutral-darker">Ticket Information</h2>
+        <div className={`bg-white rounded-lg shadow p-4 h-fit ${className}`}>
+            <div className="flex justify-between items-start mb-4">
+                <h2 className="text-lg font-semibold text-neutral-darker">Ticket Information</h2>
                 <span className={getStatusBadgeClasses(ticket?.status || '')}>
                     {ticket?.status || 'N/A'}
                 </span>
             </div>
 
-            <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+            <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
                     <div>
                         <span className="text-neutral">Ticket ID</span>
                         <p className="font-medium text-neutral-darker">#{ticket?.ticket_id || 'N/A'}</p>

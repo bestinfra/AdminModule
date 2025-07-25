@@ -52,109 +52,109 @@ const ActivityLogCard: React.FC<ActivityLogCardProps> = ({ activities, className
     };
 
     return (
-        <div className={`bg-white rounded-lg shadow p-6 h-fit ${className}`}>
-            <h2 className="text-xl font-semibold text-neutral-darker mb-6">Activity Log</h2>
+        <div className={`bg-white rounded-lg shadow p-4 h-fit ${className}`}>
+            <h2 className="text-lg font-semibold text-neutral-darker mb-4">Activity Log</h2>
             
             <div className="relative h-64 overflow-y-auto">
                 {!activities || activities.length === 0 ? (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         {/* Sample Activity Entry 1 */}
-                        <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="bg-gray-50 rounded-lg p-3">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-neutral-darker mb-2">
+                                    <p className="text-xs font-medium text-neutral-darker mb-1">
                                         Ticket created
                                     </p>
                                     <div className="flex items-center space-x-2">
                                         <span className="text-xs text-neutral">Status:</span>
-                                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClasses('open')}`}>
+                                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClasses('open')}`}>
                                             Open
                                         </span>
                                     </div>
                                 </div>
-                                <div className="text-right text-xs text-neutral ml-4">
+                                <div className="text-right text-xs text-neutral ml-3">
                                     07/14/2025, 05:24 PM
                                 </div>
                             </div>
                         </div>
 
                         {/* Sample Activity Entry 2 */}
-                        <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="bg-gray-50 rounded-lg p-3">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-neutral-darker">
+                                    <p className="text-xs font-medium text-neutral-darker">
                                         Ticket assigned to support team
                                     </p>
                                 </div>
-                                <div className="text-right text-xs text-neutral ml-4">
+                                <div className="text-right text-xs text-neutral ml-3">
                                     07/14/2025, 05:24 PM
                                 </div>
                             </div>
                         </div>
 
                         {/* Sample Activity Entry 3 */}
-                        <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="bg-gray-50 rounded-lg p-3">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-neutral-darker mb-2">
+                                    <p className="text-xs font-medium text-neutral-darker mb-1">
                                         Initial description provided
                                     </p>
-                                    <p className="text-xs text-neutral ml-4">
+                                    <p className="text-xs text-neutral ml-3">
                                         test the ticket
                                     </p>
                                 </div>
-                                <div className="text-right text-xs text-neutral ml-4">
+                                <div className="text-right text-xs text-neutral ml-3">
                                     07/14/2025, 05:24 PM
                                 </div>
                             </div>
                         </div>
 
                         {/* Sample Activity Entry 4 */}
-                        <div className="bg-gray-50 rounded-lg p-4">
+                        <div className="bg-gray-50 rounded-lg p-3">
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
-                                    <p className="text-sm font-medium text-neutral-darker mb-2">
+                                    <p className="text-xs font-medium text-neutral-darker mb-1">
                                         Status updated to In Progress
                                     </p>
                                     <div className="flex items-center space-x-2">
                                         <span className="text-xs text-neutral">Status:</span>
-                                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClasses('in progress')}`}>
+                                        <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClasses('in progress')}`}>
                                             In Progress
                                         </span>
                                     </div>
                                 </div>
-                                <div className="text-right text-xs text-neutral ml-4">
+                                <div className="text-right text-xs text-neutral ml-3">
                                     07/15/2025, 05:24 PM
                                 </div>
                             </div>
                         </div>
                     </div>
                 ) : (
-                    <div className="space-y-4">
+                    <div className="space-y-3">
                         {activities
                             .sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime())
                             .map((activity) => (
-                                <div key={`activity-${activity.id}`} className="bg-gray-50 rounded-lg p-4">
+                                <div key={`activity-${activity.id}`} className="bg-gray-50 rounded-lg p-3">
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
-                                            <p className="text-sm font-medium text-neutral-darker mb-2">
+                                            <p className="text-xs font-medium text-neutral-darker mb-1">
                                                 {activity.description}
                                             </p>
                                             {activity.status && (
                                                 <div className="flex items-center space-x-2">
                                                     <span className="text-xs text-neutral">Status:</span>
-                                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClasses(activity.status)}`}>
+                                                    <span className={`inline-flex items-center px-1.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadgeClasses(activity.status)}`}>
                                                         {activity.status}
                                                     </span>
                                                 </div>
                                             )}
                                             {activity.note && (
-                                                <p className="text-xs text-neutral ml-4 mt-1">
+                                                <p className="text-xs text-neutral ml-3 mt-1">
                                                     {activity.note}
                                                 </p>
                                             )}
                                         </div>
-                                        <div className="text-right text-xs text-neutral ml-4">
+                                        <div className="text-right text-xs text-neutral ml-3">
                                             {formatDate(activity.timestamp)}
                                         </div>
                                     </div>

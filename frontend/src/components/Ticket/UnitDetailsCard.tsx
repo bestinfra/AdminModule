@@ -67,11 +67,11 @@ const UnitDetailsCard: React.FC<UnitDetailsCardProps> = ({ ticket, className = '
     };
 
     return (
-        <div className={`bg-white rounded-lg shadow p-6 h-fit ${className}`}>
-            <h2 className="text-xl font-semibold text-neutral-darker mb-6">Unit Details</h2>
+        <div className={`bg-white rounded-lg shadow p-4 h-fit ${className}`}>
+            <h2 className="text-lg font-semibold text-neutral-darker mb-4">Unit Details</h2>
             
-            <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm">
+            <div className="space-y-3">
+                <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-xs">
                     <div>
                         <span className="text-neutral">Unit Name</span>
                         <p className="font-medium text-neutral-darker">{toCamelCase(ticket?.UnitName || 'N/A')}</p>

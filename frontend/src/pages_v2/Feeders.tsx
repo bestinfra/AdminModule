@@ -111,6 +111,11 @@ const stats = [
 ];
 
 const Feeders = () => {
+    // Brand green icon style
+    const brandGreenIconStyle = {
+        filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+    };
+    
     const mapRef = useRef<HTMLDivElement>(null);
     const [location, setLocation] = useState<{
         lat: number;
@@ -225,7 +230,7 @@ const Feeders = () => {
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
                     {stats.map((stat, idx) => (
-                        <Card key={idx} {...stat} />
+                        <Card key={idx} {...stat} iconStyle={brandGreenIconStyle} />
                     ))}
                 </div>
             </section>

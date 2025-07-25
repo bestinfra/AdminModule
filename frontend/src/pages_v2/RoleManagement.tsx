@@ -1,113 +1,46 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
+import BACKEND_URL from '../config';
 
-// Types
 interface Role {
     id: number;
     name: string;
-    description: string;
-    permissions: string;
-    created_at: string;
-    updated_at?: string;
+    users: Array<{ id: number; username: string; firstName: string; lastName: string; email: string; isActive: boolean }>;
+    permissions: Array<{ id: number; name: string; description: string }>;
+    createdAt: string;
+    updatedAt?: string;
 }
 
 interface NewRole {
     name: string;
-    description: string;
-    permissions: string;
+    permissions?: string;
 }
 
 export default function RoleManagement() {
     const navigate = useNavigate();
-
-    // State
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [selectedRole, setSelectedRole] = useState<Role | null>(null);
     const [isAddingRole, setIsAddingRole] = useState(false);
-    const [newRole, setNewRole] = useState<NewRole>({
-        name: '',
-        description: '',
-        permissions: '',
-    });
+    const [newRole, setNewRole] = useState<NewRole>({ name: '' });
 
-    // Dummy Data
-    const dummyRoles: Role[] = [
-        {
-            id: 1,
-            name: 'Super Admin',
-            description:
-                'Full system access with all permissions including user management, system configuration, and data management.',
-            permissions:
-                'create, read, update, delete, manage_users, manage_roles, system_config',
-            created_at: '2024-01-01T09:00:00Z',
-            updated_at: '2024-01-15T10:30:00Z',
-        },
-        {
-            id: 2,
-            name: 'Admin',
-            description:
-                'Administrative access with user management and most system features except critical system configuration.',
-            permissions: 'create, read, update, delete, manage_users',
-            created_at: '2024-01-02T10:15:00Z',
-            updated_at: '2024-01-14T15:45:00Z',
-        },
-        {
-            id: 3,
-            name: 'Moderator',
-            description:
-                'Moderate access with ability to manage content and basic user interactions.',
-            permissions: 'create, read, update, moderate_content',
-            created_at: '2024-01-03T14:30:00Z',
-            updated_at: '2024-01-13T11:20:00Z',
-        },
-        {
-            id: 4,
-            name: 'Accountant',
-            description:
-                'Financial data access with permissions to view and manage billing, payments, and financial reports.',
-            permissions: 'read, manage_billing, view_reports, manage_payments',
-            created_at: '2024-01-04T11:45:00Z',
-            updated_at: '2024-01-12T16:10:00Z',
-        },
-        {
-            id: 5,
-            name: 'Support Agent',
-            description:
-                'Customer support role with access to tickets, user queries, and basic system information.',
-            permissions: 'read, manage_tickets, view_customer_data',
-            created_at: '2024-01-05T13:20:00Z',
-            updated_at: '2024-01-11T09:30:00Z',
-        },
-        {
-            id: 6,
-            name: 'User',
-            description:
-                'Basic user access with limited permissions for personal account management.',
-            permissions: 'read, update_profile',
-            created_at: '2024-01-06T15:10:00Z',
-            updated_at: '2024-01-10T12:15:00Z',
-        },
-    ];
-
-    // Effects
     useEffect(() => {
         fetchRoles();
     }, []);
 
-    // API Functions
     const fetchRoles = async () => {
         try {
             setLoading(true);
             setError(null);
-
-            // Simulate API delay
-            await new Promise((resolve) => setTimeout(resolve, 500));
-
-            // Use dummy data
-            setRoles(dummyRoles);
+            const res = await fetch(`${BACKEND_URL}/roles`);
+            const data = await res.json();
+            if (data.success) {
+                setRoles(data.data);
+            } else {
+                throw new Error(data.message || 'Failed to fetch roles');
+            }
         } catch (err) {
             setError('Failed to fetch roles');
             console.error('Error fetching roles:', err);
@@ -120,15 +53,14 @@ export default function RoleManagement() {
     const handleAddRole = () => {
         setIsAddingRole(true);
         setSelectedRole(null);
-        setNewRole({ name: '', description: '', permissions: '' });
+        setNewRole({ name: '' });
     };
 
     const handleEditRole = (role: Role) => {
         setSelectedRole(role);
         setNewRole({
             name: role.name,
-            description: role.description,
-            permissions: role.permissions || '',
+            permissions: role.permissions.map(p => p.name).join(', '),
         });
         setIsAddingRole(true);
     };
@@ -138,13 +70,16 @@ export default function RoleManagement() {
             try {
                 setLoading(true);
 
-                // Simulate API delay
-                await new Promise((resolve) => setTimeout(resolve, 500));
+                const res = await fetch(`${BACKEND_URL}/roles/${role.id}`, {
+                    method: 'DELETE',
+                });
+                const data = await res.json();
 
-                // Remove role from dummy data
-                setRoles((prevRoles) =>
-                    prevRoles.filter((r) => r.id !== role.id)
-                );
+                if (data.success) {
+                    setRoles(prevRoles => prevRoles.filter(r => r.id !== role.id));
+                } else {
+                    throw new Error(data.message || 'Failed to delete role');
+                }
             } catch (err) {
                 setError('Failed to delete role');
                 console.error('Error deleting role:', err);
@@ -160,36 +95,30 @@ export default function RoleManagement() {
             setLoading(true);
             setError(null);
 
-            // Simulate API delay
-            await new Promise((resolve) => setTimeout(resolve, 500));
+            const method = selectedRole ? 'PUT' : 'POST';
+            const url = selectedRole ? `${BACKEND_URL}/roles/${selectedRole.id}` : `${BACKEND_URL}/roles`;
 
-            if (selectedRole) {
-                // Update existing role in dummy data
-                setRoles((prevRoles) =>
-                    prevRoles.map((role) =>
-                        role.id === selectedRole.id
-                            ? {
-                                  ...role,
-                                  ...newRole,
-                                  updated_at: new Date().toISOString(),
-                              }
-                            : role
-                    )
-                );
+            const res = await fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newRole),
+            });
+            const data = await res.json();
+
+            if (data.success) {
+                if (selectedRole) {
+                    setRoles(prevRoles => prevRoles.map(role => role.id === selectedRole.id ? data.data : role));
+                } else {
+                    setRoles(prevRoles => [...prevRoles, data.data]);
+                }
+                setIsAddingRole(false);
+                setSelectedRole(null);
+                setNewRole({ name: '' });
             } else {
-                // Add new role to dummy data
-                const newRoleData: Role = {
-                    id: Math.max(...dummyRoles.map((r) => r.id)) + 1,
-                    ...newRole,
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString(),
-                };
-                setRoles((prevRoles) => [...prevRoles, newRoleData]);
+                throw new Error(data.message || 'Failed to save role');
             }
-
-            setIsAddingRole(false);
-            setSelectedRole(null);
-            setNewRole({ name: '', description: '', permissions: '' });
         } catch (err) {
             setError('Failed to save role');
             console.error('Error saving role:', err);
@@ -205,7 +134,7 @@ export default function RoleManagement() {
     const handleCancelForm = () => {
         setIsAddingRole(false);
         setSelectedRole(null);
-        setNewRole({ name: '', description: '', permissions: '' });
+        setNewRole({ name: '' });
     };
 
     // Utility Functions
@@ -222,22 +151,24 @@ export default function RoleManagement() {
             hour12: true,
         });
     };
+    console.log(formatDate);
 
     // Table data for the Table component
     const tableData = roles.map(role => ({
         id: role.id,
         name: role.name,
-        description: role.description,
-        permissions: role.permissions,
-        created_at: formatDate(role.created_at),
-        updated_at: role.updated_at ? formatDate(role.updated_at) : 'NA',
+        users: role.users.length,
+        permissions: role.permissions.map(p => p.name).join(', '),
+        createdAt: role.createdAt,
+        updatedAt: role.updatedAt || 'NA',
     }));
 
     // Table columns configuration
     const tableColumns = [
         { key: 'name', label: 'Role Name' },
-        { key: 'description', label: 'Description' },
-        { key: 'created_at', label: 'Created Date' }
+        { key: 'users', label: 'Users' },
+        { key: 'permissions', label: 'Permissions' },
+        //{ key: 'createdAt', label: 'Created Date' }
     ];
 
     // Custom action handlers for the table
@@ -402,25 +333,6 @@ export default function RoleManagement() {
                                                                 className="w-full px-4 py-2 border border-neutral-light rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
                                                             />
                                                         </div>
-
-                                                        <div className="space-y-2">
-                                                            <label className="block text-sm font-semibold text-text-secondary">
-                                                                Description
-                                                            </label>
-                                                            <textarea
-                                                                value={newRole.description}
-                                                                onChange={(e) =>
-                                                                    setNewRole({
-                                                                        ...newRole,
-                                                                        description: e.target.value,
-                                                                    })
-                                                                }
-                                                                placeholder="Enter role description"
-                                                                rows={4}
-                                                                className="w-full px-4 py-2 border border-neutral-light rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-vertical"
-                                                            />
-                                                        </div>
-
                                                         <div className="flex justify-end gap-3 pt-4 border-t">
                                                             <button
                                                                 type="button"

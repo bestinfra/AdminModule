@@ -14,7 +14,7 @@ export default defineConfig({
       exposes: {
         './Login': './src/pages/SubLogin.tsx',
         './Dashboard': './src/pages_v2/Dashboard.tsx',
-        './NewDashboard': './src/pages/NewDashboard.tsx',
+       // './NewDashboard': './src/pages/NewDashboard.tsx',
         './Consumers': './src/pages_v2/Consumers.tsx',
         './Ticket': './src/pages_v2/Tickets.tsx',
         './Users': './src/pages_v2/Users.tsx',
@@ -23,6 +23,8 @@ export default defineConfig({
         './Transformer': './src/pages_v2/DTRDashboard.tsx',
         './DTRDashboard': './src/pages_v2/DTRDashboard.tsx',
         './Feeders': './src/pages_v2/Feeders.tsx',
+        './MeterDetails': './src/pages_v2/MeterDetails.tsx',
+        './TicketView': './src/pages_v2/TicketView.tsx',
         // Components and context exports remain unchanged
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',

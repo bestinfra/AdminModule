@@ -4,51 +4,28 @@ import BACKEND_URL from '../config';
 
 const tableColumns = [
     { key: 'sNo', label: 'S.No' },
-    { key: 'userId', label: 'User ID' },
-    { key: 'name', label: 'Name' },
-    { key: 'email', label: 'Email' },
+    { key: 'name', label: 'Full Name' },
+    { key: 'email', label: 'Email Address' },
+    { key: 'phone', label: 'Phone Number' },
     { key: 'role', label: 'Role' },
+    { key: 'client', label: 'Client' },
+   // { key: 'lastActive', label: 'Last Active' },
+    { key: 'createdDate', label: 'Created Date' },
+    // Add actions column if you want to show action buttons
 ];
 
-// Card data for user statistics
-const cardData = [
-    {
-        title: 'Total Users',
-        value: '8',
-        icon: '/icons/users.svg',
-        subtitle1: '1 Active Users',
-        subtitle2: '7 Inactive Users',
-    },
-    {
-        title: 'Total Admins',
-        value: '4',
-        icon: '/icons/admin.svg',
-        subtitle1: 'This Month',
-    },
-    {
-        title: 'Total Accountants',
-        value: '1',
-        icon: '/icons/accountant.svg',
-        subtitle1: 'This Month',
-    },
-    {
-        title: 'Total Moderators',
-        value: '1',
-        icon: '/icons/moderator.svg',
-        subtitle1: '1 Active Users',
-    },
-    {
-        title: 'Total Roles',
-        value: '4',
-        icon: '/icons/roles.svg',
-        subtitle1: '1 Active Users',
-    },
-];
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
 
 export default function Users() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+    // User stats state
+    const [userStats, setUserStats] = useState<any>(null);
+    const [statsLoading, setStatsLoading] = useState(true);
 
     useEffect(() => {
         setLoading(true);
@@ -65,6 +42,72 @@ export default function Users() {
             })
             .finally(() => setLoading(false));
     }, []);
+
+    // Fetch user stats (widgets)
+    useEffect(() => {
+        setStatsLoading(true);
+        fetch(`${BACKEND_URL}/users/stats`)
+            .then(async (res) => {
+                if (!res.ok) throw new Error('Failed to fetch user stats');
+                const result = await res.json();
+                if (!result.success) throw new Error(result.message || 'Failed to fetch user stats');
+                setUserStats(result.data);
+            })
+            .catch((err) => {
+                console.error('Failed to fetch user stats:', err);
+                // Set fallback stats if API fails
+                setUserStats({
+                    totalUsers: 8,
+                    activeUsers: 1,
+                    inactiveUsers: 7,
+                    totalAdmins: 4,
+                    totalAccountants: 1,
+                    totalModerators: 1,
+                    totalRoles: 4
+                });
+            })
+            .finally(() => setStatsLoading(false));
+    }, []);
+
+    // Widget cards array (same style as meters/tickets)
+    const userWidgets = userStats ? [
+        {
+            title: 'Total Users',
+            value: userStats.totalUsers || 0,
+            icon: '/icons/user.svg',
+            subtitle1: `${userStats.activeUsers || 0} Active Users`,
+            subtitle2: `${userStats.inactiveUsers || 0} Inactive Users`,
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Admins',
+            value: userStats.totalAdmins || 0,
+            icon: '/icons/user-gear.svg',
+            subtitle1: 'This Month',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Accountants',
+            value: userStats.totalAccountants || 0,
+            icon: '/icons/user-pen.svg',
+            subtitle1: 'This Month',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Moderators',
+            value: userStats.totalModerators || 0,
+            icon: '/icons/user-profile.svg',
+            subtitle1: `${userStats.totalModerators || 0} Active Users`,
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: 'Total Roles',
+            value: userStats.totalRoles || 0,
+            icon: '/icons/roles.svg',
+            subtitle1: `${userStats.totalRoles || 0} Active Users`,
+            iconStyle: ICON_FILTER_STYLE,
+        },
+    ] : [];
 
     return (
         <>
@@ -123,9 +166,12 @@ export default function Users() {
                                     layout: 'grid' as const,
                                     gridColumns: 5,
                                     gap: 'gap-6',
-                                    columns: cardData.map(card => ({
+                                    columns: userWidgets.map(card => ({
                                         name: 'Card',
-                                        props: card
+                                        props: {
+                                            ...card,
+                                            loading: statsLoading
+                                        }
                                     }))
                                 }
                             ]
@@ -138,9 +184,7 @@ export default function Users() {
                             gap: 'gap-6',
                             rows: [
                                 {
-                                    layout: 'grid' as const,
-                                    gridColumns: 1,
-                                    gap: 'gap-6',
+                                    layout: 'column',
                                     columns: [
                                         {
                                             name: 'Table',

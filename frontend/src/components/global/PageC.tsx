@@ -21,7 +21,7 @@ import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
 import { Form } from '../Form';
-import IssueDetailsCard from '../Ticket/IssueDetailsCard';
+import IssueCardDetails from '../Ticket/IssueCardDetails';
 import ChatInput from '../Ticket/ChatInput';
 import TicketInfoCard from '../Ticket/TicketInfoCard';
 import UnitDetailsCard from '../Ticket/UnitDetailsCard';
@@ -51,7 +51,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Stepper,
     FormContainer,
     Form,
-    IssueDetailsCard,
+    IssueCardDetails,
     ChatInput,
     TicketInfoCard,
     UnitDetailsCard,

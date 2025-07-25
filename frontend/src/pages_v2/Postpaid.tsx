@@ -129,6 +129,11 @@ export default function Postpaid() {
     const [search, setSearch] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
     const [filteredData, setFilteredData] = useState(tableData);
+    
+    // Brand green icon style
+    const brandGreenIconStyle = {
+        filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+    };
 
     const handleAddBill = () => {
         console.log('Adding new bill...');
@@ -232,7 +237,10 @@ export default function Postpaid() {
                                 gap: 'gap-6',
                                 columns: cardData.slice(0, 4).map(card => ({
                                     name: 'Card',
-                                    props: card
+                                    props: {
+                                        ...card,
+                                        iconStyle: brandGreenIconStyle
+                                    }
                                 }))
                             }
                         ]
@@ -251,7 +259,10 @@ export default function Postpaid() {
                                 columns: [
                                     {
                                         name: 'Card',
-                                        props: cardData[4]
+                                        props: {
+                                            ...cardData[4],
+                                            iconStyle: brandGreenIconStyle
+                                        }
                                     }
                                 ]
                             }

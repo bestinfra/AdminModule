@@ -2,14 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 // Components
-import Page from '@components/global/PageC';
-import {
-    IssueDetailsCard,
-    TicketInfoCard,
-    UnitDetailsCard,
-    ActivityLogCard,
-    ChatInput
-} from '@components/Ticket';
+import PageC from '@components/global/PageC';
 
 // Context
 import { useAuth } from '@context/AuthContext';
@@ -88,7 +81,6 @@ const TicketView: React.FC = () => {
         id: id || '12345',
         ticket_id: `TKT-${id || '12345'}`,
         title: 'Billing Issue - Incorrect Meter Reading',
-        description: 'I have noticed that my last month electricity bill shows an unusually high consumption reading. The meter reading seems to be incorrect as my usage pattern has not changed significantly. I would like to request a manual meter reading verification and correction of the billing amount if necessary.',
         status: 'Open',
         priority: 'High',
         category: 'Billing',
@@ -166,6 +158,7 @@ const TicketView: React.FC = () => {
                 url: '/attachments/meter_photo.jpg',
             },
         ],
+        description: ''
     };
 
     const activities: Activity[] = [
@@ -227,102 +220,150 @@ const TicketView: React.FC = () => {
     const handleSendMessage = () => {
         if (!chatMessage.trim() && chatAttachments.length === 0) return;
 
-        const newMessage: ChatMessage = {
-            sender_type: isAdmin ? 'admin' : 'user',
-            sender_name: isAdmin ? 'Support Agent' : ticket?.UnitName || user?.username || 'You',
-            message: chatMessage.trim(),
-            timestamp: new Date().toISOString(),
-            attachments: chatAttachments.map(file => ({
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                file,
-            })),
-            metadata: {
-                role: isAdmin ? 'support' : 'consumer',
-                department: isAdmin ? 'customer_service' : 'billing',
-                isInternal: false,
-            },
-        };
-
         setChatMessage('');
         setChatAttachments([]);
     };
 
+    // Ticket overview cards data
+    const ticketOverviewCards = [
+        {
+            title: 'Ticket Status',
+            value: ticket.status,
+            icon: '/icons/ticket.svg',
+            subtitle2: 'Current Status',
+        },
+        {
+            title: 'Priority Level',
+            value: ticket.priority,
+            icon: '/icons/priority.svg',
+            subtitle2: 'Issue Priority',
+        },
+        {
+            title: 'Category',
+            value: ticket.category,
+            icon: '/icons/category.svg',
+            subtitle2: 'Ticket Category',
+        },
+        {
+            title: 'Assigned To',
+            value: ticket.assigned_to || 'Unassigned',
+            icon: '/icons/assigned.svg',
+            subtitle2: 'Current Assignee',
+        },
+    ];
+
+    // Brand green icon style
+    const brandGreenIconStyle = {
+        filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+    };
+
     return (
-        <Page
+        <PageC
             sections={[
+                // Page Header Section
                 {
                     layout: {
                         type: 'column',
                         gap: 'gap-6',
-                    },
-                    components: [
-                        {
-                            name: 'PageHeader',
-                            props: {
-                                title: 'Ticket Details',
-                                onBackClick: () => {
-                                    if (isAdmin) {
-                                        navigate(basePath);
-                                    } else {
-                                        navigate(userDashboardPath);
+                        rows: [
+                            {
+                                layout: 'row',
+                                columns: [
+                                    {
+                                        name: 'PageHeader',
+                                        props: {
+                                            title: `Ticket Details`,
+                                            subtitle: ticket.title,
+                                        }
                                     }
-                                },
-                                backButtonText: isAdmin ? "Back to Tickets" : "Back to Dashboard",
-                            },
-                        },
-                    ],
+                                ]
+                            }
+                        ]
+                    }
                 },
+                // Main Content Section - Issue Details and Ticket Info
                 {
                     layout: {
-                        type: 'grid',
-                        columns: 2,
-                        gap: 'gap-8',
-                    },
-                    components: [
-                        // Left Column - IssueDetailsCard
-                        {   
-                            name: 'IssueDetailsCard',
-                            props: {
-                                ticket: ticket,
-                            },
-                        },
-                        // Right Column - TicketInfoCard
-                        {
-                            name: 'TicketInfoCard',
-                            props: {
-                                ticket: ticket,
-                            },
-                        },
-                        // Left Column - ChatInput
-                        {
-                            name: 'ChatInput',
-                            props: {
-                                chatMessage: chatMessage,
-                                setChatMessage: setChatMessage,
-                                handleSendMessage: handleSendMessage,
-                                isSubmittingResponse: isSubmittingResponse,
-                                conversation: ticket?.conversation || [],
-                            },
-                        },
-                        // Right Column - UnitDetailsCard
-                        {
-                            name: 'UnitDetailsCard',
-                            props: {
-                                ticket: ticket,
-                            },
-                        },
-                        // Right Column - ActivityLogCard (spans to next row)
-                        {
-                            name: 'ActivityLogCard',
-                            props: {
-                                activities: activities,
-                            },
-                        },
-                    ],
+                        type: 'column',
+                        gap: 'gap-6',
+                        rows: [
+                            {
+                                layout: 'grid',
+                                gridColumns: 2,
+                                gap: 'gap-6',
+                                columns: [
+                                    {
+                                        name: 'IssueCardDetails',
+                                        props: {
+                                            ticket: ticket,
+                                        },
+                                    },
+                                    {
+                                        name: 'TicketInfoCard',
+                                        props: {
+                                            ticket: ticket,
+                                        },
+                                    }
+                                ]
+                            }
+                        ]
+                    }
                 },
-                
+                // Chat and Unit Details Section
+                {
+                    layout: {
+                        type: 'column',
+                        gap: 'gap-6',
+                        rows: [
+                            {
+                                layout: 'grid',
+                                gridColumns: 2,
+                                gap: 'gap-6',
+                                columns: [
+                                    {
+                                        name: 'ChatInput',
+                                        props: {
+                                            chatMessage: chatMessage,
+                                            setChatMessage: setChatMessage,
+                                            handleSendMessage: handleSendMessage,
+                                            isSubmittingResponse: isSubmittingResponse,
+                                            chatAttachments: chatAttachments,
+                                            setChatAttachments: setChatAttachments,
+                                        },
+                                    },
+                                    {
+                                        name: 'UnitDetailsCard',
+                                        props: {
+                                            ticket: ticket,
+                                        },
+                                    },
+                                ]
+                            }
+                        ]
+                    }
+                },
+                // Activity Log Section - Right Aligned
+                {
+                    layout: {
+                        type: 'column',
+                        gap: 'gap-6',
+                        rows: [
+                            {
+                                layout: 'row',
+                                columns: [
+                                    {
+                                        name: 'ActivityLogCard',
+                                        props: {
+                                            activities: activities,
+                                        },
+                                        align: 'end',
+                                        
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
             ]}
         />
     );

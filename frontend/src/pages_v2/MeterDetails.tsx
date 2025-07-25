@@ -1,72 +1,103 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Page from '@components/global/PageC';
 import Table from '@components/global/Table';
-
-const summaryCards = [
-  {
-    title: 'Current Reading',
-    value: '12950.11 kWh',
-    icon: '/icons/reading.svg',
-    subtitle1: 'Last Reading: 12790.97 kWh Con: 159.14 kWh',
-    subtitle2: '',
-  },
-  {
-    title: 'Status',
-    value: 'Active',
-    icon: '/icons/status.svg',
-    subtitle1: 'Last Communication: 23/07/2025 01:00 pm',
-    subtitle2: '',
-  },
-  {
-    title: 'Meter Type',
-    value: 'Prepaid',
-    icon: '/icons/meter-type.svg',
-    subtitle1: 'Phase Type: null',
-    subtitle2: '',
-  },
-  {
-    title: 'Location',
-    value: '19.678 19.678',
-    icon: '/icons/location.svg',
-    subtitle1: 'Installation Date: N/A',
-    subtitle2: '',
-  },
-];
-
-const meterInfo = [
-  { label: 'Meter SI No.', value: 'A9345417' },
-  { label: 'Modem SI No', value: 'RFDCU_DCU101' },
-  { label: 'UID', value: 'BI25GMRA002' },
-  { label: 'Assigned To', value: 'Neo Travels' },
-  { label: 'Meter Make', value: 'N/A' },
-  { label: 'Meter CT Ratio', value: 'N/A' },
-  { label: 'Meter PT Ratio', value: 'N/A' },
-  { label: 'External CT Ratio', value: 'N/A' },
-  { label: 'External PT Ratio', value: 'N/A' },
-  { label: 'Multiplication Factor', value: 'N/A' },
-];
-
-const historyColumns = [
-  { key: 'consumerName', label: 'Consumer Name' },
-  { key: 'startDate', label: 'Start Date' },
-  { key: 'endDate', label: 'End Date' },
-  { key: 'paymentStatus', label: 'Payment Status' },
-  { key: 'status', label: 'Status' },
-];
-
-const historyData = [
-  { consumerName: 'John Doe', startDate: '2023-01-01', endDate: '2023-06-30', paymentStatus: 'Completed', status: 'Completed' },
-  { consumerName: 'Jane Smith', startDate: '2023-07-01', endDate: '2023-12-31', paymentStatus: 'Overdue', status: 'Completed' },
-  { consumerName: 'Current Consumer', startDate: '2024-01-01', endDate: 'Present', paymentStatus: 'Pending', status: 'Active' },
-];
+import BACKEND_URL from '../config';
 
 const MeterDetails: React.FC = () => {
   const { meterId } = useParams();
   const navigate = useNavigate();
-  const info = meterInfo.map((item) =>
-    item.label === 'Meter SI No.' ? { ...item, value: meterId || 'A9345417' } : item
-  );
+
+  const [meter, setMeter] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!meterId) return;
+    setLoading(true);
+    setError(null);
+    fetch(`${BACKEND_URL}/meters/${meterId}/view`)
+      .then(async (res) => {
+        if (!res.ok) throw new Error('Failed to fetch meter details');
+        const result = await res.json();
+        if (!result.success) throw new Error(result.message || 'Failed to fetch meter details');
+        setMeter(result.data);
+      })
+      .catch((err) => setError(err.message || 'Failed to fetch meter details'))
+      .finally(() => setLoading(false));
+  }, [meterId]);
+
+  // Brand green icon style
+  const brandGreenIconStyle = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+  };
+
+  // Prepare summary cards and info from API data
+  const summaryCards = meter ? [
+    {
+      title: 'Current Reading',
+      value: meter.readings?.[0]?.kWh ? `${meter.readings[0].kWh} kWh` : 'N/A',
+      icon: '/icons/reading.svg',
+      subtitle1: meter.readings?.[0] ? `Last Reading: ${meter.readings[0].kWh || 'N/A'} kWh` : '',
+      subtitle2: '',
+      iconStyle: brandGreenIconStyle,
+    },
+    {
+      title: 'Status',
+      value: meter.status || 'N/A',
+      icon: '/icons/status.svg',
+      subtitle1: meter.readings?.[0]?.readingDate ? `Last Communication: ${new Date(meter.readings[0].readingDate).toLocaleString()}` : '',
+      subtitle2: '',
+      iconStyle: brandGreenIconStyle,
+    },
+    {
+      title: 'Meter Type',
+      value: meter.type || 'N/A',
+      icon: '/icons/meter-type.svg',
+      subtitle1: `Phase Type: ${meter.phase || 'N/A'}`,
+      subtitle2: '',
+      iconStyle: brandGreenIconStyle,
+    },
+    {
+      title: 'Location',
+      value: meter.location?.name || '',
+      icon: '/icons/location.svg',
+      subtitle1: `Installation Date: ${meter.installationDate ? new Date(meter.installationDate).toLocaleDateString() : 'N/A'}`,
+      subtitle2: '',
+      iconStyle: brandGreenIconStyle,
+    },
+  ] : [];
+
+  const meterInfo = meter ? [
+    { label: 'Meter SI No.', value: meter.serialNumber || 'N/A' },
+    { label: 'Modem SI No', value: meter.modem?.modem_sl_no || 'N/A' },
+    { label: 'UID', value: meter.meterNumber || 'N/A' },
+    { label: 'Assigned To', value: meter.consumer?.name || 'N/A' },
+    { label: 'Meter Make', value: meter.manufacturer || 'N/A' },
+    { label: 'Meter CT Ratio', value: meter.config?.ctRatio || 'N/A' },
+    { label: 'Meter PT Ratio', value: meter.config?.ptRatio || 'N/A' },
+    { label: 'External CT Ratio', value: meter.config?.adoptedCTRatio || 'N/A' },
+    { label: 'External PT Ratio', value: meter.config?.adoptedPTRatio || 'N/A' },
+    { label: 'Multiplication Factor', value: meter.config?.mf || 'N/A' },
+  ] : [];
+
+  const historyColumns = [
+    { key: 'consumerName', label: 'Consumer Name' },
+    { key: 'startDate', label: 'Start Date' },
+    { key: 'endDate', label: 'End Date' },
+    { key: 'paymentStatus', label: 'Payment Status' },
+    { key: 'status', label: 'Status' },
+  ];
+
+  // Dummy history data (replace with real API data if available)
+  const historyData = [
+    { consumerName: 'John Doe', startDate: '2023-01-01', endDate: '2023-06-30', paymentStatus: 'Completed', status: 'Completed' },
+    { consumerName: 'Jane Smith', startDate: '2023-07-01', endDate: '2023-12-31', paymentStatus: 'Overdue', status: 'Completed' },
+    { consumerName: 'Current Consumer', startDate: '2024-01-01', endDate: 'Present', paymentStatus: 'Pending', status: 'Active' },
+  ];
+
+  if (loading) return <div className="p-8 text-center">Loading meter details...</div>;
+  if (error) return <div className="p-8 text-center text-danger">{error}</div>;
 
   return (
     <div className="min-h-screen">
@@ -104,14 +135,13 @@ const MeterDetails: React.FC = () => {
           },
         ]}
       />
-      
       {/* Custom sections outside of PageC */}
       <div className="mt-6 space-y-6">
         {/* Meter Information Section */}
         <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-6">
           <h2 className="text-xl font-semibold text-neutral-darker mb-4">Meter Information</h2>
           <div className="grid grid-cols-5 gap-4">
-            {info.map((infoItem, index) => (
+            {meterInfo.map((infoItem, index) => (
               <div key={index} className="mb-2">
                 <div className="text-neutral text-sm mb-1">{infoItem.label}</div>
                 <div className="text-base font-semibold text-neutral-darker">{infoItem.value}</div>
@@ -119,7 +149,6 @@ const MeterDetails: React.FC = () => {
             ))}
           </div>
         </div>
-        
         {/* Meter History Section */}
         <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl p-4">
           <h2 className="text-xl font-semibold text-neutral-darker mb-4">Meter History</h2>

@@ -105,6 +105,11 @@ const tableColumns = [
 export default function Prepaid() {
     const navigate = useNavigate();
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
+    
+    // Brand green icon style
+    const brandGreenIconStyle = {
+        filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+    };
 
     const handleTimeRangeChange = (range: string) => {
         setSelectedTimeRange(range);
@@ -183,7 +188,10 @@ export default function Prepaid() {
                                 gap: 'gap-6',
                                 columns: cardData.map(card => ({
                                     name: 'Card',
-                                    props: card
+                                    props: {
+                                        ...card,
+                                        iconStyle: brandGreenIconStyle
+                                    }
                                 }))
                             }
                         ]
@@ -222,7 +230,10 @@ export default function Prepaid() {
                                 gap: 'gap-6',
                                 columns: rechargeData.map(card => ({
                                     name: 'Card',
-                                    props: card
+                                    props: {
+                                        ...card,
+                                        iconStyle: brandGreenIconStyle
+                                    }
                                 }))
                             }
                         ]
