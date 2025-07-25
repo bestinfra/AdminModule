@@ -536,7 +536,103 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
           <div className="flex justify-between items-start">
             <div className="flex flex-col gap-4 w-full">
               <h3 className="text-sm font-semibold text-primary">Modules</h3>
-              <p>{(formData.modules || []).length > 0 ? formData.modules.join(', ') : 'No modules selected'}</p>
+              <div className="space-y-2">
+                {(formData.modules || []).length > 0 ? (
+                  (() => {
+                    // Define parent-child relationships
+                    const parentChildMap: Record<string, string[]> = {
+                      'dashboard': ['consumer_dashboard', 'dtr_dashboard'],
+                      'bills': ['prepaid', 'postpaid']
+                    };
+                    
+                    // Debug logging
+                    console.log('FinalizeAndDeploy - All modules:', formData.modules);
+                    console.log('FinalizeAndDeploy - Parent-child map:', parentChildMap);
+                    
+                    // Helper: check if a module is a parent
+                    const isParent = (module: string) => parentChildMap[module] !== undefined;
+                    
+                    // Helper: check if a module is a child
+                    const isChild = (module: string) => {
+                      return Object.values(parentChildMap).some(children => children.includes(module));
+                    };
+                    
+                    // Helper: get parent of a child module
+                    const getParent = (childModule: string) => {
+                      for (const [parent, children] of Object.entries(parentChildMap)) {
+                        if (children.includes(childModule)) return parent;
+                      }
+                      return null;
+                    };
+                    
+                    // Helper: get children of a parent module
+                    const getChildren = (parentModule: string) => parentChildMap[parentModule] || [];
+                    
+                    // Filter out children from top-level list if their parent is selected
+                    const mainModules = (formData.modules || []).filter((module: string) => {
+                      if (isChild(module)) {
+                        const parent = getParent(module);
+                        const shouldInclude = parent ? !formData.modules.includes(parent) : true;
+                        console.log(`FinalizeAndDeploy - Module ${module}: parent=${parent}, shouldInclude=${shouldInclude}`);
+                        return shouldInclude;
+                      }
+                      return true;
+                    });
+                    
+                    console.log('FinalizeAndDeploy - Main modules after filtering:', mainModules);
+                    
+                    return (
+                      <div className="space-y-1">
+                        {mainModules.map((module: string, index: number) => {
+                          if (isParent(module)) {
+                            const children = getChildren(module);
+                            const selectedChildren = children.filter(child => formData.modules.includes(child));
+                            
+                            return (
+                              <div key={index}>
+                                <div className="font-medium text-gray-700 dark:text-gray-300">
+                                  {module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')}
+                                </div>
+                                {/* Show sub-menus if selected */}
+                                {selectedChildren.length > 0 && (
+                                  <div className="ml-6 space-y-1">
+                                    {selectedChildren.map((child: string, childIndex: number) => (
+                                      <div key={childIndex} className="flex items-center gap-2">
+                                        <span className="text-xs text-gray-500">└─</span>
+                                        <span className="text-sm text-gray-700 dark:text-gray-300">
+                                          {child.charAt(0).toUpperCase() + child.slice(1).replace(/_/g, ' ')}
+                                        </span>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          }
+                          
+                          // Show child modules as main menu if their parent is not selected
+                          if (isChild(module)) {
+                            return (
+                              <div key={index} className="text-sm text-gray-700 dark:text-gray-300">
+                                {module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')}
+                              </div>
+                            );
+                          }
+                          
+                          // Show other modules as main menu
+                          return (
+                            <div key={index} className="text-sm text-gray-700 dark:text-gray-300">
+                              {module.charAt(0).toUpperCase() + module.slice(1).replace(/_/g, ' ')}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    );
+                  })()
+                ) : (
+                  <p className="text-gray-500">No modules selected</p>
+                )}
+              </div>
             </div>
 
 

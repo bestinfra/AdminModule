@@ -106,6 +106,8 @@ function AppContent() {
       {{assetManagementCase}}
       {{meterManagementCase}}
       {{dtrCase}}
+      {{consumerDashboardCase}}
+      {{dtrDashboardCase}}
       default:
         return 'Dashboard';
     }
@@ -136,13 +138,53 @@ function AppContent() {
   
 // Generate dynamic menu items based on selected modules
 const generateMenuItems = (modules = []) => {
-  const mandatoryMenus = [
-    {
+  const mandatoryMenus = [];
+
+  // Handle Dashboard with dynamic submenu logic
+  const hasDashboard = modules.includes('dashboard');
+  
+  // Define all possible dashboard submenu items
+  const dashboardSubmenuItems = [
+    { key: 'consumer_dashboard', title: 'Consumer Dashboard', link: '/consumer-dashboard', icon: '/icons/dashboard.svg' },
+    { key: 'dtr_dashboard', title: 'DTR Dashboard', link: '/dtr-dashboard', icon: '/icons/transformer.svg' },
+    // Add more dashboard submenu items here in the future
+    // { key: 'analytics_dashboard', title: 'Analytics Dashboard', link: '/analytics-dashboard', icon: '/icons/analytics.svg' },
+    // { key: 'reports_dashboard', title: 'Reports Dashboard', link: '/reports-dashboard', icon: '/icons/reports.svg' },
+  ];
+  
+  // Check which dashboard submenu items are selected
+  const selectedDashboardItems = dashboardSubmenuItems.filter(item => modules.includes(item.key));
+  
+  if (hasDashboard && selectedDashboardItems.length > 0) {
+    // Create Dashboard with submenu
+    const dashboardSubmenu = selectedDashboardItems.map(item => ({
+      title: item.title,
+      link: item.link,
+    }));
+    
+    mandatoryMenus.push({
+      title: 'Dashboard',
+      icon: '/icons/dashboard.svg',
+      hasSubmenu: true,
+      submenu: dashboardSubmenu,
+    });
+  } else if (selectedDashboardItems.length > 0) {
+    // Show individual dashboard items as main menus
+    selectedDashboardItems.forEach(item => {
+      mandatoryMenus.push({
+        title: item.title,
+        icon: item.icon,
+        link: item.link,
+      });
+    });
+  } else {
+    // Default dashboard
+    mandatoryMenus.push({
       title: 'Dashboard',
       icon: '/icons/dashboard.svg',
       link: '/dashboard',
-    },
-  ];
+    });
+  }
 
   // Add Consumers only if consumer module is selected
   if (modules.includes('consumer')) {
@@ -279,6 +321,8 @@ const menuItems = generateMenuItems({{modulesArray}});
                   <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
                     {/* All protected routes here */}
                     <Routes>
+                      <Route path="/" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
                       {{consumerRoute}}
                       {{billsPrepaidRoute}}
                       {{billsPostpaidRoute}}
@@ -291,6 +335,8 @@ const menuItems = generateMenuItems({{modulesArray}});
                       {{usersRoute}}
                       {{roleManagementRoute}}
                       {{dtrRoute}}
+                      {{consumerDashboardRoute}}
+                      {{dtrDashboardRoute}}
                       <Route path="*" element={
                         <div className="p-6">
                           <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -313,6 +359,8 @@ const menuItems = generateMenuItems({{modulesArray}});
                                 {{usersError}}
                                 {{roleManagementError}}
                                 {{dtrError}}
+                                {{consumerDashboardError}}
+                                {{dtrDashboardError}}
                               </ul>
                             </div>
                           </div>
