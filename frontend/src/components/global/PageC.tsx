@@ -23,6 +23,7 @@ import Stepper from './Stepper';
 import FormContainer from './FormContainer';
 import SectionHeader from './SectionHeader';
 import { Form } from '../Form';
+import OrgChartAlt from './OrgChartAlt';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
@@ -38,6 +39,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     DatePicker,
     ExpandableTable,
     OrgChart,
+    OrgChartAlt,
     Holder,
     LoadingSpinner,
     Heading,
