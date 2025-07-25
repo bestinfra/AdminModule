@@ -1,5 +1,5 @@
 {
-  "nextPort": 4078,
+  "nextPort": 4076,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -246,30 +246,20 @@
       "deployedAt": "2025-07-24T14:41:56.052Z",
       "path": "C:\\xampp\\htdocs\\dtc123-backend"
     },
-    "chandrasekhar": {
+    "tgnpdcl122222": {
       "port": 4073,
-      "deployedAt": "2025-07-24T17:31:16.984Z",
-      "path": "C:\\xampp\\htdocs\\chandrasekhar-backend"
+      "deployedAt": "2025-07-24T17:03:22.400Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl122222-backend"
     },
-    "sai-naga": {
+    "tgnpdcl007": {
       "port": 4074,
-      "deployedAt": "2025-07-24T17:48:38.832Z",
-      "path": "C:\\xampp\\htdocs\\sai-naga-backend"
+      "deployedAt": "2025-07-24T17:07:51.095Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl007-backend"
     },
-    "applica": {
+    "tgnpdcl1123": {
       "port": 4075,
-      "deployedAt": "2025-07-24T18:12:04.417Z",
-      "path": "C:\\xampp\\htdocs\\applica-backend"
-    },
-    "chandra": {
-      "port": 4076,
-      "deployedAt": "2025-07-24T18:22:55.399Z",
-      "path": "C:\\xampp\\htdocs\\chandra-backend"
-    },
-    "chandrikadhay": {
-      "port": 4077,
-      "deployedAt": "2025-07-24T18:28:22.088Z",
-      "path": "C:\\xampp\\htdocs\\chandrikadhay-backend"
+      "deployedAt": "2025-07-24T21:05:20.893Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl1123-backend"
     }
   }
 }
