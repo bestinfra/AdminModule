@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import Tree from 'react-d3-tree';
+// import '@/styles/custom.css';
 
 interface HierarchyNode {
     hierarchy_id: string | number;
@@ -62,30 +63,10 @@ const OrgChartAlt: React.FC<OrgChartAltProps> = ({
                     zoomable={true}
                     separation={{ siblings: 1.5, nonSiblings: 2 }}
                     pathFunc="elbow"
-                    styles={{
-                        nodes: {
-                            node: {
-                                circle: { fill: '#2563eb', r: 10 },
-                                name: { fontSize: '1rem', fill: '#1e293b' },
-                                attributes: {
-                                    fontSize: '0.8rem',
-                                    fill: '#64748b',
-                                },
-                            },
-                            leafNode: {
-                                circle: { fill: '#38bdf8', r: 10 },
-                                name: { fontSize: '1rem', fill: '#0f172a' },
-                                attributes: {
-                                    fontSize: '0.8rem',
-                                    fill: '#64748b',
-                                },
-                            },
-                        },
-                        links: {
-                            stroke: '#94a3b8',
-                            strokeWidth: 2,
-                        },
-                    }}
+                    rootNodeClassName="orgchart-root-node"
+                    branchNodeClassName="orgchart-branch-node"
+                    leafNodeClassName="orgchart-leaf-node"
+                    // To style nodes/links, use the above classNames in your CSS
                 />
             )}
         </div>
