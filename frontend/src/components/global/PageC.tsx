@@ -11,6 +11,7 @@ import Search from './Search';
 import DatePicker from './DatePicker';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
+// import OrgChartAlt from './OrgChartAlt';
 import Holder from './Holder';
 import LoadingSpinner from './LoadingSpinner';
 import Heading from './Heading';
@@ -20,6 +21,7 @@ import PieChart from '../../graphs/PieChart';
 import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
+import SectionHeader from './SectionHeader';
 import { Form } from '../Form';
 import IssueCardDetails from '../Ticket/IssueCardDetails';
 import ChatInput from '../Ticket/ChatInput';
@@ -51,6 +53,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Stepper,
     FormContainer,
     Form,
+    SectionHeader,
     IssueCardDetails,
     ChatInput,
     TicketInfoCard,

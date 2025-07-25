@@ -1,5 +1,5 @@
 {
-  "nextPort": 4067,
+  "nextPort": 4076,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -215,6 +215,51 @@
       "port": 4066,
       "deployedAt": "2025-07-24T07:52:54.415Z",
       "path": "C:\\xampp\\htdocs\\manager-backend"
+    },
+    "zxcvb": {
+      "port": 4067,
+      "deployedAt": "2025-07-24T12:03:30.859Z",
+      "path": "C:\\xampp\\htdocs\\zxcvb-backend"
+    },
+    "asdfg": {
+      "port": 4068,
+      "deployedAt": "2025-07-24T12:20:44.356Z",
+      "path": "C:\\xampp\\htdocs\\asdfg-backend"
+    },
+    "trewq": {
+      "port": 4069,
+      "deployedAt": "2025-07-24T13:18:00.578Z",
+      "path": "C:\\xampp\\htdocs\\trewq-backend"
+    },
+    "lkjhg": {
+      "port": 4070,
+      "deployedAt": "2025-07-24T13:46:16.943Z",
+      "path": "C:\\xampp\\htdocs\\lkjhg-backend"
+    },
+    "dfghjk": {
+      "port": 4071,
+      "deployedAt": "2025-07-24T14:27:41.112Z",
+      "path": "C:\\xampp\\htdocs\\dfghjk-backend"
+    },
+    "dtc123": {
+      "port": 4072,
+      "deployedAt": "2025-07-24T14:41:56.052Z",
+      "path": "C:\\xampp\\htdocs\\dtc123-backend"
+    },
+    "tgnpdcl122222": {
+      "port": 4073,
+      "deployedAt": "2025-07-24T17:03:22.400Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl122222-backend"
+    },
+    "tgnpdcl007": {
+      "port": 4074,
+      "deployedAt": "2025-07-24T17:07:51.095Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl007-backend"
+    },
+    "tgnpdcl1123": {
+      "port": 4075,
+      "deployedAt": "2025-07-24T21:05:20.893Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl1123-backend"
     }
   }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
 
@@ -8,82 +8,78 @@ const ICON_FILTER_STYLE = {
     filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
 };
 
-
-
 const METER_STATUS_DATA = [
     { value: 284, name: 'Communicating' },
     { value: 8, name: 'Non-Communicating' },
 ];
 
 const Dashboard: React.FC = () => {
-    const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>('Daily');
+    const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>(
+        'Daily'
+    );
     const navigate = useNavigate();
 
     const handleTotalConsumersClick = () => navigate('/consumers');
-    const handleHighUsageConsumersClick = () => navigate('/consumers/high-usage');
-
-
+    const handleHighUsageConsumersClick = () =>
+        navigate('/consumers/high-usage');
 
     const [consumerStatsData] = useState([
         {
             id: 1,
-                                                title: 'Total Consumers',
-                                                value: '292',
-                                                icon: '/icons/account.svg',
-                                                subtitle1: '284 Active',
-                                                subtitle2: '8 In-Active',
-                                                iconStyle: ICON_FILTER_STYLE,
-                                                onValueClick: handleTotalConsumersClick
-                                        },
-                                        {
+            title: 'Total Consumers',
+            value: '292',
+            icon: '/icons/account.svg',
+            subtitle1: '284 Active',
+            subtitle2: '8 In-Active',
+            iconStyle: ICON_FILTER_STYLE,
+            onValueClick: handleTotalConsumersClick,
+        },
+        {
             id: 2,
-                                                title: 'Prepaid Consumers',
-                                                value: '2',
-                                                icon: '/icons/coins.svg',
-                                                subtitle1: '0 Disconnected',
-                                                subtitle2: '',
-                                                iconStyle: ICON_FILTER_STYLE
-                                        },
-                                        {
+            title: 'Prepaid Consumers',
+            value: '2',
+            icon: '/icons/coins.svg',
+            subtitle1: '0 Disconnected',
+            subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
             id: 3,
-                                                title: 'Postpaid Consumers',
-                                                value: '290',
-                                                icon: '/icons/document.svg',
-                                                subtitle1: '11 Disconnected',
-                                                subtitle2: '',
-                                                iconStyle: ICON_FILTER_STYLE
-                                        },
-                                        {
+            title: 'Postpaid Consumers',
+            value: '290',
+            icon: '/icons/document.svg',
+            subtitle1: '11 Disconnected',
+            subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
             id: 4,
-                                                title: 'Overdue Amount',
-                                                value: '2590925.47',
-                                                icon: '/icons/bills.svg',
-                                                subtitle1:
-                                                    '1395 Overdue Consumers',
-                                                subtitle2: '',
-                                                iconStyle: ICON_FILTER_STYLE
-                                        },
-                                        {
+            title: 'Overdue Amount',
+            value: '2590925.47',
+            icon: '/icons/bills.svg',
+            subtitle1: '1395 Overdue Consumers',
+            subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
             id: 5,
-                                                title: 'Total Outstanding (Rs.)',
-                                                value: '2590925.47',
-                                                icon: '/icons/bills.svg',
-                                                subtitle1:
-                                                    '614.98% of Total Billed Amount',
-                                                subtitle2: '',
-                                                iconStyle: ICON_FILTER_STYLE
-                                        },
-                                        {
+            title: 'Total Outstanding (Rs.)',
+            value: '2590925.47',
+            icon: '/icons/bills.svg',
+            subtitle1: '614.98% of Total Billed Amount',
+            subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
             id: 6,
-                                                title: 'High-Usage Consumers',
-                                                value: '139',
-                                                icon: '/icons/graph-bar.svg',
-                                                subtitle1:
-                                                    '140.09 kWh Average Consumption',
-                                                subtitle2: '',
-                                                iconStyle: ICON_FILTER_STYLE,
-                                                onValueClick: handleHighUsageConsumersClick
-                                            }
+            title: 'High-Usage Consumers',
+            value: '139',
+            icon: '/icons/graph-bar.svg',
+            subtitle1: '140.09 kWh Average Consumption',
+            subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
+            onValueClick: handleHighUsageConsumersClick,
+        },
     ]);
 
     const [billingData] = useState([
@@ -96,7 +92,7 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: 2.4,
-            iconStyle: ICON_FILTER_STYLE
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 2,
@@ -107,7 +103,7 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: -18.3,
-            iconStyle: ICON_FILTER_STYLE
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 3,
@@ -118,7 +114,7 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: 0,
-            iconStyle: ICON_FILTER_STYLE
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 4,
@@ -129,8 +125,8 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: 0,
-            iconStyle: ICON_FILTER_STYLE
-        }
+            iconStyle: ICON_FILTER_STYLE,
+        },
     ]);
 
     const [overdueConsumersData] = useState([
@@ -138,32 +134,32 @@ const Dashboard: React.FC = () => {
             uid: '2025UIDC089',
             consumerName: 'I Lakshmana Rao',
             flatNo: 'C089',
-            overdue: '32004.12'
+            overdue: '32004.12',
         },
         {
             uid: '2025UIDC088',
             consumerName: 'G Ramaraju',
             flatNo: 'C088',
-            overdue: '22613.91'
+            overdue: '22613.91',
         },
         {
             uid: '2025UIDC089',
             consumerName: 'I Lakshmana Rao',
             flatNo: 'C089',
-            overdue: '21679.76'
+            overdue: '21679.76',
         },
         {
             uid: '2025UIDC089',
             consumerName: 'I Lakshmana Rao',
             flatNo: 'C089',
-            overdue: '20745.27'
+            overdue: '20745.27',
         },
         {
             uid: '2025UIDC089',
             consumerName: 'I Lakshmana Rao',
             flatNo: 'C089',
-            overdue: '19731.31'
-        }
+            overdue: '19731.31',
+        },
     ]);
 
     const [disconnectedConsumersData] = useState([
@@ -171,60 +167,75 @@ const Dashboard: React.FC = () => {
             uid: '2025UIDA006',
             consumerName: 'T Vidyasagar',
             flatNo: 'A006',
-            overdue: '4339.14'
+            overdue: '4339.14',
         },
         {
             uid: '2025UIDA009',
             consumerName: 'Reading Room',
             flatNo: 'A009',
-            overdue: '3802.83'
+            overdue: '3802.83',
         },
         {
             uid: '2025UIDA008',
             consumerName: 'D Sudhakar Gupta',
             flatNo: 'A008',
-            overdue: '2778.76'
+            overdue: '2778.76',
         },
         {
             uid: '2025UIDA011',
             consumerName: 'M Nagaphani',
             flatNo: 'A011',
-            overdue: '2627.91'
+            overdue: '2627.91',
         },
         {
             uid: '2025UIDA010',
             consumerName: 'M Ramakrishna',
             flatNo: 'A010',
-            overdue: '2244.91'
-        }
+            overdue: '2244.91',
+        },
     ]);
 
     const [overdueConsumersColumns] = useState([
         { key: 'uid', label: 'UID' },
         { key: 'consumerName', label: 'Consumer Name' },
         { key: 'flatNo', label: 'Flat No' },
-        { key: 'overdue', label: 'Overdue (Rs.)' }
+        { key: 'overdue', label: 'Overdue (Rs.)' },
     ]);
 
     const [disconnectedConsumersColumns] = useState([
         { key: 'uid', label: 'UID' },
         { key: 'consumerName', label: 'Consumer Name' },
         { key: 'flatNo', label: 'Flat No' },
-        { key: 'overdue', label: 'Overdue (Rs.)' }
+        { key: 'overdue', label: 'Overdue (Rs.)' },
     ]);
 
     const [billingChartData] = useState({
         xAxisData: [
-            'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
         ],
         seriesData: [
             {
                 name: 'Bills Generated',
-                data: [260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295],
+                data: [
+                    260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
+                ],
             },
             {
                 name: 'Paid',
-                data: [240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270],
+                data: [
+                    240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
+                ],
             },
             {
                 name: 'Pending',
@@ -236,57 +247,58 @@ const Dashboard: React.FC = () => {
             },
         ],
         seriesColors: [
-            '#3B82F6',  // Blue for Bills Generated
-            '#10B981',  // Green for Paid
-            '#EF4444',  // Red for Pending
-            '#F97316',  // Orange for Overdue
+            '#3B82F6', // Blue for Bills Generated
+            '#10B981', // Green for Paid
+            '#EF4444', // Red for Pending
+            '#F97316', // Orange for Overdue
         ],
     });
 
     return (
-        <Page
-            sections={[
-                {
-                    layout: {
-                        type: 'grid',
-                        gap: 'gap-6',
-                        columns: 3,
-                        // className: 'items-stretch',
-                        rows: [
-                            {
-                                layout: 'grid',
-                                gridColumns: 3,
-                                gridRows: 2,
-                                bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
-                                gap: 'gap-4',
-                                span: { col: 2, row: 1 },
-                                // className: 'w-[60%] h-full', // width 70%, take full height
-                                columns: [
-                                    {
-                                        name: 'Heading',
-                                        props: {
-                                            text: 'Consumer Statistics',
-                                            level: 2,
-                                            size: 'md',
-                                            variant: 'primary',
-                                            weight: 'bold',
-                                            align: 'left',
+        <Suspense fallback={<div>Loading...</div>}>
+            <Page
+                sections={[
+                    {
+                        layout: {
+                            type: 'grid',
+                            gap: 'gap-6',
+                            columns: 3,
+                            // className: 'items-stretch',
+                            rows: [
+                                {
+                                    layout: 'grid',
+                                    gridColumns: 3,
+                                    gridRows: 2,
+                                    bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
+                                    gap: 'gap-4',
+                                    span: { col: 2, row: 1 },
+                                    // className: 'w-[60%] h-full', // width 70%, take full height
+                                    columns: [
+                                        {
+                                            name: 'Heading',
+                                            props: {
+                                                text: 'Consumer Statistics',
+                                                level: 2,
+                                                size: 'md',
+                                                variant: 'primary',
+                                                weight: 'bold',
+                                                align: 'left',
+                                            },
+                                            span: { col: 3, row: 1 },
                                         },
-                                        span: { col: 3, row: 1 },
-                                    },
-                                    ...consumerStatsData.map((stat) => ({
-                                        name: 'Card',
-                                        props: {
-                                            title: stat.title,
-                                            value: stat.value,
-                                            icon: stat.icon,
-                                            subtitle1: stat.subtitle1,
-                                            subtitle2: stat.subtitle2,
-                                            iconStyle: stat.iconStyle,
-                                            onValueClick: stat.onValueClick,
-                                        },
-                                    })),
-                                ],
+                                        ...consumerStatsData.map((stat) => ({
+                                            name: 'Card',
+                                            props: {
+                                                title: stat.title,
+                                                value: stat.value,
+                                                icon: stat.icon,
+                                                subtitle1: stat.subtitle1,
+                                                subtitle2: stat.subtitle2,
+                                                iconStyle: stat.iconStyle,
+                                                onValueClick: stat.onValueClick,
+                                            },
+                                        })),
+                                    ],
                                 },
                                 {
                                     layout: 'grid',
@@ -328,23 +340,24 @@ const Dashboard: React.FC = () => {
                                             span: { col: 1, row: 1 },
                                             align: 'end',
                                         },
-                                    ...billingData.map((billing) => ({
+                                        ...billingData.map((billing) => ({
                                             name: 'Card',
                                             props: {
-                                            title: billing.title,
-                                            value: billing.value,
-                                            icon: billing.icon,
-                                            subtitle1: billing.subtitle1,
-                                            subtitle2: billing.subtitle2,
-                                            showTrend: billing.showTrend,
-                                            comparisonValue: billing.comparisonValue,
-                                            iconStyle: billing.iconStyle,
-                                        },
-                                    })),
-                                ],
-                            },
-                        ],
-                    },
+                                                title: billing.title,
+                                                value: billing.value,
+                                                icon: billing.icon,
+                                                subtitle1: billing.subtitle1,
+                                                subtitle2: billing.subtitle2,
+                                                showTrend: billing.showTrend,
+                                                comparisonValue:
+                                                    billing.comparisonValue,
+                                                iconStyle: billing.iconStyle,
+                                            },
+                                        })),
+                                    ],
+                                },
+                            ],
+                        },
                     },
                     {
                         layout: {
@@ -410,18 +423,26 @@ const Dashboard: React.FC = () => {
                                         {
                                             name: 'BarChart',
                                             props: {
-                                                xAxisData: billingChartData.xAxisData,
-                                                seriesData: billingChartData.seriesData,
-                                                seriesColors: billingChartData.seriesColors,
+                                                xAxisData:
+                                                    billingChartData.xAxisData,
+                                                seriesData:
+                                                    billingChartData.seriesData,
+                                                seriesColors:
+                                                    billingChartData.seriesColors,
                                                 height: '400px',
                                                 showHeader: true,
-                                                headerTitle: 'Billing vs Collection',
+                                                headerTitle:
+                                                    'Billing vs Collection',
                                                 dateRange: '2024',
                                                 showDownloadButton: true,
                                                 showViewToggle: true,
-                                                viewToggleOptions: ['Graph', 'Table'],
+                                                viewToggleOptions: [
+                                                    'Graph',
+                                                    'Table',
+                                                ],
                                                 showTableView: true,
-                                                ariaLabel: 'Monthly billing statistics chart',
+                                                ariaLabel:
+                                                    'Monthly billing statistics chart',
                                                 yAxisMax: 300,
                                                 yAxisStep: 50,
                                             },
@@ -454,8 +475,9 @@ const Dashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
-                                            data: overdueConsumersData,
-                                            columns: overdueConsumersColumns,
+                                                data: overdueConsumersData,
+                                                columns:
+                                                    overdueConsumersColumns,
                                                 loading: false,
                                                 searchable: true,
                                                 pagination: true,
@@ -517,8 +539,9 @@ const Dashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
-                                            data: disconnectedConsumersData,
-                                            columns: disconnectedConsumersColumns,
+                                                data: disconnectedConsumersData,
+                                                columns:
+                                                    disconnectedConsumersColumns,
                                                 loading: false,
                                                 searchable: true,
                                                 pagination: true,
@@ -568,6 +591,7 @@ const Dashboard: React.FC = () => {
                     },
                 ]}
             />
+        </Suspense>
     );
 };
 

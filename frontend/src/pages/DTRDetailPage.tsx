@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import Card from '@components/global/Card'
-import Page from '@components/global/PageC';
+import Card from '@components/global/Card';
+import Page from '@/components/global/PageC';
 import PageHeader from '@components/global/PageHeader';
-
 
 const mockDTRData = {
     name: 'TGNP_DTR-03',
@@ -147,7 +146,8 @@ const DTRDetailPage = () => {
                                                     Location
                                                 </span>
                                                 <span className="text-base text-main dark:text-white font-medium">
-                                                    {dtr.location.lat}, {dtr.location.lng}
+                                                    {dtr.location.lat},{' '}
+                                                    {dtr.location.lng}
                                                 </span>
                                             </div>
                                         </div>
@@ -180,9 +180,11 @@ const DTRDetailPage = () => {
                                 props: {
                                     children: (
                                         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                                            {dtr.stats.map((stat: any, idx: number) => (
-                                                <Card key={idx} {...stat} />
-                                            ))}
+                                            {dtr.stats.map(
+                                                (stat: any, idx: number) => (
+                                                    <Card key={idx} {...stat} />
+                                                )
+                                            )}
                                         </div>
                                     ),
                                 },
@@ -213,8 +215,14 @@ const DTRDetailPage = () => {
                                 props: {
                                     columns: [
                                         { key: 'sNo', label: 'S No' },
-                                        { key: 'feederName', label: 'Feeder Name' },
-                                        { key: 'loadStatus', label: 'Load Status' },
+                                        {
+                                            key: 'feederName',
+                                            label: 'Feeder Name',
+                                        },
+                                        {
+                                            key: 'loadStatus',
+                                            label: 'Load Status',
+                                        },
                                         {
                                             key: 'actions',
                                             label: 'Actions',
@@ -242,7 +250,8 @@ const DTRDetailPage = () => {
                                     initialRowsPerPage: 5,
                                     emptyMessage: 'No Feeders Found',
                                     showActions: false,
-                                    onRowClick: (row: any) => navigate(`/feeders/${row.feederName}`),
+                                    onRowClick: (row: any) =>
+                                        navigate(`/feeders/${row.feederName}`),
                                 },
                             },
                         ],
@@ -272,8 +281,14 @@ const DTRDetailPage = () => {
                                     columns: [
                                         { key: 'alertId', label: 'Alert ID' },
                                         { key: 'type', label: 'Type' },
-                                        { key: 'feederName', label: 'Feeder Name' },
-                                        { key: 'occuredOn', label: 'Occured On' },
+                                        {
+                                            key: 'feederName',
+                                            label: 'Feeder Name',
+                                        },
+                                        {
+                                            key: 'occuredOn',
+                                            label: 'Occured On',
+                                        },
                                     ],
                                     data: [],
                                     searchable: true,
