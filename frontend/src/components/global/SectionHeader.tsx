@@ -1,10 +1,12 @@
 import React from 'react';
 import TimeRangeSelector from './TimeRangeSelector';
+import LastComm from './LastComm';
 // Import other components you want to support as rightComponent
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
     TimeRangeSelector,
+    LastComm,
     // Add more components here if needed
 };
 

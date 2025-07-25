@@ -95,6 +95,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dtr.svg',
                 link: '/dtr-dashboard',
             },
+            {
+                title:'Feeders',
+                icon:'/icons/feeder.svg',
+                link:'/feeders'
+            }
 
         ],
     },

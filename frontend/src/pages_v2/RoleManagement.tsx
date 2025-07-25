@@ -28,7 +28,7 @@ export default function RoleManagement() {
     const navigate = useNavigate();
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [_error, setError] = useState<string | null>(null);
     const [selectedRole, setSelectedRole] = useState<Role | null>(null);
     const [isAddingRole, setIsAddingRole] = useState(false);
     const [newRole, setNewRole] = useState<NewRole>({ name: '' });
@@ -383,46 +383,46 @@ export default function RoleManagement() {
                         },
                     },
                     // Error Section (if any)
-                    ...(error
-                        ? [
-                              {
-                                  layout: {
-                                      type: 'column' as const,
-                                      gap: 'gap-6',
-                                      rows: [
-                                          {
-                                              layout: 'row' as const,
-                                              columns: [
-                                                  {
-                                                      name: 'Card',
-                                                      props: {
-                                                          className:
-                                                              'p-4 bg-red-50 border border-red-200',
-                                                          children: (
-                                                              <div className="flex items-center justify-between">
-                                                                  <p className="text-red-600">
-                                                                      {error}
-                                                                  </p>
-                                                                  <button
-                                                                      onClick={() =>
-                                                                          setError(
-                                                                              null
-                                                                          )
-                                                                      }
-                                                                      className="text-red-400 hover:text-red-600">
-                                                                      ×
-                                                                  </button>
-                                                              </div>
-                                                          ),
-                                                      },
-                                                  },
-                                              ],
-                                          },
-                                      ],
-                                  },
-                              },
-                          ]
-                        : []),
+                    // ...(error
+                    //     ? [
+                    //           {
+                    //               layout: {
+                    //                   type: 'column' as const,
+                    //                   gap: 'gap-6',
+                    //                   rows: [
+                    //                       {
+                    //                           layout: 'row' as const,
+                    //                           columns: [
+                    //                               {
+                    //                                   name: 'Card',
+                    //                                   props: {
+                    //                                       className:
+                    //                                           'p-4 bg-red-50 border border-red-200',
+                    //                                       children: (
+                    //                                           <div className="flex items-center justify-between">
+                    //                                               <p className="text-red-600">
+                    //                                                   {error}
+                    //                                               </p>
+                    //                                               <button
+                    //                                                   onClick={() =>
+                    //                                                       setError(
+                    //                                                           null
+                    //                                                       )
+                    //                                                   }
+                    //                                                   className="text-red-400 hover:text-red-600">
+                    //                                                   ×
+                    //                                               </button>
+                    //                                           </div>
+                    //                                       ),
+                    //                                   },
+                    //                               },
+                    //                           ],
+                    //                       },
+                    //                   ],
+                    //               },
+                    //           },
+                    //       ]
+                    //     : []),
                     // Main Content Section
                     {
                         layout: {

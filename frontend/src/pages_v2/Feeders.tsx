@@ -1,13 +1,6 @@
 import { useState, useEffect } from 'react';
 import Page from '@/components/global/PageC';
 
-const feederInfo = {
-    name: 'D1F1(32500114)',
-    rating: '25 kVA',
-    address: 'Waddepally, Warangal, Telangana, India, 506001',
-    lastComm: '30/06/2025 22:31:38',
-};
-
 const stats = [
     { title: 'R-Phase Voltage', value: '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts' },
     { title: 'Y-Phase Voltage', value: '255.089', icon: '/icons/y-phase-voltage.svg', subtitle1: 'Volts' },
@@ -75,6 +68,14 @@ const Feeders = () => {
         },
     ]);
 
+    // Replace feederDescriptions and feederInfo with feederData and lastComm   
+    const [feederData, _setFeederData] = useState([
+        { title: 'Feeder Name', description: 'D1F1(32500114)' },
+        { title: 'Rating', description: '25.00 kVA' },
+        { title: 'Address', description: 'Waddepally, Warangal, Telangana, India, 506001' },
+    ]);
+    const lastComm = '30/06/2025 22:31:38';
+
     // Use setters to avoid unused variable warnings
     useEffect(() => {
         // No-op usage to avoid TS warnings
@@ -107,35 +108,33 @@ const Feeders = () => {
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             layout: 'horizontal',
-                                            rightComponent: { name: 'LastComm', props: { value: feederInfo.lastComm } },
+                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
                                         },
                                     },
-                                   
                                 ],
                             },
-                           
                             {
                                 layout: 'grid' as const,
                                 gridColumns: 3,
-                                span:{col:3,row:1},
-                                columns: [
-                                    {
-                                        name: 'SectionHeader',
-                                        props: { title: 'Feeder Name', value: feederInfo.name, titleLevel: 2, titleSize: 'md', titleVariant: 'primary', titleWeight: 'bold', titleAlign: 'left', layout: 'veritical', rightComponent: { name: 'LastComm', props: { value: feederInfo.lastComm } } },
-                                        span: { col: 1, row: 1 },
+                                span: { col: 3, row: 1 },
+                                columns: feederData.map((item) => ({
+                                    name: 'SectionHeader',
+                                    props: {
+                                        title: item.title,
+                                        value: item.description,
+                                        titleLevel: 2,
+                                        titleSize: 'md',
+                                        titleVariant: 'primary',
+                                        titleWeight: 'bold',
+                                        titleAlign: 'left',
+                                        layout: 'vertical',
+                                        rightComponent: {
+                                            name: 'LastComm',
+                                            props: { description: item.description },
+                                        },
                                     },
-                                    {
-                                        name: 'SectionHeader',
-                                        props: { title: 'Rating', value: feederInfo.rating, titleLevel: 2, titleSize: 'md', titleVariant: 'primary', titleWeight: 'bold', titleAlign: 'left', layout: 'veritical', rightComponent: { name: 'LastComm', props: { value: feederInfo.lastComm } } },
-                                        span: { col: 1, row: 1 },
-                                    },
-                                    {
-                                        name: 'SectionHeader',
-                                        props: { title: 'Address', value: feederInfo.address, titleLevel: 2, titleSize: 'md', titleVariant: 'primary', titleWeight: 'bold', titleAlign: 'left', layout: 'veritical', rightComponent: { name: 'LastComm', props: { value: feederInfo.lastComm } } },
-                                        span: { col: 1, row: 1 },
-                                    },
-                                   
-                                ],
+                                    span: { col: 1, row: 1 },
+                                })),
                             },
                         ],
                     },
@@ -159,7 +158,7 @@ const Feeders = () => {
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             className: 'w-full',
-                                            rightComponent: { name: 'LastComm', props: { value: feederInfo.lastComm } },
+                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
                                             
                                         },
                                         
