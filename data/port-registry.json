@@ -1,5 +1,5 @@
 {
-  "nextPort": 4080,
+  "nextPort": 4081,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -280,6 +280,11 @@
       "port": 4079,
       "deployedAt": "2025-07-25T04:54:55.823Z",
       "path": "C:\\xampp\\htdocs\\asdfghgff1-backend"
+    },
+    "szxcvbn": {
+      "port": 4080,
+      "deployedAt": "2025-07-25T05:02:48.260Z",
+      "path": "C:\\xampp\\htdocs\\szxcvbn-backend"
     }
   }
 }
