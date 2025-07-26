@@ -92,7 +92,7 @@ const HeaderTest = ({
 
             {/* Right section */}
             {rightContent ? (
-                <div className="flex items-center">
+                <div className="flex items-center"> 
                     {rightContent}
                 </div>
             ) : (

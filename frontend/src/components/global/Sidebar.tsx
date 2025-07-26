@@ -3,6 +3,7 @@ import { useState } from 'react';
 import Cookies from 'js-cookie';
 import { useApp } from '@context/AppContext';
 import '@/styles/custom.css';
+import Button from './Button';
 
 interface SubMenuItem {
     title: string;
@@ -32,11 +33,6 @@ interface SidebarProps {
     currentPath?: string;
     onNavigate?: (path: string) => void;
     menus?: MenuCategory[];
-    logo?: {
-        src: string;
-        alt: string;
-        collapsedSrc?: string;
-    };
     appDownload?: {
         enabled: boolean;
         title: string;
@@ -50,10 +46,10 @@ interface SidebarProps {
         };
     };
     footer?: {
-        copyright: string;
-        showThemeToggle: boolean;
         showShareButton: boolean;
     };
+    showThemeToggle?: boolean;
+    showAppDownload?: boolean;
     className?: string;
     onThemeToggle?: () => void;
     onShareClick?: () => void;
@@ -83,11 +79,6 @@ const defaultMenus: MenuCategory[] = [
                 title: 'App Management',
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
-            },
-            {
-                title:'Login V2',
-                icon:'/icons/login.svg',
-                link:'/login-v2'
             },
             // {
             //     title: 'User Management',
@@ -390,11 +381,6 @@ const defaultMenus: MenuCategory[] = [
 const defaultProps: Partial<
     Omit<SidebarProps, 'isCollapsed' | 'onThemeToggle'>
 > = {
-    logo: {
-        src: '/images/bi-blue-logo.svg',
-        alt: 'Company Logo',
-        collapsedSrc: '/images/changed-logo.svg',
-    },
     appDownload: {
         enabled: true,
         title: 'Download our Mobile App',
@@ -407,11 +393,11 @@ const defaultProps: Partial<
             alt: 'App Logo',
         },
     },
-    footer: {
-        copyright: '© 2025 Bestinfra Pvt. Ltd.',
-        showThemeToggle: true,
-        showShareButton: true,
-    },
+    // footer: {
+    //     copyright: '© 2025 Bestinfra Pvt. Ltd.',
+    //     showThemeToggle: true,
+    //     showShareButton: true,
+    // },
     onLogout: () => {
         const allCookies = Cookies.get();
         Object.keys(allCookies).forEach((cookieName) => {
@@ -428,10 +414,15 @@ const Sidebar = ({
     currentPath,
     onNavigate,
     menus = defaultMenus,
-    logo = defaultProps.logo,
+    appDownload = defaultProps.appDownload,
+    footer = defaultProps.footer,
+    showThemeToggle = true,
+    showAppDownload = true,
     className = '',
     onLogout = defaultProps.onLogout,
-}: Omit<SidebarProps, 'isCollapsed' | 'onThemeToggle'>) => {
+    onThemeToggle,
+    onShareClick,
+}: Omit<SidebarProps, 'isCollapsed'>) => {
     const { isDarkMode, isSidebarCollapsed } = useApp();
     const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
         {}
@@ -473,12 +464,12 @@ const Sidebar = ({
                                 isSidebarCollapsed
                                     ? isDarkMode
                                         ? '/images/bi-white-logo.svg'
-                                        : logo?.collapsedSrc || logo?.src
+                                        : '/images/changed-logo.svg'
                                     : isDarkMode
                                         ? '/images/bi-white-logo.svg'
-                                        : logo?.src
+                                        : '/images/bi-blue-logo.svg'
                             }
-                            alt={logo?.alt}
+                            alt="Company Logo"
                             className={`md:block ${isSidebarCollapsed ? 'w-8' : 'w-[170px]'
                                 }`}
                         />
@@ -670,10 +661,10 @@ const Sidebar = ({
                         ))}
                     </main>
                 </div>
-                {/* <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
+                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
                     {!isSidebarCollapsed ? (
                         <>
-                            {appDownload?.enabled && (
+                            {showAppDownload && appDownload?.enabled && (
                                 <section className="rounded-lg bg-[url('/images/download-app.svg')] bg-cover bg-center flex flex-col items-center justify-center p-6 gap-4">
                                     <div className="flex items-center justify-between w-full">
                                         <span className="w-10 h-10 bg-primary rounded-full transition-all duration-300 flex justify-center items-center">
@@ -694,13 +685,14 @@ const Sidebar = ({
                                             {appDownload.title}
                                         </h3>
                                         <p className="text-white text-sm font-semibold">
-                                            {""}
+                                            {appDownload.subtitle}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Button
                                             label={appDownload.buttonText}
                                             variant="primary"
+                                            // className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300"
                                             onClick={() => {
                                                 window.open(
                                                     appDownload.downloadUrl,
@@ -709,7 +701,7 @@ const Sidebar = ({
                                             }}
                                         />
                                         {footer?.showShareButton && (
-                                            <button
+                                            <span
                                                 className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-primary-lightest"
                                                 aria-label="Share app"
                                                 onClick={onShareClick}>
@@ -719,21 +711,21 @@ const Sidebar = ({
                                                     className="w-5 h-5 filter"
                                                     aria-hidden="true"
                                                 />
-                                            </button>
+                                            </span>
                                         )}
                                     </div>
                                 </section>
                             )}
                             <div className="flex items-center justify-between w-full">
                                 <p className="text-xs text-light dark:text-subinfo">
-                                    {footer?.copyright}
+                                    © {new Date().getFullYear()} Bestinfra Pvt. Ltd.
                                 </p>
 
-                                {footer?.showThemeToggle && (
+                                {showThemeToggle && (
                                     <button
                                         className="w-10 h-10 border border-primary-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
                                         aria-label="Toggle dark mode"
-                                        onClick={toggleTheme}>
+                                        onClick={onThemeToggle}>
                                         <img
                                             className="w-5 h-5"
                                             src={`${
@@ -758,11 +750,11 @@ const Sidebar = ({
                                     aria-hidden="true"
                                 />
                             </span>
-                            {footer?.showThemeToggle && (
+                            {showThemeToggle && (
                                 <button
                                     className="w-10 h-10 border border-light-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
                                     aria-label="Toggle dark mode"
-                                    onClick={toggleTheme}>
+                                    onClick={onThemeToggle}>
                                     <img
                                         className="w-5 h-5"
                                         src={`${
@@ -777,7 +769,7 @@ const Sidebar = ({
                             )}
                         </div>
                     )}
-                </footer> */}
+                </footer>
             </nav>
         </div>
     );
