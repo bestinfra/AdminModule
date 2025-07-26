@@ -1,21 +1,44 @@
-import React, { useState } from 'react';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
+import React from 'react';
+import PageC from '@components/global/PageC';
+import type { CarouselSlide } from '@components/global/Carousel';
+import { useState } from 'react';
+import type { FormInputValue } from '@components/Form/types';
+  
+const slides: CarouselSlide[] = [
+  {
+    title: 'Welcome to the Sub-App!',
+    description: 'Manage your tasks efficiently and securely.',
+    img: '/images/energy-analytics.png',
+  },
+  {
+    title: 'Feature Highlight',
+    description: 'Discover powerful features tailored for you.',
+    img: '/images/meter-eval.png',
+  },
+  {
+    title: 'Stay Connected',
+    description: 'Access your dashboard from anywhere, anytime.',
+    img: '/images/smart-comm.png',
+  },
+];
+const DUMMY_USER = {
+  identifier: 'admin@example.com',
+  password: 'password',
+};
 
 const SubLogin: React.FC = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [loading, setLoading] = useState(false);
+    const [_error, setError] = useState('');
+    const [_loading, setLoading] = useState(false);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleDummyLogin = async (data: Record<string, FormInputValue>) => {
         setError('');
         setLoading(true);
-        // TODO: Replace with real authentication logic (API call)
         setTimeout(() => {
             setLoading(false);
-            if (email === 'admin@example.com' && password === 'password') {
+            if (
+                data.identifier === DUMMY_USER.identifier &&
+                data.password === DUMMY_USER.password
+            ) {
                 localStorage.setItem('token', 'dummy-token');
                 window.location.href = '/';
             } else {
@@ -24,59 +47,84 @@ const SubLogin: React.FC = () => {
         }, 1000);
     };
 
-    // Login Form Section
-    const loginFormSection: Section = {
-        id: 'login-form',
-        component: (
-            <div className="flex items-center justify-center min-h-screen bg-neutral-light dark:bg-primary-dark">
-                <div className="bg-white dark:bg-primary-dark-light rounded-2xl shadow-lg p-8 w-full max-w-md">
-                    <h2 className="text-2xl font-bold mb-6 text-center text-primary dark:text-white">
-                        Sub-App Login
-                    </h2>
-                    {error && (
-                        <div className="mb-4 text-danger text-center">
-                            {error}
-                        </div>
-                    )}
-                    <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <input
-                                type="text"
-                                placeholder="Username"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                required
-                            />
-                        </div>
-                        <div>
-                            <input
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 border border-neutral-light rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                                required
-                            />
-                        </div>
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full bg-primary hover:bg-primary-dark text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:opacity-50">
-                            {loading ? 'Logging in...' : 'Login'}
-                        </button>
-                    </form>
-                </div>
-            </div>
-        ),
-    };
-
     return (
-        <Page
-            layout="single-column"
-            sections={[loginFormSection]}
-            className="min-h-screen flex items-center justify-center bg-neutral-light dark:bg-primary-dark"
-            containerClassName="flex items-center justify-center"
+        <PageC
+            sections={[
+                {
+                    layout: {
+                        type: 'grid',
+                        columns: 5,
+                        className: 'min-h-screen',
+                    },
+                    components: [
+                        {
+                            name: 'Carousel',
+                            props: { slides },
+                            span: { col: 3, row: 1 },
+                        },
+                        {
+                            name: 'LoginV2',
+                            span:{col:2,row:1},
+                            props: {
+                                buttonLabel: 'Sign In',
+                                rememberMeLabel: 'Keep me signed in',
+                                minPasswordLength: 8,
+                                identifierPlaceholder: 'Email or Username',
+                                passwordPlaceholder: 'Enter your password',
+                               
+                                // Add extra input fields dynamically
+                                inputs: [
+                                  // Default login fields below
+                                  {
+                                    name: 'identifier',
+                                    type: 'text',
+                                    placeholder: 'Email or Username',
+                                    required: true,
+                                    row: 2,
+                                    col: 1,
+                                    colSpan: 2,
+                                    validation: {
+                                      custom: (value: FormInputValue) => !value ? 'Username or email is required' : null,
+                                    },
+                                  },
+                                  {
+                                    name: 'password',
+                                    type: 'password',
+                                    placeholder: 'Enter your password',
+                                    required: true,
+                                    showPasswordToggle: true,
+                                    row: 3,
+                                    col: 1,
+                                    colSpan: 2,
+                                    validation: {
+                                      minLength: 8,
+                                      custom: (value: FormInputValue) => {
+                                        if (!value) return 'Password is required';
+                                        if (typeof value === 'string' && value.length < 8) return `Password must be at least 8 characters`;
+                                        return null;
+                                      },
+                                    },
+                                  },
+                                  // {
+                                  //   name: 'rememberMe',
+                                  //   type: 'checkbox',
+                                  //   label: 'Keep me signed in',
+                                  //   defaultValue: false,
+                                  //   row: 4,
+                                  //   col: 1,
+                                  //   colSpan: 1,
+                                  //   className: 'justify-start',
+                                  // },
+                                ],
+                                onSubmit: handleDummyLogin,
+                                // Optionally, you can pass loading and error to LoginV2 for UI feedback
+                                // loading,
+                                // error,
+                            },
+                        },
+                    ],
+                },
+            ]}
         />
     );
 };

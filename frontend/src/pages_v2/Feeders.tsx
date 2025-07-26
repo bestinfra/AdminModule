@@ -123,7 +123,7 @@ const Feeders = () => {
                                         title: item.title,
                                         value: item.description,
                                         titleLevel: 2,
-                                        titleSize: 'md',
+                                        titleSize: 'md',    
                                         titleVariant: 'primary',
                                         titleWeight: 'bold',
                                         titleAlign: 'left',

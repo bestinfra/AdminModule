@@ -34,7 +34,7 @@ const Tabs: React.FC<TabsProps> = ({ tabs, defaultTab = 0, onTabChange, activeTa
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="flex border border-primary-border dark:border-dark-border rounded-full p-1 h-12 gap-2">
+      <div className="flex border border-PrimaryBorder dark:border-dark-border rounded-full p-1 h-12 gap-2">
         {tabs.map((tab, index) => (
           <button
             key={index}
