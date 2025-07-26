@@ -31,6 +31,7 @@ import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
+import LoginV2 from './pages_v2/LoginV2';
 
 const App: React.FC = () => {
     return (
@@ -50,6 +51,7 @@ const App: React.FC = () => {
                                 path="/data-logger"
                                 element={<DataLogger />}
                             />
+                            <Route path="/login-v2" element={<LoginV2 />} />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />

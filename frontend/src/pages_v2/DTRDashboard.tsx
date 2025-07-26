@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import type { TableData } from "@components/global/Table";
-import { useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
+import type { TableData } from '@components/global/Table';
+import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 
 // Brand green icon style
@@ -10,7 +10,7 @@ const ICON_FILTER_STYLE = {
 
 
 const DTRDashboard: React.FC = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
   // DTR statistics cards data using useState
   const [dtrStatsCards] = useState([
@@ -233,127 +233,146 @@ const DTRDashboard: React.FC = () => {
     },
   ];
 
-  // Dummy data for Latest Alerts table
-  const alertsTableColumns = [
-    { key: "alert", label: "Alert" },
-    { key: "date", label: "Date" },
-    { key: "status", label: "Status" },
-  ];
-  const alertsTableData = [
-    {
-      alert: "Overload detected",
-      date: "2024-07-01 10:00",
-      status: "Active",
-    },
-    { alert: "Fuse blown", date: "2024-07-01 09:30", status: "Resolved" },
-    { alert: "Power failure", date: "2024-07-01 08:45", status: "Active" },
-  ];
+    // Dummy data for Latest Alerts table
+    const alertsTableColumns = [
+        { key: 'alert', label: 'Alert' },
+        { key: 'date', label: 'Date' },
+        { key: 'status', label: 'Status' },
+    ];
+    const alertsTableData = [
+        {
+            alert: 'Overload detected',
+            date: '2024-07-01 10:00',
+            status: 'Active',
+        },
+        { alert: 'Fuse blown', date: '2024-07-01 09:30', status: 'Resolved' },
+        { alert: 'Power failure', date: '2024-07-01 08:45', status: 'Active' },
+    ];
 
-  // Dummy data for DTR Alert Statistics
-  // TODO: Unused - consider removing if not needed.
-  // const [statsRange, setStatsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
-  const [statsRange] = useState<"Monthly" | "Yearly">("Monthly");
-  const alertTypes = [
-    { name: "LT Fuse Blown (R - Phase)", color: "#e74c3c" },
-    { name: "Unbalanced Load", color: "#f39c12" },
-    { name: "Low PF (R - Phase)", color: "#3498db" },
-    { name: "Power Failure", color: "#9b59b6" },
-    { name: "B_PH Missing", color: "#8e44ad" },
-    { name: "R_PH CT Reversed", color: "#e67e22" },
-    { name: "HT Fuse Blown (B - Phase)", color: "#f1c40f" },
-    { name: "LT Fuse Blown (Y - Phase)", color: "#1abc9c" },
-    { name: "LT Fuse Blown (B - Phase)", color: "#e67e22" },
-    { name: "R-L-P", color: "#9b59b6" },
-  ];
-  const months = [
-    "May 2025",
-    "Apr 2025",
-    "Mar 2025",
-    "Feb 2025",
-    "Jan 2025",
-    "Dec 2024",
-    "Nov 2024",
-    "Oct 2024",
-    "Sept 2024",
-  ];
-  const alertSeries = alertTypes.map((type) => ({
-    name: type.name,
-    data: months.map(() => Math.floor(Math.random() * 350)),
-  }));
-  const alertColors = alertTypes.map((type) => type.color);
+    // Dummy data for DTR Alert Statistics
+    // TODO: Unused - consider removing if not needed.
+    // const [statsRange, setStatsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
+    const [statsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
+    const alertTypes = [
+        { name: 'LT Fuse Blown (R - Phase)', color: '#e74c3c' },
+        { name: 'Unbalanced Load', color: '#f39c12' },
+        { name: 'Low PF (R - Phase)', color: '#3498db' },
+        { name: 'Power Failure', color: '#9b59b6' },
+        { name: 'B_PH Missing', color: '#8e44ad' },
+        { name: 'R_PH CT Reversed', color: '#e67e22' },
+        { name: 'HT Fuse Blown (B - Phase)', color: '#f1c40f' },
+        { name: 'LT Fuse Blown (Y - Phase)', color: '#1abc9c' },
+        { name: 'LT Fuse Blown (B - Phase)', color: '#e67e22' },
+        { name: 'R-L-P', color: '#9b59b6' },
+    ];
+    const months = [
+        'May 2025',
+        'Apr 2025',
+        'Mar 2025',
+        'Feb 2025',
+        'Jan 2025',
+        'Dec 2024',
+        'Nov 2024',
+        'Oct 2024',
+        'Sept 2024',
+    ];
+    const alertSeries = alertTypes.map((type) => ({
+        name: type.name,
+        data: months.map(() => Math.floor(Math.random() * 350)),
+    }));
+    const alertColors = alertTypes.map((type) => type.color);
 
-  return (
-    <div className="p-2 min-h-screen">
-      <Page
-        sections={[
-          // Header section
-          {
-            layout: {
-              type: "grid" as const,
-              columns: 1,
-              className: "mb-6",
-            },
-            components: [
-              {
-                name: "PageHeader",
-                props: {
-                  title: "DTR Dashboard",
-                  onBackClick: () => window.history.back(),
-                  backButtonText: "Back to Dashboard",
-                  buttonsLabel: "Add DTR",
-                  variant: "primary",
-                  onClick: () => console.log("Adding new DTR..."),
-                  showMenu: true,
-                  showDropdown: true,
-                  menuItems: [
-                    { id: "all", label: "All DTRs" },
-                    { id: "active", label: "Active DTRs" },
-                    { id: "inactive", label: "Inactive DTRs" },
-                    { id: "overloaded", label: "Overloaded" },
-                    { id: "underloaded", label: "Underloaded" },
-                    { id: "fuse-blown", label: "Fuse Blown" },
-                    { id: "unbalanced", label: "Unbalanced" },
-                    { id: "power-failure", label: "Power Failure" },
-                  ],
-                  onMenuItemClick: (itemId: string) => {
-                    console.log(`Filter by: ${itemId}`);
-                  },
-                },
-              },
-            ],
-          },
-          // DTR Statistics section & cards should be here
-          // {
-          //     layout: {
-          //         type: "grid",
-          //         columns: 2,
-          //         gap: "gap-6",
-          //         rows: [
-          //             {
-          //                 layout: "grid",
-          //                 gap: "gap-4",
-          //                 gridColumns: 3,
-          //                 gridRows: 2,
-          //                 columns: [
-          //                   {
-          //                     name: "Heading",
-          //                     props: {
-          //                       text: "Distribution Transformer (DTR) Statistics",
-          //                       level: 2,
-          //                       size: "md",
-          //                       variant: "primary",
-          //                       weight: "bold",
-          //                       align: "left",
-          //                     },
-          //                     span: { col: 3, row: 1 },
-          //                   },
+    return (
+        <div className="p-2 min-h-screen">
+            <Page
+                sections={[
+                    // Header section
+                    {
+                        layout: {
+                            type: 'grid' as const,
+                            columns: 1,
+                            className: 'mb-6',
+                        },
+                        components: [
+                            {
+                                name: 'PageHeader',
+                                props: {
+                                    title: 'DTR Dashboard',
+                                    onBackClick: () => window.history.back(),
+                                    backButtonText: 'Back to Dashboard',
+                                    buttonsLabel: 'Add DTR',
+                                    variant: 'primary',
+                                    onClick: () =>
+                                        console.log('Adding new DTR...'),
+                                    showMenu: true,
+                                    showDropdown: true,
+                                    menuItems: [
+                                        { id: 'all', label: 'All DTRs' },
+                                        { id: 'active', label: 'Active DTRs' },
+                                        {
+                                            id: 'inactive',
+                                            label: 'Inactive DTRs',
+                                        },
+                                        {
+                                            id: 'overloaded',
+                                            label: 'Overloaded',
+                                        },
+                                        {
+                                            id: 'underloaded',
+                                            label: 'Underloaded',
+                                        },
+                                        {
+                                            id: 'fuse-blown',
+                                            label: 'Fuse Blown',
+                                        },
+                                        {
+                                            id: 'unbalanced',
+                                            label: 'Unbalanced',
+                                        },
+                                        {
+                                            id: 'power-failure',
+                                            label: 'Power Failure',
+                                        },
+                                    ],
+                                    onMenuItemClick: (itemId: string) => {
+                                        console.log(`Filter by: ${itemId}`);
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                    // DTR Statistics section & cards should be here
+                    // {
+                    //     layout: {
+                    //         type: "grid",
+                    //         columns: 2,
+                    //         gap: "gap-6",
+                    //         rows: [
+                    //             {
+                    //                 layout: "grid",
+                    //                 gap: "gap-4",
+                    //                 gridColumns: 3,
+                    //                 gridRows: 2,
+                    //                 columns: [
+                    //                   {
+                    //                     name: "Heading",
+                    //                     props: {
+                    //                       text: "Distribution Transformer (DTR) Statistics",
+                    //                       level: 2,
+                    //                       size: "md",
+                    //                       variant: "primary",
+                    //                       weight: "bold",
+                    //                       align: "left",
+                    //                     },
+                    //                     span: { col: 3, row: 1 },
+                    //                   },
 
-          //                 ],
-          //               },
-          //             ]
-          //         }
+                    //                 ],
+                    //               },
+                    //             ]
+                    //         }
 
-          // },
+                    // },
 
           // DTR Statistics Cards
           {
@@ -534,101 +553,103 @@ const DTRDashboard: React.FC = () => {
         //       ],
         //     },
 
-        //   },
+                    //   },
 
-          // Consumption & Energies Cards
-          
-          // DTRs Table section
-          {
-            layout: {
-              type: "column" as const,
-              className: "mb-8",
-            },
-            components: [
-              {
-                name: "Heading",
-                props: {
-                  text: "DTRs",
-                  level: 2,
-                  className: "text-lg font-semibold mb-4",
-                },
-              },
-              {
-                name: "Table",
-                props: {
-                  data: dtrTableData,
-                  columns: dtrTableColumns,
-                  actions: dtrTableActions,
-                  showActions: true,
-                  searchable: true,
-                  pagination: true,
-                  initialRowsPerPage: 10,
-                  emptyMessage: "No DTRs found",
-                  onRowClick: (row: TableData) => navigate(`/dtr/${row.dtrId}`),
-                },
-              },
-            ],
-          },
-          // Latest Alerts section
-          {
-            layout: {
-              type: "column" as const,
-            },
-            components: [
-              {
-                name: "Heading",
-                props: {
-                  text: "Latest Alerts",
-                  level: 2,
-                  className: "text-lg font-semibold mb-4",
-                },
-              },
-              {
-                name: "Table",
-                props: {
-                  data: alertsTableData,
-                  columns: alertsTableColumns,
-                  showActions: false,
-                  searchable: true,
-                  pagination: true,
-                  initialRowsPerPage: 10,
-                  emptyMessage: "No alerts found",
-                },
-              },
-            ],
-          },
-          // Statistics Chart section
-          {
-            layout: {
-              type: "column" as const,
-              className: "mb-8 border border-primary-border rounded-3xl p-6",
-            },
-            components: [
-              {
-                name: "Heading",
-                props: {
-                  text: "Statistics",
-                  level: 2,
-                  className: "text-lg font-semibold mb-4",
-                },
-              },
-              {
-                name: "BarChart",
-                props: {
-                  xAxisData: months,
-                  seriesData: alertSeries,
-                  seriesColors: alertColors,
-                  height: 300,
-                  showLegendInteractions: true,
-                  timeRange: statsRange,
-                },
-              },
-            ],
-          },
-        ]}
-      />
-    </div>
-  );
+                    // Consumption & Energies Cards
+
+                    // DTRs Table section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            className: 'mb-8',
+                        },
+                        components: [
+                            {
+                                name: 'Heading',
+                                props: {
+                                    text: 'DTRs',
+                                    level: 2,
+                                    className: 'text-lg font-semibold mb-4',
+                                },
+                            },
+                            {
+                                name: 'Table',
+                                props: {
+                                    data: dtrTableData,
+                                    columns: dtrTableColumns,
+                                    actions: dtrTableActions,
+                                    showActions: true,
+                                    searchable: true,
+                                    pagination: true,
+                                    initialRowsPerPage: 10,
+                                    emptyMessage: 'No DTRs found',
+                                    onRowClick: (row: TableData) =>
+                                        navigate(`/dtr/${row.dtrId}`),
+                                },
+                            },
+                        ],
+                    },
+                    // Latest Alerts section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                        },
+                        components: [
+                            {
+                                name: 'Heading',
+                                props: {
+                                    text: 'Latest Alerts',
+                                    level: 2,
+                                    className: 'text-lg font-semibold mb-4',
+                                },
+                            },
+                            {
+                                name: 'Table',
+                                props: {
+                                    data: alertsTableData,
+                                    columns: alertsTableColumns,
+                                    showActions: false,
+                                    searchable: true,
+                                    pagination: true,
+                                    initialRowsPerPage: 10,
+                                    emptyMessage: 'No alerts found',
+                                },
+                            },
+                        ],
+                    },
+                    // Statistics Chart section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            className:
+                                'mb-8 border border-primary-border rounded-3xl p-6',
+                        },
+                        components: [
+                            {
+                                name: 'Heading',
+                                props: {
+                                    text: 'Statistics',
+                                    level: 2,
+                                    className: 'text-lg font-semibold mb-4',
+                                },
+                            },
+                            {
+                                name: 'BarChart',
+                                props: {
+                                    xAxisData: months,
+                                    seriesData: alertSeries,
+                                    seriesColors: alertColors,
+                                    height: 300,
+                                    showLegendInteractions: true,
+                                    timeRange: statsRange,
+                                },
+                            },
+                        ],
+                    },
+                ]}
+            />
+        </div>
+    );
 };
 
 export default DTRDashboard;

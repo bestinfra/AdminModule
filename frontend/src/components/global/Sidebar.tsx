@@ -84,6 +84,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
+            {
+                title:'Login V2',
+                icon:'/icons/login.svg',
+                link:'/login-v2'
+            },
             // {
             //     title: 'User Management',
             //     icon: '/icons/user-gear.svg',
