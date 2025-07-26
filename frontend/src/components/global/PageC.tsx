@@ -25,6 +25,7 @@ import SectionHeader from './SectionHeader';
 import Carousel from './Carousel';
 import LoginV2 from '../../pages_v2/LoginV2';
 import { Form } from '../Form';
+import OrgChartAlt from './OrgChartAlt';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
@@ -40,6 +41,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     DatePicker,
     ExpandableTable,
     OrgChart,
+    OrgChartAlt,
     Holder,
     LoadingSpinner,
     Heading,
