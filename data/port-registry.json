@@ -1,5 +1,5 @@
 {
-  "nextPort": 4080,
+  "nextPort": 4086,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -261,25 +261,55 @@
       "deployedAt": "2025-07-24T21:05:20.893Z",
       "path": "C:\\xampp\\htdocs\\tgnpdcl1123-backend"
     },
-    "qqqwerty": {
+    "tgnpdcl1125": {
       "port": 4076,
-      "deployedAt": "2025-07-25T04:14:21.965Z",
-      "path": "C:\\xampp\\htdocs\\qqqwerty-backend"
+      "deployedAt": "2025-07-24T22:48:38.861Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl1125-backend"
     },
-    "qqqwerty1": {
+    "brnm": {
       "port": 4077,
-      "deployedAt": "2025-07-25T04:19:23.316Z",
-      "path": "C:\\xampp\\htdocs\\qqqwerty1-backend"
+      "deployedAt": "2025-07-25T07:40:38.178Z",
+      "path": "C:\\xampp\\htdocs\\brnm-backend"
     },
-    "asdfghgff": {
+    "brnms": {
       "port": 4078,
-      "deployedAt": "2025-07-25T04:47:42.990Z",
-      "path": "C:\\xampp\\htdocs\\asdfghgff-backend"
+      "deployedAt": "2025-07-25T09:54:32.881Z",
+      "path": "C:\\xampp\\htdocs\\brnms-backend"
     },
-    "asdfghgff1": {
+    "ktr": {
       "port": 4079,
-      "deployedAt": "2025-07-25T04:54:55.823Z",
-      "path": "C:\\xampp\\htdocs\\asdfghgff1-backend"
+      "deployedAt": "2025-07-25T10:09:31.550Z",
+      "path": "C:\\xampp\\htdocs\\ktr-backend"
+    },
+    "tgnpdcl11": {
+      "port": 4080,
+      "deployedAt": "2025-07-25T12:18:06.964Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl11-backend"
+    },
+    "brnms1": {
+      "port": 4081,
+      "deployedAt": "2025-07-25T12:25:07.518Z",
+      "path": "C:\\xampp\\htdocs\\brnms1-backend"
+    },
+    "tgnpdcl12345": {
+      "port": 4082,
+      "deployedAt": "2025-07-25T12:42:08.135Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl12345-backend"
+    },
+    "sandeep22": {
+      "port": 4083,
+      "deployedAt": "2025-07-25T13:01:40.156Z",
+      "path": "C:\\xampp\\htdocs\\sandeep22-backend"
+    },
+    "tgnpdcl11111": {
+      "port": 4084,
+      "deployedAt": "2025-07-25T13:17:48.456Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl11111-backend"
+    },
+    "tgnpdcl12122": {
+      "port": 4085,
+      "deployedAt": "2025-07-25T19:16:05.259Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl12122-backend"
     }
   }
 }
