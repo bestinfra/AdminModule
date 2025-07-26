@@ -40,6 +40,10 @@ function createAppProjectOptimized(formData) {
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '') || 'my-admin-app';
 
+    // Log selected modules for debugging
+    console.log('\n📋 Selected modules:', modules || []);
+    console.log('📋 Total modules selected:', (modules || []).length);
+
     const baseDir = path.join(
         __dirname,
         '..',
@@ -57,7 +61,7 @@ function createAppProjectOptimized(formData) {
 
     const dynamicPort = deployer.findAvailablePort();
 
-    copyAssets(baseDir);
+    copyAssets(baseDir, formData);
 
     const frontendFormData = { ...formData, backendPort: dynamicPort };
     generateFrontend(baseDir, frontendFormData);
@@ -111,19 +115,78 @@ function createAppProjectOptimized(formData) {
     return baseDir;
 }
 
-function copyAssets(baseDir) {
+function copyAssets(baseDir, formData) {
     const frontendDir = path.join(baseDir, 'frontend');
     const sourceFrontendDir = path.join(__dirname, '..', 'frontend');
 
     // Prefer pages_v2 as the source for pages
     const sourcePagesV2Dir = path.join(sourceFrontendDir, 'src', 'pages_v2');
     const destPagesDir = path.join(frontendDir, 'src', 'pages');
+    
+    // Module to page file mapping
+    const moduleToPageMapping = {
+        'consumer_dashboard': ['Dashboard.tsx'], // Consumer dashboard is part of main Dashboard
+        'dtr_dashboard': ['DTRDashboard.tsx', 'Feeders.tsx'], // Separate DTR Dashboard component
+        'consumer': ['Consumers.tsx', 'ConsumerView.tsx', 'AddConsumer'],
+        'tickets': ['Tickets.tsx', 'TicketView.tsx', 'AddTicket.tsx'],
+        'prepaid': ['Prepaid.tsx'],
+        'postpaid': ['Postpaid.tsx'],
+        'asset_management': ['AssetManagment.tsx'],
+        'meter_management': ['Meters.tsx', 'MeterDetails.tsx', 'DataLogger.tsx'],
+        'user_management_default': ['Users.tsx'],
+        'role_management': ['RoleManagement.tsx'],
+        'connect_disconnect': ['ConnectDisconnect.tsx']
+    };
+
     if (fs.existsSync(sourcePagesV2Dir)) {
         // Remove existing destPagesDir if it exists to avoid mixing old files
         if (fs.existsSync(destPagesDir)) {
             fs.rmSync(destPagesDir, { recursive: true, force: true });
         }
-        copyDirectoryRecursive(sourcePagesV2Dir, destPagesDir);
+        
+        // Create destination directory
+        fs.mkdirSync(destPagesDir, { recursive: true });
+        
+        // Copy only selected modules
+        const selectedModules = formData.modules || [];
+        console.log('📁 Copying selected modules:', selectedModules);
+        
+        selectedModules.forEach(module => {
+            const pageFiles = moduleToPageMapping[module];
+            if (pageFiles) {
+                pageFiles.forEach(pageFile => {
+                    const sourcePath = path.join(sourcePagesV2Dir, pageFile);
+                    const destPath = path.join(destPagesDir, pageFile);
+                    
+                    if (fs.existsSync(sourcePath)) {
+                        if (fs.statSync(sourcePath).isDirectory()) {
+                            // Copy directory recursively
+                            copyDirectoryRecursive(sourcePath, destPath);
+                            console.log(`  ✅ Copied directory: ${pageFile}`);
+                        } else {
+                            // Copy single file
+                            copyFileWithImportProcessing(sourcePath, destPath);
+                            console.log(`  ✅ Copied file: ${pageFile}`);
+                        }
+                    } else {
+                        console.log(`  ⚠️  File not found: ${pageFile} for module: ${module}`);
+                    }
+                });
+            } else {
+                console.log(`  ⚠️  No page mapping found for module: ${module}`);
+            }
+        });
+        
+        // Always copy essential files (login, etc.)
+        const essentialFiles = ['SubLogin.tsx', 'LoginV2.tsx'];
+        essentialFiles.forEach(file => {
+            const sourcePath = path.join(sourcePagesV2Dir, file);
+            const destPath = path.join(destPagesDir, file);
+            if (fs.existsSync(sourcePath)) {
+                copyFileWithImportProcessing(sourcePath, destPath);
+                console.log(`  ✅ Copied essential file: ${file}`);
+            }
+        });
     }
 
     copyPublicAssets(sourceFrontendDir, frontendDir);
@@ -162,6 +225,33 @@ function copyDirectoryRecursive(source, dest) {
             }
         }
     });
+}
+
+function copyFileWithImportProcessing(sourcePath, destPath) {
+    // Ensure destination directory exists
+    const destDir = path.dirname(destPath);
+    if (!fs.existsSync(destDir)) {
+        fs.mkdirSync(destDir, { recursive: true });
+    }
+    
+    if (/\.(js|jsx|ts|tsx)$/.test(path.basename(sourcePath))) {
+        let content = fs.readFileSync(sourcePath, 'utf8');
+        const importToReplace = `import Page from '@/components/global/PageC';`;
+        const lazyImport = `const Page = lazy(() => import('SuperAdmin/Page'));`;
+        if (content.includes(importToReplace)) {
+            content = content.replace(importToReplace, lazyImport);
+            if (
+                !/import\s+\{\s*lazy\s*\}\s+from\s+['"]react['"]/.test(
+                    content
+                )
+            ) {
+                content = `import { lazy } from 'react';\n` + content;
+            }
+        }
+        fs.writeFileSync(destPath, content, 'utf8');
+    } else {
+        fs.copyFileSync(sourcePath, destPath);
+    }
 }
 
 /**

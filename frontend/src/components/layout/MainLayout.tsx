@@ -3,7 +3,9 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@components/global/Sidebar';
 import HeaderTest from '@components/global/HeaderTest';
 import { useApp } from '@context/AppContext';
-// import Cookies from 'js-cookie';
+import Cookies from 'js-cookie';
+
+// Define action configurations for header
 const headerActions = [
     {
         icon: '/icons/user.svg',
@@ -23,6 +25,25 @@ const headerActions = [
         onClick: () => console.log('Settings clicked'),
         ariaLabel: 'Settings',
         className: 'hover:bg-green-100 dark:hover:bg-green-900'
+    },
+    {
+        icon: '/icons/logout.svg',
+        onClick: () => {
+            // Clear all cookies
+            const allCookies = Cookies.get();
+            Object.keys(allCookies).forEach((cookieName) => {
+                Cookies.remove(cookieName);
+            });
+
+            // Clear all storage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Redirect to login page
+            window.location.href = '/login';
+        },
+        ariaLabel: 'Logout',
+        className: 'hover:bg-red-100 dark:hover:bg-red-900'
     }
 ];
 
