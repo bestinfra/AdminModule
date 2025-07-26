@@ -4,8 +4,6 @@ import Sidebar from '@components/global/Sidebar';
 import HeaderTest from '@components/global/HeaderTest';
 import { useApp } from '@context/AppContext';
 // import Cookies from 'js-cookie';
-
-// Define action configurations for header
 const headerActions = [
     {
         icon: '/icons/user.svg',
@@ -28,12 +26,35 @@ const headerActions = [
     }
 ];
 
+
 interface MainLayoutProps {
     children?: React.ReactNode;
+    footer?: {
+        companyName: string;
+        showShareButton: boolean;
+    };
+    appDownload?: {
+        enabled: boolean;
+        title: string;
+        subtitle: string;
+        buttonText: string;
+        backgroundImage: string;
+        downloadUrl: string;
+        logo: {
+            src: string;
+            alt: string;
+        };
+    };
+    showThemeToggle?: boolean;
+    showAppDownload?: boolean;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = () => {
-    const { toggleSidebar } = useApp();
+const MainLayout: React.FC<MainLayoutProps> = ({ 
+    appDownload,
+    showThemeToggle = true,
+    showAppDownload = true
+}) => {
+    const { toggleSidebar, toggleTheme } = useApp();
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -98,9 +119,34 @@ const MainLayout: React.FC<MainLayoutProps> = () => {
         navigate(path);
     };
 
+    // Share handler for sidebar
+    const handleShareClick = () => {
+        if (!appDownload) return;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Download our Mobile App',
+                text: 'Check out our mobile app!',
+                url: appDownload.downloadUrl,
+            });
+        } else {
+            // Fallback for browsers that don't support Web Share API
+            navigator.clipboard.writeText(appDownload.downloadUrl);
+            alert('Download link copied to clipboard!');
+        }
+    };
+
     return (
         <div className="flex h-screen bg-white ">
-            <Sidebar onNavigate={handleNavigate} />
+            <Sidebar 
+                onNavigate={handleNavigate} 
+                footer={{ showShareButton: true }} 
+                appDownload={appDownload} 
+                showThemeToggle={showThemeToggle}
+                onThemeToggle={toggleTheme} 
+                onShareClick={handleShareClick} 
+                showAppDownload={showAppDownload}
+            />
             <div className="flex flex-col flex-1">
                 <HeaderTest
                     title={getPageTitle()}

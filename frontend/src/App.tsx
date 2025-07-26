@@ -27,7 +27,6 @@ import TicketView from './pages_v2/TicketView';
 import Prepaid from './pages_v2/Prepaid';
 import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
-import LoginV2 from './pages_v2/LoginV2';
 
 const App: React.FC = () => {
     return (
@@ -47,7 +46,6 @@ const App: React.FC = () => {
                                 path="/data-logger"
                                 element={<DataLogger />}
                             />
-                            <Route path="/login-v2" element={<LoginV2 />} />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
