@@ -16,7 +16,7 @@ export default defineConfig({
         './Header': './src/components/global/Header.tsx',
         './Page': './src/components/global/PageC.tsx',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
-        './SubLogin': './src/pages_v2/SubLogin.tsx',
+        './Login': './src/pages_v2/SubLogin.tsx',
       },
       shared : [
         'react', 
