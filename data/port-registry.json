@@ -1,5 +1,5 @@
 {
-  "nextPort": 4081,
+  "nextPort": 4091,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -285,6 +285,56 @@
       "port": 4080,
       "deployedAt": "2025-07-26T05:40:59.892Z",
       "path": "C:\\xampp\\htdocs\\india-backend"
+    },
+    "indiaa": {
+      "port": 4081,
+      "deployedAt": "2025-07-26T10:23:56.869Z",
+      "path": "C:\\xampp\\htdocs\\indiaa-backend"
+    },
+    "pakis": {
+      "port": 4082,
+      "deployedAt": "2025-07-26T10:58:53.185Z",
+      "path": "C:\\xampp\\htdocs\\pakis-backend"
+    },
+    "indus": {
+      "port": 4083,
+      "deployedAt": "2025-07-26T11:49:08.366Z",
+      "path": "C:\\xampp\\htdocs\\indus-backend"
+    },
+    "mnbvc": {
+      "port": 4084,
+      "deployedAt": "2025-07-26T12:08:01.524Z",
+      "path": "C:\\xampp\\htdocs\\mnbvc-backend"
+    },
+    "mnbvcx": {
+      "port": 4085,
+      "deployedAt": "2025-07-26T12:10:19.638Z",
+      "path": "C:\\xampp\\htdocs\\mnbvcx-backend"
+    },
+    "mnbvcxz": {
+      "port": 4086,
+      "deployedAt": "2025-07-26T12:15:09.919Z",
+      "path": "C:\\xampp\\htdocs\\mnbvcxz-backend"
+    },
+    "mnbvcxza": {
+      "port": 4087,
+      "deployedAt": "2025-07-26T12:18:58.690Z",
+      "path": "C:\\xampp\\htdocs\\mnbvcxza-backend"
+    },
+    "mnbvcxzas": {
+      "port": 4088,
+      "deployedAt": "2025-07-26T12:24:24.428Z",
+      "path": "C:\\xampp\\htdocs\\mnbvcxzas-backend"
+    },
+    "mnbvcxzasd": {
+      "port": 4089,
+      "deployedAt": "2025-07-26T12:47:19.642Z",
+      "path": "C:\\xampp\\htdocs\\mnbvcxzasd-backend"
+    },
+    "appnamesss": {
+      "port": 4090,
+      "deployedAt": "2025-07-26T12:52:19.819Z",
+      "path": "C:\\xampp\\htdocs\\appnamesss-backend"
     }
   }
 }
