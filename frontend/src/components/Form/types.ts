@@ -18,7 +18,10 @@ export interface FormInputConfig {
     | 'radio'
     | 'switch'
     | 'chosenfile'
-    | 'textareafield';
+    | 'textareafield'
+    | 'button'
+    | 'label'
+    ;
   label?: string;
   placeholder?: string;
   description?: string;
@@ -32,6 +35,7 @@ export interface FormInputConfig {
   colSpan?: number;
   fullWidth?: boolean;
   icon?: string;
+  showPasswordToggle?: boolean;
   accept?: string;
   onChange?: (value: FormInputValue) => void;
   validation?: {
@@ -55,6 +59,7 @@ export interface GridLayoutProps {
 export interface FormProps {
   inputs: FormInputConfig[];
   onSubmit: (data: Record<string, FormInputValue>) => void;
+  label?: string;
   submitLabel?: string;
   cancelLabel?: string;
   className?: string;
@@ -73,6 +78,12 @@ export interface FormProps {
   showFormActions?: boolean;
   submitAction?: () => void;
   cancelAction?: () => void;
+  padding?: string;
+  border?: string;
+  /**
+   * Custom class for the form actions row (submit/cancel buttons)
+   */
+  actionsClassName?: string;
 }
 
 export interface FormInputProps {

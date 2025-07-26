@@ -22,6 +22,8 @@ import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
 import SectionHeader from './SectionHeader';
+import Carousel from './Carousel';
+import LoginV2 from '../../pages_v2/LoginV2';
 import { Form } from '../Form';
 import OrgChartAlt from './OrgChartAlt';
 
@@ -51,6 +53,8 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     FormContainer,
     Form,
     SectionHeader,
+    Carousel,
+    LoginV2,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

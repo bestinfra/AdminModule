@@ -195,9 +195,9 @@ export default function Tickets() {
     const statsArray = [
         { key: 'total', label: 'Total Tickets', icon: 'icons/open-tickets.svg', subtitle1: 'Total active tickets', subtitle2: 'Last 24 hours' },
         { key: 'open', label: 'Open Tickets', icon: 'icons/check-circle.svg', subtitle1: 'Successfully resolved', subtitle2: 'Today' },
-        { key: 'inProgress', label: 'In Progress Tickets', icon: 'icons/clock.svg', subtitle1: 'Customer satisfaction', subtitle2: 'Target: 4h' },
+        { key: 'inProgress', label: 'In Progress Tickets', icon: 'icons/progress.svg', subtitle1: 'Customer satisfaction', subtitle2: 'Target: 4h' },
         { key: 'resolved', label: 'Resolved Tickets', icon: 'icons/alert-triggered.svg', subtitle1: 'Requires attention', subtitle2: 'High priority' },
-        { key: 'closed', label: 'Closed Tickets', icon: 'icons/star.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month' },
+        { key: 'closed', label: 'Closed Tickets', icon: 'icons/closed.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month' },
     ];
 
     return (
