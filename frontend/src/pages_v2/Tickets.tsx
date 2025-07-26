@@ -335,12 +335,12 @@ export default function Tickets() {
                         {
                             name: 'PageHeader',
                             props: {
-                                title: "Ticket Management",
+                                title: "Tickets",
                                 onBackClick: () => window.history.back(),
                                 backButtonText: "Back to Dashboard",
                                 buttonsLabel: "Add Ticket",
                                 variant: "primary",
-                                onClick: () => console.log('Adding new ticket...'),
+                                onClick: () => navigate('/add-ticket'),
                                 showMenu: true,
                                 showDropdown: true,
                                 menuItems: [

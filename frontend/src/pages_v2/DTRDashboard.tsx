@@ -3,6 +3,11 @@ import type { TableData } from "@components/global/Table";
 import { useNavigate } from "react-router-dom";
 import Page from '@/components/global/PageC';
 
+// Brand green icon style
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
+
 
 const DTRDashboard: React.FC = () => {
   const navigate = useNavigate();
@@ -15,6 +20,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/dtr.svg",
       subtitle1: "Total Transformer Units",
       onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total LT Feeders",
@@ -22,6 +28,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/feeder.svg",
       subtitle1: "Connected to DTRs",
       onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total Fuse Blown",
@@ -29,6 +36,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/power_failure.svg",
       subtitle1: "0.10% of Total DTRs",
       onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Overloaded Feeders",
@@ -36,6 +44,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/dtr.svg",
       subtitle1: "0.00% of Total Feeders",
       onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Underloaded Feeders",
@@ -43,6 +52,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/dtr.svg",
       subtitle1: "100.0% of Total Feeders",
       onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "LT Side Fuse Blown",
@@ -50,6 +60,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/power_failure.svg",
       subtitle1: "3 Incidents",
       onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Unbalanced DTRs",
@@ -57,6 +68,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/dtr.svg",
       subtitle1: "0.00% of Total DTRs",
       onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Power Failure Feeders",
@@ -64,6 +76,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/power_failure.svg",
       subtitle1: "0.00% of Feeders",
       onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "HT Side Fuse Blown",
@@ -71,6 +84,7 @@ const DTRDashboard: React.FC = () => {
       icon: "/icons/power_failure.svg",
       subtitle1: "0 Incident",
       onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
     },
   ]);
 
@@ -81,30 +95,35 @@ const DTRDashboard: React.FC = () => {
       value: "111931.96",
       icon: "/icons/consumption.svg",
       subtitle1: "Cumulative Active Energy",
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total kVAh",
       value: "113369.06",
       icon: "/icons/consumption.svg",
       subtitle1: "Cumulative Apparent Energy",
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total kW",
       value: "6.10",
       icon: "/icons/consumption.svg",
       subtitle1: "Active Power",
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total kVA",
       value: "6.26",
       icon: "/icons/consumption.svg",
       subtitle1: "Apparent Power",
+      iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Active DTRs",
       value: 29,
       icon: "/icons/dtr.svg",
       subtitle1: "100.00% of Total DTRs",
+      iconStyle: ICON_FILTER_STYLE,
     },
 
     {
@@ -112,6 +131,7 @@ const DTRDashboard: React.FC = () => {
       value: 0,
       icon: "/icons/dtr.svg",
       subtitle1: "0.00% of Total DTRs",
+      iconStyle: ICON_FILTER_STYLE,
     },
   ]);
   // Dummy data for DTRs table
@@ -364,17 +384,18 @@ const DTRDashboard: React.FC = () => {
                       },
                       span: { col: 3, row: 1 },
                     },
-                    ...dtrStatsCards.map((stat) => ({
-                      name: "Card",
-                      props: {
-                        title: stat.title,
-                        value: stat.value,
-                        icon: stat.icon,
-                        subtitle1: stat.subtitle1,
-                        onValueClick: stat.onValueClick,
-                      },
-                      span: { col: 1, row: 1 },
-                    })),
+                                         ...dtrStatsCards.map((stat) => ({
+                       name: "Card",
+                       props: {
+                         title: stat.title,
+                         value: stat.value,
+                         icon: stat.icon,
+                         subtitle1: stat.subtitle1,
+                         onValueClick: stat.onValueClick,
+                         iconStyle: stat.iconStyle,
+                       },
+                       span: { col: 1, row: 1 },
+                     })),
                   ],
                 },
                 {
@@ -408,16 +429,17 @@ const DTRDashboard: React.FC = () => {
                           },
                           span: { col: 2, row: 1 },
                         },
-                        ...dtrConsumptionCards.map((card) => ({
-                            name: 'Card',
-                            props: {
-                                title: card.title,
-                                value: card.value,
-                                icon: card.icon,
-                                subtitle1: card.subtitle1,
-                            },
-                            span: { col: 1, row: 1 },
-                        }))
+                                                 ...dtrConsumptionCards.map((card) => ({
+                             name: 'Card',
+                             props: {
+                                 title: card.title,
+                                 value: card.value,
+                                 icon: card.icon,
+                                 subtitle1: card.subtitle1,
+                                 iconStyle: card.iconStyle,
+                             },
+                             span: { col: 1, row: 1 },
+                         }))
                     ],
                 },
               ],

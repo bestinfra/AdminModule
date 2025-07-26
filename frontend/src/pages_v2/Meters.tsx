@@ -4,6 +4,11 @@ import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
+// Brand green icon style
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
+
 export default function Meters() {
     const navigate = useNavigate();
     const [meterData, setMeterData] = useState<
@@ -13,6 +18,7 @@ export default function Meters() {
             value: string | number;
             icon: string;
             subtitle1: string;
+            iconStyle?: any;
         }[]
     >([]);
 
@@ -43,6 +49,7 @@ export default function Meters() {
             value: 1200,
             subtitle1: 'Total number of meters',
             icon: 'icons/meter.svg',
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 2,
@@ -50,6 +57,7 @@ export default function Meters() {
             value: 5,
             subtitle1: 'Unique Makes',
             icon: 'icons/meter-make.svg',
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 3,
@@ -57,6 +65,7 @@ export default function Meters() {
             value: 3,
             subtitle1: 'Unique Types',
             icon: 'icons/meter.svg',
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 4,
@@ -64,6 +73,7 @@ export default function Meters() {
             value: 2,
             subtitle1: 'Unique Connection Types',
             icon: 'icons/connection-type.svg',
+            iconStyle: ICON_FILTER_STYLE,
         },
     ]);
     const [demoTableData] = useState([
@@ -175,6 +185,7 @@ export default function Meters() {
                             value: stats.totalMeters,
                             subtitle1: 'Total number of meters',
                             icon: 'icons/meter.svg',
+                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 2,
@@ -182,6 +193,7 @@ export default function Meters() {
                             value: stats.makes?.length ?? 0,
                             subtitle1: 'Unique Makes',
                             icon: 'icons/meter-make.svg',
+                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 3,
@@ -189,6 +201,7 @@ export default function Meters() {
                             value: stats.types?.length ?? 0,
                             subtitle1: 'Unique Types',
                             icon: 'icons/meter.svg',
+                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 4,
@@ -197,6 +210,7 @@ export default function Meters() {
                                 .length,
                             subtitle1: 'Unique Connection Types',
                             icon: 'icons/connection-type.svg',
+                            iconStyle: ICON_FILTER_STYLE,
                         },
                     ];
                     setMeterData(cards);
@@ -335,15 +349,16 @@ export default function Meters() {
                             rows: [
                                 {
                                     layout: 'row',
-                                    columns: meterData.map((meter) => ({
-                                        name: 'Card',
-                                        props: {
-                                            title: meter.title,
-                                            value: meter.value,
-                                            icon: meter.icon,
-                                            subtitle1: meter.subtitle1,
-                                        },
-                                    })),
+                                                                         columns: meterData.map((meter) => ({
+                                         name: 'Card',
+                                         props: {
+                                             title: meter.title,
+                                             value: meter.value,
+                                             icon: meter.icon,
+                                             subtitle1: meter.subtitle1,
+                                             iconStyle: meter.iconStyle,
+                                         },
+                                     })),
                                 },
                             ],
                         },

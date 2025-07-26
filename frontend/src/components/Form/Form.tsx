@@ -414,7 +414,7 @@ const Form = forwardRef<FormRef, FormProps>(({
   const formContainerClasses = `${baseClasses} ${backgroundClass} ${className || ''}`;
 
   return (
-    <div className={`w-full   ${formContainerClasses}`}>
+    <div className={`w-full ${formContainerClasses}`}>
       <form
         id={formId}
         onSubmit={handleFormSubmit}

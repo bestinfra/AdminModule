@@ -1,4 +1,5 @@
 import { useState, useEffect, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
 
@@ -19,6 +20,7 @@ const ICON_FILTER_STYLE = {
 };
 
 export default function Users() {
+    const navigate = useNavigate();
     const [users, setUsers] = useState<
         Array<{
             sNo: number;
@@ -116,7 +118,7 @@ export default function Users() {
                     totalRoles: 4,
                 });
             })
-            .finally(() => {});
+            .finally(() => setStatsLoading(false));
     }, []);
 
     // Widget cards array (same style as meters/tickets)
@@ -268,10 +270,17 @@ export default function Users() {
                                                 loading: loading,
                                                 searchable: true,
                                                 pagination: true,
-                                                showActions: false,
+                                                showActions: true,
                                                 emptyMessage: loading
                                                     ? 'Loading users...'
                                                     : 'No users found',
+                                                onViewClick: (row: any) => {
+                                                    navigate('/basic-information', {
+                                                        state: {
+                                                            user: row
+                                                        }
+                                                    });
+                                                },
                                             },
                                         },
                                     ],

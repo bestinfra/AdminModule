@@ -71,7 +71,7 @@ const Header = createSafeLazyComponent(
 );
 
 const SubLogin = createSafeLazyComponent(
-  () => import('SuperAdmin/Login'),
+  () => import('SuperAdmin/SubLogin'),
   SubLoginFallback
 );
 
