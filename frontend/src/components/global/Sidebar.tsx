@@ -91,34 +91,14 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dtr.svg',
                 link: '/dtr-dashboard',
             },
-            {
-                title:'Feeders',
-                icon:'/icons/feeder.svg',
-                link:'/feeders'
-            }
+            // {
+            //     title:'Feeders',
+            //     icon:'/icons/feeder.svg',
+            //     link:'/feeders'
+            // }
 
         ],
     },
-    // {
-    //     category: 'CONSUMER MANAGEMENT',
-    //     items: [
-    //         {
-    //             title: 'Consumers',
-    //             icon: '/icons/user.svg',
-    //             link: '/consumers',
-    //         },
-    //         {
-    //             title: 'Add Consumer',
-    //             icon: '/icons/user-add.svg',
-    //             link: '/consumers/add',
-    //         },
-    //         {
-    //             title: 'Consumer View',
-    //             icon: '/icons/user-profile.svg',
-    //             link: '/consumers',
-    //         },
-    //     ],
-    // },
     // {
     //     category: 'METER MANAGEMENT',
     //     items: [

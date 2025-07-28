@@ -130,4 +130,14 @@ declare module 'SuperAdmin/AppProvider' {
 
 declare module 'SuperAdmin/useApp' {
   export const useApp: () => any;
-} 
+}
+
+declare module 'SuperAdmin/Login' {
+  const Login: React.ComponentType<any>;
+  export default Login;
+}
+
+declare module 'SuperAdmin/OrgChartAlt' {
+  const OrgChartAlt: React.ComponentType<any>;
+  export default OrgChartAlt;
+}

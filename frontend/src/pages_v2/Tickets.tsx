@@ -11,6 +11,190 @@ export default function Tickets() {
     const [tickets, setTickets] = useState<any[]>([]);
     const [pagination, setPagination] = useState<any>(null);
 
+    // Dummy data for development
+    const dummyTickets = [
+        {
+            id: 336,
+            ticketNumber: '336',
+            customerName: 'BI25GMRA001',
+            subject: 'Testing',
+            priority: 'High',
+            status: 'Open',
+            assignedTo: 'Support Team',
+            createdAt: '2024-01-15T10:30:00Z',
+            lastUpdated: '2024-01-16T14:20:00Z',
+            category: 'Connection Issue',
+            responseTime: '2h 15m',
+            meterSerialNo: 'A9211434',
+            email: 'customer1@example.com',
+            phone: '+91-9876543210',
+            description: 'Testing connection issue with meter.',
+        },
+        {
+            id: 335,
+            ticketNumber: '335',
+            customerName: 'BI25GMRA001',
+            subject: 'Issue',
+            priority: 'High',
+            status: 'Open',
+            assignedTo: 'Technical Team',
+            createdAt: '2024-01-14T09:15:00Z',
+            lastUpdated: '2024-01-16T11:45:00Z',
+            category: 'Meter Issue',
+            responseTime: '1h 30m',
+            meterSerialNo: 'A9211434',
+            email: 'customer1@example.com',
+            phone: '+91-9876543210',
+            description: 'Meter showing connection error.',
+        },
+        {
+            id: 333,
+            ticketNumber: '333',
+            customerName: 'BI25GMRA001',
+            subject: 'Communication Issue',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'IT Team',
+            createdAt: '2024-01-13T16:45:00Z',
+            lastUpdated: '2024-01-16T08:30:00Z',
+            category: 'Billing',
+            responseTime: '45m',
+            meterSerialNo: 'A9211434',
+            email: 'customer1@example.com',
+            phone: '+91-9876543210',
+            description: 'Communication issue with billing system.',
+        },
+        {
+            id: 332,
+            ticketNumber: '332',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Customer Service',
+            createdAt: '2024-01-12T13:20:00Z',
+            lastUpdated: '2024-01-15T17:10:00Z',
+            category: 'Connection Issue',
+            responseTime: '3h 20m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Meter maintenance request.',
+        },
+        {
+            id: 327,
+            ticketNumber: '327',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Installation Team',
+            createdAt: '2024-01-11T08:00:00Z',
+            lastUpdated: '2024-01-16T08:00:00Z',
+            category: 'Meter Issue',
+            responseTime: '1h 45m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Meter installation verification needed.',
+        },
+        {
+            id: 326,
+            ticketNumber: '326',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Emergency Team',
+            createdAt: '2024-01-10T06:30:00Z',
+            lastUpdated: '2024-01-16T10:15:00Z',
+            category: 'Billing',
+            responseTime: '30m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Billing discrepancy report.',
+        },
+        {
+            id: 325,
+            ticketNumber: '325',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Support Team',
+            createdAt: '2024-01-09T14:20:00Z',
+            lastUpdated: '2024-01-16T09:30:00Z',
+            category: 'Connection Issue',
+            responseTime: '2h 10m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Connection stability issue.',
+        },
+        {
+            id: 324,
+            ticketNumber: '324',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Billing Team',
+            createdAt: '2024-01-08T11:00:00Z',
+            lastUpdated: '2024-01-16T11:00:00Z',
+            category: 'Meter Issue',
+            responseTime: '1h 20m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Meter reading accuracy check.',
+        },
+        {
+            id: 323,
+            ticketNumber: '323',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Customer Service',
+            createdAt: '2024-01-07T16:45:00Z',
+            lastUpdated: '2024-01-16T12:20:00Z',
+            category: 'Billing',
+            responseTime: '4h 15m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Billing query resolution.',
+        },
+        {
+            id: 322,
+            ticketNumber: '322',
+            customerName: 'BI25GMRA002',
+            subject: 'MMMM',
+            priority: 'Medium',
+            status: 'Open',
+            assignedTo: 'Investigation Team',
+            createdAt: '2024-01-06T10:30:00Z',
+            lastUpdated: '2024-01-16T07:45:00Z',
+            category: 'Connection Issue',
+            responseTime: '1h 5m',
+            meterSerialNo: 'A9345417',
+            email: 'customer2@example.com',
+            phone: '+91-8765432109',
+            description: 'Connection investigation request.',
+        },
+    ];
+
+    const dummyPagination = {
+        currentPage: 1,
+        totalPages: 3,
+        totalItems: 24,
+        itemsPerPage: 10,
+        hasNextPage: true,
+        hasPrevPage: false,
+    };
+
+    // Fetch ticket stats
     useEffect(() => {
         fetch(`${BACKEND_URL}/tickets/stats`)
             .then(res => res.json())
@@ -71,105 +255,17 @@ export default function Tickets() {
                 if (data.success) {
                     setTickets(data.data);
                     setPagination(data.pagination);
+                } else {
+                    // Fallback to dummy data
+                    setTickets(dummyTickets);
+                    setPagination(dummyPagination);
                 }
             })
             .catch((err) => {
                 console.error('Failed to fetch ticket data:', err);
-                // Fallback dummy data
-                const dummyTickets = [
-                    {
-                        id: 'TICKET-001',
-                        ticketNumber: 'TICKET-001',
-                        customerName: 'John Smith',
-                        subject: 'Power Outage in Downtown Area',
-                        priority: 'High',
-                        status: 'Open',
-                        assignedTo: 'Sarah Johnson',
-                        createdAt: '2024-01-15 09:30:00',
-                        lastUpdated: '2024-01-16 14:20:00',
-                        category: 'Power Outage',
-                        responseTime: '2h 15m',
-                        description: 'Complete power outage affecting 50+ customers in downtown area. Emergency response required.',
-                        location: '123 Main St, Downtown',
-                        contactPhone: '+1-555-0123',
-                        contactEmail: 'john.smith@email.com'
-                    },
-                    {
-                        id: 'TICKET-002',
-                        ticketNumber: 'TICKET-002',
-                        customerName: 'Emily Davis',
-                        subject: 'Meter Reading Issue',
-                        priority: 'Medium',
-                        status: 'In Progress',
-                        assignedTo: 'Mike Chen',
-                        createdAt: '2024-01-14 11:45:00',
-                        lastUpdated: '2024-01-16 10:15:00',
-                        category: 'Meter Issues',
-                        responseTime: '4h 30m',
-                        description: 'Customer reports incorrect meter readings. Investigation needed.',
-                        location: '456 Oak Ave, Suburb',
-                        contactPhone: '+1-555-0456',
-                        contactEmail: 'emily.davis@email.com'
-                    },
-                    {
-                        id: 'TICKET-003',
-                        ticketNumber: 'TICKET-003',
-                        customerName: 'Robert Wilson',
-                        subject: 'Billing Dispute',
-                        priority: 'Low',
-                        status: 'Resolved',
-                        assignedTo: 'Lisa Park',
-                        createdAt: '2024-01-13 16:20:00',
-                        lastUpdated: '2024-01-15 09:45:00',
-                        category: 'Billing',
-                        responseTime: '1h 45m',
-                        description: 'Customer disputing monthly bill amount. Investigation completed.',
-                        location: '789 Pine Rd, Village',
-                        contactPhone: '+1-555-0789',
-                        contactEmail: 'robert.wilson@email.com'
-                    },
-                    {
-                        id: 'TICKET-004',
-                        ticketNumber: 'TICKET-004',
-                        customerName: 'Maria Garcia',
-                        subject: 'Service Connection Request',
-                        priority: 'Medium',
-                        status: 'Open',
-                        assignedTo: 'David Kim',
-                        createdAt: '2024-01-16 08:15:00',
-                        lastUpdated: '2024-01-16 08:15:00',
-                        category: 'New Connection',
-                        responseTime: '0h 30m',
-                        description: 'New customer requesting service connection for residential property.',
-                        location: '321 Elm St, New District',
-                        contactPhone: '+1-555-0321',
-                        contactEmail: 'maria.garcia@email.com'
-                    },
-                    {
-                        id: 'TICKET-005',
-                        ticketNumber: 'TICKET-005',
-                        customerName: 'James Brown',
-                        subject: 'Equipment Maintenance',
-                        priority: 'High',
-                        status: 'Escalated',
-                        assignedTo: 'Technical Team',
-                        createdAt: '2024-01-15 13:00:00',
-                        lastUpdated: '2024-01-16 16:30:00',
-                        category: 'Equipment',
-                        responseTime: '6h 45m',
-                        description: 'Critical equipment failure at substation. Immediate attention required.',
-                        location: 'Substation Alpha, Industrial Zone',
-                        contactPhone: '+1-555-0654',
-                        contactEmail: 'james.brown@email.com'
-                    }
-                ];
+                // Fallback to dummy data
                 setTickets(dummyTickets);
-                setPagination({
-                    currentPage: 1,
-                    totalPages: 1,
-                    totalItems: dummyTickets.length,
-                    itemsPerPage: limit
-                });
+                setPagination(dummyPagination);
             })
             .finally(() => {});
     };
@@ -182,22 +278,48 @@ export default function Tickets() {
         fetchTicketsTable(page, limit);
     };
 
+    // Handle ticket actions
+    const handleViewTicket = (row: TableData) => {
+        console.log('Viewing ticket:', row);
+        navigate(`/tickets/${row.id}`);
+    };
+
+    const handleEditTicket = (row: TableData) => {
+        console.log('Editing ticket:', row);
+        navigate(`/tickets/${row.id}/edit`);
+    };
+
+    const handleDeleteTicket = (row: TableData) => {
+        console.log('Deleting ticket:', row);
+        if (confirm(`Are you sure you want to delete ticket ${row.ticketNumber}?`)) {
+            console.log('Ticket deleted:', row.id);
+        }
+    };
+
+    // Brand green icon style
+    const brandGreenIconStyle = {
+        filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+    };
+
     const [tableColumns] = useState([
         { key: 'ticketNumber', label: 'Ticket ID' },
-        { key: 'consumerUid', label: 'Consumer UID' },
+        { key: 'customerName', label: 'Consumer UID' },
         { key: 'subject', label: 'Subject' },
+        { key: 'meterSerialNo', label: 'Meter Serial No' },
+        { key: 'category', label: 'Category' },
         { key: 'meterSerialNo', label: 'Meter Serial No' },
         { key: 'category', label: 'Category' },
         { key: 'priority', label: 'Priority' },
         { key: 'status', label: 'Status' },
+        { key: 'actions', label: 'Actions' },
     ]);
 
     const statsArray = [
-        { key: 'total', label: 'Total Tickets', icon: 'icons/open-tickets.svg', subtitle1: 'Total active tickets', subtitle2: 'Last 24 hours' },
-        { key: 'open', label: 'Open Tickets', icon: 'icons/check-circle.svg', subtitle1: 'Successfully resolved', subtitle2: 'Today' },
-        { key: 'inProgress', label: 'In Progress Tickets', icon: 'icons/progress.svg', subtitle1: 'Customer satisfaction', subtitle2: 'Target: 4h' },
-        { key: 'resolved', label: 'Resolved Tickets', icon: 'icons/alert-triggered.svg', subtitle1: 'Requires attention', subtitle2: 'High priority' },
-        { key: 'closed', label: 'Closed Tickets', icon: 'icons/closed.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month' },
+        { key: 'total', label: 'Total Tickets', icon: 'icons/open-tickets.svg', subtitle1: 'Total active tickets', subtitle2: 'Last 24 hours', iconStyle: brandGreenIconStyle },
+        { key: 'open', label: 'Open Tickets', icon: 'icons/check-circle.svg', subtitle1: 'Successfully resolved', subtitle2: 'Today', iconStyle: brandGreenIconStyle },
+        { key: 'inProgress', label: 'In Progress Tickets', icon: 'icons/clock.svg', subtitle1: 'Customer satisfaction', subtitle2: 'Target: 4h', iconStyle: brandGreenIconStyle },
+        { key: 'resolved', label: 'Resolved Tickets', icon: 'icons/alert-triggered.svg', subtitle1: 'Requires attention', subtitle2: 'High priority', iconStyle: brandGreenIconStyle },
+        { key: 'closed', label: 'Closed Tickets', icon: 'icons/star.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month', iconStyle: brandGreenIconStyle },
     ];
 
     return (
@@ -213,12 +335,12 @@ export default function Tickets() {
                         {
                             name: 'PageHeader',
                             props: {
-                                title: "Ticket Management",
+                                title: "Tickets",
                                 onBackClick: () => window.history.back(),
                                 backButtonText: "Back to Dashboard",
                                 buttonsLabel: "Add Ticket",
                                 variant: "primary",
-                                onClick: () => console.log('Adding new ticket...'),
+                                onClick: () => navigate('/add-ticket'),
                                 showMenu: true,
                                 showDropdown: true,
                                 menuItems: [
@@ -250,6 +372,7 @@ export default function Tickets() {
                                         icon: stat.icon,
                                         subtitle1: stat.subtitle1,
                                         subtitle2: stat.subtitle2,
+                                        iconStyle: stat.iconStyle,
                                     },
                                 })),
                             },
@@ -318,12 +441,9 @@ export default function Tickets() {
                                             text: 'Ticket Management Table',
                                             serverPagination: pagination,
                                             onPageChange: handleTicketPageChange,
-                                            onEdit: (row: TableData) =>
-                                                console.log('Edit:', row),
-                                            onDelete: (row: TableData) =>
-                                                console.log('Delete:', row),
-                                            onView: (row: TableData) =>
-                                                navigate(`/tickets/${row.ticketNumber}`),
+                                             onEdit: handleEditTicket,
+                                             onDelete: handleDeleteTicket,
+                                             onView: handleViewTicket,
                                         },
                                     },
                                 ],
