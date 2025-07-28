@@ -97,45 +97,85 @@ const Feeders = () => {
                                 className: 'justify-between w-full',
                                 span: { col: 3, row: 1 },
                                 columns: [
-                                    {
-                                        name: 'SectionHeader',
-                                        props: {
-                                            title: 'Feeder Information',
-                                            titleLevel: 2,
-                                            titleSize: 'md',
-                                            className: 'w-full',
-                                            titleVariant: 'primary',
-                                            titleWeight: 'bold',
-                                            titleAlign: 'left',
-                                            layout: 'horizontal',
-                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
-                                        },
-                                    },
-                                ],
-                            },
-                            {
-                                layout: 'grid' as const,
-                                gridColumns: 3,
-                                span: { col: 3, row: 1 },
-                                columns: feederData.map((item) => ({
-                                    name: 'SectionHeader',
-                                    props: {
-                                        title: item.title,
-                                        value: item.description,
-                                        titleLevel: 2,
-                                        titleSize: 'md',    
-                                        titleVariant: 'primary',
-                                        titleWeight: 'bold',
-                                        titleAlign: 'left',
-                                        layout: 'vertical',
-                                        rightComponent: {
-                                            name: 'LastComm',
-                                            props: { description: item.description },
-                                        },
-                                    },
-                                    span: { col: 1, row: 1 },
-                                })),
-                            },
+                                    {   
+                                       name: 'PageInformation',
+                                       props: {
+                                        gridColumns: 3,
+                                        rows: [
+                                            {
+                                                layout: 'row',
+                                                className: 'justify-between w-full',
+                                                span: { col: 3, row: 1 },
+                                                items: [
+                                                    {
+                                                        title: 'Feeder Name',
+                                                        value: 'D1F1(32500114)',
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title: 'Rating',
+                                                        value: '25.00 kVA',
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title: 'Address',
+                                                        value: 'Waddepally, Warangal, Telangana, India, 506001',
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                       }
+                                    }
+                                ]
+                            }
+                            // {
+                            //     layout: 'row' as const,
+                            //     className: 'justify-between w-full',
+                            //     span: { col: 3, row: 1 },
+                            //     columns: [
+                            //         {
+                            //             name: 'SectionHeader',
+                            //             props: {
+                            //                 title: 'Feeder Information',
+                            //                 titleLevel: 2,
+                            //                 titleSize: 'md',
+                            //                 className: 'w-full',
+                            //                 titleVariant: 'primary',
+                            //                 titleWeight: 'bold',
+                            //                 titleAlign: 'left',
+                            //                 layout: 'horizontal',
+                            //                 rightComponent: { name: 'LastComm', props: { value: lastComm } },
+                            //             },
+                            //         },
+                            //     ],
+                            // },
+                            // {
+                            //     layout: 'grid' as const,
+                            //     gridColumns: 3,
+                            //     span: { col: 3, row: 1 },
+                            //     columns: feederData.map((item) => ({
+                            //         name: 'SectionHeader',
+                            //         props: {
+                            //             title: item.title,
+                            //             value: item.description,
+                            //             titleLevel: 2,
+                            //             titleSize: 'md',    
+                            //             titleVariant: 'primary',
+                            //             titleWeight: 'bold',
+                            //             titleAlign: 'left',
+                            //             layout: 'vertical',
+                            //             rightComponent: {
+                            //                 name: 'LastComm',
+                            //                 props: { description: item.description },
+                            //             },
+                            //         },
+                            //         span: { col: 1, row: 1 },
+                            //     })),
+                            // },
                         ],
                     },
                 },
