@@ -598,7 +598,7 @@ const DTRDashboard: React.FC = () => {
                               props: {
                                 availableTimeRanges: ["Daily", "Monthly"],
                                 selectedTimeRange: selectedTimeRange,
-                                handleTimeRangeChange: handleTimeRangeChange,
+                                handleTimeRangeChange: handleTimeRangeChange, 
                                 timeRangeLabels: {},
                               },
                             },
@@ -607,7 +607,7 @@ const DTRDashboard: React.FC = () => {
                           },
                           span: { col: 2, row: 1 },
                         },
-                                                 ...getCurrentConsumptionCards().map((card) => ({
+                          ...getCurrentConsumptionCards().map((card) => ({
                              name: 'Card',
                              props: {
                                  title: card.title,
