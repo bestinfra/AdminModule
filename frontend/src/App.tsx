@@ -23,6 +23,7 @@ import UserManagement from './pages/UserManagment';
 import AllTickets from './pages/AllTickets';import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
+import MetersList from './pages/MetersList';
 import TicketView from './pages_v2/TicketView';
 import Prepaid from './pages_v2/Prepaid';   
 import Postpaid from './pages_v2/Postpaid';
@@ -82,6 +83,7 @@ const App: React.FC = () => {
                             <Route path="/add-role" element={<AddRole />} />
                             <Route path="/add-user" element={<AddUser />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
+                            <Route path="/meters-list" element={<MetersList />} />
                         </Route>
                     </Routes>
                 </Router>

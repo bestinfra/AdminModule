@@ -403,7 +403,7 @@ const DTRDashboard: React.FC = () => {
                       },
                       span: { col: 3, row: 1 },
                     },
-                                         ...dtrStatsCards.map((stat) => ({
+                      ...dtrStatsCards.map((stat) => ({
                        name: "Card",
                        props: {
                          title: stat.title,
