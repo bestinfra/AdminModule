@@ -76,9 +76,9 @@ const TimeRangeSelector: React.FC<TimeRangeSelectorProps> = ({
                 <span
                     ref={selectedTimeRange === range ? selectedRef : null}
                     key={range}
-                    className={`relative z-10 border-none px-3 py-2 rounded-3xl font-medium text-sm cursor-pointer ${
+                    className={`relative z-10 border-none px-3 py-2 rounded-3xl font-normal text-sm cursor-pointer ${
                         selectedTimeRange === range
-                            ? 'text-primary font-semibold'
+                            ? 'text-colorPrimaryDark font-light '
                             : 'text-text-secondary'
                     }`}
                     onClick={() => handleTimeRangeChange(range)}>

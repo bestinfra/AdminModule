@@ -2,20 +2,20 @@ import { useState, useEffect } from 'react';
 import Page from '@/components/global/PageC';
 
 const stats = [
-    { title: 'R-Phase Voltage', value: '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts' },
-    { title: 'Y-Phase Voltage', value: '255.089', icon: '/icons/y-phase-voltage.svg', subtitle1: 'Volts' },
-    { title: 'B-Phase Voltage', value: '254.417', icon: '/icons/b-phase-voltage.svg', subtitle1: 'Volts' },
+    { title: 'R-Phase Voltage', value: '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-5 h-5' },
+    { title: 'Y-Phase Voltage', value: '255.089', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-5 h-5' },
+    { title: 'B-Phase Voltage', value: '254.417', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-warning)]', iconClassName: 'w-5 h-5' },
     { title: 'Apparent Power', value: '19.527', icon: '/icons/consumption.svg', subtitle1: 'kVA' },
     { title: 'MD-kVA', value: '52.220', icon: '/icons/consumption.svg', subtitle1: 'kVA' },
-    { title: 'R-Phase Current', value: '15.892', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps' },
-    { title: 'Y-Phase Current', value: '27.644', icon: '/icons/y-phase-current.svg', subtitle1: 'Amps' },
-    { title: 'B-Phase Current', value: '33.984', icon: '/icons/b-phase-current.svg', subtitle1: 'Amps' },
+    { title: 'R-Phase Current', value: '15.892', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-5 h-5' },
+    { title: 'Y-Phase Current', value: '27.644', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-5 h-5' },
+    { title: 'B-Phase Current', value: '33.984', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-warning)]', iconClassName: 'w-5 h-5' },
     { title: 'Neutral Current', value: '12.980', icon: '/icons/consumption.svg', subtitle1: 'Amps' },
     { title: 'Frequency', value: '49.980', icon: '/icons/frequency.svg', subtitle1: 'Hz' },
-    { title: 'R-Phase PF', value: '1.000', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
-    { title: 'Y-Phase PF', value: '-0.987', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
-    { title: 'B-Phase PF', value: '0.998', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
-    { title: 'Avg PF', value: '-0.999', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
+    { title: 'R-Phase PF', value: '1.000', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-5 h-5' },
+    { title: 'Y-Phase PF', value: '-0.987', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-5 h-5' },
+    { title: 'B-Phase PF', value: '0.998', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-warning)]', iconClassName: 'w-5 h-5' },
+    { title: 'Avg PF', value: '-0.999', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor'},
     { title: 'Cummulative kVAh', value: '77902.296', icon: '/icons/consumption.svg', subtitle1: 'kVAh' },
 ];
 
@@ -90,7 +90,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
-                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-8 ',
+                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-8',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -143,7 +143,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'mb-6 border border-primary-border rounded-3xl px-6',
+                        className: 'mb-6 border border-primary-border rounded-3xl px-6 bg-background-secondary',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -154,8 +154,8 @@ const Feeders = () => {
                                             title: 'Feeder Statistics',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
-                                            titleWeight: 'bold',
+                                            titleVariant: 'colorPrimaryDark',
+                                            titleWeight: 'medium',
                                             titleAlign: 'left',
                                             className: 'w-full',
                                             rightComponent: { name: 'LastComm', props: { value: lastComm } },
@@ -172,7 +172,10 @@ const Feeders = () => {
                                 layout: 'grid' as const,
                                 gap: 'gap-4',
                                 gridColumns: 5,
-                                columns: stats.map((stat) => ({ name: 'Card', props: stat })),
+                                columns: stats.map((stat) => ({ 
+                                    name: 'Card', 
+                                    props: { ...stat } 
+                                })),
                             },
                         ],
                     },
@@ -293,7 +296,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'bg-white p-4',
+                        className: 'mb-8 border border-primary-border rounded-3xl p-6',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -304,8 +307,8 @@ const Feeders = () => {
                                             title: 'Alerts',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
-                                            titleWeight: 'bold',
+                                            titleVariant: "colorPrimaryDark",
+                                            titleWeight: "medium",
                                             titleAlign: 'left',
                                         },
                                     },

@@ -21,6 +21,8 @@ const DTRDashboard: React.FC = () => {
       subtitle1: "Total Transformer Units",
       onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
       iconStyle: ICON_FILTER_STYLE,
+      bg: "bg-stat-icon-gradient",
+
     },
     {
       title: "Total LT Feeders",
@@ -387,7 +389,7 @@ const DTRDashboard: React.FC = () => {
                   gridColumns: 3,
                   gridRows: 2,
                   span: { col: 3, row: 1 },
-                  className:'border border-primary-border rounded-3xl p-6',
+                  className:'border border-primary-border rounded-3xl p-6 bg-background-secondary',
                   columns: [
                     {
                       name: "SectionHeader",
@@ -395,15 +397,15 @@ const DTRDashboard: React.FC = () => {
                         title: "Distribution Transformer (DTR) Statistics",
                         titleLevel: 2,
                         titleSize: "md",
-                        titleVariant: "primary",
-                        titleWeight: "bold",
+                        titleVariant: "colorPrimaryDark",
+                        titleWeight: "medium",
                         titleAlign: "left",
                         layout: "horizontal",
                         gap: "gap-4",
                       },
                       span: { col: 3, row: 1 },
                     },
-                                         ...dtrStatsCards.map((stat) => ({
+                      ...dtrStatsCards.map((stat) => ({
                        name: "Card",
                        props: {
                          title: stat.title,
@@ -412,6 +414,7 @@ const DTRDashboard: React.FC = () => {
                          subtitle1: stat.subtitle1,
                          onValueClick: stat.onValueClick,
                          iconStyle: stat.iconStyle,
+                         bg: "bg-stat-icon-gradient",
                        },
                        span: { col: 1, row: 1 },
                      })),
@@ -423,7 +426,7 @@ const DTRDashboard: React.FC = () => {
                     gridColumns: 2,
                     gridRows: 2,
                     span: { col: 2, row: 1 },
-                    className:'border border-primary-border rounded-3xl p-6',
+                    className:'border border-primary-border rounded-3xl p-6 bg-background-secondary',
                     columns: [
                                               {
                           name: "SectionHeader",
@@ -431,8 +434,8 @@ const DTRDashboard: React.FC = () => {
                             title: "Latest Alerts",
                             titleLevel: 2,
                             titleSize: "md",
-                            titleVariant: "primary",
-                            titleWeight: "bold",
+                            titleVariant: "colorPrimaryDark",
+                            titleWeight: "medium",
                             titleAlign: "left",
                             rightComponent: {
                               name: "TimeRangeSelector",
@@ -456,6 +459,7 @@ const DTRDashboard: React.FC = () => {
                                  icon: card.icon,
                                  subtitle1: card.subtitle1,
                                  iconStyle: card.iconStyle,
+                                 bg: "bg-stat-icon-gradient",
                              },
                              span: { col: 1, row: 1 },
                          }))
@@ -561,7 +565,7 @@ const DTRDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column' as const,
-                            className: 'mb-8',
+                            className: 'mb-8 border border-primary-border rounded-3xl p-6',
                         },
                         components: [
                             {
@@ -569,7 +573,7 @@ const DTRDashboard: React.FC = () => {
                                 props: {
                                     text: 'DTRs',
                                     level: 2,
-                                    className: 'text-lg font-semibold mb-4',
+                                    className: 'text-base font-medium',
                                 },
                             },
                             {
@@ -593,6 +597,7 @@ const DTRDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column' as const,
+                            className: 'mb-8 border border-primary-border rounded-3xl p-6',
                         },
                         components: [
                             {
@@ -600,7 +605,7 @@ const DTRDashboard: React.FC = () => {
                                 props: {
                                     text: 'Latest Alerts',
                                     level: 2,
-                                    className: 'text-lg font-semibold mb-4',
+                                    className: 'text-base font-medium',
                                 },
                             },
                             {

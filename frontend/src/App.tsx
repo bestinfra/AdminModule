@@ -23,16 +23,16 @@ import UserManagement from './pages/UserManagment';
 import AllTickets from './pages/AllTickets';import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
+import MetersList from './pages/MetersList';
 import TicketView from './pages_v2/TicketView';
-import Prepaid from './pages_v2/Prepaid';
+import Prepaid from './pages_v2/Prepaid';   
 import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
-import LoginV2 from './pages_v2/LoginV2';
-
+import SubLogin from './pages_v2/SubLogin';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -40,6 +40,7 @@ const App: React.FC = () => {
                 <Router>
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
+                        {/* <Route path="/sub-login" element={<SubLogin />} /> */}
                         <Route
                             element={
                                 <ProtectedRoute>
@@ -81,6 +82,7 @@ const App: React.FC = () => {
                             <Route path="/add-role" element={<AddRole />} />
                             <Route path="/add-user" element={<AddUser />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
+                            <Route path="/meters-list" element={<MetersList />} />
                         </Route>
                     </Routes>
                 </Router>

@@ -169,7 +169,6 @@ const renderFormInput = (
 );
 
 const Form = forwardRef<FormRef, FormProps>(({
-  // usefull
   inputs,
   onSubmit,
   submitLabel,

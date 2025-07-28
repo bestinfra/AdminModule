@@ -373,6 +373,7 @@ export default function Tickets() {
                                         subtitle1: stat.subtitle1,
                                         subtitle2: stat.subtitle2,
                                         iconStyle: stat.iconStyle,
+                                        bg: "bg-stat-icon-gradient",
                                     },
                                 })),
                             },

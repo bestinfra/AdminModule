@@ -267,7 +267,7 @@ export default function Postpaid() {
                                         .slice(0, 4)
                                         .map((card) => ({
                                             name: 'Card',
-                                            props: card,
+                                            props: { ...card, bg: "bg-stat-icon-gradient" },
                                         })),
                                 },
                             ],
@@ -286,7 +286,7 @@ export default function Postpaid() {
                                     columns: [
                                         {
                                             name: 'Card',
-                                            props: cardData[4],
+                                            props: { ...cardData[4], bg: "bg-stat-icon-gradient" },
                                         },
                                     ],
                                 },
