@@ -58,304 +58,68 @@ interface SidebarProps {
 
 const defaultMenus: MenuCategory[] = [
     {
-        category: 'DASHBOARD',
+        category: 'GENERAL',
         items: [
-            // {
-            //     title: 'Dashboard',
-            //     icon: '/icons/dashboard.svg',
-            //     link: '/',
-            // },
-            // {
-            //     title: 'Super Admin Dashboard',
-            //     icon: '/icons/admin.svg',
-            //     link: '/super-admin',
-            // },
-            // {
-            //     title: 'Consumers',
-            //     icon: '/icons/user.svg',
-            //     link: '/consumers',
-            // },
-            {
-                title: 'App Management',
-                icon: '/icons/apps-icon.svg',
-                link: '/apps',
-            },
-            // {
-            //     title: 'User Management',
-            //     icon: '/icons/user-gear.svg',
-            //     link: '/user-management',
-            // },
-           
             {
                 title: 'DTR Dashboard',
-                icon: '/icons/dtr.svg',
+                icon: '/icons/dashboard.svg',
                 link: '/dtr-dashboard',
-            },
-            // {
-            //     title:'Feeders',
-            //     icon:'/icons/feeder.svg',
-            //     link:'/feeders'
-            // }
-
-        ],
-    },
-    // {
-    //     category: 'METER MANAGEMENT',
-    //     items: [
-    //         {
-    //             title: 'Meters List',
-    //             icon: '/icons/meter.svg',
-    //             link: '/meter-management/meters-list',
-    //         },
-    //         {
-    //             title: 'Add Meter',
-    //             icon: '/icons/meter-bolt.svg',
-    //             link: '/meter-management/meters-list/add',
-    //         },
-    //         {
-    //             title: 'Meter Details',
-    //             icon: '/icons/meter-make.svg',
-    //             link: '/meter-details',
-    //         },
-    //         {
-    //             title: 'Data Logger Master',
-    //             icon: '/icons/database.svg',
-    //             link: '/meter-management/data-logger-master',
-    //         },
-    //         {
-    //             title: 'Add Data Logger',
-    //             icon: '/icons/server.svg',
-    //             link: '/meter-management/data-logger-master/add',
-    //         },
-    //     ],
-    // },
-    // {
-    //     category: 'BILLING',
-    //     items: [
-    //         {
-    //             title: 'Bills Postpaid',
-    //             icon: '/icons/bills.svg',
-    //             link: '/postpaid',
-    //         },
-    //         {
-    //             title: 'Bills Prepaid',
-    //             icon: '/icons/bills2.svg',
-    //             link: '/prepaid',
-    //         },
-    //     ],
-    // },
-    // {
-    //     category: 'DTR MANAGEMENT',
-    //     items: [
-    //         {
-    //             title: 'DTR Overview',
-    //             icon: '/icons/dtr.svg',
-    //             link: '/dtr-dashboard',
-    //             hasSubmenu: true,
-    //             submenu: [
-    //                 {
-    //                     title: 'DTR Detail Page',
-    //                     link: '/dtr',
-    //                 },
-    //                 {
-    //                     title: 'Total DTRs',
-    //                     link: '/dtr-statistics/total-dtrs',
-    //                 },
-    //                 {
-    //                     title: 'Total Fuse Blown',
-    //                     link: '/dtr-statistics/total-fuse-blown',
-    //                 },
-    //                 {
-    //                     title: 'Total LT Feeders',
-    //                     link: '/dtr-statistics/total-lt-feeders',
-    //                 },
-    //             ],
-    //         },
-    //         {
-    //             title: 'DTR Issues',
-    //             icon: '/icons/alert-triggered.svg',
-    //             hasSubmenu: true,
-    //             submenu: [
-    //                 {
-    //                     title: 'HT Side Fuse Blown',
-    //                     link: '/dtr-statistics/ht-side-fuse-blown',
-    //                 },
-    //                 {
-    //                     title: 'LT Side Fuse Blown',
-    //                     link: '/dtr-statistics/lt-side-fuse-blown',
-    //                 },
-    //                 {
-    //                     title: 'Overloaded Feeders',
-    //                     link: '/dtr-statistics/overloaded-feeders',
-    //                 },
-    //                 {
-    //                     title: 'Underloaded Feeders',
-    //                     link: '/dtr-statistics/underloaded-feeders',
-    //                 },
-    //                 {
-    //                     title: 'Unbalanced DTRs',
-    //                     link: '/dtr-statistics/unbalanced-dtrs',
-    //                 },
-    //                 {
-    //                     title: 'Power Failure Feeders',
-    //                     link: '/dtr-statistics/power-failure-feeders',
-    //                 },
-    //             ],
-    //         },
-    //         {
-    //             title: 'Feeders',
-    //             icon: '/icons/feeder.svg',
-    //             link: '/feeders',
-    //         },
-    //     ],
-    // },
-    // {
-    //     category: 'ASSET MANAGEMENT',
-    //     items: [
-    //         {
-    //             title: 'Asset Management',
-    //             icon: '/icons/workflow-setting-alt.svg',
-    //             link: '/asset-management',
-    //         },
-    //         {
-    //             title: 'Connect/Disconnect',
-    //             icon: '/icons/connect.svg',
-    //             link: '/connect-disconnect',
-    //         },
-    //     ],
-    // },
-    {
-        category: 'TICKETS & SUPPORT',
-        items: [
-            {
-                title: 'All Tickets',
-                icon: '/icons/support-tickets.svg',
-                link: '/all-tickets',
             },
             {
                 title: 'Tickets',
-                icon: '/icons/support-tickets.svg',
+                icon: '/icons/customer-service.svg',
                 link: '/tickets',
             },
-            // {
-            //     title: 'Ticket View',
-            //     icon: '/icons/ticket-view.svg',
-            //     link: '/ticket-view/:ticketId',
-            // },
-            // {
-            //     title: 'Add Message',
-            //     icon: '/icons/ticket-view.svg',
-            //     link: '/ticket-view/:ticketId/add-message',
-            // },
-            // {
-            //     title: 'User Management',
-            //     icon: '/icons/user-management.svg',
-            //     link: '/user-management',
-            // },
-            // {
-            //     title: 'Role Management',
-            //     icon: '/icons/role-management.svg',
-            //     link: '/role-management',
-            // },
-        ],
-    },
-    {
-        category: 'METER MANAGEMENT',
-        items: [
             {
-                title: 'Meters',
-                icon: '/icons/meter-make.svg',
-                link: '/meters',
-            },
-            {
-                title: 'Data Logger',
-                icon: '/icons/database.svg',
-                link: '/data-logger',
+                title: 'App-Managment',
+                icon: '/icons/apps-icon.svg',
+                link: '/app-managment',
             },
         ],
     },
     {
-        category: 'USER MANAGEMENT',
+        category: 'ADMIN SETTINGS',
         items: [
             {
-                title: 'Users',
-                icon: '/icons/user.svg',
-                link: '/users',
+                title: 'Asset Management',
+                icon: '/icons/Asset_managment.svg',
+                link: '/asset-management',
+            },
+            
+            {
+                title: 'Meter Management',
+                icon: '/icons/meter_managment.svg',
+                link: '/meter-management',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Data Logger Master',
+                        link: '/data-logger',
+                    },
+                    {
+                        title: 'Meter List',
+                        link: '/meter-management/meter-list',
+                    },
+                ],
             },
             {
-                title: 'Role Management',
-                icon: '/icons/user-gear.svg',
-                link: '/role-management',
+                title: 'User Management',
+                icon: '/icons/user_managment.svg',
+                link: '/user-management',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Users',
+                        link: '/user-management/users',
+                    },
+                    {
+                        title: 'Role Management',
+                        link: '/user-management/role-management',
+                    },
+                ],
             },
         ],
     },
-    // {
-    //     category: 'APPS & MODULES',
-    //     items: [
-    //         {
-    //             title: 'App Management',
-    //             icon: '/icons/apps-icon.svg',
-    //             link: '/apps',
-    //         },
-    //         {
-    //             title: 'Module Selection',
-    //             icon: '/icons/collection.svg',
-    //             link: '/module-selection',
-    //         },
-    //     ],
-    // },
-    // {
-    //     category: 'PAGE BUILDER',
-    //     items: [
-    //         {
-    //             title: 'Page Builder',
-    //             icon: '/icons/workflow-setting-alt.svg',
-    //             link: '/page-builder',
-    //         },
-    //     ],
-    // },
-    // {
-    //     category: 'SETTINGS',
-    //     items: [
-    //         {
-    //             title: 'Forms',
-    //             icon: '/icons/clipboard-user.svg',
-    //             link: '/forms',
-    //         },
-    //         {
-    //             title: 'Profile',
-    //             icon: '/icons/user-profile.svg',
-    //             link: '/profile',
-    //             hasSubmenu: true,
-    //             submenu: [
-    //                 {
-    //                     title: 'Basic Information',
-    //                     link: '/profile/basic-info',
-    //                 },
-    //                 {
-    //                     title: 'Password',
-    //                     link: '/profile/password',
-    //                 },
-    //                 {
-    //                     title: 'Activity Log',
-    //                     link: '/profile/activity-log',
-    //                 },
-    //                 {
-    //                     title: 'Notifications',
-    //                     link: '/profile/notifications',
-    //                 },
-    //                 {
-    //                     title: 'Two-Factor Auth',
-    //                     link: '/profile/two-factor',
-    //                 },
-    //                 {
-    //                     title: 'Account Status',
-    //                     link: '/profile/account-status',
-    //                 },
-    //             ],
-    //         },
-    //     ],
-    // },
 ];
 
 const defaultProps: Partial<
@@ -479,8 +243,8 @@ const Sidebar = ({
                                                             }
                                                             className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${pathname ===
                                                                     menuItem.link
-                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white custom-shadow'
-                                                                    : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
+                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white custom-shadow text-sm font-semibold'
+                                                                    : 'text-main hover:bg-white hover:text-primary  dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white text-sm font-semibold'
                                                                 }`}
                                                             aria-expanded={
                                                                 expandedMenus[
@@ -559,9 +323,9 @@ const Sidebar = ({
                                                                                         subItem.link
                                                                                     )
                                                                                 }
-                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left ${pathname ===
+                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left text-sm ${pathname ===
                                                                                         subItem.link
-                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow'
+                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow '
                                                                                         : 'text-gray-400 hover:text-primary'
                                                                                     }`}>
                                                                                 {
@@ -756,3 +520,4 @@ const Sidebar = ({
 };
 
 export default Sidebar;
+

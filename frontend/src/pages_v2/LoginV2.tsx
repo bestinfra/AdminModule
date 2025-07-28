@@ -154,7 +154,7 @@ const LoginV2: React.FC<LoginV2Props> = ({
   }, [getErrorMessage, onSubmit]);
 
   return (
-    <div className="min-h-screen bg-primary-lightest flex items-center justify-center px-4">
+    <div className=" flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="bg-white rounded-3xl border border-primary-border shadow-md p-8 flex flex-col gap-4 ">
           {logo}
