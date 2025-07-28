@@ -83,7 +83,7 @@ const defaultMenus: MenuCategory[] = [
             {
                 title: 'Asset Management',
                 icon: '/icons/Asset_managment.svg',
-                link: '/asset-management',
+                link: '/asset-managment',
             },
             
             {
