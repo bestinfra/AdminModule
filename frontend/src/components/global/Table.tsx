@@ -322,7 +322,7 @@ const Table: React.FC<TableProps> = ({
                         <img
                             src="/icons/eye.svg"
                             alt="View"
-                            className="w-4 h-4"
+                            className="w-4 h-4 text-colorPrimaryDark"
                         />
                     </span>
                     {onPayment && (

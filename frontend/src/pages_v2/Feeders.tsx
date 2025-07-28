@@ -143,7 +143,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'mb-6 border border-primary-border rounded-3xl px-6',
+                        className: 'mb-6 border border-primary-border rounded-3xl px-6 bg-background-secondary',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -154,8 +154,8 @@ const Feeders = () => {
                                             title: 'Feeder Statistics',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
-                                            titleWeight: 'bold',
+                                            titleVariant: 'colorPrimaryDark',
+                                            titleWeight: 'medium',
                                             titleAlign: 'left',
                                             className: 'w-full',
                                             rightComponent: { name: 'LastComm', props: { value: lastComm } },

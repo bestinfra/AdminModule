@@ -31,7 +31,7 @@ import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
-import LoginV2 from './pages_v2/LoginV2';
+// import Dashboard from './pages_v2/Dashboard';
 
 const App: React.FC = () => {
     return (
