@@ -1331,7 +1331,7 @@ const ConnectDisconnect: React.FC = () => {
                                         gap: 'gap-4',
                                         columns: overviewCards.map((card) => ({
                                             name: 'Card',
-                                            props: card,
+                                            props: { ...card, bg: "bg-stat-icon-gradient" },
                                         })),
                                     },
                                 ],

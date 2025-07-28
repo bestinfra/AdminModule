@@ -21,6 +21,8 @@ const DTRDashboard: React.FC = () => {
       subtitle1: "Total Transformer Units",
       onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
       iconStyle: ICON_FILTER_STYLE,
+      bg: "bg-stat-icon-gradient",
+
     },
     {
       title: "Total LT Feeders",
@@ -412,6 +414,7 @@ const DTRDashboard: React.FC = () => {
                          subtitle1: stat.subtitle1,
                          onValueClick: stat.onValueClick,
                          iconStyle: stat.iconStyle,
+                         bg: "bg-stat-icon-gradient",
                        },
                        span: { col: 1, row: 1 },
                      })),
@@ -456,6 +459,7 @@ const DTRDashboard: React.FC = () => {
                                  icon: card.icon,
                                  subtitle1: card.subtitle1,
                                  iconStyle: card.iconStyle,
+                                 bg: "bg-stat-icon-gradient",
                              },
                              span: { col: 1, row: 1 },
                          }))
