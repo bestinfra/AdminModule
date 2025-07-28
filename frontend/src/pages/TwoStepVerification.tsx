@@ -3,11 +3,11 @@ import Page from '@components/global/Page';
 import { useNavigate } from 'react-router-dom';
 
 const userSidebarMenu = [
-  { title: 'Basic Information', path: '/user-management/users/USR-001' },
-  { title: 'Change Password', path: '/user-management/change-password' },
-  { title: 'Notifications', path: '/user-management/notifications' },
-  { title: 'Two-step Verification', path: '/user-management/two-step-verification' },
-  { title: 'Account Status', path: '/user-management/account-status' },
+  { title: 'Basic Information', path: '/users/basic-information' },
+  { title: 'Change Password', path: '/users/change-password' },
+  { title: 'Notifications', path: '/users/notifications' },
+  { title: 'Two-step Verification', path: '/users/two-step-verification' },
+  { title: 'Account Status', path: '/users/account-status' },
 ];
 
 const SidebarMenu = ({ selected = 3 }) => {

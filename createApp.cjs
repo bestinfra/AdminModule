@@ -444,7 +444,7 @@ const Dashboard = createSafeLazyComponent(
 import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';
 
 const SubLogin = createSafeLazyComponent(
-  () => import('SuperAdmin/Login'),
+  () => import('SuperAdmin/SubLogin'),
   SubLoginFallback
 );
 

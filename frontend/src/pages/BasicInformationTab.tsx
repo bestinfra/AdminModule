@@ -1,4 +1,6 @@
 import React from 'react';
+import Page from '@components/global/Page';
+import { useNavigate } from 'react-router-dom';
 
 interface User {
     name?: string;
@@ -23,6 +25,36 @@ const formatDateSlash = (dateString: string): string => {
     });
 };
 
+const userSidebarMenu = [
+  { title: 'Basic Information', path: '/users/basic-information' },
+  { title: 'Change Password', path: '/users/change-password' },
+  { title: 'Notifications', path: '/users/notifications' },
+  { title: 'Two-step Verification', path: '/users/two-step-verification' },
+  { title: 'Account Status', path: '/users/account-status' },
+];
+
+const SidebarMenu = ({ selected = 0 }) => {
+  const navigate = useNavigate();
+  return (
+    <div className="flex flex-col gap-2 p-4 bg-primary-lightest rounded-2xl min-h-[500px] w-full">
+      {userSidebarMenu.map((item, idx) => (
+        <button
+          key={item.title}
+          className={`text-left px-4 py-3 rounded-xl font-medium text-[16px] transition-all ${
+            idx === selected
+              ? 'bg-white shadow text-primary' // active
+              : 'text-neutral-darker hover:bg-white hover:shadow'
+          }`}
+          style={{ outline: 'none', border: 'none' }}
+          onClick={() => item.path && item.path !== '#' && navigate(item.path)}
+        >
+          {item.title}
+        </button>
+      ))}
+    </div>
+  );
+};
+
 const BasicInformationTab: React.FC<BasicInformationTabProps> = ({ user }) => {
     // Mock user data if no user is provided
     const mockUser: User = {
@@ -37,7 +69,7 @@ const BasicInformationTab: React.FC<BasicInformationTabProps> = ({ user }) => {
 
     const displayUser = user || mockUser;
 
-    return (
+    const content = (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="flex flex-col gap-2">
                 <span className="text-sm color-text-secondary">Full Name</span>
@@ -72,6 +104,17 @@ const BasicInformationTab: React.FC<BasicInformationTabProps> = ({ user }) => {
                 </span>
             </div>
         </div>
+    );
+
+    return (
+        <Page
+            layout="single-column"
+            sections={[{ id: 'basic-information', component: content }]}
+            sidebar={<SidebarMenu selected={0} />}
+            sidebarPosition="left"
+            sectionClassName="bg-transparent p-0 shadow-none"
+            className="bg-white min-h-screen p-0"
+        />
     );
 };
 

@@ -8,6 +8,11 @@ import Holder from '@components/global/Holder';
 import PageHeader from '@components/global/PageHeader';
 import type { Column } from '@components/global/Table';
 
+// Brand green icon style
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
+
 interface TicketData {
     id: number;
     ticketNumber: string;
@@ -221,6 +226,7 @@ const AllTickets: React.FC = () => {
                         subtitle1="Current Month"
                         subtitle2="+12% from last month"
                         onValueClick={() => handleCardClick('all')}
+                        iconStyle={ICON_FILTER_STYLE}
                     />
                     <Card
                         title="High Priority"
@@ -231,6 +237,7 @@ const AllTickets: React.FC = () => {
                         subtitle1="Urgent tickets"
                         subtitle2="+2% from last week"
                         onValueClick={() => handleCardClick('high-priority')}
+                        iconStyle={ICON_FILTER_STYLE}
                     />
                     <Card
                         title="In Progress"
@@ -241,6 +248,7 @@ const AllTickets: React.FC = () => {
                         subtitle1="Active tickets"
                         subtitle2="+5% from last week"
                         onValueClick={() => handleCardClick('in-progress')}
+                        iconStyle={ICON_FILTER_STYLE}
                     />
                     <Card
                         title="Resolved"
@@ -251,6 +259,7 @@ const AllTickets: React.FC = () => {
                         subtitle1="This month"
                         subtitle2="+8% from last month"
                         onValueClick={() => handleCardClick('resolved')}
+                        iconStyle={ICON_FILTER_STYLE}
                     />
                     <Card
                         title="Closed"
@@ -261,6 +270,7 @@ const AllTickets: React.FC = () => {
                         subtitle1="This month"
                         subtitle2="-2% from last month"
                         onValueClick={() => handleCardClick('closed')}
+                        iconStyle={ICON_FILTER_STYLE}
                     />
                 </div>
             ),

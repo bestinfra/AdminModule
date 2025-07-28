@@ -188,6 +188,9 @@ const Form = forwardRef<FormRef, FormProps>(({
   showFormActions,
   submitAction,
   cancelAction,
+  padding,
+  border,
+  actionsClassName,
 }, ref) => {
   const fileInputRefs = useRef<{ [key: string]: HTMLInputElement | null }>({});
 
@@ -405,16 +408,17 @@ const Form = forwardRef<FormRef, FormProps>(({
   const hasValidationErrors = allErrorMessages.length > 0;
 
   // Form container classes
-  const baseClasses = 'rounded-lg shadow-sm p-6';
-  const defaultClasses = 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700';
+  const defaultPadding = 'p-8';
+  const defaultBorder = 'border border-gray-200 dark:border-gray-700';
+  const defaultClasses = `bg-white dark:bg-gray-800 rounded-lg ${border || defaultBorder} ${padding || defaultPadding}`;
   
   // Use formBackground prop if provided, otherwise use default background
   const backgroundClass = formBackground || defaultClasses;
   
-  const formContainerClasses = `${baseClasses} ${backgroundClass} ${className || ''}`;
+  const formContainerClasses = `${backgroundClass}${className ? ' ' + className : ''}`;
 
   return (
-    <div className={`w-full   ${formContainerClasses}`}>
+    <div className={`w-full ${formContainerClasses}`}>
       <form
         id={formId}
         onSubmit={handleFormSubmit}
@@ -426,7 +430,7 @@ const Form = forwardRef<FormRef, FormProps>(({
         {hasValidationErrors && isFormSubmitted && (
           <div className="sr-only" role="alert" aria-live="assertive">
             Form has {allErrorMessages.length} error
-            {allErrorMessages.length > 1 ? "s" : ""}:{" "}
+            {allErrorMessages.length > 1 ? "s" : ""}: {" "}
             {allErrorMessages.join(". ")}
           </div>
         )}
@@ -438,13 +442,15 @@ const Form = forwardRef<FormRef, FormProps>(({
 
         {/* Form actions */}
         {showFormActions && (
-          <div className="flex items-center justify-end space-x-4 dark:border-gray-700">
-            <Button
-              onClick={handleFormCancel}
-              label={cancelLabel || "Cancel"}
-              variant="secondary"
-              type="button"
-            />
+          <div className={actionsClassName || "flex items-center justify-end space-x-4 dark:border-gray-700"}>
+            {cancelLabel !== "" && cancelLabel !== undefined && (
+              <Button
+                onClick={handleFormCancel}
+                label={cancelLabel || "Cancel"}
+                variant="secondary"
+                type="button"
+              />
+            )}
             <Button
               type="submit"
               variant="primary"

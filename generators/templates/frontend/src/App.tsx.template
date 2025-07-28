@@ -34,7 +34,7 @@ const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentTyp
   });
 };
 
-const SubLoginFallback = () => (
+const LoginFallback = () => (
   <div className="p-6">
     <h1 className="text-2xl font-bold">Login</h1>
     <p className="text-gray-600">Loading login page...</p>
@@ -70,9 +70,9 @@ const Header = createSafeLazyComponent(
   HeaderFallback
 );
 
-const SubLogin = createSafeLazyComponent(
+const Login = createSafeLazyComponent(
   () => import('SuperAdmin/Login'),
-  SubLoginFallback
+  LoginFallback
 );
 
 
@@ -285,7 +285,7 @@ const menuItems = generateMenuItems({{modulesArray}});
    
     <FederatedContextProvider value={contextValue}>
       <Routes>
-        <Route path="/login" element={<SubLogin />} />
+        <Route path="/login" element={<Login />} />
         <Route
           path="*"
           element={
@@ -298,7 +298,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                     onNavigate={(path:any) => navigate(path)}
                     menus={[
                       {
-                        category: 'Navigation',
+                        category: 'GENERAL',
                         items: menuItems,
                       },
                     ]}
