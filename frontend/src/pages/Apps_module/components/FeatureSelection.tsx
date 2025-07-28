@@ -15,8 +15,15 @@ interface FeatureSelectionProps {
 // Module configuration with default and optional modules
 const moduleConfig = {
   default: [
-    { key: 'dashboard', label: 'Dashboard', description: 'Overview and analytics dashboard' },
-    { key: 'dtr', label: 'DTR Dashboard', description: 'DTR Dashboard' },
+    { 
+      key: 'dashboard', 
+      label: 'Dashboard', 
+      description: 'Overview and analytics dashboard with DTR Dashboard',
+      nested: [
+        { key: 'consumer_dashboard', label: 'Consumer Dashboard', description: 'Overview and analytics dashboard' },
+        { key: 'dtr_dashboard', label: 'DTR Dashboard', description: 'DTR Dashboard' }
+      ]
+    },
     { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
     { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
     { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions (includes Role Management)' },
@@ -56,8 +63,8 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
   // Only render the core modules section
   // Render default modules as selectable
   const renderDefaultModuleItem = (module: any) => {
-    if (module.key === 'bills' && module.nested) {
-      // Render the main 'bills' module
+    if ((module.key === 'bills' || module.key === 'dashboard') && module.nested) {
+      // Render modules with nested items (bills and dashboard)
       return (
         <div key={module.key} className="flex flex-col gap-2">
           <div className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
@@ -85,9 +92,9 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
               <div className="text-xs text-gray-500 dark:text-gray-400">{module.description}</div>
             </div>
           </div>
-          {/* Render nested modules if 'bills' is enabled */}
+          {/* Render nested modules if parent module is enabled */}
           {isModuleEnabled(module.key) && (
-            <div className="ml-8 flex  gap-2">
+            <div className="ml-8 flex gap-2">
               {module.nested.map((nested: any) => (
                 <div key={nested.key} className="flex items-start gap-3 p-3 bg-blue-50 dark:bg-blue-900/10 border border-gray-200 dark:border-dark-border rounded-lg transition-all">
                   <label className="flex items-start select-none cursor-pointer flex-shrink-0 pt-1">
@@ -110,7 +117,7 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
                     </span>
                   </label>
                   <div className="flex-1 min-w-0">
-                    <div className="text-sm font-semibold text-main dark:text-white ">{nested.label}</div>
+                    <div className="text-sm font-semibold text-main dark:text-white">{nested.label}</div>
                     <div className="text-xs text-gray-500 dark:text-gray-400">{nested.description}</div>
                   </div>
                 </div>

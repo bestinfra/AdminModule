@@ -5,6 +5,21 @@ import { FederatedContextProvider } from './components/FederatedWrapper';
 import CSSLoader from './components/CSSLoader';
 import './App.css';
 import { Theme } from './Theme';
+import Dashboard from './pages/Dashboard';
+import Consumers from './pages/Consumers';
+import ConsumerView from './pages/ConsumerView';
+import Users from './pages/Users';
+import RoleManagement from './pages/RoleManagement';
+import Meters from './pages/Meters';
+import DataLoggerMaster from './pages/DataLogger';
+import DTRDashboard from './pages/DTRDashboard';
+import AssetManagment from './pages/AssetManagment';
+import Tickets from './pages/Tickets';
+import Prepaid from './pages/Prepaid';
+import Postpaid from './pages/Postpaid';
+import MeterDetails from './pages/MeterDetails'
+import TicketView from './pages/TicketView';
+import Feeders from './pages/Feeders';
 
 // Create safe lazy loading with error handling
 const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
@@ -19,62 +34,13 @@ const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentTyp
   });
 };
 
-// Fallback components
-const DashboardFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Dashboard</h1>
-    <p className="text-gray-600">Loading dashboard...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote Dashboard component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const SubLoginFallback = () => (
+const LoginFallback = () => (
   <div className="p-6">
     <h1 className="text-2xl font-bold">Login</h1>
     <p className="text-gray-600">Loading login page...</p>
     <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
       <h3 className="font-semibold text-blue-800">Debug Info:</h3>
       <p className="text-sm text-blue-700">This is the fallback component. The remote Login component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const ConsumerFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Consumers</h1>
-    <p className="text-gray-600">Loading consumers...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote Consumers component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const ConsumerViewFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Consumer View</h1>
-    <p className="text-gray-600">Loading consumer view...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote ConsumerView component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
-
-const AllTicketsFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">All Tickets</h1>
-    <p className="text-gray-600">Loading all tickets...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote AllTickets component failed to load.</p>
       <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
     </div>
   </div>
@@ -92,180 +58,8 @@ const HeaderFallback = () => (
   </div>
 );
 
-// Safe lazy components with fallbacks - using federated components from SuperAdmin
-const Dashboard = createSafeLazyComponent(
-  () => import('SuperAdmin/Dashboard'),
-  DashboardFallback
-);
-
 import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';
 
-const SubLogin = createSafeLazyComponent(
-  () => import('SuperAdmin/Login'),
-  SubLoginFallback
-);
-
-const Consumers = createSafeLazyComponent(
-  () => import('SuperAdmin/Consumers'),
-  ConsumerFallback
-);
-
-const ConsumerView = createSafeLazyComponent(
-  () => import('SuperAdmin/ConsumerView'),
-  ConsumerViewFallback
-);
-
-const Users = createSafeLazyComponent(
-  () => import('SuperAdmin/Users'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Users</h1>
-      <p className="text-gray-600">Loading users...</p>
-      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-        <p className="text-sm text-blue-700">This is the fallback component. The remote Users component failed to load.</p>
-        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-      </div>
-    </div>
-  )
-);
-
-const RoleManagement = createSafeLazyComponent(
-  () => import('SuperAdmin/RoleManagement'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Role Management</h1>
-      <p className="text-gray-600">Loading role management...</p>
-      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-        <p className="text-sm text-blue-700">This is the fallback component. The remote RoleManagement component failed to load.</p>
-        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-      </div>
-    </div>
-  )
-);
-
-const BillsPrepaid = createSafeLazyComponent(
-  () => import('SuperAdmin/BillsPrepaid'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Bills Prepaid</h1>
-      <p className="text-gray-600">Loading bills prepaid...</p>
-      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-        <p className="text-sm text-blue-700">This is the fallback component. The remote BillsPrepaid component failed to load.</p>
-        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-      </div>
-    </div>
-  )
-);
-
-const BillsPostpaid = createSafeLazyComponent(
-  () => import('SuperAdmin/BillsPostpaid'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Bills Postpaid</h1>
-      <p className="text-gray-600">Loading bills postpaid...</p>
-      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-        <p className="text-sm text-blue-700">This is the fallback component. The remote BillsPostpaid component failed to load.</p>
-        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-      </div>
-    </div>
-  )
-);
-
-const AllTickets = createSafeLazyComponent(
-  () => import('SuperAdmin/Ticket'),
-  AllTicketsFallback
-);
-
-const Transformer = createSafeLazyComponent(
-  () => import('SuperAdmin/Transformer'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">DTR Dashboard</h1>
-      <p className="text-gray-600">Loading DTR dashboard...</p>
-    </div>
-  )
-);
-
-const Feeders = createSafeLazyComponent(
-  () => import('SuperAdmin/Feeders'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Feeders</h1>
-      <p className="text-gray-600">Loading feeders...</p>
-      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-        <p className="text-sm text-blue-700">This is the fallback component. The remote Feeders component failed to load.</p>
-        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-      </div>
-    </div>
-  )
-);
-
-const MeterDetails = createSafeLazyComponent(
-  () => import('SuperAdmin/MeterDetails'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Meter Details</h1>
-      <p className="text-gray-600">Loading meter details...</p>
-      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-        <p className="text-sm text-blue-700">This is the fallback component. The remote MeterDetails component failed to load.</p>
-        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-      </div>
-    </div>
-  )
-);
-
-const TicketView = createSafeLazyComponent(
-  () => import('SuperAdmin/TicketView'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Ticket View</h1>
-      <p className="text-gray-600">Loading ticket view...</p>
-      <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-        <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-        <p className="text-sm text-blue-700">This is the fallback component. The remote TicketView component failed to load.</p>
-        <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-      </div>
-    </div>
-  )
-);
-
-const Assets = createSafeLazyComponent(
-  () => import('SuperAdmin/Assets'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Asset Management</h1>
-      <p className="text-gray-600">Loading asset management...</p>
-    </div>
-  )
-);
-
-const Meters = createSafeLazyComponent(
-  () => import('SuperAdmin/Meters'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Meters List</h1>
-      <p className="text-gray-600">Loading meters list...</p>
-    </div>
-  )
-);
-
-const DataLoggerMaster = createSafeLazyComponent(
-  () => import('SuperAdmin/DataLogger'),
-  () => (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold">Data Logger Master</h1>
-      <p className="text-gray-600">Loading data logger master...</p>
-    </div>
-  )
-);
-
-// Use federated Sidebar and Header from SuperAdmin app
 const Sidebar = createSafeLazyComponent(
   () => import('SuperAdmin/Sidebar'),
   SidebarFallback
@@ -275,6 +69,13 @@ const Header = createSafeLazyComponent(
   () => import('SuperAdmin/Header'),
   HeaderFallback
 );
+
+const Login = createSafeLazyComponent(
+  () => import('SuperAdmin/Login'),
+  LoginFallback
+);
+
+
 
 function RequireAuth({ children }) {
   const isLoggedIn = !!localStorage.getItem('token');
@@ -305,6 +106,8 @@ function AppContent() {
       {{assetManagementCase}}
       {{meterManagementCase}}
       {{dtrCase}}
+      {{consumerDashboardCase}}
+      {{dtrDashboardCase}}
       default:
         return 'Dashboard';
     }
@@ -335,13 +138,53 @@ function AppContent() {
   
 // Generate dynamic menu items based on selected modules
 const generateMenuItems = (modules = []) => {
-  const mandatoryMenus = [
-    {
+  const mandatoryMenus = [];
+
+  // Handle Dashboard with dynamic submenu logic
+  const hasDashboard = modules.includes('dashboard');
+  
+  // Define all possible dashboard submenu items
+  const dashboardSubmenuItems = [
+    { key: 'consumer_dashboard', title: 'Consumer Dashboard', link: '/consumer-dashboard', icon: '/icons/dashboard.svg' },
+    { key: 'dtr_dashboard', title: 'DTR Dashboard', link: '/dtr-dashboard', icon: '/icons/transformer.svg' },
+    // Add more dashboard submenu items here in the future
+    // { key: 'analytics_dashboard', title: 'Analytics Dashboard', link: '/analytics-dashboard', icon: '/icons/analytics.svg' },
+    // { key: 'reports_dashboard', title: 'Reports Dashboard', link: '/reports-dashboard', icon: '/icons/reports.svg' },
+  ];
+  
+  // Check which dashboard submenu items are selected
+  const selectedDashboardItems = dashboardSubmenuItems.filter(item => modules.includes(item.key));
+  
+  if (hasDashboard && selectedDashboardItems.length > 0) {
+    // Create Dashboard with submenu
+    const dashboardSubmenu = selectedDashboardItems.map(item => ({
+      title: item.title,
+      link: item.link,
+    }));
+    
+    mandatoryMenus.push({
+      title: 'Dashboard',
+      icon: '/icons/dashboard.svg',
+      hasSubmenu: true,
+      submenu: dashboardSubmenu,
+    });
+  } else if (selectedDashboardItems.length > 0) {
+    // Show individual dashboard items as main menus
+    selectedDashboardItems.forEach(item => {
+      mandatoryMenus.push({
+        title: item.title,
+        icon: item.icon,
+        link: item.link,
+      });
+    });
+  } else {
+    // Default dashboard
+    mandatoryMenus.push({
       title: 'Dashboard',
       icon: '/icons/dashboard.svg',
       link: '/dashboard',
-    },
-  ];
+    });
+  }
 
   // Add Consumers only if consumer module is selected
   if (modules.includes('consumer')) {
@@ -442,7 +285,7 @@ const menuItems = generateMenuItems({{modulesArray}});
    
     <FederatedContextProvider value={contextValue}>
       <Routes>
-        <Route path="/login" element={<SubLogin />} />
+        <Route path="/login" element={<Login />} />
         <Route
           path="*"
           element={
@@ -455,7 +298,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                     onNavigate={(path:any) => navigate(path)}
                     menus={[
                       {
-                        category: 'Navigation',
+                        category: 'GENERAL',
                         items: menuItems,
                       },
                     ]}
@@ -492,6 +335,9 @@ const menuItems = generateMenuItems({{modulesArray}});
                       {{usersRoute}}
                       {{roleManagementRoute}}
                       {{dtrRoute}}
+                      {{consumerDashboardRoute}}
+                      {{dtrDashboardRoute}}
+                      <Route path="/dtr/:dtrID" element={<Feeders />} />
                       <Route path="*" element={
                         <div className="p-6">
                           <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -514,6 +360,8 @@ const menuItems = generateMenuItems({{modulesArray}});
                                 {{usersError}}
                                 {{roleManagementError}}
                                 {{dtrError}}
+                                {{consumerDashboardError}}
+                                {{dtrDashboardError}}
                               </ul>
                             </div>
                           </div>

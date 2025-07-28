@@ -11,6 +11,7 @@ import Search from './Search';
 import DatePicker from './DatePicker';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
+// import OrgChartAlt from './OrgChartAlt';
 import Holder from './Holder';
 import LoadingSpinner from './LoadingSpinner';
 import Heading from './Heading';
@@ -20,8 +21,16 @@ import PieChart from '../../graphs/PieChart';
 import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
+import SectionHeader from './SectionHeader';
+import Carousel from './Carousel';
+import LoginV2 from '../../pages_v2/LoginV2';
 import { Form } from '../Form';
-
+import OrgChartAlt from './OrgChartAlt';
+import IssueCardDetails from '../Ticket/IssueCardDetails';
+import ChatInput from '../Ticket/ChatInput';
+import TicketInfoCard from '../Ticket/TicketInfoCard';
+import UnitDetailsCard from '../Ticket/UnitDetailsCard';
+import ActivityLogCard from '../Ticket/ActivityLogCard';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
@@ -36,6 +45,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     DatePicker,
     ExpandableTable,
     OrgChart,
+    OrgChartAlt,
     Holder,
     LoadingSpinner,
     Heading,
@@ -46,6 +56,14 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Stepper,
     FormContainer,
     Form,
+    SectionHeader,
+    IssueCardDetails,
+    ChatInput,
+    TicketInfoCard,
+    UnitDetailsCard,
+    ActivityLogCard,
+    Carousel,
+    LoginV2,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

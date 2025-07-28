@@ -13,6 +13,55 @@ import Button from '@components/global/Button';
 import type { Section } from '@components/global/Page';
 import type { TableData, Column } from '@components/global/Table';
 
+// API Client
+const API_BASE_URL = 'http://localhost:4000/api';
+
+interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    message: string;
+}
+
+const apiClient = {
+    async get<T>(endpoint: string): Promise<ApiResponse<T>> {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.json();
+    },
+    async post<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        return response.json();
+    },
+    async put<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        return response.json();
+    },
+    async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
+        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.json();
+    },
+};
+
 // Interfaces
 interface Role extends TableData {
     id: number;
@@ -29,13 +78,35 @@ interface NewRole {
     permissions: string;
 }
 
+// Error Display Component
+const ErrorDisplay: React.FC<{ error: string; onClose: () => void }> = ({ error, onClose }) => (
+    <div className="bg-danger-light border border-danger rounded-lg p-4 mb-4">
+        <div className="flex items-center justify-between">
+            <div className="flex items-center">
+                <svg className="w-5 h-5 text-danger mr-2" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                </svg>
+                <span className="text-danger font-medium">{error}</span>
+            </div>
+            <button
+                onClick={onClose}
+                className="text-danger hover:text-danger-dark"
+            >
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+            </button>
+        </div>
+    </div>
+);
+
 const RoleManagement: React.FC = () => {
     const navigate = useNavigate();
 
     // State
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
-    const [_error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const [selectedRole, setSelectedRole] = useState<Role | null>(null);
     const [isAddingRole, setIsAddingRole] = useState(false);
     const [newRole, setNewRole] = useState<NewRole>({
@@ -44,7 +115,7 @@ const RoleManagement: React.FC = () => {
         permissions: '',
     });
 
-    // Dummy Data
+    // Dummy Data (fallback)
     const dummyRoles: Role[] = [
         {
             id: 1,
@@ -108,27 +179,29 @@ const RoleManagement: React.FC = () => {
         fetchRoles();
     }, []);
 
-    // API Functions (commented out - using dummy data)
+    // API Functions
     const fetchRoles = async () => {
         try {
             setLoading(true);
             setError(null);
 
-            // Commented out API call - using dummy data instead
-            /*
-            const response: ApiResponse<Role> = await apiClient.get('/roles');
-            console.log(response.data);
-            setRoles(response.data || []);
-            */
-
-            // Simulate API delay
-            await new Promise((resolve) => setTimeout(resolve, 500));
-
-            // Use dummy data
-            setRoles(dummyRoles);
+            try {
+                const response: ApiResponse<Role[]> = await apiClient.get('/roles');
+                if (response.success) {
+                    setRoles(response.data || []);
+                } else {
+                    throw new Error(response.message || 'Failed to fetch roles');
+                }
+            } catch (apiError) {
+                console.warn('API call failed, using dummy data:', apiError);
+                // Fallback to dummy data if API is not available
+                setRoles(dummyRoles);
+            }
         } catch (err) {
             setError('Failed to fetch roles');
             console.error('Error fetching roles:', err);
+            // Use dummy data as fallback
+            setRoles(dummyRoles);
         } finally {
             setLoading(false);
         }
@@ -156,19 +229,16 @@ const RoleManagement: React.FC = () => {
             try {
                 setLoading(true);
 
-                // Commented out API call - using dummy data instead
-                /*
-                await apiClient.delete(`/roles/${role.id}`);
-                await fetchRoles();
-                */
-
-                // Simulate API delay
-                await new Promise((resolve) => setTimeout(resolve, 500));
-
-                // Remove role from dummy data
-                setRoles((prevRoles) =>
-                    prevRoles.filter((r) => r.id !== role.id)
-                );
+                try {
+                    await apiClient.delete(`/roles/${role.id}`);
+                    await fetchRoles();
+                } catch (apiError) {
+                    console.warn('API call failed, using local state update:', apiError);
+                    // Fallback to local state update
+                    setRoles((prevRoles) =>
+                        prevRoles.filter((r) => r.id !== role.id)
+                    );
+                }
             } catch (err) {
                 setError('Failed to delete role');
                 console.error('Error deleting role:', err);
@@ -184,40 +254,37 @@ const RoleManagement: React.FC = () => {
             setLoading(true);
             setError(null);
 
-            // Commented out API call - using dummy data instead
-            /*
-            if (selectedRole) {
-                await apiClient.put(`/roles/${selectedRole.id}`, newRole);
-            } else {
-                await apiClient.post('/roles', newRole);
-            }
-            */
-
-            // Simulate API delay
-            await new Promise((resolve) => setTimeout(resolve, 500));
-
-            if (selectedRole) {
-                // Update existing role in dummy data
-                setRoles((prevRoles) =>
-                    prevRoles.map((role) =>
-                        role.id === selectedRole.id
-                            ? {
-                                  ...role,
-                                  ...newRole,
-                                  updated_at: new Date().toISOString(),
-                              }
-                            : role
-                    )
-                );
-            } else {
-                // Add new role to dummy data
-                const newRoleData: Role = {
-                    id: Math.max(...dummyRoles.map((r) => r.id)) + 1,
-                    ...newRole,
-                    created_at: new Date().toISOString(),
-                    updated_at: new Date().toISOString(),
-                };
-                setRoles((prevRoles) => [...prevRoles, newRoleData]);
+            try {
+                if (selectedRole) {
+                    await apiClient.put(`/roles/${selectedRole.id}`, newRole);
+                } else {
+                    await apiClient.post('/roles', newRole);
+                }
+                await fetchRoles();
+            } catch (apiError) {
+                console.warn('API call failed, using local state update:', apiError);
+                // Fallback to local state update
+                if (selectedRole) {
+                    setRoles((prevRoles) =>
+                        prevRoles.map((role) =>
+                            role.id === selectedRole.id
+                                ? {
+                                      ...role,
+                                      ...newRole,
+                                      updated_at: new Date().toISOString(),
+                                  }
+                                : role
+                        )
+                    );
+                } else {
+                    const newRoleData: Role = {
+                        id: Math.max(...roles.map((r) => r.id)) + 1,
+                        ...newRole,
+                        created_at: new Date().toISOString(),
+                        updated_at: new Date().toISOString(),
+                    };
+                    setRoles((prevRoles) => [...prevRoles, newRoleData]);
+                }
             }
 
             setIsAddingRole(false);
@@ -303,8 +370,6 @@ const RoleManagement: React.FC = () => {
             },
         },
     ];
-
-    // Error component
 
     // Role form component
     const RoleForm = () => (
@@ -400,25 +465,25 @@ const RoleManagement: React.FC = () => {
         />
     );
 
-    // Page sections (commented out)
+    // Page sections
     const sections: Section[] = [
-        // {
-        //     id: 'subtitle',
-        //     component: (
-        //         <div className="mb-6">
-        //             <p className="text-gray-600">Manage and configure system roles</p>
-        //         </div>
-        //     ),
-        // },
-        // {
-        //     id: 'error',
-        //     component: error ? (
-        //         <ErrorDisplay
-        //             error={error}
-        //             onClose={() => setError(null)}
-        //         />
-        //     ) : null,
-        // },
+        {
+            id: 'subtitle',
+            component: (
+                <div className="mb-6">
+                    <p className="text-gray-600">Manage and configure system roles</p>
+                </div>
+            ),
+        },
+        {
+            id: 'error',
+            component: error ? (
+                <ErrorDisplay
+                    error={error}
+                    onClose={() => setError(null)}
+                />
+            ) : null,
+        },
         {
             id: 'content',
             component: (

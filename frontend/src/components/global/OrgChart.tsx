@@ -1,4 +1,4 @@
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import ReactFlow, {
     MiniMap,
     Controls,
@@ -34,8 +34,7 @@ const OrgChart = ({
     className,
     loading = false,
 }: OrgChartProps) => {
-    const chartRef = useRef(null);
-    const containerRef = useRef<HTMLDivElement>(null);
+    // Removed useRef hooks as they are not used
 
     const computeSubtreeHeight = (node: HierarchyNode): number => {
         if (!node.children || node.children.length === 0) return 1;
@@ -150,9 +149,7 @@ const OrgChart = ({
         <div
             className={`w-full ${className || ''}`}
             style={{ height, fontFamily: 'Manrope, sans-serif' }}>
-            <div
-                className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 overflow-auto"
-                ref={containerRef}>
+            <div className="w-full h-full bg-gray-50 rounded-lg border border-gray-200 overflow-auto">
                 {loading ? (
                     <div className="flex items-center justify-center h-full min-h-[200px]">
                         <div className="w-8 h-8 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
@@ -160,7 +157,6 @@ const OrgChart = ({
                 ) : (
                     <ReactFlowProvider>
                         <ReactFlow
-                            ref={chartRef}
                             nodes={nodes}
                             edges={edges}
                             onNodesChange={onNodesChange}
