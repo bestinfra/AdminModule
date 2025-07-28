@@ -110,11 +110,11 @@ const defaultMenus: MenuCategory[] = [
                 submenu: [
                     {
                         title: 'Users',
-                        link: '/user-management/users',
+                        link: '/users',
                     },
                     {
                         title: 'Role Management',
-                        link: '/user-management/role-management',
+                        link: '/role-management ',
                     },
                 ],
             },
