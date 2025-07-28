@@ -1,5 +1,5 @@
 {
-  "nextPort": 4067,
+  "nextPort": 4072,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -215,6 +215,26 @@
       "port": 4066,
       "deployedAt": "2025-07-24T07:52:54.415Z",
       "path": "C:\\xampp\\htdocs\\manager-backend"
+    },
+    "madhu6": {
+      "port": 4067,
+      "deployedAt": "2025-07-26T06:22:19.318Z",
+      "path": "C:\\xampp\\htdocs\\madhu6-backend"
+    },
+    "help": {
+      "port": 4069,
+      "deployedAt": "2025-07-26T06:55:09.291Z",
+      "path": "C:\\xampp\\htdocs\\help-backend"
+    },
+    "madhu7": {
+      "port": 4070,
+      "deployedAt": "2025-07-26T07:40:29.255Z",
+      "path": "C:\\xampp\\htdocs\\madhu7-backend"
+    },
+    "dtr-test-app": {
+      "port": 4071,
+      "deployedAt": "2025-07-26T08:09:21.456Z",
+      "path": "C:\\xampp\\htdocs\\dtr-test-app-backend"
     }
   }
 }

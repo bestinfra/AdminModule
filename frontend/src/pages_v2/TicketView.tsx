@@ -656,7 +656,7 @@ const TicketView: React.FC = () => {
     // State
     const [ticket, setTicket] = useState<Ticket | null>(generateDummyTicket(id || 'TICKET-001'));
     const [activities, setActivities] = useState<Activity[]>([]);
-    const [isLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Chat state
     const [chatMessage, setChatMessage] = useState('');
@@ -669,7 +669,6 @@ const TicketView: React.FC = () => {
             if (!id) return;
             try {
                 setIsLoading(true);
-                setError(null);
                 // API call to fetch ticket details
                 const response = await fetch(`${process.env.REACT_APP_BACKEND_URL || ''}/tickets/${id}`);
                 if (!response.ok) {
@@ -707,9 +706,8 @@ const TicketView: React.FC = () => {
                 }
             } catch (err) {
                 console.error('Error fetching ticket details:', err);
-                setError(err instanceof Error ? err.message : 'Failed to fetch ticket details');
                 // Fallback to dummy data for development
-                setTicket(dummyTicket);
+                setTicket(generateDummyTicket(id || 'TICKET-001'));
                 setActivities(dummyActivities);
             } finally {
                 setIsLoading(false);

@@ -44,6 +44,7 @@ export default defineConfig({
         './OrgChart': './src/components/global/OrgChart.tsx',
         './PageHeader': './src/components/global/PageHeader.tsx',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
+        './PageC': './src/components/global/PageC.tsx',
       },
       shared: ['react', 'react-dom', 'reactflow', 'react-router-dom', 'echarts-for-react'],
     }),
