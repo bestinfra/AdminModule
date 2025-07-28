@@ -286,6 +286,7 @@ const MeterDetails: React.FC = () => {
                                 props: {
                                     ...cardData,
                                     icon: cardData.icon || '/icons/default.svg',
+                                    bg: "bg-stat-icon-gradient",
                                 },
                             })),
                         },

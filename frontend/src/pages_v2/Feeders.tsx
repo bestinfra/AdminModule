@@ -2,19 +2,19 @@ import { useState, useEffect } from 'react';
 import Page from '@/components/global/PageC';
 
 const stats = [
-    { title: 'R-Phase Voltage', value: '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts' },
-    { title: 'Y-Phase Voltage', value: '255.089', icon: '/icons/y-phase-voltage.svg', subtitle1: 'Volts' },
-    { title: 'B-Phase Voltage', value: '254.417', icon: '/icons/b-phase-voltage.svg', subtitle1: 'Volts' },
+    { title: 'R-Phase Voltage', value: '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-red-500' },
+    { title: 'Y-Phase Voltage', value: '255.089', icon: '/icons/y-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-red-500' },
+    { title: 'B-Phase Voltage', value: '254.417', icon: '/icons/b-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-red-500' },
     { title: 'Apparent Power', value: '19.527', icon: '/icons/consumption.svg', subtitle1: 'kVA' },
     { title: 'MD-kVA', value: '52.220', icon: '/icons/consumption.svg', subtitle1: 'kVA' },
-    { title: 'R-Phase Current', value: '15.892', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps' },
-    { title: 'Y-Phase Current', value: '27.644', icon: '/icons/y-phase-current.svg', subtitle1: 'Amps' },
-    { title: 'B-Phase Current', value: '33.984', icon: '/icons/b-phase-current.svg', subtitle1: 'Amps' },
+    { title: 'R-Phase Current', value: '15.892', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-blue-500' },
+    { title: 'Y-Phase Current', value: '27.644', icon: '/icons/y-phase-current.svg', subtitle1: 'Amps', bg: 'bg-blue-500' },
+    { title: 'B-Phase Current', value: '33.984', icon: '/icons/b-phase-current.svg', subtitle1: 'Amps', bg: 'bg-blue-500' },
     { title: 'Neutral Current', value: '12.980', icon: '/icons/consumption.svg', subtitle1: 'Amps' },
     { title: 'Frequency', value: '49.980', icon: '/icons/frequency.svg', subtitle1: 'Hz' },
-    { title: 'R-Phase PF', value: '1.000', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
-    { title: 'Y-Phase PF', value: '-0.987', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
-    { title: 'B-Phase PF', value: '0.998', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
+    { title: 'R-Phase PF', value: '1.000', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-yellow-500' },
+    { title: 'Y-Phase PF', value: '-0.987', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-yellow-500' },
+    { title: 'B-Phase PF', value: '0.998', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-yellow-500' },
     { title: 'Avg PF', value: '-0.999', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' },
     { title: 'Cummulative kVAh', value: '77902.296', icon: '/icons/consumption.svg', subtitle1: 'kVAh' },
 ];
@@ -172,7 +172,10 @@ const Feeders = () => {
                                 layout: 'grid' as const,
                                 gap: 'gap-4',
                                 gridColumns: 5,
-                                columns: stats.map((stat) => ({ name: 'Card', props: stat })),
+                                columns: stats.map((stat) => ({ 
+                                    name: 'Card', 
+                                    props: { ...stat } 
+                                })),
                             },
                         ],
                     },

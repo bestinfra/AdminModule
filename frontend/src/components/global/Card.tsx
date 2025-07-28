@@ -10,6 +10,7 @@ interface CardProps {
     loading?: boolean;
     onValueClick?: () => void; // new prop
     iconStyle?: React.CSSProperties; // new prop for custom icon styling
+    bg?: string; // new prop for dynamic background
 }
 
 import CardSkeleton from '@components/skeletons/CardSkeleton';
@@ -27,6 +28,7 @@ const Card = ({
     loading = false,
     onValueClick, // new prop
     iconStyle, // new prop
+    bg ,
 }: CardProps) => {
     if (loading) {
         return <CardSkeleton />;
@@ -75,7 +77,7 @@ const Card = ({
                     )}
                 </div>
                 {icon && (
-                    <figure className="p-2 bg-stat-icon-gradient rounded-full w-12 h-12 flex items-center justify-center ">
+                    <figure className={`p-2 ${bg || 'bg-stat-icon-gradient'} rounded-full w-12 h-12 flex items-center justify-center`}>
                         <img src={icon} alt={`${title} Icon`} className="w-6 h-6" style={iconStyle} />
                     </figure>
                 )}

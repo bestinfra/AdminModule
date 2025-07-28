@@ -40,6 +40,7 @@ const NewDashboard: React.FC = () => {
                                                 content: 'This is an empty dashboard page. You can customize it by adding components like charts, tables, and other widgets.',
                                                 variant: 'default',
                                                 size: 'lg',
+                                                bg: "bg-stat-icon-gradient",
                                             },
                                         },
                                     ],

@@ -73,7 +73,7 @@ const defaultMenus: MenuCategory[] = [
             {
                 title: 'App-Managment',
                 icon: '/icons/apps-icon.svg',
-                link: '/app-managment',
+                link: '/apps',
             },
         ],
     },
