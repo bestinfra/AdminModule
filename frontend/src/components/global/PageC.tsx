@@ -45,7 +45,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     DatePicker,
     ExpandableTable,
     OrgChart,
-    // OrgChartAlt,
+    OrgChartAlt,
     Holder,
     LoadingSpinner,
     Heading,

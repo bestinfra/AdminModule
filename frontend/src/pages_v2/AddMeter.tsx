@@ -129,9 +129,7 @@ export default function AddMeter() {
         }
     };
 
-    const handleFormCancel = () => {
-        navigate('/meters');
-    };
+
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
