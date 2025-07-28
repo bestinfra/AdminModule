@@ -32,7 +32,7 @@ import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
-import SubLogin from './pages_v2/SubLogin';
+// import SubLogin from './pages_v2/SubLogin';
 const App: React.FC = () => {
     return (
         <AppProvider>
