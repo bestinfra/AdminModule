@@ -12,36 +12,32 @@ interface FeatureSelectionProps {
   onBack?: () => void;
 }
 
-// Module configuration with default and optional modules
-const moduleConfig = {
-  default: [
-    { 
-      key: 'dashboard', 
-      label: 'Dashboard', 
-      description: 'Overview and analytics dashboard with DTR Dashboard',
-      nested: [
-        { key: 'consumer_dashboard', label: 'Consumer Dashboard', description: 'Overview and analytics dashboard' },
-        { key: 'dtr_dashboard', label: 'DTR Dashboard', description: 'DTR Dashboard' }
-      ]
-    },
-    { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
-    { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
-    { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions (includes Role Management)' },
-    { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
-    { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
-  ],
-  optional: [
-    { 
-      key: 'bills', 
-      label: 'Bills', 
-      description: 'Billing and payment management',
-      nested: [
-        { key: 'prepaid', label: 'Prepaid' },
-        { key: 'postpaid', label: 'Postpaid' }
-      ]
-    },
-  ]
-};
+// Module configuration with all modules in one section
+const moduleConfig = [
+  { 
+    key: 'dashboard', 
+    label: 'Dashboard', 
+    description: 'Overview and analytics dashboard with DTR Dashboard',
+    nested: [
+      { key: 'consumer_dashboard', label: 'Consumer Dashboard', description: 'Overview and analytics dashboard' },
+      { key: 'dtr_dashboard', label: 'DTR Dashboard', description: 'DTR Dashboard' }
+    ]
+  },
+  { key: 'consumer', label: 'Consumer', description: 'Consumer management and profiles' },
+  { key: 'asset_management', label: 'Asset Management', description: 'Manage physical assets and equipment' },
+  { key: 'user_management_default', label: 'User Management', description: 'Core user management and permissions (includes Role Management)' },
+  { key: 'meter_management', label: 'Meter Management', description: 'Smart meter monitoring and control' },
+  { key: 'tickets', label: 'Tickets', description: 'Support ticketing system' },
+  { 
+    key: 'bills', 
+    label: 'Bills', 
+    description: 'Billing and payment management',
+    nested: [
+      { key: 'prepaid', label: 'Prepaid' },
+      { key: 'postpaid', label: 'Postpaid' }
+    ]
+  },
+];
 
 const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, onModuleToggle, onNext, currentStep = 1, onBack }) => {
   const [hasSubmitted, setHasSubmitted] = useState(false);
@@ -61,10 +57,10 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
 
   // Remove all optional module logic and UI
   // Only render the core modules section
-  // Render default modules as selectable
-  const renderDefaultModuleItem = (module: any) => {
-    if ((module.key === 'bills' || module.key === 'dashboard') && module.nested) {
-      // Render modules with nested items (bills and dashboard)
+  // Render all modules as selectable
+  const renderModuleItem = (module: any) => {
+    if (module.nested) {
+      // Render modules with nested items (dashboard and bills)
       return (
         <div key={module.key} className="flex flex-col gap-2">
           <div className="flex items-start gap-3 p-3 bg-white dark:bg-primary-dark border border-gray-200 dark:border-dark-border rounded-lg transition-all hover:border-primary hover:shadow-sm">
@@ -185,25 +181,9 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
             </span>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {moduleConfig.default.map(renderDefaultModuleItem)}
+            {moduleConfig.map(renderModuleItem)}
           </div>
-          
-          {/* Optional Modules Section */}
-          {moduleConfig.optional.length > 0 && (
-            <>
-              <div className="flex items-start gap-4 mt-6">
-                <div>
-                  <h3 className="text-sm font-semibold text-primary dark:text-white mb-1">Optional Modules</h3>
-                </div>
-                <span className="text-xs px-4 py-1 rounded-full bg-blue-100 dark:bg-blue-900/20 text-blue-800 dark:text-blue-200">
-                  Additional Features
-                </span>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {moduleConfig.optional.map(renderDefaultModuleItem)}
-              </div>
-            </>
-          )}
+          {/* This section is removed as all modules are now displayed under one "Modules" section */}
           {allErrors.modules && (
             <div className="text-error text-sm font-medium mt-4 p-3 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
               {allErrors.modules}

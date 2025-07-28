@@ -1,5 +1,5 @@
 {
-  "nextPort": 4076,
+  "nextPort": 4079,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -260,6 +260,21 @@
       "port": 4075,
       "deployedAt": "2025-07-24T21:05:20.893Z",
       "path": "C:\\xampp\\htdocs\\tgnpdcl1123-backend"
+    },
+    "tgnpdcl": {
+      "port": 4076,
+      "deployedAt": "2025-07-28T05:19:43.642Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl-backend"
+    },
+    "tgnpdcl1": {
+      "port": 4077,
+      "deployedAt": "2025-07-28T05:34:01.189Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl1-backend"
+    },
+    "ssss": {
+      "port": 4078,
+      "deployedAt": "2025-07-28T05:53:18.810Z",
+      "path": "C:\\xampp\\htdocs\\ssss-backend"
     }
   }
 }
