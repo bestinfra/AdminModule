@@ -110,11 +110,11 @@ const defaultMenus: MenuCategory[] = [
                 submenu: [
                     {
                         title: 'Users',
-                        link: '/user-management/users',
+                        link: '/users',
                     },
                     {
                         title: 'Role Management',
-                        link: '/user-management/role-management',
+                        link: '/role-management ',
                     },
                 ],
             },
@@ -320,7 +320,7 @@ const Sidebar = ({
                                                                                 }
                                                                                 className={`block ml-4 mr-4 py-3 px-4 pl-8 rounded-lg font-semibold transition-all duration-200 w-full text-left text-sm relative z-10 ${pathname ===
                                                                                         subItem.link
-                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_40%,white_40%_100%)] text-primary shadow '
+                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_10%,white_8%_100%)] text-primary shadow '
                                                                                         : 'text-gray-400 hover:text-primary'
                                                                                     }`}>
                                                                                 {
