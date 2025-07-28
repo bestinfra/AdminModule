@@ -565,7 +565,7 @@ const DTRDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column' as const,
-                            className: 'mb-8',
+                            className: 'mb-8 border border-primary-border rounded-3xl p-6',
                         },
                         components: [
                             {
@@ -573,7 +573,7 @@ const DTRDashboard: React.FC = () => {
                                 props: {
                                     text: 'DTRs',
                                     level: 2,
-                                    className: 'text-lg font-semibold mb-4',
+                                    className: 'text-base font-medium',
                                 },
                             },
                             {
@@ -597,6 +597,7 @@ const DTRDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column' as const,
+                            className: 'mb-8 border border-primary-border rounded-3xl p-6',
                         },
                         components: [
                             {
@@ -604,7 +605,7 @@ const DTRDashboard: React.FC = () => {
                                 props: {
                                     text: 'Latest Alerts',
                                     level: 2,
-                                    className: 'text-lg font-semibold mb-4',
+                                    className: 'text-base font-medium',
                                 },
                             },
                             {

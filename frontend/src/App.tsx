@@ -40,7 +40,7 @@ const App: React.FC = () => {
                 <Router>
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
-                        <Route path="/sub-login" element={<SubLogin />} />
+                        {/* <Route path="/sub-login" element={<SubLogin />} /> */}
                         <Route
                             element={
                                 <ProtectedRoute>

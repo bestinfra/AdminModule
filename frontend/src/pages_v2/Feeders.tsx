@@ -90,7 +90,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
-                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-8 ',
+                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-8',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -296,7 +296,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'bg-white p-4',
+                        className: 'mb-8 border border-primary-border rounded-3xl p-6',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -307,8 +307,8 @@ const Feeders = () => {
                                             title: 'Alerts',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
-                                            titleWeight: 'bold',
+                                            titleVariant: "colorPrimaryDark",
+                                            titleWeight: "medium",
                                             titleAlign: 'left',
                                         },
                                     },
