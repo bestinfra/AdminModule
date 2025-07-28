@@ -98,7 +98,7 @@ const defaultMenus: MenuCategory[] = [
                     },
                     {
                         title: 'Meter List',
-                        link: '/meter-management/meter-list',
+                        link: '/meters-list',
                     },
                 ],
             },
@@ -137,11 +137,6 @@ const defaultProps: Partial<
             alt: 'App Logo',
         },
     },
-    // footer: {
-    //     copyright: '© 2025 Bestinfra Pvt. Ltd.',
-    //     showThemeToggle: true,
-    //     showShareButton: true,
-    // },
     onLogout: () => {
         const allCookies = Cookies.get();
         Object.keys(allCookies).forEach((cookieName) => {
@@ -303,7 +298,7 @@ const Sidebar = ({
                                                                         : 'max-h-0 opacity-0'
                                                                     }`}>
                                                                 {/* Vertical line for submenu */}
-                                                                <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200"></span>
+                                                                <span className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 z-0"></span>  
                                                                 {menuItem.submenu?.map(
                                                                     (
                                                                         subItem,
@@ -315,7 +310,7 @@ const Sidebar = ({
                                                                             }
                                                                             className="relative">
                                                                             {/* Horizontal line for each submenu item */}
-                                                                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-0.5 bg-gray-200"></span>
+                                                                            <span className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-gray-200 z-20"></span>
                                                                             <button
                                                                                 onClick={() =>
                                                                                     subItem.link &&
@@ -323,9 +318,9 @@ const Sidebar = ({
                                                                                         subItem.link
                                                                                     )
                                                                                 }
-                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left text-sm ${pathname ===
+                                                                                className={`block ml-4 mr-4 py-3 px-4 pl-8 rounded-lg font-semibold transition-all duration-200 w-full text-left text-sm relative z-10 ${pathname ===
                                                                                         subItem.link
-                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow '
+                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_40%,white_40%_100%)] text-primary shadow '
                                                                                         : 'text-gray-400 hover:text-primary'
                                                                                     }`}>
                                                                                 {
@@ -436,7 +431,6 @@ const Sidebar = ({
                                         <Button
                                             label={appDownload.buttonText}
                                             variant="primary"
-                                            // className="bg-white text-primary px-4 py-2 rounded-lg font-semibold hover:bg-gray-100 transition-colors duration-300"
                                             onClick={() => {
                                                 window.open(
                                                     appDownload.downloadUrl,
@@ -520,4 +514,3 @@ const Sidebar = ({
 };
 
 export default Sidebar;
-
