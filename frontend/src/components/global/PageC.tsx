@@ -26,7 +26,11 @@ import Carousel from './Carousel';
 import LoginV2 from '../../pages_v2/LoginV2';
 import { Form } from '../Form';
 import OrgChartAlt from './OrgChartAlt';
-
+import IssueCardDetails from '../Ticket/IssueCardDetails';
+import ChatInput from '../Ticket/ChatInput';
+import TicketInfoCard from '../Ticket/TicketInfoCard';
+import UnitDetailsCard from '../Ticket/UnitDetailsCard';
+import ActivityLogCard from '../Ticket/ActivityLogCard';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
@@ -53,6 +57,11 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     FormContainer,
     Form,
     SectionHeader,
+    IssueCardDetails,
+    ChatInput,
+    TicketInfoCard,
+    UnitDetailsCard,
+    ActivityLogCard,
     Carousel,
     LoginV2,
 };

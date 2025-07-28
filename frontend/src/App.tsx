@@ -27,6 +27,10 @@ import TicketView from './pages_v2/TicketView';
 import Prepaid from './pages_v2/Prepaid';
 import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
+import AddMeter from './pages_v2/AddMeter';
+import AddRole from './pages_v2/AddRole';
+import AddUser from './pages_v2/AddUser';
+import AddDataLogger from './pages_v2/AddDataLogger';
 import LoginV2 from './pages_v2/LoginV2';
 
 const App: React.FC = () => {
@@ -47,7 +51,6 @@ const App: React.FC = () => {
                                 path="/data-logger"
                                 element={<DataLogger />}
                             />
-                            <Route path="/login-v2" element={<LoginV2 />} />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
@@ -73,7 +76,11 @@ const App: React.FC = () => {
                             <Route path="/" element={<PageDemo />} />
                             <Route path="/prepaid" element={<Prepaid />} />
                             <Route path="/postpaid" element={<Postpaid />} />
-                            <Route path="/asset-managment" element={<AssetManagment />} />  
+                            <Route path="/asset-managment" element={<AssetManagment />} />
+                            <Route path="/add-meter" element={<AddMeter />} />
+                            <Route path="/add-role" element={<AddRole />} />
+                            <Route path="/add-user" element={<AddUser />} />
+                            <Route path="/add-data-logger" element={<AddDataLogger />} />
                         </Route>
                     </Routes>
                 </Router>
