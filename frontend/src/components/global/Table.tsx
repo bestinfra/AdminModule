@@ -313,7 +313,7 @@ const Table: React.FC<TableProps> = ({
             return (
                 <div className="flex items-center gap-4">
                     <span
-                        className="cursor-pointer hover:bg-blue-50 p-1 rounded"
+                        className="cursor-pointer hover:border-3 hover:border-background-secondary hover:bg-transparent w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
                         onClick={(e) => {
                             e.stopPropagation();
                             (onView || defaultViewHandler)(row);
@@ -322,12 +322,12 @@ const Table: React.FC<TableProps> = ({
                         <img
                             src="/icons/eye.svg"
                             alt="View"
-                            className="w-4 h-4 text-colorPrimaryDark"
+                            className="w-4 h-4 text-colorNeutralDark"
                         />
                     </span>
                     {onPayment && (
                         <span
-                            className="cursor-pointer hover:bg-green-50 p-1 rounded"
+                        className="cursor-pointer hover:border-3 hover:border-background-secondary hover:bg-transparent w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
                             onClick={(e) =>
                                 handleActionClick(e, onPayment, row)
                             }
@@ -341,7 +341,7 @@ const Table: React.FC<TableProps> = ({
                     )}
                     {onEdit && (
                         <span
-                            className="cursor-pointer hover:bg-yellow-50 p-1 rounded"
+                        className="cursor-pointer hover:border-3 hover:border-background-secondary hover:bg-transparent w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
                             onClick={(e) => handleActionClick(e, onEdit, row)}
                             title="Edit">
                             <img
@@ -353,7 +353,7 @@ const Table: React.FC<TableProps> = ({
                     )}
                     {onDelete && (
                         <span
-                            className="cursor-pointer hover:bg-red-50 p-1 rounded"
+                        className="cursor-pointer hover:border-3 hover:border-background-secondary hover:bg-transparent w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
                             onClick={(e) => handleActionClick(e, onDelete, row)}
                             title="Delete">
                             <img
@@ -473,7 +473,7 @@ const Table: React.FC<TableProps> = ({
     const tableContent = (
         <div className={`w-full ${className || ''}`}>
             {searchable && (
-                <div className="relative mb-4">
+                <div className="relative mb-2">
                     <input
                         type="text"
                         placeholder="Search"
@@ -494,10 +494,10 @@ const Table: React.FC<TableProps> = ({
                     aria-label={text || 'Data Table'}>
                     <thead className="dark:bg-primary-dark-light bg-background-secondary overflow-hidden">
                         <tr className="font-manrope text-base font-normal w-full dark:text-white">
-                            {selectable && (
-                                <th
-                                    scope="col"
-                                    className="px-4 py-3 text-left font-normal w-12 relative flex items-center">
+                                                            {selectable && (
+                                    <th
+                                        scope="col"
+                                        className="px-3 py-3 text-left text-base font-semibold w-12 relative flex items-center">
                                     <input
                                         type="checkbox"
                                         checked={isAllSelected}
@@ -514,7 +514,7 @@ const Table: React.FC<TableProps> = ({
                                     key={column.key}
                                     onClick={() => handleSort(column.key)}
                                     scope="col"
-                                    className={`px-4 py-3 text-left font-base font-normal cursor-pointer w-auto relative ${
+                                    className={`px-3 py-3 text-left font-base text-base	 font-semibold	 cursor-pointer w-auto relative ${
                                         sortable ? 'cursor-pointer' : ''
                                     }`}
                                     aria-sort={
@@ -555,7 +555,7 @@ const Table: React.FC<TableProps> = ({
                                 onPayment) && (
                                 <th
                                     scope="col"
-                                    className="px-4 py-3 text-left font-normal w-auto relative">
+                                    className="px-3 py-3 text-left font-semibold w-auto relative">
                                     Actions
                                 </th>
                             )}
@@ -595,7 +595,7 @@ const Table: React.FC<TableProps> = ({
                                             }>
                                             {selectable && (
                                                 <td
-                                                    className="px-4 py-3 text-sm font-normal border-b border-primary-border dark:border-dark-border"
+                                                    className="px-3 py-2 text-sm font-normal border-b border-primary-border dark:border-dark-border"
                                                     onClick={(e) => e.stopPropagation()}>
                                                     <input
                                                         type="checkbox"
@@ -608,7 +608,7 @@ const Table: React.FC<TableProps> = ({
                                             {columns.map((column) => (
                                                 <td
                                                     key={column.key}
-                                                    className="px-4 py-3 text-sm font-normal dark:text-white border-b border-primary-border dark:border-dark-border"
+                                                    className="px-3 py-2 text-sm font-normal dark:text-white border-b border-primary-border dark:border-dark-border"
                                                     data-label={column.label}>
                                                     {column.key === 'sNo'
                                                         ? (currentPage - 1) *
@@ -635,7 +635,7 @@ const Table: React.FC<TableProps> = ({
                                                 onView ||
                                                 onPayment) && (
                                                 <td
-                                                    className="px-4 py-3 text-sm font-normal  border-b border-primary-border dark:border-dark-border"
+                                                    className="px-3 py-2 text-sm font-normal  border-b border-primary-border dark:border-dark-border"
                                                     data-label="Actions">
                                                     {renderActionButtons(row)}
                                                 </td>
