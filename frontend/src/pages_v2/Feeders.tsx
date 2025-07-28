@@ -90,8 +90,25 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
-                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-8',
+                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-6',
                         rows: [
+                            {
+                                layout: 'row' as const,
+                                className: 'justify-between w-full mb-4',
+                                span: { col: 3, row: 1 },
+                                columns: [
+                                    {   
+                                       name: 'PageInformation',
+                                       props: {
+                                        title: 'Feeder Information',
+                                        isSectionHeader: true,
+                                        layout: 'row',
+                                        align: 'between',
+                                        gap: 'gap-4'
+                                       }
+                                    }
+                                ]
+                            },
                             {
                                 layout: 'row' as const,
                                 className: 'justify-between w-full',
@@ -122,6 +139,12 @@ const Feeders = () => {
                                                     {
                                                         title: 'Address',
                                                         value: 'Waddepally, Warangal, Telangana, India, 506001',
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title:'Location',
+                                                        value:'16.353710, 78.059170 ',
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     }

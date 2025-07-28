@@ -26,6 +26,9 @@ interface PageInformationProps {
     align?: 'start' | 'center' | 'end' | 'between';
     gap?: string;
     
+    // Section header mode
+    isSectionHeader?: boolean;
+    
     // Grid mode - multiple rows and items
     rows?: PageInformationRow[];
     gridColumns?: number;
@@ -65,6 +68,9 @@ const PageInformation: React.FC<PageInformationProps> = ({
     align = 'start',
     gap = 'gap-1',
     
+    // Section header mode
+    isSectionHeader,
+    
     // Grid mode props
     rows,
     gridColumns,
@@ -83,6 +89,15 @@ const PageInformation: React.FC<PageInformationProps> = ({
                     <div className="text-sm font-medium text-gray-600">{title}</div>
                     <div className="text-base text-gray-900">{value}</div>
                 </div>
+            </div>
+        );
+    }
+    
+    // Section header mode
+    if (isSectionHeader) {
+        return (
+            <div className={`w-full h-full ${wrapperClassName}`} style={style}>
+                <div className="text-sm font-medium text-gray-600">{title}</div>
             </div>
         );
     }
@@ -113,8 +128,8 @@ const PageInformation: React.FC<PageInformationProps> = ({
                                             key={itemIndex}
                                             className={`flex flex-col ${itemGap} ${itemAlignClass} ${itemSpanClasses}`}
                                         >
-                                            <div className="text-sm font-medium font-bold text-primary">{item.title}</div>
-                                            <div className="text-base text-gray-900">{item.value}</div>
+                                            <div className="text-md font-bold text-primary">{item.title}</div>
+                                            <div className="text-sm text-gray-900">{item.value}</div>
                                         </div>
                                     );
                                 })}
