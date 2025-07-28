@@ -159,7 +159,7 @@ const LoginV2: React.FC<LoginV2Props> = ({
         <div className="bg-white rounded-3xl border border-primary-border shadow-md p-8 flex flex-col gap-4 ">
           {logo}
           {/* Remove external error display, let Form handle errors */}
-                     <Form
+           <Form
              inputs={loginFields}
              onSubmit={handleLoginSubmit}
              submitLabel={isSubmitting ? 'Signing in...' : buttonLabel}
