@@ -387,7 +387,7 @@ const DTRDashboard: React.FC = () => {
                   gridColumns: 3,
                   gridRows: 2,
                   span: { col: 3, row: 1 },
-                  className:'border border-primary-border rounded-3xl p-6',
+                  className:'border border-primary-border rounded-3xl p-6 bg-background-secondary',
                   columns: [
                     {
                       name: "SectionHeader",
@@ -395,8 +395,8 @@ const DTRDashboard: React.FC = () => {
                         title: "Distribution Transformer (DTR) Statistics",
                         titleLevel: 2,
                         titleSize: "md",
-                        titleVariant: "primary",
-                        titleWeight: "bold",
+                        titleVariant: "colorPrimaryDark",
+                        titleWeight: "medium",
                         titleAlign: "left",
                         layout: "horizontal",
                         gap: "gap-4",
@@ -423,7 +423,7 @@ const DTRDashboard: React.FC = () => {
                     gridColumns: 2,
                     gridRows: 2,
                     span: { col: 2, row: 1 },
-                    className:'border border-primary-border rounded-3xl p-6',
+                    className:'border border-primary-border rounded-3xl p-6 bg-background-secondary',
                     columns: [
                                               {
                           name: "SectionHeader",
@@ -431,8 +431,8 @@ const DTRDashboard: React.FC = () => {
                             title: "Latest Alerts",
                             titleLevel: 2,
                             titleSize: "md",
-                            titleVariant: "primary",
-                            titleWeight: "bold",
+                            titleVariant: "colorPrimaryDark",
+                            titleWeight: "medium",
                             titleAlign: "left",
                             rightComponent: {
                               name: "TimeRangeSelector",
