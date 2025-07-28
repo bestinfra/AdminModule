@@ -265,7 +265,6 @@ variables.dtrDashboardError = modules.includes('dtr_dashboard') ?
   if (placeholders && placeholders.length > 0) {
     console.error('Warning: Template placeholders were not replaced!');
     console.error('Unreplaced placeholders:', placeholders);
-    console.error('Available variables:', Object.keys(variables));
   }
   
   const appPath = path.join(frontendDir, 'src', 'App.tsx');
