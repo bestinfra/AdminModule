@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useTheme } from "@/providers";
+import React, { useState, useEffect, useRef } from "react";
 type Module = {
   name: string;
   route?: string;
@@ -55,7 +54,23 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   tickets,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const theme = useTheme();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -132,11 +147,11 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
     meters.total > 0 ? (meters.inactive / meters.total) * 100 : 0;
 
   return (
-    <div className="bg-white rounded-3xl flex flex-col gap-4 border border-primary-border p-6 max-w-2xl">
+    <div className="bg-white rounded-3xl flex flex-col gap-6 border border-primary-border p-6 w-full">
       {/* Header Section */}
       <div className="flex items-start justify-between w-full items-center h-full gap-8">
         <div className="flex items-center gap-4 items-start">
-          <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center">
             {/* Icon removed */}
           </div>
           <div>
@@ -152,9 +167,49 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
             {status}
           </div>
         </div>
-        <div className="bg-TextSecondary text-white px-3 py-1 h-full rounded-md text-sm font-medium flex items-center gap-2">
-          <img src="/icons/v-dots.svg" alt="status" className="w-4 h-4" />
+        <div className="relative">
+          <span
+            onClick={toggleMenu}
+            className="bg-TextSecondary text-white px-3 py-1 h-full rounded-md text-sm font-medium flex items-center gap-2 hover:bg-opacity-80 transition-colors"
+          >
+            <img src="/icons/v-dots.svg" alt="menu" className="w-4 h-4" />
+          </span>
           
+          {/* Dropdown Menu */}
+          {isMenuOpen && (
+            <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50" ref={menuRef}>
+              <div className="py-1">
+                <span
+                  onClick={handleViewDetails}
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3 transition-colors"
+                >
+                  <img src="/icons/eye.svg" alt="view" className="w-4 h-4" />
+                  View Details
+                </span>
+                <span
+                  onClick={handleEdit}
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3 transition-colors"
+                >
+                  <img src="/icons/edit.svg" alt="edit" className="w-4 h-4" />
+                  Edit
+                </span>
+                <span
+                  onClick={handleVisitSite}
+                  className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-3 transition-colors"
+                >
+                  <img src="/icons/globe.svg" alt="visit" className="w-4 h-4" />
+                  Visit Site
+                </span>
+                <span
+                  onClick={handleDelete}
+                  className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50 flex items-center gap-3 transition-colors"
+                >
+                  <img src="/icons/delete.svg" alt="delete" className="w-4 h-4" />
+                  Delete
+                </span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

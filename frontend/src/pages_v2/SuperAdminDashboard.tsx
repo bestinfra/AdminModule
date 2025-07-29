@@ -129,17 +129,37 @@ const SuperAdminDashboard: React.FC = () => {
                     // SubApp Panel Section
                     {
                         layout: {
-                            type: "row",
+                            type: "grid",
+                            columns:2,
                             gap: "gap-6",
-                            className: "mt-8",
+                            className:'w-full mt-6',
+                            rows: [
+                                {
+                                  layout:"grid",
+                                  gap:"gap-6",
+                                  gridColumns:2,
+                                  gridRows:1,
+                                  span:{col:2,row:1},
+                                  columns:[{
+                                    name:"SubappPanel",
+                                    props:sampleSubApp,
+                                  },
+                                  {
+                                    name:"SubappPanel",
+                                    props:sampleSubApp,
+                                  }
+                                ]
+                                }
+                            ]
                         },
-                        components: [
-                            {
-                                name: "SubappPanel",
-                                props: sampleSubApp,
-                                align: "center"
-                            }
-                        ],
+                       
+                        // components: [
+                        //     {
+                        //         name: "SubappPanel",
+                        //         props: sampleSubApp,
+                        //         align: "center"
+                        //     }
+                        // ],
                     },
                 ]}
             />
