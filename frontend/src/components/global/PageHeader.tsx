@@ -224,7 +224,7 @@ const Header: React.FC<HeaderProps> = ({
 
                 {showMenu && showDropdown && (
                     <span
-                        className="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md cursor-pointer border border-gray-300"
+                        className="flex items-center justify-center w-6 h-6 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md cursor-pointer"
                         ref={dropdownIconRef}
                         onClick={handleMenuClick}
                         title="Filter Menu"
@@ -232,7 +232,7 @@ const Header: React.FC<HeaderProps> = ({
                         <img 
                             src="/icons/menu-dots.svg" 
                             alt="dropdown" 
-                            className="w-4 h-4 filter dark:invert"
+                            className="w-3 h-3 filter dark:invert"
                         />
                     </span>
                 )}

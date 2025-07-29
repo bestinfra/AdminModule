@@ -1,6 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
+import { exportChartData } from '@/utils/excelExport';
 
 // Constants
 
@@ -254,6 +255,11 @@ const Dashboard: React.FC = () => {
         ],
     });
 
+    // Chart download handler
+    const handleChartDownload = () => {
+        exportChartData(billingChartData.xAxisData, billingChartData.seriesData, 'billing-vs-collection-data');
+    };
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Page
@@ -447,6 +453,7 @@ const Dashboard: React.FC = () => {
                                                     'Monthly billing statistics chart',
                                                 yAxisMax: 300,
                                                 yAxisStep: 50,
+                                                onDownload: handleChartDownload,
                                             },
                                         },
                                     ],
