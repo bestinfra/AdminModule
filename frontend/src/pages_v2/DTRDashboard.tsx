@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import type { TableData } from '@components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import BarChart from '@/graphs/BarChart';
 import { exportChartData } from '@/utils/excelExport';
 
 // Brand green icon style
@@ -702,24 +701,18 @@ const DTRDashboard: React.FC = () => {
                         },
                         components: [
                             {
-                                name: 'Holder',
+                                name: 'BarChart',
                                 props: {
-                                    title: 'Statistics',
-                                    loading: false,
-                                    height: 'auto',
-                                    className: 'mb-4',
-                                    hasDownload: true,
-                                    handleDownload: handleChartDownload,
-                                    children: (
-                                        <BarChart
-                                            xAxisData={months}
-                                            seriesData={alertSeries}
-                                            seriesColors={alertColors}
-                                            height={300}
-                                            showLegendInteractions={true}
-                                            timeRange={statsRange}
-                                        />
-                                    ),
+                                    xAxisData: months,
+                                    seriesData: alertSeries,
+                                    seriesColors: alertColors,
+                                    height: 300,
+                                    showLegendInteractions: true,
+                                    timeRange: statsRange,
+                                    showHeader: true,
+                                    headerTitle: 'Statistics',
+                                    showDownloadButton: true,
+                                    onDownload: () => handleChartDownload(),
                                 },
                             },
                         ],

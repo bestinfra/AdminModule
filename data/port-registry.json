@@ -1,5 +1,5 @@
 {
-  "nextPort": 4081,
+  "nextPort": 4083,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -275,6 +275,11 @@
       "port": 4078,
       "deployedAt": "2025-07-28T05:53:18.810Z",
       "path": "C:\\xampp\\htdocs\\ssss-backend"
+    },
+    "koe": {
+      "port": 4082,
+      "deployedAt": "2025-07-29T04:46:55.096Z",
+      "path": "C:\\xampp\\htdocs\\koe-backend"
     }
   }
 }

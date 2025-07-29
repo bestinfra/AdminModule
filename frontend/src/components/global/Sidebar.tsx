@@ -236,10 +236,10 @@ const Sidebar = ({
                                                                     menuItem.title
                                                                 )
                                                             }
-                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${pathname ===
+                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg w-full text-left ${pathname ===
                                                                     menuItem.link
-                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white custom-shadow text-sm font-semibold'
-                                                                    : 'text-main hover:bg-white hover:text-primary  dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white text-sm font-semibold'
+                                                                    ? 'text-primary bg-white dark:bg-brand-blue dark:text-white custom-shadow text-sm font-bold hover:font-semibold'
+                                                                    : 'text-main hover:bg-white hover:text-primary hover:font-semibold dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white text-sm font-normal'
                                                                 }`}
                                                             aria-expanded={
                                                                 expandedMenus[
@@ -318,10 +318,10 @@ const Sidebar = ({
                                                                                         subItem.link
                                                                                     )
                                                                                 }
-                                                                                className={`block ml-4 mr-4 py-3 px-4 pl-8 rounded-lg font-medium transition-all duration-200 w-full text-left text-sm relative z-10 ${pathname ===
+                                                                                className={`block ml-4 mr-4 py-3 px-4 pl-8 rounded-lg transition-all duration-200 w-full text-left text-sm relative z-10 ${pathname ===
                                                                                         subItem.link
-                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_10%,white_8%_100%)] text-primary shadow '
-                                                                                        : 'text-gray-400 hover:text-primary'
+                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_10%,white_8%_100%)] text-primary shadow font-bold'
+                                                                                        : 'text-gray-400 hover:text-primary font-normal'
                                                                                     }`}>
                                                                                 {
                                                                                     subItem.title
@@ -352,8 +352,8 @@ const Sidebar = ({
                                                         }}
                                                         className={`flex items-center gap-4 py-3 px-4  text-sm cursor-pointer group rounded-lg w-full text-left ${pathname ===
                                                                 menuItem.link
-                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white custom-shadow'
-                                                                : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
+                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white custom-shadow font-bold'
+                                                                : 'text-main hover:bg-white hover:text-primary hover:font-semibold dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white font-normal'
                                                             }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
                                                             <img
@@ -370,7 +370,7 @@ const Sidebar = ({
                                                             />
                                                         </span>
                                                         {!isSidebarCollapsed && (
-                                                            <div className="flex items-center justify-between w-full gap-2 font-semibold">
+                                                            <div className={`flex items-center justify-between w-full gap-2 ${pathname === menuItem.link ? 'font-bold' : 'font-normal hover:font-semibold'}`}>
                                                                 <span>
                                                                     {
                                                                         menuItem.title
