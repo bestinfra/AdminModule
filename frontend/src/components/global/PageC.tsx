@@ -242,7 +242,7 @@ const Page: React.FC<PageProps> = ({
                                 const rowElement = (
                                     <div
                                         key={rowIdx}
-                                        className={`${rowClass} mb-4`}>
+                                        className={`${rowClass}`}>
                                         {row.columns.map((comp, cidx) => {
                                             let name: string;
                                             let props: Record<string, unknown> =
