@@ -237,7 +237,7 @@ export default function Prepaid() {
                                     gap: 'gap-6',
                                     columns: cardData.map((card) => ({
                                         name: 'Card',
-                                        props: card,
+                                        props: { ...card, bg: "bg-stat-icon-gradient" },
                                     })),
                                 },
                             ],
@@ -283,7 +283,7 @@ export default function Prepaid() {
                                     gap: 'gap-6',
                                     columns: rechargeData.map((card) => ({
                                         name: 'Card',
-                                        props: card,
+                                        props: { ...card, bg: "bg-stat-icon-gradient" },
                                     })),
                                 },
                             ],

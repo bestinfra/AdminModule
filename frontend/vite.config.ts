@@ -40,7 +40,7 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@assets': path.resolve(__dirname, './src/assets'),
       '@types': path.resolve(__dirname, './src/types'),
-      
+      '@pages_v2': path.resolve(__dirname, './src/pages_v2'),
     },
   },
   build: {

@@ -296,6 +296,7 @@ const Dashboard: React.FC = () => {
                                                 subtitle2: stat.subtitle2,
                                                 iconStyle: stat.iconStyle,
                                                 onValueClick: stat.onValueClick,
+                                                bg: "bg-stat-icon-gradient",
                                             },
                                         })),
                                     ],
@@ -352,6 +353,7 @@ const Dashboard: React.FC = () => {
                                                 comparisonValue:
                                                     billing.comparisonValue,
                                                 iconStyle: billing.iconStyle,
+                                                bg: "bg-stat-icon-gradient",
                                             },
                                         })),
                                     ],

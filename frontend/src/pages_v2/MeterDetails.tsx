@@ -286,6 +286,7 @@ const MeterDetails: React.FC = () => {
                                 props: {
                                     ...cardData,
                                     icon: cardData.icon || '/icons/default.svg',
+                                    bg: "bg-stat-icon-gradient",
                                 },
                             })),
                         },
@@ -438,7 +439,7 @@ const MeterDetails: React.FC = () => {
                         {
                             layout:{
                                 type:"column" as const,
-                                className:"mb-8"
+                                className:"mb-8 border border-primary-border rounded-3xl bg-white p-8"
                             },
                             components:[
                                 {
@@ -446,7 +447,7 @@ const MeterDetails: React.FC = () => {
                                     props:{
                                         text:"Meter History",
                                         level:2,
-                                        className:"text-lg font-semibold mb-4"
+                                        className:"text-base font-medium"
                                     }
                                 },
                                 {
@@ -455,7 +456,7 @@ const MeterDetails: React.FC = () => {
                                         data:meterInfoData,
                                         columns:meterInfoColumns,
                                         actions:meterDetailAction,
-                                        showActions:true,
+                                        showActions:false,
                                         searchable:true,
                                         pagination:true,
                                         initialRowsPerPage:10,

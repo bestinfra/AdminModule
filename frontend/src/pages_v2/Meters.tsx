@@ -357,6 +357,7 @@ export default function Meters() {
                                              icon: meter.icon,
                                              subtitle1: meter.subtitle1,
                                              iconStyle: meter.iconStyle,
+                                             bg: "bg-stat-icon-gradient",
                                          },
                                      })),
                                 },
