@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import type { TableData } from '@components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
@@ -10,22 +10,6 @@ const ICON_FILTER_STYLE = {
 
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
-    const [error, setError] = useState<string | null>(null);
-    const [dtrStats, setDtrStats] = useState<any>({});
-    const [consumptionStats, setConsumptionStats] = useState<any>({});
-    const [dtrTableData, setDtrTableData] = useState<any[]>([]);
-    const [alertsTableData, setAlertsTableData] = useState<any[]>([]);
-    
-    // Add a type for the trends data
-    type Trend = {
-      month: string;
-      detected_count: number;
-      analyzing_count: number;
-      repairing_count: number;
-      resolved_count: number;
-      unresolved_count: number;
-    };
-    const [trends, setTrends] = useState<Trend[]>([]);
 
     // State for time range toggle
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
@@ -311,117 +295,98 @@ const DTRDashboard: React.FC = () => {
       commStatus: "Active",
     },
   ];
-
   const dtrTableActions = [
     {
-            label: 'View',
-            icon: '/icons/eye.svg',
+      label: "View",
+      icon: "/icons/eye.svg",
       onClick: (row: TableData) => navigate(`/dtr/${row.dtrId}`),
     },
   ];
 
-    // Alerts table columns
+    // Dummy data for Latest Alerts table
     const alertsTableColumns = [
         { key: 'alert', label: 'Alert' },
         { key: 'date', label: 'Date' },
         { key: 'status', label: 'Status' },
     ];
 
-    // Load data from APIs
-    useEffect(() => {
-        const fetchData = async () => {
-            setError(null);
-            console.log('🔍 Fetching DTR data from:', BACKEND_URL);
-            
-            try {
-                // Fetch consolidated DTR stats
-                console.log('📊 Fetching consolidated DTR stats...');
-                const statsResponse = await fetch(`${BACKEND_URL}/dtrs/stats`);
-                console.log('📊 Stats response status:', statsResponse.status);
-                if (statsResponse.ok) {
-                    const statsResult = await statsResponse.json();
-                    console.log('📊 Stats result:', statsResult);
-                    if (statsResult.success) {
-                        setDtrStats(statsResult.data.row1);
-                        setConsumptionStats(statsResult.data.row2[selectedTimeRange.toLowerCase()]);
-                    }
-                } else {
-                    console.error('❌ Stats response not ok:', statsResponse.status, statsResponse.statusText);
-                }
-
-                // Fetch DTR table data
-                console.log('📋 Fetching DTR table data...');
-                const tableResponse = await fetch(`${BACKEND_URL}/dtrs`);
-                console.log('📋 Table response status:', tableResponse.status);
-                if (tableResponse.ok) {
-                    const tableResult = await tableResponse.json();
-                    console.log('📋 Table result:', tableResult);
-                    if (tableResult.success) {
-                        setDtrTableData(tableResult.data || []);
-                    }
-                                } else {
-                    console.error('❌ Table response not ok:', tableResponse.status, tableResponse.statusText);
-                }
-
-                // Fetch alerts
-                console.log('🚨 Fetching alerts...');
-                const alertsResponse = await fetch(`${BACKEND_URL}/dtrs/alerts`);
-                console.log('🚨 Alerts response status:', alertsResponse.status);
-                if (alertsResponse.ok) {
-                    const alertsResult = await alertsResponse.json();
-                    console.log('🚨 Alerts result:', alertsResult);
-                    if (alertsResult.success) {
-                        setAlertsTableData(alertsResult.data || []);
-                    }
-                                } else {
-                    console.error('❌ Alerts response not ok:', alertsResponse.status, alertsResponse.statusText);
-                }
-
-                // Fetch DTR alert trends
-                console.log('📈 Fetching trends...');
-                const trendsResponse = await fetch(`${BACKEND_URL}/dtrs/alerts/trends`);
-                console.log('📈 Trends response status:', trendsResponse.status);
-                if (trendsResponse.ok) {
-                    const trendsResult = await trendsResponse.json();
-                    console.log('📈 Trends result:', trendsResult);
-                    if (trendsResult.success) {
-                        setTrends(trendsResult.data || []);
-                    }
-                                } else {
-                    console.error('❌ Trends response not ok:', trendsResponse.status, trendsResponse.statusText);
-                }
-                        } catch (err: any) {
-                console.error('💥 Error fetching data:', err);
-                setError(err.message || 'Failed to fetch DTR data');
-            }
-        };
-
-        fetchData();
-    }, [selectedTimeRange]);
-
-    // Map real-time trends data for the Statistics BarChart
-    const xAxisData = trends.map(t => t.month);
-    const statusTypes = [
-      { key: 'detected_count', name: 'Detected', color: '#e74c3c' },
-      { key: 'analyzing_count', name: 'Analyzing', color: '#f39c12' },
-      { key: 'repairing_count', name: 'Repairing', color: '#3498db' },
-      { key: 'resolved_count', name: 'Resolved', color: '#10B981' },
-      { key: 'unresolved_count', name: 'Unresolved', color: '#EF4444' },
+    // Daily alerts data
+    const dailyAlertsData = [
+        {
+            alert: 'Overload detected on DTR-01',
+            date: '2024-07-25 14:30',
+            status: 'Active',
+        },
+        { 
+            alert: 'Fuse blown on DTR-03', 
+            date: '2024-07-25 13:15', 
+            status: 'Resolved' 
+        },
+        { 
+            alert: 'Power failure on DTR-07', 
+            date: '2024-07-25 12:45', 
+            status: 'Active' 
+        },
+        {
+            alert: 'Low voltage detected on DTR-02',
+            date: '2024-07-25 11:20',
+            status: 'Active',
+        },
+        {
+            alert: 'Communication lost on DTR-05',
+            date: '2024-07-25 10:30',
+            status: 'Resolved',
+        },
+        {
+            alert: 'High temperature on DTR-08',
+            date: '2024-07-25 09:15',
+            status: 'Active',
+        },
     ];
-    const seriesData = statusTypes.map(type => ({
-      name: type.name,
-      data: trends.map(t => {
-        switch (type.key) {
-          case 'detected_count': return t.detected_count;
-          case 'analyzing_count': return t.analyzing_count;
-          case 'repairing_count': return t.repairing_count;
-          case 'resolved_count': return t.resolved_count;
-          case 'unresolved_count': return t.unresolved_count;
-          default: return 0;
-        }
-      })
-    }));
-    const seriesColors = statusTypes.map(type => type.color);
+
+    // Monthly alerts data
+    const monthlyAlertsData = [
+        {
+            alert: 'Monthly overload summary - DTR-01',
+            date: 'July 2024',
+            status: 'Active',
+        },
+        { 
+            alert: 'Monthly fuse blown incidents - DTR-03', 
+            date: 'July 2024', 
+            status: 'Resolved' 
+        },
+        { 
+            alert: 'Monthly power failure report - DTR-07', 
+            date: 'July 2024', 
+            status: 'Active' 
+        },
+        {
+            alert: 'Monthly voltage fluctuation - DTR-02',
+            date: 'July 2024',
+            status: 'Active',
+        },
+        {
+            alert: 'Monthly communication issues - DTR-05',
+            date: 'July 2024',
+            status: 'Resolved',
+        },
+        {
+            alert: 'Monthly temperature monitoring - DTR-08',
+            date: 'July 2024',
+            status: 'Active',
+        },
+        {
+            alert: 'Monthly maintenance alert - DTR-04',
+            date: 'July 2024',
+            status: 'Scheduled',
+        },
+        {
+            alert: 'Monthly performance report - DTR-06',
+            date: 'July 2024',
+            status: 'Completed',
+        },
+    ];
 
     // Function to handle time range change
     const handleTimeRangeChange = (range: string) => {
@@ -474,11 +439,6 @@ const DTRDashboard: React.FC = () => {
 
     return (
         <div className="p-2 min-h-screen">
-            {error && (
-                <div className="mb-4 p-4 bg-danger-light border border-danger rounded-md text-danger">
-                    {error}
-                </div>
-            )}
             <Page
                 sections={[
                     // Header section
@@ -515,37 +475,20 @@ const DTRDashboard: React.FC = () => {
                     // DTR Statistics Cards
           {
             layout: {
-                            type: 'grid' as const,
-                            columns: 3,
-                            gap: 'gap-4',
-                            className: 'mb-8'
-                        },
-                        components: [
+              type: "grid",
+              columns: 5,
+              gap: "gap-6",
+              rows: [
                 {
-                                name: 'Card',
-                                props: {
-                                    title: 'Total DTRs',
-                                    value: dtrStats.totalDtrs || 0,
-                                    icon: '/icons/dtr.svg',
-                                    subtitle1: 'Total Transformer Units',
-                                    onValueClick: () => navigate('/dtr-statistics/total-dtrs'),
-                                    iconStyle: ICON_FILTER_STYLE,
-                                    bg: 'bg-stat-icon-gradient',
-                                }
-                            },
-                            {
-                                name: 'Card',
-                                props: {
-                                    title: 'Total LT Feeders',
-                                    value: dtrStats.totalLtFeeders || 0,
-                                    icon: '/icons/feeder.svg',
-                                    subtitle1: 'Connected to DTRs',
-                                    onValueClick: () => navigate('/dtr-statistics/total-lt-feeders'),
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            },
+                  layout: "grid",
+                  gap: "gap-4",
+                  gridColumns: 3,
+                  gridRows: 2,
+                  span: { col: 3, row: 1 },
+                  className:'border border-primary-border rounded-3xl p-6 bg-background-secondary',
+                  columns: [
                     {
-                                name: 'Card',
+                      name: "SectionHeader",
                       props: {
                         title: "Distribution Transformer (DTR) Statistics",
                         titleLevel: 2,
@@ -561,163 +504,67 @@ const DTRDashboard: React.FC = () => {
                       ...dtrStatsCards.map((stat) => ({
                        name: "Card",
                        props: {
-                                    title: 'Underloaded Feeders',
-                                    value: dtrStats.underloadedFeeders || 0,
-                                    icon: '/icons/dtr.svg',
-                                    subtitle1: `${dtrStats.underloadedPercentage || 0}% of Total Feeders`,
-                                    onValueClick: () => navigate('/dtr-statistics/underloaded-feeders'),
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            },
-                            {
-                                name: 'Card',
-                                props: {
-                                    title: 'LT Side Fuse Blown',
-                                    value: dtrStats.ltSideFuseBlown || 0,
-                                    icon: '/icons/power_failure.svg',
-                                    subtitle1: `${dtrStats.ltSideFuseBlown || 0} Incidents`,
-                                    onValueClick: () => navigate('/dtr-statistics/lt-side-fuse-blown'),
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
+                         title: stat.title,
+                         value: stat.value,
+                         icon: stat.icon,
+                         subtitle1: stat.subtitle1,
+                         onValueClick: stat.onValueClick,
+                         iconStyle: stat.iconStyle,
+                         bg: "bg-stat-icon-gradient",
+                       },
+                       span: { col: 1, row: 1 },
+                     })),
+                  ],
                 },
                 {
-                                name: 'Card',
-                                props: {
-                                    title: 'Unbalanced DTRs',
-                                    value: dtrStats.unbalancedDtrs || 0,
-                                    icon: '/icons/dtr.svg',
-                                    subtitle1: `${dtrStats.unbalancedPercentage || 0}% of Total DTRs`,
-                                    onValueClick: () => navigate('/dtr-statistics/unbalanced-dtrs'),
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            },
+                    layout: "grid",
+                    gap: "gap-4",
+                    gridColumns: 2,
+                    gridRows: 2,
+                    span: { col: 2, row: 1 },
+                    className:'border border-primary-border rounded-3xl p-6 bg-background-secondary',
+                    columns: [
                                               {
-                                name: 'Card',
+                          name: "SectionHeader",
                           props: {
-                                    title: 'Power Failure Feeders',
-                                    value: dtrStats.powerFailureFeeders || 0,
-                                    icon: '/icons/power_failure.svg',
-                                    subtitle1: `${dtrStats.powerFailurePercentage || 0}% of Feeders`,
-                                    onValueClick: () => navigate('/dtr-statistics/power-failure-feeders'),
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            },
-                            {
-                                name: 'Card',
+                            title: "Latest Alerts",
+                            titleLevel: 2,
+                            titleSize: "md",
+                            titleVariant: "colorPrimaryDark",
+                            titleWeight: "medium",
+                            titleAlign: "left",
+                            rightComponent: {
+                              name: "TimeRangeSelector",
                               props: {
-                                    title: 'HT Side Fuse Blown',
-                                    value: dtrStats.htSideFuseBlown || 0,
-                                    icon: '/icons/power_failure.svg',
-                                    subtitle1: `${dtrStats.htSideFuseBlown || 0} Incident`,
-                                    onValueClick: () => navigate('/dtr-statistics/ht-side-fuse-blown'),
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            }
-                        ]
-                    },
-                    // Consumption & Energies section
-                    {
-                        layout: {
-                            type: 'column' as const,
-                            className: 'mb-8'
-                        },
-                        components: [
-                            {
-                                name: 'Heading',
-                                props: {
-                                    text: 'Consumption & Energies',
-                                    level: 2,
-                                    size: 'md',
-                                    variant: 'primary',
-                                    weight: 'bold',
-                                    align: 'left',
-                                    className: 'mb-4'
-                                }
-                            },
-                            {
-                                name: 'TimeRangeSelector',
-                                props: {
-                                    availableTimeRanges: ['Daily', 'Monthly'],
+                                availableTimeRanges: ["Daily", "Monthly"],
                                 selectedTimeRange: selectedTimeRange,
                                 handleTimeRangeChange: handleTimeRangeChange, 
-                                }
-                            }
-                        ]
-                    },
-                    // Consumption & Energies Cards
-                    {
-                        layout: {
-                            type: 'grid' as const,
-                            columns: 2,
-                            gap: 'gap-4',
-                            className: 'mb-8'
+                                timeRangeLabels: {},
+                              },
+                            },
+                            layout: "horizontal",
+                            gap: "gap-4",
+                          },
+                          span: { col: 2, row: 1 },
                         },
-                        components: [
-                            {
-                                name: 'Card',
-                                props: {
-                                    title: 'Total kWh',
-                                    value: consumptionStats.totalKwh || '0',
-                                    icon: '/icons/consumption.svg',
-                                    subtitle1: 'Cumulative Active Energy',
-                                    iconStyle: ICON_FILTER_STYLE,
-                                    bg: 'bg-stat-icon-gradient',
-                                }
-                            },
-                            {
-                                name: 'Card',
-                                props: {
-                                    title: 'Total kVAh',
-                                    value: consumptionStats.totalKvah || '0',
-                                    icon: '/icons/consumption.svg',
-                                    subtitle1: 'Cumulative Apparent Energy',
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            },
-                            {
+                          ...getCurrentConsumptionCards().map((card) => ({
                              name: 'Card',
                              props: {
-                                    title: 'Total kW',
-                                    value: consumptionStats.totalKw || '0',
-                                    icon: '/icons/consumption.svg',
-                                    subtitle1: 'Active Power',
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            },
-                            {
-                                name: 'Card',
-                                props: {
-                                    title: 'Total kVA',
-                                    value: consumptionStats.totalKva || '0',
-                                    icon: '/icons/consumption.svg',
-                                    subtitle1: 'Apparent Power',
-                                    iconStyle: ICON_FILTER_STYLE,
-                                }
-                            },
-                            {
-                                name: 'Card',
-                                props: {
-                                    title: 'Active DTRs',
-                                    value: dtrStats.activeDtrs || 0,
-                                    icon: '/icons/dtr.svg',
-                                    subtitle1: `${dtrStats.activePercentage || 0}% of Total DTRs`,
-                                    iconStyle: ICON_FILTER_STYLE,
-                                    iconColor: 'green'
-                                }
-                            },
-                            {
-                                name: 'Card',
-                                props: {
-                                    title: 'In-Active DTRs',
-                                    value: dtrStats.inactiveDtrs || 0,
-                                    icon: '/icons/dtr.svg',
-                                    subtitle1: `${dtrStats.inactivePercentage || 0}% of Total DTRs`,
-                                    iconStyle: ICON_FILTER_STYLE,
-                                    iconColor: 'red'
-                                }
-                            }
-                        ]
-                    },
+                                 title: card.title,
+                                 value: card.value,
+                                 icon: card.icon,
+                                 subtitle1: card.subtitle1,
+                                 iconStyle: card.iconStyle,
+                                 bg: "bg-stat-icon-gradient",
+                             },
+                             span: { col: 1, row: 1 },
+                         }))
+                    ],
+                },
+              ],
+            },
+          },
+
                     // DTRs Table section
                     {
                         layout: {
@@ -768,7 +615,7 @@ const DTRDashboard: React.FC = () => {
                             {
                                 name: 'Table',
                                 props: {
-                                    data: alertsTableData,
+                                    data: getCurrentAlertsData(),
                                     columns: alertsTableColumns,
                                     showActions: false,
                                     searchable: true,
@@ -783,7 +630,8 @@ const DTRDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column' as const,
-                            className: 'mb-8',
+                            className:
+                                'mb-8',
                         },
                         components: [
                             {
