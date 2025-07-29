@@ -8,12 +8,10 @@ import billing from './billing.js';
 import dashboard from './dashboard.js';
 import tickets from './tickets.js';
 import dtrs from './dtrs.js';
-import auth from './auth.js';
 
 const router = express.Router();
 
 // Authentication routes (public)
-router.use('/auth', auth);
 
 // Define all route groups
 router.use('/meters', meters);

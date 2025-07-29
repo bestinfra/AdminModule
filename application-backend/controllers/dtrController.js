@@ -42,10 +42,43 @@ export const getDTRTable = async (req, res) => {
 export const getFeedersForDTR = async (req, res) => {
     try {
         const { dtrId } = req.params;
-        const feeders = await DTRDB.getFeedersForDTR(dtrId);
+        const feedersData = await DTRDB.getFeedersForDTR(dtrId);
+        
+        // Map feeders data to match frontend expectations
+        const mappedFeeders = feedersData.feeders.map((feeder, idx) => ({
+            sNo: idx + 1,
+            feederId: feeder.id,
+            meterNumber: feeder.meterNumber || 'NA',
+            serialNumber: feeder.serialNumber || 'NA',
+            manufacturer: feeder.manufacturer || 'NA',
+            model: feeder.model || 'NA',
+            type: feeder.type || 'NA',
+            phase: feeder.phase || 'NA',
+            status: feeder.status || 'NA',
+            location: feeder.location ? feeder.location.name : 'NA',
+            city: feeder.location ? feeder.location.city : 'NA',
+            latitude: feeder.location ? feeder.location.latitude : null,
+            longitude: feeder.location ? feeder.location.longitude : null
+        }));
+
+        const mappedDTR = {
+            dtrId: feedersData.dtr.id,
+            dtrNumber: feedersData.dtr.dtrNumber || 'NA',
+            serialNumber: feedersData.dtr.serialNumber || 'NA',
+            manufacturer: feedersData.dtr.manufacturer || 'NA',
+            model: feedersData.dtr.model || 'NA',
+            capacity: feedersData.dtr.capacity || 0,
+            loadPercentage: feedersData.dtr.loadPercentage || 0,
+            status: feedersData.dtr.status || 'NA'
+        };
+
         res.json({
             success: true,
-            data: feeders,
+            data: {
+                dtr: mappedDTR,
+                feeders: mappedFeeders,
+                totalFeeders: mappedFeeders.length
+            },
             message: 'Feeders fetched successfully'
         });
     } catch (error) {
@@ -191,8 +224,8 @@ export const getFeederStats = async (req, res) => {
 
 export const getInstantaneousStats = async (req, res) => {
     try {
-        const { meterId } = req.params;
-        const stats = await DTRDB.getInstantaneousStats(meterId);
+        const { dtrId } = req.params;
+        const stats = await DTRDB.getInstantaneousStats(dtrId);
         res.json({
             success: true,
             data: stats,
@@ -203,6 +236,95 @@ export const getInstantaneousStats = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to fetch instantaneous stats',
+            error: error.message
+        });
+    }
+};
+
+export const getConsolidatedDTRStats = async (req, res) => {
+    try {
+        const stats = await DTRDB.getConsolidatedDTRStats();
+        res.json({
+            success: true,
+            data: stats,
+            message: 'Consolidated DTR stats fetched successfully'
+        });
+    } catch (error) {
+        console.error('Error fetching consolidated DTR stats:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch consolidated DTR stats',
+            error: error.message
+        });
+    }
+}; 
+
+export const getDTRConsumptionAnalytics = async (req, res) => {
+    try {
+        const { dtrId } = req.params;
+        const { period = 'daily' } = req.query;
+        
+        const analytics = await DTRDB.getDTRConsumptionAnalytics(dtrId, period);
+        
+        // Format data similar to dashboard analytics
+        const { xAxisData, kwhData, kvahData, kwData, kvaData } = analytics.reduce(
+            (acc, item) => {
+                acc.xAxisData.push(item.consumption_date);
+                acc.kwhData.push((item.total_kwh || 0).toFixed(2));
+                acc.kvahData.push((item.total_kvah || 0).toFixed(2));
+                acc.kwData.push((item.total_kw || 0).toFixed(2));
+                acc.kvaData.push((item.total_kva || 0).toFixed(2));
+                return acc;
+            },
+            { xAxisData: [], kwhData: [], kvahData: [], kwData: [], kvaData: [] }
+        );
+
+        res.json({
+            success: true,
+            data: {
+                xAxisData,
+                kwhData,
+                kvahData,
+                kwData,
+                kvaData,
+                period
+            },
+            message: 'DTR consumption analytics fetched successfully'
+        });
+    } catch (error) {
+        console.error('Error fetching DTR consumption analytics:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch DTR consumption analytics',
+            error: error.message
+        });
+    }
+};
+
+export const getDTRConsumptionStats = async (req, res) => {
+    try {
+        const { dtrId } = req.params;
+        const stats = await DTRDB.getDTRConsumptionStats(dtrId);
+        
+        // Map consumption stats to match frontend card field names exactly
+        const mappedStats = {
+            totalKwh: stats.totalKWh || '0',
+            totalKvah: stats.totalKVAh || '0',
+            totalKw: stats.totalKW || '0',
+            totalKva: stats.totalKVA || '0',
+            meterCount: stats.meterCount || 0
+        };
+
+        res.json({
+            success: true,
+            data: mappedStats,
+            message: 'DTR consumption stats fetched successfully'
+        });
+    } catch (error) {
+        console.error('Error fetching DTR consumption stats:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch DTR consumption stats',
             error: error.message
         });
     }
