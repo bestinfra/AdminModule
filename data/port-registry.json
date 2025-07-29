@@ -1,5 +1,5 @@
 {
-  "nextPort": 4076,
+  "nextPort": 4080,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -260,6 +260,26 @@
       "port": 4075,
       "deployedAt": "2025-07-24T21:05:20.893Z",
       "path": "C:\\xampp\\htdocs\\tgnpdcl1123-backend"
+    },
+    "test23": {
+      "port": 4076,
+      "deployedAt": "2025-07-28T12:03:42.061Z",
+      "path": "C:\\xampp\\htdocs\\test23-backend"
+    },
+    "test235": {
+      "port": 4077,
+      "deployedAt": "2025-07-28T13:06:58.912Z",
+      "path": "C:\\xampp\\htdocs\\test235-backend"
+    },
+    "test2356": {
+      "port": 4078,
+      "deployedAt": "2025-07-28T13:08:58.487Z",
+      "path": "C:\\xampp\\htdocs\\test2356-backend"
+    },
+    "test23568": {
+      "port": 4079,
+      "deployedAt": "2025-07-28T13:15:51.756Z",
+      "path": "C:\\xampp\\htdocs\\test23568-backend"
     }
   }
 }
