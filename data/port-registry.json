@@ -1,5 +1,5 @@
 {
-  "nextPort": 4080,
+  "nextPort": 4084,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -275,6 +275,16 @@
       "port": 4078,
       "deployedAt": "2025-07-28T05:53:18.810Z",
       "path": "C:\\xampp\\htdocs\\ssss-backend"
+    },
+    "tgnpdcl22": {
+      "port": 4082,
+      "deployedAt": "2025-07-29T04:41:29.619Z",
+      "path": "C:\\xampp\\htdocs\\tgnpdcl22-backend"
+    },
+    "brnm22": {
+      "port": 4083,
+      "deployedAt": "2025-07-29T11:31:01.302Z",
+      "path": "C:\\xampp\\htdocs\\brnm22-backend"
     }
   }
 }
