@@ -3,6 +3,7 @@ import PageC from "@components/global/PageC";
 import type { CarouselSlide } from "@components/global/Carousel";
 import { useState } from "react";
 import type { FormInputValue } from "@components/Form/types";
+import { login } from "@api/subAppAuth";
 
 const slides: CarouselSlide[] = [
   {
@@ -18,30 +19,34 @@ const slides: CarouselSlide[] = [
     img: "/images/smart-comm.png",
   },
 ];
-const DUMMY_USER = {
-  identifier: "admin@example.com",
-  password: "password",
-};
-
 const SubLogin: React.FC = () => {
-  const [_error, setError] = useState("");
-  const [_loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleDummyLogin = async (data: Record<string, FormInputValue>) => {
+  const handleLogin = async (data: Record<string, FormInputValue>) => {
     setError("");
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      if (
-        data.identifier === DUMMY_USER.identifier &&
-        data.password === DUMMY_USER.password
-      ) {
-        localStorage.setItem("token", "dummy-token");
+    
+    try {
+      const result = await login({
+        identifier: data.identifier as string,
+        password: data.password as string,
+        appId: window.location.hostname || 'sub-app'
+      });
+
+      if (result.success && result.data) {
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("user", JSON.stringify(result.data.user));
         window.location.href = "/";
       } else {
-        setError("Invalid credentials");
+        setError(result.message || "Login failed");
       }
-    }, 1000);
+    } catch (error) {
+      console.error('Login error:', error);
+      setError("Network error. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -86,7 +91,7 @@ const SubLogin: React.FC = () => {
                         name: "Button",
                         props: {
                           label: "Sign In",
-                          onClick: handleDummyLogin,
+                          onClick: handleLogin,
                         },
                     
                       },
@@ -146,10 +151,9 @@ const SubLogin: React.FC = () => {
                         //   className: 'justify-start',
                         // },
                       ],
-                      onSubmit: handleDummyLogin,
-                      //             // Optionally, you can pass loading and error to LoginV2 for UI feedback
-                      //             // loading,
-                      //             // error,
+                      onSubmit: handleLogin,
+                      loading,
+                      error,
   
                     },
                   },

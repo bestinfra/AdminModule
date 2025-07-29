@@ -12,6 +12,7 @@ import dashboard from './routes/dashboard.js';
 import tickets from './routes/tickets.js';
 import dtrs from './routes/dtrs.js';
 import apiRoutes from './routes/apiRoutes.js';
+import subAppAuthRoutes from './routes/subAppAuth.js';
 import { initializeCronJobs } from './cron/jobs.js';
 
 dotenv.config();
@@ -36,6 +37,9 @@ app.use((req, res, next) => {
 });
 
 app.use('/api', apiRoutes);
+
+// Sub-app authentication routes
+app.use('/api/sub-app/auth', subAppAuthRoutes);
 
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',
