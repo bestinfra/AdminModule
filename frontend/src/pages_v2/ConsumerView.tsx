@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Card from '@components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
@@ -11,7 +11,6 @@ import { exportChartData } from '@/utils/excelExport';
 const ConsumerView: React.FC = () => {
     // Try to get unitId from useParams first, then fallback to URL parsing
     const params = useParams<{ unitId: string }>();
-    const navigate = useNavigate();
 
     const uidFromParams = params?.unitId;
 

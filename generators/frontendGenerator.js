@@ -203,51 +203,52 @@ function generateAppComponent(frontendDir, variables) {
   variables.ticketViewRoute = modules.includes('tickets') ? 
     '<Route path="/tickets/:ticketId" element={<TicketView />} />' : '';
   
- // Dashboard submenu routes
+ // Dashboard submenu routes - always create routes for selected sub-dashboards
+ variables.consumerDashboardRoute = modules.includes('consumer_dashboard') ? 
+   '<Route path="/consumer-dashboard" element={<Dashboard />} />' : '';
 
- variables.consumerDashboardRoute = modules.includes('consumer_dashboard') && modules.includes('dashboard') ? 
+ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ? 
+   '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
 
- '<Route path="/consumer-dashboard" element={<Dashboard />} />' : '';
-
-
-
-variables.dtrDashboardRoute = modules.includes('dtr_dashboard') && modules.includes('dashboard') ? 
-
- '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
-
-  variables.feedersRoute = modules.includes('dtr') ? 
-    '<Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
-
-  // Calculate dashboard route dynamically based on selected dashboard modules
-  let defaultDashboardComponent = 'Dashboard';
-  let defaultDashboardPath = '/';
+  // Smart dashboard route and import logic
+  const dashboardModules = [];
+  if (modules.includes('consumer_dashboard')) dashboardModules.push('consumer_dashboard');
+  if (modules.includes('dtr_dashboard')) dashboardModules.push('dtr_dashboard');
   
-  // Check which dashboard modules are selected and set the default
-  if (modules.includes('dtr_dashboard') && !modules.includes('consumer_dashboard')) {
-    defaultDashboardComponent = 'DTRDashboard';
-    defaultDashboardPath = '/';
-  } else if (modules.includes('consumer_dashboard')) {
-    defaultDashboardComponent = 'Dashboard'; // Consumer dashboard uses the main Dashboard component
-    defaultDashboardPath = '/';
-  }
-  
-  // Generate dashboard routes - both / and /dashboard for dashboard module
-  if (modules.includes('dashboard') || modules.includes('consumer_dashboard')) {
-    variables.dashboardRoute = `<Route path="/" element={<${defaultDashboardComponent} />} />
-                      <Route path="/dashboard" element={<${defaultDashboardComponent} />} />`;
-    variables.dashboardError = `<li>/ - ${defaultDashboardComponent}</li>
-                                <li>/dashboard - ${defaultDashboardComponent}</li>`;
+  if (dashboardModules.length === 0) {
+    // No dashboard modules - use default
+    variables.dashboardRoute = `<Route path="/" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<Dashboard />} />`;
+    variables.dashboardError = `<li>/ - Dashboard</li>
+                                <li>/dashboard - Dashboard</li>`;
+    variables.dashboardImport = 'import Dashboard from \'./pages/Dashboard\';';
+  } else if (dashboardModules.length === 1) {
+    // Single dashboard - make it the main dashboard
+    const singleModule = dashboardModules[0];
+    if (singleModule === 'consumer_dashboard') {
+      variables.dashboardRoute = `<Route path="/" element={<Dashboard />} />
+                        <Route path="/dashboard" element={<Dashboard />} />`;
+      variables.dashboardError = `<li>/ - Dashboard</li>
+                                  <li>/dashboard - Dashboard</li>`;
+      variables.dashboardImport = 'import Dashboard from \'./pages/Dashboard\';';
+    } else if (singleModule === 'dtr_dashboard') {
+      variables.dashboardRoute = `<Route path="/" element={<DTRDashboard />} />
+                        <Route path="/dashboard" element={<DTRDashboard />} />`;
+      variables.dashboardError = `<li>/ - DTRDashboard</li>
+                                  <li>/dashboard - DTRDashboard</li>`;
+      variables.dashboardImport = 'import DTRDashboard from \'./pages/DTRDashboard\';';
+    }
   } else {
-    variables.dashboardRoute = `<Route path="${defaultDashboardPath}" element={<${defaultDashboardComponent} />} />`;
-    variables.dashboardError = `<li>/ - ${defaultDashboardComponent}</li>`;
+    // Multiple dashboards - create main dashboard with sub-routes
+    variables.dashboardRoute = `<Route path="/" element={<Dashboard />} />
+                      <Route path="/dashboard" element={<Dashboard />} />`;
+    variables.dashboardError = `<li>/ - Dashboard</li>
+                                <li>/dashboard - Dashboard</li>`;
+    variables.dashboardImport = 'import Dashboard from \'./pages/Dashboard\';';
+    if (modules.includes('dtr_dashboard')) {
+      variables.dashboardImportForConsumer = 'import DTRDashboard from \'./pages/DTRDashboard\';';
+    }
   }
-
-  // Calculate import variables based on selected modules
-  variables.dashboardImport = `import ${defaultDashboardComponent} from './pages/${defaultDashboardComponent}';`;
-  
-  // Add Dashboard import for consumer dashboard route (only if it's not already imported)
-  variables.dashboardImportForConsumer = modules.includes('consumer_dashboard') && defaultDashboardComponent !== 'Dashboard' ? 
-    'import Dashboard from \'./pages/Dashboard\';' : '';
   
   variables.consumersImport = modules.includes('consumer') ? 
     'import Consumers from \'./pages/Consumers\';' : '';
