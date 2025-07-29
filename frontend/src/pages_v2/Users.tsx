@@ -246,7 +246,8 @@ export default function Users() {
                                         name: 'Card',
                                         props: {
                                             ...card,
-                                            loading: statsLoading
+                                            loading: statsLoading,
+                                            bg: "bg-stat-icon-gradient"
                                         }
                                     }))
                                 }

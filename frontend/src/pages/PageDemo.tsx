@@ -168,7 +168,7 @@ const PageDemo: React.FC = () => {
                                         },
                                         ...firstRowData.map((cardData) => ({
                                             name: 'Card',
-                                            props: cardData,
+                                            props: { ...cardData, bg: "bg-stat-icon-gradient" },
                                         })),
                                     ],
                                 },
@@ -194,7 +194,7 @@ const PageDemo: React.FC = () => {
                                         },
                                         ...secondRowData.map((cardData) => ({
                                             name: 'Card',
-                                            props: cardData,
+                                            props: { ...cardData, bg: "bg-stat-icon-gradient" },
                                         })),
                                     ],
                                 },

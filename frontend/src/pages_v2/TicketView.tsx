@@ -936,6 +936,7 @@ const TicketView: React.FC = () => {
                                             'Fetching ticket information',
                                         subtitle2:
                                             'This may take a few moments',
+                                        bg: "bg-stat-icon-gradient",
                                     },
                                 },
                             ],
@@ -984,6 +985,7 @@ const TicketView: React.FC = () => {
                                             'Please check the ticket ID and try again',
                                         subtitle2:
                                             'Or return to the tickets list',
+                                        bg: "bg-stat-icon-gradient",
                                     },
                                 },
                             ],
