@@ -12,7 +12,7 @@ import { Theme } from './Theme';
 {{usersImport}}
 {{roleManagementImport}}
 {{metersImport}}
-{{dataLoggerImport}}
+// {{dataLoggerImport}}
 {{dtrDashboardImport}}
 {{assetManagementImport}}
 {{ticketsImport}}
@@ -77,6 +77,7 @@ function AppContent() {
       {{ticketsCase}}
       {{assetManagementCase}}
       {{meterManagementCase}}
+      // {{dataLoggerCase}}
       {{dtrCase}}
       {{consumerDashboardCase}}
       {{dtrDashboardCase}}
@@ -135,12 +136,20 @@ const generateMenuItems = (modules: string[] = []) => {
     });
   } else if (selectedDashboardItems.length > 0) {
     // Show individual dashboard items as main menus
+    // But don't create separate menu items if they're the default dashboard
     selectedDashboardItems.forEach(item => {
-      mandatoryMenus.push({
-        title: item.title,
-        icon: item.icon,
-        link: item.link,
-      });
+      // Check if this item should be the default dashboard (when only this dashboard is selected)
+      const isDefaultDashboard = (item.key === 'dtr_dashboard' && modules.includes('dtr_dashboard') && !modules.includes('dashboard')) ||
+                                (item.key === 'consumer_dashboard' && modules.includes('consumer_dashboard') && !modules.includes('dashboard'));
+      
+      // Only add as separate menu if it's not the default dashboard
+      if (!isDefaultDashboard) {
+        mandatoryMenus.push({
+          title: item.title,
+          icon: item.icon,
+          link: item.link,
+        });
+      }
     });
   } else {
     // Default dashboard
@@ -202,10 +211,10 @@ const generateMenuItems = (modules: string[] = []) => {
       link: '/meters',
       hasSubmenu: true,
       submenu: [
-        {
-          title: 'Data Logger Master',
-          link: '/data-logger-master',
-        },
+        // {
+        //   title: 'Data Logger Master',
+        //   link: '/data-logger-master',
+        // },
         {
           title: 'Meter List',
           link: '/meters',
@@ -294,7 +303,7 @@ const menuItems = useMemo(() => generateMenuItems({{modulesArray}}), [{{modulesA
                       {{assetManagementRoute}}
                       {{meterManagementRoute}}
                       {{meterDetailsRoute}}
-                      {{dataLoggerRoute}}
+                      // {{dataLoggerRoute}}
                       {{ticketsRoute}}
                       {{ticketViewRoute}}
                       {{usersRoute}}
@@ -319,7 +328,7 @@ const menuItems = useMemo(() => generateMenuItems({{modulesArray}}), [{{modulesA
                                 {{billsPostpaidError}}
                                 {{assetManagementError}}
                                 {{meterManagementError}}
-                                {{dataLoggerError}}
+                                // {{dataLoggerError}}
                                 {{ticketsError}}
                                 {{usersError}}
                                 {{roleManagementError}}

@@ -12,10 +12,23 @@ function processTemplate(templateContent, variables) {
   
   // Replace all {{variable}} placeholders with actual values
   Object.entries(variables).forEach(([key, value]) => {
-    const placeholder = new RegExp(`{{${key}}}`, 'g');
-    const replacement = value !== undefined && value !== null ? String(value) : '';
-    processedContent = processedContent.replace(placeholder, replacement);
+    // Only replace if the key matches valid variable name pattern
+    if (/^[a-zA-Z_][a-zA-Z0-9_]*$/.test(key)) {
+      const placeholder = new RegExp(`{{${key}}}`, 'g');
+      const replacement = value !== undefined && value !== null ? String(value) : '';
+      processedContent = processedContent.replace(placeholder, replacement);
+    }
   });
+  
+  // Remove any remaining template placeholders that weren't replaced
+  // But be careful not to remove JSX expressions like {{ from: location }}
+  processedContent = processedContent.replace(/\{\{([a-zA-Z_][a-zA-Z0-9_]*)\}\}/g, '');
+  
+  // Clean up any lines that are now empty after placeholder removal
+  processedContent = processedContent
+    .split('\n')
+    .filter(line => line.trim() !== '')
+    .join('\n');
   
   // Remove empty lines and clean up the output
   processedContent = processedContent
