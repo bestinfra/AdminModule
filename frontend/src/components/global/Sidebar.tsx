@@ -70,6 +70,12 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/customer-service.svg',
                 link: '/tickets',
             },
+
+            {
+                title:'SuperAdminDashboard',
+                icon:'/icons/dashboard.svg',
+                link:'/superadmin',
+            },
             {
                 title: 'App-Managment',
                 icon: '/icons/apps-icon.svg',
