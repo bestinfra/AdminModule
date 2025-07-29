@@ -404,10 +404,10 @@ const Feeders = () => {
                                         name: 'Table',
                                         props: {
                                             columns: [
-                        { key: 'alertId', label: 'Alert ID' },
-                        { key: 'type', label: 'Type' },
-                        { key: 'feederName', label: 'Feeder Name' },
-                        { key: 'occuredOn', label: 'Occured On' },
+                                                { key: 'alertId', label: 'Alert ID' },
+                                                { key: 'type', label: 'Type' },
+                                                { key: 'feederName', label: 'Feeder Name' },
+                                                { key: 'occuredOn', label: 'Occured On' },
                                             ],
                                             data: alertsData,
                                             searchable: true,

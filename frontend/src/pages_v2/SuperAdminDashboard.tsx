@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import PageC from '@components/global/PageC';
 
@@ -10,9 +10,6 @@ const ICON_FILTER_STYLE = {
 const SuperAdminDashboard: React.FC = () => {
     const navigate = useNavigate();
     
-    // State for time range toggle
-    const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
-
     // KPI Cards Data
     const kpiCards = [
         {
@@ -65,190 +62,40 @@ const SuperAdminDashboard: React.FC = () => {
         }
     ];
 
-    // App Usage Data - Daily
-    const dailyAppUsageCards = [
-        {
-            title: 'Login Trends',
-            value: '1,890',
-            icon: '/icons/dashboard.svg',
-            subtitle1: 'Today\'s total logins',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
+    // Sample SubApp Data
+    const sampleSubApp = {
+        appIcon: '/icons/app.svg',
+        appName: 'E-Commerce Platform',
+        appId: 'app_2024_001',
+        subdomain: 'store.techcorp.com',
+        health: 'Live' as const,
+        status: 'Active' as const,
+        created: '1/15/2024',
+        updated: '7/28/2024',
+        company: 'TechCorp Solutions',
+        website: 'techcorp.com',
+        category: 'E-Commerce',
+        modules: [
+            { name: 'Inventory', icon: '/icons/inventory.svg' },
+            { name: 'Payments', icon: '/icons/payments.svg' },
+            { name: 'Analytics', icon: '/icons/analytics.svg' }
+        ],
+        connectedApis: [
+            { name: 'Payment Gateway', status: 'connected' as const },
+            { name: 'Inventory System', status: 'error' as const },
+            { name: 'Analytics API', status: 'connected' as const }
+        ],
+        meters: {
+            total: 1250,
+            active: 1180,
+            inactive: 70
         },
-        {
-            title: 'Active Sessions',
-            value: '245',
-            icon: '/icons/active-users.svg',
-            subtitle1: 'Current active sessions',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
-        },
-        {
-            title: 'New Users',
-            value: '12',
-            icon: '/icons/active-users.svg',
-            subtitle1: 'Registered today',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
-        },
-        {
-            title: 'App Deployments',
-            value: '3',
-            icon: '/icons/apps-icon.svg',
-            subtitle1: 'Deployed this week',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
+        tickets: {
+            count: 12,
+            icon: '/icons/tickets.svg'
         }
-    ];
-
-    // App Usage Data - Monthly
-    const monthlyAppUsageCards = [
-        {
-            title: 'Monthly Logins',
-            value: '45,230',
-            icon: '/icons/dashboard.svg',
-            subtitle1: 'Total logins this month',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
-        },
-        {
-            title: 'Avg Daily Users',
-            value: '1,507',
-            icon: '/icons/active-users.svg',
-            subtitle1: 'Average daily active users',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
-        },
-        {
-            title: 'New Registrations',
-            value: '89',
-            icon: '/icons/active-users.svg',
-            subtitle1: 'New users this month',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
-        },
-        {
-            title: 'App Updates',
-            value: '15',
-            icon: '/icons/apps-icon.svg',
-            subtitle1: 'Updates deployed',
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
-        }
-    ];
-
-    // Get current app usage cards based on selected time range
-    const getCurrentAppUsageCards = () => {
-        return selectedTimeRange === 'Daily' ? dailyAppUsageCards : monthlyAppUsageCards;
     };
-
-    // Function to handle time range change
-    const handleTimeRangeChange = (range: string) => {
-        setSelectedTimeRange(range as 'Daily' | 'Monthly');
-    };
-
-    // Sub-Apps Table Data
-    const subAppsTableColumns = [
-        { key: 'appId', label: 'App ID' },
-        { key: 'appName', label: 'App Name' },
-        { key: 'status', label: 'Status' },
-        { key: 'users', label: 'Active Users' },
-        { key: 'lastDeployed', label: 'Last Deployed' },
-        { key: 'version', label: 'Version' },
-    ];
-
-    const subAppsTableData = [
-        {
-            appId: 'APP-001',
-            appName: 'Consumer Management',
-            status: 'Active',
-            users: 156,
-            lastDeployed: '2024-07-25',
-            version: 'v2.1.0',
-        },
-        {
-            appId: 'APP-002',
-            appName: 'Billing System',
-            status: 'Active',
-            users: 89,
-            lastDeployed: '2024-07-24',
-            version: 'v1.8.2',
-        },
-        {
-            appId: 'APP-003',
-            appName: 'DTR Monitoring',
-            status: 'Active',
-            users: 234,
-            lastDeployed: '2024-07-23',
-            version: 'v3.0.1',
-        },
-        {
-            appId: 'APP-004',
-            appName: 'Asset Management',
-            status: 'Maintenance',
-            users: 45,
-            lastDeployed: '2024-07-22',
-            version: 'v1.5.3',
-        },
-        {
-            appId: 'APP-005',
-            appName: 'Ticket System',
-            status: 'Active',
-            users: 67,
-            lastDeployed: '2024-07-21',
-            version: 'v2.0.0',
-        },
-    ];
-
-    const subAppsTableActions = [
-        {
-            label: 'View',
-            icon: '/icons/eye.svg',
-            onClick: (row: any) => navigate(`/sub-app/${row.appId}`),
-        },
-    ];
-
-    // Recent Activities Data
-    const recentActivitiesColumns = [
-        { key: 'activity', label: 'Activity' },
-        { key: 'app', label: 'Application' },
-        { key: 'user', label: 'User' },
-        { key: 'timestamp', label: 'Timestamp' },
-    ];
-
-    const recentActivitiesData = [
-        {
-            activity: 'New user registered',
-            app: 'Consumer Management',
-            user: 'john.doe@example.com',
-            timestamp: '2024-07-25 14:30',
-        },
-        {
-            activity: 'App deployed',
-            app: 'Billing System',
-            user: 'admin@system.com',
-            timestamp: '2024-07-25 13:15',
-        },
-        {
-            activity: 'Configuration updated',
-            app: 'DTR Monitoring',
-            user: 'tech.support@example.com',
-            timestamp: '2024-07-25 12:45',
-        },
-        {
-            activity: 'Issue resolved',
-            app: 'Ticket System',
-            user: 'support@example.com',
-            timestamp: '2024-07-25 11:20',
-        },
-        {
-            activity: 'Backup completed',
-            app: 'Asset Management',    
-            user: 'system@example.com',
-            timestamp: '2024-07-25 10:30',
-        },
-    ];
-
+    
     return (
         <div className="p-2 min-h-screen">
             <PageC
@@ -277,6 +124,21 @@ const SuperAdminDashboard: React.FC = () => {
                                     bg: card.bg,
                                 },
                             })),
+                        ],
+                    },
+                    // SubApp Panel Section
+                    {
+                        layout: {
+                            type: "row",
+                            gap: "gap-6",
+                            className: "mt-8",
+                        },
+                        components: [
+                            {
+                                name: "SubappPanel",
+                                props: sampleSubApp,
+                                align: "center"
+                            }
                         ],
                     },
                 ]}

@@ -32,6 +32,7 @@ import TicketInfoCard from '../Ticket/TicketInfoCard';
 import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
 import PageInformation from './PageInformation';
+import SubappPanel from './SubAppPanel';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
@@ -66,6 +67,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Carousel,
     LoginV2,
     PageInformation,
+    SubappPanel,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

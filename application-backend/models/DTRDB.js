@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { getDateInYMDFormat } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -280,6 +281,116 @@ class DTRDB {
         }
     }
 
+    static async getConsolidatedDTRStats() {
+        try {
+            // Get basic DTR stats
+            const totalDTRs = await prisma.dTR.count();
+            const totalLTFeeders = await prisma.meter.count();
+            const activeDTRs = await prisma.dTR.count({ where: { status: 'ACTIVE' } });
+            const inactiveDTRs = await prisma.dTR.count({ where: { status: 'INACTIVE' } });
+
+            // Get meter readings for calculations
+            const meterIds = (await prisma.meter.findMany({ select: { id: true } })).map(m => m.id);
+            const latestReadings = await Promise.all(
+                meterIds.map(async meterId =>
+                    await prisma.meterReading.findFirst({
+                        where: { meterId },
+                        orderBy: { readingDate: 'desc' }
+                    })
+                )
+            );
+            const readingsArr = latestReadings.filter(Boolean);
+
+            // Calculate fuse blown stats
+            const ltFuseBlown = readingsArr.filter(r =>
+                (r.currentR === 0 || r.currentY === 0 || r.currentB === 0)
+            ).length;
+
+            const htFuseBlown = readingsArr.filter(r =>
+                (r.voltageR !== null && r.voltageR < 180) ||
+                (r.voltageY !== null && r.voltageY < 180) ||
+                (r.voltageB !== null && r.voltageB < 180)
+            ).length;
+
+            const totalFuseBlown = ltFuseBlown + htFuseBlown;
+
+            // Calculate overloaded/underloaded stats
+            const overloadedDTRs = await prisma.dTR.count({
+                where: {
+                    loadPercentage: { gt: 90 }
+                }
+            });
+
+            const underloadedDTRs = await prisma.dTR.count({
+                where: {
+                    loadPercentage: { lt: 30 }
+                }
+            });
+
+            const unbalancedDTRs = readingsArr.filter(r =>
+                r.currentB !== null && r.currentB > 15
+            ).length;
+
+            const powerFailureFeeders = readingsArr.filter(r =>
+                r.powerFactor !== null && r.powerFactor === 0
+            ).length;
+
+            // Calculate percentages
+            const percent = (num, denom) => denom > 0 ? +(num / denom * 100).toFixed(2) : 0;
+
+            // Get consumption stats
+            const agg = await prisma.meterReading.aggregate({
+                _sum: {
+                    kWh: true,
+                    kVAh: true,
+                    kW: true,
+                    kVA: true
+                }
+            });
+
+            // Format data according to the specified structure
+            return {
+                row1: {
+                    totalDtrs: totalDTRs,
+                    totalLtFeeders: totalLTFeeders,
+                    totalFuseBlown: totalFuseBlown,
+                    fuseBlownPercentage: percent(totalFuseBlown, totalDTRs),
+                    overloadedFeeders: overloadedDTRs,
+                    overloadedPercentage: percent(overloadedDTRs, totalLTFeeders),
+                    underloadedFeeders: underloadedDTRs,
+                    underloadedPercentage: percent(underloadedDTRs, totalLTFeeders),
+                    ltSideFuseBlown: ltFuseBlown,
+                    unbalancedDtrs: unbalancedDTRs,
+                    unbalancedPercentage: percent(unbalancedDTRs, totalDTRs),
+                    powerFailureFeeders: powerFailureFeeders,
+                    powerFailurePercentage: percent(powerFailureFeeders, totalLTFeeders),
+                    htSideFuseBlown: htFuseBlown,
+                    activeDtrs: activeDTRs,
+                    activePercentage: percent(activeDTRs, totalDTRs),
+                    inactiveDtrs: inactiveDTRs,
+                    inactivePercentage: percent(inactiveDTRs, totalDTRs)
+                },
+                row2: {
+                    daily: {
+                        totalKwh: (agg._sum.kWh || 0).toFixed(2),
+                        totalKvah: (agg._sum.kVAh || 0).toFixed(2),
+                        totalKw: (agg._sum.kW || 0).toFixed(2),
+                        totalKva: (agg._sum.kVA || 0).toFixed(2)
+                    },
+                    monthly: {
+                        totalKwh: (agg._sum.kWh || 0).toFixed(2),
+                        totalKvah: (agg._sum.kVAh || 0).toFixed(2),
+                        totalKw: (agg._sum.kW || 0).toFixed(2),
+                        totalKva: (agg._sum.kVA || 0).toFixed(2)
+                    }
+                }
+            };
+        } catch (error) {
+            console.error('Error fetching consolidated DTR stats:', error);
+            throw error;
+        }
+    }
+
     static async getFeederStats(dtrId) {
         try {
             const meters = await prisma.meter.findMany({
@@ -347,14 +458,17 @@ class DTRDB {
         }
     }
 
-    static async getInstantaneousStats(meterId) {
+    static async getInstantaneousStats(dtrId) {
         try {
-            const latestReading = await prisma.meterReading.findFirst({
-                where: { meterId: parseInt(meterId) },
-                orderBy: { readingDate: 'desc' }
+            // Get all meters associated with this DTR
+            const meters = await prisma.meter.findMany({
+                where: { dtrId: parseInt(dtrId) },
+                select: { id: true }
             });
-
-            if (!latestReading) {
+            
+            const meterIds = meters.map(m => m.id);
+            
+            if (meterIds.length === 0) {
                 return {
                     rphVolt: 0, yphVolt: 0, bphVolt: 0,
                     instantKVA: 0, mdKVA: 0,
@@ -362,56 +476,253 @@ class DTRDB {
                     neutralCurrent: 0, freqHz: 0,
                     rphPF: 0, yphPF: 0, bphPF: 0,
                     avgPF: 0, cumulativeKVAh: 0,
-                    lastCommDate: null
+                    lastCommDate: null,
+                    meterCount: 0
                 };
             }
 
+            // Get latest readings for all meters in this DTR
+            const latestReadings = await Promise.all(
+                meterIds.map(async meterId => {
+                    return await prisma.meterReading.findFirst({
+                        where: { meterId },
+                        orderBy: { readingDate: 'desc' }
+                    });
+                })
+            );
+
+            const validReadings = latestReadings.filter(Boolean);
+            
+            if (validReadings.length === 0) {
+                return {
+                    rphVolt: 0, yphVolt: 0, bphVolt: 0,
+                    instantKVA: 0, mdKVA: 0,
+                    rphCurr: 0, yphCurr: 0, bphCurr: 0,
+                    neutralCurrent: 0, freqHz: 0,
+                    rphPF: 0, yphPF: 0, bphPF: 0,
+                    avgPF: 0, cumulativeKVAh: 0,
+                    lastCommDate: null,
+                    meterCount: meterIds.length
+                };
+            }
+
+            // Get all readings for all meters in this DTR for cumulative calculations
             const allReadings = await prisma.meterReading.findMany({
-                where: { meterId: parseInt(meterId) }
+                where: { meterId: { in: meterIds } }
             });
 
-            const rphVolt = latestReading.voltageR || 0;
-            const yphVolt = latestReading.voltageY || 0;
-            const bphVolt = latestReading.voltageB || 0;
-            const rphCurr = latestReading.currentR || 0;
-            const yphCurr = latestReading.currentY || 0;
-            const bphCurr = latestReading.currentB || 0;
-            const instantKVA = latestReading.kVA || 0;
-            const freqHz = latestReading.frequency || 0;
-            const avgPF = latestReading.averagePF || 0;
-            const neutralCurrent = latestReading.currentB || 0; 
+            // Calculate averages across all meters
+            const avgRphVolt = validReadings.reduce((sum, r) => sum + (r.voltageR || 0), 0) / validReadings.length;
+            const avgYphVolt = validReadings.reduce((sum, r) => sum + (r.voltageY || 0), 0) / validReadings.length;
+            const avgBphVolt = validReadings.reduce((sum, r) => sum + (r.voltageB || 0), 0) / validReadings.length;
+            const avgRphCurr = validReadings.reduce((sum, r) => sum + (r.currentR || 0), 0) / validReadings.length;
+            const avgYphCurr = validReadings.reduce((sum, r) => sum + (r.currentY || 0), 0) / validReadings.length;
+            const avgBphCurr = validReadings.reduce((sum, r) => sum + (r.currentB || 0), 0) / validReadings.length;
+            const avgInstantKVA = validReadings.reduce((sum, r) => sum + (r.kVA || 0), 0) / validReadings.length;
+            const avgFreqHz = validReadings.reduce((sum, r) => sum + (r.frequency || 0), 0) / validReadings.length;
+            const avgPowerFactor = validReadings.reduce((sum, r) => sum + (r.averagePF || 0), 0) / validReadings.length;
 
+            // Calculate maximum demand KVA across all meters
             const mdKVA = allReadings.length > 0 
                 ? Math.max(...allReadings.map(r => r.kVA || 0))
                 : 0;
 
+            // Calculate cumulative KVAh across all meters
             const cumulativeKVAh = allReadings.reduce((sum, r) => sum + (r.kVAh || 0), 0);
 
-            // Use the new phase-specific power factor columns
-            const rphPF = latestReading.rphPowerFactor || avgPF;
-            const yphPF = latestReading.yphPowerFactor || avgPF;
-            const bphPF = latestReading.bphPowerFactor || avgPF;
+            // Calculate average phase-specific power factors
+            const avgRphPF = validReadings.reduce((sum, r) => sum + (r.rphPowerFactor || r.averagePF || 0), 0) / validReadings.length;
+            const avgYphPF = validReadings.reduce((sum, r) => sum + (r.yphPowerFactor || r.averagePF || 0), 0) / validReadings.length;
+            const avgBphPF = validReadings.reduce((sum, r) => sum + (r.bphPowerFactor || r.averagePF || 0), 0) / validReadings.length;
+
+            // Get the latest communication date
+            const latestCommDate = validReadings.reduce((latest, r) => 
+                r.readingDate > latest ? r.readingDate : latest, 
+                validReadings[0].readingDate
+            );
 
             return {
-                rphVolt: +(rphVolt).toFixed(2),
-                yphVolt: +(yphVolt).toFixed(2),
-                bphVolt: +(bphVolt).toFixed(2),
-                instantKVA: +(instantKVA).toFixed(2),
+                rphVolt: +(avgRphVolt).toFixed(2),
+                yphVolt: +(avgYphVolt).toFixed(2),
+                bphVolt: +(avgBphVolt).toFixed(2),
+                instantKVA: +(avgInstantKVA).toFixed(2),
                 mdKVA: +(mdKVA).toFixed(2),
-                rphCurr: +(rphCurr).toFixed(2),
-                yphCurr: +(yphCurr).toFixed(2),
-                bphCurr: +(bphCurr).toFixed(2),
-                neutralCurrent: +(neutralCurrent).toFixed(2),
-                freqHz: +(freqHz).toFixed(2),
-                rphPF: +(rphPF).toFixed(2),
-                yphPF: +(yphPF).toFixed(2),
-                bphPF: +(bphPF).toFixed(2),
-                avgPF: +(avgPF).toFixed(2),
+                rphCurr: +(avgRphCurr).toFixed(2),
+                yphCurr: +(avgYphCurr).toFixed(2),
+                bphCurr: +(avgBphCurr).toFixed(2),
+                neutralCurrent: +(avgBphCurr).toFixed(2), // Using B phase current as neutral
+                freqHz: +(avgFreqHz).toFixed(2),
+                rphPF: +(avgRphPF).toFixed(2),
+                yphPF: +(avgYphPF).toFixed(2),
+                bphPF: +(avgBphPF).toFixed(2),
+                avgPF: +(avgPowerFactor).toFixed(2),
                 cumulativeKVAh: +(cumulativeKVAh).toFixed(2),
-                lastCommDate: latestReading.readingDate
+                lastCommDate: latestCommDate,
+                meterCount: meterIds.length
             };
         } catch (error) {
             console.error('Error fetching instantaneous stats:', error);
+            throw error;
+        }
+    }
+
+    static async getDTRConsumptionAnalytics(dtrId, period) {
+        try {
+            // Get all meters associated with this DTR
+            const meters = await prisma.meter.findMany({
+                where: { dtrId: parseInt(dtrId) },
+                select: { id: true }
+            });
+            
+            const meterIds = meters.map(m => m.id);
+            
+            if (meterIds.length === 0) {
+                return [];
+            }
+
+            if (period === 'daily') {
+                const d1 = new Date();
+                const sdf = (date) => getDateInYMDFormat(date);
+                const presDate = sdf(new Date(d1.setDate(d1.getDate() - 62)));
+                d1.setDate(d1.getDate() + 62);
+                const nextDate = sdf(new Date(d1));
+
+                let whereClause = {
+                    meterId: { in: meterIds },
+                    readingDate: {
+                        gte: new Date(presDate),
+                        lt: new Date(nextDate)
+                    }
+                };
+
+                const result = await prisma.meterReading.groupBy({
+                    by: ['readingDate'],
+                    where: whereClause,
+                    _count: {
+                        id: true
+                    },
+                    _sum: {
+                        kWh: true,
+                        kVAh: true,
+                        kW: true,
+                        kVA: true
+                    },
+                    orderBy: {
+                        readingDate: 'asc'
+                    }
+                });
+
+                return result.map(item => ({
+                    consumption_date: getDateInYMDFormat(item.readingDate),
+                    count: item._count.id,
+                    total_kwh: item._sum.kWh || 0,
+                    total_kvah: item._sum.kVAh || 0,
+                    total_kw: item._sum.kW || 0,
+                    total_kva: item._sum.kVA || 0
+                }));
+
+            }
+            // monthly
+            const d1 = new Date();
+            const sdf = (date) => getDateInYMDFormat(date);
+            const presDate = sdf(new Date(d1.setMonth(d1.getMonth() - 13)));
+            d1.setMonth(d1.getMonth() + 14);
+            const nextDate = sdf(new Date(d1));
+
+            let whereClause = {
+                meterId: { in: meterIds },
+                readingDate: {
+                    gte: new Date(presDate),
+                    lt: new Date(nextDate)
+                }
+            };
+
+            const result = await prisma.meterReading.groupBy({
+                by: ['readingDate'],
+                where: whereClause,
+                _count: {
+                    id: true
+                },
+                _sum: {
+                    kWh: true,
+                    kVAh: true,
+                    kW: true,
+                    kVA: true
+                },
+                orderBy: {
+                    readingDate: 'asc'
+                }
+            });
+
+            // Group by month
+            const monthlyData = {};
+            result.forEach(item => {
+                const monthKey = getDateInYMDFormat(item.readingDate).slice(0, 7); // YYYY-MM format
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        consumption_date: monthKey,
+                        count: 0,
+                        total_kwh: 0,
+                        total_kvah: 0,
+                        total_kw: 0,
+                        total_kva: 0
+                    };
+                }
+                monthlyData[monthKey].count += item._count.id;
+                monthlyData[monthKey].total_kwh += item._sum.kWh || 0;
+                monthlyData[monthKey].total_kvah += item._sum.kVAh || 0;
+                monthlyData[monthKey].total_kw += item._sum.kW || 0;
+                monthlyData[monthKey].total_kva += item._sum.kVA || 0;
+            });
+
+            return Object.values(monthlyData).sort((a, b) => a.consumption_date.localeCompare(b.consumption_date));
+        } catch (error) {
+            console.error('Error fetching DTR consumption analytics:', error);
+            throw error;
+        }
+    }
+
+    static async getDTRConsumptionStats(dtrId) {
+        try {
+            // Get all meters associated with this DTR
+            const meters = await prisma.meter.findMany({
+                where: { dtrId: parseInt(dtrId) },
+                select: { id: true }
+            });
+            
+            const meterIds = meters.map(m => m.id);
+            
+            if (meterIds.length === 0) {
+                return {
+                    totalKWh: 0,
+                    totalKVAh: 0,
+                    totalKW: 0,
+                    totalKVA: 0,
+                    meterCount: 0
+                };
+            }
+
+            const agg = await prisma.meterReading.aggregate({
+                where: {
+                    meterId: { in: meterIds }
+                },
+                _sum: {
+                    kWh: true,
+                    kVAh: true,
+                    kW: true,
+                    kVA: true
+                }
+            });
+
+            return {
+                totalKWh: agg._sum.kWh || 0,
+                totalKVAh: agg._sum.kVAh || 0,
+                totalKW: agg._sum.kW || 0,
+                totalKVA: agg._sum.kVA || 0,
+                meterCount: meterIds.length
+            };
+        } catch (error) {
+            console.error('Error fetching DTR consumption stats:', error);
             throw error;
         }
     }
