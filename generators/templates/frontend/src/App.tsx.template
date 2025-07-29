@@ -1,25 +1,26 @@
-import React, { lazy, Suspense, ComponentType, useEffect } from 'react';
+import React, { lazy, Suspense, ComponentType, useEffect, useMemo } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navigate } from 'react-router-dom';
 import { AppProvider, useApp } from './context/AppContext';
 import { FederatedContextProvider } from './components/FederatedWrapper';
 import CSSLoader from './components/CSSLoader';
 import './App.css';
 import { Theme } from './Theme';
-import Dashboard from './pages/Dashboard';
-import Consumers from './pages/Consumers';
-import ConsumerView from './pages/ConsumerView';
-import Users from './pages/Users';
-import RoleManagement from './pages/RoleManagement';
-import Meters from './pages/Meters';
-import DataLoggerMaster from './pages/DataLogger';
-import DTRDashboard from './pages/DTRDashboard';
-import AssetManagment from './pages/AssetManagment';
-import Tickets from './pages/Tickets';
-import Prepaid from './pages/Prepaid';
-import Postpaid from './pages/Postpaid';
-import MeterDetails from './pages/MeterDetails'
-import TicketView from './pages/TicketView';
-import Feeders from './pages/Feeders';
+{{dashboardImport}}
+{{dashboardImportForConsumer}}
+{{consumersImport}}
+{{consumerViewImport}}
+{{usersImport}}
+{{roleManagementImport}}
+{{metersImport}}
+{{dataLoggerImport}}
+{{dtrDashboardImport}}
+{{assetManagementImport}}
+{{ticketsImport}}
+{{prepaidImport}}
+{{postpaidImport}}
+{{meterDetailsImport}}
+{{ticketViewImport}}
+{{feedersImport}}
 
 // Create safe lazy loading with error handling
 const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
@@ -34,56 +35,27 @@ const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentTyp
   });
 };
 
-const LoginFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Login</h1>
-    <p className="text-gray-600">Loading login page...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote Login component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);
+{{loginFallback}}
+{{sidebarFallback}}
+{{headerFallback}}
 
-const SidebarFallback = () => (
-  <div className="w-72 bg-gray-100 h-screen p-4">
-    <div className="text-center">Sidebar Loading...</div>
-  </div>
-);
+{{themeProviderImport}}
 
-const HeaderFallback = () => (
-  <div className="h-16 bg-gray-100 border-b flex items-center px-6">
-    <span>Header Loading...</span>
-  </div>
-);
+{{sidebarComponent}}
+{{headerComponent}}
+{{loginComponent}}
 
-import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';
+interface RequireAuthProps {
+  children: React.ReactNode;
+}
 
-const Sidebar = createSafeLazyComponent(
-  () => import('SuperAdmin/Sidebar'),
-  SidebarFallback
-);
-
-const Header = createSafeLazyComponent(
-  () => import('SuperAdmin/Header'),
-  HeaderFallback
-);
-
-const Login = createSafeLazyComponent(
-  () => import('SuperAdmin/Login'),
-  LoginFallback
-);
-
-
-
-function RequireAuth({ children }) {
+function RequireAuth({ children }: RequireAuthProps) {
   const isLoggedIn = !!localStorage.getItem('token');
   const location = useLocation();
   if (!isLoggedIn) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
-  return children;
+  return <>{children}</>;
 }
 
 function AppContent() {
@@ -92,7 +64,7 @@ function AppContent() {
   const navigate = useNavigate();
   
   // Function to get page title based on current route
-  const getPageTitle = () => {
+  const getPageTitle = (): string => {
     switch (location.pathname) {
       case '/':
       case '/dashboard':
@@ -113,11 +85,6 @@ function AppContent() {
     }
   };
   
-  // Debug logging for routing
-  useEffect(() => {
-    
-  }, [location.pathname]);
-  
   // Check if remote app is accessible
   useEffect(() => {
     const checkRemoteApp = async () => {
@@ -125,8 +92,6 @@ function AppContent() {
         const response = await fetch('http://localhost:3000/assets/remoteEntry.js');
         if (!response.ok) {
           console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
-        } else {
-  
         }
       } catch (error) {
         console.error('Failed to check remote app:', error);
@@ -137,7 +102,7 @@ function AppContent() {
   }, []);
   
 // Generate dynamic menu items based on selected modules
-const generateMenuItems = (modules = []) => {
+const generateMenuItems = (modules: string[] = []) => {
   const mandatoryMenus = [];
 
   // Handle Dashboard with dynamic submenu logic
@@ -279,7 +244,8 @@ const generateMenuItems = (modules = []) => {
   return [...mandatoryMenus, ...selectedModuleMenus];
 };
 
-const menuItems = generateMenuItems({{modulesArray}});
+// Memoize menu items to prevent unnecessary re-renders
+const menuItems = useMemo(() => generateMenuItems({{modulesArray}}), [{{modulesArray}}]);
 
   return (
    
@@ -295,7 +261,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                 <Suspense fallback={<SidebarFallback />}>
                   <Sidebar 
                     currentPath={location.pathname}
-                    onNavigate={(path:any) => navigate(path)}
+                    onNavigate={(path: string) => navigate(path)}
                     menus={[
                       {
                         category: 'GENERAL',
@@ -321,8 +287,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                   <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
                     {/* All protected routes here */}
                     <Routes>
-                      <Route path="/" element={<Dashboard />} />
-                      <Route path="/dashboard" element={<Dashboard />} />
+                      {{dashboardRoute}}
                       {{consumerRoute}}
                       {{billsPrepaidRoute}}
                       {{billsPostpaidRoute}}
@@ -337,7 +302,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                       {{dtrRoute}}
                       {{consumerDashboardRoute}}
                       {{dtrDashboardRoute}}
-                      <Route path="/dtr/:dtrID" element={<Feeders />} />
+                      {{feedersRoute}}
                       <Route path="*" element={
                         <div className="p-6">
                           <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
@@ -348,8 +313,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                             <div className="mt-4">
                               <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
                               <ul className="text-sm text-red-700 space-y-1">
-                                <li>/ - Dashboard</li>
-                                <li>/dashboard - Dashboard</li>
+                                {{dashboardError}}
                                 {{consumerError}}
                                 {{billsPrepaidError}}
                                 {{billsPostpaidError}}
@@ -362,6 +326,7 @@ const menuItems = generateMenuItems({{modulesArray}});
                                 {{dtrError}}
                                 {{consumerDashboardError}}
                                 {{dtrDashboardError}}
+                                {{feedersError}}
                               </ul>
                             </div>
                           </div>
