@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import type { TableData } from '@components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
+import BarChart from '@/graphs/BarChart';
+import { exportChartData } from '@/utils/excelExport';
 
 // Brand green icon style
 const ICON_FILTER_STYLE = {
@@ -12,8 +14,11 @@ const ICON_FILTER_STYLE = {
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
 
-  // DTR statistics cards data using useState
-  const [dtrStatsCards] = useState([
+    // State for time range toggle
+    const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
+
+  // DTR statistics cards data - Daily data
+  const dailyDtrStatsCards = [
     {
       title: "Total DTRs",
       value: 29,
@@ -22,7 +27,6 @@ const DTRDashboard: React.FC = () => {
       onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
       iconStyle: ICON_FILTER_STYLE,
       bg: "bg-stat-icon-gradient",
-
     },
     {
       title: "Total LT Feeders",
@@ -33,10 +37,10 @@ const DTRDashboard: React.FC = () => {
       iconStyle: ICON_FILTER_STYLE,
     },
     {
-      title: "Total Fuse Blown",
-      value: 3,
+      title: "Today's Fuse Blown",
+      value: 1,
       icon: "/icons/power_failure.svg",
-      subtitle1: "0.10% of Total DTRs",
+      subtitle1: "0.03% of Total DTRs",
       onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
       iconStyle: ICON_FILTER_STYLE,
     },
@@ -58,9 +62,9 @@ const DTRDashboard: React.FC = () => {
     },
     {
       title: "LT Side Fuse Blown",
-      value: 3,
+      value: 1,
       icon: "/icons/power_failure.svg",
-      subtitle1: "3 Incidents",
+      subtitle1: "1 Incident Today",
       onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
       iconStyle: ICON_FILTER_STYLE,
     },
@@ -84,40 +88,122 @@ const DTRDashboard: React.FC = () => {
       title: "HT Side Fuse Blown",
       value: 0,
       icon: "/icons/power_failure.svg",
-      subtitle1: "0 Incident",
+      subtitle1: "0 Incident Today",
       onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
       iconStyle: ICON_FILTER_STYLE,
     },
-  ]);
+  ];
 
-  // DTR Consumption Cards
-  const [dtrConsumptionCards] = useState([
+  // DTR statistics cards data - Monthly data
+  const monthlyDtrStatsCards = [
+    {
+      title: "Total DTRs",
+      value: 29,
+      icon: "/icons/dtr.svg",
+      subtitle1: "Total Transformer Units",
+      onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
+      iconStyle: ICON_FILTER_STYLE,
+      bg: "bg-stat-icon-gradient",
+    },
+    {
+      title: "Total LT Feeders",
+      value: 33,
+      icon: "/icons/feeder.svg",
+      subtitle1: "Connected to DTRs",
+      onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Monthly Fuse Blown",
+      value: 3,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "0.10% of Total DTRs",
+      onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Overloaded Feeders",
+      value: 2,
+      icon: "/icons/dtr.svg",
+      subtitle1: "6.06% of Total Feeders",
+      onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Underloaded Feeders",
+      value: 31,
+      icon: "/icons/dtr.svg",
+      subtitle1: "93.94% of Total Feeders",
+      onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "LT Side Fuse Blown",
+      value: 3,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "3 Incidents This Month",
+      onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Unbalanced DTRs",
+      value: 1,
+      icon: "/icons/dtr.svg",
+      subtitle1: "3.45% of Total DTRs",
+      onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Power Failure Feeders",
+      value: 1,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "3.03% of Feeders",
+      onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "HT Side Fuse Blown",
+      value: 0,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "0 Incident This Month",
+      onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+  ];
+
+  // Get current DTR statistics cards data based on selected time range
+  const getCurrentDtrStatsCards = () => {
+    return selectedTimeRange === 'Daily' ? dailyDtrStatsCards : monthlyDtrStatsCards;
+  };
+
+  // DTR Consumption Cards - Daily data
+  const dailyConsumptionCards = [
     {
       title: "Total kWh",
-      value: "111931.96",
+      value: "3,847.32",
       icon: "/icons/consumption.svg",
-      subtitle1: "Cumulative Active Energy",
+      subtitle1: "Today's Active Energy",
       iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total kVAh",
-      value: "113369.06",
+      value: "3,892.45",
       icon: "/icons/consumption.svg",
-      subtitle1: "Cumulative Apparent Energy",
+      subtitle1: "Today's Apparent Energy",
       iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total kW",
       value: "6.10",
       icon: "/icons/consumption.svg",
-      subtitle1: "Active Power",
+      subtitle1: "Current Active Power",
       iconStyle: ICON_FILTER_STYLE,
     },
     {
       title: "Total kVA",
       value: "6.26",
       icon: "/icons/consumption.svg",
-      subtitle1: "Apparent Power",
+      subtitle1: "Current Apparent Power",
       iconStyle: ICON_FILTER_STYLE,
     },
     {
@@ -127,7 +213,6 @@ const DTRDashboard: React.FC = () => {
       subtitle1: "100.00% of Total DTRs",
       iconStyle: ICON_FILTER_STYLE,
     },
-
     {
       title: "In-Active DTRs",
       value: 0,
@@ -135,7 +220,58 @@ const DTRDashboard: React.FC = () => {
       subtitle1: "0.00% of Total DTRs",
       iconStyle: ICON_FILTER_STYLE,
     },
-  ]);
+  ];
+
+  // DTR Consumption Cards - Monthly data
+  const monthlyConsumptionCards = [
+    {
+      title: "Total kWh",
+      value: "111,931.96",
+      icon: "/icons/consumption.svg",
+      subtitle1: "Monthly Active Energy",
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Total kVAh",
+      value: "113,369.06",
+      icon: "/icons/consumption.svg",
+      subtitle1: "Monthly Apparent Energy",
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Avg kW",
+      value: "5.87",
+      icon: "/icons/consumption.svg",
+      subtitle1: "Monthly Average Power",
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Avg kVA",
+      value: "6.02",
+      icon: "/icons/consumption.svg",
+      subtitle1: "Monthly Average Apparent",
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Active DTRs",
+      value: 29,
+      icon: "/icons/dtr.svg",
+      subtitle1: "100.00% of Total DTRs",
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "In-Active DTRs",
+      value: 0,
+      icon: "/icons/dtr.svg",
+      subtitle1: "0.00% of Total DTRs",
+      iconStyle: ICON_FILTER_STYLE,
+    },
+  ];
+
+  // Get current consumption cards data based on selected time range
+  const getCurrentConsumptionCards = () => {
+    return selectedTimeRange === 'Daily' ? dailyConsumptionCards : monthlyConsumptionCards;
+  };
   // Dummy data for DTRs table
   const dtrTableColumns = [
     { key: "dtrId", label: "DTR ID" },
@@ -241,15 +377,94 @@ const DTRDashboard: React.FC = () => {
         { key: 'date', label: 'Date' },
         { key: 'status', label: 'Status' },
     ];
-    const alertsTableData = [
+
+    // Daily alerts data
+    const dailyAlertsData = [
         {
-            alert: 'Overload detected',
-            date: '2024-07-01 10:00',
+            alert: 'Overload detected on DTR-01',
+            date: '2024-07-25 14:30',
             status: 'Active',
         },
-        { alert: 'Fuse blown', date: '2024-07-01 09:30', status: 'Resolved' },
-        { alert: 'Power failure', date: '2024-07-01 08:45', status: 'Active' },
+        { 
+            alert: 'Fuse blown on DTR-03', 
+            date: '2024-07-25 13:15', 
+            status: 'Resolved' 
+        },
+        { 
+            alert: 'Power failure on DTR-07', 
+            date: '2024-07-25 12:45', 
+            status: 'Active' 
+        },
+        {
+            alert: 'Low voltage detected on DTR-02',
+            date: '2024-07-25 11:20',
+            status: 'Active',
+        },
+        {
+            alert: 'Communication lost on DTR-05',
+            date: '2024-07-25 10:30',
+            status: 'Resolved',
+        },
+        {
+            alert: 'High temperature on DTR-08',
+            date: '2024-07-25 09:15',
+            status: 'Active',
+        },
     ];
+
+    // Monthly alerts data
+    const monthlyAlertsData = [
+        {
+            alert: 'Monthly overload summary - DTR-01',
+            date: 'July 2024',
+            status: 'Active',
+        },
+        { 
+            alert: 'Monthly fuse blown incidents - DTR-03', 
+            date: 'July 2024', 
+            status: 'Resolved' 
+        },
+        { 
+            alert: 'Monthly power failure report - DTR-07', 
+            date: 'July 2024', 
+            status: 'Active' 
+        },
+        {
+            alert: 'Monthly voltage fluctuation - DTR-02',
+            date: 'July 2024',
+            status: 'Active',
+        },
+        {
+            alert: 'Monthly communication issues - DTR-05',
+            date: 'July 2024',
+            status: 'Resolved',
+        },
+        {
+            alert: 'Monthly temperature monitoring - DTR-08',
+            date: 'July 2024',
+            status: 'Active',
+        },
+        {
+            alert: 'Monthly maintenance alert - DTR-04',
+            date: 'July 2024',
+            status: 'Scheduled',
+        },
+        {
+            alert: 'Monthly performance report - DTR-06',
+            date: 'July 2024',
+            status: 'Completed',
+        },
+    ];
+
+    // Function to handle time range change
+    const handleTimeRangeChange = (range: string) => {
+        setSelectedTimeRange(range as 'Daily' | 'Monthly');
+    };
+
+    // Get current alerts data based on selected time range
+    const getCurrentAlertsData = () => {
+        return selectedTimeRange === 'Daily' ? dailyAlertsData : monthlyAlertsData;
+    };
 
     // Dummy data for DTR Alert Statistics
     // TODO: Unused - consider removing if not needed.
@@ -284,6 +499,11 @@ const DTRDashboard: React.FC = () => {
     }));
     const alertColors = alertTypes.map((type) => type.color);
 
+    // Handle Excel download for chart data
+    const handleChartDownload = () => {
+        exportChartData(months, alertSeries, 'dtr-statistics-data');
+    };
+
     return (
         <div className="p-2 min-h-screen">
             <Page
@@ -302,39 +522,15 @@ const DTRDashboard: React.FC = () => {
                                     title: 'DTR Dashboard',
                                     onBackClick: () => window.history.back(),
                                     backButtonText: 'Back to Dashboard',
-                                    buttonsLabel: 'Add DTR',
+                                    buttonsLabel: 'Upload',
                                     variant: 'primary',
                                     onClick: () =>
                                         console.log('Adding new DTR...'),
                                     showMenu: true,
                                     showDropdown: true,
                                     menuItems: [
-                                        { id: 'all', label: 'All DTRs' },
-                                        { id: 'active', label: 'Active DTRs' },
-                                        {
-                                            id: 'inactive',
-                                            label: 'Inactive DTRs',
-                                        },
-                                        {
-                                            id: 'overloaded',
-                                            label: 'Overloaded',
-                                        },
-                                        {
-                                            id: 'underloaded',
-                                            label: 'Underloaded',
-                                        },
-                                        {
-                                            id: 'fuse-blown',
-                                            label: 'Fuse Blown',
-                                        },
-                                        {
-                                            id: 'unbalanced',
-                                            label: 'Unbalanced',
-                                        },
-                                        {
-                                            id: 'power-failure',
-                                            label: 'Power Failure',
-                                        },
+                                        { id: 'all', label: 'Alerts' },
+                                        { id: 'export', label: 'Export' },
                                     ],
                                     onMenuItemClick: (itemId: string) => {
                                         console.log(`Filter by: ${itemId}`);
@@ -343,40 +539,7 @@ const DTRDashboard: React.FC = () => {
                             },
                         ],
                     },
-                    // DTR Statistics section & cards should be here
-                    // {
-                    //     layout: {
-                    //         type: "grid",
-                    //         columns: 2,
-                    //         gap: "gap-6",
-                    //         rows: [
-                    //             {
-                    //                 layout: "grid",
-                    //                 gap: "gap-4",
-                    //                 gridColumns: 3,
-                    //                 gridRows: 2,
-                    //                 columns: [
-                    //                   {
-                    //                     name: "Heading",
-                    //                     props: {
-                    //                       text: "Distribution Transformer (DTR) Statistics",
-                    //                       level: 2,
-                    //                       size: "md",
-                    //                       variant: "primary",
-                    //                       weight: "bold",
-                    //                       align: "left",
-                    //                     },
-                    //                     span: { col: 3, row: 1 },
-                    //                   },
-
-                    //                 ],
-                    //               },
-                    //             ]
-                    //         }
-
-                    // },
-
-          // DTR Statistics Cards
+                    // DTR Statistics Cards
           {
             layout: {
               type: "grid",
@@ -405,7 +568,7 @@ const DTRDashboard: React.FC = () => {
                       },
                       span: { col: 3, row: 1 },
                     },
-                      ...dtrStatsCards.map((stat) => ({
+                      ...getCurrentDtrStatsCards().map((stat) => ({
                        name: "Card",
                        props: {
                          title: stat.title,
@@ -441,8 +604,8 @@ const DTRDashboard: React.FC = () => {
                               name: "TimeRangeSelector",
                               props: {
                                 availableTimeRanges: ["Daily", "Monthly"],
-                                selectedTimeRange: "Daily",
-                                handleTimeRangeChange: (range: string) => console.log("Time range changed to:", range),
+                                selectedTimeRange: selectedTimeRange,
+                                handleTimeRangeChange: handleTimeRangeChange, 
                                 timeRangeLabels: {},
                               },
                             },
@@ -451,7 +614,7 @@ const DTRDashboard: React.FC = () => {
                           },
                           span: { col: 2, row: 1 },
                         },
-                                                 ...dtrConsumptionCards.map((card) => ({
+                          ...getCurrentConsumptionCards().map((card) => ({
                              name: 'Card',
                              props: {
                                  title: card.title,
@@ -468,98 +631,6 @@ const DTRDashboard: React.FC = () => {
               ],
             },
           },
-        //   {
-        //     layout: {
-        //       type: "grid" as const,
-        //       columns: 1,
-        //       gap: "gap-4",
-        //       className: "mb-8",
-        //       rows: [
-        //         {
-        //           layout: "grid",
-        //           gap: "gap-4",
-        //           gridColumns: 3,
-        //           gridRows: 2,
-        //           columns: [
-        //             {
-        //               name: "Heading",
-        //               props: {
-        //                 text: "Consumption & Energies",
-        //                 level: 2,
-        //                 size: "md",
-        //                 variant: "primary",
-        //                 weight: "bold",
-        //                 align: "left",
-        //               },
-        //                   span: { col: 3, row: 1 },
-        //             },
-        //             {
-        //                 name: "Heading",
-        //                 props: {
-        //                   text: "Time Range",
-        //                   level: 2,
-        //                   size: "md",
-        //                   variant: "primary",
-        //                   weight: "bold",
-        //                   align: "left",
-        //                 },
-        //                     span: { col:3, row: 1 },
-        //               },
-        //             ...dtrConsumptionCards.map((card) => ({
-        //                 name: 'Card',
-        //                 props: {
-        //                     title: card.title,
-        //                     value: card.value,
-        //                     icon: card.icon,
-        //                     subtitle1: card.subtitle1,
-        //                 },
-        //                 span: { col: 1, row: 1 },
-        //             }))
-        //           ],
-        //         },
-        //       ],
-        //     },
-        //   },    
-          // Consumption & Energies section
-        //   {
-        //     layout: {
-        //       type: "grid",
-        //       columns: 2,
-        //       gap: "gap-6",
-        //       rows: [
-        //         {
-        //           layout: "grid",
-        //           gap: "gap-4",
-        //           gridColumns: 3,
-        //           gridRows: 2,
-        //           columns: [
-        //             {
-        //               name: "Heading",
-        //               props: {
-        //                 text: "Consumption & Energies",
-        //                 level: 2,
-        //                 size: "md",
-        //                 variant: "primary",
-        //                 weight: "bold",
-        //                 align: "left",
-        //               },
-        //             },
-        //             {
-        //               name: "TimeRangeSelector",
-        //               props: {
-        //                 availableTimeRanges: ["Daily", "Monthly"],
-        //                 selectedTimeRange: "Daily",
-        //                 handleTimeRangeChange: () => {},
-        //               },
-        //             },
-        //           ],
-        //         },
-        //       ],
-        //     },
-
-                    //   },
-
-                    // Consumption & Energies Cards
 
                     // DTRs Table section
                     {
@@ -611,7 +682,7 @@ const DTRDashboard: React.FC = () => {
                             {
                                 name: 'Table',
                                 props: {
-                                    data: alertsTableData,
+                                    data: getCurrentAlertsData(),
                                     columns: alertsTableColumns,
                                     showActions: false,
                                     searchable: true,
@@ -627,26 +698,28 @@ const DTRDashboard: React.FC = () => {
                         layout: {
                             type: 'column' as const,
                             className:
-                                'mb-8 border border-primary-border rounded-3xl p-6',
+                                'mb-8',
                         },
                         components: [
                             {
-                                name: 'Heading',
+                                name: 'Holder',
                                 props: {
-                                    text: 'Statistics',
-                                    level: 2,
-                                    className: 'text-lg font-semibold mb-4',
-                                },
-                            },
-                            {
-                                name: 'BarChart',
-                                props: {
-                                    xAxisData: months,
-                                    seriesData: alertSeries,
-                                    seriesColors: alertColors,
-                                    height: 300,
-                                    showLegendInteractions: true,
-                                    timeRange: statsRange,
+                                    title: 'Statistics',
+                                    loading: false,
+                                    height: 'auto',
+                                    className: 'mb-4',
+                                    hasDownload: true,
+                                    handleDownload: handleChartDownload,
+                                    children: (
+                                        <BarChart
+                                            xAxisData={months}
+                                            seriesData={alertSeries}
+                                            seriesColors={alertColors}
+                                            height={300}
+                                            showLegendInteractions={true}
+                                            timeRange={statsRange}
+                                        />
+                                    ),
                                 },
                             },
                         ],
