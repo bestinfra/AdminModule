@@ -318,7 +318,7 @@ const Sidebar = ({
                                                                                         subItem.link
                                                                                     )
                                                                                 }
-                                                                                className={`block ml-4 mr-4 py-3 px-4 pl-8 rounded-lg font-semibold transition-all duration-200 w-full text-left text-sm relative z-10 ${pathname ===
+                                                                                className={`block ml-4 mr-4 py-3 px-4 pl-8 rounded-lg font-medium transition-all duration-200 w-full text-left text-sm relative z-10 ${pathname ===
                                                                                         subItem.link
                                                                                         ? 'bg-[linear-gradient(to_right,transparent_0_10%,white_8%_100%)] text-primary shadow '
                                                                                         : 'text-gray-400 hover:text-primary'
@@ -514,3 +514,4 @@ const Sidebar = ({
 };
 
 export default Sidebar;
+// font-medium	
