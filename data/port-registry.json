@@ -1,5 +1,5 @@
 {
-  "nextPort": 4079,
+  "nextPort": 4092,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -7,8 +7,8 @@
       "path": "C:\\xampp\\htdocs\\example-backend"
     },
     "example-app": {
-      "port": 4022,
-      "deployedAt": "2025-07-21T04:30:54.655Z",
+      "port": 4089,
+      "deployedAt": "2025-07-28T19:41:54.460Z",
       "path": "C:\\xampp\\htdocs\\example-app-backend"
     },
     "madhu": {
@@ -275,6 +275,66 @@
       "port": 4078,
       "deployedAt": "2025-07-28T05:53:18.810Z",
       "path": "C:\\xampp\\htdocs\\ssss-backend"
+    },
+    "srividya": {
+      "port": 4079,
+      "deployedAt": "2025-07-28T17:12:12.282Z",
+      "path": "C:\\xampp\\htdocs\\srividya-backend"
+    },
+    "besttinfraaappss": {
+      "port": 4080,
+      "deployedAt": "2025-07-28T17:46:42.339Z",
+      "path": "C:\\xampp\\htdocs\\besttinfraaappss-backend"
+    },
+    "binfraaappss": {
+      "port": 4081,
+      "deployedAt": "2025-07-28T18:05:23.937Z",
+      "path": "C:\\xampp\\htdocs\\binfraaappss-backend"
+    },
+    "vidya": {
+      "port": 4082,
+      "deployedAt": "2025-07-28T18:29:03.125Z",
+      "path": "C:\\xampp\\htdocs\\vidya-backend"
+    },
+    "vidyaa": {
+      "port": 4083,
+      "deployedAt": "2025-07-28T18:44:08.012Z",
+      "path": "C:\\xampp\\htdocs\\vidyaa-backend"
+    },
+    "reddy": {
+      "port": 4084,
+      "deployedAt": "2025-07-28T18:56:42.563Z",
+      "path": "C:\\xampp\\htdocs\\reddy-backend"
+    },
+    "reddyy": {
+      "port": 4085,
+      "deployedAt": "2025-07-28T19:02:40.502Z",
+      "path": "C:\\xampp\\htdocs\\reddyy-backend"
+    },
+    "reddyyyy": {
+      "port": 4086,
+      "deployedAt": "2025-07-28T19:03:24.765Z",
+      "path": "C:\\xampp\\htdocs\\reddyyyy-backend"
+    },
+    "gira": {
+      "port": 4087,
+      "deployedAt": "2025-07-28T19:16:27.998Z",
+      "path": "C:\\xampp\\htdocs\\gira-backend"
+    },
+    "giram": {
+      "port": 4088,
+      "deployedAt": "2025-07-28T19:39:31.722Z",
+      "path": "C:\\xampp\\htdocs\\giram-backend"
+    },
+    "applicat": {
+      "port": 4090,
+      "deployedAt": "2025-07-29T04:21:22.765Z",
+      "path": "C:\\xampp\\htdocs\\applicat-backend"
+    },
+    "besinfra": {
+      "port": 4091,
+      "deployedAt": "2025-07-29T04:28:12.205Z",
+      "path": "C:\\xampp\\htdocs\\besinfra-backend"
     }
   }
 }
