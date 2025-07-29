@@ -1,5 +1,5 @@
 {
-  "nextPort": 4083,
+  "nextPort": 4084,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -261,17 +261,17 @@
       "deployedAt": "2025-07-24T21:05:20.893Z",
       "path": "C:\\xampp\\htdocs\\tgnpdcl1123-backend"
     },
-    "tgnpdcl": {
+    "test23": {
       "port": 4076,
-      "deployedAt": "2025-07-28T05:19:43.642Z",
-      "path": "C:\\xampp\\htdocs\\tgnpdcl-backend"
+      "deployedAt": "2025-07-28T12:03:42.061Z",
+      "path": "C:\\xampp\\htdocs\\test23-backend"
     },
-    "tgnpdcl1": {
+    "test235": {
       "port": 4077,
-      "deployedAt": "2025-07-28T05:34:01.189Z",
-      "path": "C:\\xampp\\htdocs\\tgnpdcl1-backend"
+      "deployedAt": "2025-07-28T13:06:58.912Z",
+      "path": "C:\\xampp\\htdocs\\test235-backend"
     },
-    "ssss": {
+    "test2356": {
       "port": 4078,
       "deployedAt": "2025-07-28T05:53:18.810Z",
       "path": "C:\\xampp\\htdocs\\ssss-backend"
@@ -280,6 +280,11 @@
       "port": 4082,
       "deployedAt": "2025-07-29T04:41:29.619Z",
       "path": "C:\\xampp\\htdocs\\tgnpdcl22-backend"
+    },
+    "brnm22": {
+      "port": 4083,
+      "deployedAt": "2025-07-29T11:31:01.302Z",
+      "path": "C:\\xampp\\htdocs\\brnm22-backend"
     }
   }
 }

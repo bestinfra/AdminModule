@@ -149,11 +149,11 @@ function generateAppComponent(frontendDir, variables) {
         return 'Feeders';` : '';
   
   // Dashboard submenu case variables
-  variables.consumerDashboardCase = modules.includes('consumer_dashboard') ? `
+  variables.consumerDashboardCase = modules.includes('consumer_dashboard') && modules.includes('dashboard') ? `
       case '/consumer-dashboard':
         return 'Consumer Dashboard';` : '';
   
-  variables.dtrDashboardCase = modules.includes('dtr_dashboard') ? `
+  variables.dtrDashboardCase = modules.includes('dtr_dashboard') && modules.includes('dashboard') ? `
       case '/dtr-dashboard':
         return 'DTR Dashboard';` : '';
   
@@ -178,9 +178,9 @@ function generateAppComponent(frontendDir, variables) {
   variables.meterManagementRoute = modules.includes('meter_management') ? 
     '<Route path="/meters" element={<Meters />} />' : '';
   
-  // Data Logger route commented out
+  // Data Logger route (commented out)
   // variables.dataLoggerRoute = modules.includes('meter_management') ? 
-  //   '<Route path="/data-logger-master" element={<DataLoggerMaster />} />' : '';
+  //   '<Route path="/data-logger-master" element={<DataLogger />} />' : '';
   
   variables.ticketsRoute = modules.includes('tickets') ? 
     '<Route path="/all-tickets" element={<Tickets />} />' : '';
@@ -205,13 +205,13 @@ function generateAppComponent(frontendDir, variables) {
   
  // Dashboard submenu routes
 
- variables.consumerDashboardRoute = modules.includes('consumer_dashboard') ? 
+ variables.consumerDashboardRoute = modules.includes('consumer_dashboard') && modules.includes('dashboard') ? 
 
  '<Route path="/consumer-dashboard" element={<Dashboard />} />' : '';
 
 
 
-variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ? 
+variables.dtrDashboardRoute = modules.includes('dtr_dashboard') && modules.includes('dashboard') ? 
 
  '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
 
@@ -223,7 +223,7 @@ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ?
   let defaultDashboardPath = '/';
   
   // Check which dashboard modules are selected and set the default
-  if (modules.includes('dtr_dashboard')) {
+  if (modules.includes('dtr_dashboard') && !modules.includes('consumer_dashboard')) {
     defaultDashboardComponent = 'DTRDashboard';
     defaultDashboardPath = '/';
   } else if (modules.includes('consumer_dashboard')) {
@@ -245,8 +245,8 @@ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ?
   // Calculate import variables based on selected modules
   variables.dashboardImport = `import ${defaultDashboardComponent} from './pages/${defaultDashboardComponent}';`;
   
-  // Add Dashboard import for consumer dashboard route
-  variables.dashboardImportForConsumer = modules.includes('consumer_dashboard') ? 
+  // Add Dashboard import for consumer dashboard route (only if it's not already imported)
+  variables.dashboardImportForConsumer = modules.includes('consumer_dashboard') && defaultDashboardComponent !== 'Dashboard' ? 
     'import Dashboard from \'./pages/Dashboard\';' : '';
   
   variables.consumersImport = modules.includes('consumer') ? 
@@ -264,9 +264,9 @@ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ?
   variables.metersImport = modules.includes('meter_management') ? 
     'import Meters from \'./pages/Meters\';' : '';
   
-  // Data Logger import commented out
+  // Data Logger import (commented out)
   // variables.dataLoggerImport = modules.includes('meter_management') ? 
-  //   'import DataLoggerMaster from \'./pages/DataLogger\';' : '';
+  //   'import DataLogger from \'./pages/DataLogger\';' : '';
   
   variables.dtrDashboardImport = modules.includes('dtr') ? 
     'import DTRDashboard from \'./pages/DTRDashboard\';' : '';
@@ -349,7 +349,7 @@ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ?
   variables.meterManagementError = modules.includes('meter_management') ? 
     '<li>/meters - Meters List</li>\n                                <li>/meter-details/:meterSlNo - Meter Details</li>' : '';
   
-  // Data Logger error commented out
+  // Data Logger error (commented out)
   // variables.dataLoggerError = modules.includes('meter_management') ? 
   //   '<li>/data-logger-master - Data Logger Master</li>' : '';
   
@@ -370,13 +370,13 @@ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ?
   
  // Dashboard submenu error variables
 
- variables.consumerDashboardError = modules.includes('consumer_dashboard') ? 
+ variables.consumerDashboardError = modules.includes('consumer_dashboard') && modules.includes('dashboard') ? 
 
  '<li>/consumer-dashboard - Consumer Dashboard</li>' : '';
 
 
 
-variables.dtrDashboardError = modules.includes('dtr_dashboard') ? 
+variables.dtrDashboardError = modules.includes('dtr_dashboard') && modules.includes('dashboard') ? 
 
  '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
 
