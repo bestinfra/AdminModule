@@ -1,15 +1,17 @@
-import { useState, useEffect, Suspense } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, Suspense } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import Card from '@components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
 import Table from '@components/global/Table';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
+import { exportChartData } from '@/utils/excelExport';
 
 const ConsumerView: React.FC = () => {
     // Try to get unitId from useParams first, then fallback to URL parsing
     const params = useParams<{ unitId: string }>();
+    const navigate = useNavigate();
 
     const uidFromParams = params?.unitId;
 
@@ -52,6 +54,31 @@ const ConsumerView: React.FC = () => {
     const handleRefreshClick = () => {
         console.log('Refresh button clicked');
         // Add your refresh logic here
+    };
+
+    // Chart download handlers
+    const handlePowerMetricsDownload = () => {
+        if (consumer?.powerMetrics) {
+            const xAxisData = ['kVAh- (i)', 'kWh(i)', 'kWh(E)', 'kVArh-lag(i)', 'kVArh-Ld(i)'];
+            const seriesData = [{ name: 'Power', data: consumer.powerMetrics }];
+            exportChartData(xAxisData, seriesData, 'consumer-power-metrics-data');
+        }
+    };
+
+    const handleDailyConsumptionDownload = () => {
+        if (consumer?.dailyConsumption) {
+            const xAxisData = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'];
+            const seriesData = [{ name: 'Daily Consumption', data: consumer.dailyConsumption }];
+            exportChartData(xAxisData, seriesData, 'consumer-daily-consumption-data');
+        }
+    };
+
+    const handleMonthlyConsumptionDownload = () => {
+        if (consumer?.monthlyConsumption) {
+            const xAxisData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const seriesData = [{ name: 'Monthly Consumption', data: consumer.monthlyConsumption }];
+            exportChartData(xAxisData, seriesData, 'consumer-monthly-consumption-data');
+        }
     };
 
     // Fetch consumer data
@@ -425,7 +452,7 @@ const ConsumerView: React.FC = () => {
                                     availableTimeRanges: [],
                                     selectedTimeRange: '',
                                     handleTimeRangeChange: () => {},
-                                    handleDownload: () => {},
+                                    handleDownload: handlePowerMetricsDownload,
                                     loading: false,
                                     children: (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -551,11 +578,7 @@ const ConsumerView: React.FC = () => {
                                                     </div>
                                                     <span
                                                         className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border"
-                                                        onClick={() =>
-                                                            alert(
-                                                                'Download Power Metrics'
-                                                            )
-                                                        }>
+                                                        onClick={handlePowerMetricsDownload}>
                                                         <img
                                                             alt="Download chart"
                                                             src="icons/download-icon.svg"
@@ -626,7 +649,7 @@ const ConsumerView: React.FC = () => {
                                     availableTimeRanges: [],
                                     selectedTimeRange: '',
                                     handleTimeRangeChange: () => {},
-                                    handleDownload: () => {},
+                                    handleDownload: handleDailyConsumptionDownload,
                                     loading: false,
                                     children: (
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -642,11 +665,7 @@ const ConsumerView: React.FC = () => {
                                                     </div>
                                                     <span
                                                         className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border"
-                                                        onClick={() =>
-                                                            alert(
-                                                                'Download Daily Consumption'
-                                                            )
-                                                        }>
+                                                        onClick={handleDailyConsumptionDownload}>
                                                         <img
                                                             alt="Download chart"
                                                             src="icons/download-icon.svg"
@@ -697,11 +716,7 @@ const ConsumerView: React.FC = () => {
                                                     </div>
                                                     <span
                                                         className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border"
-                                                        onClick={() =>
-                                                            alert(
-                                                                'Download Monthly Consumption'
-                                                            )
-                                                        }>
+                                                        onClick={handleMonthlyConsumptionDownload}>
                                                         <img
                                                             alt="Download chart"
                                                             src="icons/download-icon.svg"

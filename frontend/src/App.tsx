@@ -78,7 +78,7 @@ const App: React.FC = () => {
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
-                            <Route path="/" element={<PageDemo />} />
+                            <Route path="/" element={<DTRDashboard />} />
                             <Route path="/prepaid" element={<Prepaid />} />
                             <Route path="/postpaid" element={<Postpaid />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
