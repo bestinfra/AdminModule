@@ -251,7 +251,7 @@ const Header: React.FC<HeaderProps> = ({
                     {menuItems.map((item) => (
                         <div
                             key={item.id}
-                            className="px-5 py-3 text-sm cursor-pointer flex items-center gap-3 hover:bg-blue-600 hover:text-white rounded-lg active:bg-blue-600 active:text-white"
+                            className="px-5 py-3 text-sm cursor-pointer flex items-center gap-3 hover:bg-primary hover:text-white rounded-lg active:bg-blue-600 active:text-white"
                             onClick={() => handleMenuItemClickWithLink(item)}
                         >
                             {item.label}
