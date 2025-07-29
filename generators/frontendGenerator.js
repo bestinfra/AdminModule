@@ -73,9 +73,9 @@ function generateFrontend(baseDir, formData) {
     backendPort: backendPort || 4000
   };
 
-  // Copy template directory
+  // Copy template directory (excluding App.tsx which will be processed separately)
   const templateDir = path.join(__dirname, 'templates', 'frontend');
-  copyTemplateDirectory(templateDir, frontendDir, variables);
+  copyTemplateDirectory(templateDir, frontendDir, variables, ['App.tsx.template']);
 
   // Generate additional files that need complex logic
   generateAppComponent(frontendDir, variables);
@@ -167,10 +167,10 @@ function generateAppComponent(frontendDir, variables) {
 
   // Calculate route variables
   variables.billsPrepaidRoute = (modules.includes('bills') || modules.includes('prepaid')) ? 
-    '<Route path="/bills/prepaid" element={<BillsPrepaid />} />' : '';
+    '<Route path="/bills/prepaid" element={<Prepaid />} />' : '';
   
   variables.billsPostpaidRoute = (modules.includes('bills') || modules.includes('postpaid')) ? 
-    '<Route path="/bills/postpaid" element={<BillsPostpaid />} />' : '';
+    '<Route path="/bills/postpaid" element={<Postpaid />} />' : '';
   
   variables.assetManagementRoute = modules.includes('asset_management') ? 
     '<Route path="/asset-management" element={<AssetManagment />} />' : '';
@@ -178,8 +178,9 @@ function generateAppComponent(frontendDir, variables) {
   variables.meterManagementRoute = modules.includes('meter_management') ? 
     '<Route path="/meters" element={<Meters />} />' : '';
   
-  variables.dataLoggerRoute = modules.includes('meter_management') ? 
-    '<Route path="/data-logger-master" element={<DataLoggerMaster />} />' : '';
+  // Data Logger route commented out
+  // variables.dataLoggerRoute = modules.includes('meter_management') ? 
+  //   '<Route path="/data-logger-master" element={<DataLoggerMaster />} />' : '';
   
   variables.ticketsRoute = modules.includes('tickets') ? 
     '<Route path="/all-tickets" element={<Tickets />} />' : '';
@@ -194,7 +195,7 @@ function generateAppComponent(frontendDir, variables) {
     '<Route path="/consumers" element={<Consumers />} />' : '';
   
   variables.dtrRoute = modules.includes('dtr') ? 
-    '<Route path="/dtr-dashboard" element={<Transformer />} />\n                          <Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
+    '' : ''; // DTR dashboard route is handled by dtrDashboardRoute, feeders by feedersRoute
    
   variables.meterDetailsRoute = modules.includes('meter_management') ? 
     '<Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />' : '';
@@ -214,6 +215,127 @@ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ?
 
  '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
 
+  variables.feedersRoute = modules.includes('dtr') ? 
+    '<Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
+
+  // Calculate dashboard route dynamically based on selected dashboard modules
+  let defaultDashboardComponent = 'Dashboard';
+  let defaultDashboardPath = '/';
+  
+  // Check which dashboard modules are selected and set the default
+  if (modules.includes('dtr_dashboard')) {
+    defaultDashboardComponent = 'DTRDashboard';
+    defaultDashboardPath = '/';
+  } else if (modules.includes('consumer_dashboard')) {
+    defaultDashboardComponent = 'Dashboard'; // Consumer dashboard uses the main Dashboard component
+    defaultDashboardPath = '/';
+  }
+  
+  // Generate dashboard routes - both / and /dashboard for dashboard module
+  if (modules.includes('dashboard') || modules.includes('consumer_dashboard')) {
+    variables.dashboardRoute = `<Route path="/" element={<${defaultDashboardComponent} />} />
+                      <Route path="/dashboard" element={<${defaultDashboardComponent} />} />`;
+    variables.dashboardError = `<li>/ - ${defaultDashboardComponent}</li>
+                                <li>/dashboard - ${defaultDashboardComponent}</li>`;
+  } else {
+    variables.dashboardRoute = `<Route path="${defaultDashboardPath}" element={<${defaultDashboardComponent} />} />`;
+    variables.dashboardError = `<li>/ - ${defaultDashboardComponent}</li>`;
+  }
+
+  // Calculate import variables based on selected modules
+  variables.dashboardImport = `import ${defaultDashboardComponent} from './pages/${defaultDashboardComponent}';`;
+  
+  // Add Dashboard import for consumer dashboard route
+  variables.dashboardImportForConsumer = modules.includes('consumer_dashboard') ? 
+    'import Dashboard from \'./pages/Dashboard\';' : '';
+  
+  variables.consumersImport = modules.includes('consumer') ? 
+    'import Consumers from \'./pages/Consumers\';' : '';
+  
+  variables.consumerViewImport = modules.includes('consumer') ? 
+    'import ConsumerView from \'./pages/ConsumerView\';' : '';
+  
+  variables.usersImport = modules.includes('user_management_default') ? 
+    'import Users from \'./pages/Users\';' : '';
+  
+  variables.roleManagementImport = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
+    'import RoleManagement from \'./pages/RoleManagement\';' : '';
+  
+  variables.metersImport = modules.includes('meter_management') ? 
+    'import Meters from \'./pages/Meters\';' : '';
+  
+  // Data Logger import commented out
+  // variables.dataLoggerImport = modules.includes('meter_management') ? 
+  //   'import DataLoggerMaster from \'./pages/DataLogger\';' : '';
+  
+  variables.dtrDashboardImport = modules.includes('dtr') ? 
+    'import DTRDashboard from \'./pages/DTRDashboard\';' : '';
+  
+  variables.assetManagementImport = modules.includes('asset_management') ? 
+    'import AssetManagment from \'./pages/AssetManagment\';' : '';
+  
+  variables.ticketsImport = modules.includes('tickets') ? 
+    'import Tickets from \'./pages/Tickets\';' : '';
+  
+  variables.prepaidImport = (modules.includes('bills') || modules.includes('prepaid')) ? 
+    'import Prepaid from \'./pages/Prepaid\';' : '';
+  
+  variables.postpaidImport = (modules.includes('bills') || modules.includes('postpaid')) ? 
+    'import Postpaid from \'./pages/Postpaid\';' : '';
+  
+  variables.meterDetailsImport = modules.includes('meter_management') ? 
+    'import MeterDetails from \'./pages/MeterDetails\';' : '';
+  
+  variables.ticketViewImport = modules.includes('tickets') ? 
+    'import TicketView from \'./pages/TicketView\';' : '';
+  
+  variables.feedersImport = modules.includes('dtr') ? 
+    'import Feeders from \'./pages/Feeders\';' : '';
+  
+  // Calculate fallback components
+  variables.loginFallback = `const LoginFallback = () => (
+  <div className="p-6">
+    <h1 className="text-2xl font-bold">Login</h1>
+    <p className="text-gray-600">Loading login page...</p>
+    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
+      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
+      <p className="text-sm text-blue-700">This is the fallback component. The remote Login component failed to load.</p>
+      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
+    </div>
+  </div>
+);`;
+
+  variables.sidebarFallback = `const SidebarFallback = () => (
+  <div className="w-72 bg-gray-100 h-screen p-4">
+    <div className="text-center">Sidebar Loading...</div>
+  </div>
+);`;
+
+  variables.headerFallback = `const HeaderFallback = () => (
+  <div className="h-16 bg-gray-100 border-b flex items-center px-6">
+    <span>Header Loading...</span>
+  </div>
+);`;
+
+  // Calculate theme provider import
+  variables.themeProviderImport = `import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';`;
+
+  // Calculate federated components
+  variables.sidebarComponent = `const Sidebar = createSafeLazyComponent(
+  () => import('SuperAdmin/Sidebar'),
+  SidebarFallback
+);`;
+
+  variables.headerComponent = `const Header = createSafeLazyComponent(
+  () => import('SuperAdmin/Header'),
+  HeaderFallback
+);`;
+
+  variables.loginComponent = `const Login = createSafeLazyComponent(
+  () => import('SuperAdmin/Login'),
+  LoginFallback
+);`;
+
   // Calculate error page variables
   variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
     '<li>/bills/prepaid - Bills Prepaid</li>' : '';
@@ -227,8 +349,9 @@ variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ?
   variables.meterManagementError = modules.includes('meter_management') ? 
     '<li>/meters - Meters List</li>\n                                <li>/meter-details/:meterSlNo - Meter Details</li>' : '';
   
-  variables.dataLoggerError = modules.includes('meter_management') ? 
-    '<li>/data-logger-master - Data Logger Master</li>' : '';
+  // Data Logger error commented out
+  // variables.dataLoggerError = modules.includes('meter_management') ? 
+  //   '<li>/data-logger-master - Data Logger Master</li>' : '';
   
   variables.ticketsError = modules.includes('tickets') ? 
     '<li>/all-tickets - All Tickets</li>\n                                <li>/tickets/:ticketId - Ticket View</li>' : '';
@@ -257,6 +380,9 @@ variables.dtrDashboardError = modules.includes('dtr_dashboard') ?
 
  '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
 
+  variables.feedersError = modules.includes('dtr') ? 
+    '<li>/dtr/:dtrId - Feeders</li>' : '';
+
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
   
@@ -265,7 +391,6 @@ variables.dtrDashboardError = modules.includes('dtr_dashboard') ?
   if (placeholders && placeholders.length > 0) {
     console.error('Warning: Template placeholders were not replaced!');
     console.error('Unreplaced placeholders:', placeholders);
-    console.error('Available variables:', Object.keys(variables));
   }
   
   const appPath = path.join(frontendDir, 'src', 'App.tsx');
