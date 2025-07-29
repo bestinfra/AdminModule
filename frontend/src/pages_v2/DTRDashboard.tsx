@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import type { TableData } from '@components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
+import BarChart from '@/graphs/BarChart';
+import { exportChartData } from '@/utils/excelExport';
 
 // Brand green icon style
 const ICON_FILTER_STYLE = {
@@ -283,6 +285,11 @@ const DTRDashboard: React.FC = () => {
         data: months.map(() => Math.floor(Math.random() * 350)),
     }));
     const alertColors = alertTypes.map((type) => type.color);
+
+    // Handle Excel download for chart data
+    const handleChartDownload = () => {
+        exportChartData(months, alertSeries, 'dtr-statistics-data');
+    };
 
     return (
         <div className="p-2 min-h-screen">
@@ -627,26 +634,28 @@ const DTRDashboard: React.FC = () => {
                         layout: {
                             type: 'column' as const,
                             className:
-                                'mb-8 border border-primary-border rounded-3xl p-6',
+                                'mb-8',
                         },
                         components: [
                             {
-                                name: 'Heading',
+                                name: 'Holder',
                                 props: {
-                                    text: 'Statistics',
-                                    level: 2,
-                                    className: 'text-lg font-semibold mb-4',
-                                },
-                            },
-                            {
-                                name: 'BarChart',
-                                props: {
-                                    xAxisData: months,
-                                    seriesData: alertSeries,
-                                    seriesColors: alertColors,
-                                    height: 300,
-                                    showLegendInteractions: true,
-                                    timeRange: statsRange,
+                                    title: 'Statistics',
+                                    loading: false,
+                                    height: 'auto',
+                                    className: 'mb-4',
+                                    hasDownload: true,
+                                    handleDownload: handleChartDownload,
+                                    children: (
+                                        <BarChart
+                                            xAxisData={months}
+                                            seriesData={alertSeries}
+                                            seriesColors={alertColors}
+                                            height={300}
+                                            showLegendInteractions={true}
+                                            timeRange={statsRange}
+                                        />
+                                    ),
                                 },
                             },
                         ],
