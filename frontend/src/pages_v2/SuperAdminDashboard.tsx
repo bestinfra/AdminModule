@@ -1,6 +1,7 @@
 import React from 'react';
 import Page from '@components/global/PageC';
 import { LineChart, BarChart } from '@/graphs';
+import { exportChartData } from '@/utils/excelExport';
 
 const SuperAdminDashboard: React.FC = () => {
     // KPI Cards Data
@@ -57,6 +58,11 @@ const SuperAdminDashboard: React.FC = () => {
     ];
 
     const appNames = ['madhu-app', 'les-dashboard', 'nalytics-portal'];
+
+    // Chart download handler
+    const handleAppUsageDownload = () => {
+        exportChartData(appNames, appUsageData, 'app-usage-distribution-data');
+    };
 
     const sections = [
         // Top Row - KPI Cards
@@ -143,6 +149,8 @@ const SuperAdminDashboard: React.FC = () => {
                         showLegendInteractions={false}
                         showXAxisLabel={true}
                         title=""
+                        showDownloadButton={true}
+                        onDownload={handleAppUsageDownload}
                     />
                 </div>
             </div>

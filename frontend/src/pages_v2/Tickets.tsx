@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
+import { exportChartData } from '@/utils/excelExport';
 
 export default function Tickets() {
     const navigate = useNavigate();
@@ -322,6 +323,13 @@ export default function Tickets() {
         { key: 'closed', label: 'Closed Tickets', icon: 'icons/star.svg', subtitle1: 'Based on 156 reviews', subtitle2: 'This month', iconStyle: brandGreenIconStyle },
     ];
 
+    // Chart download handler
+    const handleChartDownload = () => {
+        if (ticketTrends?.xAxisData && ticketTrends?.seriesData) {
+            exportChartData(ticketTrends.xAxisData, ticketTrends.seriesData, 'ticket-statistics-data');
+        }
+    };
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
         <Page
@@ -401,14 +409,9 @@ export default function Tickets() {
                                             headerTitle: 'Ticket Statistics',
                                             dateRange: '2024',
                                             showDownloadButton: true,
-                                            showViewToggle: true,
-                                            viewToggleOptions: [
-                                                'Graph',
-                                                'Table',
-                                            ],
-                                            showTableView: true,
                                             ariaLabel:
                                                 'Monthly ticket statistics chart',
+                                            onDownload: handleChartDownload,
                                         },
                                     },
                                 ],
@@ -445,6 +448,7 @@ export default function Tickets() {
                                              onEdit: handleEditTicket,
                                              onDelete: handleDeleteTicket,
                                              onView: handleViewTicket,
+                                            availableTimeRanges: [],
                                         },
                                     },
                                 ],

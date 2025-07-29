@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
@@ -99,13 +100,11 @@ const Feeders = () => {
 
     // Handle Excel download for daily consumption chart
     const handleDailyChartDownload = (timeRange: string, viewType: string) => {
-        console.log('Downloading daily consumption data:', timeRange, viewType);
         exportChartData(dailyConsumptionData.xAxisData, dailyConsumptionData.seriesData, 'feeder-daily-consumption-data');
     };
 
     // Handle Excel download for monthly consumption chart
     const handleMonthlyChartDownload = (timeRange: string, viewType: string) => {
-        console.log('Downloading monthly consumption data:', timeRange, viewType);
         exportChartData(monthlyConsumptionData.xAxisData, monthlyConsumptionData.seriesData, 'feeder-monthly-consumption-data');
     };
 
@@ -116,7 +115,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
-                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-6',
+                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-6 mt-4',
                         rows: [
                             {
                                 layout: 'row' as const,
