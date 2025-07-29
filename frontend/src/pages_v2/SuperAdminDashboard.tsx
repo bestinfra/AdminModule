@@ -1,6 +1,6 @@
 import React from 'react';
 import Page from '@components/global/PageC';
-import { LineChart, BarChart } from '../../graphs';
+import { LineChart, BarChart } from '@/graphs';
 
 const SuperAdminDashboard: React.FC = () => {
     // KPI Cards Data
@@ -67,7 +67,7 @@ const SuperAdminDashboard: React.FC = () => {
                 gap: 'gap-6',
                 className: 'mb-8'
             },
-            components: kpiCards.map((card, index) => ({
+            components: kpiCards.map((card) => ({
                 name: 'Card',
                 props: {
                     title: card.title,
