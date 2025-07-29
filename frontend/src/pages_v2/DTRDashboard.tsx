@@ -2,20 +2,34 @@ import React, { useState } from 'react';
 import type { TableData } from '@components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-// import BarChart from '@/graphs/BarChart';
-// import { exportChartData } from '@/utils/excelExport';
 
 // Brand green icon style
 const ICON_FILTER_STYLE = {
     filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
 };
 
-
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
 
     // State for time range toggle
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
+
+    // Chart data variables
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const alertSeries = [
+        {
+            name: 'Alerts',
+            data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10, 11, 12]
+        }
+    ];
+    const alertColors = ['#10B981'];
+    const statsRange = selectedTimeRange;
+
+    // Chart download handler
+    const handleChartDownload = () => {
+        console.log('Downloading chart data...');
+        // Add chart download logic here if needed
+    };
 
   // DTR statistics cards data - Using only daily data consistently
   const dtrStatsCards = [
@@ -621,24 +635,18 @@ const DTRDashboard: React.FC = () => {
                         },
                         components: [
                             {
-                                name: 'Holder',
+                                name: 'BarChart',
                                 props: {
-                                    title: 'Statistics',
-                                    loading: false,
-                                    height: 'auto',
-                                    className: 'mb-4',
-                                    hasDownload: true,
-                                    // handleDownload: handleChartDownload,
-                                    // children: (
-                                    //     <BarChart
-                                    //         xAxisData={months}
-                                    //         seriesData={alertSeries}
-                                    //         seriesColors={alertColors}
-                                    //         height={300}
-                                    //         showLegendInteractions={true}
-                                    //         timeRange={statsRange}
-                                    //     />
-                                    // ),
+                                    xAxisData: months,
+                                    seriesData: alertSeries,
+                                    seriesColors: alertColors,
+                                    height: 300,
+                                    showLegendInteractions: true,
+                                    timeRange: statsRange,
+                                    showHeader: true,
+                                    headerTitle: 'Statistics',
+                                    showDownloadButton: true,
+                                    onDownload: () => handleChartDownload(),
                                 },
                             },
                         ],
