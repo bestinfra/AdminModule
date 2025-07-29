@@ -1,5 +1,5 @@
 {
-  "nextPort": 4081,
+  "nextPort": 4090,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -275,6 +275,51 @@
       "port": 4078,
       "deployedAt": "2025-07-28T05:53:18.810Z",
       "path": "C:\\xampp\\htdocs\\ssss-backend"
+    },
+    "sql": {
+      "port": 4081,
+      "deployedAt": "2025-07-29T04:43:03.101Z",
+      "path": "C:\\xampp\\htdocs\\sql-backend"
+    },
+    "goutham": {
+      "port": 4082,
+      "deployedAt": "2025-07-29T04:50:03.893Z",
+      "path": "C:\\xampp\\htdocs\\goutham-backend"
+    },
+    "appinform": {
+      "port": 4083,
+      "deployedAt": "2025-07-29T07:37:10.792Z",
+      "path": "C:\\xampp\\htdocs\\appinform-backend"
+    },
+    "kiranbi": {
+      "port": 4084,
+      "deployedAt": "2025-07-29T10:06:50.931Z",
+      "path": "C:\\xampp\\htdocs\\kiranbi-backend"
+    },
+    "dhayaoo": {
+      "port": 4085,
+      "deployedAt": "2025-07-29T10:17:07.542Z",
+      "path": "C:\\xampp\\htdocs\\dhayaoo-backend"
+    },
+    "valli": {
+      "port": 4086,
+      "deployedAt": "2025-07-29T10:35:56.658Z",
+      "path": "C:\\xampp\\htdocs\\valli-backend"
+    },
+    "pen": {
+      "port": 4087,
+      "deployedAt": "2025-07-29T10:42:31.532Z",
+      "path": "C:\\xampp\\htdocs\\pen-backend"
+    },
+    "config": {
+      "port": 4088,
+      "deployedAt": "2025-07-29T10:46:14.335Z",
+      "path": "C:\\xampp\\htdocs\\config-backend"
+    },
+    "yours": {
+      "port": 4089,
+      "deployedAt": "2025-07-29T10:54:52.297Z",
+      "path": "C:\\xampp\\htdocs\\yours-backend"
     }
   }
 }

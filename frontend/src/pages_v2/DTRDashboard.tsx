@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import type { TableData } from '@components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import BarChart from '@/graphs/BarChart';
-import { exportChartData } from '@/utils/excelExport';
+// import BarChart from '@/graphs/BarChart';
+// import { exportChartData } from '@/utils/excelExport';
 
 // Brand green icon style
 const ICON_FILTER_STYLE = {
@@ -469,40 +469,40 @@ const DTRDashboard: React.FC = () => {
     // Dummy data for DTR Alert Statistics
     // TODO: Unused - consider removing if not needed.
     // const [statsRange, setStatsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
-    const [statsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
-    const alertTypes = [
-        { name: 'LT Fuse Blown (R - Phase)', color: '#e74c3c' },
-        { name: 'Unbalanced Load', color: '#f39c12' },
-        { name: 'Low PF (R - Phase)', color: '#3498db' },
-        { name: 'Power Failure', color: '#9b59b6' },
-        { name: 'B_PH Missing', color: '#8e44ad' },
-        { name: 'R_PH CT Reversed', color: '#e67e22' },
-        { name: 'HT Fuse Blown (B - Phase)', color: '#f1c40f' },
-        { name: 'LT Fuse Blown (Y - Phase)', color: '#1abc9c' },
-        { name: 'LT Fuse Blown (B - Phase)', color: '#e67e22' },
-        { name: 'R-L-P', color: '#9b59b6' },
-    ];
-    const months = [
-        'May 2025',
-        'Apr 2025',
-        'Mar 2025',
-        'Feb 2025',
-        'Jan 2025',
-        'Dec 2024',
-        'Nov 2024',
-        'Oct 2024',
-        'Sept 2024',
-    ];
-    const alertSeries = alertTypes.map((type) => ({
-        name: type.name,
-        data: months.map(() => Math.floor(Math.random() * 350)),
-    }));
-    const alertColors = alertTypes.map((type) => type.color);
+    // const [statsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
+    // const alertTypes = [
+    //     { name: 'LT Fuse Blown (R - Phase)', color: '#e74c3c' },
+    //     { name: 'Unbalanced Load', color: '#f39c12' },
+    //     { name: 'Low PF (R - Phase)', color: '#3498db' },
+    //     { name: 'Power Failure', color: '#9b59b6' },
+    //     { name: 'B_PH Missing', color: '#8e44ad' },
+    //     { name: 'R_PH CT Reversed', color: '#e67e22' },
+    //     { name: 'HT Fuse Blown (B - Phase)', color: '#f1c40f' },
+    //     { name: 'LT Fuse Blown (Y - Phase)', color: '#1abc9c' },
+    //     { name: 'LT Fuse Blown (B - Phase)', color: '#e67e22' },
+    //     { name: 'R-L-P', color: '#9b59b6' },
+    // ];
+    // const months = [
+    //     'May 2025',
+    //     'Apr 2025',
+    //     'Mar 2025',
+    //     'Feb 2025',
+    //     'Jan 2025',
+    //     'Dec 2024',
+    //     'Nov 2024',
+    //     'Oct 2024',
+    //     'Sept 2024',
+    // ];
+    // const alertSeries = alertTypes.map((type) => ({
+    //     name: type.name,
+    //     data: months.map(() => Math.floor(Math.random() * 350)),
+    // }));
+    // const alertColors = alertTypes.map((type) => type.color);
 
-    // Handle Excel download for chart data
-    const handleChartDownload = () => {
-        exportChartData(months, alertSeries, 'dtr-statistics-data');
-    };
+    // // Handle Excel download for chart data
+    // const handleChartDownload = () => {
+    //     exportChartData(months, alertSeries, 'dtr-statistics-data');
+    // };
 
     return (
         <div className="p-2 min-h-screen">
@@ -709,17 +709,17 @@ const DTRDashboard: React.FC = () => {
                                     height: 'auto',
                                     className: 'mb-4',
                                     hasDownload: true,
-                                    handleDownload: handleChartDownload,
-                                    children: (
-                                        <BarChart
-                                            xAxisData={months}
-                                            seriesData={alertSeries}
-                                            seriesColors={alertColors}
-                                            height={300}
-                                            showLegendInteractions={true}
-                                            timeRange={statsRange}
-                                        />
-                                    ),
+                                    // handleDownload: handleChartDownload,
+                                    // children: (
+                                    //     <BarChart
+                                    //         xAxisData={months}
+                                    //         seriesData={alertSeries}
+                                    //         seriesColors={alertColors}
+                                    //         height={300}
+                                    //         showLegendInteractions={true}
+                                    //         timeRange={statsRange}
+                                    //     />
+                                    // ),
                                 },
                             },
                         ],
