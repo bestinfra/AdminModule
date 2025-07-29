@@ -17,8 +17,8 @@ const DTRDashboard: React.FC = () => {
     // State for time range toggle
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
 
-  // DTR statistics cards data - Daily data
-  const dailyDtrStatsCards = [
+  // DTR statistics cards data - Using only daily data consistently
+  const dtrStatsCards = [
     {
       title: "Total DTRs",
       value: 29,
@@ -93,88 +93,6 @@ const DTRDashboard: React.FC = () => {
       iconStyle: ICON_FILTER_STYLE,
     },
   ];
-
-  // DTR statistics cards data - Monthly data
-  const monthlyDtrStatsCards = [
-    {
-      title: "Total DTRs",
-      value: 29,
-      icon: "/icons/dtr.svg",
-      subtitle1: "Total Transformer Units",
-      onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
-      iconStyle: ICON_FILTER_STYLE,
-      bg: "bg-stat-icon-gradient",
-    },
-    {
-      title: "Total LT Feeders",
-      value: 33,
-      icon: "/icons/feeder.svg",
-      subtitle1: "Connected to DTRs",
-      onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Monthly Fuse Blown",
-      value: 3,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "0.10% of Total DTRs",
-      onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Overloaded Feeders",
-      value: 2,
-      icon: "/icons/dtr.svg",
-      subtitle1: "6.06% of Total Feeders",
-      onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Underloaded Feeders",
-      value: 31,
-      icon: "/icons/dtr.svg",
-      subtitle1: "93.94% of Total Feeders",
-      onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "LT Side Fuse Blown",
-      value: 3,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "3 Incidents This Month",
-      onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Unbalanced DTRs",
-      value: 1,
-      icon: "/icons/dtr.svg",
-      subtitle1: "3.45% of Total DTRs",
-      onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Power Failure Feeders",
-      value: 1,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "3.03% of Feeders",
-      onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "HT Side Fuse Blown",
-      value: 0,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "0 Incident This Month",
-      onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-  ];
-
-  // Get current DTR statistics cards data based on selected time range
-  const getCurrentDtrStatsCards = () => {
-    return selectedTimeRange === 'Daily' ? dailyDtrStatsCards : monthlyDtrStatsCards;
-  };
 
   // DTR Consumption Cards - Daily data
   const dailyConsumptionCards = [
@@ -259,7 +177,7 @@ const DTRDashboard: React.FC = () => {
       subtitle1: "100.00% of Total DTRs",
       iconStyle: ICON_FILTER_STYLE,
     },
-    {
+    { 
       title: "In-Active DTRs",
       value: 0,
       icon: "/icons/dtr.svg",
@@ -466,6 +384,7 @@ const DTRDashboard: React.FC = () => {
         return selectedTimeRange === 'Daily' ? dailyAlertsData : monthlyAlertsData;
     };
 
+
     // Dummy data for DTR Alert Statistics
     // TODO: Unused - consider removing if not needed.
     // const [statsRange, setStatsRange] = useState<'Monthly' | 'Yearly'>('Monthly');
@@ -568,7 +487,7 @@ const DTRDashboard: React.FC = () => {
                       },
                       span: { col: 3, row: 1 },
                     },
-                      ...getCurrentDtrStatsCards().map((stat) => ({
+                      ...dtrStatsCards.map((stat) => ({
                        name: "Card",
                        props: {
                          title: stat.title,

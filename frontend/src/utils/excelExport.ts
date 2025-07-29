@@ -53,7 +53,7 @@ export const formatTableDataForExport = (
     data: any[],
     columns: { key: string; label: string }[]
 ): any[] => {
-    return data.map((row, index) => {
+    return data.map((row, _index) => {
         const formattedRow: any = {};
         columns.forEach(column => {
             // Use the label as the column header and the key to get the value

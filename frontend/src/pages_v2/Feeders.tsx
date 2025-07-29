@@ -83,7 +83,7 @@ const Feeders = () => {
     ]);
 
     // Replace feederDescriptions and feederInfo with feederData and lastComm   
-    const [feederData, _setFeederData] = useState([
+    const [_feederData, _setFeederData] = useState([
         { title: 'Feeder Name', description: 'D1F1(32500114)' },
         { title: 'Rating', description: '25.00 kVA' },
         { title: 'Address', description: 'Waddepally, Warangal, Telangana, India, 506001' },

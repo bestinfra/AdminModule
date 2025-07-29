@@ -273,7 +273,7 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
             <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-gray-300 dark:bg-gray-600"></div>
             
             <div className="space-y-2">
-              {module.nested.map((nested: any, index: number) => (
+              {module.nested.map((nested: any, _index: number) => (
                 <div key={nested.key} className="relative">
                   {/* Horizontal line */}
                   <div className="absolute left-3 top-4 w-4 h-0.5 bg-gray-300 dark:bg-gray-600"></div>
