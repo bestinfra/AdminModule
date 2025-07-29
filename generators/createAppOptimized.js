@@ -73,15 +73,26 @@ function createAppProjectOptimized(formData) {
       console.log('\n🚀 Deploying backend to XAMPP...');
       // Deploy directly from application-backend
       const applicationBackendDir = path.join(__dirname, '..', 'application-backend');
-      const deploymentResult = await deployer.deployBackend(projectFolderName, applicationBackendDir);
+      
+      // Prepare credentials for database insertion
+      const credentials = {
+        adminFirstName: formData.adminFirstName || 'Admin',
+        adminLastName: formData.adminLastName || 'User',
+        adminEmail: formData.adminEmail || `admin@${projectFolderName}.com`,
+        adminUsername: formData.adminUsername || 'admin',
+        adminPassword: formData.adminPassword || 'admin123',
+        adminPhone: formData.adminPhone || '+1234567890'
+      };
+      
+      const deploymentResult = await deployer.deployBackend(projectFolderName, applicationBackendDir, credentials);
       
       if (deploymentResult.success) {
         console.log('\n✅ Backend deployed successfully!');
         console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
         console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
-        console.log(`   • Environment: ${deploymentResult.envUrl}`);
         console.log(`   • Port: ${deploymentResult.port}`);
         console.log(`   • Database: ${deploymentResult.database}`);
+        console.log(`   • Admin User: ${credentials.adminUsername} (${credentials.adminEmail})`);
         console.log(`   • Mode: DEVELOPMENT`);
       } else {
         console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
