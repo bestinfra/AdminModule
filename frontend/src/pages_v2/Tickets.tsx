@@ -236,15 +236,19 @@ export default function Tickets() {
                             data: [45, 52, 38, 67, 58, 42, 35, 48, 55, 62, 41, 38]
                         },
                         {
+                            name: 'In Progress Tickets',
+                            data: [28, 35, 25, 42, 38, 28, 22, 32, 38, 45, 28, 25]
+                        },
+                        {
                             name: 'Resolved Tickets',
                             data: [38, 45, 32, 58, 49, 35, 28, 41, 48, 55, 34, 31]
                         },
                         {
-                            name: 'Escalated Tickets',
+                            name: 'Closed Tickets',
                             data: [12, 15, 8, 22, 18, 11, 7, 14, 16, 19, 10, 9]
                         }
                     ],
-                    seriesColors: ['#3B82F6', '#10B981', '#F59E0B']
+                    seriesColors: ['#163b7c', '#55b56c', '#dc272c', '#ed8c22']
                 });
             });
     }, []);
