@@ -473,7 +473,7 @@ const Table: React.FC<TableProps> = ({
     const tableContent = (
         <div className={`w-full ${className || ''}`}>
             {searchable && (
-                <div className="relative mb-2">
+                <div className="relative">
                     <input
                         type="text"
                         placeholder="Search"

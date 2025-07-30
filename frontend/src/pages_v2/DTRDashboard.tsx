@@ -487,7 +487,7 @@ const DTRDashboard: React.FC = () => {
                   gridColumns: 3,
                   gridRows: 2,
                   span: { col: 3, row: 1 },
-                  className:'border border-primary-border rounded-3xl px-3 py-2 bg-background-secondary',
+                  className:'border border-primary-border rounded-3xl px-3 py-3 bg-background-secondary',
                   columns: [
                     {
                       name: "SectionHeader",
@@ -607,7 +607,7 @@ const DTRDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column' as const,
-                            className: 'mb-8 border border-primary-border rounded-3xl p-6',
+                            className: 'mb-8 border border-primary-border rounded-3xl p-6 mt-6',
                         },
                         components: [
                             {

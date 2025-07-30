@@ -18,6 +18,7 @@ export default function Meters() {
             value: string | number;
             icon: string;
             subtitle1: string;
+            subtitle2: string;
             iconStyle?: any;
         }[]
     >([]);
@@ -48,6 +49,7 @@ export default function Meters() {
             title: 'Total Meters',
             value: 1200,
             subtitle1: 'Total number of meters',
+            subtitle2: '0 In-Active',
             icon: 'icons/meter.svg',
             iconStyle: ICON_FILTER_STYLE,
         },
@@ -56,6 +58,7 @@ export default function Meters() {
             title: 'Meter Makes',
             value: 5,
             subtitle1: 'Unique Makes',
+            subtitle2: '',
             icon: 'icons/meter-make.svg',
             iconStyle: ICON_FILTER_STYLE,
         },
@@ -64,7 +67,8 @@ export default function Meters() {
             title: 'Meter Types',
             value: 3,
             subtitle1: 'Unique Types',
-            icon: 'icons/meter.svg',
+            subtitle2: '0 Replaced',
+            icon: 'icons/mapped-meter.svg',
             iconStyle: ICON_FILTER_STYLE,
         },
         {
@@ -72,6 +76,7 @@ export default function Meters() {
             title: 'Connection Types',
             value: 2,
             subtitle1: 'Unique Connection Types',
+            subtitle2: '0 Postpaid',
             icon: 'icons/connection-type.svg',
             iconStyle: ICON_FILTER_STYLE,
         },
@@ -184,6 +189,7 @@ export default function Meters() {
                             title: 'Total Meters',
                             value: stats.totalMeters,
                             subtitle1: 'Total number of meters',
+                            subtitle2: '',
                             icon: 'icons/meter.svg',
                             iconStyle: ICON_FILTER_STYLE,
                         },
@@ -192,6 +198,7 @@ export default function Meters() {
                             title: 'Meter Makes',
                             value: stats.makes?.length ?? 0,
                             subtitle1: 'Unique Makes',
+                            subtitle2: '',
                             icon: 'icons/meter-make.svg',
                             iconStyle: ICON_FILTER_STYLE,
                         },
@@ -200,7 +207,8 @@ export default function Meters() {
                             title: 'Meter Types',
                             value: stats.types?.length ?? 0,
                             subtitle1: 'Unique Types',
-                            icon: 'icons/meter.svg',
+                            subtitle2: '',
+                            icon: 'icons/mapped-meter.svg',
                             iconStyle: ICON_FILTER_STYLE,
                         },
                         {
@@ -209,6 +217,7 @@ export default function Meters() {
                             value: Object.keys(stats.connectionTypes || {})
                                 .length,
                             subtitle1: 'Unique Connection Types',
+                            subtitle2: '',
                             icon: 'icons/connection-type.svg',
                             iconStyle: ICON_FILTER_STYLE,
                         },
@@ -301,7 +310,7 @@ export default function Meters() {
                     {
                         layout: {
                             type: 'row',
-                            className: 'mb-6',
+                            className: '',
                         },
                         components: [
                             {
@@ -310,7 +319,7 @@ export default function Meters() {
                                     title: 'Meter Management',
                                     onBackClick: () => window.history.back(),
                                     backButtonText: 'Back to Dashboard',
-                                    buttonsLabel: 'Add Meter',
+                                    // buttonsLabel: 'Add Meter',
                                     variant: 'primary',
                                     onClick: () =>
                                         console.log('Adding new meter...'),
@@ -349,13 +358,14 @@ export default function Meters() {
                             rows: [
                                 {
                                     layout: 'row',
-                                                                         columns: meterData.map((meter) => ({
+                                    columns: meterData.map((meter) => ({
                                          name: 'Card',
                                          props: {
                                              title: meter.title,
                                              value: meter.value,
                                              icon: meter.icon,
                                              subtitle1: meter.subtitle1,
+                                             subtitle2: meter.subtitle2,
                                              iconStyle: meter.iconStyle,
                                              bg: "bg-stat-icon-gradient",
                                          },
@@ -442,8 +452,6 @@ export default function Meters() {
                                                 onPageChange: handlePageChange,
                                                 onEdit: (row: TableData) =>
                                                     console.log('Edit:', row),
-                                                onDelete: (row: TableData) =>
-                                                    console.log('Delete:', row),
                                                 onView: (row: TableData) =>
                                                     navigate(
                                                         `/meter-details/${row.meterNumber}`
