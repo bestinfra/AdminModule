@@ -34,7 +34,7 @@ const DTRDashboard: React.FC = () => {
     // Handle DTR table actions
     const handleViewDTR = (row: TableData) => {
         console.log('Viewing DTR:', row);
-        navigate(`/dtr/${row.dtrId}`);
+        navigate(`/dtr-detail/${row.dtrId}`);
     };
 
 

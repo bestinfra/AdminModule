@@ -64,7 +64,7 @@ const App: React.FC = () => {
                             <Route path="/pagedemo" element={<PageDemo />} />
                             {/* <Route path="/" element={<Dashboard />} /> */}
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
-                            <Route path="dtr-detailId" element={<DTRDetailPage/>}/>
+                            <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
