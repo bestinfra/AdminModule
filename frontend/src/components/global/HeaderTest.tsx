@@ -83,9 +83,9 @@ const HeaderTest = ({
             ) : (
                 searchEnabled && (
                     <section
-                        className="flex-1 max-w-2xl mx-8"
+                        className="flex-1 max-w-2xl mx-8 text-sm font-manrope font-normal"
                         aria-label="Search section">
-                        <Input onSearch={onSearch} placeholder={searchPlaceholder} />
+                        <Input onSearch={onSearch} placeholder={searchPlaceholder} className="text-sm font-manrope font-normal"/>
                     </section>
                 )
             )}
