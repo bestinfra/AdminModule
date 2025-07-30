@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import Page from '@/components/global/PageC';
+import PageC from '@/components/global/PageC';
+import PageHeader from '@/components/global/PageHeader';
 import { exportChartData } from '@/utils/excelExport';
 
 const stats = [
@@ -107,32 +108,74 @@ const Feeders = () => {
         exportChartData(monthlyConsumptionData.xAxisData, monthlyConsumptionData.seriesData, 'feeder-monthly-consumption-data');
     };
 
+    // Handle alerts export
+    const handleAlertsExport = () => {
+        console.log('Exporting alerts...');
+        // Add alerts export logic here
+    };
+
+    // Handle refresh functionality
+    const handleRefresh = () => {
+        console.log('Refreshing feeder data...');
+        // Add refresh logic here
+    };
+
     return (
-        <Page
+        <PageC
             sections={[
+                {
+                    layout: {
+                        type: 'grid' as const,
+                        columns: 1,
+                        className: 'w-full',
+                        rows: [
+                            {
+                                layout: 'row' as const,
+                                className: 'w-full',
+                                columns: [
+                                    {
+                                        name: 'PageHeader',
+                                        props: {
+                                            title: 'Feeder Information',
+                                            onBackClick: () => window.history.back(),
+                                            backButtonText: 'Back to Dashboard',
+                                            buttonsLabel: 'Export Data',
+                                            variant: 'primary',
+                                            onClick: () => handleDailyChartDownload(),
+                                            showMenu: true,
+                                            showDropdown: true,
+                                            menuItems: [
+                                                { id: 'export-daily', label: 'Export Daily Data' },
+                                                { id: 'export-monthly', label: 'Export Monthly Data' },
+                                                { id: 'export-alerts', label: 'Export Alerts' },
+                                            ],
+                                            onMenuItemClick: (itemId: string) => {
+                                                switch (itemId) {
+                                                    case 'export-daily':
+                                                        handleDailyChartDownload();
+                                                        break;
+                                                    case 'export-monthly':
+                                                        handleMonthlyChartDownload();
+                                                        break;
+                                                    case 'export-alerts':
+                                                        handleAlertsExport();
+                                                        break;
+                                                }
+                                            },
+
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
                 {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
                         className: 'border border-primary-border rounded-3xl bg-white p-6',
                         rows: [
-                            {
-                                layout: 'row' as const,
-                                className: 'justify-between w-full',
-                                span: { col: 3, row: 1 },
-                                columns: [
-                                    {   
-                                       name: 'PageInformation',
-                                       props: {
-                                        title: 'Feeder Information',
-                                        isSectionHeader: true,
-                                        layout: 'row',
-                                        align: 'between',
-                                        gap: 'gap-4'
-                                       }
-                                    }
-                                ]
-                            },
                             {
                                 layout: 'row' as const,
                                 className: 'justify-between w-full',
@@ -179,90 +222,6 @@ const Feeders = () => {
                                     }
                                 ]
                             }
-                            // {
-                            //     layout: 'row' as const,
-                            //     className: 'justify-between w-full',
-                            //     span: { col: 3, row: 1 },
-                            //     columns: [
-                            //         {
-                            //             name: 'SectionHeader',
-                            //             props: {
-                            //                 title: 'Feeder Information',
-                            //                 titleLevel: 2,
-                            //                 titleSize: 'md',
-                            //                 className: 'w-full',
-                            //                 titleVariant: 'primary',
-                            //                 titleWeight: 'bold',
-                            //                 titleAlign: 'left',
-                            //                 layout: 'horizontal',
-                            //                 rightComponent: { name: 'LastComm', props: { value: lastComm } },
-                            //             },
-                            //         },
-                            //     ],
-                            // },
-                            // {
-                            //     layout: 'grid' as const,
-                            //     gridColumns: 3,
-                            //     span: { col: 3, row: 1 },
-                            //     columns: feederData.map((item) => ({
-                            //         name: 'SectionHeader',
-                            //         props: {
-                            //             title: item.title,
-                            //             value: item.description,
-                            //             titleLevel: 2,
-                            //             titleSize: 'md',    
-                            //             titleVariant: 'primary',
-                            //             titleWeight: 'bold',
-                            //             titleAlign: 'left',
-                            //             layout: 'vertical',
-                            //             rightComponent: {
-                            //                 name: 'LastComm',
-                            //                 props: { description: item.description },
-                            //             },
-                            //         },
-                            //         span: { col: 1, row: 1 },
-                            //     })),
-                            // },
-                        ],
-                    },
-                },
-                {
-                    layout: {
-                        type: 'grid' as const,
-                        columns: 1,
-                        className: 'border border-primary-border rounded-3xl px-6 bg-background-secondary',
-                        rows: [
-                            {
-                                layout: 'row' as const,
-                                columns: [
-                                    {
-                                        name: 'SectionHeader',
-                                        props: {
-                                            title: 'Feeder Statistics',
-                                            titleLevel: 2,
-                                            titleSize: 'md',
-                                            titleVariant: 'colorPrimaryDark',
-                                            titleWeight: 'medium',
-                                            titleAlign: 'left',
-                                            className: 'w-full',
-                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
-                                            
-                                        },
-                                        
-                                    },
-                                
-
-                                ],
-                                
-                            },
-                            {
-                                layout: 'grid' as const,
-                                gridColumns: 5,
-                                columns: stats.map((stat) => ({ 
-                                    name: 'Card', 
-                                    props: { ...stat } 
-                                })),
-                            },
                         ],
                     },
                 },
@@ -335,7 +294,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'border border-primary-border rounded-3xl p-0',
+                        className: 'border border-primary-border rounded-3xl p-6',
                         rows: [
                             {
                                 layout: 'row' as const,

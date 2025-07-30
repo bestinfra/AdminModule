@@ -503,8 +503,9 @@ const Table: React.FC<TableProps> = ({
 
     // Table content component
     const tableContent = (
-        <div className={`w-full ${className || ''}`}>
+        <div className={`w-full flex flex-col gap-4 ${className || ''}`}>
             {searchable && (
+                <div className="relative">
                 <div className="relative">
                     <input
                         type="text"
