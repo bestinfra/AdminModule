@@ -35,6 +35,7 @@ type SubappPanelProps = {
   connectedApis: ApiConnection[];
   meters: MeterStats;
   tickets: TicketStatus;
+  appIcon: string;
 };
 
 const SubappPanel: React.FC<SubappPanelProps> = ({
@@ -52,6 +53,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   connectedApis,
   meters,
   tickets,
+  appIcon,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -151,8 +153,9 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
       {/* Header Section */}
       <div className="flex items-start justify-between w-full items-center h-full gap-8">
         <div className="flex items-center gap-4 items-start">
-          <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center overflow-hidden">
             {/* Icon removed */}
+            <img src={appIcon} alt="app-icon" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900">{appName}</h2>
@@ -286,7 +289,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
 
               <div className="flex items-center gap-2 flex-col items-start">
                 {/* Icon removed */}
-                <span className="text-sm text-gray-600">Tickets</span>
+                <span className="text-sm text-gray-600">Open Tickets</span>
                 <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
                   {tickets.count}
                 </span>
