@@ -1,5 +1,5 @@
 import express from 'express';
-import { getDTRTable, getFeedersForDTR, getDTRAlerts, getDTRAlertsTrends, getDTRStats, getConsumptionStats, getFeederStats, getInstantaneousStats, getConsolidatedDTRStats, getDTRConsumptionAnalytics, getDTRConsumptionStats } from '../controllers/dtrController.js';
+import { getDTRTable, getFeedersForDTR, getDTRAlerts, getDTRAlertsTrends, getDTRStats, getConsumptionStats, getFeederStats, getInstantaneousStats, getConsolidatedDTRStats, getDTRConsumptionAnalytics } from '../controllers/dtrController.js';
 
 const router = express.Router();
 
@@ -12,7 +12,6 @@ router.get('/alerts/trends', getDTRAlertsTrends);
 router.get('/:dtrId', getFeedersForDTR);
 router.get('/:dtrId/feederStats', getFeederStats);
 router.get('/:dtrId/consumptionAnalytics', getDTRConsumptionAnalytics);
-router.get('/:dtrId/consumptionStats', getDTRConsumptionStats);
 router.get('/:dtrId/instantaneousStats', getInstantaneousStats);
 
 export default router; 

@@ -48,9 +48,25 @@ export function generateInvoiceNumber() {
 
 // Returns date in MM-YYYY format
 export function getDateInMYFormat(date = new Date()) {
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    return `${month}-${year}`;
+    // Handle string dates (YYYY-MM format)
+    if (typeof date === 'string') {
+        const parts = date.split('-');
+        if (parts.length >= 2) {
+            const month = parts[1];
+            const year = parts[0];
+            return `${month}-${year}`;
+        }
+    }
+    
+    // Handle Date objects
+    if (date instanceof Date) {
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${month}-${year}`;
+    }
+    
+    // Fallback for other cases
+    return '01-2024';
 }
 
 // Fills missing dates in data for charts

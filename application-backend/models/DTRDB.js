@@ -726,6 +726,109 @@ class DTRDB {
             throw error;
         }
     }
+
+    
+
+    static async getDTRMainGraphAnalytics(dtrId, period) {
+        try {
+            // Get all meters associated with this DTR
+            const meters = await prisma.meter.findMany({
+                where: { dtrId: parseInt(dtrId) },
+                select: { id: true }
+            });
+            
+            const meterIds = meters.map(m => m.id);
+            
+            if (meterIds.length === 0) {
+                return [];
+            }
+
+            if (period === 'daily') {
+                const d1 = new Date();
+                const sdf = (date) => getDateInYMDFormat(date);
+                const presDate = sdf(new Date(d1.setDate(d1.getDate() - 62)));
+                d1.setDate(d1.getDate() + 62);
+                const nextDate = sdf(new Date(d1));
+
+                let whereClause = {
+                    meterId: { in: meterIds },
+                    consumptionDate: {
+                        gte: new Date(presDate),
+                        lt: new Date(nextDate)
+                    }
+                };
+
+                const result = await prisma.consumption.groupBy({
+                    by: ['consumptionDate'],
+                    where: whereClause,
+                    _count: {
+                        id: true
+                    },
+                    _sum: {
+                        consumption: true
+                    },
+                    orderBy: {
+                        consumptionDate: 'asc'
+                    }
+                });
+
+                return result.map(item => ({
+                    consumption_date: getDateInYMDFormat(item.consumptionDate),
+                    count: item._count.id,
+                    total_consumption: item._sum.consumption || 0
+                }));
+
+            }
+            // monthly
+            const d1 = new Date();
+            const sdf = (date) => getDateInYMDFormat(date);
+            const presDate = sdf(new Date(d1.setMonth(d1.getMonth() - 13)));
+            d1.setMonth(d1.getMonth() + 14);
+            const nextDate = sdf(new Date(d1));
+
+            let whereClause = {
+                meterId: { in: meterIds },
+                consumptionDate: {
+                    gte: new Date(presDate),
+                    lt: new Date(nextDate)
+                }
+            };
+
+            const result = await prisma.consumption.groupBy({
+                by: ['consumptionDate'],
+                where: whereClause,
+                _count: {
+                    id: true
+                },
+                _sum: {
+                    consumption: true
+                },
+                orderBy: {
+                    consumptionDate: 'asc'
+                }
+            });
+
+            // Group by month
+            const monthlyData = {};
+            result.forEach(item => {
+                const monthKey = getDateInYMDFormat(item.consumptionDate).slice(0, 7); // YYYY-MM format
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        consumption_date: monthKey,
+                        count: 0,
+                        total_consumption: 0
+                    };
+                }
+                monthlyData[monthKey].count += item._count.id;
+                monthlyData[monthKey].total_consumption += item._sum.consumption || 0;
+            });
+
+            return Object.values(monthlyData).sort((a, b) => a.consumption_date.localeCompare(b.consumption_date));
+        } catch (error) {
+            console.error('Error fetching DTR main graph analytics:', error);
+            throw error;
+        }
+    }
 }
 
 export default DTRDB; 
