@@ -114,7 +114,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
-                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-6 mt-4',
+                        className: 'border border-primary-border rounded-3xl bg-white p-6',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -230,7 +230,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'mb-6 border border-primary-border rounded-3xl px-6 bg-background-secondary',
+                        className: 'border border-primary-border rounded-3xl px-6 bg-background-secondary',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -335,7 +335,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'mb-6 border border-primary-border rounded-3xl p-0 mt-4',
+                        className: 'border border-primary-border rounded-3xl p-0',
                         rows: [
                             {
                                 layout: 'row' as const,

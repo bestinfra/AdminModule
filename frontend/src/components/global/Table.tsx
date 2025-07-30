@@ -20,6 +20,7 @@ export interface Column {
         value: string | number | boolean | null | undefined,
         row: TableData
     ) => ReactNode;
+    priorityBadge?: boolean; // New prop for automatic priority badge rendering
 }
 
 interface Action {
@@ -85,6 +86,37 @@ interface DefaultRowWrapperProps {
 
 const DefaultRowWrapper: React.FC<DefaultRowWrapperProps> = ({ children }) =>
     children;
+
+// Helper function to render priority badges
+const renderPriorityBadge = (value: string | number | boolean | null | undefined) => {
+    const priority = String(value);
+    let bgColor = '';
+    let textColor = '';
+    
+    switch (priority.toLowerCase()) {
+        case 'high':
+            bgColor = 'bg-red-100 dark:bg-red-900/30';
+            textColor = 'text-red-800 dark:text-red-200';
+            break;
+        case 'medium':
+            bgColor = 'bg-yellow-100 dark:bg-yellow-900/30';
+            textColor = 'text-yellow-800 dark:text-yellow-200';
+            break;
+        case 'low':
+            bgColor = 'bg-green-100 dark:bg-green-900/30';
+            textColor = 'text-green-800 dark:text-green-200';
+            break;
+        default:
+            bgColor = 'bg-gray-100 dark:bg-gray-700';
+            textColor = 'text-gray-800 dark:text-gray-200';
+    }
+    
+    return (
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${bgColor} ${textColor}`}>
+            {priority}
+        </span>
+    );
+};
 
 const Table: React.FC<TableProps> = ({
     data,
@@ -620,6 +652,8 @@ const Table: React.FC<TableProps> = ({
                                                               row[column.key],
                                                               row
                                                           )
+                                                        : column.priorityBadge
+                                                        ? renderPriorityBadge(row[column.key])
                                                         : !row[column.key] &&
                                                           row[column.key] !==
                                                               0 &&
@@ -863,6 +897,7 @@ Table.propTypes = {
             key: PropTypes.string.isRequired,
             label: PropTypes.string.isRequired,
             render: PropTypes.func,
+            priorityBadge: PropTypes.bool,
         })
     ),
     actions: PropTypes.arrayOf(

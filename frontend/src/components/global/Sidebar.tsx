@@ -68,16 +68,16 @@ const defaultMenus: MenuCategory[] = [
             {
                 title: 'Tickets',
                 icon: '/icons/customer-service.svg',
-                link: '/tickets',
+                link: '/tickets',   
             },
 
             {
-                title:'SuperAdminDashboard',
+                title:'All Tickets',
                 icon:'/icons/dashboard.svg',
-                link:'/superadmin',
+                link:'/all-tickets',
             },
             {
-                title: 'App-Managment',
+                title: 'App-Managment', 
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },
@@ -92,21 +92,20 @@ const defaultMenus: MenuCategory[] = [
                 link: '/asset-managment',
             },
             
+            // {
+            //     title: 'Meter Management',
+            //     icon: '/icons/meter_managment.svg',
+            //     link: '/meter-management',
+            //     hasSubmenu: true,
+            //     submenu: [
+                   
+                   
+            //     ],
+            // },
             {
-                title: 'Meter Management',
+                title: 'Meter List',
                 icon: '/icons/meter_managment.svg',
-                link: '/meter-management',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Data Logger Master',
-                        link: '/data-logger',
-                    },
-                    {
-                        title: 'Meter List',
-                        link: '/meters-list',
-                    },
-                ],
+                link: '/meters-list',
             },
             {
                 title: 'User Management',
