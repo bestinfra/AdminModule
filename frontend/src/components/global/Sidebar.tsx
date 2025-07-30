@@ -68,16 +68,16 @@ const defaultMenus: MenuCategory[] = [
             {
                 title: 'Tickets',
                 icon: '/icons/customer-service.svg',
-                link: '/tickets',
+                link: '/tickets',   
             },
 
             {
-                title:'SuperAdminDashboard',
+                title:'All Tickets',
                 icon:'/icons/dashboard.svg',
-                link:'/superadmin',
+                link:'/all-tickets',
             },
             {
-                title: 'App-Managment',
+                title: 'App-Managment', 
                 icon: '/icons/apps-icon.svg',
                 link: '/apps',
             },

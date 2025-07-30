@@ -10,7 +10,7 @@ import DataLogger from './pages_v2/DataLogger';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import AssetManagment from './pages_v2/AssetManagment';
-import Dashboard from './pages_v2/Dashboard';
+// import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';
 import AddConsumer from './pages/AddConsumer';
@@ -20,7 +20,8 @@ import AddTicket from './pages_v2/AddTicket';
 import RoleManagement from './pages_v2/RoleManagement';
 // import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import UserManagement from './pages/UserManagment';
-import AllTickets from './pages/AllTickets';import ConsumerView from './pages_v2/ConsumerView';
+import AllTickets from './pages/AllTickets';
+import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 // import MetersList from './pages/MetersList';
@@ -60,7 +61,7 @@ const App: React.FC = () => {
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            <Route path="/" element={<Dashboard />} />
+                            {/* <Route path="/" element={<Dashboard />} /> */}
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
