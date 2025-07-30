@@ -21,12 +21,16 @@ export async function initializeCronJobs() {
         ];
 
         jobs.forEach(job => {
-            cronHandler.addJob(
-                job.name,
-                job.schedule,
-                job.task,
-                job.options
-            );
+            try {
+                cronHandler.addJob(
+                    job.name,
+                    job.schedule,
+                    job.task,
+                    job.options
+                );
+            } catch (error) {
+                console.error(`❌ Failed to add job "${job.name}":`, error);
+            }
         });
 
         cronHandler.startAllJobs();

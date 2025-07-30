@@ -257,7 +257,6 @@ const Feeders = () => {
                             },
                             {
                                 layout: 'grid' as const,
-                                gap: 'gap-4',
                                 gridColumns: 5,
                                 columns: stats.map((stat) => ({ 
                                     name: 'Card', 
@@ -294,7 +293,7 @@ const Feeders = () => {
                                             initialTimeRange: 'Daily',
                                             onTimeRangeChange: (range: string) => console.log('Time range changed to:', range),
                                             showDownloadButton: true,
-                                            onDownload: (timeRange: string, viewType: string) => console.log('Downloading data for:', timeRange, 'in', viewType, 'view'),
+                                            onDownload: () => handleDailyChartDownload(),
                                         },
                                         span: { col: 1, row: 1 },
                                     },
