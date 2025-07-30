@@ -116,97 +116,97 @@ const DTRDashboard: React.FC = () => {
     },
   ];
 
-  // DTR Consumption Cards - Daily data
-  const dailyConsumptionCards = [
-    {
-      title: "Total kWh",
-      value: "3,847.32",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Today's Active Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kVAh",
-      value: "3,892.45",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Today's Apparent Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kW",
-      value: "6.10",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Current Active Power",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kVA",
-      value: "6.26",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Current Apparent Power",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Active DTRs",
-      value: 29,
-      icon: "/icons/dtr.svg",
-      subtitle1: "100.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "In-Active DTRs",
-      value: 0,
-      icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-  ];
+    // DTR Consumption Cards - Daily data
+    const dailyConsumptionCards = [
+        {
+            title: "Total kWh",
+            value: "3,847.32",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Today's Active Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kVAh",
+            value: "3,892.45",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Today's Apparent Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kW",
+            value: "6.10",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Current Active Power",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kVA",
+            value: "6.26",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Current Apparent Power",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Active DTRs",
+            value: 29,
+            icon: "/icons/dtr.svg",
+            subtitle1: "100.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "In-Active DTRs",
+            value: 0,
+            icon: "/icons/dtr.svg",
+            subtitle1: "0.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+    ];
 
-  // DTR Consumption Cards - Monthly data
-  const monthlyConsumptionCards = [
-    {
-      title: "Total kWh",
-      value: "111,931.96",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Active Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kVAh",
-      value: "113,369.06",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Apparent Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Avg kW",
-      value: "5.87",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Average Power",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Avg kVA",
-      value: "6.02",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Average Apparent",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Active DTRs",
-      value: 29,
-      icon: "/icons/dtr.svg",
-      subtitle1: "100.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    { 
-      title: "In-Active DTRs",
-      value: 0,
-      icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-  ];
+    // DTR Consumption Cards - Monthly data
+    const monthlyConsumptionCards = [
+        {
+            title: "Total kWh",
+            value: "111,931.96",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Active Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kVAh",
+            value: "113,369.06",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Apparent Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Avg kW",
+            value: "5.87",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Average Power",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Avg kVA",
+            value: "6.02",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Average Apparent",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Active DTRs",
+            value: 29,
+            icon: "/icons/dtr.svg",
+            subtitle1: "100.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "In-Active DTRs",
+            value: 0,
+            icon: "/icons/dtr.svg",
+            subtitle1: "0.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+    ];
 
   // Get current consumption cards data based on selected time range
   const getCurrentConsumptionCards = () => {
@@ -353,15 +353,15 @@ const DTRDashboard: React.FC = () => {
             date: 'July 2024',
             status: 'Active',
         },
-        { 
-            alert: 'Monthly fuse blown incidents - DTR-03', 
-            date: 'July 2024', 
-            status: 'Resolved' 
+        {
+            alert: 'Monthly fuse blown incidents - DTR-03',
+            date: 'July 2024',
+            status: 'Resolved'
         },
-        { 
-            alert: 'Monthly power failure report - DTR-07', 
-            date: 'July 2024', 
-            status: 'Active' 
+        {
+            alert: 'Monthly power failure report - DTR-07',
+            date: 'July 2024',
+            status: 'Active'
         },
         {
             alert: 'Monthly voltage fluctuation - DTR-02',
@@ -487,7 +487,7 @@ const DTRDashboard: React.FC = () => {
                   gridColumns: 3,
                   gridRows: 2,
                   span: { col: 3, row: 1 },
-                  className:'border border-primary-border rounded-3xl p-3 bg-background-secondary',
+                  className:'border border-primary-border rounded-3xl px-3 py-2 bg-background-secondary',
                   columns: [
                     {
                       name: "SectionHeader",
@@ -540,7 +540,7 @@ const DTRDashboard: React.FC = () => {
                               props: {
                                 availableTimeRanges: ["Daily", "Monthly"],
                                 selectedTimeRange: selectedTimeRange,
-                                handleTimeRangeChange: handleTimeRangeChange, 
+                                handleTimeRangeChange: handleTimeRangeChange,
                                 timeRangeLabels: {},
                               },
                             },
