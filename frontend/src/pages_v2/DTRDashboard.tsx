@@ -37,289 +37,271 @@ const DTRDashboard: React.FC = () => {
         navigate(`/dtr/${row.dtrId}`);
     };
 
-    const handleEditDTR = (row: TableData) => {
-        console.log('Editing DTR:', row);
-        navigate(`/dtr/${row.dtrId}/edit`);
+    // DTR statistics cards data - Using only daily data consistently
+    const dtrStatsCards = [
+        {
+            title: "Total DTRs",
+            value: 29,
+            icon: "/icons/dtr.svg",
+            subtitle1: "Total Transformer Units",
+            onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
+            iconStyle: ICON_FILTER_STYLE,
+            bg: "bg-stat-icon-gradient",
+        },
+        {
+            title: "Total LT Feeders",
+            value: 33,
+            icon: "/icons/feeder.svg",
+            subtitle1: "Connected to DTRs",
+            onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Today's Fuse Blown",
+            value: 1,
+            icon: "/icons/power_failure.svg",
+            subtitle1: "0.03% of Total DTRs",
+            onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Overloaded Feeders",
+            value: 0,
+            icon: "/icons/dtr.svg",
+            subtitle1: "0.00% of Total Feeders",
+            onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Underloaded Feeders",
+            value: 33,
+            icon: "/icons/dtr.svg",
+            subtitle1: "100.0% of Total Feeders",
+            onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "LT Side Fuse Blown",
+            value: 1,
+            icon: "/icons/power_failure.svg",
+            subtitle1: "1 Incident Today",
+            onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Unbalanced DTRs",
+            value: 0,
+            icon: "/icons/dtr.svg",
+            subtitle1: "0.00% of Total DTRs",
+            onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Power Failure Feeders",
+            value: 0,
+            icon: "/icons/power_failure.svg",
+            subtitle1: "0.00% of Feeders",
+            onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "HT Side Fuse Blown",
+            value: 0,
+            icon: "/icons/power_failure.svg",
+            subtitle1: "0 Incident Today",
+            onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
+            iconStyle: ICON_FILTER_STYLE,
+        },
+    ];
+
+    // DTR Consumption Cards - Daily data
+    const dailyConsumptionCards = [
+        {
+            title: "Total kWh",
+            value: "3,847.32",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Today's Active Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kVAh",
+            value: "3,892.45",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Today's Apparent Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kW",
+            value: "6.10",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Current Active Power",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kVA",
+            value: "6.26",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Current Apparent Power",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Active DTRs",
+            value: 29,
+            icon: "/icons/dtr.svg",
+            subtitle1: "100.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "In-Active DTRs",
+            value: 0,
+            icon: "/icons/dtr.svg",
+            subtitle1: "0.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+    ];
+
+    // DTR Consumption Cards - Monthly data
+    const monthlyConsumptionCards = [
+        {
+            title: "Total kWh",
+            value: "111,931.96",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Active Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Total kVAh",
+            value: "113,369.06",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Apparent Energy",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Avg kW",
+            value: "5.87",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Average Power",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Avg kVA",
+            value: "6.02",
+            icon: "/icons/consumption.svg",
+            subtitle1: "Monthly Average Apparent",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "Active DTRs",
+            value: 29,
+            icon: "/icons/dtr.svg",
+            subtitle1: "100.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+        {
+            title: "In-Active DTRs",
+            value: 0,
+            icon: "/icons/dtr.svg",
+            subtitle1: "0.00% of Total DTRs",
+            iconStyle: ICON_FILTER_STYLE,
+        },
+    ];
+
+    // Get current consumption cards data based on selected time range
+    const getCurrentConsumptionCards = () => {
+        return selectedTimeRange === 'Daily' ? dailyConsumptionCards : monthlyConsumptionCards;
     };
 
-    const handleDeleteDTR = (row: TableData) => {
-        console.log('Deleting DTR:', row);
-        if (confirm(`Are you sure you want to delete DTR ${row.dtrName}?`)) {
-            console.log('DTR deleted:', row.dtrId);
-        }
-    };
-
-  // DTR statistics cards data - Using only daily data consistently
-  const dtrStatsCards = [
-    {
-      title: "Total DTRs",
-      value: 29,
-      icon: "/icons/dtr.svg",
-      subtitle1: "Total Transformer Units",
-      onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
-      iconStyle: ICON_FILTER_STYLE,
-      bg: "bg-stat-icon-gradient",
-    },
-    {
-      title: "Total LT Feeders",
-      value: 33,
-      icon: "/icons/feeder.svg",
-      subtitle1: "Connected to DTRs",
-      onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Today's Fuse Blown",
-      value: 1,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "0.03% of Total DTRs",
-      onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Overloaded Feeders",
-      value: 0,
-      icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total Feeders",
-      onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Underloaded Feeders",
-      value: 33,
-      icon: "/icons/dtr.svg",
-      subtitle1: "100.0% of Total Feeders",
-      onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "LT Side Fuse Blown",
-      value: 1,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "1 Incident Today",
-      onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Unbalanced DTRs",
-      value: 0,
-      icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total DTRs",
-      onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Power Failure Feeders",
-      value: 0,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "0.00% of Feeders",
-      onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "HT Side Fuse Blown",
-      value: 0,
-      icon: "/icons/power_failure.svg",
-      subtitle1: "0 Incident Today",
-      onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
-      iconStyle: ICON_FILTER_STYLE,
-    },
-  ];
-
-  // DTR Consumption Cards - Daily data
-  const dailyConsumptionCards = [
-    {
-      title: "Total kWh",
-      value: "3,847.32",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Today's Active Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kVAh",
-      value: "3,892.45",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Today's Apparent Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kW",
-      value: "6.10",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Current Active Power",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kVA",
-      value: "6.26",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Current Apparent Power",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Active DTRs",
-      value: 29,
-      icon: "/icons/dtr.svg",
-      subtitle1: "100.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "In-Active DTRs",
-      value: 0,
-      icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-  ];
-
-  // DTR Consumption Cards - Monthly data
-  const monthlyConsumptionCards = [
-    {
-      title: "Total kWh",
-      value: "111,931.96",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Active Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Total kVAh",
-      value: "113,369.06",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Apparent Energy",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Avg kW",
-      value: "5.87",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Average Power",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Avg kVA",
-      value: "6.02",
-      icon: "/icons/consumption.svg",
-      subtitle1: "Monthly Average Apparent",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    {
-      title: "Active DTRs",
-      value: 29,
-      icon: "/icons/dtr.svg",
-      subtitle1: "100.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-    { 
-      title: "In-Active DTRs",
-      value: 0,
-      icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total DTRs",
-      iconStyle: ICON_FILTER_STYLE,
-    },
-  ];
-
-  // Get current consumption cards data based on selected time range
-  const getCurrentConsumptionCards = () => {
-    return selectedTimeRange === 'Daily' ? dailyConsumptionCards : monthlyConsumptionCards;
-  };
-  // Dummy data for DTRs table
-  const dtrTableColumns = [
-    { key: "dtrId", label: "DTR ID" },
-    { key: "dtrName", label: "DTR Name" },
-    { key: "feedersCount", label: "Feeders Count" },
-    { key: "streetName", label: "Street Name" },
-    { key: "city", label: "City" },
-    { key: "commStatus", label: "Comm-Status" },
-  ];
-  const dtrTableData = [
-    {
-      dtrId: "TRANSFORMER-01",
-      dtrName: "TGNP_DTR-01",
-      feedersCount: 1,
-      streetName: "Waddepally",
-      city: "Warangal",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-02",
-      dtrName: "TGNP_DTR-02",
-      feedersCount: 1,
-      streetName: "Sun city",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-03",
-      dtrName: "TGNP_DTR-03",
-      feedersCount: 4,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-04",
-      dtrName: "TGNP_DTR-04",
-      feedersCount: 1,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-05",
-      dtrName: "TGNP_DTR-05",
-      feedersCount: 1,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-06",
-      dtrName: "TGNP_DTR-06",
-      feedersCount: 1,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-07",
-      dtrName: "TGNP_DTR-07",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-08",
-      dtrName: "TGNP_DTR-08",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-09",
-      dtrName: "TGNP_DTR-09",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-    {
-      dtrId: "TRANSFORMER-10",
-      dtrName: "TGNP_DTR-10",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-    },
-  ];
-  const dtrTableActions = [
-    {
-      label: "View",
-      icon: "/icons/eye.svg",
-      onClick: (row: TableData) => navigate(`/dtr/${row.dtrId}`),
-    },
-  ];
+    // Dummy data for DTRs table
+    const dtrTableColumns = [
+        { key: "dtrId", label: "DTR ID" },
+        { key: "dtrName", label: "DTR Name" },
+        { key: "feedersCount", label: "Feeders Count" },
+        { key: "streetName", label: "Street Name" },
+        { key: "city", label: "City" },
+        { key: "commStatus", label: "Comm-Status" },
+    ];
+    const dtrTableData = [
+        {
+            dtrId: "TRANSFORMER-01",
+            dtrName: "TGNP_DTR-01",
+            feedersCount: 1,
+            streetName: "Waddepally",
+            city: "Warangal",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-02",
+            dtrName: "TGNP_DTR-02",
+            feedersCount: 1,
+            streetName: "Sun city",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-03",
+            dtrName: "TGNP_DTR-03",
+            feedersCount: 4,
+            streetName: "Prashanth Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-04",
+            dtrName: "TGNP_DTR-04",
+            feedersCount: 1,
+            streetName: "Prashanth Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-05",
+            dtrName: "TGNP_DTR-05",
+            feedersCount: 1,
+            streetName: "Prashanth Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-06",
+            dtrName: "TGNP_DTR-06",
+            feedersCount: 1,
+            streetName: "Prashanth Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-07",
+            dtrName: "TGNP_DTR-07",
+            feedersCount: 1,
+            streetName: "Hyder Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-08",
+            dtrName: "TGNP_DTR-08",
+            feedersCount: 1,
+            streetName: "Hyder Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-09",
+            dtrName: "TGNP_DTR-09",
+            feedersCount: 1,
+            streetName: "Hyder Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+        {
+            dtrId: "TRANSFORMER-10",
+            dtrName: "TGNP_DTR-10",
+            feedersCount: 1,
+            streetName: "Hyder Nagar",
+            city: "Hyderabad",
+            commStatus: "Active",
+        },
+    ];
 
     // Dummy data for Latest Alerts table
     const alertsTableColumns = [
@@ -369,15 +351,15 @@ const DTRDashboard: React.FC = () => {
             date: 'July 2024',
             status: 'Active',
         },
-        { 
-            alert: 'Monthly fuse blown incidents - DTR-03', 
-            date: 'July 2024', 
-            status: 'Resolved' 
+        {
+            alert: 'Monthly fuse blown incidents - DTR-03',
+            date: 'July 2024',
+            status: 'Resolved'
         },
-        { 
-            alert: 'Monthly power failure report - DTR-07', 
-            date: 'July 2024', 
-            status: 'Active' 
+        {
+            alert: 'Monthly power failure report - DTR-07',
+            date: 'July 2024',
+            status: 'Active'
         },
         {
             alert: 'Monthly voltage fluctuation - DTR-02',
@@ -503,7 +485,7 @@ const DTRDashboard: React.FC = () => {
                   gridColumns: 3,
                   gridRows: 2,
                   span: { col: 3, row: 1 },
-                  className:'border border-primary-border rounded-3xl p-3 bg-background-secondary',
+                  className:'border border-primary-border rounded-3xl px-3 py-2 bg-background-secondary',
                   columns: [
                     {
                       name: "SectionHeader",
@@ -556,7 +538,7 @@ const DTRDashboard: React.FC = () => {
                               props: {
                                 availableTimeRanges: ["Daily", "Monthly"],
                                 selectedTimeRange: selectedTimeRange,
-                                handleTimeRangeChange: handleTimeRangeChange, 
+                                handleTimeRangeChange: handleTimeRangeChange,
                                 timeRangeLabels: {},
                               },
                             },

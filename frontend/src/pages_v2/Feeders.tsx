@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
@@ -99,12 +98,12 @@ const Feeders = () => {
     }, []);
 
     // Handle Excel download for daily consumption chart
-    const handleDailyChartDownload = (timeRange: string, viewType: string) => {
+    const handleDailyChartDownload = () => {
         exportChartData(dailyConsumptionData.xAxisData, dailyConsumptionData.seriesData, 'feeder-daily-consumption-data');
     };
 
     // Handle Excel download for monthly consumption chart
-    const handleMonthlyChartDownload = (timeRange: string, viewType: string) => {
+    const handleMonthlyChartDownload = () => {
         exportChartData(monthlyConsumptionData.xAxisData, monthlyConsumptionData.seriesData, 'feeder-monthly-consumption-data');
     };
 
@@ -258,7 +257,6 @@ const Feeders = () => {
                             },
                             {
                                 layout: 'grid' as const,
-                                gap: 'gap-4',
                                 gridColumns: 5,
                                 columns: stats.map((stat) => ({ 
                                     name: 'Card', 
@@ -295,7 +293,7 @@ const Feeders = () => {
                                             initialTimeRange: 'Daily',
                                             onTimeRangeChange: (range: string) => console.log('Time range changed to:', range),
                                             showDownloadButton: true,
-                                            onDownload: (timeRange: string, viewType: string) => console.log('Downloading data for:', timeRange, 'in', viewType, 'view'),
+                                            onDownload: () => handleDailyChartDownload(),
                                         },
                                         span: { col: 1, row: 1 },
                                     },
@@ -325,7 +323,7 @@ const Feeders = () => {
                                             className: 'w-full',
                                             dateRange: 'Last 30 days',
                                             showDownloadButton: true,
-                                            onDownload: (timeRange: string, viewType: string) => handleMonthlyChartDownload(timeRange, viewType),
+                                            onDownload: () => handleMonthlyChartDownload(),
                                         },
                                     },
                                 ],
