@@ -152,6 +152,7 @@ const DTRDashboard: React.FC = () => {
             icon: "/icons/dtr.svg",
             subtitle1: "100.00% of Total DTRs",
             iconStyle: ICON_FILTER_STYLE,
+            bg:'var[--red-500]'
         },
         {
             title: "In-Active DTRs",
@@ -436,7 +437,7 @@ const DTRDashboard: React.FC = () => {
 
     // // Handle Excel download for chart data
     // const handleChartDownload = () => {
-    //     exportChartData(months, alertSeries, 'dtr-statistics-data');
+    //     exportChartData(months, alertSeries, 'dtr-statis tics-data');
     // };
 
     return (
@@ -588,13 +589,13 @@ const DTRDashboard: React.FC = () => {
                                                 showHeader: true,
                                                 headerTitle: 'DTRInformation',
                                                 dateRange: 'All DTRs',
-                                                searchable: true,
+                                                searchable: true, 
                                                 sortable: true,
                                                 pagination: true,
                                                 showActions: true,
                                                 text: 'DTR Management Table',
                                                 onRowClick: (row: TableData) =>
-                                                    navigate(`/dtr/${row.dtrId}`),
+                                                    navigate(`/dtr-detail/${row.dtrId}`),
                                                 onView: handleViewDTR,
                                                 availableTimeRanges: [],
                                             },
