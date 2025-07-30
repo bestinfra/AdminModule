@@ -200,10 +200,7 @@ const DTRDetailPage = () => {
         exportChartData(dailyConsumptionData.xAxisData, dailyConsumptionData.seriesData, 'dtr-daily-consumption-data');
     };
 
-    // Handle Excel download for monthly consumption chart
-    const handleMonthlyChartDownload = () => {
-        exportChartData(monthlyConsumptionData.xAxisData, monthlyConsumptionData.seriesData, 'dtr-monthly-consumption-data');
-    };
+
 
     // Handle feeders export
     const handleFeedersExport = () => {
@@ -212,9 +209,20 @@ const DTRDetailPage = () => {
     };
 
     // Handle alerts export
-    const handleAlertsExport = () => {
-        console.log('Exporting alerts...');
-        // Add alerts export logic here
+
+    // Handle feeder row click
+    const handleFeederClick = (feederId: string) => {
+        // Find the feeder data for the clicked feeder
+        const feederData = feedersData.find(feeder => feeder.feederName === feederId);
+        if (feederData) {
+            navigate(`/feeder/${feederId}`, { 
+                state: { 
+                    feederData,
+                    dtrId: dtrId,
+                    dtrName: dtr.name
+                } 
+            });
+        }
     };
 
     return (
@@ -367,6 +375,48 @@ const DTRDetailPage = () => {
                     },
                 },
                
+                {
+                    layout: {
+                        type: 'grid' as const,
+                        columns: 1,
+                        className: '',
+                        rows: [
+                            {
+                                layout: 'grid' as const,
+                                gridColumns: 1,
+                                columns: [
+                                    {
+                                        name: 'Table',
+                                        props: {
+                                            columns: [
+                                                { key: 'sNo', label: 'S.No' },
+                                                { key: 'feederName', label: 'Feeder Name' },
+                                                { key: 'loadStatus', label: 'Load Status' },
+                                                { key: 'rating', label: 'Rating' },
+                                                { key: 'address', label: 'Address' },
+                                            ],
+                                            data: feedersData,
+                                            searchable: true,
+                                            pagination: true,
+                                            initialRowsPerPage: 10,
+                                            rowsPerPageOptions: [5, 10, 15, 20, 25],
+                                            emptyMessage: 'No Feeders Found',
+                                            showActions: true,
+                                            title: 'DTR Feeders',
+                                            headerTitle: 'DTR Feeders',
+                                            showHeader: true,
+                                            showPaginationInfo: true,
+                                            showRowsPerPageSelector: true,
+                                            className: 'w-full',
+                                            onExport: handleFeedersExport,
+                                            onRowClick: (row: any) => handleFeederClick(row.feederName),
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
                 {
                     layout: {
                         type: 'grid' as const,

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
@@ -21,6 +22,31 @@ const stats = [
 ];
 
 const Feeders = () => {
+    const { dtrId, feederId } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    console.log('Feeders Page - DTR ID:', dtrId, 'Feeder ID:', feederId);
+    
+    // Get passed data from navigation state
+    const passedData = location.state as {
+        feederData?: {
+            sNo: number;
+            feederName: string;
+            loadStatus: string;
+            rating: string;
+            address: string;
+        };
+        dtrId?: string;
+        dtrName?: string;
+    } | null;
+    
+    // Determine if this is an individual feeder page or DTR page
+    const isIndividualFeeder = !!feederId;
+    const currentFeederId = feederId || dtrId;
+    
+    // Use passed feeder data if available, otherwise use default
+    const feederData = passedData?.feederData;
     const [dailyConsumptionData, setDailyConsumptionData] = useState({
         xAxisData: [
             '6 May', '7 May', '8 May', '9 May', '10 May', '11 May', '12 May', '13 May', '14 May', '15 May', '16 May', '17 May', '18 May', '19 May', '20 May', '21 May', '22 May', '23 May', '24 May', '25 May', '26 May', '27 May', '28 May', '29 May', '30 May', '31 May', '1 Jun', '2 Jun', '3 Jun', '4 Jun', '5 Jun', '6 Jun', '7 Jun', '8 Jun', '9 Jun', '10 Jun', '11 Jun', '12 Jun', '13 Jun', '14 Jun', '15 Jun', '16 Jun', '17 Jun', '18 Jun', '19 Jun', '20 Jun', '21 Jun', '22 Jun', '23 Jun', '24 Jun', '25 Jun', '26 Jun', '27 Jun', '28 Jun', '29 Jun', '30 Jun', '1 Jul', '2 Jul', '3 Jul', '4 Jul', '5 Jul', '6 Jul',
@@ -250,9 +276,15 @@ const Feeders = () => {
                                     {
                                         name: 'PageHeader',
                                         props: {
-                                            title: 'Feeder Information',
-                                            onBackClick: () => window.history.back(),
-                                            backButtonText: 'Back to Dashboard',
+                                            title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId}` : 'Feeder Information',
+                                            onBackClick: () => {
+                                                if (isIndividualFeeder) {
+                                                    navigate('/dtr-dashboard');
+                                                } else {
+                                                    window.history.back();
+                                                }
+                                            },
+                                            backButtonText: isIndividualFeeder ? 'Back to DTR Dashboard' : 'Back to Dashboard',
                                             buttonsLabel: 'Export Data',
                                             variant: 'primary',
                                             onClick: () => handleDailyChartDownload(),
@@ -277,7 +309,7 @@ const Feeders = () => {
                                     {
                                         name: 'SectionHeader',
                                         props: {
-                                            title: 'Feeder Information',
+                                            title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId} Information` : 'Feeder Information',
                                             titleLevel: 2,
                                             titleSize: 'md',
                                             titleVariant: 'primary',
@@ -305,19 +337,19 @@ const Feeders = () => {
                                                 items: [
                                                     {
                                                         title: 'Feeder Name',
-                                                        value: 'D1F1(32500114)',
+                                                        value: feederData?.feederName || (isIndividualFeeder ? currentFeederId : 'D1F1(32500114)'),
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
                                                         title: 'Rating',
-                                                        value: '25.00 kVA',
+                                                        value: feederData?.rating || '25.00 kVA',
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
                                                         title: 'Address',
-                                                        value: 'Waddepally, Warangal, Telangana, India, 506001',
+                                                        value: feederData?.address || 'Waddepally, Warangal, Telangana, India, 506001',
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
@@ -352,7 +384,7 @@ const Feeders = () => {
                                     {
                                         name: 'SectionHeader',
                                         props: {
-                                            title: 'Feeder Information',
+                                            title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId} Information` : 'Feeder Information',
                                             titleLevel: 2,
                                             titleSize: 'md',
                                             titleVariant: 'primary',
