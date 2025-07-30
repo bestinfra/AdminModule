@@ -95,7 +95,7 @@ const MeterDetails: React.FC = () => {
         {
             title: 'Meter Type',
             value: meter.type || 'N/A',
-            icon: '/icons/meter-type.svg',
+            icon: '/icons/units.svg',
             subtitle1: `Phase Type: ${meter.phase || 'N/A'}`,
             subtitle2: '',
         },

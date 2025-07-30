@@ -17,12 +17,12 @@ interface TicketData {
     id: number;
     ticketNumber: string;
     subject: string;
+    category: string;
+    application: string;
+    location: string;
     status: string;
     priority: string;
     assignedTo: string;
-    createdAt: string;
-    category?: string;
-    department?: string;
     [key: string]: string | number | boolean | null | undefined;
 }
 
@@ -57,68 +57,68 @@ const AllTickets: React.FC = () => {
         {
             id: 1,
             ticketNumber: 'TICK-001',
-            subject: 'System Access Issue',
+            subject: 'System Access Issue (Technical)',
+            category: 'Technical',
+            application: 'Admin Portal',
+            location: 'Head Office',
             status: 'Open',
             priority: 'High',
             assignedTo: 'John Doe',
-            createdAt: '2024-03-20',
-            category: 'Technical',
-            department: 'IT',
         },
         {
             id: 2,
             ticketNumber: 'TICK-002',
-            subject: 'Email Configuration',
+            subject: 'Email Configuration (Technical)',
+            category: 'Technical',
+            application: 'Email System',
+            location: 'Branch Office',
             status: 'In Progress',
             priority: 'Medium',
             assignedTo: 'Jane Smith',
-            createdAt: '2024-03-19',
-            category: 'Technical',
-            department: 'IT',
         },
         {
             id: 3,
             ticketNumber: 'TICK-003',
-            subject: 'Software Update',
+            subject: 'Software Update (Technical)',
+            category: 'Technical',
+            application: 'Meter Management',
+            location: 'Field Office',
             status: 'Resolved',
             priority: 'Low',
             assignedTo: 'Mike Johnson',
-            createdAt: '2024-03-18',
-            category: 'Technical',
-            department: 'IT',
         },
         {
             id: 4,
             ticketNumber: 'TICK-004',
-            subject: 'Billing Dispute',
+            subject: 'Billing Dispute (Billing)',
+            category: 'Billing',
+            application: 'Billing System',
+            location: 'Customer Service',
             status: 'Closed',
             priority: 'High',
             assignedTo: 'Sarah Wilson',
-            createdAt: '2024-03-17',
-            category: 'Billing',
-            department: 'Finance',
         },
         {
             id: 5,
             ticketNumber: 'TICK-005',
-            subject: 'Network Connectivity',
+            subject: 'Network Connectivity (Infrastructure)',
+            category: 'Infrastructure',
+            application: 'Network System',
+            location: 'Data Center',
             status: 'Open',
             priority: 'High',
             assignedTo: 'Tom Anderson',
-            createdAt: '2024-03-21',
-            category: 'Infrastructure',
-            department: 'IT',
         },
         {
             id: 6,
             ticketNumber: 'TICK-006',
-            subject: 'Password Reset',
+            subject: 'Password Reset (Security)',
+            category: 'Security',
+            application: 'User Management',
+            location: 'Remote Office',
             status: 'Resolved',
             priority: 'Medium',
             assignedTo: 'Lisa Chen',
-            createdAt: '2024-03-16',
-            category: 'Security',
-            department: 'IT',
         },
     ];
 
@@ -170,10 +170,16 @@ const AllTickets: React.FC = () => {
     }, [ticketData]);
 
     const columns: Column[] = [
-        { key: 'ticketNumber', label: 'Ticket Number' },
-        { key: 'subject', label: 'Subject' },
+        { key: 'ticketNumber', label: 'Ticket ID' },
+        { key: 'subject', label: 'Subject & Category' },
+        { key: 'application', label: 'Application' },
+        { key: 'location', label: 'Location' },
         { key: 'status', label: 'Status' },
-        { key: 'priority', label: 'Priority' },
+        { 
+            key: 'priority', 
+            label: 'Priority',
+            priorityBadge: true
+        },
         { key: 'assignedTo', label: 'Assigned To' },
         { key: 'createdAt', label: 'Created At' },
     ];
