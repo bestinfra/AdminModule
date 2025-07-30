@@ -607,10 +607,26 @@ const DTRDashboard: React.FC = () => {
                                          // // Latest Alerts section
                      {
                          layout: {
-                             type: 'column' as const,
+                             type: 'grid' as const,
                              className: '',
+                             columns:2,
                          },
                          components: [
+                          {
+                            name: 'BarChart',
+                            props: {
+                                xAxisData: months,
+                                seriesData: alertSeries,
+                                seriesColors: alertColors,
+                                height: 300,
+                                showLegendInteractions: true,
+                                timeRange: statsRange,
+                                showHeader: true,
+                                headerTitle: 'Statistics',
+                                showDownloadButton: true,
+                                onDownload: () => handleChartDownload(),
+                            },
+                        },
                              {
                                  name: 'Table',
                                  props: {
@@ -629,6 +645,7 @@ const DTRDashboard: React.FC = () => {
                                      onTimeRangeChange: handleTimeRangeChange,
                                  },
                              },
+                           
                          ],
                      },
                     // Statistics Chart section
@@ -639,21 +656,7 @@ const DTRDashboard: React.FC = () => {
                                 '',
                         },
                         components: [
-                            {
-                                name: 'BarChart',
-                                props: {
-                                    xAxisData: months,
-                                    seriesData: alertSeries,
-                                    seriesColors: alertColors,
-                                    height: 300,
-                                    showLegendInteractions: true,
-                                    timeRange: statsRange,
-                                    showHeader: true,
-                                    headerTitle: 'Statistics',
-                                    showDownloadButton: true,
-                                    onDownload: () => handleChartDownload(),
-                                },
-                            },
+                           
                         ],
                     },
                 ]}
