@@ -37,17 +37,7 @@ const DTRDashboard: React.FC = () => {
         navigate(`/dtr/${row.dtrId}`);
     };
 
-    const handleEditDTR = (row: TableData) => {
-        console.log('Editing DTR:', row);
-        navigate(`/dtr/${row.dtrId}/edit`);
-    };
 
-    const handleDeleteDTR = (row: TableData) => {
-        console.log('Deleting DTR:', row);
-        if (confirm(`Are you sure you want to delete DTR ${row.dtrName}?`)) {
-            console.log('DTR deleted:', row.dtrId);
-        }
-    };
 
   // DTR statistics cards data - Using only daily data consistently
   const dtrStatsCards = [
@@ -313,13 +303,7 @@ const DTRDashboard: React.FC = () => {
       commStatus: "Active",
     },
   ];
-  const dtrTableActions = [
-    {
-      label: "View",
-      icon: "/icons/eye.svg",
-      onClick: (row: TableData) => navigate(`/dtr/${row.dtrId}`),
-    },
-  ];
+
 
     // Dummy data for Latest Alerts table
     const alertsTableColumns = [
