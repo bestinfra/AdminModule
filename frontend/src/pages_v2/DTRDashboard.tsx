@@ -582,10 +582,11 @@ const DTRDashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
+                                                
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
-                                                showHeader: false,
-                                                headerTitle: 'DTR Management',
+                                                showHeader: true,
+                                                headerTitle: 'DTRInformation',
                                                 dateRange: 'All DTRs',
                                                 searchable: true,
                                                 sortable: true,
