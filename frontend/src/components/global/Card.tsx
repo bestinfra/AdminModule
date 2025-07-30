@@ -46,7 +46,7 @@ const Card = ({
 
     return (
         <article className="rounded-3xl custom-shadow w-full h-full min-h-[140px] md:min-h-[130px] sm:min-h-[120px] bg-background-secondary">
-            <section className="flex justify-between items-start p-5 md:p-4 sm:p-3 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
+            <section className="flex justify-between items-start p-7 md:p-5.5 sm:p-4 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
                 <div className="flex flex-col gap-4 md:gap-3 sm:gap-2">
                     <h3 className={`${titleFontSize} text-main dark:text-white`}>
                         {title}
@@ -92,7 +92,7 @@ const Card = ({
                     </figure>
                 )}
             </section>
-            <footer className="flex justify-between px-5 md:px-4 sm:px-3 py-3 md:py-2.5 sm:py-2 space-y-1">
+            <footer className="flex justify-between px-5 md:px-5 sm:px-3 py-3 md:py-2.5 sm:py-2 space-y-1">
                 {subtitle1 && (
                     <p className="text-base md:text-sm sm:text-xs text-text-secondary font-normal">
                         {subtitle1}
