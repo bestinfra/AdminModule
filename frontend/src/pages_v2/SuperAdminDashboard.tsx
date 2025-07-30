@@ -64,21 +64,21 @@ const SuperAdminDashboard: React.FC = () => {
 
     // Daily Login Trends Data for Pie Chart
     const dailyLoginTrendsData = [
-        { value: 45, name: 'E-Commerce Platform' },
-        { value: 25, name: 'Inventory Management' },
-        { value: 20, name: 'Customer Portal' },
-        { value: 10, name: 'Analytics Dashboard' },
+        { value: 45, name: 'TGNPDCL' },
+        { value: 25, name: 'GMR' },
+        { value: 20, name: 'Railway' },
+        { value: 10, name: 'Lkea' },
+        { value: 10, name: 'NTPC' },
     ];
 
     // App Usage Distribution Data for Bar Chart
     const appUsageData = {
         xAxisData: [
-            'E-Commerce',
-            'Inventory',
-            'Customer Portal',
-            'Analytics',
-            'Payment System',
-            'Support Desk'
+            'TGNPDCL',
+            'GMR',
+            'Railway',
+            'Lkea',
+            'NTPC'
         ],
         seriesData: [
             {
@@ -98,7 +98,7 @@ const SuperAdminDashboard: React.FC = () => {
 
     // Sample SubApp Data
     const sampleSubApp = {
-        appIcon: '/icons/gmr-logo.png',
+        appIcon: '/images/gmr-logo.png',
         appName: 'TGNPDCL Application',
         appId: 'app_2024_001',
         subdomain: 'store.techcorp.com',
@@ -108,11 +108,11 @@ const SuperAdminDashboard: React.FC = () => {
         updated: '7/28/2024',
         company: 'TechCorp Solutions',
         website: 'techcorp.com',
-        category: 'E-Commerce',
+        category: 'Power Distribution',
         modules: [
-            { name: 'Inventory', icon: '/icons/inventory.svg' },
-            { name: 'Payments', icon: '/icons/payments.svg' },
-            { name: 'Analytics', icon: '/icons/analytics.svg' }
+            { name: 'DTR Dashboard', icon: '/icons/inventory.svg' },
+            { name: 'Meter Details', icon: '/icons/payments.svg' },
+            { name: 'Feeder Details', icon: '/icons/analytics.svg' }
         ],
         connectedApis: [
             { name: 'Payment Gateway', status: 'connected' as const },
