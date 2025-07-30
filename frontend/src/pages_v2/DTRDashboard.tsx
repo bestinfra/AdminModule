@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { TableData } from '@components/global/Table';
+import type { TableData } from '@/components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';

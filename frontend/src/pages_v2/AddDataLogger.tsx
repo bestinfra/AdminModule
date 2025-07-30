@@ -1,7 +1,7 @@
 import { useState, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import type { FormInputConfig } from '@components/Form/types';
+import type { FormInputConfig } from '@/components/Form/types';
 
 export default function AddDataLogger() {
     const navigate = useNavigate();

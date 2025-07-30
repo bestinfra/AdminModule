@@ -1,5 +1,5 @@
 {
-  "nextPort": 4100,
+  "nextPort": 4121,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -355,6 +355,111 @@
       "port": 4099,
       "deployedAt": "2025-07-29T19:16:19.950Z",
       "path": "C:\\xampp\\htdocs\\close-backend"
+    },
+    "dtr": {
+      "port": 4100,
+      "deployedAt": "2025-07-29T19:26:26.929Z",
+      "path": "C:\\xampp\\htdocs\\dtr-backend"
+    },
+    "bills": {
+      "port": 4101,
+      "deployedAt": "2025-07-29T19:34:12.971Z",
+      "path": "C:\\xampp\\htdocs\\bills-backend"
+    },
+    "feeders": {
+      "port": 4102,
+      "deployedAt": "2025-07-29T19:40:31.375Z",
+      "path": "C:\\xampp\\htdocs\\feeders-backend"
+    },
+    "feeder": {
+      "port": 4103,
+      "deployedAt": "2025-07-29T19:45:24.032Z",
+      "path": "C:\\xampp\\htdocs\\feeder-backend"
+    },
+    "optimized": {
+      "port": 4104,
+      "deployedAt": "2025-07-29T20:01:50.649Z",
+      "path": "C:\\xampp\\htdocs\\optimized-backend"
+    },
+    "dell": {
+      "port": 4105,
+      "deployedAt": "2025-07-30T04:11:58.323Z",
+      "path": "C:\\xampp\\htdocs\\dell-backend"
+    },
+    "itemcode": {
+      "port": 4106,
+      "deployedAt": "2025-07-30T04:19:05.995Z",
+      "path": "C:\\xampp\\htdocs\\itemcode-backend"
+    },
+    "modem": {
+      "port": 4107,
+      "deployedAt": "2025-07-30T04:49:58.935Z",
+      "path": "C:\\xampp\\htdocs\\modem-backend"
+    },
+    "shiva": {
+      "port": 4108,
+      "deployedAt": "2025-07-30T05:58:08.088Z",
+      "path": "C:\\xampp\\htdocs\\shiva-backend"
+    },
+    "deploy": {
+      "port": 4109,
+      "deployedAt": "2025-07-30T06:24:13.399Z",
+      "path": "C:\\xampp\\htdocs\\deploy-backend"
+    },
+    "trinadh": {
+      "port": 4110,
+      "deployedAt": "2025-07-30T06:55:38.055Z",
+      "path": "C:\\xampp\\htdocs\\trinadh-backend"
+    },
+    "access": {
+      "port": 4111,
+      "deployedAt": "2025-07-30T07:09:22.216Z",
+      "path": "C:\\xampp\\htdocs\\access-backend"
+    },
+    "control": {
+      "port": 4112,
+      "deployedAt": "2025-07-30T08:22:05.562Z",
+      "path": "C:\\xampp\\htdocs\\control-backend"
+    },
+    "brand": {
+      "port": 4113,
+      "deployedAt": "2025-07-30T08:30:10.907Z",
+      "path": "C:\\xampp\\htdocs\\brand-backend"
+    },
+    "personalization": {
+      "port": 4114,
+      "deployedAt": "2025-07-30T08:37:53.927Z",
+      "path": "C:\\xampp\\htdocs\\personalization-backend"
+    },
+    "setup": {
+      "port": 4115,
+      "deployedAt": "2025-07-30T10:16:14.925Z",
+      "path": "C:\\xampp\\htdocs\\setup-backend"
+    },
+    "selection": {
+      "port": 4116,
+      "deployedAt": "2025-07-30T11:39:51.688Z",
+      "path": "C:\\xampp\\htdocs\\selection-backend"
+    },
+    "select": {
+      "port": 4117,
+      "deployedAt": "2025-07-30T12:03:22.060Z",
+      "path": "C:\\xampp\\htdocs\\select-backend"
+    },
+    "settings": {
+      "port": 4118,
+      "deployedAt": "2025-07-30T12:43:17.725Z",
+      "path": "C:\\xampp\\htdocs\\settings-backend"
+    },
+    "management": {
+      "port": 4119,
+      "deployedAt": "2025-07-30T12:54:04.245Z",
+      "path": "C:\\xampp\\htdocs\\management-backend"
+    },
+    "tickets": {
+      "port": 4120,
+      "deployedAt": "2025-07-30T13:07:52.355Z",
+      "path": "C:\\xampp\\htdocs\\tickets-backend"
     }
   }
 }
