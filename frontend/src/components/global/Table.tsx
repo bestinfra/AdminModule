@@ -506,7 +506,6 @@ const Table: React.FC<TableProps> = ({
         <div className={`w-full flex flex-col gap-4 ${className || ''}`}>
             {searchable && (
                 <div className="relative">
-                <div className="relative">
                     <input
                         type="text"
                         placeholder="Search"
@@ -874,12 +873,14 @@ const Table: React.FC<TableProps> = ({
                     )}
                 </div>
                 <div className="flex items-center gap-2">
-                  <TimeRangeSelector
-                    availableTimeRanges={availableTimeRanges}
-                    selectedTimeRange={selectedTimeRange}
-                    handleTimeRangeChange={onTimeRangeChange}
-                    timeRangeLabels={timeRangeLabels}
-                  />
+                  {availableTimeRanges && selectedTimeRange && onTimeRangeChange && (
+                    <TimeRangeSelector
+                      availableTimeRanges={availableTimeRanges}
+                      selectedTimeRange={selectedTimeRange}
+                      handleTimeRangeChange={onTimeRangeChange}
+                      timeRangeLabels={timeRangeLabels}
+                    />
+                  )}
                 </div>
             </div>
             
