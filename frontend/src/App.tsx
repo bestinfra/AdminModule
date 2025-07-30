@@ -87,7 +87,7 @@ const App: React.FC = () => {
                             <Route path="/add-role" element={<AddRole />} />
                             <Route path="/add-user" element={<AddUser />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
-                            <Route path="/meters-list" element={<MetersList />} />
+                            {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
                 </Router>

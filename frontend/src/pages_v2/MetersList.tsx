@@ -181,7 +181,7 @@ const MetersList: React.FC = () => {
                         type: 'grid' as const,
                         columns: 4,
                         gap: 'gap-4',
-                        className: 'mb-6',
+                        className: 'mb-4',
                     },
                     components: meterCards.map((card) => ({
                         name: 'Card',
@@ -202,7 +202,7 @@ const MetersList: React.FC = () => {
                         type: 'grid' as const,
                         columns: 3,
                         gap: 'gap-4',
-                        className: 'mb-6',
+                        className: 'mb-4',
                     },
                     components: [
                         {
