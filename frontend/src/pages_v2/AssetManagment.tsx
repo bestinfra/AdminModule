@@ -1,5 +1,4 @@
 import { Suspense } from 'react';
-import Page from '@/components/global/PageC';
 import PageC from '@/components/global/PageC';
 
 // --- Types ---

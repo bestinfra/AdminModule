@@ -62,10 +62,44 @@ const SuperAdminDashboard: React.FC = () => {
         }
     ];
 
+    // Daily Login Trends Data for Pie Chart
+    const dailyLoginTrendsData = [
+        { value: 45, name: 'E-Commerce Platform' },
+        { value: 25, name: 'Inventory Management' },
+        { value: 20, name: 'Customer Portal' },
+        { value: 10, name: 'Analytics Dashboard' },
+    ];
+
+    // App Usage Distribution Data for Bar Chart
+    const appUsageData = {
+        xAxisData: [
+            'E-Commerce',
+            'Inventory',
+            'Customer Portal',
+            'Analytics',
+            'Payment System',
+            'Support Desk'
+        ],
+        seriesData: [
+            {
+                name: 'Active Users',
+                data: [320, 180, 150, 120, 95, 80],
+            },
+            {
+                name: 'Sessions',
+                data: [450, 280, 220, 180, 140, 120],
+            },
+        ],
+        seriesColors: [
+            '#3B82F6', // Blue for Active Users
+            '#10B981', // Green for Sessions
+        ],
+    };
+
     // Sample SubApp Data
     const sampleSubApp = {
-        appIcon: '/icons/app.svg',
-        appName: 'E-Commerce Platform',
+        appIcon: '/icons/gmr-logo.png',
+        appName: 'TGNPDCL Application',
         appId: 'app_2024_001',
         subdomain: 'store.techcorp.com',
         health: 'Live' as const,
@@ -126,40 +160,112 @@ const SuperAdminDashboard: React.FC = () => {
                             })),
                         ],
                     },
+                    // Charts Section - Daily Login Trends and App Usage Distribution
+                    {
+                        layout: {
+                            type: "grid",
+                            columns: 2,
+                            gap: "gap-6",
+                            className: 'w-full mt-6',
+                            rows: [
+                                {
+                                    layout: 'column',
+                                    gap: 'gap-0',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
+                                    columns: [
+                                        {
+                                            name: 'Holder',
+                                            props: {
+                                                title: 'Daily Login Trends',
+                                                subtitle: 'User login activity across all sub-applications',
+                                                className: 'border-none rounded-t-3xl',
+                                            },
+                                        },
+                                        {
+                                            name: 'PieChart',
+                                            props: {
+                                                data: dailyLoginTrendsData,
+                                                height: 300,
+                                                showNoDataMessage: false,
+                                                showHeader: false,
+                                                className: 'p-6',
+                                                title: '',
+                                                onClick: (segmentName?: string) => {
+                                                    console.log('Clicked on:', segmentName);
+                                                    // Navigate to specific app dashboard
+                                                    if (segmentName) {
+                                                        navigate(`/sub-apps/${segmentName.toLowerCase().replace(/\s+/g, '-')}`);
+                                                    }
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                                {
+                                    layout: 'column',
+                                    gap: 'gap-0',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
+                                    columns: [
+                                        {
+                                            name: 'Holder',
+                                            props: {
+                                                title: 'App Usage Distribution',
+                                                subtitle: 'Active users and sessions by sub-application',
+                                                className: 'border-none rounded-t-3xl',
+                                            },
+                                        },
+                                        {
+                                            name: 'BarChart',
+                                            props: {
+                                                xAxisData: appUsageData.xAxisData,
+                                                seriesData: appUsageData.seriesData,
+                                                seriesColors: appUsageData.seriesColors,
+                                                height: '350px',
+                                                showHeader: false,
+                                                showDownloadButton: true,
+                                                showViewToggle: true,
+                                                viewToggleOptions: ['Graph', 'Table'],
+                                                showTableView: true,
+                                                ariaLabel: 'App usage distribution chart',
+                                                yAxisMax: 500,
+                                                yAxisStep: 100,
+                                                onDownload: () => {
+                                                    console.log('Downloading app usage data');
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
                     // SubApp Panel Section
                     {
                         layout: {
                             type: "grid",
-                            columns:2,
+                            columns: 2,
                             gap: "gap-6",
-                            className:'w-full mt-6',
+                            className: 'w-full mt-6',
                             rows: [
                                 {
-                                  layout:"grid",
-                                  gap:"gap-6",
-                                  gridColumns:2,
-                                  gridRows:1,
-                                  span:{col:2,row:1},
-                                  columns:[{
-                                    name:"SubappPanel",
-                                    props:sampleSubApp,
-                                  },
-                                  {
-                                    name:"SubappPanel",
-                                    props:sampleSubApp,
-                                  }
-                                ]
+                                    layout: "grid",
+                                    gap: "gap-6",
+                                    gridColumns: 2,
+                                    gridRows: 1,
+                                    span: { col: 2, row: 1 },
+                                    columns: [
+                                        {
+                                            name: "SubappPanel",
+                                            props: sampleSubApp,
+                                        },
+                                        {
+                                            name: "SubappPanel",
+                                            props: sampleSubApp,
+                                        }
+                                    ]
                                 }
                             ]
                         },
-                       
-                        // components: [
-                        //     {
-                        //         name: "SubappPanel",
-                        //         props: sampleSubApp,
-                        //         align: "center"
-                        //     }
-                        // ],
                     },
                 ]}
             />

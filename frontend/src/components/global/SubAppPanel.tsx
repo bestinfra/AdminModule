@@ -107,13 +107,13 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   const getHealthColor = (healthStatus: string) => {
     switch (healthStatus) {
       case "Live":
-        return "text-green-600 bg-green-100";
+        return "bg-green-500";
       case "Down":
-        return "text-red-600 bg-red-100";
+        return "bg-red-100";
       case "Maintenance":
-        return "text-yellow-600 bg-yellow-100";
+        return "bg-yellow-100";
       default:
-        return "text-gray-600 bg-gray-100";
+        return "bg-gray-100";
     }
   };
 
@@ -255,10 +255,10 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
             <div className="space-y-4">
               <div className="flex items-center gap-2 flex-col items-start">
                 <span className="text-sm text-gray-600  "> Health</span>
-                <span className="text-sm font-medium text-seondary flex">
+                <span className="text-sm font-medium text-gray-900 flex items-center gap-2">
                   <div
                     className={`w-3 h-3 rounded-full ${
-                      getHealthColor(health).split(" ")[0]
+                      getHealthColor(health)
                     }`}
                   ></div>
                   {health}
@@ -312,6 +312,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
           </div>
           {/* Connected APIs Section */}
           <div className="flex flex-col gap-4">
+            
             <h3 className="text-sm font-medium text-gray-900">
               Connected APIs
             </h3>
