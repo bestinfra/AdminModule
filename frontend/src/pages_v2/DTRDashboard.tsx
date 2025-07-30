@@ -23,7 +23,7 @@ const DTRDashboard: React.FC = () => {
             data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10, 11, 12]
         }
     ];
-    const alertColors = ['#10B981'];
+    const alertColors = ['#163b7c'];
     const statsRange = selectedTimeRange;
 
     // Chart download handler
@@ -587,7 +587,7 @@ const DTRDashboard: React.FC = () => {
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
                                                 showHeader: true,
-                                                headerTitle: 'DTRInformation',
+                                                headerTitle: 'DTRInformation',  
                                                 dateRange: 'All DTRs',
                                                 searchable: true, 
                                                 sortable: true,

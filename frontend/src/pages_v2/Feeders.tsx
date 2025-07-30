@@ -136,26 +136,6 @@ const Feeders = () => {
                                             buttonsLabel: 'Export Data',
                                             variant: 'primary',
                                             onClick: () => handleDailyChartDownload(),
-                                            showMenu: true,
-                                            showDropdown: true,
-                                            menuItems: [
-                                                { id: 'export-daily', label: 'Export Daily Data' },
-                                                { id: 'export-monthly', label: 'Export Monthly Data' },
-                                                { id: 'export-alerts', label: 'Export Alerts' },
-                                            ],
-                                            onMenuItemClick: (itemId: string) => {
-                                                switch (itemId) {
-                                                    case 'export-daily':
-                                                        handleDailyChartDownload();
-                                                        break;
-                                                    case 'export-monthly':
-                                                        handleMonthlyChartDownload();
-                                                        break;
-                                                    case 'export-alerts':
-                                                        handleAlertsExport();
-                                                        break;
-                                                }
-                                            },
                                         },
                                     },
                                 ],
@@ -183,6 +163,7 @@ const Feeders = () => {
                                             titleVariant: 'primary',
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
+                                            defaultTitleHeight:'0',
                                         },
                                     },
                                 ],
