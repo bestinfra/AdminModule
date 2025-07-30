@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import Page from '@/components/global/PageC';
+import PageC from '@/components/global/PageC';
 
 // --- Types ---
 interface HierarchyNode {
@@ -158,8 +158,29 @@ export default function AssetManagment() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Page
+            <PageC  
                 sections={[
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-6',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: 'Asset Management',
+                                                onBackClick: () => window.history.back(),
+                                                backButtonText: 'Back to Dashboard',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
                     {
                         layout: {
                             type: 'grid',

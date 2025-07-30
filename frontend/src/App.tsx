@@ -10,7 +10,7 @@ import DataLogger from './pages_v2/DataLogger';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import AssetManagment from './pages_v2/AssetManagment';
-// import Dashboard from './pages_v2/Dashboard';
+import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';
 import AddConsumer from './pages/AddConsumer';
@@ -18,7 +18,7 @@ import ComponentsDocumentation from './pages/ComponentsDocumentation';
 import Connect from './pages_v2/ConnectDisconnect';
 import AddTicket from './pages_v2/AddTicket';
 import RoleManagement from './pages_v2/RoleManagement';
-import SuperAdminDashboard from './pages/SuperAdminDashboard';
+// import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import UserManagement from './pages/UserManagment';
 import AllTickets from './pages/AllTickets';import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
@@ -34,6 +34,7 @@ import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
 // import LoginV2 from './pages_v2/LoginV2';
+import SuperAdminDashboard from './pages_v2/SuperAdminDashboard';
 
 const App: React.FC = () => {
     return (
@@ -55,10 +56,11 @@ const App: React.FC = () => {
                                 element={<DataLogger />}
                             />
                             <Route path="/meters" element={<Meters />} />
+                            {/* <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />} /> */}
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            {/* <Route path="/" element={<Dashboard />} /> */}
+                            <Route path="/" element={<Dashboard />} />
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
@@ -66,7 +68,7 @@ const App: React.FC = () => {
                             <Route path="/connect-consumer" element={<Connect />} />
                             <Route path="/add-ticket" element={<AddTicket/>} />
                             <Route path="/role-management" element={<RoleManagement/>} />
-                            <Route path="/super-admin" element={<SuperAdminDashboard/>} />
+                            <Route path="/superadmin" element={<SuperAdminDashboard/>} />
                             <Route path="/user-management" element={<UserManagement/>} />
                             <Route path="/all-tickets" element={<AllTickets/>} />
                             <Route path="/consumers" element={<Consumers />} />
@@ -76,7 +78,7 @@ const App: React.FC = () => {
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
-                            <Route path="/" element={<PageDemo />} />
+                            <Route path="/" element={<DTRDashboard />} />
                             <Route path="/prepaid" element={<Prepaid />} />
                             <Route path="/postpaid" element={<Postpaid />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />

@@ -98,14 +98,12 @@ const Feeders = () => {
     }, []);
 
     // Handle Excel download for daily consumption chart
-    const handleDailyChartDownload = (timeRange: string, viewType: string) => {
-        console.log('Downloading daily consumption data:', timeRange, viewType);
+    const handleDailyChartDownload = () => {
         exportChartData(dailyConsumptionData.xAxisData, dailyConsumptionData.seriesData, 'feeder-daily-consumption-data');
     };
 
     // Handle Excel download for monthly consumption chart
-    const handleMonthlyChartDownload = (timeRange: string, viewType: string) => {
-        console.log('Downloading monthly consumption data:', timeRange, viewType);
+    const handleMonthlyChartDownload = () => {
         exportChartData(monthlyConsumptionData.xAxisData, monthlyConsumptionData.seriesData, 'feeder-monthly-consumption-data');
     };
 
@@ -116,11 +114,11 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
-                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-6',
+                        className: 'mb-6 border border-primary-border rounded-3xl bg-white p-6 mt-4',
                         rows: [
                             {
                                 layout: 'row' as const,
-                                className: 'justify-between w-full mb-4',
+                                className: 'justify-between w-full',
                                 span: { col: 3, row: 1 },
                                 columns: [
                                     {   
@@ -259,7 +257,6 @@ const Feeders = () => {
                             },
                             {
                                 layout: 'grid' as const,
-                                gap: 'gap-4',
                                 gridColumns: 5,
                                 columns: stats.map((stat) => ({ 
                                     name: 'Card', 
@@ -296,7 +293,7 @@ const Feeders = () => {
                                             initialTimeRange: 'Daily',
                                             onTimeRangeChange: (range: string) => console.log('Time range changed to:', range),
                                             showDownloadButton: true,
-                                            onDownload: (timeRange: string, viewType: string) => console.log('Downloading data for:', timeRange, 'in', viewType, 'view'),
+                                            onDownload: () => handleDailyChartDownload(),
                                         },
                                         span: { col: 1, row: 1 },
                                     },
@@ -326,7 +323,7 @@ const Feeders = () => {
                                             className: 'w-full',
                                             dateRange: 'Last 30 days',
                                             showDownloadButton: true,
-                                            onDownload: (timeRange: string, viewType: string) => handleMonthlyChartDownload(timeRange, viewType),
+                                            onDownload: () => handleMonthlyChartDownload(),
                                         },
                                     },
                                 ],

@@ -514,7 +514,7 @@ const Table: React.FC<TableProps> = ({
                                     key={column.key}
                                     onClick={() => handleSort(column.key)}
                                     scope="col"
-                                    className={`px-3 py-3 text-left font-base text-base	 font-semibold	 cursor-pointer w-auto relative ${
+                                    className={`px-3 py-3 text-left font-base text-sm	font-semibold cursor-pointer w-auto relative ${
                                         sortable ? 'cursor-pointer' : ''
                                     }`}
                                     aria-sort={

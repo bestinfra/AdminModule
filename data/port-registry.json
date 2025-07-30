@@ -1,5 +1,5 @@
 {
-  "nextPort": 4097,
+  "nextPort": 4100,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -336,10 +336,25 @@
       "deployedAt": "2025-07-29T11:26:55.510Z",
       "path": "C:\\xampp\\htdocs\\madhu40-backend"
     },
-    "test1": {
+    "bottle": {
       "port": 4096,
-      "deployedAt": "2025-07-30T08:28:55.919Z",
-      "path": "C:\\xampp\\htdocs\\test1-backend"
+      "deployedAt": "2025-07-29T18:57:17.423Z",
+      "path": "C:\\xampp\\htdocs\\bottle-backend"
+    },
+    "water": {
+      "port": 4097,
+      "deployedAt": "2025-07-29T19:05:48.934Z",
+      "path": "C:\\xampp\\htdocs\\water-backend"
+    },
+    "charge": {
+      "port": 4098,
+      "deployedAt": "2025-07-29T19:11:16.038Z",
+      "path": "C:\\xampp\\htdocs\\charge-backend"
+    },
+    "close": {
+      "port": 4099,
+      "deployedAt": "2025-07-29T19:16:19.950Z",
+      "path": "C:\\xampp\\htdocs\\close-backend"
     }
   }
 }
