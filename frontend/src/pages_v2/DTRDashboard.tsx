@@ -440,7 +440,7 @@ const DTRDashboard: React.FC = () => {
     // };
 
     return (
-        <div className="p-2 min-h-screen">
+        <div className="">
             <Page
                 sections={[
                     // Header section
@@ -448,7 +448,7 @@ const DTRDashboard: React.FC = () => {
                         layout: {
                             type: 'grid' as const,
                             columns: 1,
-                            className: 'mb-6',
+                            className: '',
                         },
                         components: [
                             {
@@ -607,7 +607,7 @@ const DTRDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column' as const,
-                            className: 'mb-8 border border-primary-border rounded-3xl p-6',
+                            className: ' border border-primary-border rounded-3xl p-6',
                         },
                         components: [
                             {
@@ -637,7 +637,7 @@ const DTRDashboard: React.FC = () => {
                         layout: {
                             type: 'column' as const,
                             className:
-                                'mb-8',
+                                '',
                         },
                         components: [
                             {

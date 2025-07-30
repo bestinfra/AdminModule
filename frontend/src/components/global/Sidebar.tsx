@@ -92,21 +92,20 @@ const defaultMenus: MenuCategory[] = [
                 link: '/asset-managment',
             },
             
+            // {
+            //     title: 'Meter Management',
+            //     icon: '/icons/meter_managment.svg',
+            //     link: '/meter-management',
+            //     hasSubmenu: true,
+            //     submenu: [
+                   
+                   
+            //     ],
+            // },
             {
-                title: 'Meter Management',
+                title: 'Meter List',
                 icon: '/icons/meter_managment.svg',
-                link: '/meter-management',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Data Logger Master',
-                        link: '/data-logger',
-                    },
-                    {
-                        title: 'Meter List',
-                        link: '/meters-list',
-                    },
-                ],
+                link: '/meters-list',
             },
             {
                 title: 'User Management',
