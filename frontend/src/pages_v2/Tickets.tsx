@@ -10,7 +10,6 @@ export default function Tickets() {
     const [ticketStats, setTicketStats] = useState<any>(null);
     const [ticketTrends, setTicketTrends] = useState<any>(null);
     const [tickets, setTickets] = useState<any[]>([]);
-    const [pagination, setPagination] = useState<any>(null);
 
     // Dummy data for development
     const dummyTickets = [
@@ -184,16 +183,145 @@ export default function Tickets() {
             phone: '+91-8765432109',
             description: 'Connection investigation request.',
         },
+        {
+            id: 321,
+            ticketNumber: '321',
+            customerName: 'BI25GMRA003',
+            subject: 'Billing Query',
+            priority: 'Low',
+            status: 'In Progress',
+            assignedTo: 'Billing Team',
+            createdAt: '2024-01-05T14:15:00Z',
+            lastUpdated: '2024-01-16T06:20:00Z',
+            category: 'Billing',
+            responseTime: '2h 30m',
+            meterSerialNo: 'A9456789',
+            email: 'customer3@example.com',
+            phone: '+91-7654321098',
+            description: 'Billing query resolution.',
+        },
+        {
+            id: 320,
+            ticketNumber: '320',
+            customerName: 'BI25GMRA003',
+            subject: 'Meter Reading Issue',
+            priority: 'High',
+            status: 'Resolved',
+            assignedTo: 'Technical Team',
+            createdAt: '2024-01-04T09:45:00Z',
+            lastUpdated: '2024-01-15T16:30:00Z',
+            category: 'Meter Issue',
+            responseTime: '1h 15m',
+            meterSerialNo: 'A9456789',
+            email: 'customer3@example.com',
+            phone: '+91-7654321098',
+            description: 'Meter reading accuracy issue.',
+        },
+        {
+            id: 319,
+            ticketNumber: '319',
+            customerName: 'BI25GMRA004',
+            subject: 'Connection Problem',
+            priority: 'Medium',
+            status: 'Closed',
+            assignedTo: 'Support Team',
+            createdAt: '2024-01-03T11:20:00Z',
+            lastUpdated: '2024-01-14T15:45:00Z',
+            category: 'Connection Issue',
+            responseTime: '3h 45m',
+            meterSerialNo: 'A9567890',
+            email: 'customer4@example.com',
+            phone: '+91-6543210987',
+            description: 'Connection stability problem.',
+        },
+        {
+            id: 318,
+            ticketNumber: '318',
+            customerName: 'BI25GMRA004',
+            subject: 'Installation Request',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Installation Team',
+            createdAt: '2024-01-02T08:30:00Z',
+            lastUpdated: '2024-01-16T09:15:00Z',
+            category: 'Meter Issue',
+            responseTime: '4h 20m',
+            meterSerialNo: 'A9567890',
+            email: 'customer4@example.com',
+            phone: '+91-6543210987',
+            description: 'New meter installation request.',
+        },
+        {
+            id: 317,
+            ticketNumber: '317',
+            customerName: 'BI25GMRA005',
+            subject: 'Billing Dispute',
+            priority: 'High',
+            status: 'In Progress',
+            assignedTo: 'Billing Team',
+            createdAt: '2024-01-01T12:00:00Z',
+            lastUpdated: '2024-01-16T08:45:00Z',
+            category: 'Billing',
+            responseTime: '1h 30m',
+            meterSerialNo: 'A9678901',
+            email: 'customer5@example.com',
+            phone: '+91-5432109876',
+            description: 'Billing dispute resolution.',
+        },
+        {
+            id: 316,
+            ticketNumber: '316',
+            customerName: 'BI25GMRA005',
+            subject: 'Meter Reading Error',
+            priority: 'Medium',
+            status: 'Resolved',
+            assignedTo: 'Technical Team',
+            createdAt: '2023-12-31T15:30:00Z',
+            lastUpdated: '2024-01-15T17:20:00Z',
+            category: 'Meter Issue',
+            responseTime: '2h 45m',
+            meterSerialNo: 'A9678901',
+            email: 'customer5@example.com',
+            phone: '+91-5432109876',
+            description: 'Meter reading accuracy issue.',
+        },
+        {
+            id: 315,
+            ticketNumber: '315',
+            customerName: 'BI25GMRA006',
+            subject: 'Connection Loss',
+            priority: 'High',
+            status: 'Closed',
+            assignedTo: 'Emergency Team',
+            createdAt: '2023-12-30T09:15:00Z',
+            lastUpdated: '2024-01-14T14:30:00Z',
+            category: 'Connection Issue',
+            responseTime: '45m',
+            meterSerialNo: 'A9789012',
+            email: 'customer6@example.com',
+            phone: '+91-4321098765',
+            description: 'Emergency connection restoration.',
+        },
+        {
+            id: 314,
+            ticketNumber: '314',
+            customerName: 'BI25GMRA006',
+            subject: 'Service Upgrade',
+            priority: 'Low',
+            status: 'Open',
+            assignedTo: 'Customer Service',
+            createdAt: '2023-12-29T11:45:00Z',
+            lastUpdated: '2024-01-16T10:00:00Z',
+            category: 'Meter Issue',
+            responseTime: '3h 15m',
+            meterSerialNo: 'A9789012',
+            email: 'customer6@example.com',
+            phone: '+91-4321098765',
+            description: 'Service upgrade request.',
+        },
     ];
 
-    const dummyPagination = {
-        currentPage: 1,
-        totalPages: 3,
-        totalItems: 24,
-        itemsPerPage: 10,
-        hasNextPage: true,
-        hasPrevPage: false,
-    };
+
 
     // Fetch ticket stats
     useEffect(() => {
@@ -236,37 +364,38 @@ export default function Tickets() {
                             data: [45, 52, 38, 67, 58, 42, 35, 48, 55, 62, 41, 38]
                         },
                         {
+                            name: 'In Progress Tickets',
+                            data: [28, 35, 25, 42, 38, 28, 22, 32, 38, 45, 28, 25]
+                        },
+                        {
                             name: 'Resolved Tickets',
                             data: [38, 45, 32, 58, 49, 35, 28, 41, 48, 55, 34, 31]
                         },
                         {
-                            name: 'Escalated Tickets',
+                            name: 'Closed Tickets',
                             data: [12, 15, 8, 22, 18, 11, 7, 14, 16, 19, 10, 9]
                         }
                     ],
-                    seriesColors: ['#3B82F6', '#10B981', '#F59E0B']
+                    seriesColors: ['#163b7c', '#55b56c', '#dc272c', '#ed8c22']
                 });
             });
     }, []);
 
-    const fetchTicketsTable = (page: number = 1, limit: number = 10) => {
-        fetch(`${BACKEND_URL}/tickets/table?page=${page}&limit=${limit}`)
+    const fetchTicketsTable = () => {
+        fetch(`${BACKEND_URL}/tickets/table`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
                     setTickets(data.data);
-                    setPagination(data.pagination);
                 } else {
                     // Fallback to dummy data
                     setTickets(dummyTickets);
-                    setPagination(dummyPagination);
                 }
             })
             .catch((err) => {
                 console.error('Failed to fetch ticket data:', err);
                 // Fallback to dummy data
                 setTickets(dummyTickets);
-                setPagination(dummyPagination);
             })
             .finally(() => {});
     };
@@ -274,10 +403,6 @@ export default function Tickets() {
     useEffect(() => {
         fetchTicketsTable();
     }, []);
-
-    const handleTicketPageChange = (page: number, limit: number) => {
-        fetchTicketsTable(page, limit);
-    };
 
     // Handle ticket actions
     const handleViewTicket = (row: TableData) => {
@@ -308,11 +433,10 @@ export default function Tickets() {
         { key: 'subject', label: 'Subject' },
         { key: 'meterSerialNo', label: 'Meter Serial No' },
         { key: 'category', label: 'Category' },
-        { key: 'meterSerialNo', label: 'Meter Serial No' },
-        { key: 'category', label: 'Category' },
         { key: 'priority', label: 'Priority' },
         { key: 'status', label: 'Status' },
-        { key: 'actions', label: 'Actions' },
+        { key: 'assignedTo', label: 'Assigned To' },
+        { key: 'createdAt', label: 'Created Date' },
     ]);
 
     const statsArray = [
@@ -438,18 +562,17 @@ export default function Tickets() {
                                             columns: tableColumns,
                                             showHeader: true,
                                             headerTitle: 'Recent Tickets',
-                                              dateRange: 'Last 30 days',
-                                              headerClassName: 'h-18',
-                                              searchable: true,
+                                            dateRange: 'Last 30 days',
+                                            headerClassName: 'h-18',
+                                            searchable: true,
                                             sortable: true,
                                             pagination: true,
+                                            initialRowsPerPage: 10,
                                             showActions: true,
                                             text: 'Ticket Management Table',
-                                            serverPagination: pagination,
-                                            onPageChange: handleTicketPageChange,
-                                             onEdit: handleEditTicket,
-                                             onDelete: handleDeleteTicket,
-                                             onView: handleViewTicket,
+                                            onEdit: handleEditTicket,
+                                            onDelete: handleDeleteTicket,
+                                            onView: handleViewTicket,
                                             availableTimeRanges: [],
                                         },
                                     },

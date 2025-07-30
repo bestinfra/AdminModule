@@ -739,7 +739,7 @@ const Table: React.FC<TableProps> = ({
           (serverPagination
             ? serverPagination.totalCount > serverPagination.limit
             : data.length > rowsPerPage) && (
-            <div className="pt-4 font-manrope flex justify-between items-center">
+            <div className="font-manrope flex justify-between items-center">
               <div className="flex items-center gap-5">
                 <div className="w-32">
                   <Dropdown

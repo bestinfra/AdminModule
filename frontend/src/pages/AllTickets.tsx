@@ -387,7 +387,7 @@ const AllTickets: React.FC = () => {
         id: 'recent-activity',
         component: (
             <div className="">
-                <h3 className="text-lg font-semibold text-neutral-darker dark:text-white mb-4">
+                <h3 className="text-lg font-semibold text-neutral-darker dark:text-white ">
                     Recent Ticket Activity
                 </h3>
                 <div className="bg-white dark:bg-primary-dark-light rounded-xl border border-neutral-light dark:border-dark-border overflow-hidden">

@@ -58,13 +58,13 @@ const App: React.FC = () => {
                                 element={<DataLogger />}
                             />
                             <Route path="/meters" element={<Meters />} />
-                            {/* <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />} /> */}
+                            <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
                             {/* <Route path="/" element={<Dashboard />} /> */}
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
-                            <Route path="dtr-detailId" element={<DTRDetailPage/>}/>
+                            <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
@@ -80,6 +80,7 @@ const App: React.FC = () => {
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
+                            <Route path="/feeder/:feederId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
                             <Route path="/" element={<DTRDashboard />} />
                             <Route path="/prepaid" element={<Prepaid />} />

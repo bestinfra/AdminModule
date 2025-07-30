@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
@@ -21,6 +22,31 @@ const stats = [
 ];
 
 const Feeders = () => {
+    const { dtrId, feederId } = useParams();
+    const navigate = useNavigate();
+    const location = useLocation();
+    
+    console.log('Feeders Page - DTR ID:', dtrId, 'Feeder ID:', feederId);
+    
+    // Get passed data from navigation state
+    const passedData = location.state as {
+        feederData?: {
+            sNo: number;
+            feederName: string;
+            loadStatus: string;
+            rating: string;
+            address: string;
+        };
+        dtrId?: string;
+        dtrName?: string;
+    } | null;
+    
+    // Determine if this is an individual feeder page or DTR page
+    const isIndividualFeeder = !!feederId;
+    const currentFeederId = feederId || dtrId;
+    
+    // Use passed feeder data if available, otherwise use default
+    const feederData = passedData?.feederData;
     const [dailyConsumptionData, setDailyConsumptionData] = useState({
         xAxisData: [
             '6 May', '7 May', '8 May', '9 May', '10 May', '11 May', '12 May', '13 May', '14 May', '15 May', '16 May', '17 May', '18 May', '19 May', '20 May', '21 May', '22 May', '23 May', '24 May', '25 May', '26 May', '27 May', '28 May', '29 May', '30 May', '31 May', '1 Jun', '2 Jun', '3 Jun', '4 Jun', '5 Jun', '6 Jun', '7 Jun', '8 Jun', '9 Jun', '10 Jun', '11 Jun', '12 Jun', '13 Jun', '14 Jun', '15 Jun', '16 Jun', '17 Jun', '18 Jun', '19 Jun', '20 Jun', '21 Jun', '22 Jun', '23 Jun', '24 Jun', '25 Jun', '26 Jun', '27 Jun', '28 Jun', '29 Jun', '30 Jun', '1 Jul', '2 Jul', '3 Jul', '4 Jul', '5 Jul', '6 Jul',
@@ -48,7 +74,7 @@ const Feeders = () => {
         ],
     };
 
-    // Dummy data for Alerts Table
+    // Enhanced data for Alerts Table with more entries
     const [alertsData, setAlertsData] = useState([
         {
             alertId: 'ALRT-001',
@@ -79,6 +105,126 @@ const Feeders = () => {
             type: 'Over Current',
             feederName: 'D1F1(32500114)',
             occuredOn: '2025-06-26 08:10:00',
+        },
+        {
+            alertId: 'ALRT-006',
+            type: 'Frequency Deviation',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-25 16:45:00',
+        },
+        {
+            alertId: 'ALRT-007',
+            type: 'Power Factor Low',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-24 12:30:00',
+        },
+        {
+            alertId: 'ALRT-008',
+            type: 'Over Voltage',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-23 09:15:00',
+        },
+        {
+            alertId: 'ALRT-009',
+            type: 'Communication Loss',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-22 07:20:00',
+        },
+        {
+            alertId: 'ALRT-010',
+            type: 'Under Voltage',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-21 15:40:00',
+        },
+        {
+            alertId: 'ALRT-011',
+            type: 'Phase Imbalance',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-20 11:25:00',
+        },
+        {
+            alertId: 'ALRT-012',
+            type: 'Over Current',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-19 13:50:00',
+        },
+        {
+            alertId: 'ALRT-013',
+            type: 'Power Failure',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-18 20:35:00',
+        },
+        {
+            alertId: 'ALRT-014',
+            type: 'Frequency Deviation',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-17 18:10:00',
+        },
+        {
+            alertId: 'ALRT-015',
+            type: 'Power Factor Low',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-16 14:45:00',
+        },
+        {
+            alertId: 'ALRT-016',
+            type: 'Over Voltage',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-15 10:20:00',
+        },
+        {
+            alertId: 'ALRT-017',
+            type: 'Communication Loss',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-14 08:55:00',
+        },
+        {
+            alertId: 'ALRT-018',
+            type: 'Under Voltage',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-13 16:30:00',
+        },
+        {
+            alertId: 'ALRT-019',
+            type: 'Phase Imbalance',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-12 12:15:00',
+        },
+        {
+            alertId: 'ALRT-020',
+            type: 'Over Current',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-11 19:40:00',
+        },
+        {
+            alertId: 'ALRT-021',
+            type: 'Power Failure',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-10 22:05:00',
+        },
+        {
+            alertId: 'ALRT-022',
+            type: 'Frequency Deviation',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-09 17:30:00',
+        },
+        {
+            alertId: 'ALRT-023',
+            type: 'Power Factor Low',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-08 13:45:00',
+        },
+        {
+            alertId: 'ALRT-024',
+            type: 'Over Voltage',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-07 09:20:00',
+        },
+        {
+            alertId: 'ALRT-025',
+            type: 'Communication Loss',
+            feederName: 'D1F1(32500114)',
+            occuredOn: '2025-06-06 11:35:00',
         },
     ]);
 
@@ -130,32 +276,18 @@ const Feeders = () => {
                                     {
                                         name: 'PageHeader',
                                         props: {
-                                            title: 'Feeder Information',
-                                            onBackClick: () => window.history.back(),
-                                            backButtonText: 'Back to Dashboard',
+                                            title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId}` : 'Feeder Information',
+                                            onBackClick: () => {
+                                                if (isIndividualFeeder) {
+                                                    navigate('/dtr-dashboard');
+                                                } else {
+                                                    window.history.back();
+                                                }
+                                            },
+                                            backButtonText: isIndividualFeeder ? 'Back to DTR Dashboard' : 'Back to Dashboard',
                                             buttonsLabel: 'Export Data',
                                             variant: 'primary',
                                             onClick: () => handleDailyChartDownload(),
-                                            showMenu: true,
-                                            showDropdown: true,
-                                            menuItems: [
-                                                { id: 'export-daily', label: 'Export Daily Data' },
-                                                { id: 'export-monthly', label: 'Export Monthly Data' },
-                                                { id: 'export-alerts', label: 'Export Alerts' },
-                                            ],
-                                            onMenuItemClick: (itemId: string) => {
-                                                switch (itemId) {
-                                                    case 'export-daily':
-                                                        handleDailyChartDownload();
-                                                        break;
-                                                    case 'export-monthly':
-                                                        handleMonthlyChartDownload();
-                                                        break;
-                                                    case 'export-alerts':
-                                                        handleAlertsExport();
-                                                        break;
-                                                }
-                                            },
                                         },
                                     },
                                 ],
@@ -177,12 +309,13 @@ const Feeders = () => {
                                     {
                                         name: 'SectionHeader',
                                         props: {
-                                            title: 'Feeder Information',
+                                            title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId} Information` : 'Feeder Information',
                                             titleLevel: 2,
                                             titleSize: 'md',
                                             titleVariant: 'primary',
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
+                                            defaultTitleHeight:'0',
                                         },
                                     },
                                 ],
@@ -204,19 +337,19 @@ const Feeders = () => {
                                                 items: [
                                                     {
                                                         title: 'Feeder Name',
-                                                        value: 'D1F1(32500114)',
+                                                        value: feederData?.feederName || (isIndividualFeeder ? currentFeederId : 'D1F1(32500114)'),
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
                                                         title: 'Rating',
-                                                        value: '25.00 kVA',
+                                                        value: feederData?.rating || '25.00 kVA',
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
                                                         title: 'Address',
-                                                        value: 'Waddepally, Warangal, Telangana, India, 506001',
+                                                        value: feederData?.address || 'Waddepally, Warangal, Telangana, India, 506001',
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
@@ -251,7 +384,7 @@ const Feeders = () => {
                                     {
                                         name: 'SectionHeader',
                                         props: {
-                                            title: 'Feeder Information',
+                                            title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId} Information` : 'Feeder Information',
                                             titleLevel: 2,
                                             titleSize: 'md',
                                             titleVariant: 'primary',
@@ -309,6 +442,8 @@ const Feeders = () => {
                                             dateRange: 'Last 30 days',
                                             showDownloadButton: true,
                                             onDownload: () => handleMonthlyChartDownload(),
+                                            showXAxisLabel: true,
+                                            xAxisLabel: 'kWAh',
                                         },
                                     },
                                 ],
@@ -342,6 +477,8 @@ const Feeders = () => {
                                             onTimeRangeChange: (range: string) => console.log('Time range changed to:', range),
                                             showDownloadButton: true,
                                             onDownload: () => handleDailyChartDownload(),
+                                            showXAxisLabel: true,
+                                            xAxisLabel: 'kVA',
                                         },
                                         span: { col: 1, row: 1 },
                                     },
@@ -397,13 +534,16 @@ const Feeders = () => {
                                             ],
                                             data: alertsData,
                                             searchable: true,
-
                                             pagination: true,
-                                            initialRowsPerPage: 5,
+                                            initialRowsPerPage: 10,
+                                            rowsPerPageOptions: [5, 10, 15, 20, 25],
                                             emptyMessage: 'No Alerts Found',
                                             showActions: true,
-                                            showHeader:'true',
-                                            headerTitle:'Alerts',
+                                            showHeader: 'true',
+                                            headerTitle: 'Alerts',
+                                            showPaginationInfo: true,
+                                            showRowsPerPageSelector: true,
+                                            className: 'w-full',
                                         },
                                     },
                                 ],
