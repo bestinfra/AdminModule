@@ -386,7 +386,7 @@ const AllTickets: React.FC = () => {
     const recentActivitySection: Section = {
         id: 'recent-activity',
         component: (
-            <div className="mb-8">
+            <div className="">
                 <h3 className="text-lg font-semibold text-neutral-darker dark:text-white mb-4">
                     Recent Ticket Activity
                 </h3>

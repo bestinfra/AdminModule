@@ -337,7 +337,7 @@ export default function Tickets() {
                 {
                     layout: {
                         type: 'row',
-                        className: 'mb-6'
+                        className: ''
                     },
                     components: [
                         {

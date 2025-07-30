@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import PageC from '@/components/global/PageC';
-import PageHeader from '@/components/global/PageHeader';
 import { exportChartData } from '@/utils/excelExport';
 
 const stats = [
@@ -162,7 +161,6 @@ const Feeders = () => {
                                                         break;
                                                 }
                                             },
-
                                         },
                                     },
                                 ],
@@ -174,8 +172,26 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 3,
-                        className: 'border border-primary-border rounded-3xl bg-white p-6',
+                        className: 'border border-primary-border rounded-3xl bg-white p-4',
                         rows: [
+                            {
+                                layout: 'row' as const,
+                                className: 'justify-between w-full',
+                                span: { col: 3, row: 1 },
+                                columns: [
+                                    {
+                                        name: 'SectionHeader',
+                                        props: {
+                                            title: 'Feeder Information',
+                                            titleLevel: 2,
+                                            titleSize: 'md',
+                                            titleVariant: 'primary',
+                                            titleWeight: 'bold',
+                                            titleAlign: 'left',
+                                        },
+                                    },
+                                ],
+                            },
                             {
                                 layout: 'row' as const,
                                 className: 'justify-between w-full',
@@ -232,6 +248,36 @@ const Feeders = () => {
                         rows: [
                            
 
+
+
+                            {
+                                layout: 'grid' as const,
+                                className:"w-full",
+                                columns: [
+                                    {
+                                        name: 'BarChart',
+                                        props: {
+                                            xAxisData: monthlyConsumptionData.xAxisData,
+                                            seriesData: monthlyConsumptionData.seriesData,
+                                            height: 320,
+                                            showHeader: true,  
+                                            headerTitle: 'Consumption Metrics Bar Chart',
+                                            className: 'w-full',
+                                            dateRange: 'Last 30 days',
+                                            showDownloadButton: true,
+                                            onDownload: () => handleMonthlyChartDownload(),
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+                {
+                    layout: {
+                        type: 'grid' as const,
+                        columns: 1,
+                        rows: [
                             {
                                 layout: 'grid' as const,
                                 gridColumns:1,
@@ -242,13 +288,13 @@ const Feeders = () => {
                                             xAxisData: dailyConsumptionData.xAxisData,
                                             seriesData: dailyConsumptionData.seriesData,
                                             height: 320,
-                                            ariaLabel: 'Daily Consumption Metrics Bar Chart',
+                                            ariaLabel: ' kVA Metrics Bar Chart',
                                             showHeader: true,
                                             handleDownload: handleDailyChartDownload,
-                                            headerTitle: 'Daily Consumption Metrics',
+                                            headerTitle: 'kVA Metrics',
                                             className: 'w-full',
                                             dateRange: 'Last 30 days',
-                                            availableTimeRanges: ['Daily', 'Monthly'],
+                                            availableTimeRanges: ['Daily', 'Monthly', 'Yearly'],
                                             initialTimeRange: 'Daily',
                                             onTimeRangeChange: (range: string) => console.log('Time range changed to:', range),
                                             showDownloadButton: true,
@@ -265,36 +311,7 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        rows: [
-                            
-                            {
-                                layout: 'grid' as const,
-                                className:"w-full",
-                                columns: [
-                                    {
-                                        name: 'BarChart',
-                                        props: {
-                                            xAxisData: monthlyConsumptionData.xAxisData,
-                                            seriesData: monthlyConsumptionData.seriesData,
-                                            height: 320,
-                                            showHeader: true,  
-                                            headerTitle: 'Monthly Consumption Metrics Bar Chart',
-                                            className: 'w-full',
-                                            dateRange: 'Last 30 days',
-                                            showDownloadButton: true,
-                                            onDownload: () => handleMonthlyChartDownload(),
-                                        },
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                },
-                {
-                    layout: {
-                        type: 'grid' as const,
-                        columns: 1,
-                        className: 'border border-primary-border rounded-3xl p-6',
+                        className: 'border border-primary-border rounded-3xl p-4',
                         rows: [
                             {
                                 layout: 'row' as const,
@@ -335,26 +352,12 @@ const Feeders = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'mb-8 border border-primary-border rounded-3xl p-6',
+                        className: '',
                         rows: [
                             {
-                                layout: 'row' as const,
-                                columns: [
-                                    {
-                                        name: 'SectionHeader',
-                                        props: {
-                                            title: 'Alerts',
-                                            titleLevel: 2,
-                                            titleSize: 'md',
-                                            titleVariant: "colorPrimaryDark",
-                                            titleWeight: "medium",
-                                            titleAlign: 'left',
-                                        },
-                                    },
-                                ],
-                            },
-                            {
-                                layout: 'row' as const,
+                                layout: 'grid' as const,
+                                gridColumns:1,
+
                                 columns: [
                                     {
                                         name: 'Table',
@@ -367,11 +370,13 @@ const Feeders = () => {
                                             ],
                                             data: alertsData,
                                             searchable: true,
+
                                             pagination: true,
                                             initialRowsPerPage: 5,
                                             emptyMessage: 'No Alerts Found',
                                             showActions: true,
-
+                                            showHeader:'true',
+                                            headerTitle:'Alerts',
                                         },
                                     },
                                 ],
