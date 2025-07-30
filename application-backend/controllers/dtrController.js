@@ -1,4 +1,5 @@
 import DTRDB from '../models/DTRDB.js';
+import { getDateTime, getDateInYMDFormat, getDateInMYFormat, fillMissingDatesDyno } from '../utils/utils.js';
 
 export const getDTRTable = async (req, res) => {
     try {
@@ -262,70 +263,73 @@ export const getConsolidatedDTRStats = async (req, res) => {
 export const getDTRConsumptionAnalytics = async (req, res) => {
     try {
         const { dtrId } = req.params;
-        const { period = 'daily' } = req.query;
         
-        const analytics = await DTRDB.getDTRConsumptionAnalytics(dtrId, period);
+        const consumptionOnDaily = await DTRDB.getDTRMainGraphAnalytics(dtrId, 'daily');
+        const consumptionOnMonthly = await DTRDB.getDTRMainGraphAnalytics(dtrId, 'monthly');
         
-        // Format data similar to dashboard analytics
-        const { xAxisData, kwhData, kvahData, kwData, kvaData } = analytics.reduce(
+        const { dailyxAxisData, dailysums } = consumptionOnDaily.reduce(
             (acc, item) => {
-                acc.xAxisData.push(item.consumption_date);
-                acc.kwhData.push((item.total_kwh || 0).toFixed(2));
-                acc.kvahData.push((item.total_kvah || 0).toFixed(2));
-                acc.kwData.push((item.total_kw || 0).toFixed(2));
-                acc.kvaData.push((item.total_kva || 0).toFixed(2));
+                acc.dailyxAxisData.push(item.consumption_date);
+                acc.dailysums.push((item.total_consumption || 0).toFixed(2));
                 return acc;
             },
-            { xAxisData: [], kwhData: [], kvahData: [], kwData: [], kvaData: [] }
+            { dailyxAxisData: [], dailysums: [] }
+        );
+        
+        const daily = fillMissingDatesDyno(
+            dailyxAxisData,
+            dailysums,
+            'DD MMM, YYYY',
+            'day'
+        );
+        
+        const { monthlyxAxisData, monthlysums } = consumptionOnMonthly.reduce(
+            (acc, item) => {
+                acc.monthlyxAxisData.push(
+                    getDateInMYFormat(item.consumption_date)
+                );
+                acc.monthlysums.push((item.total_consumption || 0).toFixed(2));
+                return acc;
+            },
+            { monthlyxAxisData: [], monthlysums: [] }
+        );
+        
+        const monthly = fillMissingDatesDyno(
+            monthlyxAxisData,
+            monthlysums,
+            'DD MMM, YYYY',
+            'month'
         );
 
-        res.json({
-            success: true,
+        const dailyData = {
+            xAxisData: daily.dates,
+            sums: daily.values,
+        };
+
+        const monthlyData = {
+            xAxisData: monthly.dates,
+            sums: monthly.values,
+        };
+        
+        res.status(200).json({
+            status: 'success',
             data: {
-                xAxisData,
-                kwhData,
-                kvahData,
-                kwData,
-                kvaData,
-                period
+                dailyData,
+                monthlyData,
             },
-            message: 'DTR consumption analytics fetched successfully'
         });
     } catch (error) {
-        console.error('Error fetching DTR consumption analytics:', error);
+        console.error('Error fetching DTR consumption analytics:', {
+            error: error.message,
+            stack: error.stack,
+            timestamp: getDateTime(),
+        });
+
         res.status(500).json({
-            success: false,
-            message: 'Failed to fetch DTR consumption analytics',
-            error: error.message
+            status: 'error',
+            message: 'An error occurred while fetching DTR consumption analytics',
+            errorId: error.code || 'INTERNAL_SERVER_ERROR',
         });
     }
 };
 
-export const getDTRConsumptionStats = async (req, res) => {
-    try {
-        const { dtrId } = req.params;
-        const stats = await DTRDB.getDTRConsumptionStats(dtrId);
-        
-        // Map consumption stats to match frontend card field names exactly
-        const mappedStats = {
-            totalKwh: stats.totalKWh || '0',
-            totalKvah: stats.totalKVAh || '0',
-            totalKw: stats.totalKW || '0',
-            totalKva: stats.totalKVA || '0',
-            meterCount: stats.meterCount || 0
-        };
-
-        res.json({
-            success: true,
-            data: mappedStats,
-            message: 'DTR consumption stats fetched successfully'
-        });
-    } catch (error) {
-        console.error('Error fetching DTR consumption stats:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch DTR consumption stats',
-            error: error.message
-        });
-    }
-}; 

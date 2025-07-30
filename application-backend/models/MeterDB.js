@@ -362,6 +362,52 @@ class MeterDB {
             throw error;
         }
     }
+
+    static async getMeterHistory(meterId) {
+        try {
+            const meter = await prisma.meter.findUnique({
+                where: { id: parseInt(meterId) },
+                include: {
+                    consumer: {
+                        select: {
+                            id: true,
+                            name: true,
+                            consumerNumber: true
+                        }
+                    },
+                    location: {
+                        select: {
+                            id: true,
+                            name: true,
+                            code: true
+                        }
+                    },
+                    modem: true
+                }
+            });
+
+            if (!meter) {
+                throw new Error('Meter not found');
+            }
+
+            return {
+                id: meter.id,
+                meterNumber: meter.meterNumber,
+                serialNumber: meter.serialNumber,
+                manufacturer: meter.manufacturer,
+                model: meter.model,
+                type: meter.type,
+                status: meter.status,
+                installationDate: meter.installationDate,
+                consumer: meter.consumer,
+                location: meter.location,
+                modem: meter.modem
+            };
+        } catch (error) {
+            console.error(' MeterDB.getMeterHistory: Database error:', error);
+            throw error;
+        }
+    }
 }
 
 export default MeterDB; 
