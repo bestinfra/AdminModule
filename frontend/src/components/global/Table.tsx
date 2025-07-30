@@ -511,7 +511,7 @@ const Table: React.FC<TableProps> = ({
                         placeholder="Search"
                         value={searchTerm}
                         onChange={handleSearch}
-                        className="w-full h-12 px-4 py-4 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border placeholder-dark-border dark:text-white dark:placeholder-white rounded-full font-manrope text-sm outline-none mb-4"
+                        className="w-full h-12 px-4 py-4 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border placeholder-dark-border dark:text-white dark:placeholder-white rounded-full font-manrope text-sm outline-none"
                     />
                     <span className="absolute right-2 top-2 bg-primary-lightest dark:bg-primary-dark rounded-full w-8 h-8 flex justify-center items-center">
                         <img src="/icons/search-icon.svg" alt="search" />
