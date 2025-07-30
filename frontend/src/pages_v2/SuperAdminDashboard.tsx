@@ -134,6 +134,45 @@ const SuperAdminDashboard: React.FC = () => {
         <div className="p-2 min-h-screen">
             <PageC
                 sections={[
+                    // Header section
+                    {
+                        layout: {
+                            type: 'grid' as const,
+                            columns: 1,
+                            className: '',
+                        },
+                        components: [
+                            {
+                                name: 'PageHeader',
+                                props: {
+                                    title: 'Super Admin Dashboard',
+                                    buttonsLabel: 'Create New App',
+                                    variant: 'primary',
+                                    onClick: () => navigate("/apps/create"),
+                                    showMenu: true,
+                                    showDropdown: true,
+                                    menuItems: [
+                                        { id: 'refresh', label: 'Refresh Data' },
+                                        { id: 'export', label: 'Export Report' },
+                                        { id: 'settings', label: 'Dashboard Settings' }
+                                    ],
+                                    onMenuItemClick: (itemId: string) => {
+                                        switch (itemId) {
+                                            case 'refresh':
+                                                console.log('Refreshing dashboard data');
+                                                break;
+                                            case 'export':
+                                                console.log('Exporting dashboard report');
+                                                break;
+                                            case 'settings':
+                                                navigate("/dashboard-settings");
+                                                break;
+                                        }
+                                    },
+                                },
+                            },
+                        ],
+                    },
                     // Main Statistics Cards
                     {
                         layout: {

@@ -61,6 +61,11 @@ const defaultMenus: MenuCategory[] = [
         category: 'GENERAL',
         items: [
             {
+                title: 'SuperAdmin Dashboard', 
+                icon: '/icons/dashboard.svg',
+                link: '/superadmin',
+            },
+            {
                 title: 'DTR Dashboard',
                 icon: '/icons/dashboard.svg',
                 link: '/dtr-dashboard',
@@ -76,11 +81,7 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/dashboard.svg',
                 link:'/all-tickets',
             },
-            {
-                title: 'App-Managment', 
-                icon: '/icons/apps-icon.svg',
-                link: '/apps',
-            },
+           
         ],
     },
     {
@@ -108,21 +109,23 @@ const defaultMenus: MenuCategory[] = [
                 link: '/meters',
             },
             {
-                title: 'User Management',
+                title: 'Users Management',
                 icon: '/icons/user_managment.svg',
-                link: '/user-management',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Users',
-                        link: '/users',
-                    },
-                    {
-                        title: 'Role Management',
-                        link: '/role-management ',
-                    },
-                ],
+                link: '/users',
             },
+            // {
+            //     title: 'User Management',
+            //     icon: '/icons/user_managment.svg',
+            //     link: '/user-management',
+            //     hasSubmenu: true,
+            //     submenu: [
+                  
+            //         {
+            //             title: 'Role Management',
+            //             link: '/role-management ',
+            //         },
+            //     ],
+            // },
         ],
     },
 ];

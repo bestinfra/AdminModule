@@ -58,7 +58,7 @@ const App: React.FC = () => {
                                 element={<DataLogger />}
                             />
                             <Route path="/meters" element={<Meters />} />
-                            {/* <Route path="/super-admin-dashboard" element={<SuperAdminDashboard />} /> */}
+                            <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
