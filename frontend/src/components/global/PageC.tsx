@@ -32,6 +32,7 @@ import TicketInfoCard from '../Ticket/TicketInfoCard';
 import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
 import PageInformation from './PageInformation';
+import SubappPanel from './SubAppPanel';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
@@ -66,6 +67,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Carousel,
     LoginV2,
     PageInformation,
+    SubappPanel,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
@@ -240,7 +242,7 @@ const Page: React.FC<PageProps> = ({
                                 const rowElement = (
                                     <div
                                         key={rowIdx}
-                                        className={`${rowClass} mb-4`}>
+                                        className={`${rowClass}`}>
                                         {row.columns.map((comp, cidx) => {
                                             let name: string;
                                             let props: Record<string, unknown> =

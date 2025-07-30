@@ -1,7 +1,7 @@
 import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-
+                                                            
 // Removed: import BACKEND_URL from '../config';
 
 // Meter Information Data (moved outside component)

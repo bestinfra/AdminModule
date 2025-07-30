@@ -37,82 +37,84 @@ const DTRDashboard: React.FC = () => {
         navigate(`/dtr/${row.dtrId}`);
     };
 
-    // DTR statistics cards data - Using only daily data consistently
-    const dtrStatsCards = [
-        {
-            title: "Total DTRs",
-            value: 29,
-            icon: "/icons/dtr.svg",
-            subtitle1: "Total Transformer Units",
-            onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
-            iconStyle: ICON_FILTER_STYLE,
-            bg: "bg-stat-icon-gradient",
-        },
-        {
-            title: "Total LT Feeders",
-            value: 33,
-            icon: "/icons/feeder.svg",
-            subtitle1: "Connected to DTRs",
-            onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: "Today's Fuse Blown",
-            value: 1,
-            icon: "/icons/power_failure.svg",
-            subtitle1: "0.03% of Total DTRs",
-            onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: "Overloaded Feeders",
-            value: 0,
-            icon: "/icons/dtr.svg",
-            subtitle1: "0.00% of Total Feeders",
-            onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: "Underloaded Feeders",
-            value: 33,
-            icon: "/icons/dtr.svg",
-            subtitle1: "100.0% of Total Feeders",
-            onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: "LT Side Fuse Blown",
-            value: 1,
-            icon: "/icons/power_failure.svg",
-            subtitle1: "1 Incident Today",
-            onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: "Unbalanced DTRs",
-            value: 0,
-            icon: "/icons/dtr.svg",
-            subtitle1: "0.00% of Total DTRs",
-            onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: "Power Failure Feeders",
-            value: 0,
-            icon: "/icons/power_failure.svg",
-            subtitle1: "0.00% of Feeders",
-            onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-        {
-            title: "HT Side Fuse Blown",
-            value: 0,
-            icon: "/icons/power_failure.svg",
-            subtitle1: "0 Incident Today",
-            onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
-            iconStyle: ICON_FILTER_STYLE,
-        },
-    ];
+
+
+  // DTR statistics cards data - Using only daily data consistently
+  const dtrStatsCards = [
+    {
+      title: "Total DTRs",
+      value: 29,
+      icon: "/icons/dtr.svg",
+      subtitle1: "Total Transformer Units",
+      onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
+      iconStyle: ICON_FILTER_STYLE,
+      bg: "bg-stat-icon-gradient",
+    },
+    {
+      title: "Total LT Feeders",
+      value: 33,
+      icon: "/icons/feeder.svg",
+      subtitle1: "Connected to DTRs",
+      onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Today's Fuse Blown",
+      value: 1,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "0.03% of Total DTRs",
+      onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Overloaded Feeders",
+      value: 0,
+      icon: "/icons/dtr.svg",
+      subtitle1: "0.00% of Total Feeders",
+      onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Underloaded Feeders",
+      value: 33,
+      icon: "/icons/dtr.svg",
+      subtitle1: "100.0% of Total Feeders",
+      onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "LT Side Fuse Blown",
+      value: 1,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "1 Incident Today",
+      onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Unbalanced DTRs",
+      value: 0,
+      icon: "/icons/dtr.svg",
+      subtitle1: "0.00% of Total DTRs",
+      onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "Power Failure Feeders",
+      value: 0,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "0.00% of Feeders",
+      onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+    {
+      title: "HT Side Fuse Blown",
+      value: 0,
+      icon: "/icons/power_failure.svg",
+      subtitle1: "0 Incident Today",
+      onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
+      iconStyle: ICON_FILTER_STYLE,
+    },
+  ];
 
     // DTR Consumption Cards - Daily data
     const dailyConsumptionCards = [
@@ -206,102 +208,102 @@ const DTRDashboard: React.FC = () => {
         },
     ];
 
-    // Get current consumption cards data based on selected time range
-    const getCurrentConsumptionCards = () => {
-        return selectedTimeRange === 'Daily' ? dailyConsumptionCards : monthlyConsumptionCards;
-    };
+  // Get current consumption cards data based on selected time range
+  const getCurrentConsumptionCards = () => {
+    return selectedTimeRange === 'Daily' ? dailyConsumptionCards : monthlyConsumptionCards;
+  };
+  // Dummy data for DTRs table
+  const dtrTableColumns = [
+    { key: "dtrId", label: "DTR ID" },
+    { key: "dtrName", label: "DTR Name" },
+    { key: "feedersCount", label: "Feeders Count" },
+    { key: "streetName", label: "Street Name" },
+    { key: "city", label: "City" },
+    { key: "commStatus", label: "Comm-Status" },
+  ];
+  const dtrTableData = [
+    {
+      dtrId: "TRANSFORMER-01",
+      dtrName: "TGNP_DTR-01",
+      feedersCount: 1,
+      streetName: "Waddepally",
+      city: "Warangal",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-02",
+      dtrName: "TGNP_DTR-02",
+      feedersCount: 1,
+      streetName: "Sun city",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-03",
+      dtrName: "TGNP_DTR-03",
+      feedersCount: 4,
+      streetName: "Prashanth Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-04",
+      dtrName: "TGNP_DTR-04",
+      feedersCount: 1,
+      streetName: "Prashanth Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-05",
+      dtrName: "TGNP_DTR-05",
+      feedersCount: 1,
+      streetName: "Prashanth Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-06",
+      dtrName: "TGNP_DTR-06",
+      feedersCount: 1,
+      streetName: "Prashanth Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-07",
+      dtrName: "TGNP_DTR-07",
+      feedersCount: 1,
+      streetName: "Hyder Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-08",
+      dtrName: "TGNP_DTR-08",
+      feedersCount: 1,
+      streetName: "Hyder Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-09",
+      dtrName: "TGNP_DTR-09",
+      feedersCount: 1,
+      streetName: "Hyder Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-10",
+      dtrName: "TGNP_DTR-10",
+      feedersCount: 1,
+      streetName: "Hyder Nagar",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+  ];
 
-    // Dummy data for DTRs table
-    const dtrTableColumns = [
-        { key: "dtrId", label: "DTR ID" },
-        { key: "dtrName", label: "DTR Name" },
-        { key: "feedersCount", label: "Feeders Count" },
-        { key: "streetName", label: "Street Name" },
-        { key: "city", label: "City" },
-        { key: "commStatus", label: "Comm-Status" },
-    ];
-    const dtrTableData = [
-        {
-            dtrId: "TRANSFORMER-01",
-            dtrName: "TGNP_DTR-01",
-            feedersCount: 1,
-            streetName: "Waddepally",
-            city: "Warangal",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-02",
-            dtrName: "TGNP_DTR-02",
-            feedersCount: 1,
-            streetName: "Sun city",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-03",
-            dtrName: "TGNP_DTR-03",
-            feedersCount: 4,
-            streetName: "Prashanth Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-04",
-            dtrName: "TGNP_DTR-04",
-            feedersCount: 1,
-            streetName: "Prashanth Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-05",
-            dtrName: "TGNP_DTR-05",
-            feedersCount: 1,
-            streetName: "Prashanth Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-06",
-            dtrName: "TGNP_DTR-06",
-            feedersCount: 1,
-            streetName: "Prashanth Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-07",
-            dtrName: "TGNP_DTR-07",
-            feedersCount: 1,
-            streetName: "Hyder Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-08",
-            dtrName: "TGNP_DTR-08",
-            feedersCount: 1,
-            streetName: "Hyder Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-09",
-            dtrName: "TGNP_DTR-09",
-            feedersCount: 1,
-            streetName: "Hyder Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-        {
-            dtrId: "TRANSFORMER-10",
-            dtrName: "TGNP_DTR-10",
-            feedersCount: 1,
-            streetName: "Hyder Nagar",
-            city: "Hyderabad",
-            commStatus: "Active",
-        },
-    ];
 
     // Dummy data for Latest Alerts table
     const alertsTableColumns = [

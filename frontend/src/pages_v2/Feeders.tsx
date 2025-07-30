@@ -118,7 +118,7 @@ const Feeders = () => {
                         rows: [
                             {
                                 layout: 'row' as const,
-                                className: 'justify-between w-full mb-4',
+                                className: 'justify-between w-full',
                                 span: { col: 3, row: 1 },
                                 columns: [
                                     {   
