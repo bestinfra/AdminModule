@@ -582,10 +582,11 @@ const DTRDashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
+                                                
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
-                                                showHeader: false,
-                                                headerTitle: 'DTR Management',
+                                                showHeader: true,
+                                                headerTitle: 'DTRInformation',
                                                 dateRange: 'All DTRs',
                                                 searchable: true,
                                                 sortable: true,
@@ -603,35 +604,33 @@ const DTRDashboard: React.FC = () => {
                             ],
                         },
                     },
-                    // // Latest Alerts section
-                    {
-                        layout: {
-                            type: 'column' as const,
-                            className: ' border border-primary-border rounded-3xl p-6',
-                        },
-                        components: [
-                            {
-                                name: 'Heading',
-                                props: {
-                                    text: 'Latest Alerts',
-                                    level: 2,
-                                    className: 'text-base font-medium',
-                                },
-                            },
-                            {
-                                name: 'Table',
-                                props: {
-                                    data: getCurrentAlertsData(),
-                                    columns: alertsTableColumns,
-                                    showActions: false,
-                                    searchable: true,
-                                    pagination: true,
-                                    initialRowsPerPage: 10,
-                                    emptyMessage: 'No alerts found',
-                                },
-                            },
-                        ],
-                    },
+                                         // // Latest Alerts section
+                     {
+                         layout: {
+                             type: 'column' as const,
+                             className: '',
+                         },
+                         components: [
+                             {
+                                 name: 'Table',
+                                 props: {
+                                     data: getCurrentAlertsData(),
+                                     columns: alertsTableColumns,
+                                     showHeader: true,
+                                     headerTitle: 'Latest Alerts',
+                                     dateRange: selectedTimeRange === 'Daily' ? 'Today' : 'This Month',
+                                     showActions: false,
+                                     searchable: true,
+                                     pagination: true,
+                                     initialRowsPerPage: 10,
+                                     emptyMessage: 'No alerts found',
+                                     availableTimeRanges: ['Daily', 'Monthly'],
+                                     selectedTimeRange: selectedTimeRange,
+                                     onTimeRangeChange: handleTimeRangeChange,
+                                 },
+                             },
+                         ],
+                     },
                     // Statistics Chart section
                     {
                         layout: {
