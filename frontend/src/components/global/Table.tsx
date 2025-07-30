@@ -71,6 +71,7 @@ interface TableProps {
   showHeader?: boolean;
   headerTitle?: string;
   dateRange?: string;
+  headerClassName?: string; // Custom className for header styling
   // Time range selector props
   availableTimeRanges?: string[];
   selectedTimeRange?: string;
@@ -85,6 +86,8 @@ interface DefaultRowWrapperProps {
 
 const DefaultRowWrapper: React.FC<DefaultRowWrapperProps> = ({ children }) =>
   children;
+
+
 
 // Helper function to render priority badges
 const renderPriorityBadge = (
@@ -164,6 +167,7 @@ const Table: React.FC<TableProps> = ({
   showHeader = false,
   headerTitle = "Data Table",
   dateRange = "",
+  headerClassName = "", // Default header className
   // Time range selector props with defaults
   availableTimeRanges = ["Daily", "Monthly", "Yearly"],
   selectedTimeRange = "Daily",
@@ -862,7 +866,11 @@ const Table: React.FC<TableProps> = ({
       style={{ fontFamily: "Manrope, sans-serif" }}
     >
       {/* Header Section */}
-      <div className="flex justify-between items-center gap-4 bg-background-secondary dark:bg-primary-dark-light rounded-t-3xl p-4">
+                                     <div
+               className={`flex justify-between items-center gap-4 bg-background-secondary dark:bg-primary-dark-light rounded-t-3xl p-4 ${
+                 headerClassName || ""
+               }`}
+             >
         <div
           className="font-medium text-neutral-darker dark:text-surface font-manrope"
           style={{ fontFamily: "Manrope, sans-serif" }}
@@ -938,6 +946,7 @@ Table.propTypes = {
   showHeader: PropTypes.bool,
   headerTitle: PropTypes.string,
   dateRange: PropTypes.string,
+  headerClassName: PropTypes.string, // Custom className for header styling
   // Time range selector props
   availableTimeRanges: PropTypes.arrayOf(PropTypes.string),
   selectedTimeRange: PropTypes.string,

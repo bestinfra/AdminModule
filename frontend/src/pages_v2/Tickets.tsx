@@ -1,6 +1,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Page from '@/components/global/PageC';
+import PageC from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 import { exportChartData } from '@/utils/excelExport';
@@ -332,7 +332,7 @@ export default function Tickets() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-        <Page
+        <PageC
             sections={[
                 {
                     layout: {
@@ -402,13 +402,14 @@ export default function Tickets() {
                                         props: {
                                             xAxisData: ticketTrends?.xAxisData || [],
                                             seriesData: ticketTrends?.seriesData || [],
-                                            seriesColors:
+                                            seriesColors:   
                                                 ticketTrends?.seriesColors || [],
                                             height: '400px',
                                             showHeader: true,
                                             headerTitle: 'Ticket Statistics',
                                             dateRange: '2024',
                                             showDownloadButton: true,
+                                            headerHeight: 'h-12',
                                             ariaLabel:
                                                 'Monthly ticket statistics chart',
                                             onDownload: handleChartDownload,
@@ -435,10 +436,11 @@ export default function Tickets() {
                                         props: {
                                             data: tickets,
                                             columns: tableColumns,
-                                            showHeader: false,
+                                            showHeader: true,
                                             headerTitle: 'Recent Tickets',
-                                            dateRange: 'Last 30 days',
-                                            searchable: true,
+                                              dateRange: 'Last 30 days',
+                                              headerClassName: 'h-18',
+                                              searchable: true,
                                             sortable: true,
                                             pagination: true,
                                             showActions: true,

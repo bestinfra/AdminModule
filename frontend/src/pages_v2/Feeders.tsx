@@ -113,11 +113,6 @@ const Feeders = () => {
         // Add alerts export logic here
     };
 
-    // Handle refresh functionality
-    const handleRefresh = () => {
-        console.log('Refreshing feeder data...');
-        // Add refresh logic here
-    };
 
     return (
         <PageC
@@ -241,15 +236,63 @@ const Feeders = () => {
                         ],
                     },
                 },
+              
+                {
+                    layout: {
+                        type: 'grid' as const,
+                        columns: 1,
+                        className: 'w-full p-4 border border-primary-border rounded-3xl',
+                        rows: [
+                            {
+                                layout: 'row' as const,
+                                className: 'justify-between w-full',
+                                span: { col: 1, row: 1 },
+                                columns: [
+                                    {
+                                        name: 'SectionHeader',
+                                        props: {
+                                            title: 'Feeder Information',
+                                            titleLevel: 2,
+                                            titleSize: 'md',
+                                            titleVariant: 'primary',
+                                            titleWeight: 'bold',
+                                            titleAlign: 'left',
+                                            className:'w-full',
+                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
+                                        },
+                                        span: { col: 1, row: 1 },
+                                    },
+                                ],
+                            },
+                            {
+                                layout: 'grid' as const,
+                                gridColumns: 5,
+                                className: 'w-full gap-4',
+                                columns: stats.map((stat) => ({
+                                    name: 'Card',
+                                    props: {
+                                        title: stat.title,
+                                        value: stat.value,
+                                        subtitle1: stat.subtitle1,
+                                        icon: stat.icon,
+                                        bg: stat.bg ,
+                                        iconClassName: stat.iconClassName || 'w-4 h-4',
+                                        width: stat.width || 'w-8',
+                                        height: stat.height || 'h-8',
+                                        valueFontSize: stat.valueFontSize || 'text-lg lg:text-xl md:text-lg sm:text-base',
+                                    },
+                                    span: { col: 1, row: 1 },
+                                })),
+                            },
+                        ],
+                    },
+                },
+               
                 {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
                         rows: [
-                           
-
-
-
                             {
                                 layout: 'grid' as const,
                                 className:"w-full",
@@ -329,22 +372,6 @@ const Feeders = () => {
                                     },
                                 ],
                             },
-                            // {
-                            //     layout: 'row' as const,
-                            //     columns: [
-                            //         {
-                            //             name: 'GoogleMap',
-                            //             props: {
-                            //                 apiKey: 'AIzaSyDUMMY-KEY-1234567890abcdefg',
-                            //                 center: { lat: 17.385044, lng: 78.486671 },
-                            //                 markerPosition: { lat: 17.385044, lng: 78.486671 },
-                            //                 style: { width: '100%', height: '350px', borderRadius: '16px', overflow: 'hidden' },
-                            //                 className: 'w-full',
-                            //             },
-                                     
-                            //         },
-                            //     ],
-                            // },
                         ],
                     },
                 },

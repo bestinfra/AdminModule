@@ -36,6 +36,7 @@ import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
 // import LoginV2 from './pages_v2/LoginV2';
 import SuperAdminDashboard from './pages_v2/SuperAdminDashboard';
+import DTRDetailPage from './pages/DTRDetailPage';
 
 const App: React.FC = () => {
     return (
@@ -63,6 +64,7 @@ const App: React.FC = () => {
                             <Route path="/pagedemo" element={<PageDemo />} />
                             {/* <Route path="/" element={<Dashboard />} /> */}
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
+                            <Route path="dtr-detailId" element={<DTRDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
