@@ -253,13 +253,6 @@ const Feeders = () => {
         exportChartData(monthlyConsumptionData.xAxisData, monthlyConsumptionData.seriesData, 'feeder-monthly-consumption-data');
     };
 
-    // Handle alerts export
-    const handleAlertsExport = () => {
-        console.log('Exporting alerts...');
-        // Add alerts export logic here
-    };
-
-
     return (
         <PageC
             sections={[

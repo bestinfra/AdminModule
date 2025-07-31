@@ -40,7 +40,7 @@ export default function Meters() {
         location: 'all',
     });
 
-    // const [allMeters, setAllMeters] = useState<any[]>([]);
+
 
     // Demo data for fallback
     const [demoMeterData] = useState([
@@ -237,26 +237,7 @@ export default function Meters() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    // useEffect(() => {
-    //     fetch(`${BACKEND_URL}/meters?page=1&limit=10`)
-    //         .then((res) => res.json())
-    //         .then((data) => {
-    //             if (data.success) {
-    //                 setAllMeters(
-    //                     data.data.map((row: any) => ({
-    //                         ...row,
-    //                         meterMake: row.meterMake || row.manufacturer || '',
-    //                     }))
-    //                 );
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             console.error(
-    //                 err.message || 'Failed to fetch all meters for filters'
-    //             );
-    //             setAllMeters(demoAllMeters);
-    //         });
-    // }, []);
+
 
     const handleFilterChange = (e: {
         target: { name: string; value: string };

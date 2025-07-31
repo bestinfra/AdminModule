@@ -29,6 +29,7 @@
             "@api/*": ["src/api/*"],
             "@components/*": ["src/components/*"],
             "@pages/*": ["src/pages/*"],
+            "@pages_v2/*": ["src/pages_v2/*"],
             "@graphs/*": ["src/graphs/*"],
             "@context/*": ["src/context/*"],
             "@providers/*": ["src/providers/*"],
