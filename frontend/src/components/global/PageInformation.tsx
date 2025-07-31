@@ -28,6 +28,7 @@ interface PageInformationProps {
     
     // Section header mode
     isSectionHeader?: boolean;
+    className?: string;
     
     // Grid mode - multiple rows and items
     rows?: PageInformationRow[];
@@ -70,6 +71,7 @@ const PageInformation: React.FC<PageInformationProps> = ({
     
     // Section header mode
     isSectionHeader,
+    className,
     
     // Grid mode props
     rows,
@@ -97,7 +99,7 @@ const PageInformation: React.FC<PageInformationProps> = ({
     if (isSectionHeader) {
         return (
             <div className={`w-full h-full ${wrapperClassName}`} style={style}>
-                <div className="text-sm font-medium text-gray-600">{title}</div>
+                <div className={`${className || 'text-sm font-medium text-gray-600'}`}>{title}</div>
             </div>
         );
     }

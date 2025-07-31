@@ -208,7 +208,7 @@ export default function AddTicket() {
                                                     className: 'w-full',
                                                 },
                                                 formBackground:
-                                                    'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
+                                                    'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-3xl',
                                                 className: 'w-full',
                                             },
                                         },

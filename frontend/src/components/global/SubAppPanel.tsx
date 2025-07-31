@@ -35,6 +35,7 @@ type SubappPanelProps = {
   connectedApis: ApiConnection[];
   meters: MeterStats;
   tickets: TicketStatus;
+  appIcon: string;
 };
 
 const SubappPanel: React.FC<SubappPanelProps> = ({
@@ -52,6 +53,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   connectedApis,
   meters,
   tickets,
+  appIcon,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
@@ -107,13 +109,13 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   const getHealthColor = (healthStatus: string) => {
     switch (healthStatus) {
       case "Live":
-        return "text-green-600 bg-green-100";
+        return "bg-green-500";
       case "Down":
-        return "text-red-600 bg-red-100";
+        return "bg-red-100";
       case "Maintenance":
-        return "text-yellow-600 bg-yellow-100";
+        return "bg-yellow-100";
       default:
-        return "text-gray-600 bg-gray-100";
+        return "bg-gray-100";
     }
   };
 
@@ -151,8 +153,9 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
       {/* Header Section */}
       <div className="flex items-start justify-between w-full items-center h-full gap-8">
         <div className="flex items-center gap-4 items-start">
-          <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center">
+          <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center overflow-hidden">
             {/* Icon removed */}
+            <img src={appIcon} alt="app-icon" className="w-full h-full object-contain" />
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900">{appName}</h2>
@@ -255,10 +258,10 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
             <div className="space-y-4">
               <div className="flex items-center gap-2 flex-col items-start">
                 <span className="text-sm text-gray-600  "> Health</span>
-                <span className="text-sm font-medium text-seondary flex">
+                <span className="text-sm font-medium text-gray-900 flex items-center gap-2">
                   <div
                     className={`w-3 h-3 rounded-full ${
-                      getHealthColor(health).split(" ")[0]
+                      getHealthColor(health)
                     }`}
                   ></div>
                   {health}
@@ -286,7 +289,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
 
               <div className="flex items-center gap-2 flex-col items-start">
                 {/* Icon removed */}
-                <span className="text-sm text-gray-600">Tickets</span>
+                <span className="text-sm text-gray-600">Open Tickets</span>
                 <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">
                   {tickets.count}
                 </span>
@@ -312,6 +315,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
           </div>
           {/* Connected APIs Section */}
           <div className="flex flex-col gap-4">
+            
             <h3 className="text-sm font-medium text-gray-900">
               Connected APIs
             </h3>

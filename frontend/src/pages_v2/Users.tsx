@@ -41,12 +41,13 @@ export default function Users() {
         setLoading(true);
         fetch(`${BACKEND_URL}/users`)
             .then(async (res) => {
-                // if (!res.ok) throw new Error('Failed to fetch users');
                 const result = await res.json();
                 console.log(result);
-                // if (!result.success)
-                //     throw new Error(result.message || 'Failed to fetch users');
-                // setUsers(result.data);
+                if (result.success) {
+                    setUsers(result.data);
+                } else {
+                    throw new Error('Failed to fetch users');
+                }
             })
             .catch((err) => {
                 console.log(err);
@@ -105,6 +106,7 @@ export default function Users() {
                         result.message || 'Failed to fetch user stats'
                     );
                 setUserStats(result.data);
+                console.log('User stats:', result.data);
             })
             .catch(() => {
                 // Demo user stats fallback

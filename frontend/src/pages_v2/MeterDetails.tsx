@@ -1,9 +1,13 @@
 import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-                                                            
+import BACKEND_URL from '../config';
+                           
 // Removed: import BACKEND_URL from '../config';
-
+// Brand green icon style
+const ICON_FILTER_STYLE = {
+    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
+};
 // Meter Information Data (moved outside component)
 const METER_INFO_ROW_1 = [
     { title: 'Meter Sl No.', value: 'A9345417' },
@@ -75,11 +79,12 @@ const MeterDetails: React.FC = () => {
             value: meter.readings?.[0]?.kWh
                 ? `${meter.readings[0].kWh} kWh`
                 : 'N/A',
-            icon: '/icons/reading.svg',
+            icon: '/icons/current-reading.svg',
             subtitle1: meter.readings?.[0]
                 ? `Last Reading: ${meter.readings[0].kWh || 'N/A'} kWh`
                 : '',
             subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Status',
@@ -91,13 +96,15 @@ const MeterDetails: React.FC = () => {
                   ).toLocaleString()}`
                 : '',
             subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Meter Type',
             value: meter.type || 'N/A',
-            icon: '/icons/meter-type.svg',
+            icon: '/icons/units.svg',
             subtitle1: `Phase Type: ${meter.phase || 'N/A'}`,
             subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Location',
@@ -109,6 +116,7 @@ const MeterDetails: React.FC = () => {
                     : 'N/A'
             }`,
             subtitle2: '',
+            iconStyle: ICON_FILTER_STYLE,
         },
     ];
 
@@ -307,7 +315,8 @@ const MeterDetails: React.FC = () => {
                                                 isSectionHeader: true,
                                                 layout: 'row',
                                                 align: 'between',
-                                                gap: 'gap-4'
+                                                gap: 'gap-4',
+                                                className: 'text-lg font-semibold'
                                                }
                                             }
                                         ]

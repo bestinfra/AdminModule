@@ -1,5 +1,5 @@
 {
-  "nextPort": 4138,
+  "nextPort": 4102,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -252,8 +252,8 @@
       "path": "C:\\xampp\\htdocs\\tgnpdcl122222-backend"
     },
     "tgnpdcl007": {
-      "port": 4074,
-      "deployedAt": "2025-07-24T17:07:51.095Z",
+      "port": 4100,
+      "deployedAt": "2025-07-30T04:22:27.760Z",
       "path": "C:\\xampp\\htdocs\\tgnpdcl007-backend"
     },
     "tgnpdcl1123": {
@@ -355,196 +355,6 @@
       "port": 4099,
       "deployedAt": "2025-07-29T19:16:19.950Z",
       "path": "C:\\xampp\\htdocs\\close-backend"
-    },
-    "dtr": {
-      "port": 4100,
-      "deployedAt": "2025-07-29T19:26:26.929Z",
-      "path": "C:\\xampp\\htdocs\\dtr-backend"
-    },
-    "bills": {
-      "port": 4101,
-      "deployedAt": "2025-07-29T19:34:12.971Z",
-      "path": "C:\\xampp\\htdocs\\bills-backend"
-    },
-    "feeders": {
-      "port": 4102,
-      "deployedAt": "2025-07-29T19:40:31.375Z",
-      "path": "C:\\xampp\\htdocs\\feeders-backend"
-    },
-    "feeder": {
-      "port": 4103,
-      "deployedAt": "2025-07-29T19:45:24.032Z",
-      "path": "C:\\xampp\\htdocs\\feeder-backend"
-    },
-    "optimized": {
-      "port": 4104,
-      "deployedAt": "2025-07-29T20:01:50.649Z",
-      "path": "C:\\xampp\\htdocs\\optimized-backend"
-    },
-    "dell": {
-      "port": 4105,
-      "deployedAt": "2025-07-30T04:11:58.323Z",
-      "path": "C:\\xampp\\htdocs\\dell-backend"
-    },
-    "itemcode": {
-      "port": 4106,
-      "deployedAt": "2025-07-30T04:19:05.995Z",
-      "path": "C:\\xampp\\htdocs\\itemcode-backend"
-    },
-    "modem": {
-      "port": 4107,
-      "deployedAt": "2025-07-30T04:49:58.935Z",
-      "path": "C:\\xampp\\htdocs\\modem-backend"
-    },
-    "shiva": {
-      "port": 4108,
-      "deployedAt": "2025-07-30T05:58:08.088Z",
-      "path": "C:\\xampp\\htdocs\\shiva-backend"
-    },
-    "deploy": {
-      "port": 4109,
-      "deployedAt": "2025-07-30T06:24:13.399Z",
-      "path": "C:\\xampp\\htdocs\\deploy-backend"
-    },
-    "trinadh": {
-      "port": 4110,
-      "deployedAt": "2025-07-30T06:55:38.055Z",
-      "path": "C:\\xampp\\htdocs\\trinadh-backend"
-    },
-    "access": {
-      "port": 4111,
-      "deployedAt": "2025-07-30T07:09:22.216Z",
-      "path": "C:\\xampp\\htdocs\\access-backend"
-    },
-    "control": {
-      "port": 4112,
-      "deployedAt": "2025-07-30T08:22:05.562Z",
-      "path": "C:\\xampp\\htdocs\\control-backend"
-    },
-    "brand": {
-      "port": 4113,
-      "deployedAt": "2025-07-30T08:30:10.907Z",
-      "path": "C:\\xampp\\htdocs\\brand-backend"
-    },
-    "personalization": {
-      "port": 4114,
-      "deployedAt": "2025-07-30T08:37:53.927Z",
-      "path": "C:\\xampp\\htdocs\\personalization-backend"
-    },
-    "setup": {
-      "port": 4115,
-      "deployedAt": "2025-07-30T10:16:14.925Z",
-      "path": "C:\\xampp\\htdocs\\setup-backend"
-    },
-    "selection": {
-      "port": 4116,
-      "deployedAt": "2025-07-30T11:39:51.688Z",
-      "path": "C:\\xampp\\htdocs\\selection-backend"
-    },
-    "select": {
-      "port": 4117,
-      "deployedAt": "2025-07-30T12:03:22.060Z",
-      "path": "C:\\xampp\\htdocs\\select-backend"
-    },
-    "settings": {
-      "port": 4118,
-      "deployedAt": "2025-07-30T12:43:17.725Z",
-      "path": "C:\\xampp\\htdocs\\settings-backend"
-    },
-    "management": {
-      "port": 4119,
-      "deployedAt": "2025-07-30T12:54:04.245Z",
-      "path": "C:\\xampp\\htdocs\\management-backend"
-    },
-    "tickets": {
-      "port": 4120,
-      "deployedAt": "2025-07-30T13:07:52.355Z",
-      "path": "C:\\xampp\\htdocs\\tickets-backend"
-    },
-    "hare": {
-      "port": 4121,
-      "deployedAt": "2025-07-31T04:29:36.705Z",
-      "path": "C:\\xampp\\htdocs\\hare-backend"
-    },
-    "ram": {
-      "port": 4122,
-      "deployedAt": "2025-07-31T04:42:53.639Z",
-      "path": "C:\\xampp\\htdocs\\ram-backend"
-    },
-    "barathi": {
-      "port": 4123,
-      "deployedAt": "2025-07-31T05:16:51.383Z",
-      "path": "C:\\xampp\\htdocs\\barathi-backend"
-    },
-    "ramana": {
-      "port": 4124,
-      "deployedAt": "2025-07-31T05:28:41.087Z",
-      "path": "C:\\xampp\\htdocs\\ramana-backend"
-    },
-    "mardhal": {
-      "port": 4125,
-      "deployedAt": "2025-07-31T05:44:57.096Z",
-      "path": "C:\\xampp\\htdocs\\mardhal-backend"
-    },
-    "bujji": {
-      "port": 4126,
-      "deployedAt": "2025-07-31T05:51:34.478Z",
-      "path": "C:\\xampp\\htdocs\\bujji-backend"
-    },
-    "room": {
-      "port": 4127,
-      "deployedAt": "2025-07-31T06:03:51.941Z",
-      "path": "C:\\xampp\\htdocs\\room-backend"
-    },
-    "rooms": {
-      "port": 4128,
-      "deployedAt": "2025-07-31T06:05:35.588Z",
-      "path": "C:\\xampp\\htdocs\\rooms-backend"
-    },
-    "frontend": {
-      "port": 4129,
-      "deployedAt": "2025-07-31T06:30:55.508Z",
-      "path": "C:\\xampp\\htdocs\\frontend-backend"
-    },
-    "crm": {
-      "port": 4130,
-      "deployedAt": "2025-07-31T06:41:30.481Z",
-      "path": "C:\\xampp\\htdocs\\crm-backend"
-    },
-    "temp": {
-      "port": 4131,
-      "deployedAt": "2025-07-31T06:52:27.567Z",
-      "path": "C:\\xampp\\htdocs\\temp-backend"
-    },
-    "taxi-wala": {
-      "port": 4132,
-      "deployedAt": "2025-07-31T06:56:32.948Z",
-      "path": "C:\\xampp\\htdocs\\taxi-wala-backend"
-    },
-    "yedhi": {
-      "port": 4133,
-      "deployedAt": "2025-07-31T07:02:21.901Z",
-      "path": "C:\\xampp\\htdocs\\yedhi-backend"
-    },
-    "bad-boys": {
-      "port": 4134,
-      "deployedAt": "2025-07-31T07:09:57.544Z",
-      "path": "C:\\xampp\\htdocs\\bad-boys-backend"
-    },
-    "med": {
-      "port": 4135,
-      "deployedAt": "2025-07-31T07:19:03.110Z",
-      "path": "C:\\xampp\\htdocs\\med-backend"
-    },
-    "madam": {
-      "port": 4136,
-      "deployedAt": "2025-07-31T07:23:25.208Z",
-      "path": "C:\\xampp\\htdocs\\madam-backend"
-    },
-    "export": {
-      "port": 4137,
-      "deployedAt": "2025-07-31T07:28:19.022Z",
-      "path": "C:\\xampp\\htdocs\\export-backend"
     }
   }
 }
