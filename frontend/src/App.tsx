@@ -25,7 +25,7 @@ import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 // import MetersList from './pages/MetersList';
-import MetersList from './pages_v2/MetersList';
+// import MetersList from './pages_v2/MetersList';
 import TicketView from './pages_v2/TicketView';
 import Prepaid from './pages_v2/Prepaid';   
 import Postpaid from './pages_v2/Postpaid';
@@ -36,6 +36,8 @@ import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
 // import LoginV2 from './pages_v2/LoginV2';
 import SuperAdminDashboard from './pages_v2/SuperAdminDashboard';
+import EditRole from './pages_v2/EditRole';
+import EditUser from './pages_v2/EditUser';
 
 const App: React.FC = () => {
     return (
@@ -85,7 +87,9 @@ const App: React.FC = () => {
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
+                            <Route path="/edit-role/:roleId" element={<EditRole/>} />
                             <Route path="/add-user" element={<AddUser />} />
+                            <Route path="/edit-user/:userId" element={<EditUser />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>

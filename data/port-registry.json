@@ -1,5 +1,5 @@
 {
-  "nextPort": 4102,
+  "nextPort": 4103,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -360,6 +360,11 @@
       "port": 4101,
       "deployedAt": "2025-07-30T07:44:51.478Z",
       "path": "C:\\xampp\\htdocs\\tgnpdcl222-backend"
+    },
+    "lkjh": {
+      "port": 4102,
+      "deployedAt": "2025-07-30T13:27:53.280Z",
+      "path": "C:\\xampp\\htdocs\\lkjh-backend"
     }
   }
 }

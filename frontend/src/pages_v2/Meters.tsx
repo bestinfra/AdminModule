@@ -40,7 +40,7 @@ export default function Meters() {
         location: 'all',
     });
 
-    const [allMeters, setAllMeters] = useState<any[]>([]);
+    // const [allMeters, setAllMeters] = useState<any[]>([]);
 
     // Demo data for fallback
     const [demoMeterData] = useState([
@@ -59,7 +59,7 @@ export default function Meters() {
             value: 5,
             subtitle1: '1 Used Meter Makes',
             subtitle2: '',
-            icon: 'icons/meter-make.svg',
+            icon: 'icons/meter-bolt.svg',
             iconStyle: ICON_FILTER_STYLE,
         },
         {
@@ -116,23 +116,23 @@ export default function Meters() {
             meterNumber: 'MTR-1003',
         },
     ]);
-    const [demoAllMeters] = useState([
-        {
-            meterType: 'Smart',
-            meterMake: 'MakeA',
-            location: 'Building 1',
-        },
-        {
-            meterType: 'Digital',
-            meterMake: 'MakeB',
-            location: 'Building 2',
-        },
-        {
-            meterType: 'Smart',
-            meterMake: 'MakeA',
-            location: 'Building 3',
-        },
-    ]);
+    // const [demoAllMeters] = useState([
+    //     {
+    //         meterType: 'Smart',
+    //         meterMake: 'MakeA',
+    //         location: 'Building 1',
+    //     },
+    //     {
+    //         meterType: 'Digital',
+    //         meterMake: 'MakeB',
+    //         location: 'Building 2',
+    //     },
+    //     {
+    //         meterType: 'Smart',
+    //         meterMake: 'MakeA',
+    //         location: 'Building 3',
+    //     },
+    // ]);
 
     const fetchMeters = (page = 1, limit = 8, filtersOverride = filters) => {
         const params = new URLSearchParams();
@@ -237,26 +237,26 @@ export default function Meters() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        fetch(`${BACKEND_URL}/meters?page=1&limit=10`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.success) {
-                    setAllMeters(
-                        data.data.map((row: any) => ({
-                            ...row,
-                            meterMake: row.meterMake || row.manufacturer || '',
-                        }))
-                    );
-                }
-            })
-            .catch((err) => {
-                console.error(
-                    err.message || 'Failed to fetch all meters for filters'
-                );
-                setAllMeters(demoAllMeters);
-            });
-    }, []);
+    // useEffect(() => {
+    //     fetch(`${BACKEND_URL}/meters?page=1&limit=10`)
+    //         .then((res) => res.json())
+    //         .then((data) => {
+    //             if (data.success) {
+    //                 setAllMeters(
+    //                     data.data.map((row: any) => ({
+    //                         ...row,
+    //                         meterMake: row.meterMake || row.manufacturer || '',
+    //                     }))
+    //                 );
+    //             }
+    //         })
+    //         .catch((err) => {
+    //             console.error(
+    //                 err.message || 'Failed to fetch all meters for filters'
+    //             );
+    //             setAllMeters(demoAllMeters);
+    //         });
+    // }, []);
 
     const handleFilterChange = (e: {
         target: { name: string; value: string };
@@ -291,6 +291,7 @@ export default function Meters() {
         //     .map((type) => ({ value: type, label: type })),
         { value: 'active', label: 'Active' },
         { value: 'replaced', label: 'Replaced' },
+        { value: 'inactive', label: 'Inactive' },
     ];
     const meterMakeOptions = [
         // { value: 'all', label: 'Filter By Meter Types' },
@@ -322,7 +323,7 @@ export default function Meters() {
                             {
                                 name: 'PageHeader',
                                 props: {
-                                    title: 'Meter Management',
+                                    title: 'Meters List',
                                     onBackClick: () => window.history.back(),
                                     backButtonText: 'Back to Dashboard',
                                     // buttonsLabel: 'Add Meter',
@@ -330,7 +331,7 @@ export default function Meters() {
                                     onClick: () =>
                                         console.log('Adding new meter...'),
                                     showMenu: true,
-                                    showDropdown: true,
+                                    showDropdown: false,
                                     menuItems: [
                                         { id: 'all', label: 'All Meters' },
                                         {

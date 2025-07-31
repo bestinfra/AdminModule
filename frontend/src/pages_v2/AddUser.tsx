@@ -47,6 +47,7 @@ export default function AddUser() {
         {
             name: 'role',
             type: 'dropdown',
+            placeholder: 'Select User Role',
             options: [
                 { value: '', label: 'Select Role' },
                 ...roles.map((role) => ({
@@ -61,6 +62,7 @@ export default function AddUser() {
         {
             name: 'parentRole',
             type: 'dropdown',
+            placeholder: 'Select Parent Role',
             options: [
                 { value: '', label: 'Select Parent Role' },
                 ...parentRoles.map((role) => ({
@@ -109,7 +111,7 @@ export default function AddUser() {
                                         {
                                             name: 'PageHeader',
                                             props: {
-                                                title: 'Create User',
+                                                title: 'Add New User',
                                                 onBackClick: () => navigate('/users'),
                                                 backButtonText: 'Back to Users',
                                                 showMenu: false,
@@ -148,10 +150,9 @@ export default function AddUser() {
                                                 gridLayout: {
                                                     gridRows: 3,
                                                     gridColumns: 2,
-                                                    gap: 'gap-6',
+                                                    gap: 'gap-3',
                                                     className: 'w-full',
                                                 },
-                                               
                                             },
                                         },
                                     ],
