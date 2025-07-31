@@ -327,7 +327,7 @@ const Table: React.FC<TableProps> = ({
           {actions.map((action, index) => (
             <span
               key={index}
-              className="cursor-pointer"
+              className="cursor-pointer hover:border-3 hover:border-background-secondary hover:bg-transparent w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
               onClick={(e) => {
                 e.stopPropagation();
                 action.onClick(row);

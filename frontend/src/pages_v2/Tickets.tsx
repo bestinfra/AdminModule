@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { lazy } from 'react';
-const Page = lazy(() => import('SuperAdmin/Page'));
+const Page = lazy(() => import('@/components/global/PageC'));
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 import { exportChartData } from '@/utils/excelExport';

@@ -4,28 +4,11 @@ import Page from '@/components/global/PageC';
 import type { FormInputConfig } from '@/components/Form/types';
 import BACKEND_URL from '../config';
 
-// interface Role {
-//     id: number;
-//     name: string;
-//     description?: string;
-//     users: Array<{
-//         id: number;
-//         username: string;
-//         firstName: string;
-//         lastName: string;
-//         email: string;
-//         isActive: boolean;
-//     }>;
-//     permissions: Array<{ id: number; name: string; description: string }>;
-//     createdAt: string;
-//     updatedAt?: string;
-// }
-
 export default function EditRole() {
     const navigate = useNavigate();
     const { roleId } = useParams<{ roleId: string }>();
     const location = useLocation();
-    // const [role, setRole] = useState<any>(null);
+
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [initialFormData, setInitialFormData] = useState({
@@ -44,7 +27,6 @@ export default function EditRole() {
             // Check if we have role data from navigation state
             if (location.state?.role) {
                 const roleData = location.state.role;
-                // setRole(roleData);
                 setInitialFormData({
                     name: roleData.roleName || roleData.name || '',
                     description: roleData.description || ''
@@ -57,7 +39,6 @@ export default function EditRole() {
                 const res = await fetch(`${BACKEND_URL}/roles/${roleId}`);
                 const data = await res.json();
                 if (data.success) {
-                    // setRole(data.data);
                     setInitialFormData({
                         name: data.data.name || '',
                         description: data.data.description || ''
@@ -90,7 +71,6 @@ export default function EditRole() {
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
             };
-            // setRole(demoRole);
             setInitialFormData({
                 name: demoRole.name,
                 description: demoRole.description || ''

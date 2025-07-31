@@ -384,7 +384,7 @@ const Feeders = () => {
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             className:'w-full',
-                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
+                                            rightComponent: { name: 'LastComm', props: { value: '2024-01-15 14:30:00' } },
                                         },
                                         span: { col: 1, row: 1 },
                                     },
@@ -394,7 +394,7 @@ const Feeders = () => {
                                 layout: 'grid' as const,
                                 gridColumns: 5,
                                 className: 'w-full gap-4',
-                                columns: stats.map((stat) => ({
+                                columns: stats.map((stat: any) => ({
                                     name: 'Card',
                                     props: {
                                         title: stat.title,

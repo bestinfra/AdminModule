@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { lazy } from 'react';
-const Page = lazy(() => import('SuperAdmin/Page'));
+const Page = lazy(() => import('@/components/global/PageC'));
 
 // --- Types ---
 interface HierarchyNode {
