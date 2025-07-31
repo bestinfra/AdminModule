@@ -64,6 +64,7 @@ const mockDTRData = {
             icon: '/icons/power_failure.svg',
             subtitle1: '',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
+            bg: 'bg-green-500', // Use custom CSS class with higher specificity
         },
         {
             title: 'Power Off',

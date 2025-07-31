@@ -6,7 +6,47 @@
         hue-rotate(105deg) brightness(95%) contrast(90%);
 }
 .bg-stat-icon-gradient {
-    background-image: var(--color-stat-icon-gradient);
+    background-image: var(--color-stat-icon-gradient) !important;
+}
+
+/* Custom background classes for card icons with higher specificity */
+.card-icon-bg-green {
+    background-color: rgb(220 252 231) !important; /* green-100 */
+    background-image: none !important;
+}
+
+.card-icon-bg-blue {
+    background-color: rgb(219 234 254) !important; /* blue-100 */
+    background-image: none !important;
+}
+
+.card-icon-bg-yellow {
+    background-color: rgb(254 249 195) !important; /* yellow-100 */
+    background-image: none !important;
+}
+
+.card-icon-bg-red {
+    background-color: rgb(254 226 226) !important; /* red-100 */
+    background-image: none !important;
+}
+
+.card-icon-bg-purple {
+    background-color: rgb(243 232 255) !important; /* purple-100 */
+    background-image: none !important;
+}
+
+/* Override gradient for Tailwind background classes */
+.bg-green-500,
+.bg-blue-500,
+.bg-yellow-500,
+.bg-red-500,
+.bg-purple-500,
+.bg-green-100,
+.bg-blue-100,
+.bg-yellow-100,
+.bg-red-100,
+.bg-purple-100 {
+    background-image: none !important;
 }
 
 /* OrgChartAlt node styles */

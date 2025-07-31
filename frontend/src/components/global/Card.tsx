@@ -33,7 +33,7 @@ const Card = ({
     loading = false,
     onValueClick, // new prop
     iconStyle, // new prop
-    bg,
+    bg='bg-stat-icon-gradient',
     iconClassName = 'w-7 h-7 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-4 sm:h-4', // responsive icon sizing - decreases with smaller width
     width = 'w-14 h-14 lg:w-12 lg:h-12 md:w-10 md:h-10 sm:w-8 sm:h-8', // responsive container sizing - decreases with smaller width
     height = 'w-14 h-14 lg:w-12 lg:h-12 md:w-10 md:h-10 sm:w-8 sm:h-8', // responsive container sizing - decreases with smaller width
@@ -87,7 +87,7 @@ const Card = ({
                     )}
                 </div>
                 {icon && (
-                    <figure className={`p-2.5 md:p-2 sm:p-1.5 ${bg || 'bg-stat-icon-gradient'} rounded-full ${width} ${height} flex items-center justify-center`}>
+                    <figure className={`p-2.5 md:p-2 sm:p-1.5 ${bg} rounded-full ${width} ${height} flex items-center justify-center`}>
                         <img src={icon} alt={`${title} Icon`} className={iconClassName} style={iconStyle} />
                     </figure>
                 )}
