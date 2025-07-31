@@ -475,6 +475,7 @@ export default function Users() {
                                                 onSave: handleConfirmInactive,
                                                 saveButtonLabel: 'Inactivate User',
                                                 cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
                                             },
                                         },
                                     ],

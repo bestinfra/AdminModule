@@ -234,7 +234,7 @@ const Feeders = () => {
         { title: 'Rating', description: '25.00 kVA' },
         { title: 'Address', description: 'Waddepally, Warangal, Telangana, India, 506001' },
     ]);
-    // const lastComm = '30/06/2025 22:31:38';
+    const lastComm = '30/06/2025 22:31:38';
 
     // Use setters to avoid unused variable warnings
     useEffect(() => {
