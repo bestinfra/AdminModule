@@ -108,24 +108,28 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/meter_managment.svg',
                 link: '/meters',
             },
-            {
-                title: 'Users Management',
-                icon: '/icons/user_managment.svg',
-                link: '/users',
-            },
             // {
-            //     title: 'User Management',
+            //     title: 'Users Management',
             //     icon: '/icons/user_managment.svg',
-            //     link: '/user-management',
-            //     hasSubmenu: true,
-            //     submenu: [
-                  
-            //         {
-            //             title: 'Role Management',
-            //             link: '/role-management ',
-            //         },
-            //     ],
+            //     link: '/users',
             // },
+            {
+                title: 'User Management',
+                icon: '/icons/user_managment.svg',
+                link: '/user-management',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'User Management',
+                        link: '/users',
+                    },
+                  
+                    {
+                        title: 'Role Management',
+                        link: '/role-management ',
+                    },
+                ],
+            },
         ],
     },
 ];

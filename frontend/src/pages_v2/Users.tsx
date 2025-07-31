@@ -1,7 +1,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import Modal from '@/components/global/Modal';
 import BACKEND_URL from '../config';
 
 const tableColumns = [
@@ -37,10 +36,6 @@ export default function Users() {
     // User stats state
     const [userStats, setUserStats] = useState<any>(null);
     const [statsLoading, setStatsLoading] = useState(true);
-
-    // Delete modal state
-    const [showDeleteModal, setShowDeleteModal] = useState(false);
-    const [userToDelete, setUserToDelete] = useState<any>(null);
 
     // Inactive modal state
     const [showInactiveModal, setShowInactiveModal] = useState(false);
@@ -209,23 +204,7 @@ export default function Users() {
         : [];
 
 
-    const handleConfirmDelete = () => {
-        if (userToDelete) {
-            console.log('Deleting user:', userToDelete.sNo);
-            // Add your delete API call here
-            fetch(`${BACKEND_URL}/users/${userToDelete.sNo}`, { method: 'DELETE' })
-                .then(() => {
-                    setUsers(users.filter(user => user.sNo !== userToDelete.sNo));
-                });
-        }
-        setShowDeleteModal(false);
-        setUserToDelete(null);
-    };
 
-    const handleCancelDelete = () => {
-        setShowDeleteModal(false);
-        setUserToDelete(null);
-    };
 
     const handleInactiveClick = (row: any) => {
         setUserToInactive(row);

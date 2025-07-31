@@ -33,6 +33,7 @@ import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
 import PageInformation from './PageInformation';
 import SubappPanel from './SubAppPanel';
+import Permissions from './Permissions';
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
@@ -68,6 +69,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     LoginV2,
     PageInformation,
     SubappPanel,
+    Permissions,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
