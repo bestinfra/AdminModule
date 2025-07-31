@@ -326,6 +326,10 @@ export default function RoleManagement() {
         });
     };
 
+    const handleManagePermissions = (row: any) => {
+        navigate('/roles-permissions', { state: { role: row } });
+    };
+
     // Form fields configuration for add role
     const addRoleFormFields = [
         {
@@ -399,15 +403,12 @@ export default function RoleManagement() {
     const tableActions = [
         {
             label: 'Manage Permissions',
-            onClick: (row: any) => {
-                console.log('Manage Permissions clicked for:', row);
-                navigate('/admin/permissions', { state: { role: row } });
-            },
+            onClick: handleManagePermissions,
             icon: '/icons/settings.svg',
         },
                             {
                         label: 'Edit',
-                        onClick: handleEditClick,
+            onClick: handleEditClick,
                         icon: '/icons/user-pen.svg',
                     },
         {
@@ -442,7 +443,7 @@ export default function RoleManagement() {
                                                 variant: 'primary',
                                                 onClick: handleAddClick,
                                                 showMenu: true,
-                                                showDropdown: true,
+                                                showDropdown: false,
                                                 menuItems: [
                                                     {
                                                         id: 'all',
@@ -601,6 +602,7 @@ export default function RoleManagement() {
                             ],
                         },
                     },
+
                 ]}
             />
         </Suspense>

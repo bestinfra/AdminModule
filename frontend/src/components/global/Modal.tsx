@@ -34,6 +34,7 @@ interface ModalProps {
   onSave?: (formData: any) => void;
   saveButtonLabel?: string;
   cancelButtonLabel?: string;
+  cancelButtonVariant?: 'primary' | 'secondary' | 'outline';
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -56,7 +57,8 @@ const Modal: React.FC<ModalProps> = ({
   formFields = [],
   onSave,
   saveButtonLabel = 'Save',
-  cancelButtonLabel = 'Cancel'
+  cancelButtonLabel = 'Cancel',
+  cancelButtonVariant = 'secondary'
 }) => {
   const uniqueModalId = modalId || `modal-${Math.random().toString(36).substr(2, 9)}`;
   
@@ -257,12 +259,11 @@ const Modal: React.FC<ModalProps> = ({
                 <footer className="flex justify-end gap-3 px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
                   {showForm ? (
                     <>
-                      <button
+                      <Button
+                        label={cancelButtonLabel}
+                        variant={cancelButtonVariant}
                         onClick={onClose}
-                        className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
-                      >
-                        {cancelButtonLabel}
-                      </button>
+                      />
                       <Button
                         label={saveButtonLabel}
                         onClick={handleSave}
