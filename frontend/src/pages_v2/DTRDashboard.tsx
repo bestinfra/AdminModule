@@ -643,12 +643,12 @@ const DTRDashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
-                                                
+                                                                                              
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
                                                 showHeader: true,
                                                 headerTitle: 'DTRInformation',  
-
+                                                headerClassName:'h-18',
                                                 searchable: true, 
                                                 sortable: true,
                                                 pagination: true,
