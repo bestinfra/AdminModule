@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { TableData } from '@components/global/Table';
+import type { TableData } from '@/components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
@@ -37,7 +37,10 @@ const DTRDashboard: React.FC = () => {
         navigate(`/dtr-detail/${row.dtrId}`);
     };
 
-
+    // const handleEditDTR = (row: TableData) => {
+    //     console.log('Editing DTR:', row);
+    //     navigate(`/dtr/${row.dtrId}/edit`);
+    // };
 
   // DTR statistics cards data - Using only daily data consistently
   const dtrStatsCards = [

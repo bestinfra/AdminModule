@@ -1,8 +1,8 @@
 import React, { useState, useCallback, useMemo } from 'react';
 // import { useAuth } from '@context/AuthContext';
-import Logo from '@components/global/Logo';
-import Form from '@components/Form/Form';
-import type { FormInputConfig, FormInputValue } from '@components/Form/types';
+import Logo from '@/components/global/Logo';
+import Form from '@/components/Form/Form';
+import type { FormInputConfig, FormInputValue } from '@/components/Form/types';
 
 export interface LoginV2Props {
   minPasswordLength?: number;

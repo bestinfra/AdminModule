@@ -5,6 +5,7 @@ import { FederatedContextProvider } from './components/FederatedWrapper';
 import CSSLoader from './components/CSSLoader';
 import './App.css';
 import { Theme } from './Theme';
+import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';
 {{dashboardImport}}
 {{dashboardImportForConsumer}}
 {{consumersImport}}
@@ -12,7 +13,6 @@ import { Theme } from './Theme';
 {{usersImport}}
 {{roleManagementImport}}
 {{metersImport}}
-// {{dataLoggerImport}}
 {{dtrDashboardImport}}
 {{assetManagementImport}}
 {{ticketsImport}}
@@ -45,65 +45,8 @@ const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentTyp
 {{headerComponent}}
 {{loginComponent}}
 
-interface RequireAuthProps {
-  children: React.ReactNode;
-}
-
-function RequireAuth({ children }: RequireAuthProps) {
-  const isLoggedIn = !!localStorage.getItem('token');
-  const location = useLocation();
-  if (!isLoggedIn) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-  return <>{children}</>;
-}
-
-function AppContent() {
-  const contextValue = useApp();
-  const location = useLocation();
-  const navigate = useNavigate();
-  
-  // Function to get page title based on current route
-  const getPageTitle = (): string => {
-    switch (location.pathname) {
-      case '/':
-      case '/dashboard':
-        return 'Dashboard';
-      {{consumerCase}}
-      {{userManagementCase}}
-      {{roleManagementCase}}
-      {{billsPrepaidCase}}
-      {{billsPostpaidCase}}
-      {{ticketsCase}}
-      {{assetManagementCase}}
-      {{meterManagementCase}}
-      // {{dataLoggerCase}}
-      {{dtrCase}}
-      {{consumerDashboardCase}}
-      {{dtrDashboardCase}}
-      default:
-        return 'Dashboard';
-    }
-  };
-  
-  // Check if remote app is accessible
-  useEffect(() => {
-    const checkRemoteApp = async () => {
-      try {
-        const response = await fetch('http://localhost:3000/assets/remoteEntry.js');
-        if (!response.ok) {
-          console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
-        }
-      } catch (error) {
-        console.error('Failed to check remote app:', error);
-      }
-    };
-    
-    checkRemoteApp();
-  }, []);
-  
 // Generate dynamic menu items based on selected modules
-const generateMenuItems = (modules: string[] = []) => {
+const generateModuleBasedMenuItems = (modules: string[] = []) => {
   const mandatoryMenus = [];
 
   // Add Consumers only if consumer module is selected
@@ -178,31 +121,17 @@ const generateMenuItems = (modules: string[] = []) => {
         },
       ],
     },
-    prepaid: {
-      title: 'Prepaid Bills',
-      icon: '/icons/bills2.svg',
-      link: '/bills/prepaid',
-    },
-    postpaid: {
-      title: 'Postpaid Bills',
-      icon: '/icons/bills.svg',
-      link: '/bills/postpaid',
-    },
-    asset_management: {
-      title: 'Assets',
-      icon: '/icons/workflow-setting-alt.svg',
-      link: '/asset-management',
-    },
+    // asset_management: {
+    //   title: 'Assets',
+    //   icon: '/icons/workflow-setting-alt.svg',
+    //   link: '/asset-management',
+    // },
     meter_management: {
       title: 'Meters',
       icon: '/icons/meter-bolt.svg',
       link: '/meters',
       hasSubmenu: true,
       submenu: [
-        // {
-        //   title: 'Data Logger Master',
-        //   link: '/data-logger-master',
-        // },
         {
           title: 'Meter List',
           link: '/meters',
@@ -241,99 +170,231 @@ const generateMenuItems = (modules: string[] = []) => {
   return [...mandatoryMenus, ...selectedModuleMenus];
 };
 
-// Memoize menu items to prevent unnecessary re-renders
-const menuItems = useMemo(() => generateMenuItems({{modulesArray}}), [{{modulesArray}}]);
+// Role-based menu filtering
+const filterMenuItemsByRole = (menuItems: any[], userRole: string) => {
+
+  
+  // Define role-based access rules
+  const roleAccessRules = {
+    admin: ['all'], // Admin can access everything
+    moderator: ['tickets', 'meter_management'], // Moderator access (removed asset_management)
+    accountant: ['tickets', 'bills'], // Accountant access (bills only)
+  };
+
+  const allowedModules = roleAccessRules[userRole] || ['tickets'];
+  
+  return menuItems.filter(item => {
+    // Always allow dashboard items
+    if (item.title === 'Dashboard' || item.title === 'DTR Dashboard' || item.title === 'Consumer Dashboard') {
+      return true;
+    }
+    
+    // Check if item is allowed for this role
+    return allowedModules.includes('all') || allowedModules.some(module => 
+      item.title.toLowerCase().includes(module.replace('_', ' ')) ||
+      item.link?.includes(module.replace('_', '-'))
+    );
+  });
+};
+
+// Local authentication components with error handling
+const AuthProvider = React.lazy(() => 
+  import('./components/auth/LocalAuthWrapper').catch(error => {
+    console.error('Failed to load AuthProvider:', error);
+    return { default: () => <div>Authentication Error - Please refresh the page</div> };
+  })
+);
+
+const ProtectedRoute = React.lazy(() => 
+  import('./components/auth/LocalProtectedRoute').catch(error => {
+    console.error('Failed to load ProtectedRoute:', error);
+    return { default: ({ children }: any) => <>{children}</> };
+  })
+);
+
+// Fallback components for authentication
+const AuthProviderFallback = () => <div>Loading Authentication...</div>;
+const ProtectedRouteFallback = () => <div>Loading Protected Route...</div>;
+
+function AppContent() {
+  const contextValue = useApp();
+  const location = useLocation();
+  const navigate = useNavigate();
+  
+  // Function to get page title based on current route
+  const getPageTitle = (): string => {
+    switch (location.pathname) {
+      case '/':
+      case '/dashboard':
+        return 'Dashboard';
+      {{consumerCase}}
+      {{userManagementCase}}
+      {{roleManagementCase}}
+      {{billsPrepaidCase}}
+      {{billsPostpaidCase}}
+      {{ticketsCase}}
+      {{assetManagementCase}}
+      {{meterManagementCase}}
+      {{dtrCase}}
+      {{consumerDashboardCase}}
+      {{dtrDashboardCase}}
+      default:
+        return 'Dashboard';
+    }
+  };
+  
+  // Check if remote app is accessible
+  useEffect(() => {
+    const checkRemoteApp = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/assets/remoteEntry.js');
+        if (!response.ok) {
+          console.error('Remote app not accessible. Make sure SuperAdmin is running on port 3000');
+        }
+      } catch (error) {
+        console.error('Failed to check remote app:', error);
+      }
+    };
+    
+    checkRemoteApp();
+  }, []);
+  
+// Generate menu items based on modules and filter by role
+const menuItems = useMemo(() => {
+  // Get user from localStorage to determine role
+  const getUserRole = () => {
+    try {
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        return user.role || 'accountant'; // Default to accountant if no role
+      }
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+    }
+    return 'accountant'; // Default role
+  };
+
+  const userRole = getUserRole();
+  
+  // First, generate menu items based on selected modules
+  const selectedModules = {{modulesArray}};
+  const moduleBasedMenuItems = generateModuleBasedMenuItems(selectedModules);
+  
+  // Then, filter by user role
+  const roleFilteredMenuItems = filterMenuItemsByRole(moduleBasedMenuItems, userRole);
+  
+  return roleFilteredMenuItems;
+}, [location.pathname]); // Re-compute when route changes (indicates login/logout)
 
   return (
-   
     <FederatedContextProvider value={contextValue}>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/unauthorized" element={<div className="min-h-screen flex items-center justify-center bg-gray-50">
+          <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h1>
+              <p className="text-gray-600 mb-6">You don't have permission to access this page.</p>
+            </div>
+          </div>
+        </div>} />
         <Route
           path="*"
           element={
-            <RequireAuth>
-              <div className="flex h-screen bg-white">
-                {/* Sidebar and Header only for authenticated users */}
-                <Suspense fallback={<SidebarFallback />}>
-                  <Sidebar 
-                    currentPath={location.pathname}
-                    onNavigate={(path: string) => navigate(path)}
-                    menus={[
-                      {
-                        category: 'GENERAL',
-                        items: menuItems,
-                      },
-                    ]}
-                    logo={{
-                      src: '/images/bi-blue-logo.svg',
-                      alt: '{{appName}}',
-                      collapsedSrc: '/images/changed-logo.svg',
-                    }}
-                    footer={{
-                      copyright: '© 2024 {{companyName}}',
-                      showThemeToggle: true,
-                      showShareButton: false,
-                    }}
-                  />
+            <Suspense fallback={<AuthProviderFallback />}>
+              <AuthProvider>
+                <Suspense fallback={<ProtectedRouteFallback />}>
+                  <ProtectedRoute>
+                    <div className="flex h-screen bg-white">
+                      {/* Sidebar and Header only for authenticated users */}
+                      <Suspense fallback={<SidebarFallback />}>
+                        <Sidebar 
+                          currentPath={location.pathname}
+                          onNavigate={(path: string) => navigate(path)}
+                          menus={[
+                            {
+                              category: 'GENERAL',
+                              items: menuItems,
+                            },
+                          ]}
+                          logo={{
+                            src: '/images/bi-blue-logo.svg',
+                            alt: '{{appName}}',
+                            collapsedSrc: '/images/changed-logo.svg',
+                          }}
+                          footer={{
+                            copyright: '© 2024 {{companyName}}',
+                            showThemeToggle: true,
+                            showShareButton: false,
+                          }}
+                        />
+                      </Suspense>
+                      <div className="flex flex-col flex-1">
+                        <Suspense fallback={<HeaderFallback />}>
+                          <Header title={getPageTitle()} />
+                        </Suspense>
+                        <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
+                          {/* All protected routes here */}
+                          <Routes>
+                            {/* Routes accessible to all authenticated users */}
+                            {{dashboardRoute}}
+                            {{dtrDashboardRoute}}
+                            
+                            {/* Admin only routes */}
+                            {{usersRoute}}
+                            {{roleManagementRoute}}
+                            {{meterManagementRoute}}
+                            {{meterDetailsRoute}}
+                            
+                            {/* Admin and Moderator routes */}
+                            {{assetManagementRoute}}
+                            
+                            {/* Routes accessible to all roles */}
+                            {{ticketsRoute}}
+                            {{ticketViewRoute}}
+                            {{consumerRoute}}
+                            {{billsPrepaidRoute}}
+                            {{billsPostpaidRoute}}
+                            {{consumerDashboardRoute}}
+                            {{feedersRoute}}
+                            
+                            <Route path="*" element={
+                              <div className="p-6">
+                                <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
+                                <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                  <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
+                                  <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
+                                  <div className="mt-4">
+                                    <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
+                                    <ul className="text-sm text-red-700 space-y-1">
+                                      {{dashboardError}}
+                                      {{consumerError}}
+                                      {{billsPrepaidError}}
+                                      {{billsPostpaidError}}
+                                      {{assetManagementError}}
+                                      {{meterManagementError}}
+                                      {{ticketsError}}
+                                      {{usersError}}
+                                      {{roleManagementError}}
+                                      {{dtrError}}
+                                      {{consumerDashboardError}}
+                                      {{dtrDashboardError}}
+                                      {{feedersError}}
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            } />
+                          </Routes>
+                        </main>
+                      </div>
+                    </div>
+                  </ProtectedRoute>
                 </Suspense>
-                <div className="flex flex-col flex-1">
-                  <Suspense fallback={<HeaderFallback />}>
-                    <Header title={getPageTitle()} />
-                  </Suspense>
-                  <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
-                    {/* All protected routes here */}
-                    <Routes>
-                      {{dashboardRoute}}
-                      {{consumerRoute}}
-                      {{billsPrepaidRoute}}
-                      {{billsPostpaidRoute}}
-                      {{assetManagementRoute}}
-                      {{meterManagementRoute}}
-                      {{meterDetailsRoute}}
-                      // {{dataLoggerRoute}}
-                      {{ticketsRoute}}
-                      {{ticketViewRoute}}
-                      {{usersRoute}}
-                      {{roleManagementRoute}}
-                      {{dtrRoute}}
-                      {{consumerDashboardRoute}}
-                      {{dtrDashboardRoute}}
-                      {{feedersRoute}}
-                      <Route path="*" element={
-                        <div className="p-6">
-                          <h1 className="text-2xl font-bold mb-4">Page Not Found</h1>
-                          <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
-                          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                            <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
-                            <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
-                            <div className="mt-4">
-                              <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
-                              <ul className="text-sm text-red-700 space-y-1">
-                                {{dashboardError}}
-                                {{consumerError}}
-                                {{billsPrepaidError}}
-                                {{billsPostpaidError}}
-                                {{assetManagementError}}
-                                {{meterManagementError}}
-                                // {{dataLoggerError}}
-                                {{ticketsError}}
-                                {{usersError}}
-                                {{roleManagementError}}
-                                {{dtrError}}
-                                {{consumerDashboardError}}
-                                {{dtrDashboardError}}
-                                {{feedersError}}
-                              </ul>
-                            </div>
-                          </div>
-                        </div>
-                      } />
-                    </Routes>
-                  </main>
-                </div>
-              </div>
-            </RequireAuth>
+              </AuthProvider>
+            </Suspense>
           }
         />
       </Routes>
@@ -344,15 +405,15 @@ const menuItems = useMemo(() => generateMenuItems({{modulesArray}}), [{{modulesA
 function App() {
   return (
     <ThemeProvider>
-    <Theme>
-    <Router>
-      <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
-        <AppProvider>
-          <AppContent />
-        </AppProvider>
-      </Suspense>
-    </Router>
-    </Theme>
+      <Theme>
+        <Router>
+          <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
+            <AppProvider>
+              <AppContent />
+            </AppProvider>
+          </Suspense>
+        </Router>
+      </Theme>
     </ThemeProvider>
   );
 }

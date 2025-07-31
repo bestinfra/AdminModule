@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import PageC from '@components/global/PageC';
+import PageC from '@/components/global/PageC';
 
 // Brand green icon style
 const ICON_FILTER_STYLE = {

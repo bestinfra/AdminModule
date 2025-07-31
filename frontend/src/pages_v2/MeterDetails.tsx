@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import BACKEND_URL from '../config';
                            
 // Removed: import BACKEND_URL from '../config';
 // Brand green icon style
@@ -54,7 +53,7 @@ const MeterDetails: React.FC = () => {
             },
         ],
         status: 'Active',
-        type: 'Three Phase',
+        type: 'Prepaid',
         phase: 'Three Phase',
         location: { name: 'Main Building' },
         installationDate: '2023-01-01T00:00:00Z',
@@ -83,7 +82,7 @@ const MeterDetails: React.FC = () => {
             subtitle1: meter.readings?.[0]
                 ? `Last Reading: ${meter.readings[0].kWh || 'N/A'} kWh`
                 : '',
-            subtitle2: '',
+            subtitle2: 'Consumption: 160.99 kWh',
             iconStyle: ICON_FILTER_STYLE,
         },
         {
@@ -301,11 +300,11 @@ const MeterDetails: React.FC = () => {
                             layout: {
                                 type: 'grid',
                                 columns: 3,
-                                className: 'mb-6 border border-primary-border rounded-3xl bg-white p-8 mt-6',
+                                className: 'border border-primary-border rounded-3xl bg-white p-4',
                                 rows: [
                                     {
                                         layout: 'row' as const,
-                                        className: 'justify-between w-full mb-4',
+                                        className: 'justify-between w-full',
                                         span: { col: 3, row: 1 },
                                         columns: [
                                             {   
@@ -382,17 +381,9 @@ const MeterDetails: React.FC = () => {
                         {
                             layout:{
                                 type:"column" as const,
-                                className:"mb-8 border border-primary-border rounded-3xl bg-white p-8"
+                                gap:"gap-4"
                             },
                             components:[
-                                {
-                                    name:"Heading",
-                                    props:{
-                                        text:"Meter History",
-                                        level:2,
-                                        className:"text-base font-medium"
-                                    }
-                                },
                                 {
                                     name:'Table',
                                     props:{
@@ -400,6 +391,8 @@ const MeterDetails: React.FC = () => {
                                         columns:meterInfoColumns,
                                         actions:meterDetailAction,
                                         showActions:false,
+                                        showHeader: true,
+                                        headerTitle: 'Meter History',
                                         searchable:true,
                                         pagination:true,
                                         initialRowsPerPage:10,
@@ -407,8 +400,8 @@ const MeterDetails: React.FC = () => {
                                         emptyMessage:"No Meter Information Found",
                                         onRowClick:()=>{
                                             navigate(`/meters/${meter.serialNumber}`)
-                                        }
-                                        
+                                        },
+                                        availableTimeRanges: [],                                        
                                     }
                                 }
                             ]

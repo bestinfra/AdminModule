@@ -9,7 +9,8 @@ import Login from './pages/Login';
 import DataLogger from './pages_v2/DataLogger';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
-import AssetManagment from './pages_v2/AssetManagment';
+import AssetManagment from './pages_v2/AssetManagement';
+// import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';
 import AddConsumer from './pages/AddConsumer';
@@ -31,6 +32,8 @@ import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
 import SuperAdminDashboard from './pages_v2/SuperAdminDashboard';
+import EditRole from './pages_v2/EditRole';
+import EditUser from './pages_v2/EditUser';
 
 import DTRDetailPage from './pages/DTRDetailPage';
 
@@ -83,7 +86,9 @@ const App: React.FC = () => {
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
+                            <Route path="/edit-role/:roleId" element={<EditRole/>} />
                             <Route path="/add-user" element={<AddUser />} />
+                            <Route path="/edit-user/:userId" element={<EditUser />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>

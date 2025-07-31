@@ -77,6 +77,9 @@ function generateFrontend(baseDir, formData) {
   const templateDir = path.join(__dirname, 'templates', 'frontend');
   copyTemplateDirectory(templateDir, frontendDir, variables, ['App.tsx.template']);
 
+  // Generate authentication components FIRST (before App.tsx)
+  generateAuthComponents(frontendDir, variables);
+  
   // Generate additional files that need complex logic
   generateAppComponent(frontendDir, variables);
   generateContextFiles(frontendDir, variables);
@@ -142,63 +145,21 @@ function generateAppComponent(frontendDir, variables) {
       case '/meter-details/:meterSlNo':
         return 'Meter Details';` : '';
   
-  variables.dtrCase = modules.includes('dtr') ? `
-      case '/dtr-dashboard':
-        return 'DTR Dashboard';
-      case '/dtr/:dtrId':
-        return 'Feeders';` : '';
+  // Dashboard submenu case variables - smart logic
+  const dashboardCaseModules = [];
+  if (modules.includes('consumer_dashboard')) dashboardCaseModules.push('consumer_dashboard');
+  if (modules.includes('dtr_dashboard')) dashboardCaseModules.push('dtr_dashboard');
   
-  // Dashboard submenu case variables
-  variables.consumerDashboardCase = modules.includes('consumer_dashboard') && modules.includes('dashboard') ? `
-      case '/consumer-dashboard':
-        return 'Consumer Dashboard';` : '';
-  
-  variables.dtrDashboardCase = modules.includes('dtr_dashboard') && modules.includes('dashboard') ? `
-      case '/dtr-dashboard':
-        return 'DTR Dashboard';` : '';
-  
-  variables.consumerCase = modules.includes('consumer') ? `
-      case '/consumers':
-        return 'Consumers';` : '';
-  
-  variables.userManagementCase = modules.includes('user_management_default') ? `
-      case '/users':
-        return 'Users';` : '';
+  // Old case-based variables removed - now using simplified pageTitles object
 
-  // Calculate route variables
-  variables.billsPrepaidRoute = (modules.includes('bills') || modules.includes('prepaid')) ? 
-    '<Route path="/bills/prepaid" element={<Prepaid />} />' : '';
-  
-  variables.billsPostpaidRoute = (modules.includes('bills') || modules.includes('postpaid')) ? 
-    '<Route path="/bills/postpaid" element={<Postpaid />} />' : '';
-  
-  variables.assetManagementRoute = modules.includes('asset_management') ? 
-    '<Route path="/asset-management" element={<AssetManagment />} />' : '';
-   
-  variables.meterManagementRoute = modules.includes('meter_management') ? 
-    '<Route path="/meters" element={<Meters />} />' : '';
-  
-  // Data Logger route (commented out)
-  // variables.dataLoggerRoute = modules.includes('meter_management') ? 
-  //   '<Route path="/data-logger-master" element={<DataLogger />} />' : '';
-  
-  variables.ticketsRoute = modules.includes('tickets') ? 
-    '<Route path="/all-tickets" element={<Tickets />} />' : '';
-  
-  variables.usersRoute = modules.includes('user_management_default') ? 
-    '<Route path="/users" element={<Users />} />' : '';
-  
-  variables.roleManagementRoute = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
-    '<Route path="/role-management" element={<RoleManagement />} />' : '';
-  
-  variables.consumerRoute = modules.includes('consumer') ? 
-    '<Route path="/consumers" element={<Consumers />} />' : '';
-  
-  variables.dtrRoute = modules.includes('dtr') ? 
-    '' : ''; // DTR dashboard route is handled by dtrDashboardRoute, feeders by feedersRoute
+  // Old route variables removed - now using simplified routes array
    
   variables.meterDetailsRoute = modules.includes('meter_management') ? 
     '<Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />' : '';
+
+  // Add feeders route for DTR dashboard navigation
+  variables.feedersRoute = modules.includes('dtr_dashboard') ? 
+    '<Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
   
   variables.ticketViewRoute = modules.includes('tickets') ? 
     '<Route path="/tickets/:ticketId" element={<TicketView />} />' : '';
@@ -230,13 +191,13 @@ function generateAppComponent(frontendDir, variables) {
                         <Route path="/dashboard" element={<Dashboard />} />`;
       variables.dashboardError = `<li>/ - Dashboard</li>
                                   <li>/dashboard - Dashboard</li>`;
-      variables.dashboardImport = 'import Dashboard from \'./pages/Dashboard\';';
+      variables.dashboardImport = 'import Dashboard from \'@/pages/Dashboard\';';
     } else if (singleModule === 'dtr_dashboard') {
       variables.dashboardRoute = `<Route path="/" element={<DTRDashboard />} />
                         <Route path="/dashboard" element={<DTRDashboard />} />`;
       variables.dashboardError = `<li>/ - DTRDashboard</li>
                                   <li>/dashboard - DTRDashboard</li>`;
-      variables.dashboardImport = 'import DTRDashboard from \'./pages/DTRDashboard\';';
+      variables.dashboardImport = 'import DTRDashboard from \'@/pages/DTRDashboard\';';
     }
   } else {
     // Multiple dashboards - create main dashboard with sub-routes
@@ -244,54 +205,57 @@ function generateAppComponent(frontendDir, variables) {
                       <Route path="/dashboard" element={<Dashboard />} />`;
     variables.dashboardError = `<li>/ - Dashboard</li>
                                 <li>/dashboard - Dashboard</li>`;
-    variables.dashboardImport = 'import Dashboard from \'./pages/Dashboard\';';
+    variables.dashboardImport = 'import Dashboard from \'@/pages/Dashboard\';';
     if (modules.includes('dtr_dashboard')) {
-      variables.dashboardImportForConsumer = 'import DTRDashboard from \'./pages/DTRDashboard\';';
+      variables.dashboardImportForConsumer = 'import DTRDashboard from \'@/pages/DTRDashboard\';';
     }
   }
   
   variables.consumersImport = modules.includes('consumer') ? 
-    'import Consumers from \'./pages/Consumers\';' : '';
+    'import Consumers from \'@/pages/Consumers\';' : '';
   
   variables.consumerViewImport = modules.includes('consumer') ? 
-    'import ConsumerView from \'./pages/ConsumerView\';' : '';
+    'import ConsumerView from \'@/pages/ConsumerView\';' : '';
   
   variables.usersImport = modules.includes('user_management_default') ? 
-    'import Users from \'./pages/Users\';' : '';
+    'import Users from \'@/pages/Users\';' : '';
   
   variables.roleManagementImport = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
-    'import RoleManagement from \'./pages/RoleManagement\';' : '';
+    'import RoleManagement from \'@/pages/RoleManagement\';' : '';
   
   variables.metersImport = modules.includes('meter_management') ? 
-    'import Meters from \'./pages/Meters\';' : '';
+    'import Meters from \'@/pages/Meters\';' : '';
   
   // Data Logger import (commented out)
   // variables.dataLoggerImport = modules.includes('meter_management') ? 
-  //   'import DataLogger from \'./pages/DataLogger\';' : '';
+  //   'import DataLogger from \'@/pages/DataLogger\';' : '';
   
-  variables.dtrDashboardImport = modules.includes('dtr') ? 
-    'import DTRDashboard from \'./pages/DTRDashboard\';' : '';
+  variables.dtrDashboardImport = modules.includes('dtr_dashboard') ? 
+    'import DTRDashboard from \'@/pages/DTRDashboard\';' : '';
+
+  // Add Feeders import for DTR dashboard navigation
+  variables.feedersImport = modules.includes('dtr_dashboard') ? 
+    'import Feeders from \'@/pages/Feeders\';' : '';
   
   variables.assetManagementImport = modules.includes('asset_management') ? 
-    'import AssetManagment from \'./pages/AssetManagment\';' : '';
+    'import AssetManagement from \'@/pages/AssetManagement\';' : '';
   
   variables.ticketsImport = modules.includes('tickets') ? 
-    'import Tickets from \'./pages/Tickets\';' : '';
+    'import Tickets from \'@/pages/Tickets\';' : '';
   
   variables.prepaidImport = (modules.includes('bills') || modules.includes('prepaid')) ? 
-    'import Prepaid from \'./pages/Prepaid\';' : '';
+    'import Prepaid from \'@/pages/Prepaid\';' : '';
   
   variables.postpaidImport = (modules.includes('bills') || modules.includes('postpaid')) ? 
-    'import Postpaid from \'./pages/Postpaid\';' : '';
+    'import Postpaid from \'@/pages/Postpaid\';' : '';
   
   variables.meterDetailsImport = modules.includes('meter_management') ? 
-    'import MeterDetails from \'./pages/MeterDetails\';' : '';
+    'import MeterDetails from \'@/pages/MeterDetails\';' : '';
   
   variables.ticketViewImport = modules.includes('tickets') ? 
-    'import TicketView from \'./pages/TicketView\';' : '';
+    'import TicketView from \'@/pages/TicketView\';' : '';
   
-  variables.feedersImport = modules.includes('dtr') ? 
-    'import Feeders from \'./pages/Feeders\';' : '';
+
   
   // Calculate fallback components
   variables.loginFallback = `const LoginFallback = () => (
@@ -337,53 +301,311 @@ function generateAppComponent(frontendDir, variables) {
   LoginFallback
 );`;
 
-  // Calculate error page variables
-  variables.billsPrepaidError = (modules.includes('bills') || modules.includes('prepaid')) ? 
-    '<li>/bills/prepaid - Bills Prepaid</li>' : '';
+  // Generate all imports
+  variables.imports = '';
   
-  variables.billsPostpaidError = (modules.includes('bills') || modules.includes('postpaid')) ? 
-    '<li>/bills/postpaid - Bills Postpaid</li>' : '';
+  // Dashboard imports - smart import logic
+  const dashboardImportModules = [];
+  if (modules.includes('consumer_dashboard')) dashboardImportModules.push('consumer_dashboard');
+  if (modules.includes('dtr_dashboard')) dashboardImportModules.push('dtr_dashboard');
   
-  variables.assetManagementError = modules.includes('asset_management') ? 
-    '<li>/asset-management - Asset Management</li>' : '';
-  
-  variables.meterManagementError = modules.includes('meter_management') ? 
-    '<li>/meters - Meters List</li>\n                                <li>/meter-details/:meterSlNo - Meter Details</li>' : '';
-  
-  // Data Logger error (commented out)
-  // variables.dataLoggerError = modules.includes('meter_management') ? 
-  //   '<li>/data-logger-master - Data Logger Master</li>' : '';
-  
-  variables.ticketsError = modules.includes('tickets') ? 
-    '<li>/all-tickets - All Tickets</li>\n                                <li>/tickets/:ticketId - Ticket View</li>' : '';
-  
-  variables.usersError = modules.includes('user_management_default') ? 
-    '<li>/users - Users</li>' : '';
-  
-  variables.roleManagementError = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
-    '<li>/role-management - Role Management</li>' : '';
-  
-  variables.consumerError = modules.includes('consumer') ? 
-    '<li>/consumers - Consumers</li>' : '';
-  
-  variables.dtrError = modules.includes('dtr') ? 
-    '<li>/dtr-dashboard - DTR Dashboard</li>\n                                <li>/dtr/:dtrId - Feeders</li>' : '';
-  
- // Dashboard submenu error variables
+  if (dashboardImportModules.length === 0) {
+    // No dashboard modules - use default dashboard
+    if (modules.includes('dashboard')) {
+      variables.imports += 'import Dashboard from \'@/pages/Dashboard\';\n';
+    }
+  } else if (dashboardImportModules.length === 1) {
+    // Single dashboard module - import the specific dashboard
+    const singleModule = dashboardImportModules[0];
+    if (singleModule === 'consumer_dashboard') {
+      variables.imports += 'import Dashboard from \'@/pages/Dashboard\';\n';
+    } else if (singleModule === 'dtr_dashboard') {
+      variables.imports += 'import DTRDashboard from \'@/pages/DTRDashboard\';\n';
+    }
+  } else {
+    // Multiple dashboard modules - import both
+    variables.imports += 'import Dashboard from \'@/pages/Dashboard\';\n';
+    variables.imports += 'import DTRDashboard from \'@/pages/DTRDashboard\';\n';
+  }
+  if (modules.includes('consumer')) {
+    variables.imports += 'import Consumers from \'@/pages/Consumers\';\n';
+  }
+  if (modules.includes('consumer_view')) {
+    variables.imports += 'import ConsumerView from \'@/pages/ConsumerView\';\n';
+  }
+  if (modules.includes('user_management_default') || modules.includes('users')) {
+    variables.imports += 'import Users from \'@/pages/Users\';\n';
+  }
+  if (modules.includes('role_management')) {
+    variables.imports += 'import RoleManagement from \'@/pages/RoleManagement\';\n';
+  }
+  if (modules.includes('meter_management') || modules.includes('meter_list')) {
+    variables.imports += 'import Meters from \'@/pages/Meters\';\n';
+  }
+  if (modules.includes('asset_management')) {
+    variables.imports += 'import AssetManagement from \'@/pages/AssetManagement\';\n';
+  }
+  if (modules.includes('tickets')) {
+    variables.imports += 'import Tickets from \'@/pages/Tickets\';\n';
+  }
+  if (modules.includes('prepaid')) {
+    variables.imports += 'import Prepaid from \'@/pages/Prepaid\';\n';
+  }
+  if (modules.includes('postpaid')) {
+    variables.imports += 'import Postpaid from \'@/pages/Postpaid\';\n';
+  }
+  if (modules.includes('meter_details')) {
+    variables.imports += 'import MeterDetails from \'@/pages/MeterDetails\';\n';
+  }
+  if (modules.includes('dtr_dashboard')) {
+    variables.imports += 'import Feeders from \'@/pages/Feeders\';\n';
+  }
 
- variables.consumerDashboardError = modules.includes('consumer_dashboard') && modules.includes('dashboard') ? 
+  // Generate all routes
+  variables.routes = [];
+  variables.pageTitles = [];
+  
+  // Dashboard routes - smart route generation
+  const dashboardRouteModules = [];
+  if (modules.includes('consumer_dashboard')) dashboardRouteModules.push('consumer_dashboard');
+  if (modules.includes('dtr_dashboard')) dashboardRouteModules.push('dtr_dashboard');
+  
+  if (dashboardRouteModules.length === 0) {
+    // No dashboard modules - don't add any dashboard routes
+  } else if (dashboardRouteModules.length === 1) {
+    // Single dashboard module - make it the main dashboard
+    const singleModule = dashboardRouteModules[0];
+    if (singleModule === 'consumer_dashboard') {
+      variables.routes.push('            <Route path="/" element={<Dashboard />} />');
+      variables.pageTitles.push('    \'/\': \'Consumer Dashboard\'');
+    } else if (singleModule === 'dtr_dashboard') {
+      variables.routes.push('            <Route path="/" element={<DTRDashboard />} />');
+      variables.pageTitles.push('    \'/\': \'DTR Dashboard\'');
+    }
+  } else {
+    // Multiple dashboard modules - Consumer Dashboard is default, DTR Dashboard gets its own route
+    variables.routes.push('            <Route path="/" element={<Dashboard />} />');
+    variables.routes.push('            <Route path="/dtr-dashboard" element={<DTRDashboard />} />');
+    variables.pageTitles.push('    \'/\': \'Consumer Dashboard\'');
+    variables.pageTitles.push('    \'/dtr-dashboard\': \'DTR Dashboard\'');
+  }
+  
+  // Consumer routes
+  if (modules.includes('consumer')) {
+    variables.routes.push('            <Route path="/consumers" element={<Consumers />} />');
+    variables.pageTitles.push('    \'/consumers\': \'Consumers\'');
+  }
+  if (modules.includes('consumer_view')) {
+    variables.routes.push('            <Route path="/consumer/:consumerId" element={<ConsumerView />} />');
+  }
+  
+  // Bills routes
+  if (modules.includes('prepaid')) {
+    variables.routes.push('            <Route path="/bills/prepaid" element={<Prepaid />} />');
+    variables.pageTitles.push('    \'/bills/prepaid\': \'Prepaid Bills\'');
+  }
+  if (modules.includes('postpaid')) {
+    variables.routes.push('            <Route path="/bills/postpaid" element={<Postpaid />} />');
+    variables.pageTitles.push('    \'/bills/postpaid\': \'Postpaid Bills\'');
+  }
+  
+  // Asset management routes
+  if (modules.includes('asset_management')) {
+    variables.routes.push('            <Route path="/asset-management" element={<AssetManagement />} />');
+    variables.pageTitles.push('    \'/asset-management\': \'Asset Management\'');
+  }
+  
+  // Meter management routes
+  if (modules.includes('meter_management') || modules.includes('meter_list')) {
+    variables.routes.push('            <Route path="/meters" element={<Meters />} />');
+    variables.pageTitles.push('    \'/meters\': \'Meters\'');
+  }
+  if (modules.includes('meter_details')) {
+    variables.routes.push('            <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />');
+    variables.pageTitles.push('    \'/meter-details/:meterSlNo\': \'Meter Details\'');
+  }
+  
+  // Tickets routes
+  if (modules.includes('tickets')) {
+    variables.routes.push('            <Route path="/all-tickets" element={<Tickets />} />');
+    variables.pageTitles.push('    \'/all-tickets\': \'All Tickets\'');
+  }
+  
+  // User management routes
+  if (modules.includes('user_management_default') || modules.includes('users')) {
+    variables.routes.push('            <Route path="/users" element={<Users />} />');
+    variables.pageTitles.push('    \'/users\': \'Users\'');
+  }
+  if (modules.includes('role_management')) {
+    variables.routes.push('            <Route path="/role-management" element={<RoleManagement />} />');
+    variables.pageTitles.push('    \'/role-management\': \'Role Management\'');
+  }
+  
+  // DTR routes
+  if (modules.includes('dtr_dashboard')) {
+    variables.routes.push('            <Route path="/dtr/:dtrId" element={<Feeders />} />');
+    variables.pageTitles.push('    \'/dtr/:dtrId\': \'Feeders\'');
+  }
 
- '<li>/consumer-dashboard - Consumer Dashboard</li>' : '';
-
-
-
-variables.dtrDashboardError = modules.includes('dtr_dashboard') && modules.includes('dashboard') ? 
-
- '<li>/dtr-dashboard - DTR Dashboard</li>' : '';
-
-  variables.feedersError = modules.includes('dtr') ? 
-    '<li>/dtr/:dtrId - Feeders</li>' : '';
-
+  // Convert arrays to template strings
+  variables.routes = variables.routes.join('\n');
+  variables.pageTitles = variables.pageTitles.join(',\n');
+  
+  // Generate menu items for sidebar
+  variables.menuItems = '';
+  
+  // Dashboard menu items - smart submenu logic
+  const dashboardSubmenus = [];
+  if (modules.includes('consumer_dashboard')) {
+    dashboardSubmenus.push({
+      title: 'Consumer Dashboard',
+      link: '/',
+    });
+  }
+  if (modules.includes('dtr_dashboard')) {
+    dashboardSubmenus.push({
+      title: 'DTR Dashboard',
+      link: '/dtr-dashboard',
+    });
+  }
+  
+  // Create smart dashboard menu
+  if (dashboardSubmenus.length === 0) {
+    // No dashboard modules selected - don't add dashboard menu
+  } else if (dashboardSubmenus.length === 1) {
+    // Single dashboard module - make it the main menu
+    const singleDashboard = dashboardSubmenus[0];
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Dashboard\',\n'; // Always show as "Dashboard"
+    variables.menuItems += '      icon: \'/icons/dashboard.svg\',\n';
+    variables.menuItems += '      link: \'/\',\n'; // Always link to root path
+    variables.menuItems += '    },\n';
+  } else {
+    // Multiple dashboard modules - create parent with submenus
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Dashboard\',\n';
+    variables.menuItems += '      icon: \'/icons/dashboard.svg\',\n';
+    variables.menuItems += '      hasSubmenu: true,\n';
+    variables.menuItems += '      submenu: [\n';
+    dashboardSubmenus.forEach(submenu => {
+      variables.menuItems += '        {\n';
+      variables.menuItems += `          title: '${submenu.title}',\n`;
+      variables.menuItems += `          link: '${submenu.link}',\n`;
+      variables.menuItems += '        },\n';
+    });
+    variables.menuItems += '      ],\n';
+    variables.menuItems += '    },\n';
+  }
+  
+  // Consumer menu items
+  if (modules.includes('consumer')) {
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Consumers\',\n';
+    variables.menuItems += '      icon: \'/icons/units.svg\',\n';
+    variables.menuItems += '      link: \'/consumers\',\n';
+    variables.menuItems += '    },\n';
+  }
+  
+  // Bills menu items
+  if (modules.includes('prepaid') && modules.includes('postpaid')) {
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Bills\',\n';
+    variables.menuItems += '      icon: \'/icons/bills.svg\',\n';
+    variables.menuItems += '      hasSubmenu: true,\n';
+    variables.menuItems += '      submenu: [\n';
+    variables.menuItems += '        {\n';
+    variables.menuItems += '          title: \'Prepaid\',\n';
+    variables.menuItems += '          link: \'/bills/prepaid\',\n';
+    variables.menuItems += '        },\n';
+    variables.menuItems += '        {\n';
+    variables.menuItems += '          title: \'Postpaid\',\n';
+    variables.menuItems += '          link: \'/bills/postpaid\',\n';
+    variables.menuItems += '        },\n';
+    variables.menuItems += '      ],\n';
+    variables.menuItems += '    },\n';
+  } else if (modules.includes('prepaid')) {
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Prepaid Bills\',\n';
+    variables.menuItems += '      icon: \'/icons/bills.svg\',\n';
+    variables.menuItems += '      link: \'/bills/prepaid\',\n';
+    variables.menuItems += '    },\n';
+  } else if (modules.includes('postpaid')) {
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Postpaid Bills\',\n';
+    variables.menuItems += '      icon: \'/icons/bills.svg\',\n';
+    variables.menuItems += '      link: \'/bills/postpaid\',\n';
+    variables.menuItems += '    },\n';
+  }
+  
+  // Asset management menu items
+  if (modules.includes('asset_management')) {
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Assets\',\n';
+    variables.menuItems += '      icon: \'/icons/workflow-setting-alt.svg\',\n';
+    variables.menuItems += '      link: \'/asset-management\',\n';
+    variables.menuItems += '    },\n';
+  }
+  
+  // Meter management menu items
+  if (modules.includes('meter_management') || modules.includes('meter_list')) {
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Meters\',\n';
+    variables.menuItems += '      icon: \'/icons/meter-bolt.svg\',\n';
+    variables.menuItems += '      link: \'/meters\',\n';
+    variables.menuItems += '    },\n';
+  }
+  
+  // Tickets menu items
+  if (modules.includes('tickets')) {
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Tickets\',\n';
+    variables.menuItems += '      icon: \'/icons/customer-service.svg\',\n';
+    variables.menuItems += '      link: \'/all-tickets\',\n';
+    variables.menuItems += '    },\n';
+  }
+  
+  // User management menu items - smart submenu logic
+  const userSubmenus = [];
+  if (modules.includes('user_management_default') || modules.includes('users')) {
+    userSubmenus.push({
+      title: 'Users',
+      link: '/users',
+    });
+  }
+  if (modules.includes('role_management')) {
+    userSubmenus.push({
+      title: 'Role Management',
+      link: '/role-management',
+    });
+  }
+  
+  // Create smart user menu
+  if (userSubmenus.length === 0) {
+    // No user modules selected - don't add anything
+  } else if (userSubmenus.length === 1) {
+    // Single user module - make it the main menu
+    const singleUser = userSubmenus[0];
+    variables.menuItems += '    {\n';
+    variables.menuItems += `      title: '${singleUser.title}',\n`;
+    variables.menuItems += '      icon: \'/icons/user.svg\',\n';
+    variables.menuItems += `      link: '${singleUser.link}',\n`;
+    variables.menuItems += '    },\n';
+  } else {
+    // Multiple user modules - create parent with submenus
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Users\',\n';
+    variables.menuItems += '      icon: \'/icons/user.svg\',\n';
+    variables.menuItems += '      hasSubmenu: true,\n';
+    variables.menuItems += '      submenu: [\n';
+    userSubmenus.forEach(submenu => {
+      variables.menuItems += '        {\n';
+      variables.menuItems += `          title: '${submenu.title}',\n`;
+      variables.menuItems += `          link: '${submenu.link}',\n`;
+      variables.menuItems += '        },\n';
+    });
+    variables.menuItems += '      ],\n';
+    variables.menuItems += '    },\n';
+  }
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
   
@@ -396,6 +618,19 @@ variables.dtrDashboardError = modules.includes('dtr_dashboard') && modules.inclu
   
   const appPath = path.join(frontendDir, 'src', 'App.tsx');
   fs.writeFileSync(appPath, appContent);
+  
+  // Generate AppLayout component
+  const appLayoutTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'AppLayout.tsx.template');
+  const appLayoutContent = loadAndProcessTemplate(appLayoutTemplate, variables);
+  
+  // Ensure components directory exists
+  const componentsDir = path.join(frontendDir, 'src', 'components');
+  if (!fs.existsSync(componentsDir)) {
+    fs.mkdirSync(componentsDir, { recursive: true });
+  }
+  
+  // Write the AppLayout.tsx file
+  fs.writeFileSync(path.join(componentsDir, 'AppLayout.tsx'), appLayoutContent);
 }
 
 /**
@@ -497,6 +732,43 @@ VITE_BACKEND_ENV_URL=http://localhost:${variables.backendPort}/api/env
   const envPath = path.join(frontendDir, '.env');
   fs.writeFileSync(envPath, envContent);
   console.log('✅ Created frontend .env file with backend connection');
+}
+
+/**
+ * Generate authentication components
+ */
+function generateAuthComponents(frontendDir, variables) {
+  const authDir = path.join(frontendDir, 'src', 'components', 'auth');
+  fs.mkdirSync(authDir, { recursive: true });
+
+  // Generate LocalAuthWrapper
+  const authWrapperTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'auth', 'LocalAuthWrapper.tsx.template');
+  if (fs.existsSync(authWrapperTemplate)) {
+    const authWrapperContent = loadAndProcessTemplate(authWrapperTemplate, variables);
+    const authWrapperPath = path.join(authDir, 'LocalAuthWrapper.tsx');
+    fs.writeFileSync(authWrapperPath, authWrapperContent);
+  }
+
+  // Generate LocalProtectedRoute
+  const protectedRouteTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'auth', 'LocalProtectedRoute.tsx.template');
+  if (fs.existsSync(protectedRouteTemplate)) {
+    const protectedRouteContent = loadAndProcessTemplate(protectedRouteTemplate, variables);
+    const protectedRoutePath = path.join(authDir, 'LocalProtectedRoute.tsx');
+    fs.writeFileSync(protectedRoutePath, protectedRouteContent);
+  }
+
+  // Verify that both files were created
+  const authWrapperPath = path.join(authDir, 'LocalAuthWrapper.tsx');
+  const protectedRoutePath = path.join(authDir, 'LocalProtectedRoute.tsx');
+  
+  if (!fs.existsSync(authWrapperPath)) {
+    console.error('❌ Failed to create LocalAuthWrapper.tsx');
+  }
+  if (!fs.existsSync(protectedRoutePath)) {
+    console.error('❌ Failed to create LocalProtectedRoute.tsx');
+  }
+
+  console.log('✅ Generated authentication components');
 }
 
 /**

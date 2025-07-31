@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import type { Column } from '@components/global/Table';
+import type { Column } from '@/components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 

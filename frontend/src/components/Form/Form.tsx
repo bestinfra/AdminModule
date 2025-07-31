@@ -407,9 +407,9 @@ const Form = forwardRef<FormRef, FormProps>(({
   const hasValidationErrors = allErrorMessages.length > 0;
 
   // Form container classes
-  const defaultPadding = 'p-8';
-  const defaultBorder = 'border border-gray-200 dark:border-gray-700';
-  const defaultClasses = `bg-white dark:bg-gray-800 rounded-lg ${border || defaultBorder} ${padding || defaultPadding}`;
+  const defaultPadding = 'p-4';
+  const defaultBorder = 'border border-primary-border dark:border-dark-border';
+  const defaultClasses = `bg-white dark:bg-gray-800 rounded-2xl ${border || defaultBorder} ${padding || defaultPadding}`;
   
   // Use formBackground prop if provided, otherwise use default background
   const backgroundClass = formBackground || defaultClasses;
