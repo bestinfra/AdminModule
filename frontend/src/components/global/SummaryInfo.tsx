@@ -62,12 +62,7 @@ const SummaryInfo: React.FC<SummaryInfoProps> = ({
     }
   };
 
-  const renderSummaryItem = (item: SummaryItem, index: number) => (
-    <div key={index} className="flex flex-col space-y-1">
-      <span className="text-sm font-semibold text-gray-700">{item.label}</span>
-      <span className="text-sm text-gray-600">{item.value}</span>
-    </div>
-  );
+
 
   return (
     <section className={`rounded-lg  p-6 flex flex-col gap-4 ${className} w-full`}>

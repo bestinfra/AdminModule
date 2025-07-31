@@ -279,29 +279,29 @@ const TypingIndicator: React.FC<{ users: string[] }> = ({ users }) => {
 const ChatApplication: React.FC<ChatApplicationProps> = ({
     messages,
     currentUser,
-    participants,
-    onSendMessage,
-    onFileUpload,
-    onMessageRead,
+    // participants,
+    // onSendMessage,
+    // onFileUpload,
+    // onMessageRead,
     onTyping,
-    title = 'Chat',
-    subtitle,
+    // title = 'Chat',
+    // subtitle,
     className = '',
-    theme = 'light',
+    // theme = 'light',
     enableFileUpload = true,
-    enableEmojiPicker = true,
+    //  enableEmojiPicker = true,
     enableVoiceMessages = false,
-    enableReadReceipts = true,
+    // enableReadReceipts = true,
     enableTypingIndicator = true,
     isSubmitting = false,
     isLoading = false,
-    onBackClick,
-    onUserClick,
+    // onBackClick,
+    // onUserClick,
 }) => {
     const [message, setMessage] = useState('');
     const [attachments, setAttachments] = useState<File[]>([]);
-    const [typingUsers, setTypingUsers] = useState<string[]>([]);
-    const [isTyping, setIsTyping] = useState(false);
+    const [typingUsers, _setTypingUsers] = useState<string[]>([]);
+    const [_isTyping, setIsTyping] = useState(false);
     
     const messagesEndRef = useRef<HTMLDivElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -344,7 +344,7 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
         if ((!message.trim() && attachments.length === 0) || isSubmitting) return;
         
         try {
-            await onSendMessage(message, attachments);
+            // await onSendMessage(message, attachments);
             setMessage('');
             setAttachments([]);
             handleTyping(false);

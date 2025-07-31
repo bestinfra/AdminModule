@@ -265,7 +265,7 @@ const ChatComponent: React.FC<ChatComponentProps> = ({
     onSendMessage,
     isSubmitting = false,
     currentUserName = 'User',
-    isAdmin = false,
+    // isAdmin = false,
     className = '',
 }) => {
     const [message, setMessage] = useState('');

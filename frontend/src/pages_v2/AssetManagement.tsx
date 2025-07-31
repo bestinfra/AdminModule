@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { lazy } from 'react';
-const Page = lazy(() => import('SuperAdmin/Page'));
+const PageC = lazy(() => import('@/components/global/PageC'));
 
 // --- Types ---
 interface HierarchyNode {
@@ -159,7 +159,7 @@ export default function AssetManagment() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Page  
+            <PageC  
                 sections={[
                     {
                         layout: {

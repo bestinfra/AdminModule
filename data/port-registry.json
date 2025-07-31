@@ -1,5 +1,5 @@
 {
-  "nextPort": 4104,
+  "nextPort": 4105,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -375,6 +375,11 @@
       "port": 4103,
       "deployedAt": "2025-07-31T11:04:53.582Z",
       "path": "C:\\xampp\\htdocs\\test5-backend"
+    },
+    "srm2": {
+      "port": 4104,
+      "deployedAt": "2025-07-31T16:14:59.391Z",
+      "path": "C:\\xampp\\htdocs\\srm2-backend"
     }
   }
 }

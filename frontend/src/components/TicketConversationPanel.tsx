@@ -1,7 +1,6 @@
     import { useState, useEffect, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
-import ChatApplication from './ChatApplication';
 import type { ChatMessage, ChatUser } from './ChatApplication';
 
 interface Ticket {
