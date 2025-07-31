@@ -37,10 +37,10 @@ const DTRDashboard: React.FC = () => {
         navigate(`/dtr-detail/${row.dtrId}`);
     };
 
-    const handleEditDTR = (row: TableData) => {
-        console.log('Editing DTR:', row);
-        navigate(`/dtr/${row.dtrId}/edit`);
-    };
+    // const handleEditDTR = (row: TableData) => {
+    //     console.log('Editing DTR:', row);
+    //     navigate(`/dtr/${row.dtrId}/edit`);
+    // };
 
   // DTR statistics cards data - Using only daily data consistently
   const dtrStatsCards = [

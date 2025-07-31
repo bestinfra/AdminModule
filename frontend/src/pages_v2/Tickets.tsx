@@ -1,6 +1,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import { lazy } from 'react';
+const Page = lazy(() => import('SuperAdmin/Page'));
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 import { exportChartData } from '@/utils/excelExport';
@@ -456,7 +457,7 @@ export default function Tickets() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-        <PageC
+        <Page
             sections={[
                 {
                     layout: {

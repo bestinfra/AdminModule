@@ -1,7 +1,6 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import Modal from '@/components/global/Modal';
 import BACKEND_URL from '../config';
 
 interface Role {
