@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import BACKEND_URL from '../config';
                            
 // Removed: import BACKEND_URL from '../config';
 // Brand green icon style
