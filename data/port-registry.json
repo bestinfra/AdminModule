@@ -1,5 +1,5 @@
 {
-  "nextPort": 4103,
+  "nextPort": 4104,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -360,6 +360,11 @@
       "port": 4102,
       "deployedAt": "2025-07-31T07:42:48.424Z",
       "path": "C:\\xampp\\htdocs\\backend-backend"
+    },
+    "lappyyy": {
+      "port": 4103,
+      "deployedAt": "2025-07-31T16:36:16.205Z",
+      "path": "C:\\xampp\\htdocs\\lappyyy-backend"
     }
   }
 }

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
 const mockDTRData = {
@@ -215,7 +215,7 @@ const DTRDetailPage = () => {
     };
 
     return (
-        <PageC
+        <Page
             sections={[
                 {
                     layout: {

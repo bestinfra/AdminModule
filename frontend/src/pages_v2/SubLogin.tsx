@@ -1,5 +1,5 @@
 import React from "react";
-import PageC from "@/components/global/PageC";
+import Page from "@/components/global/PageC";
 import type { CarouselSlide } from "@/components/global/Carousel";
 import { useState } from "react";
 import type { FormInputValue } from "@/components/Form/types";
@@ -50,7 +50,7 @@ const SubLogin: React.FC = () => {
   };
 
   return (
-    <PageC
+    <Page
       sections={[
         {
           layout: {

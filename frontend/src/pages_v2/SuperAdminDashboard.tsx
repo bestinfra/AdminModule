@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 
 // Brand green icon style
 const ICON_FILTER_STYLE = {
@@ -132,7 +132,7 @@ const SuperAdminDashboard: React.FC = () => {
     
     return (
         <div className="p-2 min-h-screen">
-            <PageC
+            <Page
                 sections={[
                     // Header section
                     {

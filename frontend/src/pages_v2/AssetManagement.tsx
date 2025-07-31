@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 
 // --- Types ---
 interface HierarchyNode {
@@ -158,7 +158,7 @@ export default function AssetManagment() {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <PageC  
+            <Page
                 sections={[
                     {
                         layout: {

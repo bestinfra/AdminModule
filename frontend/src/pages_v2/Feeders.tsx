@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
 const stats = [
@@ -254,7 +254,7 @@ const Feeders = () => {
     };
 
     return (
-        <PageC
+        <Page
             sections={[
                 {
                     layout: {

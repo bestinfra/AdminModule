@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import PageC from '@components/global/PageC';
+import Page from '@components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
 // Brand green icon style
@@ -288,7 +288,7 @@ const AllTickets: React.FC = () => {
     };
 
     return (
-        <PageC
+        <Page
             sections={[
                 {
                     layout: {
