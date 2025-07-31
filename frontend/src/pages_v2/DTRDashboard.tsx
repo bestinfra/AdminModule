@@ -518,7 +518,7 @@ const DTRDashboard: React.FC = () => {
                                     title: 'DTR Dashboard',
                                     onBackClick: () => window.history.back(),
                                     backButtonText: 'Back to Dashboard',
-                                    buttonsLabel: 'Upload',
+                                    buttonsLabel: 'Export',
                                     variant: 'primary',
                                     onClick: () =>
                                         console.log('Adding new DTR...'),
