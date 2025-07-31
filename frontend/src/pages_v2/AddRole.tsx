@@ -12,12 +12,12 @@ export default function AddRole() {
         {
             name: 'roleName',
             type: 'text',
-            label: 'Role Name',
             placeholder: 'Enter role name',
             required: true,
             row: 1,
             col: 1,
             colSpan: 1,
+            className: 'w-full px-3 py-2 rounded-md',
         },
         {
             name: 'description',
@@ -28,6 +28,7 @@ export default function AddRole() {
             row: 2,
             col: 1,
             colSpan: 1,
+            className: 'w-full px-3 py-2 rounded-md',
         },
     ];
 
@@ -38,7 +39,7 @@ export default function AddRole() {
             await new Promise((resolve) => setTimeout(resolve, 2000));
             
             console.log('Role created successfully');
-            navigate('/roles');
+            navigate('/role-management');
         } catch (error) {
             console.error('Error creating role:', error);
         } finally {
@@ -47,7 +48,7 @@ export default function AddRole() {
     };
 
     const handleFormCancel = () => {
-        navigate('/roles');
+        navigate('/role-management');
     };
 
     return (
@@ -66,8 +67,8 @@ export default function AddRole() {
                                         {
                                             name: 'PageHeader',
                                             props: {
-                                                title: 'Role Management',
-                                                onBackClick: () => navigate('/roles'),
+                                                title: 'Add Role',
+                                                onBackClick: () => navigate('/role-management'),
                                                 backButtonText: 'Back to Role Management',
                                                 showMenu: false,
                                                 showDropdown: false,
@@ -103,29 +104,31 @@ export default function AddRole() {
                                 {
                                     layout: 'grid' as const,
                                     gridColumns: 1,
-                                    gap: 'gap-6',
+                                    gap: 'gap-3',
                                     columns: [
                                         {
-                                            name: 'Form',
-                                            props: {
-                                                inputs: formInputs,
-                                                onSubmit: handleFormSubmit,
-                                                submitLabel: isSubmitting ? 'Saving...' : 'Create Role',
-                                                cancelLabel: 'Cancel',
-                                                showFormActions: true,
-                                                submitAction: () => {
-                                                    // This will be handled by the form's internal submit
-                                                },
-                                                cancelAction: handleFormCancel,
-                                                gridLayout: {
-                                                    gridRows: 2,
-                                                    gridColumns: 1,
-                                                    gap: 'gap-6',
-                                                    className: 'w-full',
-                                                },
-                                                formBackground: 'bg-white border border-blue-200',
-                                                className: 'w-full',
-                                            },
+                                             name: 'Form',
+                                             props: {
+                                                 inputs: formInputs,
+                                                 onSubmit: handleFormSubmit,
+                                                 submitLabel: isSubmitting ? 'Saving...' : 'Create Role',
+                                                 cancelLabel: 'Cancel',
+                                                 showFormActions: true,
+                                                 submitAction: () => {
+                                                     // This will be handled by the form's internal submit
+                                                 },
+                                                 cancelAction: handleFormCancel,
+                                                 gridLayout: {
+                                                     gridRows: 2,
+                                                     gridColumns: 1,
+                                                     gap: 'gap-1',
+                                                     className: 'w-full',
+                                                 },
+                                                //  formBackground: 'bg-white',
+                                                //  className: 'max-w-2xl mx-auto w-full p-6 space-y-6',
+                                                //  padding: 'p-6',
+                                                //  actionsClassName: 'flex justify-center gap-4 pt-4',
+                                             },
                                         },
                                     ],
                                 },
