@@ -136,7 +136,7 @@ function copyAssets(baseDir, formData) {
         'bills': ['Prepaid.tsx', 'Postpaid.tsx'], // Bills module includes both prepaid and postpaid
         'prepaid': ['Prepaid.tsx'],
         'postpaid': ['Postpaid.tsx'],
-        'asset_management': ['AssetManagment.tsx'],
+        'asset_management': ['AssetManagement.tsx'],
         'meter_management': ['Meters.tsx', 'MeterDetails.tsx'], // DataLogger.tsx commented out
         'user_management_default': ['Users.tsx'],
         'role_management': ['RoleManagement.tsx'],

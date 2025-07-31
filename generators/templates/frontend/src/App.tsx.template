@@ -5,6 +5,7 @@ import { FederatedContextProvider } from './components/FederatedWrapper';
 import CSSLoader from './components/CSSLoader';
 import './App.css';
 import { Theme } from './Theme';
+import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';
 {{dashboardImport}}
 {{dashboardImportForConsumer}}
 {{consumersImport}}
@@ -12,7 +13,6 @@ import { Theme } from './Theme';
 {{usersImport}}
 {{roleManagementImport}}
 {{metersImport}}
-// {{dataLoggerImport}}
 {{dtrDashboardImport}}
 {{assetManagementImport}}
 {{ticketsImport}}
@@ -121,11 +121,11 @@ const generateModuleBasedMenuItems = (modules: string[] = []) => {
         },
       ],
     },
-    asset_management: {
-      title: 'Assets',
-      icon: '/icons/workflow-setting-alt.svg',
-      link: '/asset-management',
-    },
+    // asset_management: {
+    //   title: 'Assets',
+    //   icon: '/icons/workflow-setting-alt.svg',
+    //   link: '/asset-management',
+    // },
     meter_management: {
       title: 'Meters',
       icon: '/icons/meter-bolt.svg',
@@ -177,7 +177,7 @@ const filterMenuItemsByRole = (menuItems: any[], userRole: string) => {
   // Define role-based access rules
   const roleAccessRules = {
     admin: ['all'], // Admin can access everything
-    moderator: ['tickets', 'asset_management', 'meter_management'], // Moderator access
+    moderator: ['tickets', 'meter_management'], // Moderator access (removed asset_management)
     accountant: ['tickets', 'bills'], // Accountant access (bills only)
   };
 
@@ -235,7 +235,6 @@ function AppContent() {
       {{ticketsCase}}
       {{assetManagementCase}}
       {{meterManagementCase}}
-      // {{dataLoggerCase}}
       {{dtrCase}}
       {{consumerDashboardCase}}
       {{dtrDashboardCase}}
@@ -376,7 +375,6 @@ const menuItems = useMemo(() => {
                                       {{billsPostpaidError}}
                                       {{assetManagementError}}
                                       {{meterManagementError}}
-                                      // {{dataLoggerError}}
                                       {{ticketsError}}
                                       {{usersError}}
                                       {{roleManagementError}}
@@ -407,15 +405,15 @@ const menuItems = useMemo(() => {
 function App() {
   return (
     <ThemeProvider>
-    <Theme>
-    <Router>
-      <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
-        <AppProvider>
-          <AppContent />
-        </AppProvider>
-      </Suspense>
-    </Router>
-    </Theme>
+      <Theme>
+        <Router>
+          <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading application...</div>}>
+            <AppProvider>
+              <AppContent />
+            </AppProvider>
+          </Suspense>
+        </Router>
+      </Theme>
     </ThemeProvider>
   );
 }

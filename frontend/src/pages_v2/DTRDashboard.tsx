@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { TableData } from '@components/global/Table';
+import type { TableData } from '@/components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
@@ -23,7 +23,7 @@ const DTRDashboard: React.FC = () => {
             data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10, 11, 12]
         }
     ];
-    const alertColors = ['#10B981'];
+    const alertColors = ['#163b7c'];
     const statsRange = selectedTimeRange;
 
     // Chart download handler
@@ -34,10 +34,13 @@ const DTRDashboard: React.FC = () => {
     // Handle DTR table actions
     const handleViewDTR = (row: TableData) => {
         console.log('Viewing DTR:', row);
-        navigate(`/dtr/${row.dtrId}`);
+        navigate(`/dtr-detail/${row.dtrId}`);
     };
 
-
+    // const handleEditDTR = (row: TableData) => {
+    //     console.log('Editing DTR:', row);
+    //     navigate(`/dtr/${row.dtrId}/edit`);
+    // };
 
   // DTR statistics cards data - Using only daily data consistently
   const dtrStatsCards = [
@@ -152,6 +155,7 @@ const DTRDashboard: React.FC = () => {
             icon: "/icons/dtr.svg",
             subtitle1: "100.00% of Total DTRs",
             iconStyle: ICON_FILTER_STYLE,
+            bg:'var[--red-500]'
         },
         {
             title: "In-Active DTRs",
@@ -302,13 +306,53 @@ const DTRDashboard: React.FC = () => {
       city: "Hyderabad",
       commStatus: "Active",
     },
+    {
+      dtrId: "TRANSFORMER-11",
+      dtrName: "TGNP_DTR-11",
+      feedersCount: 2,
+      streetName: "Gachibowli",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-12",
+      dtrName: "TGNP_DTR-12",
+      feedersCount: 3,
+      streetName: "Madhapur",
+      city: "Hyderabad",
+      commStatus: "Inactive",
+    },
+    {
+      dtrId: "TRANSFORMER-13",
+      dtrName: "TGNP_DTR-13",
+      feedersCount: 1,
+      streetName: "HITEC City",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-14",
+      dtrName: "TGNP_DTR-14",
+      feedersCount: 2,
+      streetName: "Jubilee Hills",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-15",
+      dtrName: "TGNP_DTR-15",
+      feedersCount: 1,
+      streetName: "Banjara Hills",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
   ];
 
 
     // Dummy data for Latest Alerts table
     const alertsTableColumns = [
         { key: 'alert', label: 'Alert' },
-        { key: 'date', label: 'Date' },
+        { key: 'date', label: 'Occured On' },
         { key: 'status', label: 'Status' },
     ];
 
@@ -342,6 +386,26 @@ const DTRDashboard: React.FC = () => {
         {
             alert: 'High temperature on DTR-08',
             date: '2024-07-25 09:15',
+            status: 'Active',
+        },
+        {
+            alert: 'Unbalanced load on DTR-11',
+            date: '2024-07-25 08:45',
+            status: 'Active',
+        },
+        {
+            alert: 'Low power factor on DTR-14',
+            date: '2024-07-25 08:00',
+            status: 'Resolved',
+        },
+        {
+            alert: 'Frequency deviation on DTR-12',
+            date: '2024-07-25 07:30',
+            status: 'Active',
+        },
+        {
+            alert: 'Phase loss detected on DTR-15',
+            date: '2024-07-25 07:00',
             status: 'Active',
         },
     ];
@@ -436,11 +500,11 @@ const DTRDashboard: React.FC = () => {
 
     // // Handle Excel download for chart data
     // const handleChartDownload = () => {
-    //     exportChartData(months, alertSeries, 'dtr-statistics-data');
+    //     exportChartData(months, alertSeries, 'dtr-statis tics-data');
     // };
 
     return (
-        <div className="p-2 min-h-screen">
+        <div className="">
             <Page
                 sections={[
                     // Header section
@@ -448,7 +512,7 @@ const DTRDashboard: React.FC = () => {
                         layout: {
                             type: 'grid' as const,
                             columns: 1,
-                            className: 'mb-6',
+                            className: '',
                         },
                         components: [
                             {
@@ -487,7 +551,7 @@ const DTRDashboard: React.FC = () => {
                   gridColumns: 3,
                   gridRows: 2,
                   span: { col: 3, row: 1 },
-                  className:'border border-primary-border rounded-3xl px-3 py-2 bg-background-secondary',
+                    className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                   columns: [
                     {
                       name: "SectionHeader",
@@ -524,7 +588,7 @@ const DTRDashboard: React.FC = () => {
                     gridColumns: 2,
                     gridRows: 2,
                     span: { col: 2, row: 1 },
-                    className:'border border-primary-border rounded-3xl p-3 bg-background-secondary',
+                    className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                     columns: [
                                               {
                           name: "SectionHeader",
@@ -582,18 +646,20 @@ const DTRDashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
+                                                                                              
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
-                                                showHeader: false,
-                                                headerTitle: 'DTR Management',
-                                                dateRange: 'All DTRs',
-                                                searchable: true,
+                                                showHeader: true,
+                                                headerTitle: 'DTRInformation',  
+                                                headerClassName:'h-18',
+                                                searchable: true, 
                                                 sortable: true,
                                                 pagination: true,
+                                                initialRowsPerPage: 10,
                                                 showActions: true,
                                                 text: 'DTR Management Table',
                                                 onRowClick: (row: TableData) =>
-                                                    navigate(`/dtr/${row.dtrId}`),
+                                                    navigate(`/dtr-detail/${row.dtrId}`),
                                                 onView: handleViewDTR,
                                                 availableTimeRanges: [],
                                             },
@@ -603,58 +669,55 @@ const DTRDashboard: React.FC = () => {
                             ],
                         },
                     },
-                    // // Latest Alerts section
-                    {
-                        layout: {
-                            type: 'column' as const,
-                            className: 'mb-8 border border-primary-border rounded-3xl p-6',
+                                         // // Latest Alerts section
+                     {
+                         layout: {
+                             type: 'grid' as const,
+                             className: '',
+                             columns:2,
+                         },
+                         components: [
+                          {
+                            name: 'BarChart',
+                            props: {
+                                xAxisData: months,
+                                seriesData: alertSeries,
+                                seriesColors: alertColors,
+                                height: 300,
+                                showLegendInteractions: true,
+                                timeRange: statsRange,
+                                showHeader: true,
+                                headerTitle: 'Statistics',
+                                showDownloadButton: true,
+                                onDownload: () => handleChartDownload(),
+                            },
                         },
-                        components: [
-                            {
-                                name: 'Heading',
-                                props: {
-                                    text: 'Latest Alerts',
-                                    level: 2,
-                                    className: 'text-base font-medium',
-                                },
-                            },
-                            {
-                                name: 'Table',
-                                props: {
-                                    data: getCurrentAlertsData(),
-                                    columns: alertsTableColumns,
-                                    showActions: false,
-                                    searchable: true,
-                                    pagination: true,
-                                    initialRowsPerPage: 10,
-                                    emptyMessage: 'No alerts found',
-                                },
-                            },
-                        ],
-                    },
+                             {
+                                 name: 'Table',
+                                 props: {
+                                     data: getCurrentAlertsData(),
+                                     columns: alertsTableColumns,
+                                     showHeader: true,
+                                     headerTitle: 'Latest Alerts',
+                                     showActions: false,
+                                     searchable: true,
+                                     pagination: true,
+                                     initialRowsPerPage: 3,
+                                     emptyMessage: 'No alerts found',
+                                 },
+                             },
+                           
+                         ],
+                     },
                     // Statistics Chart section
                     {
                         layout: {
                             type: 'column' as const,
                             className:
-                                'mb-8',
+                                '',
                         },
                         components: [
-                            {
-                                name: 'BarChart',
-                                props: {
-                                    xAxisData: months,
-                                    seriesData: alertSeries,
-                                    seriesColors: alertColors,
-                                    height: 300,
-                                    showLegendInteractions: true,
-                                    timeRange: statsRange,
-                                    showHeader: true,
-                                    headerTitle: 'Statistics',
-                                    showDownloadButton: true,
-                                    onDownload: () => handleChartDownload(),
-                                },
-                            },
+                           
                         ],
                     },
                 ]}

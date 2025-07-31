@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import PageC from '@components/global/PageC';
+import PageC from '@/components/global/PageC';
 
 // Brand green icon style
 const ICON_FILTER_STYLE = {
@@ -134,6 +134,48 @@ const SuperAdminDashboard: React.FC = () => {
         <div className="p-2 min-h-screen">
             <PageC
                 sections={[
+                    // Header section
+                    {
+                        layout: {
+                            type: 'grid' as const,
+                            columns: 1,
+                            className: '',
+                        },
+                        components: [
+                            {
+                                name: 'PageHeader',
+                                props: {
+                                    title: 'Super Admin Dashboard',
+                                    buttonsLabel: 'Create New App',
+                                    variant: 'primary',
+                                    onClick: () => navigate("/apps"),
+                                    showMenu: true,
+                                    showDropdown: true,
+                                    menuItems: [
+                                        { id: 'create-project', label: 'Create Project' },
+                                        { id: 'export', label: 'Export Report' },
+                                        { id: 'settings', label: 'Dashboard Settings' }
+                                    ],
+                                    onMenuItemClick: (itemId: string) => {
+                                        switch (itemId) {
+                                            case 'create-project':
+                                                navigate("/apps");
+                                                break;
+                                            case 'refresh':
+                                                console.log('Refreshing dashboard data');
+                                                break;
+                                            case 'export':
+                                                console.log('Exporting dashboard report');
+                                                break;
+                                            case 'settings':
+                                                navigate("/dashboard-settings");
+                                                break;
+                                        }
+                                    },
+                                },
+                            },
+                        ],
+                    },
                     // Main Statistics Cards
                     {
                         layout: {
@@ -166,7 +208,7 @@ const SuperAdminDashboard: React.FC = () => {
                             type: "grid",
                             columns: 2,
                             gap: "gap-6",
-                            className: 'w-full mt-6',
+                            className: 'w-full',
                             rows: [
                                 {
                                     layout: 'column',
@@ -245,7 +287,7 @@ const SuperAdminDashboard: React.FC = () => {
                             type: "grid",
                             columns: 2,
                             gap: "gap-6",
-                            className: 'w-full mt-6',
+                            className: 'w-full',
                             rows: [
                                 {
                                     layout: "grid",

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Suspense } from 'react';
 import Page from '@/components/global/PageC';
-import type { FormInputConfig } from '@components/Form/types';
+import type { FormInputConfig } from '@/components/Form/types';
 
 export default function AddTicket() {
     const navigate = useNavigate();
@@ -208,7 +208,7 @@ export default function AddTicket() {
                                                     className: 'w-full',
                                                 },
                                                 formBackground:
-                                                    'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700',
+                                                    'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-3xl',
                                                 className: 'w-full',
                                             },
                                         },

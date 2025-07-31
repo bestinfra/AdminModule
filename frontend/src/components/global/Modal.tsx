@@ -7,7 +7,7 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   showCloseIcon?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   centered?: boolean;
   backdropClosable?: boolean;
@@ -16,6 +16,24 @@ interface ModalProps {
   showConfirmButton?: boolean;
   confirmButtonLabel?: string;
   onConfirm?: () => void;
+  message?: string;
+  warningMessage?: string;
+  // Form props for edit/add role
+  showForm?: boolean;
+  formFields?: Array<{
+    type: 'input' | 'dropdown' | 'textarea';
+    label: string;
+    name: string;
+    value?: string;
+    placeholder?: string;
+    options?: Array<{ value: string; label: string }>;
+    required?: boolean;
+    disabled?: boolean;
+    onChange?: (value: string) => void;
+  }>;
+  onSave?: (formData: any) => void;
+  saveButtonLabel?: string;
+  cancelButtonLabel?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -31,7 +49,14 @@ const Modal: React.FC<ModalProps> = ({
   modalId,
   showConfirmButton = false,
   confirmButtonLabel = 'Confirm',
-  onConfirm
+  onConfirm,
+  message,
+  warningMessage,
+  showForm = false,
+  formFields = [],
+  onSave,
+  saveButtonLabel = 'Save',
+  cancelButtonLabel = 'Cancel'
 }) => {
   const uniqueModalId = modalId || `modal-${Math.random().toString(36).substr(2, 9)}`;
   
@@ -77,6 +102,16 @@ const Modal: React.FC<ModalProps> = ({
   const handleBackdropClick = (event: React.MouseEvent) => {
     if (backdropClosable && event.target === event.currentTarget) {
       onClose();
+    }
+  };
+
+  const handleSave = () => {
+    if (onSave && formFields.length > 0) {
+      const formData: any = {};
+      formFields.forEach(field => {
+        formData[field.name] = field.value || '';
+      });
+      onSave(formData);
     }
   };
 
@@ -150,16 +185,95 @@ const Modal: React.FC<ModalProps> = ({
 
               <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white">
                 <section id={`${uniqueModalId}-description`} className="space-y-4">
-                  {children}
+                  {children || (
+                    <>
+                      {showForm && formFields.length > 0 ? (
+                        <form className="space-y-4">
+                          {formFields.map((field, index) => (
+                            <div key={index} className="space-y-2">
+                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                {field.label}
+                                {field.required && <span className="text-red-500 ml-1">*</span>}
+                              </label>
+                                                             {field.type === 'input' && (
+                                 <input
+                                   type="text"
+                                   value={field.value || ''}
+                                   placeholder={field.placeholder}
+                                   onChange={(e) => field.onChange?.(e.target.value)}
+                                   className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${field.disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : ''}`}
+                                   required={field.required}
+                                   disabled={field.disabled}
+                                 />
+                               )}
+                              {field.type === 'dropdown' && (
+                                <select
+                                  value={field.value || ''}
+                                  onChange={(e) => field.onChange?.(e.target.value)}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                  required={field.required}
+                                >
+                                  <option value="">Select {field.label}</option>
+                                  {field.options?.map((option, optIndex) => (
+                                    <option key={optIndex} value={option.value}>
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                              )}
+                              {field.type === 'textarea' && (
+                                <textarea
+                                  value={field.value || ''}
+                                  placeholder={field.placeholder}
+                                  onChange={(e) => field.onChange?.(e.target.value)}
+                                  rows={3}
+                                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                  required={field.required}
+                                />
+                              )}
+                            </div>
+                          ))}
+                        </form>
+                      ) : (
+                        <>
+                          {message && (
+                            <p className="text-gray-600">
+                              {message}
+                            </p>
+                          )}
+                          {warningMessage && (
+                            <p className="text-sm text-gray-500">
+                              {warningMessage}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
                 </section>
               </main>
 
-              {showConfirmButton && (
-                <footer className="flex justify-end px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
-                  <Button
-                    label={confirmButtonLabel}
-                    onClick={onConfirm}
-                  />
+              {(showConfirmButton || showForm) && (
+                <footer className="flex justify-end gap-3 px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
+                  {showForm ? (
+                    <>
+                      <button
+                        onClick={onClose}
+                        className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-md transition-colors"
+                      >
+                        {cancelButtonLabel}
+                      </button>
+                      <Button
+                        label={saveButtonLabel}
+                        onClick={handleSave}
+                      />
+                    </>
+                  ) : (
+                    <Button
+                      label={confirmButtonLabel}
+                      onClick={onConfirm}
+                    />
+                  )}
                 </footer>
               )}
             </article>
