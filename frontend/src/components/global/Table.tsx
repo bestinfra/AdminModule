@@ -167,7 +167,7 @@ const Table: React.FC<TableProps> = ({
   showHeader = false,
   headerTitle = "Data Table",
   dateRange = "",
-  headerClassName = "", // Default header className
+  headerClassName = "h-18", // Default header className
   // Time range selector props with defaults
   availableTimeRanges = ["Daily", "Monthly", "Yearly"],
   selectedTimeRange = "Daily",

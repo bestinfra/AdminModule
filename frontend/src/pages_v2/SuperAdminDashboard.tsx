@@ -148,16 +148,19 @@ const SuperAdminDashboard: React.FC = () => {
                                     title: 'Super Admin Dashboard',
                                     buttonsLabel: 'Create New App',
                                     variant: 'primary',
-                                    onClick: () => navigate("/apps/create"),
+                                    onClick: () => navigate("/apps"),
                                     showMenu: true,
                                     showDropdown: true,
                                     menuItems: [
-                                        { id: 'refresh', label: 'Refresh Data' },
+                                        { id: 'create-project', label: 'Create Project' },
                                         { id: 'export', label: 'Export Report' },
                                         { id: 'settings', label: 'Dashboard Settings' }
                                     ],
                                     onMenuItemClick: (itemId: string) => {
                                         switch (itemId) {
+                                            case 'create-project':
+                                                navigate("/apps");
+                                                break;
                                             case 'refresh':
                                                 console.log('Refreshing dashboard data');
                                                 break;
@@ -205,7 +208,7 @@ const SuperAdminDashboard: React.FC = () => {
                             type: "grid",
                             columns: 2,
                             gap: "gap-6",
-                            className: 'w-full mt-6',
+                            className: 'w-full',
                             rows: [
                                 {
                                     layout: 'column',
@@ -284,7 +287,7 @@ const SuperAdminDashboard: React.FC = () => {
                             type: "grid",
                             columns: 2,
                             gap: "gap-6",
-                            className: 'w-full mt-6',
+                            className: 'w-full',
                             rows: [
                                 {
                                     layout: "grid",
