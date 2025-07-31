@@ -368,29 +368,23 @@ function generateAppComponent(frontendDir, variables) {
   if (modules.includes('dtr_dashboard')) dashboardRouteModules.push('dtr_dashboard');
   
   if (dashboardRouteModules.length === 0) {
-    // No dashboard modules - use default dashboard
-    if (modules.includes('dashboard')) {
-      variables.routes.push('            <Route path="/" element={<Dashboard />} />');
-      variables.routes.push('            <Route path="/dashboard" element={<Dashboard />} />');
-      variables.pageTitles.push('    \'/dashboard\': \'Consumer Dashboard\'');
-    }
+    // No dashboard modules - don't add any dashboard routes
   } else if (dashboardRouteModules.length === 1) {
     // Single dashboard module - make it the main dashboard
     const singleModule = dashboardRouteModules[0];
     if (singleModule === 'consumer_dashboard') {
       variables.routes.push('            <Route path="/" element={<Dashboard />} />');
-      variables.routes.push('            <Route path="/dashboard" element={<Dashboard />} />');
-      variables.pageTitles.push('    \'/dashboard\': \'Consumer Dashboard\'');
+      variables.pageTitles.push('    \'/\': \'Consumer Dashboard\'');
     } else if (singleModule === 'dtr_dashboard') {
       variables.routes.push('            <Route path="/" element={<DTRDashboard />} />');
-      variables.routes.push('            <Route path="/dashboard" element={<DTRDashboard />} />');
-      variables.pageTitles.push('    \'/dashboard\': \'DTR Dashboard\'');
+      variables.pageTitles.push('    \'/\': \'DTR Dashboard\'');
     }
   } else {
-    // Multiple dashboard modules - create main dashboard with sub-routes
+    // Multiple dashboard modules - Consumer Dashboard is default, DTR Dashboard gets its own route
     variables.routes.push('            <Route path="/" element={<Dashboard />} />');
-    variables.routes.push('            <Route path="/dashboard" element={<Dashboard />} />');
-    variables.pageTitles.push('    \'/dashboard\': \'Consumer Dashboard\'');
+    variables.routes.push('            <Route path="/dtr-dashboard" element={<DTRDashboard />} />');
+    variables.pageTitles.push('    \'/\': \'Consumer Dashboard\'');
+    variables.pageTitles.push('    \'/dtr-dashboard\': \'DTR Dashboard\'');
   }
   
   // Consumer routes
@@ -446,9 +440,7 @@ function generateAppComponent(frontendDir, variables) {
   
   // DTR routes
   if (modules.includes('dtr_dashboard')) {
-    variables.routes.push('            <Route path="/dtr-dashboard" element={<DTRDashboard />} />');
     variables.routes.push('            <Route path="/dtr/:dtrId" element={<Feeders />} />');
-    variables.pageTitles.push('    \'/dtr-dashboard\': \'DTR Dashboard\'');
     variables.pageTitles.push('    \'/dtr/:dtrId\': \'Feeders\'');
   }
 
@@ -464,7 +456,7 @@ function generateAppComponent(frontendDir, variables) {
   if (modules.includes('consumer_dashboard')) {
     dashboardSubmenus.push({
       title: 'Consumer Dashboard',
-      link: '/dashboard',
+      link: '/',
     });
   }
   if (modules.includes('dtr_dashboard')) {
@@ -476,21 +468,14 @@ function generateAppComponent(frontendDir, variables) {
   
   // Create smart dashboard menu
   if (dashboardSubmenus.length === 0) {
-    // No dashboard modules selected - use default dashboard
-    if (modules.includes('dashboard')) {
-      variables.menuItems += '    {\n';
-      variables.menuItems += '      title: \'Dashboard\',\n';
-      variables.menuItems += '      icon: \'/icons/dashboard.svg\',\n';
-      variables.menuItems += '      link: \'/dashboard\',\n';
-      variables.menuItems += '    },\n';
-    }
+    // No dashboard modules selected - don't add dashboard menu
   } else if (dashboardSubmenus.length === 1) {
     // Single dashboard module - make it the main menu
     const singleDashboard = dashboardSubmenus[0];
     variables.menuItems += '    {\n';
-    variables.menuItems += `      title: '${singleDashboard.title}',\n`;
+    variables.menuItems += '      title: \'Dashboard\',\n'; // Always show as "Dashboard"
     variables.menuItems += '      icon: \'/icons/dashboard.svg\',\n';
-    variables.menuItems += `      link: '${singleDashboard.link}',\n`;
+    variables.menuItems += '      link: \'/\',\n'; // Always link to root path
     variables.menuItems += '    },\n';
   } else {
     // Multiple dashboard modules - create parent with submenus

@@ -25,7 +25,6 @@ function AppLayout({ children }: AppLayoutProps) {
 
   // Simplified page title mapping
   const pageTitles: Record<string, string> = {
-    '/': 'Dashboard',
 {{pageTitles}}
   };
 

@@ -1,5 +1,5 @@
 {
-  "nextPort": 4121,
+  "nextPort": 4138,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -460,6 +460,91 @@
       "port": 4120,
       "deployedAt": "2025-07-30T13:07:52.355Z",
       "path": "C:\\xampp\\htdocs\\tickets-backend"
+    },
+    "hare": {
+      "port": 4121,
+      "deployedAt": "2025-07-31T04:29:36.705Z",
+      "path": "C:\\xampp\\htdocs\\hare-backend"
+    },
+    "ram": {
+      "port": 4122,
+      "deployedAt": "2025-07-31T04:42:53.639Z",
+      "path": "C:\\xampp\\htdocs\\ram-backend"
+    },
+    "barathi": {
+      "port": 4123,
+      "deployedAt": "2025-07-31T05:16:51.383Z",
+      "path": "C:\\xampp\\htdocs\\barathi-backend"
+    },
+    "ramana": {
+      "port": 4124,
+      "deployedAt": "2025-07-31T05:28:41.087Z",
+      "path": "C:\\xampp\\htdocs\\ramana-backend"
+    },
+    "mardhal": {
+      "port": 4125,
+      "deployedAt": "2025-07-31T05:44:57.096Z",
+      "path": "C:\\xampp\\htdocs\\mardhal-backend"
+    },
+    "bujji": {
+      "port": 4126,
+      "deployedAt": "2025-07-31T05:51:34.478Z",
+      "path": "C:\\xampp\\htdocs\\bujji-backend"
+    },
+    "room": {
+      "port": 4127,
+      "deployedAt": "2025-07-31T06:03:51.941Z",
+      "path": "C:\\xampp\\htdocs\\room-backend"
+    },
+    "rooms": {
+      "port": 4128,
+      "deployedAt": "2025-07-31T06:05:35.588Z",
+      "path": "C:\\xampp\\htdocs\\rooms-backend"
+    },
+    "frontend": {
+      "port": 4129,
+      "deployedAt": "2025-07-31T06:30:55.508Z",
+      "path": "C:\\xampp\\htdocs\\frontend-backend"
+    },
+    "crm": {
+      "port": 4130,
+      "deployedAt": "2025-07-31T06:41:30.481Z",
+      "path": "C:\\xampp\\htdocs\\crm-backend"
+    },
+    "temp": {
+      "port": 4131,
+      "deployedAt": "2025-07-31T06:52:27.567Z",
+      "path": "C:\\xampp\\htdocs\\temp-backend"
+    },
+    "taxi-wala": {
+      "port": 4132,
+      "deployedAt": "2025-07-31T06:56:32.948Z",
+      "path": "C:\\xampp\\htdocs\\taxi-wala-backend"
+    },
+    "yedhi": {
+      "port": 4133,
+      "deployedAt": "2025-07-31T07:02:21.901Z",
+      "path": "C:\\xampp\\htdocs\\yedhi-backend"
+    },
+    "bad-boys": {
+      "port": 4134,
+      "deployedAt": "2025-07-31T07:09:57.544Z",
+      "path": "C:\\xampp\\htdocs\\bad-boys-backend"
+    },
+    "med": {
+      "port": 4135,
+      "deployedAt": "2025-07-31T07:19:03.110Z",
+      "path": "C:\\xampp\\htdocs\\med-backend"
+    },
+    "madam": {
+      "port": 4136,
+      "deployedAt": "2025-07-31T07:23:25.208Z",
+      "path": "C:\\xampp\\htdocs\\madam-backend"
+    },
+    "export": {
+      "port": 4137,
+      "deployedAt": "2025-07-31T07:28:19.022Z",
+      "path": "C:\\xampp\\htdocs\\export-backend"
     }
   }
 }
