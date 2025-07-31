@@ -271,12 +271,17 @@ const Feeders = () => {
                                             title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId}` : 'Feeder Information',
                                             onBackClick: () => {
                                                 if (isIndividualFeeder) {
-                                                    navigate('/dtr-dashboard');
+                                                    // Go back to the specific DTR detail page if we have the DTR ID
+                                                    if (passedData?.dtrId) {
+                                                        navigate(`/dtr-detail/${passedData.dtrId}`);
+                                                    } else {
+                                                        navigate('/dtr-dashboard');
+                                                    }
                                                 } else {
                                                     window.history.back();
                                                 }
                                             },
-                                            backButtonText: isIndividualFeeder ? 'Back to DTR Dashboard' : 'Back to Dashboard',
+                                            backButtonText: isIndividualFeeder ? (passedData?.dtrName ? `Back to ${passedData.dtrName}` : 'Back to DTR Dashboard') : 'Back to Dashboard',
                                             buttonsLabel: 'Export Data',
                                             variant: 'primary',
                                             onClick: () => handleDailyChartDownload(),
