@@ -23,7 +23,7 @@ const DTRDashboard: React.FC = () => {
             data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10, 11, 12]
         }
     ];
-    const alertColors = ['#10B981'];
+    const alertColors = ['#163b7c'];
     const statsRange = selectedTimeRange;
 
     // Chart download handler
@@ -34,7 +34,7 @@ const DTRDashboard: React.FC = () => {
     // Handle DTR table actions
     const handleViewDTR = (row: TableData) => {
         console.log('Viewing DTR:', row);
-        navigate(`/dtr/${row.dtrId}`);
+        navigate(`/dtr-detail/${row.dtrId}`);
     };
 
     const handleEditDTR = (row: TableData) => {
@@ -155,6 +155,7 @@ const DTRDashboard: React.FC = () => {
             icon: "/icons/dtr.svg",
             subtitle1: "100.00% of Total DTRs",
             iconStyle: ICON_FILTER_STYLE,
+            bg:'var[--red-500]'
         },
         {
             title: "In-Active DTRs",
@@ -305,13 +306,53 @@ const DTRDashboard: React.FC = () => {
       city: "Hyderabad",
       commStatus: "Active",
     },
+    {
+      dtrId: "TRANSFORMER-11",
+      dtrName: "TGNP_DTR-11",
+      feedersCount: 2,
+      streetName: "Gachibowli",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-12",
+      dtrName: "TGNP_DTR-12",
+      feedersCount: 3,
+      streetName: "Madhapur",
+      city: "Hyderabad",
+      commStatus: "Inactive",
+    },
+    {
+      dtrId: "TRANSFORMER-13",
+      dtrName: "TGNP_DTR-13",
+      feedersCount: 1,
+      streetName: "HITEC City",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-14",
+      dtrName: "TGNP_DTR-14",
+      feedersCount: 2,
+      streetName: "Jubilee Hills",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
+    {
+      dtrId: "TRANSFORMER-15",
+      dtrName: "TGNP_DTR-15",
+      feedersCount: 1,
+      streetName: "Banjara Hills",
+      city: "Hyderabad",
+      commStatus: "Active",
+    },
   ];
 
 
     // Dummy data for Latest Alerts table
     const alertsTableColumns = [
         { key: 'alert', label: 'Alert' },
-        { key: 'date', label: 'Date' },
+        { key: 'date', label: 'Occured On' },
         { key: 'status', label: 'Status' },
     ];
 
@@ -345,6 +386,26 @@ const DTRDashboard: React.FC = () => {
         {
             alert: 'High temperature on DTR-08',
             date: '2024-07-25 09:15',
+            status: 'Active',
+        },
+        {
+            alert: 'Unbalanced load on DTR-11',
+            date: '2024-07-25 08:45',
+            status: 'Active',
+        },
+        {
+            alert: 'Low power factor on DTR-14',
+            date: '2024-07-25 08:00',
+            status: 'Resolved',
+        },
+        {
+            alert: 'Frequency deviation on DTR-12',
+            date: '2024-07-25 07:30',
+            status: 'Active',
+        },
+        {
+            alert: 'Phase loss detected on DTR-15',
+            date: '2024-07-25 07:00',
             status: 'Active',
         },
     ];
@@ -439,7 +500,7 @@ const DTRDashboard: React.FC = () => {
 
     // // Handle Excel download for chart data
     // const handleChartDownload = () => {
-    //     exportChartData(months, alertSeries, 'dtr-statistics-data');
+    //     exportChartData(months, alertSeries, 'dtr-statis tics-data');
     // };
 
     return (
@@ -585,19 +646,20 @@ const DTRDashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
-                                                
+                                                                                              
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
                                                 showHeader: true,
-                                                headerTitle: 'DTRInformation',
-                                                dateRange: 'All DTRs',
-                                                searchable: true,
+                                                headerTitle: 'DTRInformation',  
+                                                headerClassName:'h-18',
+                                                searchable: true, 
                                                 sortable: true,
                                                 pagination: true,
+                                                initialRowsPerPage: 10,
                                                 showActions: true,
                                                 text: 'DTR Management Table',
                                                 onRowClick: (row: TableData) =>
-                                                    navigate(`/dtr/${row.dtrId}`),
+                                                    navigate(`/dtr-detail/${row.dtrId}`),
                                                 onView: handleViewDTR,
                                                 availableTimeRanges: [],
                                             },
@@ -637,15 +699,11 @@ const DTRDashboard: React.FC = () => {
                                      columns: alertsTableColumns,
                                      showHeader: true,
                                      headerTitle: 'Latest Alerts',
-                                     dateRange: selectedTimeRange === 'Daily' ? 'Today' : 'This Month',
                                      showActions: false,
                                      searchable: true,
                                      pagination: true,
-                                     initialRowsPerPage: 10,
+                                     initialRowsPerPage: 3,
                                      emptyMessage: 'No alerts found',
-                                     availableTimeRanges: ['Daily', 'Monthly'],
-                                     selectedTimeRange: selectedTimeRange,
-                                     onTimeRangeChange: handleTimeRangeChange,
                                  },
                              },
                            
