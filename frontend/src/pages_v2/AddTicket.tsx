@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { Suspense } from 'react';
 import Page from '@/components/global/PageC';
-import type { FormInputConfig } from '@components/Form/types';
+import type { FormInputConfig } from '@/components/Form/types';
 
 export default function AddTicket() {
     const navigate = useNavigate();

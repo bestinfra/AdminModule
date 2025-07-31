@@ -1,9 +1,9 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
-import Card from '@components/global/Card';
+import Card from '@/components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
-import Table from '@components/global/Table';
+import Table from '@/components/global/Table';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
 import { exportChartData } from '@/utils/excelExport';

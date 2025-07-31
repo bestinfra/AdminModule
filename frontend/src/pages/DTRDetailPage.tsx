@@ -106,18 +106,7 @@ const DTRDetailPage = () => {
         ],
     });
 
-    // Monthly consumption data
-    const monthlyConsumptionData = {
-        xAxisData: [
-            'Jul 2024', 'Aug 2024', 'Sep 2024', 'Oct 2024', 'Nov 2024', 'Dec 2024', 'Jan 2025', 'Feb 2025', 'Mar 2025', 'Apr 2025', 'May 2025', 'Jun 2025', 'Jul 2025',
-        ],
-        seriesData: [
-            {
-                name: 'Consumption',
-                data: [0, 0, 0, 0, 0, 0, 0, 6000, 14000, 18000, 17000, 16000, 0],
-            },
-        ],
-    };
+
 
     // Feeders data
     const [feedersData, setFeedersData] = useState([

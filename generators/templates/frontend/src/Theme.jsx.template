@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
-import { useTheme } from 'SuperAdmin/providers/ThemeProvider';
 
 export const Theme = ({ children }) => {
-    const { theme, updateTheme } = useTheme();
     useEffect(() => {
-        updateTheme({
+        // Apply theme configuration directly to CSS variables
+        const themeConfig = {
             colorPrimaryBg: '{{colorPrimaryBg}}',
             colorPrimaryBgLight: '{{colorPrimaryBgLight}}',
             colorPrimaryLightest: '{{colorPrimaryLightest}}',
@@ -37,6 +36,14 @@ export const Theme = ({ children }) => {
             colorPrimaryDarkGradient: '{{colorPrimaryDarkGradient}}',
             colorGradientSecondary: '{{colorGradientSecondary}}',
             colorStatIconGradient: '{{colorStatIconGradient}}'
+        };
+
+        // Apply theme to CSS variables
+        Object.entries(themeConfig).forEach(([key, value]) => {
+            document.documentElement.style.setProperty(
+                `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`,
+                value
+            );
         });
     }, []);
 
