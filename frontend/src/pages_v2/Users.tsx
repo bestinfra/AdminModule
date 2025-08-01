@@ -292,39 +292,24 @@ export default function Users() {
                                             props: {
                                                 title: 'Users',
                                                 onBackClick: () =>
-                                                    window.history.back(),
+                                                    navigate('/superadmin'),
                                                 backButtonText:
                                                     'Back to Dashboard',
                                                 buttonsLabel: 'Add User',
                                                 variant: 'primary',
                                                 onClick: () => navigate('/add-user'),
                                                 showMenu: true,
-                                                showDropdown: false,
+                                                showDropdown: true,
                                                 menuItems: [
                                                     {
-                                                        id: 'all',
-                                                        label: 'All Users',
-                                                    },
+                                                        id: 'RoleManagement',
+                                                        label: 'Role Management',
+                                                    },  
                                                     {
-                                                        id: 'active',
-                                                        label: 'Active Users',
+                                                        id: 'Export',
+                                                        label: 'Export ',
                                                     },
-                                                    {
-                                                        id: 'inactive',
-                                                        label: 'Inactive Users',
-                                                    },
-                                                    {
-                                                        id: 'admin',
-                                                        label: 'Administrators',
-                                                    },
-                                                    {
-                                                        id: 'moderator',
-                                                        label: 'Moderators',
-                                                    },
-                                                    {
-                                                        id: 'user',
-                                                        label: 'Regular Users',
-                                                    },
+                                                  
                                                 ],
                                                 onMenuItemClick: (
                                                     itemId: string
@@ -332,6 +317,9 @@ export default function Users() {
                                                     console.log(
                                                         `Filter by: ${itemId}`
                                                     );
+                                                    if (itemId === 'RoleManagement') {
+                                                        navigate('/role-management');
+                                                    }
                                                 },
                                             },
                                         },

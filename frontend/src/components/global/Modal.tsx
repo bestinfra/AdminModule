@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Button from '@components/global/Button';
+import Form from '@components/Form/Form';
+import type { FormInputConfig, FormInputValue } from '@components/Form/types';
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,21 +22,14 @@ interface ModalProps {
   warningMessage?: string;
   // Form props for edit/add role
   showForm?: boolean;
-  formFields?: Array<{
-    type: 'input' | 'dropdown' | 'textarea';
-    label: string;
-    name: string;
-    value?: string;
-    placeholder?: string;
-    options?: Array<{ value: string; label: string }>;
-    required?: boolean;
-    disabled?: boolean;
-    onChange?: (value: string) => void;
-  }>;
-  onSave?: (formData: any) => void;
+  formFields?: FormInputConfig[];
+  onSave?: (formData: Record<string, FormInputValue>) => void;
   saveButtonLabel?: string;
   cancelButtonLabel?: string;
   cancelButtonVariant?: 'primary' | 'secondary' | 'outline';
+  formInitialData?: Record<string, FormInputValue>;
+  formErrorMessages?: Record<string, string>;
+  formId?: string;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -58,7 +53,10 @@ const Modal: React.FC<ModalProps> = ({
   onSave,
   saveButtonLabel = 'Save',
   cancelButtonLabel = 'Cancel',
-  cancelButtonVariant = 'secondary'
+  cancelButtonVariant = 'secondary',
+  formInitialData,
+  formErrorMessages,
+  formId
 }) => {
   const uniqueModalId = modalId || `modal-${Math.random().toString(36).substr(2, 9)}`;
   
@@ -107,12 +105,8 @@ const Modal: React.FC<ModalProps> = ({
     }
   };
 
-  const handleSave = () => {
-    if (onSave && formFields.length > 0) {
-      const formData: any = {};
-      formFields.forEach(field => {
-        formData[field.name] = field.value || '';
-      });
+  const handleFormSubmit = (formData: Record<string, FormInputValue>) => {
+    if (onSave) {
       onSave(formData);
     }
   };
@@ -190,52 +184,28 @@ const Modal: React.FC<ModalProps> = ({
                   {children || (
                     <>
                       {showForm && formFields.length > 0 ? (
-                        <form className="space-y-4">
-                          {formFields.map((field, index) => (
-                            <div key={index} className="space-y-2">
-                              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                {field.label}
-                                {field.required && <span className="text-red-500 ml-1">*</span>}
-                              </label>
-                                                             {field.type === 'input' && (
-                                 <input
-                                   type="text"
-                                   value={field.value || ''}
-                                   placeholder={field.placeholder}
-                                   onChange={(e) => field.onChange?.(e.target.value)}
-                                   className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${field.disabled ? 'bg-gray-100 cursor-not-allowed opacity-60' : ''}`}
-                                   required={field.required}
-                                   disabled={field.disabled}
-                                 />
-                               )}
-                              {field.type === 'dropdown' && (
-                                <select
-                                  value={field.value || ''}
-                                  onChange={(e) => field.onChange?.(e.target.value)}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                  required={field.required}
-                                >
-                                  <option value="">Select {field.label}</option>
-                                  {field.options?.map((option, optIndex) => (
-                                    <option key={optIndex} value={option.value}>
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
-                              )}
-                              {field.type === 'textarea' && (
-                                <textarea
-                                  value={field.value || ''}
-                                  placeholder={field.placeholder}
-                                  onChange={(e) => field.onChange?.(e.target.value)}
-                                  rows={3}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                  required={field.required}
-                                />
-                              )}
-                            </div>
-                          ))}
-                        </form>
+                        <Form
+                          inputs={formFields.map(field => ({
+                            ...field,
+                            col: 1,
+                            colSpan: 3
+                          }))}
+                          onSubmit={handleFormSubmit}
+                          submitLabel={saveButtonLabel}
+                          cancelLabel={cancelButtonLabel}
+                          formId={formId || `${uniqueModalId}-form`}
+                          initialData={formInitialData}
+                          errorMessages={formErrorMessages}
+                          showFormActions={false}
+                          formBackground=""
+                          padding="p-0"
+                          border="none"
+                          gridLayout={{
+                            gridRows: formFields.length,
+                            gridColumns: 3,
+                            gap: "gap-4"
+                          }}
+                        />
                       ) : (
                         <>
                           {message && (
@@ -255,9 +225,9 @@ const Modal: React.FC<ModalProps> = ({
                 </section>
               </main>
 
-              {(showConfirmButton || showForm) && (
+              {(showConfirmButton || (showForm && formFields.length > 0)) && (
                 <footer className="flex justify-end gap-3 px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
-                  {showForm ? (
+                  {showForm && formFields.length > 0 ? (
                     <>
                       <Button
                         label={cancelButtonLabel}
@@ -266,7 +236,13 @@ const Modal: React.FC<ModalProps> = ({
                       />
                       <Button
                         label={saveButtonLabel}
-                        onClick={handleSave}
+                        onClick={() => {
+                          // Trigger form submission
+                          const formElement = document.getElementById(formId || `${uniqueModalId}-form`) as HTMLFormElement;
+                          if (formElement) {
+                            formElement.requestSubmit();
+                          }
+                        }}
                       />
                     </>
                   ) : (

@@ -52,6 +52,7 @@ const MetersList: React.FC = () => {
             consumerName: 'Neo Travels',
             location: 'NA',
             installationDate: 'NA',
+            status: 'Active',
         },
         {
             slNo: 2,
@@ -62,6 +63,7 @@ const MetersList: React.FC = () => {
             consumerName: 'Mobikins',
             location: 'NA',
             installationDate: 'NA',
+            status: 'Inactive',
         },
         {
             slNo: 3,
@@ -72,6 +74,7 @@ const MetersList: React.FC = () => {
             consumerName: 'Airborne General Store',
             location: 'NA',
             installationDate: 'NA',
+            status: 'Active',
         },
     ];
 
@@ -84,6 +87,12 @@ const MetersList: React.FC = () => {
         { key: 'consumerName', label: 'Consumer Name' },
         { key: 'location', label: 'Location' },
         { key: 'installationDate', label: 'Installation Date' },
+        { 
+            key: 'status', 
+            label: 'Status',
+            statusIndicator: {},
+            isActive: (value: string | number | boolean | null | undefined) => String(value).toLowerCase() === 'active'
+        },
     ];
 
     const tableActions = [
