@@ -371,7 +371,6 @@ const DTRDashboard: React.FC = () => {
     const alertsTableColumns = [
         { key: 'alert', label: 'Alert' },
         { key: 'date', label: 'Occured On' },
-        { key: 'status', label: 'Status' },
     ];
 
     // Daily alerts data
@@ -704,7 +703,7 @@ const DTRDashboard: React.FC = () => {
                                 showLegendInteractions: true,
                                 timeRange: statsRange,
                                 showHeader: true,
-                                headerTitle: 'Statistics',
+                                headerTitle: 'DTR Performance Metrics',
                                 showDownloadButton: true,
                                 onDownload: () => handleChartDownload(),
                             },
@@ -719,6 +718,7 @@ const DTRDashboard: React.FC = () => {
                                      showActions: false,
                                      searchable: true,
                                      pagination: true,
+                                     availableTimeRanges: [],
                                      initialRowsPerPage: 3,
                                      emptyMessage: 'No alerts found',
                                  },
