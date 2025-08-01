@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Button from '@components/global/Button';
+import Dropdown from '@components/global/Dropdown';
 
 interface ModalProps {
   isOpen: boolean;
@@ -209,19 +210,19 @@ const Modal: React.FC<ModalProps> = ({
                                  />
                                )}
                               {field.type === 'dropdown' && (
-                                <select
+                                <Dropdown
+                                  name={field.name}
                                   value={field.value || ''}
-                                  onChange={(e) => field.onChange?.(e.target.value)}
-                                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                                  onChange={(e) => {
+                                    const value = Array.isArray(e.target.value) ? e.target.value[0] : e.target.value;
+                                    field.onChange?.(value);
+                                  }}
+                                  options={field.options || []}
+                                  placeholder={`Select ${field.label}`}
+                                  disabled={field.disabled}
+                                  searchable={false}
                                   required={field.required}
-                                >
-                                  <option value="">Select {field.label}</option>
-                                  {field.options?.map((option, optIndex) => (
-                                    <option key={optIndex} value={option.value}>
-                                      {option.label}
-                                    </option>
-                                  ))}
-                                </select>
+                                />
                               )}
                               {field.type === 'textarea' && (
                                 <textarea

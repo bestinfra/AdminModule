@@ -262,6 +262,7 @@ export default function Meters() {
         { key: 'consumerName', label: 'Consumer Name' },
         { key: 'location', label: 'Location' },
         { key: 'installationDate', label: 'Installation Date' },
+        { key: 'status', label: 'Status' },
     ]);
 
     // Generate filter options from allMeters
