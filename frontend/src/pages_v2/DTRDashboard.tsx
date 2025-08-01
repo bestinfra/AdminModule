@@ -26,7 +26,100 @@ const DTRDashboard: React.FC = () => {
     const alertColors = ['#163b7c'];
     const statsRange = selectedTimeRange;
 
-    // Chart download handler
+    // Handle Excel download for all DTR Dashboard data
+    const handleExportData = () => {
+        // Import XLSX library
+        import('xlsx').then((XLSX) => {
+            // Create a new workbook
+            const workbook = XLSX.utils.book_new();
+
+            // Prepare DTR Statistics data
+            const dtrStatsData = dtrStatsCards.map(stat => ({
+                'Metric': stat.title,
+                'Value': stat.value,
+                'Subtitle': stat.subtitle1 || '',
+            }));
+
+            // Prepare DTR Table data
+            const dtrTableExportData = dtrTableData.map(dtr => ({
+                'DTR ID': dtr.dtrId,
+                'DTR Name': dtr.dtrName,
+                'Feeders Count': dtr.feedersCount,
+                'Street Name': dtr.streetName,
+                'City': dtr.city,
+                'Communication Status': dtr.commStatus,
+                'Last Communication': dtr.lastCommunication,
+            }));
+
+            // Prepare Daily Consumption data
+            const dailyConsumptionExportData = dailyConsumptionCards.map(card => ({
+                'Metric': card.title,
+                'Value': card.value,
+                'Subtitle': card.subtitle1 || '',
+            }));
+
+            // Prepare Monthly Consumption data
+            const monthlyConsumptionExportData = monthlyConsumptionCards.map(card => ({
+                'Metric': card.title,
+                'Value': card.value,
+                'Subtitle': card.subtitle1 || '',
+            }));
+
+            // Prepare Daily Alerts data
+            const dailyAlertsExportData = dailyAlertsData.map(alert => ({
+                'Alert': alert.alert,
+                'Date': alert.date,
+                'Status': alert.status,
+            }));
+
+            // Prepare Monthly Alerts data
+            const monthlyAlertsExportData = monthlyAlertsData.map(alert => ({
+                'Alert': alert.alert,
+                'Date': alert.date,
+                'Status': alert.status,
+            }));
+
+            // Prepare Chart Performance data
+            const chartPerformanceData = months.map((month, index) => ({
+                'Month': month,
+                'Alerts': alertSeries[0].data[index],
+            }));
+
+            // Convert data to worksheets
+            const dtrStatsSheet = XLSX.utils.json_to_sheet(dtrStatsData);
+            const dtrTableSheet = XLSX.utils.json_to_sheet(dtrTableExportData);
+            const dailyConsumptionSheet = XLSX.utils.json_to_sheet(dailyConsumptionExportData);
+            const monthlyConsumptionSheet = XLSX.utils.json_to_sheet(monthlyConsumptionExportData);
+            const dailyAlertsSheet = XLSX.utils.json_to_sheet(dailyAlertsExportData);
+            const monthlyAlertsSheet = XLSX.utils.json_to_sheet(monthlyAlertsExportData);
+            const chartPerformanceSheet = XLSX.utils.json_to_sheet(chartPerformanceData);
+
+            // Add worksheets to workbook
+            XLSX.utils.book_append_sheet(workbook, dtrStatsSheet, 'DTR Statistics');
+            XLSX.utils.book_append_sheet(workbook, dtrTableSheet, 'DTR Table');
+            XLSX.utils.book_append_sheet(workbook, dailyConsumptionSheet, 'Daily Consumption');
+            XLSX.utils.book_append_sheet(workbook, monthlyConsumptionSheet, 'Monthly Consumption');
+            XLSX.utils.book_append_sheet(workbook, dailyAlertsSheet, 'Daily Alerts');
+            XLSX.utils.book_append_sheet(workbook, monthlyAlertsSheet, 'Monthly Alerts');
+            XLSX.utils.book_append_sheet(workbook, chartPerformanceSheet, 'Performance Metrics');
+
+            // Generate Excel file
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            
+            // Create blob and download
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'dtr-dashboard-complete-data.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        });
+    };
+
+    // Chart download handler (for chart-specific export)
     const handleChartDownload = () => {
         exportChartData(months, alertSeries, 'dtr-statistics-data');
     };
@@ -540,8 +633,7 @@ const DTRDashboard: React.FC = () => {
                                     backButtonText: 'Back to Dashboard',
                                     buttonsLabel: 'Export',
                                     variant: 'primary',
-                                    onClick: () =>
-                                        console.log('Adding new DTR...'),
+                                    onClick: () => handleExportData(),
                                     showMenu: true,
                                     showDropdown: true,
                                     menuItems: [
