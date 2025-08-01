@@ -1,5 +1,6 @@
 {
   "nextPort": 4105,
+  "nextPort": 4105,
   "deployedApps": {
     "example": {
       "port": 4001,
