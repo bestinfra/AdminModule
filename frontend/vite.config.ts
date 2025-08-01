@@ -14,9 +14,11 @@ export default defineConfig({
       exposes: {
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',
-        './Page': './src/components/global/PageC.tsx',
+        './Page': './src/components/global/Page.tsx',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
         './Login': './src/pages_v2/SubLogin.tsx',
+        './context/AuthContext': './src/context/AuthContext.tsx',
+        './components/auth/ProtectedRoute': './src/components/auth/ProtectedRoute.tsx',
       },
       shared : [
         'react', 
@@ -72,7 +74,22 @@ export default defineConfig({
       allow: ['..'],
     },
     proxy: {
-      '/api': {
+      '/api/auth': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/apps': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/sub-app-auth': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/sub-app/auth': {
         target: 'http://localhost:4000',
         changeOrigin: true,
         secure: false,

@@ -64,6 +64,7 @@ const mockDTRData = {
             icon: '/icons/power_failure.svg',
             subtitle1: '',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
+            bg: 'bg-green-500', // Use custom CSS class with higher specificity
         },
         {
             title: 'Power Off',
@@ -212,6 +213,17 @@ const DTRDetailPage = () => {
                 } 
             });
         }
+    };
+
+    // Handle feeder view action
+    const handleFeederView = (row: any) => {
+        navigate(`/feeder/${row.feederName}`, { 
+            state: { 
+                feederData: row,
+                dtrId: dtrId,
+                dtrName: dtr.name
+            } 
+        });
     };
 
     return (
@@ -399,6 +411,15 @@ const DTRDetailPage = () => {
                                             className: 'w-full',
                                             onExport: handleFeedersExport,
                                             onRowClick: (row: any) => handleFeederClick(row.feederName),
+                                            actions: [
+                                                {
+                                                    label: 'View',
+                                                    icon: '/icons/eye.svg',
+                                                    onClick: handleFeederView,
+                                                    variant: 'primary',
+                                                    size: 'sm'
+                                                }
+                                            ],
                                         },
                                     },
                                 ],

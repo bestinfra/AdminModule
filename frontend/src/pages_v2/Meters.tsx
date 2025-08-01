@@ -59,7 +59,7 @@ export default function Meters() {
             value: 5,
             subtitle1: '1 Used Meter Makes',
             subtitle2: '',
-            icon: 'icons/meter-make.svg',
+            icon: 'icons/meter-bolt.svg',
             iconStyle: ICON_FILTER_STYLE,
         },
         {
@@ -272,6 +272,7 @@ export default function Meters() {
         //     .map((type) => ({ value: type, label: type })),
         { value: 'active', label: 'Active' },
         { value: 'replaced', label: 'Replaced' },
+        { value: 'inactive', label: 'Inactive' },
     ];
     const meterMakeOptions = [
         // { value: 'all', label: 'Filter By Meter Types' },
@@ -303,7 +304,7 @@ export default function Meters() {
                             {
                                 name: 'PageHeader',
                                 props: {
-                                    title: 'Meter Management',
+                                    title: 'Meters List',
                                     onBackClick: () => window.history.back(),
                                     backButtonText: 'Back to Dashboard',
                                     // buttonsLabel: 'Add Meter',
@@ -311,7 +312,7 @@ export default function Meters() {
                                     onClick: () =>
                                         console.log('Adding new meter...'),
                                     showMenu: true,
-                                    showDropdown: true,
+                                    showDropdown: false,
                                     menuItems: [
                                         { id: 'all', label: 'All Meters' },
                                         {

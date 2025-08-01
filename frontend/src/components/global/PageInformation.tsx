@@ -130,7 +130,7 @@ const PageInformation: React.FC<PageInformationProps> = ({
                                             key={itemIndex}
                                             className={`flex flex-col w-full ${itemGap} ${itemAlignClass} ${itemSpanClasses}`}
                                         >
-                                            <div className="text-md font-bold text-primary">{item.title}</div>
+                                            <div className="text-md font-bold text-TextSecondary">{item.title}</div>
                                             <div className="text-sm text-gray-900">{item.value}</div>
                                         </div>
                                     );

@@ -54,3 +54,20 @@
     stroke: #94a3b8;
     stroke-width: 2;
 }
+
+/* Blinking animation for status indicators */
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.blink {
+    animation: blink 1.5s ease-in-out infinite;
+}

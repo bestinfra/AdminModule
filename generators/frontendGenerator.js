@@ -77,6 +77,9 @@ function generateFrontend(baseDir, formData) {
   const templateDir = path.join(__dirname, 'templates', 'frontend');
   copyTemplateDirectory(templateDir, frontendDir, variables, ['App.tsx.template']);
 
+  // Generate authentication components FIRST (before App.tsx)
+  generateAuthComponents(frontendDir, variables);
+  
   // Generate additional files that need complex logic
   generateAppComponent(frontendDir, variables);
   generateContextFiles(frontendDir, variables);
@@ -163,10 +166,10 @@ function generateAppComponent(frontendDir, variables) {
   
  // Dashboard submenu routes - always create routes for selected sub-dashboards
  variables.consumerDashboardRoute = modules.includes('consumer_dashboard') ? 
- '<Route path="/consumer-dashboard" element={<Dashboard />} />' : '';
+   '<Route path="/consumer-dashboard" element={<Dashboard />} />' : '';
 
  variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ? 
- '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
+   '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
 
   // Smart dashboard route and import logic
   const dashboardModules = [];
@@ -729,6 +732,43 @@ VITE_BACKEND_ENV_URL=http://localhost:${variables.backendPort}/api/env
   const envPath = path.join(frontendDir, '.env');
   fs.writeFileSync(envPath, envContent);
   console.log('✅ Created frontend .env file with backend connection');
+}
+
+/**
+ * Generate authentication components
+ */
+function generateAuthComponents(frontendDir, variables) {
+  const authDir = path.join(frontendDir, 'src', 'components', 'auth');
+  fs.mkdirSync(authDir, { recursive: true });
+
+  // Generate LocalAuthWrapper
+  const authWrapperTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'auth', 'LocalAuthWrapper.tsx.template');
+  if (fs.existsSync(authWrapperTemplate)) {
+    const authWrapperContent = loadAndProcessTemplate(authWrapperTemplate, variables);
+    const authWrapperPath = path.join(authDir, 'LocalAuthWrapper.tsx');
+    fs.writeFileSync(authWrapperPath, authWrapperContent);
+  }
+
+  // Generate LocalProtectedRoute
+  const protectedRouteTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'auth', 'LocalProtectedRoute.tsx.template');
+  if (fs.existsSync(protectedRouteTemplate)) {
+    const protectedRouteContent = loadAndProcessTemplate(protectedRouteTemplate, variables);
+    const protectedRoutePath = path.join(authDir, 'LocalProtectedRoute.tsx');
+    fs.writeFileSync(protectedRoutePath, protectedRouteContent);
+  }
+
+  // Verify that both files were created
+  const authWrapperPath = path.join(authDir, 'LocalAuthWrapper.tsx');
+  const protectedRoutePath = path.join(authDir, 'LocalProtectedRoute.tsx');
+  
+  if (!fs.existsSync(authWrapperPath)) {
+    console.error('❌ Failed to create LocalAuthWrapper.tsx');
+  }
+  if (!fs.existsSync(protectedRoutePath)) {
+    console.error('❌ Failed to create LocalProtectedRoute.tsx');
+  }
+
+  console.log('✅ Generated authentication components');
 }
 
 /**

@@ -31,9 +31,15 @@ import ChatInput from '../Ticket/ChatInput';
 import TicketInfoCard from '../Ticket/TicketInfoCard';
 import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
+import ChatComponent from '../Ticket/ChatComponent';
 import PageInformation from './PageInformation';
 import SubappPanel from './SubAppPanel';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+import Permissions from './Permissions';
+import SummaryInfo from './SummaryInfo';
+import TicketConversationPanel from '../TicketConversationPanel';
+import TicketInformationPannel from './TIcketInformationPannel';
+import ActivityLog from './ActivityLog';
+import ChatApplication from '../ChatApplication'
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -64,10 +70,17 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     TicketInfoCard,
     UnitDetailsCard,
     ActivityLogCard,
+    ChatComponent,
     Carousel,
     LoginV2,
     PageInformation,
     SubappPanel,
+    SummaryInfo,
+    TicketConversationPanel,
+    TicketInformationPannel,
+    ActivityLog,
+    ChatApplication,
+    Permissions,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

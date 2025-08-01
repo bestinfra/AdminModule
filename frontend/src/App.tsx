@@ -32,6 +32,10 @@ import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
 import SuperAdminDashboard from './pages_v2/SuperAdminDashboard';
+import EditRole from './pages_v2/EditRole';
+import EditUser from './pages_v2/EditUser';
+import UserDetail from './pages_v2/UserDetail';
+import RolesPermissions from './pages_v2/RolesPermissions';
 
 import DTRDetailPage from './pages/DTRDetailPage';
 
@@ -84,8 +88,12 @@ const App: React.FC = () => {
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
+                            <Route path="/edit-role/:roleId" element={<EditRole/>} />
                             <Route path="/add-user" element={<AddUser />} />
+                            <Route path="/edit-user/:userId" element={<EditUser />} />
+                            <Route path="/user-detail/:id" element={<UserDetail />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
+                            <Route path="/roles-permissions" element={<RolesPermissions />} />
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>

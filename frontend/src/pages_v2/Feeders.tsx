@@ -234,7 +234,6 @@ const Feeders = () => {
         { title: 'Rating', description: '25.00 kVA' },
         { title: 'Address', description: 'Waddepally, Warangal, Telangana, India, 506001' },
     ]);
-    const lastComm = '30/06/2025 22:31:38';
 
     // Use setters to avoid unused variable warnings
     useEffect(() => {
@@ -272,12 +271,17 @@ const Feeders = () => {
                                             title: isIndividualFeeder ? `Feeder ${feederData?.feederName || currentFeederId}` : 'Feeder Information',
                                             onBackClick: () => {
                                                 if (isIndividualFeeder) {
-                                                    navigate('/dtr-dashboard');
+                                                    // Go back to the specific DTR detail page if we have the DTR ID
+                                                    if (passedData?.dtrId) {
+                                                        navigate(`/dtr-detail/${passedData.dtrId}`);
+                                                    } else {
+                                                        navigate('/dtr-dashboard');
+                                                    }
                                                 } else {
                                                     window.history.back();
                                                 }
                                             },
-                                            backButtonText: isIndividualFeeder ? 'Back to DTR Dashboard' : 'Back to Dashboard',
+                                            backButtonText: isIndividualFeeder ? (passedData?.dtrName ? `Back to ${passedData.dtrName}` : 'Back to DTR Dashboard') : 'Back to Dashboard',
                                             buttonsLabel: 'Export Data',
                                             variant: 'primary',
                                             onClick: () => handleDailyChartDownload(),
@@ -384,7 +388,7 @@ const Feeders = () => {
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             className:'w-full',
-                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
+                                            rightComponent: { name: 'LastComm', props: { value: '2024-01-15 14:30:00' } },
                                         },
                                         span: { col: 1, row: 1 },
                                     },
@@ -394,7 +398,7 @@ const Feeders = () => {
                                 layout: 'grid' as const,
                                 gridColumns: 5,
                                 className: 'w-full gap-4',
-                                columns: stats.map((stat) => ({
+                                columns: stats.map((stat: any) => ({
                                     name: 'Card',
                                     props: {
                                         title: stat.title,
