@@ -20,7 +20,7 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
     className = ''
 }) => {
     return (
-        <div className={`bg-blue-50 rounded-lg p-4 w-64 ${className}`}>
+        <div className={`bg-background-secondary rounded-lg p-4 w-64 ${className}`}>
             <nav className="space-y-2">
                 {items.map((item) => (
                     <button
@@ -31,11 +31,11 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
                         }}
                         className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
                             item.isActive
-                                ? 'bg-blue-100 text-blue-700 font-medium'
-                                : 'text-gray-600 hover:bg-blue-100 hover:text-blue-700'
+                                ? 'bg-white text-primary font-medium'
+                                : 'text-gray-600 hover:bg-background-secondary hover:text-primary'
                         }`}
                     >
-                        <div className="flex items-center space-x-3">
+                        <div className="flex items-center  space-x-3">
                             {item.icon && (
                                 <img
                                     src={item.icon}

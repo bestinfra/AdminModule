@@ -572,9 +572,11 @@ const DTRDetailPage = () => {
                             {
                                 layout: 'grid' as const,
                                 gridColumns: 1,
+                                className:'pb-4',
                                 columns: [
                                     {
                                         name: 'Table',
+                                        
                                         props: {
                                             columns: [
                                                 { key: 'alertId', label: 'Alert ID' },

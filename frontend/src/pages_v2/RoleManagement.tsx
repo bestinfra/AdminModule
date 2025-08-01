@@ -536,6 +536,7 @@ export default function RoleManagement() {
                                                 size: 'md',
                                                 showConfirmButton: true,
                                                 confirmButtonLabel: 'Delete Role',
+                                                confirmButtonVariant: 'danger',
                                                 onConfirm: handleConfirmDelete,
                                                 message: `Are you sure you want to delete the role "${roleToDelete?.roleName}"?`,
                                                 warningMessage: 'This action cannot be undone. All users assigned to this role will lose their permissions.',
