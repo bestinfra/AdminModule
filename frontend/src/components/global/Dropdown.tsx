@@ -222,7 +222,7 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div
           onClick={() => !disabled && setIsOpen(!isOpen)}
           tabIndex={0}
-          className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium
+          className={`w-full flex items-center justify-between border px-4 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium
             ${disabled ? '' : 'text-current'}
             ${error ? 'border-red-500' : 'border-gray-300'}`}
           role="combobox"

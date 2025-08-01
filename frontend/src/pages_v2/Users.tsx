@@ -421,8 +421,10 @@ export default function Users() {
                                                 emptyMessage: loading
                                                     ? 'Loading users...'
                                                     : 'No users found',
-                                                onViewClick: (row: any) => {
-                                                    navigate('/basic-information', {
+                                                onView: (row: any) => {
+                                                    console.log('Users: onView triggered', row);
+                                                    console.log('Users: Navigating to', `/user-detail/${row.sNo}`);
+                                                    navigate(`/user-detail/${row.sNo}`, {
                                                         state: {
                                                             user: row
                                                         }

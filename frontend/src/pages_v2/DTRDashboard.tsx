@@ -22,7 +22,100 @@ const DTRDashboard: React.FC = () => {
     const alertColors = ['#163b7c'];
     const statsRange = selectedTimeRange;
 
-    // Chart download handler
+    // Handle Excel download for all DTR Dashboard data
+    const handleExportData = () => {
+        // Import XLSX library
+        import('xlsx').then((XLSX) => {
+            // Create a new workbook
+            const workbook = XLSX.utils.book_new();
+
+            // Prepare DTR Statistics data
+            const dtrStatsData = dtrStatsCards.map(stat => ({
+                'Metric': stat.title,
+                'Value': stat.value,
+                'Subtitle': stat.subtitle1 || '',
+            }));
+
+            // Prepare DTR Table data
+            const dtrTableExportData = dtrTableData.map(dtr => ({
+                'DTR ID': dtr.dtrId,
+                'DTR Name': dtr.dtrName,
+                'Feeders Count': dtr.feedersCount,
+                'Street Name': dtr.streetName,
+                'City': dtr.city,
+                'Communication Status': dtr.commStatus,
+                'Last Communication': dtr.lastCommunication,
+            }));
+
+            // Prepare Daily Consumption data
+            const dailyConsumptionExportData = dailyConsumptionCards.map(card => ({
+                'Metric': card.title,
+                'Value': card.value,
+                'Subtitle': card.subtitle1 || '',
+            }));
+
+            // Prepare Monthly Consumption data
+            const monthlyConsumptionExportData = monthlyConsumptionCards.map(card => ({
+                'Metric': card.title,
+                'Value': card.value,
+                'Subtitle': card.subtitle1 || '',
+            }));
+
+            // Prepare Daily Alerts data
+            const dailyAlertsExportData = dailyAlertsData.map(alert => ({
+                'Alert': alert.alert,
+                'Date': alert.date,
+                'Status': alert.status,
+            }));
+
+            // Prepare Monthly Alerts data
+            const monthlyAlertsExportData = monthlyAlertsData.map(alert => ({
+                'Alert': alert.alert,
+                'Date': alert.date,
+                'Status': alert.status,
+            }));
+
+            // Prepare Chart Performance data
+            const chartPerformanceData = months.map((month, index) => ({
+                'Month': month,
+                'Alerts': alertSeries[0].data[index],
+            }));
+
+            // Convert data to worksheets
+            const dtrStatsSheet = XLSX.utils.json_to_sheet(dtrStatsData);
+            const dtrTableSheet = XLSX.utils.json_to_sheet(dtrTableExportData);
+            const dailyConsumptionSheet = XLSX.utils.json_to_sheet(dailyConsumptionExportData);
+            const monthlyConsumptionSheet = XLSX.utils.json_to_sheet(monthlyConsumptionExportData);
+            const dailyAlertsSheet = XLSX.utils.json_to_sheet(dailyAlertsExportData);
+            const monthlyAlertsSheet = XLSX.utils.json_to_sheet(monthlyAlertsExportData);
+            const chartPerformanceSheet = XLSX.utils.json_to_sheet(chartPerformanceData);
+
+            // Add worksheets to workbook
+            XLSX.utils.book_append_sheet(workbook, dtrStatsSheet, 'DTR Statistics');
+            XLSX.utils.book_append_sheet(workbook, dtrTableSheet, 'DTR Table');
+            XLSX.utils.book_append_sheet(workbook, dailyConsumptionSheet, 'Daily Consumption');
+            XLSX.utils.book_append_sheet(workbook, monthlyConsumptionSheet, 'Monthly Consumption');
+            XLSX.utils.book_append_sheet(workbook, dailyAlertsSheet, 'Daily Alerts');
+            XLSX.utils.book_append_sheet(workbook, monthlyAlertsSheet, 'Monthly Alerts');
+            XLSX.utils.book_append_sheet(workbook, chartPerformanceSheet, 'Performance Metrics');
+
+            // Generate Excel file
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            
+            // Create blob and download
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'dtr-dashboard-complete-data.xlsx';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        });
+    };
+
+    // Chart download handler (for chart-specific export)
     const handleChartDownload = () => {
         exportChartData(months, alertSeries, 'dtr-statistics-data');
     };
@@ -108,28 +201,28 @@ const DTRDashboard: React.FC = () => {
         {
             title: "Total kWh",
             value: "3,847.32",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Today's Active Energy",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Total kVAh",
             value: "3,892.45",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Today's Apparent Energy",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Total kW",
             value: "6.10",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Current Active Power",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Total kVA",
             value: "6.26",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Current Apparent Power",
             bg: "bg-stat-icon-gradient",
         },
@@ -210,7 +303,13 @@ const DTRDashboard: React.FC = () => {
     { key: "feedersCount", label: "Feeders Count" },
     { key: "streetName", label: "Street Name" },
     { key: "city", label: "City" },
-    { key: "commStatus", label: "Comm-Status" },
+    { 
+      key: "commStatus", 
+      label: "Communication-Status",
+      statusIndicator: {},
+      isActive: (value: string | number | boolean | null | undefined) => String(value).toLowerCase() === 'active'
+    },
+    { key: "lastCommunication", label: "Last Communication" },
   ];
   const dtrTableData = [
     {
@@ -220,6 +319,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Waddepally",
       city: "Warangal",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:30:25",
     },
     {
       dtrId: "TRANSFORMER-02",
@@ -228,6 +328,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Sun city",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:28:15",
     },
     {
       dtrId: "TRANSFORMER-03",
@@ -236,6 +337,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:25:42",
     },
     {
       dtrId: "TRANSFORMER-04",
@@ -244,6 +346,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:22:18",
     },
     {
       dtrId: "TRANSFORMER-05",
@@ -252,6 +355,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:20:33",
     },
     {
       dtrId: "TRANSFORMER-06",
@@ -260,6 +364,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:18:55",
     },
     {
       dtrId: "TRANSFORMER-07",
@@ -268,6 +373,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:15:27",
     },
     {
       dtrId: "TRANSFORMER-08",
@@ -276,6 +382,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:12:44",
     },
     {
       dtrId: "TRANSFORMER-09",
@@ -284,6 +391,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:10:18",
     },
     {
       dtrId: "TRANSFORMER-10",
@@ -292,6 +400,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:08:32",
     },
     {
       dtrId: "TRANSFORMER-11",
@@ -300,6 +409,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Gachibowli",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:05:15",
     },
     {
       dtrId: "TRANSFORMER-12",
@@ -308,6 +418,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Madhapur",
       city: "Hyderabad",
       commStatus: "Inactive",
+      lastCommunication: "2024-07-24 18:45:22",
     },
     {
       dtrId: "TRANSFORMER-13",
@@ -316,6 +427,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "HITEC City",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:02:48",
     },
     {
       dtrId: "TRANSFORMER-14",
@@ -324,6 +436,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Jubilee Hills",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:00:12",
     },
     {
       dtrId: "TRANSFORMER-15",
@@ -332,6 +445,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Banjara Hills",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 13:58:35",
     },
   ];
 
@@ -340,7 +454,6 @@ const DTRDashboard: React.FC = () => {
     const alertsTableColumns = [
         { key: 'alert', label: 'Alert' },
         { key: 'date', label: 'Occured On' },
-        { key: 'status', label: 'Status' },
     ];
 
     // Daily alerts data
@@ -510,8 +623,7 @@ const DTRDashboard: React.FC = () => {
                                     backButtonText: 'Back to Dashboard',
                                     buttonsLabel: 'Export',
                                     variant: 'primary',
-                                    onClick: () =>
-                                        console.log('Adding new DTR...'),
+                                    onClick: () => handleExportData(),
                                     showMenu: true,
                                     showDropdown: true,
                                     menuItems: [
@@ -642,7 +754,7 @@ const DTRDashboard: React.FC = () => {
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
                                                 showHeader: true,
-                                                headerTitle: 'DTRInformation',  
+                                                headerTitle: 'Distribution Transformers',  
                                                 headerClassName:'h-18',
                                                 searchable: true, 
                                                 sortable: true,
@@ -679,7 +791,7 @@ const DTRDashboard: React.FC = () => {
                                 showLegendInteractions: true,
                                 timeRange: statsRange,
                                 showHeader: true,
-                                headerTitle: 'Statistics',
+                                headerTitle: 'DTR Performance Metrics',
                                 showDownloadButton: true,
                                 onDownload: () => handleChartDownload(),
                             },
@@ -694,6 +806,7 @@ const DTRDashboard: React.FC = () => {
                                      showActions: false,
                                      searchable: true,
                                      pagination: true,
+                                     availableTimeRanges: [],
                                      initialRowsPerPage: 3,
                                      emptyMessage: 'No alerts found',
                                  },
