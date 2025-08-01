@@ -1,12 +1,6 @@
 import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-                           
-// Removed: import BACKEND_URL from '../config';
-// Brand green icon style
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
 // Meter Information Data (moved outside component)
 const METER_INFO_ROW_1 = [
     { title: 'Meter Sl No.', value: 'A9345417' },
@@ -71,7 +65,7 @@ const MeterDetails: React.FC = () => {
 
     const meter = DEMO_METER;
 
-    // Prepare summary cards and info from API data
+    // Prepare summary cards and info from API data - Using BRAND_GREEN (default) for all cards
     const summaryCards = [
         {
             title: 'Current Reading',
@@ -83,7 +77,6 @@ const MeterDetails: React.FC = () => {
                 ? `Last Reading: ${meter.readings[0].kWh || 'N/A'} kWh`
                 : '',
             subtitle2: 'Consumption: 160.99 kWh',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Status',
@@ -95,7 +88,6 @@ const MeterDetails: React.FC = () => {
                   ).toLocaleString()}`
                 : '',
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Meter Type',
@@ -103,7 +95,6 @@ const MeterDetails: React.FC = () => {
             icon: '/icons/units.svg',
             subtitle1: `Phase Type: ${meter.phase || 'N/A'}`,
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Location',
@@ -115,7 +106,6 @@ const MeterDetails: React.FC = () => {
                     : 'N/A'
             }`,
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
     ];
 

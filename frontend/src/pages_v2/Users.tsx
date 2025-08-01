@@ -15,9 +15,7 @@ const tableColumns = [
     // Add actions column if you want to show action buttons
 ];
 
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
+
 
 export default function Users() {
     const navigate = useNavigate();
@@ -170,35 +168,30 @@ export default function Users() {
                 icon: '/icons/total-users.svg',
                 subtitle1: `${userStats.activeUsers} Active Users`,
                 subtitle2: `${userStats.inactiveUsers} Inactive Users`,
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Admins',
                 value: userStats.totalAdmins,
                 icon: '/icons/admin.svg',
                 subtitle1: 'This Month',
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Accountants',
                 value: userStats.totalAccountants,
                 icon: '/icons/accountant.svg',
                 subtitle1: 'This Month',
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Moderators',
                 value: userStats.totalModerators,
                 icon: '/icons/moderator.svg',
                 subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Roles',
                 value: userStats.totalRoles,
                 icon: '/icons/roles.svg',
                 subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
-                iconStyle: ICON_FILTER_STYLE,
             },
         ]
         : [];

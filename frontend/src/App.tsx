@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from '@/context/AppContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { FilterStyleProvider } from '@/contexts/FilterStyleContext';
 import Tickets from './pages_v2/Tickets';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
@@ -38,12 +39,14 @@ import UserDetail from './pages_v2/UserDetail';
 import RolesPermissions from './pages_v2/RolesPermissions';
 
 import DTRDetailPage from './pages/DTRDetailPage';
+import FilterStyleController from './components/global/FilterStyleController';
 
 const App: React.FC = () => {
     return (
         <AppProvider>
             <AuthProvider>
-                <Router>
+                <FilterStyleProvider initialStyle="BRAND_GREEN">
+                    <Router>
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
                         {/* <Route path="/sub-login" element={<SubLogin />} /> */}
@@ -94,10 +97,12 @@ const App: React.FC = () => {
                             <Route path="/user-detail/:id" element={<UserDetail />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             <Route path="/roles-permissions" element={<RolesPermissions />} />
+                            <Route path="/filter-style-controller" element={<FilterStyleController />} />
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
                 </Router>
+                </FilterStyleProvider>
             </AuthProvider>
         </AppProvider>
     );
