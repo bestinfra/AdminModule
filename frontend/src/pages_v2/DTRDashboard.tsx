@@ -48,7 +48,6 @@ const DTRDashboard: React.FC = () => {
       subtitle1: "Total Transformer Units",
       onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
       iconStyle: ICON_FILTER_STYLE,
-      bg: "bg-stat-icon-gradient",
     },
     {
       title: "Total LT Feeders",
@@ -121,28 +120,28 @@ const DTRDashboard: React.FC = () => {
         {
             title: "Total kWh",
             value: "3,847.32",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Today's Active Energy",
             iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: "Total kVAh",
             value: "3,892.45",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Today's Apparent Energy",
             iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: "Total kW",
             value: "6.10",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Current Active Power",
             iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: "Total kVA",
             value: "6.26",
-            icon: "/icons/consumption.svg",
+            icon: "/icons/energy.svg",
             subtitle1: "Current Apparent Power",
             iconStyle: ICON_FILTER_STYLE,
         },
@@ -199,6 +198,7 @@ const DTRDashboard: React.FC = () => {
             icon: "/icons/dtr.svg",
             subtitle1: "100.00% of Total DTRs",
             iconStyle: ICON_FILTER_STYLE,
+            className: "bg-primary",
         },
         {
             title: "In-Active DTRs",
@@ -220,7 +220,13 @@ const DTRDashboard: React.FC = () => {
     { key: "feedersCount", label: "Feeders Count" },
     { key: "streetName", label: "Street Name" },
     { key: "city", label: "City" },
-    { key: "commStatus", label: "Comm-Status" },
+    { 
+      key: "commStatus", 
+      label: "Communication-Status",
+      statusIndicator: {},
+      isActive: (value: string | number | boolean | null | undefined) => String(value).toLowerCase() === 'active'
+    },
+    { key: "lastCommunication", label: "Last Communication" },
   ];
   const dtrTableData = [
     {
@@ -230,6 +236,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Waddepally",
       city: "Warangal",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:30:25",
     },
     {
       dtrId: "TRANSFORMER-02",
@@ -238,6 +245,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Sun city",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:28:15",
     },
     {
       dtrId: "TRANSFORMER-03",
@@ -246,6 +254,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:25:42",
     },
     {
       dtrId: "TRANSFORMER-04",
@@ -254,6 +263,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:22:18",
     },
     {
       dtrId: "TRANSFORMER-05",
@@ -262,6 +272,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:20:33",
     },
     {
       dtrId: "TRANSFORMER-06",
@@ -270,6 +281,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Prashanth Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:18:55",
     },
     {
       dtrId: "TRANSFORMER-07",
@@ -278,6 +290,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:15:27",
     },
     {
       dtrId: "TRANSFORMER-08",
@@ -286,6 +299,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:12:44",
     },
     {
       dtrId: "TRANSFORMER-09",
@@ -294,6 +308,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:10:18",
     },
     {
       dtrId: "TRANSFORMER-10",
@@ -302,6 +317,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Hyder Nagar",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:08:32",
     },
     {
       dtrId: "TRANSFORMER-11",
@@ -310,6 +326,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Gachibowli",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:05:15",
     },
     {
       dtrId: "TRANSFORMER-12",
@@ -318,6 +335,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Madhapur",
       city: "Hyderabad",
       commStatus: "Inactive",
+      lastCommunication: "2024-07-24 18:45:22",
     },
     {
       dtrId: "TRANSFORMER-13",
@@ -326,6 +344,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "HITEC City",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:02:48",
     },
     {
       dtrId: "TRANSFORMER-14",
@@ -334,6 +353,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Jubilee Hills",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 14:00:12",
     },
     {
       dtrId: "TRANSFORMER-15",
@@ -342,6 +362,7 @@ const DTRDashboard: React.FC = () => {
       streetName: "Banjara Hills",
       city: "Hyderabad",
       commStatus: "Active",
+      lastCommunication: "2024-07-25 13:58:35",
     },
   ];
 
@@ -573,7 +594,6 @@ const DTRDashboard: React.FC = () => {
                          subtitle1: stat.subtitle1,
                          onValueClick: stat.onValueClick,
                          iconStyle: stat.iconStyle,
-                         bg: "bg-stat-icon-gradient",
                        },
                        span: { col: 1, row: 1 },
                      })),
@@ -647,7 +667,7 @@ const DTRDashboard: React.FC = () => {
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
                                                 showHeader: true,
-                                                headerTitle: 'DTRInformation',  
+                                                headerTitle: 'Distribution Transformers',  
                                                 headerClassName:'h-18',
                                                 searchable: true, 
                                                 sortable: true,
