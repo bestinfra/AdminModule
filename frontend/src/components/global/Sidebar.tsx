@@ -108,11 +108,6 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/meter_managment.svg',
                 link: '/meters',
             },
-            // {
-            //     title: 'Users Management',
-            //     icon: '/icons/user_managment.svg',
-            //     link: '/users',
-            // },
             {
                 title: 'User Management',
                 icon: '/icons/user_managment.svg',

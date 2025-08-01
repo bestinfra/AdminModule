@@ -9,6 +9,7 @@ import PageHeader from './PageHeader';
 import RecentActivities from './RecentActivities';
 import Search from './Search';
 import DatePicker from './DatePicker';
+import Calendar from './Calendar';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
 // import OrgChartAlt from './OrgChartAlt';
@@ -51,6 +52,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     RecentActivities,
     Search,
     DatePicker,
+    Calendar,
     ExpandableTable,
     OrgChart,
     OrgChartAlt,

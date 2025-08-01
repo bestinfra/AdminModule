@@ -45,11 +45,11 @@ const Search:React.FC<SearchProps>=({value,onChange,placeholder='Search',onResul
             value={value}
             onChange={handleSearchChange}
             placeholder={placeholder}
-            className={`w-full py-3 pl-10 pr-4 border border-primary-border dark:border-dark-border rounded-full shadow-sm text-base dark:text-white placeholder-dark-border dark:placeholder-white focus:outline-none focus:ring-2 dark:focus:ring-blue-500 dark:bg-primary-dark ${errorState ? 'border-red-300':'border-gray-300'} ${disabled ?'bg-gray-100 text-gray-400':''}`}
+            className={`w-full py-3 pl-5 pr-4 border border-primary-border dark:border-gray-600 rounded-full text-base dark:text-white placeholder-gray-500 dark:placeholder-gray-400 dark:bg-gray-800 ${errorState ? 'border-red-300 dark:border-red-400':'border-gray-300 dark:border-gray-600'} ${disabled ?'bg-gray-100 text-gray-400 dark:bg-gray-700 dark:text-gray-500':''}`}
             disabled={disabled}
             required={required}
             />
-            <div className="absolute inset-y-0 right-0 flex items-center">
+            <div className="absolute inset-y-0 right-4 flex items-center">
             {/* Search Icon / spinner*/}
             <span className="dark:text-white">
                 {isSearching ? (
