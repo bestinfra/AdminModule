@@ -169,6 +169,9 @@ model Meter {
   currentTransformers CurrentTransformer[]
   potentialTransformers PotentialTransformer[]
   
+  // Alerts
+  alerts          Alert[]
+  
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 
@@ -1045,39 +1048,41 @@ model PotentialTransformer {
 }
 
 model Alert {
-  alert_id         Int       @id @default(autoincrement())
-  alert_desc       String?   @db.VarChar(255)
-  status           String?   @db.VarChar(50)
-  meterId          Int?   @db.VarChar(100) 
-  location         String?   @db.VarChar(255)
-  datetime         DateTime
-  escalation_level String?   @db.VarChar(50)
-  escalation_time  DateTime
-  value            String?   @db.VarChar(250)
-  error_occured_at String?   @db.VarChar(50)
+  id                Int       @id @default(autoincrement())
+  meterId           Int?
+  type              String    @db.VarChar(100)  // ZERO_NEGATIVE_POWER, LOAD_IMBALANCE, etc.
+  message           String    @db.VarChar(500)
+  status            String    @default("ACTIVE") @db.VarChar(50)  // ACTIVE, RESOLVED, CLOSED
+  escalationLevel   Int       @default(0)
+  errorOccurredAt   DateTime
+  smsSent           Boolean   @default(false)
+  
+  // Relationships
+  meter             Meter?    @relation(fields: [meterId], references: [id])
+  escalationLogs    EscalationLog[]
+  
+  // Audit
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  meter            Meter?    @relation(fields: [meterId], references: [id])
+  @@map("alerts")
 }
 
-model AlertDescription {
-  id          Int     @id @default(autoincrement())
-  description String  @db.VarChar(255)
+model EscalationLog {
+  id                Int       @id @default(autoincrement())
+  alertId           Int
+  escalationLevel   Int
+  escalatedAt       DateTime
+  contactsNotified  Int
+  smsSent           Boolean   @default(false)
+  
+  // Relationships
+  alert             Alert     @relation(fields: [alertId], references: [id])
+  
+  // Audit
+  createdAt         DateTime  @default(now())
 
-  alerts      Alert[] 
+  @@map("escalation_logs")
 }
 
-model Alert {
-  alert_id             Int       @id @default(autoincrement())
-  alertDescriptionId   Int?      
-  status               String?   @db.VarChar(50)
-  meterId              Int?      
-  location             String?   @db.VarChar(255)
-  datetime             DateTime
-  escalation_level     String?   @db.VarChar(50)
-  escalation_time      DateTime
-  value                String?   @db.VarChar(250)
-  error_occured_at     String?   @db.VarChar(50)
 
-  meter                Meter?              @relation(fields: [meterId], references: [id])
-  alertDescription     AlertDescription?   @relation(fields: [alertDescriptionId], references: [id])
-}

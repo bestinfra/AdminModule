@@ -1,4 +1,5 @@
 import { escalateTickets } from './escalation.js';
+import { monitorPowerData } from '../utils/powerMonitoring.js';
 import cronHandler from '../utils/cronHandler.js';
 
 export async function initializeCronJobs() {
@@ -7,14 +8,24 @@ export async function initializeCronJobs() {
 
         const jobs = [
             {
+                name: 'power-monitoring',
+                schedule: '* * * * *', // Every minute
+                task: monitorPowerData,
+                options: {
+                    timezone: 'Asia/Kolkata',
+                    onError: (error, jobName) => {
+                        console.error(`🚨 Critical error in ${jobName}:`, error);
+                    }
+                }
+            },
+            {
                 name: 'ticket-escalation',
-                schedule: '*/5 * * * * *',
+                schedule: '*/5 * * * *', // Every 5 minutes
                 task: escalateTickets,
                 options: {
                     timezone: 'Asia/Kolkata',
                     onError: (error, jobName) => {
                         console.error(`🚨 Critical error in ${jobName}:`, error);
-                        
                     }
                 }
             },
@@ -28,12 +39,14 @@ export async function initializeCronJobs() {
                     job.task,
                     job.options
                 );
+                console.log(`✅ Added cron job: ${job.name} (${job.schedule})`);
             } catch (error) {
                 console.error(`❌ Failed to add job "${job.name}":`, error);
             }
         });
 
         cronHandler.startAllJobs();
+        console.log('🚀 All cron jobs started successfully');
         
         return cronHandler;
     } catch (error) {
@@ -41,7 +54,5 @@ export async function initializeCronJobs() {
         throw error;
     }
 }
-
-
 
 export default cronHandler; 
