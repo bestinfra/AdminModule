@@ -3,11 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
-// Brand green icon style
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
-
 interface TicketData {
     id: number;
     ticketNumber: string;
@@ -360,7 +355,7 @@ const AllTickets: React.FC = () => {
                                             subtitle1: card.subtitle1,
                                             subtitle2: card.subtitle2,
                                             onValueClick: () => handleCardClick(card.filterType),
-                                            iconStyle: ICON_FILTER_STYLE,
+
                                         },
                                     })),
                                 },
