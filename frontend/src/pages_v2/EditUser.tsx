@@ -55,6 +55,7 @@ export default function EditUser() {
         {
             name: 'fullName',
             type: 'text',
+            label: 'Full Name',
             placeholder: 'Enter full name',
             required: true,
             row: 1,
@@ -64,6 +65,7 @@ export default function EditUser() {
         {
             name: 'email',
             type: 'email',
+            label: 'Email Address',
             placeholder: 'Enter email address',
             required: true,
             row: 1,
@@ -73,6 +75,7 @@ export default function EditUser() {
         {
             name: 'phone',
             type: 'tel',
+            label: 'Phone Number',
             placeholder: 'Enter phone number',
             required: true,
             row: 2,
@@ -82,6 +85,7 @@ export default function EditUser() {
         {
             name: 'password',
             type: 'password',
+            label: 'New Password',
             placeholder: 'Enter new password (leave blank to keep current)',
             required: false,
             row: 2,
@@ -90,6 +94,7 @@ export default function EditUser() {
         {
             name: 'role',
             type: 'dropdown',
+            label: 'User Role',
             placeholder: 'Select User Role',
             options: [
                 { value: '', label: 'Select Role' },
@@ -106,6 +111,7 @@ export default function EditUser() {
         {
             name: 'parentRole',
             type: 'dropdown',
+            label: 'Parent Role',
             placeholder: 'Select Parent Role',
             options: [
                 { value: '', label: 'Select Parent Role' },

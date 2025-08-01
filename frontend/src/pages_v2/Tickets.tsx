@@ -474,16 +474,6 @@ export default function Tickets() {
                                 buttonsLabel: "Add Ticket",
                                 variant: "primary",
                                 onClick: () => navigate('/add-ticket'),
-                                showMenu: true,
-                                showDropdown: true,
-                                menuItems: [
-                                    { id: 'all', label: 'All Tickets' },
-                                    { id: 'open', label: 'Open Tickets' },
-                                    { id: 'in-progress', label: 'In Progress' },
-                                    { id: 'resolved', label: 'Resolved' },
-                                    { id: 'closed', label: 'Closed' },
-                                    { id: 'escalated', label: 'Escalated' }
-                                ],
                                 onMenuItemClick: (itemId: string) => {
                                     console.log(`Filter by: ${itemId}`);
                                 }

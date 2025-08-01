@@ -39,7 +39,9 @@ import SummaryInfo from './SummaryInfo';
 import TicketConversationPanel from '../TicketConversationPanel';
 import TicketInformationPannel from './TIcketInformationPannel';
 import ActivityLog from './ActivityLog';
-import ChatApplication from '../ChatApplication'
+import ChatApplication from '../ChatApplication';
+import ProfileSidebar from './ProfileSidebar';
+import ProfileContent from './ProfileContent';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -81,6 +83,8 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     ActivityLog,
     ChatApplication,
     Permissions,
+    ProfileSidebar,
+    ProfileContent,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

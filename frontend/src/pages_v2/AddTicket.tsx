@@ -102,6 +102,7 @@ export default function AddTicket() {
             label: 'Subject',
             placeholder: 'Enter Ticket Subject',
             required: true,
+
             row: 4,
             col: 1,
             colSpan: 3,
@@ -113,6 +114,7 @@ export default function AddTicket() {
             label: 'Description',
             placeholder: 'Enter detailed description of the issue',
             required: true,
+            
             row: 5,
             col: 1,
             colSpan: 3,
@@ -208,7 +210,7 @@ export default function AddTicket() {
                                                     className: 'w-full',
                                                 },
                                                 formBackground:
-                                                    'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-3xl',
+                                                    'bg-white dark:bg-gray-800 border border-primary-border dark:border-gray-700 p-4 rounded-3xl',
                                                 className: 'w-full',
                                             },
                                         },
