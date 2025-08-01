@@ -371,7 +371,6 @@ const DTRDashboard: React.FC = () => {
     const alertsTableColumns = [
         { key: 'alert', label: 'Alert' },
         { key: 'date', label: 'Occured On' },
-        { key: 'status', label: 'Status' },
     ];
 
     // Daily alerts data

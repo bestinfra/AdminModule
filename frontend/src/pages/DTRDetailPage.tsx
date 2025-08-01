@@ -5,7 +5,14 @@ import { exportChartData } from '@/utils/excelExport';
 
 const mockDTRData = {
     name: 'TGNP_DTR-03',
-    rating: '15.00 kVA',
+    dtrNo: 'DTR-001',
+    division: 'Warangal Division',
+    subDivision: 'Hanamkonda Sub-Division',
+    substation: 'Warangal Substation',
+    feeder: 'Main Feeder',
+    feederNo: 'F-001',
+    condition: '15.00 kVA',
+    capacity: '15.00 kVA',
     address: 'Prashanth Nagar, Hyderabad, Telangana, India, 500084',
     location: { lat: 17.470268, lng: 78.353907 },
     stats: [
@@ -19,28 +26,28 @@ const mockDTRData = {
         {
             title: 'Total kW',
             value: 3.73,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Active Power',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kVA',
             value: 3.98,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Apparent Power',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kWh',
             value: 20355.16,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Cumulative Active Energy',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kVAh',
             value: 20699.25,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Cumulative Apparent Energy',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
@@ -64,7 +71,6 @@ const mockDTRData = {
             icon: '/icons/power_failure.svg',
             subtitle1: '',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
-            bg: 'bg-green-500', // Use custom CSS class with higher specificity
         },
         {
             title: 'Power Off',
@@ -272,7 +278,7 @@ const DTRDetailPage = () => {
                                             title: 'DTR Information',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
+                                            titleVariant: 'primary-dark',
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             defaultTitleHeight:'0',
@@ -288,13 +294,19 @@ const DTRDetailPage = () => {
                                     {   
                                        name: 'PageInformation',
                                        props: {
-                                        gridColumns: 3,
+                                        gridColumns: 5,
                                         rows: [
                                             {
                                                 layout: 'row',
                                                 className: 'justify-between w-full',
-                                                span: { col: 3, row: 1 },
+                                                span: { col: 5, row: 1 },
                                                 items: [
+                                                    {
+                                                        title: 'DTR No',
+                                                        value: dtr.dtrNo,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
                                                     {
                                                         title: 'DTR Name',
                                                         value: dtr.name,
@@ -302,23 +314,59 @@ const DTRDetailPage = () => {
                                                         gap: 'gap-1'
                                                     },
                                                     {
-                                                        title: 'Rating',
-                                                        value: dtr.rating,
+                                                        title: 'Division',
+                                                        value: dtr.division,
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
-                                                        title: 'Address',
-                                                        value: dtr.address,
+                                                        title: 'Sub-Division',
+                                                        value: dtr.subDivision,
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
-                                                        title:'Location',
-                                                        value:`${dtr.location.lat}, ${dtr.location.lng}`,
+                                                        title: 'Substation',
+                                                        value: dtr.substation,
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     }
+                                                ]
+                                            },
+                                            {
+                                                layout: 'row',
+                                                className: 'justify-between w-full',
+                                                span: { col: 5, row: 1 },
+                                                items: [
+                                                    {
+                                                        title: 'Feeder',
+                                                        value: dtr.feeder,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title: 'Feeder No',
+                                                        value: dtr.feederNo,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                   
+                                                    {
+                                                        title: 'Condition',
+                                                        value: dtr.condition,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title: 'Capacity',
+                                                        value: dtr.capacity,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title:'',
+                                                        gap: 'gap-1'
+                                                    },
                                                 ]
                                             }
                                         ]
@@ -333,11 +381,11 @@ const DTRDetailPage = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'w-full p-4 border border-primary-border rounded-3xl',
+                        className: 'w-full p-4 border border-primary-border rounded-3xl bg-background-secondary',
                         rows: [
                             {
                                 layout: 'row' as const,
-                                className: 'justify-between w-full',
+                                className: 'justify-between w-full ',
                                 span: { col: 1, row: 1 },
                                 columns: [
                                     {
@@ -346,7 +394,7 @@ const DTRDetailPage = () => {
                                             title: 'Distribution Transformer (DTR) Statistics',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
+                                            titleVariant: 'primary-dark',
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             className:'w-full',
