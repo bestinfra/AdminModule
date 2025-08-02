@@ -149,7 +149,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
     meters.total > 0 ? (meters.inactive / meters.total) * 100 : 0;
 
   return (
-    <div className="bg-white rounded-3xl flex flex-col gap-6 border border-primary-border p-6 w-full">
+    <div className="bg-white rounded-3xl flex flex-col gap-4 border border-primary-border p-6 w-full">
       {/* Header Section */}
       <div className="flex items-start justify-between w-full items-center h-full gap-8">
         <div className="flex items-center gap-4 items-start">
@@ -218,7 +218,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
 
       <div className="flex flex-col gap-10">
           {/* Core Information Section */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             {/* Left Column */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 flex-col items-start">
@@ -296,7 +296,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
               </div>
             </div>
           </div>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
         
           {/* Modules Section */}
           <div className="flex flex-col gap-2">

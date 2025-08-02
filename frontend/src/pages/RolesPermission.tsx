@@ -40,7 +40,7 @@ const RolesPermission: React.FC = () => {
 
 
   return (
-    <div className="w-full max-w-7xl flex flex-col gap-6 p-0">
+    <div className="w-full max-w-7xl flex flex-col gap-4 p-0">
       <div className="text-xl font-bold">Permissions for GMR</div>
       <button
                     className="flex items-center gap-2 text-neutral hover:text-primary"
@@ -74,7 +74,7 @@ const RolesPermission: React.FC = () => {
           </div>
         </div>
       ))}
-      <div className="flex justify-end gap-6">
+      <div className="flex justify-end gap-4">
         <button type="button" className="bg-primary hover:bg-primary-light text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
         <button type="submit" className="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-10 rounded-full text-lg">Save Permissions</button>
       </div>

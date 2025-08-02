@@ -128,7 +128,7 @@ const PageDemo: React.FC = () => {
                         layout: {
                             type: 'grid',
                             columns: 5,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',
@@ -204,7 +204,7 @@ const PageDemo: React.FC = () => {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',
@@ -265,7 +265,7 @@ const PageDemo: React.FC = () => {
                     {
                         layout: {
                             type: 'row',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',

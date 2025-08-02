@@ -103,7 +103,7 @@ const Step3: React.FC<Step3Props> = ({
                         Personal Information
                     </h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-4">
                         <div>
                             <span className="text-sm font-medium text-gray-500">Full Name</span>
@@ -154,7 +154,7 @@ const Step3: React.FC<Step3Props> = ({
                         Property Details
                     </h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-4">
                         <div>
                             <span className="text-sm font-medium text-gray-500">Building</span>
@@ -200,7 +200,7 @@ const Step3: React.FC<Step3Props> = ({
                             {selectedUtilities.map(getUtilityLabel)}
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                             <span className="text-sm font-medium text-gray-500">Shared Meter</span>
                             <div className="text-base text-gray-900 mt-1">

@@ -117,7 +117,7 @@ const BillsPostpaid: React.FC = () => {
   const overviewCardsSection: Section = {
     id: 'overview-cards',
     component: (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
         {cardData.slice(0, 4).map((card, idx) => (
           <Card key={idx} {...card} />
         ))}
@@ -129,7 +129,7 @@ const BillsPostpaid: React.FC = () => {
   const realizationRateSection: Section = {
     id: 'realization-rate',
     component: (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <Card {...cardData[4]} />
       </div>
     )
@@ -139,7 +139,7 @@ const BillsPostpaid: React.FC = () => {
   const filtersSection: Section = {
     id: 'filters',
     component: (
-      <div className="flex flex-col md:flex-row md:items-center md:gap-6 gap-4 mb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:gap-4 gap-4 mb-4">
         <Dropdown
           name="amountRange"
           value={amountRange}

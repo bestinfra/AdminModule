@@ -915,7 +915,7 @@ const ConnectDisconnect: React.FC = () => {
                         {
                             layout: {
                                 type: 'row',
-                                gap: 'gap-6',
+                                gap: 'gap-4',
                                 rows: [
                                     {
                                         layout: 'row',
@@ -1058,7 +1058,7 @@ const ConnectDisconnect: React.FC = () => {
                                   {
                                       layout: {
                                           type: 'row' as const,
-                                          gap: 'gap-6',
+                                          gap: 'gap-4',
                                           rows: [
                                               {
                                                   layout: 'row' as const,
@@ -1343,7 +1343,7 @@ const ConnectDisconnect: React.FC = () => {
                                   {
                                       layout: {
                                           type: 'row' as const,
-                                          gap: 'gap-6',
+                                          gap: 'gap-4',
                                           rows: [
                                               {
                                                   layout: 'row' as const,
@@ -1438,7 +1438,7 @@ const ConnectDisconnect: React.FC = () => {
                         {
                             layout: {
                                 type: 'row' as const,
-                                gap: 'gap-6',
+                                gap: 'gap-4',
                                 rows: [
                                     {
                                         layout: 'row' as const,

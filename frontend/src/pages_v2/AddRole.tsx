@@ -59,7 +59,7 @@ export default function AddRole() {
                     {
                         layout: {
                             type: 'row' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -99,7 +99,7 @@ export default function AddRole() {
                         layout: {
                             type: 'grid' as const,
                             columns: 1,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,

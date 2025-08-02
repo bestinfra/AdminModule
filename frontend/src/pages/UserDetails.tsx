@@ -52,7 +52,7 @@ const UserDetails: React.FC = () => {
   // Main content (user details only)
   const content = (
     <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-4 items-start pt-2">
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <div>
           <div className="text-neutral text-sm mb-1">Full Name</div>
           <div className="font-semibold text-lg">{user.fullName}</div>
@@ -70,7 +70,7 @@ const UserDetails: React.FC = () => {
           <div className="font-semibold text-lg">{user.createdDate}</div>
         </div>
       </div>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         <div>
           <div className="text-neutral text-sm mb-1">Email Address</div>
           <div className="font-semibold text-lg">{user.email}</div>
