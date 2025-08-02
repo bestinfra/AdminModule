@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 // import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
 const SuperAdminDashboard: React.FC = () => {

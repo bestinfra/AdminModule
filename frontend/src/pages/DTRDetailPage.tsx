@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import { exportChartData } from '@/utils/excelExport';
 import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
 const mockDTRData = {

@@ -1,5 +1,5 @@
 {
-  "nextPort": 4106,
+  "nextPort": 4107,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -385,6 +385,11 @@
       "port": 4105,
       "deployedAt": "2025-08-02T04:21:32.032Z",
       "path": "C:\\xampp\\htdocs\\animated-backend"
+    },
+    "rioware": {
+      "port": 4106,
+      "deployedAt": "2025-08-02T08:15:26.262Z",
+      "path": "C:\\xampp\\htdocs\\rioware-backend"
     }
   }
 }
