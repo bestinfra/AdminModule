@@ -436,9 +436,9 @@ export default function RoleManagement() {
                                             props: {
                                                 title: 'Role Management',
                                                 onBackClick: () =>
-                                                    navigate('/'),
+                                                    navigate('/users'),
                                                 backButtonText:
-                                                    'Back to Dashboard',
+                                                    'Back to UserManagment',
                                                 buttonsLabel: 'Add Role',
                                                 variant: 'primary',
                                                 onClick: handleAddClick,

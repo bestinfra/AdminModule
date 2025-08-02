@@ -35,30 +35,30 @@ const SummaryInfo: React.FC<SummaryInfoProps> = ({
   const getStatusVariantStyles = (variant: string) => {
     switch (variant) {
       case 'success':
-        return 'bg-green-100 text-green-800';
+        return 'bg-secondary-light text-secondary';
       case 'warning':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-warning-light text-warning';
       case 'error':
-        return 'bg-red-100 text-red-800';
+        return 'bg-warning-light text-danger';
       case 'info':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-accent-light text-accent';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-primary-light text-text-primary';
     }
   };
 
   const getRightStatusStyles = (variant: string) => {
     switch (variant) {
       case 'success':
-        return 'bg-green-500 text-white';
+        return 'bg-secondary text-white';
       case 'warning':
-        return 'bg-yellow-500  text-white';
+        return 'bg-warning text-white';
       case 'error':
-        return 'bg-red-500 text-white';
+        return 'bg-danger text-white';
       case 'info':
-        return 'bg-blue-500  text-white';
+        return 'bg-accent text-white';
       default:
-        return 'bg-amber-500  text-white';
+        return 'bg-warning-light text-warning';
     }
   };
 
@@ -83,7 +83,7 @@ const SummaryInfo: React.FC<SummaryInfoProps> = ({
         {rightStatus && (
           <span
             onClick={rightStatus.onClick}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors duration-200 shadow-sm ${getRightStatusStyles(
+            className={`px-2 py-1 rounded-full text-sm font-medium transition-colors duration-200 shadow-sm ${getRightStatusStyles(
               rightStatus.variant || 'default'
             )}`}
           >

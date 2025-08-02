@@ -3,11 +3,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Page from '@components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 
-// Brand green icon style
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
-
 interface TicketData {
     id: number;
     ticketNumber: string;
@@ -41,7 +36,7 @@ const cardStats = [
         filterType: 'all' as FilterType
     },
     { 
-        title: 'High Priority', 
+        title: 'No of Clients', 
         value: '3', 
         icon: 'icons/warning-icon.svg', 
         subtitle1: 'Urgent tickets', 
@@ -87,14 +82,23 @@ const ticketTrendsData = {
     xAxisData: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
     seriesData: [
         {
-            name: 'Total Tickets',
-            data: [45, 52, 38, 61, 55, 48, 67, 59, 42, 58, 63, 71],
+            name: 'Open Tickets',
+            data: [45, 52, 38, 67, 58, 42, 35, 48, 55, 62, 41, 38]
         },
         {
-            name: 'Resolved',
-            data: [38, 45, 32, 52, 48, 41, 58, 51, 36, 49, 55, 62],
+            name: 'No Of Clients Tickets',
+            data: [28, 35, 25, 42, 38, 28, 22, 32, 38, 45, 28, 25]
         },
+        {
+            name: 'Resolved Tickets',
+            data: [38, 45, 32, 58, 49, 35, 28, 41, 48, 55, 34, 31]
+        },
+        {
+            name: 'Closed Tickets',
+            data: [12, 15, 8, 22, 18, 11, 7, 14, 16, 19, 10, 9]
+        }
     ],
+    seriesColors: ['#163b7c', '#55b56c', '#dc272c', '#ed8c22'] 
 };
 
 // Table data in JSON format
@@ -351,7 +355,7 @@ const AllTickets: React.FC = () => {
                                             subtitle1: card.subtitle1,
                                             subtitle2: card.subtitle2,
                                             onValueClick: () => handleCardClick(card.filterType),
-                                            iconStyle: ICON_FILTER_STYLE,
+
                                         },
                                     })),
                                 },
@@ -373,6 +377,7 @@ const AllTickets: React.FC = () => {
                                             props: {
                                                 xAxisData: ticketTrendsData.xAxisData,
                                                 seriesData: ticketTrendsData.seriesData,
+                                                seriesColors: ticketTrendsData.seriesColors,
                                                 height: 320,
                                                 showHeader: true,
                                                 headerTitle: 'Ticket Trends',

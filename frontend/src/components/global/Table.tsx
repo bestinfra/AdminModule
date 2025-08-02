@@ -874,10 +874,10 @@ const Table: React.FC<TableProps> = ({
             <div className="flex justify-between items-center">
               <div className="text-lg font-semibold">Delete Confirmation</div>
               <span
-                className="cursor-pointer"
+                className="cursor-pointer w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
                 onClick={() => setShowDeleteModal(false)}
               >
-                <img src="icons/close.svg" alt="close" />
+                <img src="icons/close.svg" alt="close" className="w-5 h-5" />
               </span>
             </div>
             <p>

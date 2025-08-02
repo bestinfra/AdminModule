@@ -3,18 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 
-// Brand green icon style
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
-
 const MetersList: React.FC = () => {
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
     const [mapping, setMapping] = useState('');
 
-    // Meter cards data
+    // Meter cards data - Using BRAND_GREEN (default) for all cards
     const meterCards = [
         {
             title: 'Total Meters',
@@ -22,7 +17,6 @@ const MetersList: React.FC = () => {
             icon: '/icons/meter.svg',
             subtitle1: '3 Active',
             subtitle2: '0 In-Active',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Meter Makes',
@@ -30,7 +24,6 @@ const MetersList: React.FC = () => {
             icon: '/icons/meter-make.svg',
             subtitle1: '1 Used Meter Makes',
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Mapped Meters',
@@ -38,7 +31,6 @@ const MetersList: React.FC = () => {
             icon: '/icons/mapped-meter.svg',
             subtitle1: '78 Unmapped',
             subtitle2: '0 Replaced',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             title: 'Connection Type',
@@ -46,7 +38,6 @@ const MetersList: React.FC = () => {
             icon: '/icons/connection-type.svg',
             subtitle1: '3 Prepaid',
             subtitle2: '0 Postpaid',
-            iconStyle: ICON_FILTER_STYLE,
         },
     ];
 
@@ -61,6 +52,7 @@ const MetersList: React.FC = () => {
             consumerName: 'Neo Travels',
             location: 'NA',
             installationDate: 'NA',
+            status: 'Active',
         },
         {
             slNo: 2,
@@ -71,6 +63,7 @@ const MetersList: React.FC = () => {
             consumerName: 'Mobikins',
             location: 'NA',
             installationDate: 'NA',
+            status: 'Inactive',
         },
         {
             slNo: 3,
@@ -81,6 +74,7 @@ const MetersList: React.FC = () => {
             consumerName: 'Airborne General Store',
             location: 'NA',
             installationDate: 'NA',
+            status: 'Active',
         },
     ];
 
@@ -93,6 +87,12 @@ const MetersList: React.FC = () => {
         { key: 'consumerName', label: 'Consumer Name' },
         { key: 'location', label: 'Location' },
         { key: 'installationDate', label: 'Installation Date' },
+        { 
+            key: 'status', 
+            label: 'Status',
+            statusIndicator: {},
+            isActive: (value: string | number | boolean | null | undefined) => String(value).toLowerCase() === 'active'
+        },
     ];
 
     const tableActions = [
@@ -191,7 +191,7 @@ const MetersList: React.FC = () => {
                             icon: card.icon,
                             subtitle1: card.subtitle1,
                             subtitle2: card.subtitle2,
-                            iconStyle: card.iconStyle,
+
                             bg: "bg-stat-icon-gradient",
                         },
                     })),
