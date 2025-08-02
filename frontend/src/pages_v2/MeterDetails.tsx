@@ -367,6 +367,53 @@ const MeterDetails: React.FC = () => {
                                 ]
                             }
                         },
+                        // Meter Readings Chart Section
+                        {
+                            layout: {
+                                type: 'column',
+                                gap: 'gap-4',
+                            },
+                            components: [
+                                {
+                                    name: 'BarChart',
+                                    props: {
+                                        showHeader: true,
+                                        headerTitle: 'Meter Readings',
+                                        dateRange: 'Last 7 Days',
+                                        availableTimeRanges: ['Daily', 'Weekly', 'Monthly'],
+                                        initialTimeRange: 'Daily',
+                                        showDownloadButton: true,
+                                        showViewToggle: true,
+                                        viewToggleOptions: ['Graph', 'Table'],
+                                        initialViewType: 'Graph',
+                                        height: '400px',
+                                        xAxisData: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                                        seriesData: [
+                                            {
+                                                name: 'Energy Consumption (kWh)',
+                                                data: [180, 195, 210, 185, 200, 175, 190]
+                                            },
+                                            {
+                                                name: 'Peak Demand (kW)',
+                                                data: [45, 52, 48, 43, 50, 38, 42]
+                                            }
+                                        ],
+                                        seriesColors: ['var(--color-primary)', 'var(--color-secondary)'],
+                                        showXAxisLabel: true,
+                                        xAxisLabel: 'kWh',
+                                        onTimeRangeChange: (range: string) => {
+                                            console.log('Time range changed:', range);
+                                        },
+                                        onViewTypeChange: (viewType: string) => {
+                                            console.log('View type changed:', viewType);
+                                        },
+                                        onDownload: (timeRange: string, viewType: string) => {
+                                            console.log('Download requested:', timeRange, viewType);
+                                        }
+                                    }
+                                }
+                            ]
+                        },
                         // Meter History Section
                         {
                             layout:{

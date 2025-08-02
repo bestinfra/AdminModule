@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 interface ProfileSidebarItem {
     id: string;
@@ -19,16 +19,45 @@ const ProfileSidebar: React.FC<ProfileSidebarProps> = ({
     onItemClick,
     className = ''
 }) => {
+    const isInitialRender = useRef(true);
+    const previousActiveItem = useRef<string | null>(null);
+
+    // Track the currently active item
+    useEffect(() => {
+        const activeItem = items.find(item => item.isActive);
+        if (activeItem) {
+            previousActiveItem.current = activeItem.id;
+        }
+    }, [items]);
+
+    const handleItemClick = (item: ProfileSidebarItem) => {
+        // Only log if it's not the initial render and we're switching to a different item
+        if (!isInitialRender.current && previousActiveItem.current !== item.id) {
+            // Removed console.log to prevent header interference
+        }
+
+        // Update the previous active item
+        previousActiveItem.current = item.id;
+
+        // Call the item's onClick if it exists
+        item.onClick?.();
+        
+        // Call the parent's onItemClick
+        onItemClick?.(item.id);
+    };
+
+    // Mark initial render as complete after first render
+    useEffect(() => {
+        isInitialRender.current = false;
+    }, []);
+
     return (
-        <div className={`bg-background-secondary rounded-lg p-4 w-64 ${className}`}>
+        <div className={`bg-background-secondary rounded-lg p-4 h-full ${className}`}>
             <nav className="space-y-2">
                 {items.map((item) => (
                     <button
                         key={item.id}
-                        onClick={() => {
-                            item.onClick?.();
-                            onItemClick?.(item.id);
-                        }}
+                        onClick={() => handleItemClick(item)}
                         className={`w-full text-left px-4 py-3 rounded-lg transition-all duration-200 ${
                             item.isActive
                                 ? 'bg-white text-primary font-medium'

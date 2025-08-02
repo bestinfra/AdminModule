@@ -66,7 +66,7 @@ const UserDetail: React.FC = () => {
         } else if (id) {
             // If no state data, fetch user data by ID
             setLoading(true);
-            // Simulate API call - replace with actual API call
+            // Simulate API call - replace with actual API call 
             setTimeout(() => {
                 // Mock user data based on ID
                 const mockUser = {
@@ -139,73 +139,19 @@ const UserDetail: React.FC = () => {
         },
     ];
 
-    // const renderContent = () => {
-    //     switch (activeSection) {
-    //         case 'basic-info':
-    //             return (
-    //                 <ProfileContent
-    //                     user={{
-    //                         fullName: user?.name,
-    //                         phoneNumber: user?.phone,
-    //                         client: user?.client,
-    //                         createdDate: user?.createdDate,
-    //                         emailAddress: user?.email,
-    //                         role: user?.role,
-    //                         lastActive: user?.lastLogin,
-    //                     }}
-    //                 />
-    //             );
-    //         case 'change-password':
-    //             return (
-    //                 <div className="bg-white rounded-lg p-6">
-    //                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Change Password</h2>
-    //                     <p className="text-gray-600">Password change functionality will be implemented here.</p>
-    //                 </div>
-    //             );
-    //         case 'activities':
-    //             return (
-    //                 <div className="bg-white rounded-lg p-6">
-    //                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Activities</h2>
-    //                     <p className="text-gray-600">User activity log will be displayed here.</p>
-    //                 </div>
-    //             );
-    //         case 'notifications':
-    //             return (
-    //                 <div className="bg-white rounded-lg p-6">
-    //                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Notifications</h2>
-    //                     <p className="text-gray-600">Notification settings will be managed here.</p>
-    //                 </div>
-    //             );
-    //         case 'two-step-verification':
-    //             return (
-    //                 <div className="bg-white rounded-lg p-6">
-    //                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Two-step Verification</h2>
-    //                     <p className="text-gray-600">Two-step verification settings will be configured here.</p>
-    //                 </div>
-    //             );
-    //         case 'account-status':
-    //             return (
-    //                 <div className="bg-white rounded-lg p-6">
-    //                     <h2 className="text-xl font-semibold text-gray-900 mb-6">Account Status</h2>
-    //                     <p className="text-gray-600">Account status and settings will be displayed here.</p>
-    //                 </div>
-    //             );
-    //         default:
-    //             return (
-    //                 <ProfileContent
-    //                     user={{
-    //                         fullName: user?.name,
-    //                         phoneNumber: user?.phone,
-    //                         client: user?.client,
-    //                         createdDate: user?.createdDate,
-    //                         emailAddress: user?.email,
-    //                         role: user?.role,
-    //                         lastActive: user?.lastLogin,
-    //                     }}
-    //                 />
-    //             );
-    //     }
-    // };
+    // Map the user data to the format expected by BasicInformationTab
+    const basicInfoData = user ? {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role_title: user.role,
+        client_name: user.client,
+        last_active: user.lastLogin,
+        created_at: user.createdDate,
+        USER_ID: user.sNo?.toString(),
+        id: user.sNo
+    } : undefined;
+
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -220,27 +166,29 @@ const UserDetail: React.FC = () => {
                             {
                                 name: 'PageHeader',
                                 props: {
-                                    title: user?.name || 'User Details',
-                                    subtitle: user ? `User ID: ${user.sNo || user.id}` : 'Loading user information...',
+                                    title: 'User Details',
                                     menuItems: menuItems,
                                     onMenuItemClick: handleMenuItemClick,
-                                    showMenu: true,
-                                    showDropdown: true,
-                                    buttonsLabel: 'Edit',
                                     variant: 'primary',
                                     onClick: () => handleMenuItemClick('edit'),
                                     onBackClick: handleBackClick,
                                     backButtonText: 'Back to Users',
                                     onRightImageClick: handleRefreshClick,
-                                    status: user?.status || 'Loading',
+                                    status: user?.status || 'Active',
+                                    // Remove any dynamic props that might cause header updates
+                                    editMode: false,
+                                    unitName: undefined,
                                 },
                             },
                         ],
                     },
                     {
                         layout: {
-                            type: 'row',
-                            gap: 'gap-6 h-full',
+                            type: 'grid',
+                            gridRows: 1,
+                            columns: 5,
+                            gap: 'gap-6',
+                            className: 'w-full h-full' 
                         },
                         components: [
                             {
@@ -249,11 +197,22 @@ const UserDetail: React.FC = () => {
                                     items: sidebarItems,
                                     onItemClick: handleSidebarItemClick,
                                 },
+                                span:{
+                                    col:1,
+                                    row:1
+                                }
                             },
-                        //    {
-                        //     name:'ProfileContent',
-                           
-                        //    }
+                            {
+                                name: 'ProfileContent',
+                                props: {
+                                    section: activeSection,
+                                    data: {
+                                        basicInfo: basicInfoData
+                                    },
+                                    className: 'flex-1'
+                                },
+                                span:{col:4,row:1}
+                            }
                         ],
                     },
                 ]}

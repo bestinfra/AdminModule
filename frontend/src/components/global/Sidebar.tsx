@@ -124,23 +124,20 @@ const defaultMenus: MenuCategory[] = [
             //         },
             //     ],
             // },
-            {
-                title: 'User Management',
-                icon: '/icons/user_managment.svg',
-                link: '/user-management',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'User Management',
-                        link: '/users',
-                    },
+            // {
+            //     title: 'User Management',
+            //     icon: '/icons/user_managment.svg',
+            //     link: '/user-management',
+            //     hasSubmenu: true,
+            //     submenu: [
+                 
                   
-                    {
-                        title: 'Role Management',
-                        link: '/role-management ',
-                    },
-                ],
-            },
+            //         {
+            //             title: 'Role Management',
+            //             link: '/role-management ',
+            //         },
+            //     ],
+            // },
         ],
     },
 ];
