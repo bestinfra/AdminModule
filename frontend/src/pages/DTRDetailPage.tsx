@@ -567,7 +567,7 @@ const DTRDetailPage = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: '',
+                        className: 'pb-5',
                         rows: [
                             {
                                 layout: 'grid' as const,

@@ -393,11 +393,11 @@ const AllTickets: React.FC = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'w-full',
                         rows: [
                             {
                                 layout: 'grid' as const,
                                 gridColumns: 1,
+                                className: 'pb-5', // add padding-bottom to the grid
                                 columns: [
                                     {
                                         name: 'Table',

@@ -165,6 +165,7 @@ export default function AssetManagment() {
                         layout: {
                             type: 'column',
                             gap: 'gap-6',
+                        
                             rows: [
                                 {
                                     layout: 'row',
@@ -186,7 +187,7 @@ export default function AssetManagment() {
                         layout: {
                             type: 'grid',
                             columns: 4,
-                            className: 'h-full',
+                            className: 'pb-5',
                             rows: [
                                 {
                                     layout: 'row',

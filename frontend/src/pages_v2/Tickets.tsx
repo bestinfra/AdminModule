@@ -550,6 +550,7 @@ export default function Tickets() {
                         type: 'grid',
                         columns: 1,
                         gap: 'gap-6',
+                        className: 'pb-5',
                         rows: [
                             {
                                 layout: 'grid',

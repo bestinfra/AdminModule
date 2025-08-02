@@ -130,6 +130,7 @@ const TicketView: React.FC = () => {
                                 type: 'grid',
                                 columns: 5,
                                 gap: 'gap-6',
+                                className: 'pb-5',
                                 rows:[
                                     {
                                         layout: "grid",
