@@ -1,114 +1,109 @@
-import React from 'react';
+import React, { useState } from 'react';
+import BasicInformationTab from '../../pages/BasicInformationTab';
+import ChangePassword from '../../pages/ChangePassword';
+import ActivityLogTab from '../../pages/ActivityLogTab';
+import NotificationsTab from '../../pages/NotificationTab';
+import TwoStepVerificationTab from '../../pages/TwoStepVerificationTab';
+import AccountStatusTab from '../../pages/AccountStatusTab';
 
-interface UserInfo {
-    fullName?: string;
-    phoneNumber?: string;
-    client?: string;
-    createdDate?: string;
-    emailAddress?: string;
-    role?: string;
-    lastActive?: string;
+interface User {
+    name?: string;
+    email?: string;
+    phone?: string;
+    role_title?: string;
+    client_name?: string;
+    last_active?: string;
+    created_at?: string;
+    USER_ID?: string;
+    id?: number;
 }
 
 interface ProfileContentProps {
-    user: UserInfo;
+    section: 'basic-info' | 'change-password' | 'activities' | 'notifications' | 'two-step-verification' | 'account-status';
+    data: {
+        basicInfo?: User;
+        activityLog?: any;
+    };
     className?: string;
 }
 
-const ProfileContent: React.FC<ProfileContentProps> = ({
-    user,
-    className = ''
-}) => {
-    const formatDate = (dateString?: string) => {
-        if (!dateString) return '-';
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', {
-                month: 'numeric',
-                day: 'numeric',
-                year: 'numeric'
-            });
-        } catch {
-            return dateString;
+function ProfileContent({ section, data, className = '' }: ProfileContentProps) {
+    // State for Basic Information tab
+    const [basicInfoData, setBasicInfoData] = useState<User | null>(data.basicInfo || null);
+    
+    // State for Change Password tab
+    const [passwordData, setPasswordData] = useState({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: ''
+    });
+    
+    // State for Activities tab
+    const [activitiesData, setActivitiesData] = useState({
+        activities: [],
+        loading: false,
+        error: null,
+        pagination: {
+            currentPage: 1,
+            totalPages: 1,
+            totalCount: 0,
+            limit: 5,
+            hasNextPage: false,
+            hasPrevPage: false
         }
-    };
-
-    return (
-        <div className={`bg-white rounded-lg p-6 ${className}`}>
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">Basic Information</h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Left Column */}
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
-                            Full Name
-                        </label>
-                        <p className="text-sm text-gray-900">
-                            {user.fullName || '-'}
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
-                            Phone Number
-                        </label>
-                        <p className="text-sm text-gray-900">
-                            {user.phoneNumber || '-'}
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
-                            Client
-                        </label>
-                        <p className="text-sm text-gray-900">
-                            {user.client || '-'}
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
-                            Created Date
-                        </label>
-                        <p className="text-sm text-gray-900">
-                            {formatDate(user.createdDate)}
-                        </p>
-                    </div>
-                </div>
-                
-                {/* Right Column */}
-                <div className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
-                            Email Address
-                        </label>
-                        <p className="text-sm text-gray-900">
-                            {user.emailAddress || '-'}
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
-                            Role
-                        </label>
-                        <p className="text-sm font-semibold text-gray-900">
-                            {user.role || '-'}
-                        </p>
-                    </div>
-                    
-                    <div>
-                        <label className="block text-sm font-medium text-gray-500 mb-1">
-                            Last Active
-                        </label>
-                        <p className="text-sm text-gray-900">
-                            {user.lastActive || '-'}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-};
+    });
+    
+    // State for Notifications tab
+    const [notificationsData, setNotificationsData] = useState({
+        settings: [],
+        loading: false,
+        error: null,
+        activeTab: 0
+    });
+    
+    // State for Two-Step Verification tab
+    const [twoFactorData, setTwoFactorData] = useState({
+        isEnabled: false,
+        isSetup: false,
+        qrCode: '',
+        secretKey: '',
+        backupCodes: [],
+        loading: false,
+        error: null
+    });
+    
+    // State for Account Status tab
+    const [accountStatusData, setAccountStatusData] = useState({
+        status: 'active',
+        lastLogin: '',
+        accountAge: '',
+        loading: false,
+        error: null
+    });
+    
+    // Update basicInfoData when data.basicInfo changes
+    React.useEffect(() => {
+        if (data.basicInfo) {
+            setBasicInfoData(data.basicInfo);
+        }
+    }, [data.basicInfo]);
+    
+    switch (section) {
+        case "basic-info":
+            return <BasicInformationTab user={basicInfoData} />;
+        case "change-password":
+            return <ChangePassword />;
+        case "activities":
+            return <ActivityLogTab user={basicInfoData} />;
+        case "notifications":
+            return <NotificationsTab />;
+        case "two-step-verification":
+            return <TwoStepVerificationTab user={basicInfoData} />;
+        case "account-status":
+            return <AccountStatusTab user={basicInfoData} />;
+        default:
+            return <div>Select a section</div>;
+    }
+}
 
 export default ProfileContent; 
