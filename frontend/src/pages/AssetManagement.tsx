@@ -46,7 +46,7 @@ const AddAssetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => vo
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Add New Asset" size="md" showCloseIcon>
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         {/* Tabs */}
         <div className="flex gap-2">
           <button
@@ -258,7 +258,7 @@ export default function AssetManagement() {
         </div>
       </div>
       {/* Main content: sidebar + chart */}
-      <div className="flex gap-6 px-8 pb-8" style={{ height: 900 }}>
+      <div className="flex gap-4 px-8 pb-8" style={{ height: 900 }}>
         {/* Location Hierarchy Sidebar */}
         <div className="w-[320px] flex-shrink-0">
           <LocationSidebar />

@@ -159,7 +159,7 @@ export default function AddTicket() {
                     {
                         layout: {
                             type: 'row' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -184,12 +184,12 @@ export default function AddTicket() {
                         layout: {
                             type: 'grid' as const,
                             columns: 1,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,
                                     gridColumns: 1,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: [
                                         {
                                             name: 'Form',
@@ -206,7 +206,7 @@ export default function AddTicket() {
                                                 gridLayout: {
                                                     gridRows: 6,
                                                     gridColumns: 3,
-                                                    gap: 'gap-6',
+                                                    gap: 'gap-4',
                                                     className: 'w-full',
                                                 },
                                                 formBackground:

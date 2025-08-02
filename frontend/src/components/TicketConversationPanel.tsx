@@ -164,7 +164,7 @@ export default function TicketConversationPanel() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                         },
                         components: [
                             {

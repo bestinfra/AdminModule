@@ -21,7 +21,7 @@ const AddUser: React.FC = () => {
     <div className="w-full max-w-6xl flex flex-col gap-8 p-0">
       <div className="text-2xl font-bold">Create User</div>
       <form className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <input
             type="text"
             name="fullName"
@@ -50,7 +50,7 @@ const AddUser: React.FC = () => {
             ))}
           </select>
         </div>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           <input
             type="email"
             name="email"
@@ -80,7 +80,7 @@ const AddUser: React.FC = () => {
           </select>
         </div>
       </form>
-      <div className="flex justify-end gap-6">
+      <div className="flex justify-end gap-4">
         <button type="button" className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
         <button type="submit" className="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-10 rounded-full text-lg">Save</button>
       </div>

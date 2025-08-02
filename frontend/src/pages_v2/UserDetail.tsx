@@ -233,7 +233,7 @@ const UserDetail: React.FC = () => {
                 />
 
                 {/* Main Content with Sidebar */}
-                <div className="flex gap-6">
+                <div className="flex gap-4">
                     {/* Left Sidebar */}
                     <ProfileSidebar
                         items={sidebarItems}

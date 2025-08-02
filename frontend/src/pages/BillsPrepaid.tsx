@@ -132,7 +132,7 @@ const BillsPrepaid: React.FC = () => {
   const overviewCardsSection: Section = {
     id: 'overview-cards',
     component: (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         {cardData.map((card, idx) => (
           <Card key={idx} {...card} />
         ))}
@@ -153,7 +153,7 @@ const BillsPrepaid: React.FC = () => {
             handleTimeRangeChange={setSelectedTimeRange}
           />
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           {rechargeData.map((card, idx) => (
             <Card key={idx} {...card} />
           ))}

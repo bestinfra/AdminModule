@@ -37,7 +37,7 @@ const ProfileContent: React.FC<ProfileContentProps> = ({
         <div className={`bg-white rounded-lg p-6 ${className}`}>
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Basic Information</h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Left Column */}
                 <div className="space-y-4">
                     <div>

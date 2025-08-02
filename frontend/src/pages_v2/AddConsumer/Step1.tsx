@@ -280,7 +280,7 @@ const Step1: React.FC<Step1Props> = ({
                     <h2 className="text-xl font-semibold text-gray-900">
                         Consumer Information
                     </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {formInputs.map((input) => (
                             <div key={input.name} className="space-y-2">
                                 <label className="block text-sm font-medium text-gray-700">

@@ -253,7 +253,7 @@ const Dashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'grid',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             columns: 3,
                             // className: 'items-stretch',
                             rows: [

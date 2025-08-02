@@ -16,7 +16,7 @@ const AddRole: React.FC = () => {
   return (
     <div className="w-full max-w-3xl flex flex-col gap-8 p-0">
       <div className="text-2xl font-bold">Create Role</div>
-      <form className="flex flex-col gap-6">
+      <form className="flex flex-col gap-4">
         <input
           type="text"
           name="roleName"
@@ -44,7 +44,7 @@ const AddRole: React.FC = () => {
           ))}
         </select>
       </form>
-      <div className="flex justify-end gap-6">
+      <div className="flex justify-end gap-4">
         <button type="button" className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
         <button type="submit" className="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-10 rounded-full text-lg">Save</button>
       </div>

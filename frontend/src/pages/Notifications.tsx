@@ -46,7 +46,7 @@ const Notifications: React.FC = () => {
 
 
   const content = (
-    <div className="w-full max-w-6xl flex flex-col gap-6">
+    <div className="w-full max-w-6xl flex flex-col gap-4">
       <div className="border rounded-lg p-4 bg-white">
         {/* Tabs */}
         <div className="flex border-b">

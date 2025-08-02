@@ -11,7 +11,7 @@ const SuperAdminDashboard: React.FC = () => {
         {
             title: 'Total Sub-Apps',
             value: '12',
-            icon: '/icons/apps-icon.svg',
+            icon: '/icons/apps-add.svg',
             showTrend: true,
             comparisonValue: 12.5,
             subtitle1: '3 created this month',
@@ -33,7 +33,7 @@ const SuperAdminDashboard: React.FC = () => {
         {
             title: 'Daily Logins',
             value: '1,890',
-            icon: '/icons/secure-logins.svg',
+            icon: '/icons/daily-logins.svg',
             showTrend: true,
             comparisonValue: 15.3,
             subtitle1: 'Last 24 hours',
@@ -123,7 +123,7 @@ const SuperAdminDashboard: React.FC = () => {
     };
     
     return (
-        <div className="p-2 min-h-screen">
+        <div className="">
             <PageC
                 sections={[
                     // Header section
@@ -173,7 +173,7 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 4,
-                            gap: "gap-6",
+                            gap: "gap-4",
                             className: '',
                         },
                         components: [
@@ -199,7 +199,7 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 2,
-                            gap: "gap-6",
+                            gap: "gap-4",
                             className: 'w-full',
                             rows: [
                                 {
@@ -278,12 +278,12 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 2,
-                            gap: "gap-6",
+                            gap: "gap-4",
                             className: 'w-full',
                             rows: [
                                 {
                                     layout: "grid",
-                                    gap: "gap-6",
+                                    gap: "gap-4",
                                     gridColumns: 2,
                                     gridRows: 1,
                                     span: { col: 2, row: 1 },
