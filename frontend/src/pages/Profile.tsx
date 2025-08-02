@@ -3,15 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import Button from '@components/global/Button';
 
-
-
-import BasicInformationTab from '@pages/BasicInformationTab';
-import PasswordTab from '@pages/PasswordTab';
-import ActivityLogTab from '@pages/ActivityLogTab';
-import NotificationsTab from '@pages/NotificationTab';
-import TwoStepVerificationTab from '@pages/TwoStepVerificationTab';
-import AccountStatusTab from '@pages/AccountStatusTab';
-
 interface TabItem {
     id: string;
     label: string;
@@ -66,34 +57,16 @@ const Profile: React.FC = () => {
             icon: '/icons/user-profile.svg'
         },
         {
-            id: 'password',
+            id: 'change-password',
             label: 'Change Password',
-            path: '/profile/password',
+            path: '/profile/change-password',
             icon: '/icons/shield.svg'
         },
         {
             id: 'activity-log',
-            label: 'Activities',
+            label: 'Activity Log',
             path: '/profile/activity-log',
             icon: '/icons/transactions.svg'
-        },
-        {
-            id: 'notifications',
-            label: 'Notifications',
-            path: '/profile/notifications',
-            icon: '/icons/mailbox.svg'
-        },
-        {
-            id: 'two-factor',
-            label: 'Two-step Verification',
-            path: '/profile/two-factor',
-            icon: '/icons/shield.svg'
-        },
-        {
-            id: 'account-status',
-            label: 'Account Status',
-            path: '/profile/account-status',
-            icon: '/icons/user-gear.svg'
         }
     ];
 
@@ -109,7 +82,7 @@ const Profile: React.FC = () => {
             setActiveTab('basic-info');
             navigate('/profile/basic-info', { replace: true });
         }
-    }, [location.pathname, navigate]);
+    }, [location.pathname, navigate, tabs]);
 
     const handleTabChange = (tabId: string) => {
         const tab = tabs.find(t => t.id === tabId);
@@ -120,22 +93,8 @@ const Profile: React.FC = () => {
     };
 
     const renderTabContent = () => {
-        switch (activeTab) {
-            case 'basic-info':
-                return <BasicInformationTab user={profileUser} />;
-            case 'password':
-                return <PasswordTab user={profileUser} />;
-            case 'activity-log':
-                return <ActivityLogTab user={profileUser} />;
-            case 'notifications':
-                return <NotificationsTab />;
-            case 'two-factor':
-                return <TwoStepVerificationTab user={profileUser} />;
-            case 'account-status':
-                return <AccountStatusTab user={profileUser} />;
-            default:
-                return <BasicInformationTab user={profileUser} />;
-        }
+        return (
+        );
     };
 
     const toggleSidebar = () => {

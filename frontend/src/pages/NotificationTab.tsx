@@ -96,7 +96,6 @@ const NotificationsTab = () => {
             // Simulate API delay
             await new Promise(resolve => setTimeout(resolve, 1000));
             
-            console.log('Settings saved successfully');
             // You could add a success message here
         } catch (err: any) {
             console.error('Error saving notification settings:', err);

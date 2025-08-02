@@ -123,7 +123,7 @@ const SuperAdminDashboard: React.FC = () => {
     };
     
     return (
-        <div className="p-2 min-h-screen">
+        <div className="">
             <PageC
                 sections={[
                     // Header section

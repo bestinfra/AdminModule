@@ -581,9 +581,11 @@ const DTRDetailPage = () => {
                             {
                                 layout: 'grid' as const,
                                 gridColumns: 1,
+                                className:'pb-4',
                                 columns: [
                                     {
                                         name: 'Table',
+                                        
                                         props: {
                                             columns: [
                                                 { key: 'alertId', label: 'Alert ID' },
@@ -597,13 +599,14 @@ const DTRDetailPage = () => {
                                             initialRowsPerPage: 10,
                                             rowsPerPageOptions: [5, 10, 15, 20, 25],
                                             emptyMessage: 'No Alerts Found',
-                                            showActions: true,
+                                            showActions: false,
                                             title: 'DTR Alerts',
                                             headerTitle: 'DTR Alerts',
                                             showHeader: true,
                                             showPaginationInfo: true,
                                             showRowsPerPageSelector: true,
                                             className: 'w-full',
+                                            
                                         },
                                     },
                                 ],
