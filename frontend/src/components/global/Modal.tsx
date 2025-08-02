@@ -27,6 +27,7 @@ interface ModalProps {
   saveButtonLabel?: string;
   cancelButtonLabel?: string;
   cancelButtonVariant?: 'primary' | 'secondary' | 'outline';
+  confirmButtonVariant?: 'primary' | 'secondary' | 'outline' | 'danger';
   formInitialData?: Record<string, FormInputValue>;
   formErrorMessages?: Record<string, string>;
   formId?: string;
@@ -54,6 +55,7 @@ const Modal: React.FC<ModalProps> = ({
   saveButtonLabel = 'Save',
   cancelButtonLabel = 'Cancel',
   cancelButtonVariant = 'secondary',
+  confirmButtonVariant = 'primary',
   formInitialData,
   formErrorMessages,
   formId
@@ -249,6 +251,7 @@ const Modal: React.FC<ModalProps> = ({
                     <Button
                       label={confirmButtonLabel}
                       onClick={onConfirm}
+                      variant={confirmButtonVariant}
                     />
                   )}
                 </footer>

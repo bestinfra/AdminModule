@@ -520,7 +520,7 @@ const Feeders = () => {
                             {
                                 layout: 'grid' as const,
                                 gridColumns:1,
-
+                                className:'pb-4',
                                 columns: [
                                     {
                                         name: 'Table',
