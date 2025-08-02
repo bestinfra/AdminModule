@@ -9,6 +9,7 @@ import PageHeader from './PageHeader';
 import RecentActivities from './RecentActivities';
 import Search from './Search';
 import DatePicker from './DatePicker';
+import Calendar from './Calendar';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
 // import OrgChartAlt from './OrgChartAlt';
@@ -39,7 +40,9 @@ import SummaryInfo from './SummaryInfo';
 import TicketConversationPanel from '../TicketConversationPanel';
 import TicketInformationPannel from './TIcketInformationPannel';
 import ActivityLog from './ActivityLog';
-import ChatApplication from '../ChatApplication'
+import ChatApplication from '../ChatApplication';
+import ProfileSidebar from './ProfileSidebar';
+import ProfileContent from './ProfileContent';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -51,6 +54,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     RecentActivities,
     Search,
     DatePicker,
+    Calendar,
     ExpandableTable,
     OrgChart,
     OrgChartAlt,
@@ -81,6 +85,8 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     ActivityLog,
     ChatApplication,
     Permissions,
+    ProfileSidebar,
+    ProfileContent,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

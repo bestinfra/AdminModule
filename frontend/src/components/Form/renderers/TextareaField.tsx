@@ -13,13 +13,18 @@ const TextareaField: React.FC<TextareaFieldProps> = ({
 }) => {
   return (
     <div className="flex flex-col gap-2">
+      {label && (
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 ">
+          {label}
+        </label>
+      )}
       <textarea
         {...commonProps}
         value={value}
         placeholder={placeholder}
-        className={`${commonProps.className} textarea `}
+        className={`${commonProps.className} textarea border border-primary-border rounded-xl outline-none focus:ring-0 focus:border-none`}
       />
-      {description && <span className="block text-xs text-[var(--color-light)] dark:text-[var(--color-neutral-light)] mt-1">{description}</span>}
+      {description && <span className="block text-xs text-[var(--color-light)] dark:text-[var(--color-neutral-light)] ">{description}</span>}
     </div>
   );
 };

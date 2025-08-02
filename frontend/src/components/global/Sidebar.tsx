@@ -65,16 +65,16 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dashboard.svg',
                 link: '/superadmin',
             },
-            {
-                title: 'DTR Dashboard',
-                icon: '/icons/dashboard.svg',
-                link: '/dtr-dashboard',
-            },
-            {
-                title: 'Tickets',
-                icon: '/icons/customer-service.svg',
-                link: '/tickets',   
-            },
+            // {
+            //     title: 'DTR Dashboard',
+            //     icon: '/icons/dashboard.svg',
+            //     link: '/dtr-dashboard',
+            // },
+            // {
+            //     title: 'Tickets',
+            //     icon: '/icons/customer-service.svg',
+            //     link: '/tickets',   
+            // },
 
             {
                 title:'All Tickets',
@@ -87,49 +87,57 @@ const defaultMenus: MenuCategory[] = [
     {
         category: 'ADMIN SETTINGS',
         items: [
-            {
-                title: 'Asset Management',
-                icon: '/icons/Asset_managment.svg',
-                link: '/asset-managment',
-            },
-            
             // {
-            //     title: 'Meter Management',
-            //     icon: '/icons/meter_managment.svg',
-            //     link: '/meter-management',
-            //     hasSubmenu: true,
-            //     submenu: [
-                   
-                   
-            //     ],
+            //     title: 'Asset Management',
+            //     icon: '/icons/Asset_managment.svg',
+            //     link: '/asset-managment',
             // },
-            {
-                title: 'Meter List',
-                icon: '/icons/meter_managment.svg',
-                link: '/meters',
-            },
+            
+          
             // {
-            //     title: 'Users Management',
-            //     icon: '/icons/user_managment.svg',
-            //     link: '/users',
+            //     title: 'Meter List',
+            //     icon: '/icons/meter_managment.svg',
+            //     link: '/meters',
             // },
             {
                 title: 'User Management',
-                icon: '/icons/user_managment.svg',
-                link: '/user-management',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'User Management',
-                        link: '/users',
-                    },
-                  
-                    {
-                        title: 'Role Management',
-                        link: '/role-management ',
-                    },
-                ],
+                link: '/users',
+                icon:'/icons/user_managment.svg',
             },
+            {
+                    title: 'Meter List',
+                    icon: '/icons/meter_managment.svg',
+                    link: '/meters',
+                },
+            
+            // {   
+            //     title: 'User Management',
+            //     icon: '/icons/user_managment.svg',
+            //     link: '/user-management',
+            //     hasSubmenu: true,
+            //     submenu: [
+                   
+                  
+            //         {
+            //             title: 'Role Management',
+            //             link: '/role-management ',
+            //         },
+            //     ],
+            // },
+            // {
+            //     title: 'User Management',
+            //     icon: '/icons/user_managment.svg',
+            //     link: '/user-management',
+            //     hasSubmenu: true,
+            //     submenu: [
+                 
+                  
+            //         {
+            //             title: 'Role Management',
+            //             link: '/role-management ',
+            //         },
+            //     ],
+            // },
         ],
     },
 ];
@@ -236,7 +244,7 @@ const Sidebar = ({
                                         {category.category}
                                     </h2>
                                 )}
-                                <ul className="list-none p-0 m-0 gap-2 flex flex-col">
+                                <ul className="list-none p-0 m-0 gap-1 flex flex-col">
                                     {category.items.map(
                                         (menuItem, itemIndex) => (
                                             <li key={itemIndex}>

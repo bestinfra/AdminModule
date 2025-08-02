@@ -436,9 +436,9 @@ export default function RoleManagement() {
                                             props: {
                                                 title: 'Role Management',
                                                 onBackClick: () =>
-                                                    navigate('/'),
+                                                    navigate('/users'),
                                                 backButtonText:
-                                                    'Back to Dashboard',
+                                                    'Back to UserManagment',
                                                 buttonsLabel: 'Add Role',
                                                 variant: 'primary',
                                                 onClick: handleAddClick,
@@ -536,6 +536,7 @@ export default function RoleManagement() {
                                                 size: 'md',
                                                 showConfirmButton: true,
                                                 confirmButtonLabel: 'Delete Role',
+                                                confirmButtonVariant: 'danger',
                                                 onConfirm: handleConfirmDelete,
                                                 message: `Are you sure you want to delete the role "${roleToDelete?.roleName}"?`,
                                                 warningMessage: 'This action cannot be undone. All users assigned to this role will lose their permissions.',

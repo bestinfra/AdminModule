@@ -1,13 +1,60 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
+import ProfileSidebar from '@/components/global/ProfileSidebar';
+import ProfileContent from '@/components/global/ProfileContent';
 
 const UserDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
     const location = useLocation();
     const [user, setUser] = useState<any>(null);
-    const [_loading, setLoading] = useState(true);  
+    const [_loading, setLoading] = useState(true);
+    const [activeSection, setActiveSection] = useState('basic-info');
+    
+    // State for sidebar items
+    const [sidebarItems, setSidebarItems] = useState([
+        {
+            id: 'basic-info',
+            label: 'Basic Information',
+            isActive: false,
+        },
+        {
+            id: 'change-password',
+            label: 'Change Password',
+            isActive: false,
+        },
+        {
+            id: 'activities',
+            label: 'Activities',
+            isActive: false,
+        },
+        {
+            id: 'notifications',
+            label: 'Notifications',
+            isActive: false,
+        },
+        {
+            id: 'two-step-verification',
+            label: 'Two-step Verification',
+            isActive: false,
+        },
+        {
+            id: 'account-status',
+            label: 'Account Status',
+            isActive: false,
+        },
+    ]);
+
+    // Update sidebar items when activeSection changes
+    useEffect(() => {
+        setSidebarItems(prevItems => 
+            prevItems.map(item => ({
+                ...item,
+                isActive: item.id === activeSection
+            }))
+        );
+    }, [activeSection]);
 
     // Get user data from navigation state or fetch from API
     useEffect(() => {
@@ -19,7 +66,7 @@ const UserDetail: React.FC = () => {
         } else if (id) {
             // If no state data, fetch user data by ID
             setLoading(true);
-            // Simulate API call - replace with actual API call
+            // Simulate API call - replace with actual API call 
             setTimeout(() => {
                 // Mock user data based on ID
                 const mockUser = {
@@ -72,6 +119,10 @@ const UserDetail: React.FC = () => {
         }, 500);
     };
 
+    const handleSidebarItemClick = (itemId: string) => {
+        setActiveSection(itemId);
+    };
+
     const menuItems = [
         {
             id: 'edit',
@@ -88,6 +139,20 @@ const UserDetail: React.FC = () => {
         },
     ];
 
+    // Map the user data to the format expected by BasicInformationTab
+    const basicInfoData = user ? {
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role_title: user.role,
+        client_name: user.client,
+        last_active: user.lastLogin,
+        created_at: user.createdDate,
+        USER_ID: user.sNo?.toString(),
+        id: user.sNo
+    } : undefined;
+
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <PageC
@@ -101,25 +166,57 @@ const UserDetail: React.FC = () => {
                             {
                                 name: 'PageHeader',
                                 props: {
-                                    title: user?.name || 'User Details',
-                                    subtitle: user ? `User ID: ${user.sNo || user.id}` : 'Loading user information...',
+                                    title: 'User Details',
                                     menuItems: menuItems,
                                     onMenuItemClick: handleMenuItemClick,
-                                    showMenu: true,
-                                    showDropdown: true,
-                                    buttonsLabel: 'Edit',
                                     variant: 'primary',
                                     onClick: () => handleMenuItemClick('edit'),
                                     onBackClick: handleBackClick,
                                     backButtonText: 'Back to Users',
                                     onRightImageClick: handleRefreshClick,
-                                    status: user?.status || 'Loading',
+                                    status: user?.status || 'Active',
+                                    // Remove any dynamic props that might cause header updates
+                                    editMode: false,
+                                    unitName: undefined,
                                 },
                             },
                         ],
                     },
+                    {
+                        layout: {
+                            type: 'grid',
+                            gridRows: 1,
+                            columns: 5,
+                            gap: 'gap-6',
+                            className: 'w-full h-full' 
+                        },
+                        components: [
+                            {
+                                name: 'ProfileSidebar',
+                                props: {
+                                    items: sidebarItems,
+                                    onItemClick: handleSidebarItemClick,
+                                },
+                                span:{
+                                    col:1,
+                                    row:1
+                                }
+                            },
+                            {
+                                name: 'ProfileContent',
+                                props: {
+                                    section: activeSection,
+                                    data: {
+                                        basicInfo: basicInfoData
+                                    },
+                                    className: 'flex-1'
+                                },
+                                span:{col:4,row:1}
+                            }
+                        ],
+                    },
                 ]}
-                sectionWrapperClassName="mb-8"
+                sectionWrapperClassName=""
             />
         </Suspense>
     );

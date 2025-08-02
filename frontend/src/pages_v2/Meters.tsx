@@ -4,11 +4,6 @@ import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
-// Brand green icon style
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
-
 export default function Meters() {
     const navigate = useNavigate();
     const [meterData, setMeterData] = useState<
@@ -42,7 +37,7 @@ export default function Meters() {
 
 
 
-    // Demo data for fallback
+    // Demo data for fallback - Using BRAND_GREEN (default) for all cards
     const [demoMeterData] = useState([
         {
             id: 1,
@@ -51,7 +46,6 @@ export default function Meters() {
             subtitle1: '1100 Active',
             subtitle2: '100 In-Active',
             icon: 'icons/meter.svg',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 2,
@@ -60,7 +54,6 @@ export default function Meters() {
             subtitle1: '1 Used Meter Makes',
             subtitle2: '',
             icon: 'icons/meter-bolt.svg',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 3,
@@ -69,7 +62,6 @@ export default function Meters() {
             subtitle1: '86 Unmapped',
             subtitle2: '0 Replaced',
             icon: 'icons/mapped-meter.svg',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 4,
@@ -78,7 +70,6 @@ export default function Meters() {
             subtitle1: '3 Prepaid',
             subtitle2: '0 Postpaid',
             icon: 'icons/connection-type.svg',
-            iconStyle: ICON_FILTER_STYLE,
         },
     ]);
     const [demoTableData] = useState([
@@ -191,7 +182,6 @@ export default function Meters() {
                             subtitle1: '1100 Active',
                             subtitle2: '',
                             icon: 'icons/meter.svg',
-                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 2,
@@ -200,7 +190,6 @@ export default function Meters() {
                             subtitle1: 'Unique Makes',
                             subtitle2: '',
                             icon: 'icons/meter-make.svg',
-                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 3,
@@ -209,7 +198,6 @@ export default function Meters() {
                             subtitle1: 'Unique Types',
                             subtitle2: '',
                             icon: 'icons/mapped-meter.svg',
-                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 4,
@@ -219,7 +207,6 @@ export default function Meters() {
                             subtitle1: 'Unique Connection Types',
                             subtitle2: '',
                             icon: 'icons/connection-type.svg',
-                            iconStyle: ICON_FILTER_STYLE,
                         },
                     ];
                     setMeterData(cards);
@@ -262,6 +249,7 @@ export default function Meters() {
         { key: 'consumerName', label: 'Consumer Name' },
         { key: 'location', label: 'Location' },
         { key: 'installationDate', label: 'Installation Date' },
+        { key: 'status', label: 'Status' },
     ]);
 
     // Generate filter options from allMeters
@@ -354,7 +342,6 @@ export default function Meters() {
                                              icon: meter.icon,
                                              subtitle1: meter.subtitle1,
                                              subtitle2: meter.subtitle2,
-                                             iconStyle: meter.iconStyle,
                                              bg: "bg-stat-icon-gradient",
                                          },
                                      })),

@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
+import { exportChartData } from '@/utils/excelExport';
+import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
+
 const mockDTRData = {
     name: 'TGNP_DTR-03',
     dtrNo: 'DTR-001',
@@ -76,6 +79,8 @@ const mockDTRData = {
             icon: '/icons/power_failure.svg',
             subtitle1: '',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
+            bg: 'bg-[var(--color-danger)]',
+            iconStyle: FILTER_STYLES.WHITE,
         },
         {
             title: 'Status',
@@ -83,6 +88,8 @@ const mockDTRData = {
             icon: '/icons/units.svg',
             subtitle1: '0000-00-00 00:00:00',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
+            bg: 'bg-[var(--color-secondary)]',
+            iconStyle: FILTER_STYLES.WHITE,
         },
     ],
 };
@@ -502,7 +509,9 @@ const DTRDetailPage = () => {
                                         value: stat.value,
                                         subtitle1: stat.subtitle1,
                                         icon: stat.icon,
+                                        bg: stat.bg || 'bg-stat-icon-gradient',
                                         valueFontSize: stat.valueFontSize || 'text-lg lg:text-xl md:text-lg sm:text-base',
+                                        iconStyle: stat.iconStyle || FILTER_STYLES.BRAND_GREEN,
                                     },
                                     span: { col: 1, row: 1 },
                                 })),
@@ -572,9 +581,11 @@ const DTRDetailPage = () => {
                             {
                                 layout: 'grid' as const,
                                 gridColumns: 1,
+                                className:'pb-4',
                                 columns: [
                                     {
                                         name: 'Table',
+                                        
                                         props: {
                                             columns: [
                                                 { key: 'alertId', label: 'Alert ID' },
@@ -588,13 +599,14 @@ const DTRDetailPage = () => {
                                             initialRowsPerPage: 10,
                                             rowsPerPageOptions: [5, 10, 15, 20, 25],
                                             emptyMessage: 'No Alerts Found',
-                                            showActions: true,
+                                            showActions: false,
                                             title: 'DTR Alerts',
                                             headerTitle: 'DTR Alerts',
                                             showHeader: true,
                                             showPaginationInfo: true,
                                             showRowsPerPageSelector: true,
                                             className: 'w-full',
+                                            
                                         },
                                     },
                                 ],

@@ -32,7 +32,7 @@ const TicketView: React.FC = () => {
     // Hardcoded demo values (disable useAuth logic)
     const isAdmin = false;
     const basePath = '/user/tickets';
-    const userDashboardPath = '/user';
+    const userDashboardPath = '/tickets';
 
     // Dummy ticket data
     const [ticket] = useState<Ticket>({
