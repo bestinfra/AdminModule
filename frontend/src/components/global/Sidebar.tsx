@@ -81,6 +81,11 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/dashboard.svg',
                 link:'/all-tickets',
             },
+            {
+                title:'Sub Login',
+                icon:'/icons/dashboard.svg',
+                link:'/sub-login',
+            }
            
         ],
     },

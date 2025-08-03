@@ -22,6 +22,79 @@ const slides: CarouselSlide[] = [
 const SubLogin: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalContent, setModalContent] = useState<string>("");
+  const [modalTitle, setModalTitle] = useState<string>("");
+
+  // Modal content data
+  const termsOfServiceContent = `Last updated: January 1, 2024
+
+1. Acceptance of Terms
+By accessing and using this application, you accept and agree to be bound by the terms and provision of this agreement.
+
+2. Use License
+Permission is granted to temporarily download one copy of the application for personal, non-commercial transitory viewing only.
+
+3. Disclaimer
+The materials on this application are provided on an 'as is' basis. We make no warranties, expressed or implied, and hereby disclaim and negate all other warranties including without limitation, implied warranties or conditions of merchantability, fitness for a particular purpose, or non-infringement of intellectual property or other violation of rights.
+
+4. Limitations
+In no event shall we or our suppliers be liable for any damages (including, without limitation, damages for loss of data or profit, or due to business interruption) arising out of the use or inability to use the materials on our application.
+
+5. Revisions and Errata
+The materials appearing on our application could include technical, typographical, or photographic errors. We do not warrant that any of the materials on our application are accurate, complete or current.
+
+6. Links
+We have not reviewed all of the sites linked to our application and are not responsible for the contents of any such linked site.
+
+7. Modifications
+We may revise these terms of service for our application at any time without notice.`;
+
+  const privacyPolicyContent = `Last updated: January 1, 2024
+
+1. Information We Collect
+We collect information you provide directly to us, such as when you create an account, log in, or contact us for support.
+
+2. How We Use Your Information
+We use the information we collect to:
+• Provide, maintain, and improve our services
+• Process transactions and send related information
+• Send technical notices, updates, security alerts, and support messages
+• Respond to your comments, questions, and customer service requests
+
+3. Information Sharing
+We do not share, sell, or otherwise disclose your personal information for purposes other than those outlined in this Privacy Policy.
+
+4. Data Security
+We have implemented appropriate technical and organizational security measures designed to protect the security of any personal information we process.
+
+5. Data Retention
+We will retain your personal information only for as long as is necessary for the purposes set out in this Privacy Policy.
+
+6. Your Rights
+You have the right to:
+• Access your personal information
+• Correct inaccurate personal information
+• Request deletion of your personal information
+• Object to our processing of your personal information
+
+7. Changes to This Policy
+We may update this privacy policy from time to time. We will notify you of any changes by posting the new policy on this page.
+
+8. Contact Us
+If you have any questions about this Privacy Policy, please contact us.`;
+
+  const handleModalOpen = (title: string, content: string) => {
+    setModalTitle(title);
+    setModalContent(content);
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setModalContent("");
+    setModalTitle("");
+  };
 
   const handleLogin = async (data: Record<string, FormInputValue>) => {
     setError("");
@@ -50,58 +123,57 @@ const SubLogin: React.FC = () => {
   };
 
   return (
-    <PageC
-      sections={[
+    <>
+      <PageC
+        modalOpen={modalOpen}
+        modalTitle={modalTitle}
+        modalContent={modalContent}
+        onModalClose={handleModalClose}
+        sections={[
         {
           layout: {
             type: "grid",
-            className: "border rounded-lg",
+            className: "rounded-lg min-h-screen ",
             columns:5,
-            gridRows: 2,
+            gap: "gap-0",
+            gridRows: 1,
             rows: [
               {
                 layout: "row",
-                className: "border rounded-lg",
-                // gridColumns: 1,
-                // gridRows: 2,
+                className: " rounded-lg h-full p-4",
                 span:{col:3,row:1},
                 columns: [
                   {
                     name: "Carousel",
                     props: { slides },
-                    span: { col: 3, row: 1 },
+
                   },
                 ],
               },
               {
-                layout: "grid",
-                className: "border rounded-lg",
-                // gridColumns: 1,
-                // gridRows: 2,
+                layout: "column",
+                className: "rounded-lg h-full justify-betweens py-4 pr-4",
                 span:{col:2,row:1},
                 columns: [
-                  {
-                    name: "SectionHeader",
-                    props: {
-                      title: "Distribution Transformer (DTR) Statistics",
-                      titleLevel: 2,
-                      titleSize: "md",
-                      titleVariant: "primary",
-                      rightContent: {
-                        name: "Button",
-                        props: {
-                          label: "Sign In",
-                          onClick: handleLogin,
-                        },
-                    
-                      },
-                    },
-                  },
+                                     {
+                     name: "SectionHeader",
+                     props: {
+                       title: "Back to Website",
+                       titleLevel: 2,
+                       titleSize: "xl",
+                       titleWeight:'normal',
+                       titleVariant:'success',
+                       iconBg: "bg-primary",
+                       className: "",
+                       icon: "arrow-left",
+                       iconSize: "lg",
+                     },
+                   },
                   {
                     name: "LoginV2",  
-                    span: { col: 2, row: 1 },
+
                     props: {
-                      buttonLabel: "Sign In",
+                      buttonLabel: "Login",
                       rememberMeLabel: "Keep me signed in",
                       minPasswordLength: 8,
                       identifierPlaceholder: "Email or Username",
@@ -150,6 +222,7 @@ const SubLogin: React.FC = () => {
                         //   colSpan: 1,
                         //   className: 'justify-start',
                         // },
+                        
                       ],
                       onSubmit: handleLogin,
                       loading,
@@ -157,14 +230,58 @@ const SubLogin: React.FC = () => {
   
                     },
                   },
+                  {
+                    name:'SectionHeader',
+                    props:{
+                      title:'Need Help? Contact Support',
+                      titleLevel:3,
+                      titleSize:'xl',
+                      titleWeight:'normal',
+                      titleVariant:'muted',
+                      titleClassName:'items-end',
+                                             titleParts:{
+                         prefix:'Need Help? ',
+                         suffix:'Contact Support',
+                        suffixVariant:'success',
+                        suffixClassName:'cursor-pointer ',
+                        suffixOnClick:() => {
+                          // Handle contact support click
+                          console.log('Contact Support clicked');
+                        }
+                      },
+                      rightLabels:[
+                                                 {
+                           label: 'Terms of Service',
+                           size: 'xl',
+                           variant: 'success',
+                           weight: 'normal',
+                           className: 'cursor-pointer hover:opacity-80',
+                                                       onClick: () => {
+                              handleModalOpen('Terms of Service', termsOfServiceContent);
+                            }
+                         },
+                         {
+                           label: 'Privacy Policy',
+                           size: 'xl',
+                           variant: 'success',
+                           weight: 'normal',
+                           className: 'cursor-pointer hover:opacity-80',
+                                                       onClick: () => {
+                              handleModalOpen('Privacy Policy', privacyPolicyContent);
+                            }
+                         }
+                      ]
+                    }
+                  }
                 ],
               },
             ],
           },
-        },
-      ]}
-    />
-  );
-};
+                 },
+       ]}
+       />
+     </>
+   );
+ };
 
 export default SubLogin;

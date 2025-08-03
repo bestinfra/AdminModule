@@ -37,7 +37,7 @@ import EditRole from './pages_v2/EditRole';
 import EditUser from './pages_v2/EditUser';
 import UserDetail from './pages_v2/UserDetail';
 import RolesPermissions from './pages_v2/RolesPermissions';
-
+import SubLogin from './pages_v2/SubLogin';
 import DTRDetailPage from './pages/DTRDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
 
@@ -49,7 +49,7 @@ const App: React.FC = () => {
                     <Router>
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
-                        {/* <Route path="/sub-login" element={<SubLogin />} /> */}
+                        <Route path="/sub-login" element={<SubLogin />} />
                         <Route
                             element={
                                 <ProtectedRoute>
