@@ -25,6 +25,7 @@ const SubLogin: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalContent, setModalContent] = useState<string>("");
   const [modalTitle, setModalTitle] = useState<string>("");
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
 
   // Modal content data
   const termsOfServiceContent = `Last updated: January 1, 2024
@@ -96,6 +97,14 @@ If you have any questions about this Privacy Policy, please contact us.`;
     setModalTitle("");
   };
 
+  const handleForgotPassword = () => {
+    setShowForgotPassword(true);
+  };
+
+  const handleBackToLogin = () => {
+    setShowForgotPassword(false);
+  };
+
   const handleLogin = async (data: Record<string, FormInputValue>) => {
     setError("");
     setLoading(true);
@@ -122,13 +131,27 @@ If you have any questions about this Privacy Policy, please contact us.`;
     }
   };
 
+  const handleForgotPasswordSubmit = async (data: Record<string, FormInputValue>) => {
+    setError("");
+    setLoading(true);
+    
+    try {
+      // Add your forgot password API call here
+      console.log('Forgot password for:', data.email);
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setError("Password reset link sent to your email!");
+    } catch (error) {
+      console.error('Forgot password error:', error);
+      setError("Failed to send reset link. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <>
+    <div className="h-screen overflow-hidden scroll-y-hidden">
       <PageC
-        modalOpen={modalOpen}
-        modalTitle={modalTitle}
-        modalContent={modalContent}
-        onModalClose={handleModalClose}
         sections={[
         {
           layout: {
@@ -151,16 +174,17 @@ If you have any questions about this Privacy Policy, please contact us.`;
                 ],
               },
               {
-                layout: "column",
+                layout: "grid",
                 className: "rounded-lg h-full justify-betweens py-4 pr-4",
                 span:{col:2,row:1},
+                gridColumns:2,
                 columns: [
                                      {
                      name: "SectionHeader",
                      props: {
                        title: "Back to Website",
                        titleLevel: 2,
-                       titleSize: "xl",
+                       titleSize: "lg",
                        titleWeight:'normal',
                        titleVariant:'success',
                        iconBg: "bg-primary",
@@ -168,75 +192,116 @@ If you have any questions about this Privacy Policy, please contact us.`;
                        icon: "arrow-left",
                        iconSize: "lg",
                      },
+                     span:{col:2,row:1},
                    },
-                  {
-                    name: "LoginV2",  
-
-                    props: {
-                      buttonLabel: "Login",
-                      rememberMeLabel: "Keep me signed in",
-                      minPasswordLength: 8,
-                      identifierPlaceholder: "Email or Username",
-                      passwordPlaceholder: "Enter your password",
-                      inputs: [
-                        // Default login fields below
-                        {
-                          name: "identifier",
-                          type: "text",
-                          placeholder: "Email or Username",
-                          required: true,
-                          row: 2,
-                          col: 1,
-                          colSpan: 2,
-                          validation: {
-                            custom: (value: FormInputValue) =>
-                              !value ? "Username or email is required" : null,
+                                      {
+                      name: "LoginV2",  
+                      span:{col:2,row:1},
+                      
+                      props: {
+                        buttonLabel: showForgotPassword ? "Send Verification Code" : "Login",
+                        rememberMeLabel: "Keep me signed in",
+                        minPasswordLength: 8,
+                        identifierPlaceholder: "Email or Username",
+                        passwordPlaceholder: "Enter your password",
+                        inputs: showForgotPassword ? [
+                          {
+                            name: "errorLabel",
+                            type: "label",
+                            label: error || "",
+                            row: 1,
+                            col: 1,
+                            colSpan: 2,
+                            labelClassName: error ? "text-red-500 text-sm font-medium text-center" : "hidden",
                           },
-                        },
-                        {
-                          name: "password",
-                          type: "password",
-                          placeholder: "Enter your password",
-                          required: true,
-                          showPasswordToggle: true,
-                          row: 3,
-                          col: 1,
-                          colSpan: 2,
-                          validation: {
-                            minLength: 8,
-                            custom: (value: FormInputValue) => {
-                              if (!value) return "Password is required";
-                              if (typeof value === "string" && value.length < 8)
-                                return `Password must be at least 8 characters`;
-                              return null;
+                          {
+                            name: "email",
+                            type: "email",
+                            placeholder: "Email Address",
+                            required: true,
+                            row: 2,
+                            col: 1,
+                            colSpan: 2,
+                            validation: {
+                              custom: (value: FormInputValue) => {
+                                if (!value) return "Email is required";
+                                if (typeof value === "string" && !value.includes('@')) {
+                                  return "Please enter a valid email address";
+                                }
+                                return null;
+                              },
                             },
                           },
-                        },
-                        // {
-                        //   name: 'rememberMe',
-                        //   type: 'checkbox',
-                        //   label: 'Keep me signed in',
-                        //   defaultValue: false,
-                        //   row: 4,
-                        //   col: 1,
-                        //   colSpan: 1,
-                        //   className: 'justify-start',
-                        // },
-                        
-                      ],
-                      onSubmit: handleLogin,
-                      loading,
-                      error,
-  
+                        ] : [
+                          {
+                            name: "identifier",
+                            type: "text",
+                            placeholder: "Email or Username",
+                            required: true,
+                            row: 2,
+                            col: 1,
+                            colSpan: 2,
+                            validation: {
+                              custom: (value: FormInputValue) =>
+                                !value ? "Username or email is required" : null,
+                            },
+                          },
+                          {
+                            name: "password",
+                            type: "password",
+                            placeholder: "Enter your password",
+                            required: true,
+                            showPasswordToggle: true,
+                            row: 3,
+                            col: 1,
+                            colSpan: 2,
+                            validation: {
+                              minLength: 8,
+                              custom: (value: FormInputValue) => {
+                                if (!value) return "Password is required";
+                                if (typeof value === "string" && value.length < 8)
+                                  return `Password must be at least 8 characters`;
+                                return null;
+                              },
+                            },
+                          },
+                          {
+                            name: 'rememberMe',
+                            type: 'checkbox',
+                            label: 'Keep me signed in',
+                            defaultValue: false,
+                            row: 4,
+                            col: 1,
+                            colSpan: 1,
+                            className: 'justify-start',
+                          },
+                          {
+                            name: 'forgotPassword',
+                            
+                            type: 'label',
+                            label: 'Forgot Password?',
+                            row: 4,
+                            col: 2,
+                            colSpan: 1,
+                            labelClassName:'items-end',
+                            onClick: handleForgotPassword,
+                          },
+                        ],
+                        onSubmit: showForgotPassword ? handleForgotPasswordSubmit : handleLogin,
+                        loading,
+                        error,
+                      },
                     },
-                  },
                   {
                     name:'SectionHeader',
+                    span:{col:2,row:1},
+                    
                     props:{
                       title:'Need Help? Contact Support',
                       titleLevel:3,
-                      titleSize:'xl',
+                      titleSize:'lg',
                       titleWeight:'normal',
+                      className:'h-full items-end',
                       titleVariant:'muted',
                       titleClassName:'items-end',
                                              titleParts:{
@@ -252,7 +317,7 @@ If you have any questions about this Privacy Policy, please contact us.`;
                       rightLabels:[
                                                  {
                            label: 'Terms of Service',
-                           size: 'xl',
+                           size: 'lg',
                            variant: 'success',
                            weight: 'normal',
                            className: 'cursor-pointer hover:opacity-80',
@@ -262,7 +327,7 @@ If you have any questions about this Privacy Policy, please contact us.`;
                          },
                          {
                            label: 'Privacy Policy',
-                           size: 'xl',
+                           size: 'lg',
                            variant: 'success',
                            weight: 'normal',
                            className: 'cursor-pointer hover:opacity-80',
@@ -278,9 +343,32 @@ If you have any questions about this Privacy Policy, please contact us.`;
             ],
           },
                  },
+         {
+           layout: {
+             type: "row",
+             className: "",
+             gap: "gap-0",
+           },
+           components: [
+             {
+               name: "Modal",
+               props: {
+                 isOpen: modalOpen,
+                 onClose: handleModalClose,
+                 title: modalTitle,
+                 size: "xl",
+                 showCloseIcon: true,
+                 backdropClosable: true,
+                 centered: true,
+                 content: modalContent,
+                 contentType: "html"
+               }
+             }
+           ]
+         }
        ]}
        />
-     </>
+     </div>
    );
  };
 

@@ -26,6 +26,7 @@ const FormInput: React.FC<FormInputProps> = ({
   disabled,
   onInputChange,
   fileInputRefs,
+  labelClassName,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -104,7 +105,6 @@ const FormInput: React.FC<FormInputProps> = ({
       showError ? "border-red-500" : ""
     }`.trim();
 
-    // Password input with visibility toggle
     if (type === 'password' && input.showPasswordToggle) {
       return (
         <div className="relative">
@@ -305,8 +305,12 @@ const FormInput: React.FC<FormInputProps> = ({
 
       case "label":
         return (
-          <div className="w-full">
-            <div className="flex flex-col gap-2">
+          <div className={`w-full `}>
+            <div 
+              className={`${labelClassName || "flex flex-col gap-2 w-full items-end"}`}
+              onClick={input.onClick}
+              style={{ cursor: input.onClick ? 'pointer' : 'default' }}
+            >
               {label && (
                 <div className="text-base font-medium text-gray-900 dark:text-white">
                   {label}
