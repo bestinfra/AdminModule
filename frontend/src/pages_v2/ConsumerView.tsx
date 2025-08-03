@@ -454,7 +454,7 @@ const ConsumerView: React.FC = () => {
                                     handleDownload: handlePowerMetricsDownload,
                                     loading: false,
                                     children: (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* Power Distribution Card */}
                                             <div className="rounded-2xl shadow p-0 flex flex-col h-full">
                                                 <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
@@ -478,7 +478,7 @@ const ConsumerView: React.FC = () => {
                                                 <div className="flex flex-col md:flex-row items-center justify-between px-6 pb-6 pt-2 gap-4">
                                                     <div className="flex flex-col items-center w-full md:w-2/3">
                                                         {/* Legend above chart */}
-                                                        <div className="flex items-center gap-6 mb-2">
+                                                        <div className="flex items-center gap-4 mb-2">
                                                             <span className="flex items-center gap-1 text-secondary font-medium text-sm">
                                                                 <span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>
                                                                 Apparent Power
@@ -651,7 +651,7 @@ const ConsumerView: React.FC = () => {
                                     handleDownload: handleDailyConsumptionDownload,
                                     loading: false,
                                     children: (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* Daily Consumption Card */}
                                             <div className="rounded-2xl shadow p-0 flex flex-col h-full">
                                                 <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
@@ -764,7 +764,7 @@ const ConsumerView: React.FC = () => {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                         },
                         components: [
                             {
@@ -778,7 +778,7 @@ const ConsumerView: React.FC = () => {
                                     handleDownload: () => {},
                                     loading: false,
                                     children: (
-                                        <div className="flex flex-col gap-6">
+                                        <div className="flex flex-col gap-4">
                                             <div className="flex flex-col gap-2">
                                                 <div className="font-semibold text-base">
                                                     Unit History

@@ -131,7 +131,7 @@ const Users: React.FC = () => {
     const userStatsSection: Section = {
         id: 'user-stats',
         component: (
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                 {/* User Statistics */}
                 <div className="bg-primary-lightest dark:bg-primary-dark p-6 flex flex-col gap-4 md:col-span-3 col-span-1 rounded-2xl">
                     <div className="flex justify-between items-center mb-2">

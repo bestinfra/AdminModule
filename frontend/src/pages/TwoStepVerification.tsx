@@ -34,7 +34,7 @@ const SidebarMenu = ({ selected = 3 }) => {
 
 const TwoStepVerification: React.FC = () => {
   const content = (
-    <div className="w-full flex flex-col items-center justify-center min-h-[300px] gap-6">
+    <div className="w-full flex flex-col items-center justify-center min-h-[300px] gap-4">
       <div className="text-lg font-semibold text-neutral mb-6 mt-8">
         <span className="font-bold">Two-Factor Authentication Status:</span> <span className="text-neutral font-normal">Disabled</span>
       </div>

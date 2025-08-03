@@ -168,7 +168,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -229,7 +229,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',
@@ -338,7 +338,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -370,7 +370,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',

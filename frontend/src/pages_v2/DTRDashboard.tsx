@@ -648,7 +648,7 @@ const DTRDashboard: React.FC = () => {
             layout: {
               type: "grid",
               columns: 5,
-              gap: "gap-6",
+              gap: "gap-4",
               rows: [
                 {
                   layout: "grid",
@@ -740,12 +740,12 @@ const DTRDashboard: React.FC = () => {
                         layout: {
                             type: 'grid',
                             columns: 1,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',
                                     gridColumns: 1,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: [
                                         {
                                             name: 'Table',

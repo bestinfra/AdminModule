@@ -63,13 +63,16 @@ export const useStepNavigation = (
       const allFormData = combineFormData(stepData);
       console.log(' useStepNavigation - Final Submit - Combined Form Data:', allFormData);
       console.log('useStepNavigation - Final Submit - Step Data:', stepData);
-      await submitAppCreation(allFormData);
+      const result = await submitAppCreation(allFormData);
+      // Return the result so it can be used by the success modal
+      return result;
       // Optional: Reset form or redirect after successful submission
       // resetAllData();
       // setCurrentStep(1);
     } catch (error) {
       console.error('Error creating app:', error);
-      alert(`Error creating app: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      // Error handling is now done in the FinalizeAndDeploy component
+      throw error;
     } finally {
       setLoading(false);
     }
