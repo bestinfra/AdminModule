@@ -230,6 +230,7 @@ const FormInput: React.FC<FormInputProps> = ({
 
       case "dropdown":
         const isMultiSelect = (input as any).isMultiSelect || false;
+        const searchable = (input as any).searchable !== undefined ? (input as any).searchable : true;
         return (
           <Dropdown
             name={name}
@@ -246,6 +247,7 @@ const FormInput: React.FC<FormInputProps> = ({
             required={required}
             disabled={disabled}
             isMultiSelect={isMultiSelect}
+            searchable={searchable}
           />
         );
 

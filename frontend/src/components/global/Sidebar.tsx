@@ -81,11 +81,30 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/dashboard.svg',
                 link:'/all-tickets',
             },
-            {
-                title:'Sub Login',
-                icon:'/icons/dashboard.svg',
-                link:'/sub-login',
-            }
+            {   
+                    title: 'Bills',
+                    icon: '/icons/bills.svg',
+                    link: '/user-management',
+                    hasSubmenu: true,
+                    submenu: [
+                       
+                      
+                        {
+                            title: 'Prepaid',
+                            link: '/prepaid ',
+                        },
+                        {
+                            title: 'Postpaid',
+                            link: '/postpaid ',
+                        },
+                    ],
+                },
+
+            // {
+            //     title:'ConsumerDetails',
+            //     icon:'/icons/dashboard.svg',
+            //     link:'/consumer-details',
+            // }
            
         ],
     },

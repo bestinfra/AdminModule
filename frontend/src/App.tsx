@@ -25,7 +25,7 @@ import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
-import Prepaid from './pages_v2/Prepaid';   
+// import Prepaid from './pages_v2/Prepaid';   
 import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
@@ -40,6 +40,8 @@ import RolesPermissions from './pages_v2/RolesPermissions';
 import SubLogin from './pages_v2/SubLogin';
 import DTRDetailPage from './pages/DTRDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
+import BillsPrepaid from './pages/BillsPrepaid';
+import BillsPostpaid from './pages/BillsPostpaid';
 
 const App: React.FC = () => {
     return (
@@ -80,14 +82,15 @@ const App: React.FC = () => {
                             <Route path="/consumers" element={<Consumers />} />
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
+                            <Route path="/consumers/:unitId" element={<ConsumerView />} />
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/feeder/:feederId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
                             <Route path="/" element={<DTRDashboard />} />
-                            <Route path="/prepaid" element={<Prepaid />} />
-                            <Route path="/postpaid" element={<Postpaid />} />
+                            <Route path="/prepaid" element={<BillsPrepaid />} />
+                            <Route path="/postpaid" element={<BillsPostpaid />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
