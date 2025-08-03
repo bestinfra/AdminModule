@@ -137,11 +137,6 @@ interface PageProps {
     sections: SectionConfig[];
     sectionWrapperClassName?: string;
     style?: React.CSSProperties;
-    // Modal props
-    modalOpen?: boolean;
-    modalTitle?: string;
-    modalContent?: string;
-    onModalClose?: () => void;
 }
 
 const getLayoutClass = (layout?: LayoutConfig) => {
@@ -250,14 +245,9 @@ const Page: React.FC<PageProps> = ({
     sections,
     sectionWrapperClassName = '',
     style = {},
-    modalOpen = false,
-    modalTitle = '',
-    modalContent = '',
-    onModalClose,
 }) => {
     return (
-        <>
-            <div className={`w-full h-full  flex flex-col gap-4`} style={style}>
+        <div className={`w-full h-full  flex flex-col gap-4`} style={style}>
             {sections.map((section, idx) => {
                 if (section.layout && section.layout.rows) {
                     const sectionClass = getLayoutClass(section.layout);
@@ -309,12 +299,15 @@ const Page: React.FC<PageProps> = ({
                                                 );
                                             }
 
-                                            const componentElement = (
+                                            // Optimize Modal rendering - only render when needed
+                                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                                            
+                                            const componentElement = shouldRenderComponent ? (
                                                 <Component
                                                     key={cidx}
                                                     {...props}
                                                 />
-                                            );
+                                            ) : null;
                                             const spanClasses =
                                                 getSpanClasses(span);
                                             const alignClasses =
@@ -407,9 +400,12 @@ const Page: React.FC<PageProps> = ({
                                 );
                             }
 
-                            const componentElement = (
+                            // Optimize Modal rendering - only render when needed
+                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                            
+                            const componentElement = shouldRenderComponent ? (
                                 <Component key={cidx} {...props} />
-                            );
+                            ) : null;
                             const spanClasses = getSpanClasses(span);
                             const alignClasses = getAlignClasses(
                                 align,
@@ -439,25 +435,7 @@ const Page: React.FC<PageProps> = ({
                     </section>
                 );
             })}
-            </div>
-            
-            {/* Modal Component */}
-            {modalOpen && (
-                <Modal
-                    isOpen={modalOpen}
-                    onClose={onModalClose || (() => {})}
-                    title={modalTitle}
-                    size="xl"
-                    showCloseIcon={true}
-                    backdropClosable={true}
-                    centered={true}
-                >
-                    <div className="text-gray-700 whitespace-pre-line max-h-[60vh] overflow-y-auto">
-                        {modalContent}
-                    </div>
-                </Modal>
-            )}
-        </>
+        </div>
     );
 };
 
