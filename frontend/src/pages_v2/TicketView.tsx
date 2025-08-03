@@ -1,6 +1,6 @@
 import React, { Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 
 // Interfaces
 interface Ticket {
@@ -98,7 +98,7 @@ const TicketView: React.FC = () => {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-                <PageC
+                <Page
                     sections={[
                         {   
                             layout: {

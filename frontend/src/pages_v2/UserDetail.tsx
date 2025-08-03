@@ -1,8 +1,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
-import ProfileSidebar from '@/components/global/ProfileSidebar';
-import ProfileContent from '@/components/global/ProfileContent';
+
 
 const UserDetail: React.FC = () => {
     const { id } = useParams<{ id: string }>();
