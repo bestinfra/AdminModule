@@ -68,7 +68,7 @@ const BillsPrepaid: React.FC = () => {
         {
           title: "Total Amount Deducted",
           value: "₹2,201.80",
-          icon: "/icons/total-amount-deducted.svg",
+          icon: "/icons/amount-deducted.svg",
           previousValue: "vs. ₹2,249.52 Yesterday",
           subtitle2: "Deducted from 4 Consumers",
         },
@@ -82,7 +82,7 @@ const BillsPrepaid: React.FC = () => {
         {
           title: "Alerts Triggered",
           value: "0",
-          icon: "/icons/alerts.svg",
+          icon: "/icons/alert-triggered.svg",
           previousValue: "vs. 0 Yesterday",
           subtitle2: "0 sent Today",
         },
