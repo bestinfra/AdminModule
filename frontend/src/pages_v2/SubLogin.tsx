@@ -19,6 +19,7 @@ const slides: CarouselSlide[] = [
     img: "/images/smart-comm.png",
   },
 ];
+
 const SubLogin: React.FC = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -101,10 +102,6 @@ If you have any questions about this Privacy Policy, please contact us.`;
     setShowForgotPassword(true);
   };
 
-  const handleBackToLogin = () => {
-    setShowForgotPassword(false);
-  };
-
   const handleLogin = async (data: Record<string, FormInputValue>) => {
     setError("");
     setLoading(true);
@@ -136,9 +133,7 @@ If you have any questions about this Privacy Policy, please contact us.`;
     setLoading(true);
     
     try {
-      // Add your forgot password API call here
       console.log('Forgot password for:', data.email);
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       setError("Password reset link sent to your email!");
     } catch (error) {
@@ -149,227 +144,227 @@ If you have any questions about this Privacy Policy, please contact us.`;
     }
   };
 
+  // Form inputs configuration
+  const forgotPasswordInputs = [
+    {
+      name: "errorLabel",
+      type: "label",
+      label: error || "",
+      row: 1,
+      col: 1,
+      colSpan: 2,
+      labelClassName: error ? "text-red-500 text-sm font-medium text-center" : "hidden",
+    },
+    {
+      name: "email",
+      type: "email",
+      placeholder: "Email Address",
+      required: true,
+      row: 2,
+      col: 1,
+      colSpan: 2,
+      validation: {
+        custom: (value: FormInputValue) => {
+          if (!value) return "Email is required";
+          if (typeof value === "string" && !value.includes('@')) {
+            return "Please enter a valid email address";
+          }
+          return null;
+        },
+      },
+    },
+  ];
+
+  const loginInputs = [
+    {
+      name: "identifier",
+      type: "text",
+      placeholder: "Email or Username",
+      required: true,
+      row: 2,
+      col: 1,
+      colSpan: 2,
+      validation: {
+        custom: (value: FormInputValue) =>
+          !value ? "Username or email is required" : null,
+      },
+    },
+    {
+      name: "password",
+      type: "password",
+      placeholder: "Enter your password",
+      required: true,
+      showPasswordToggle: true,
+      row: 3,
+      col: 1,
+      colSpan: 2,
+      validation: {
+        minLength: 8,
+        custom: (value: FormInputValue) => {
+          if (!value) return "Password is required";
+          if (typeof value === "string" && value.length < 8)
+            return `Password must be at least 8 characters`;
+          return null;
+        },
+      },
+    },
+    {
+      name: 'rememberMe',
+      type: 'checkbox',
+      label: 'Keep me signed in',
+      defaultValue: false,
+      row: 4,
+      col: 1,
+      colSpan: 1,
+      className: 'justify-start',
+    },
+    {
+      name: 'forgotPassword',
+      type: 'label',
+      label: 'Forgot Password?',
+      row: 4,
+      col: 2,
+      colSpan: 1,
+      labelClassName: 'items-end',
+      onClick: handleForgotPassword,
+    },
+  ];
+
   return (
     <div className="h-screen overflow-hidden scroll-y-hidden">
       <PageC
         sections={[
-        {
-          layout: {
-            type: "grid",
-            className: "rounded-lg min-h-screen ",
-            columns:5,
-            gap: "gap-0",
-            gridRows: 1,
-            rows: [
-              {
-                layout: "row",
-                className: " rounded-lg h-full p-4",
-                span:{col:3,row:1},
-                columns: [
-                  {
-                    name: "Carousel",
-                    props: { slides },
-
-                  },
-                ],
-              },
-              {
-                layout: "grid",
-                className: "rounded-lg h-full justify-betweens py-4 pr-4",
-                span:{col:2,row:1},
-                gridColumns:2,
-                columns: [
-                                     {
-                     name: "SectionHeader",
-                     props: {
-                       title: "Back to Website",
-                       titleLevel: 2,
-                       titleSize: "lg",
-                       titleWeight:'normal',
-                       titleVariant:'success',
-                       iconBg: "bg-primary",
-                       className: "",
-                       icon: "arrow-left",
-                       iconSize: "lg",
-                     },
-                     span:{col:2,row:1},
-                   },
-                                      {
-                      name: "LoginV2",  
-                      span:{col:2,row:1},
-                      
+          {
+            layout: {
+              type: "grid",
+              className: "rounded-lg min-h-screen",
+              columns: 5,
+              gap: "gap-0",
+              gridRows: 1,
+              rows: [
+                {
+                  layout: "row",
+                  className: "rounded-lg h-full p-4",
+                  span: { col: 3, row: 1 },
+                  columns: [
+                    {
+                      name: "Carousel",
+                      props: { slides },
+                    },
+                  ],
+                },
+                {
+                  layout: "grid",
+                  className: "rounded-lg h-full justify-betweens py-4 pr-4",
+                  span: { col: 2, row: 1 },
+                  gridColumns: 2,
+                  columns: [
+                    {
+                      name: "SectionHeader",
+                      props: {
+                        title: "Back to Website",
+                        titleLevel: 2,
+                        titleSize: "lg",
+                        titleWeight: 'normal',
+                        titleVariant: 'success',
+                        iconBg: "bg-primary",
+                        className: "",
+                        icon: "arrow-left",
+                        iconSize: "lg",
+                      },
+                      span: { col: 2, row: 1 },
+                    },
+                    {
+                      name: "LoginV2",
+                      span: { col: 2, row: 1 },
                       props: {
                         buttonLabel: showForgotPassword ? "Send Verification Code" : "Login",
                         rememberMeLabel: "Keep me signed in",
                         minPasswordLength: 8,
                         identifierPlaceholder: "Email or Username",
                         passwordPlaceholder: "Enter your password",
-                        inputs: showForgotPassword ? [
-                          {
-                            name: "errorLabel",
-                            type: "label",
-                            label: error || "",
-                            row: 1,
-                            col: 1,
-                            colSpan: 2,
-                            labelClassName: error ? "text-red-500 text-sm font-medium text-center" : "hidden",
-                          },
-                          {
-                            name: "email",
-                            type: "email",
-                            placeholder: "Email Address",
-                            required: true,
-                            row: 2,
-                            col: 1,
-                            colSpan: 2,
-                            validation: {
-                              custom: (value: FormInputValue) => {
-                                if (!value) return "Email is required";
-                                if (typeof value === "string" && !value.includes('@')) {
-                                  return "Please enter a valid email address";
-                                }
-                                return null;
-                              },
-                            },
-                          },
-                        ] : [
-                          {
-                            name: "identifier",
-                            type: "text",
-                            placeholder: "Email or Username",
-                            required: true,
-                            row: 2,
-                            col: 1,
-                            colSpan: 2,
-                            validation: {
-                              custom: (value: FormInputValue) =>
-                                !value ? "Username or email is required" : null,
-                            },
-                          },
-                          {
-                            name: "password",
-                            type: "password",
-                            placeholder: "Enter your password",
-                            required: true,
-                            showPasswordToggle: true,
-                            row: 3,
-                            col: 1,
-                            colSpan: 2,
-                            validation: {
-                              minLength: 8,
-                              custom: (value: FormInputValue) => {
-                                if (!value) return "Password is required";
-                                if (typeof value === "string" && value.length < 8)
-                                  return `Password must be at least 8 characters`;
-                                return null;
-                              },
-                            },
-                          },
-                          {
-                            name: 'rememberMe',
-                            type: 'checkbox',
-                            label: 'Keep me signed in',
-                            defaultValue: false,
-                            row: 4,
-                            col: 1,
-                            colSpan: 1,
-                            className: 'justify-start',
-                          },
-                          {
-                            name: 'forgotPassword',
-                            
-                            type: 'label',
-                            label: 'Forgot Password?',
-                            row: 4,
-                            col: 2,
-                            colSpan: 1,
-                            labelClassName:'items-end',
-                            onClick: handleForgotPassword,
-                          },
-                        ],
+                        inputs: showForgotPassword ? forgotPasswordInputs : loginInputs,
                         onSubmit: showForgotPassword ? handleForgotPasswordSubmit : handleLogin,
                         loading,
                         error,
                       },
                     },
-                  {
-                    name:'SectionHeader',
-                    span:{col:2,row:1},
-                    
-                    props:{
-                      title:'Need Help? Contact Support',
-                      titleLevel:3,
-                      titleSize:'lg',
-                      titleWeight:'normal',
-                      className:'h-full items-end',
-                      titleVariant:'muted',
-                      titleClassName:'items-end',
-                                             titleParts:{
-                         prefix:'Need Help? ',
-                         suffix:'Contact Support',
-                        suffixVariant:'success',
-                        suffixClassName:'cursor-pointer ',
-                        suffixOnClick:() => {
-                          // Handle contact support click
-                          console.log('Contact Support clicked');
-                        }
-                      },
-                      rightLabels:[
-                                                 {
-                           label: 'Terms of Service',
-                           size: 'lg',
-                           variant: 'success',
-                           weight: 'normal',
-                           className: 'cursor-pointer hover:opacity-80',
-                                                       onClick: () => {
+                    {
+                      name: 'SectionHeader',
+                      span: { col: 2, row: 1 },
+                      props: {
+                        title: 'Need Help? Contact Support',
+                        titleLevel: 3,
+                        titleSize: 'lg',
+                        titleWeight: 'normal',
+                        className: 'h-full items-end',
+                        titleVariant: 'muted',
+                        titleClassName: 'items-end',
+                        titleParts: {
+                          prefix: 'Need Help? ',
+                          suffix: 'Contact Support',
+                          suffixVariant: 'success',
+                          suffixClassName: 'cursor-pointer',
+                          suffixOnClick: () => {
+                            console.log('Contact Support clicked');
+                          }
+                        },
+                        rightLabels: [
+                          {
+                            label: 'Terms of Service',
+                            size: 'lg',
+                            variant: 'success',
+                            weight: 'normal',
+                            className: 'cursor-pointer hover:opacity-80',
+                            onClick: () => {
                               handleModalOpen('Terms of Service', termsOfServiceContent);
                             }
-                         },
-                         {
-                           label: 'Privacy Policy',
-                           size: 'lg',
-                           variant: 'success',
-                           weight: 'normal',
-                           className: 'cursor-pointer hover:opacity-80',
-                                                       onClick: () => {
+                          },
+                          {
+                            label: 'Privacy Policy',
+                            size: 'lg',
+                            variant: 'success',
+                            weight: 'normal',
+                            className: 'cursor-pointer hover:opacity-80',
+                            onClick: () => {
                               handleModalOpen('Privacy Policy', privacyPolicyContent);
                             }
-                         }
-                      ]
+                          }
+                        ]
+                      }
                     }
-                  }
-                ],
-              },
-            ],
+                  ],
+                },
+              ],
+            },
           },
-                 },
-         {
-           layout: {
-             type: "row",
-             className: "",
-             gap: "gap-0",
-           },
-           components: [
-             {
-               name: "Modal",
-               props: {
-                 isOpen: modalOpen,
-                 onClose: handleModalClose,
-                 title: modalTitle,
-                 size: "xl",
-                 showCloseIcon: true,
-                 backdropClosable: true,
-                 centered: true,
-                 content: modalContent,
-                 contentType: "html"
-               }
-             }
-           ]
-         }
-       ]}
-       />
-     </div>
-   );
- };
+          {
+            layout: {
+              type: "row",
+              className: "",
+              gap: "gap-0",
+            },
+            components: [
+              {
+                name: "Modal",
+                props: {
+                  isOpen: modalOpen,
+                  onClose: handleModalClose,
+                  title: modalTitle,
+                  size: "xl",
+                  showCloseIcon: true,
+                  backdropClosable: true,
+                  centered: true,
+                  content: modalContent,
+                  contentType: "html"
+                }
+              }
+            ]
+          }
+        ]}
+      />
+    </div>
+  );
+};
 
 export default SubLogin;
