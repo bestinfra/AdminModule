@@ -23,8 +23,12 @@ const Carousel: React.FC<CarouselProps> = ({ slides }) => {
   }, [slides.length]);
 
   return (
-    <div className="flex flex-col items-center justify-center h-full bg-primary-light dark:bg-primary-dark-light p-8 border rounded-3xl ">
-      <img src={slides[current].img} alt={slides[current].title} className="rounded-xl mb-4  object-cover" />
+    <div className="flex flex-col items-center justify-center h-full bg-primary-light dark:bg-primary-dark-light  rounded-3xl">
+      <img 
+        src={slides[current].img} 
+        alt={slides[current].title} 
+        className="rounded-3xl object-cover w-full h-full" 
+      />
     </div>
   );
 };
