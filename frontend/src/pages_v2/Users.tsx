@@ -261,6 +261,7 @@ export default function Users() {
             type: 'dropdown' as const,
             label: 'Reason for Inactivation',
             name: 'reason',
+            searchable: false,
             value: inactiveFormData.reason,
             required: true,
             options: [
@@ -370,6 +371,7 @@ export default function Users() {
                                                 value: filters.userTypes,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable: false,
                                             },
                                         },
                                         {
@@ -381,6 +383,7 @@ export default function Users() {
                                                 value: filters.userStatus,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable:false,
                                             },
                                         },
                                     ],
