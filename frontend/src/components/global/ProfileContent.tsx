@@ -24,62 +24,62 @@ interface ProfileContentProps {
         basicInfo?: User;
         activityLog?: any;
     };
-    className?: string;
+    // className?: string;
 }
 
-function ProfileContent({ section, data, className = '' }: ProfileContentProps) {
+function ProfileContent({ section, data }: ProfileContentProps) {
     // State for Basic Information tab
     const [basicInfoData, setBasicInfoData] = useState<User | null>(data.basicInfo || null);
     
-    // State for Change Password tab
-    const [passwordData, setPasswordData] = useState({
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-    });
+    // // State for Change Password tab
+    // const [passwordData, setPasswordData] = useState({
+    //     currentPassword: '',
+    //     newPassword: '',
+    //     confirmPassword: ''
+    // });
     
-    // State for Activities tab
-    const [activitiesData, setActivitiesData] = useState({
-        activities: [],
-        loading: false,
-        error: null,
-        pagination: {
-            currentPage: 1,
-            totalPages: 1,
-            totalCount: 0,
-            limit: 5,
-            hasNextPage: false,
-            hasPrevPage: false
-        }
-    });
+    // // State for Activities tab
+    // const [activitiesData, setActivitiesData] = useState({
+    //     activities: [],
+    //     loading: false,
+    //     error: null,
+    //     pagination: {
+    //         currentPage: 1,
+    //         totalPages: 1,
+    //         totalCount: 0,
+    //         limit: 5,
+    //         hasNextPage: false,
+    //         hasPrevPage: false
+    //     }
+    // });
     
     // State for Notifications tab
-    const [notificationsData, setNotificationsData] = useState({
-        settings: [],
-        loading: false,
-        error: null,
-        activeTab: 0
-    });
+    // const [notificationsData, setNotificationsData] = useState({
+    //     settings: [],
+    //     loading: false,
+    //     error: null,
+    //     activeTab: 0
+    // });
     
     // State for Two-Step Verification tab
-    const [twoFactorData, setTwoFactorData] = useState({
-        isEnabled: false,
-        isSetup: false,
-        qrCode: '',
-        secretKey: '',
-        backupCodes: [],
-        loading: false,
-        error: null
-    });
+    // const [twoFactorData, setTwoFactorData] = useState({
+    //     isEnabled: false,
+    //     isSetup: false,
+    //     qrCode: '',
+    //     secretKey: '',
+    //     backupCodes: [],
+    //     loading: false,
+    //     error: null
+    // });
     
-    // State for Account Status tab
-    const [accountStatusData, setAccountStatusData] = useState({
-        status: 'active',
-        lastLogin: '',
-        accountAge: '',
-        loading: false,
-        error: null
-    });
+    // // State for Account Status tab
+    // const [accountStatusData, setAccountStatusData] = useState({
+    //     status: 'active',
+    //     lastLogin: '',
+    //     accountAge: '',
+    //     loading: false,
+    //     error: null
+    // });
     
     // Update basicInfoData when data.basicInfo changes
     React.useEffect(() => {

@@ -14,7 +14,7 @@ export default defineConfig({
       exposes: {
         './Sidebar': './src/components/global/Sidebar.tsx',
         './Header': './src/components/global/Header.tsx',
-        './Page': './src/components/global/Page.tsx',
+        './Page': './src/components/global/PageC.tsx',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
         './Login': './src/pages_v2/SubLogin.tsx',
         './context/AuthContext': './src/context/AuthContext.tsx',

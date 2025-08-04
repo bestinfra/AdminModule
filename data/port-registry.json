@@ -1,5 +1,5 @@
 {
-  "nextPort": 4146,
+  "nextPort": 4154,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -585,6 +585,46 @@
       "port": 4145,
       "deployedAt": "2025-08-02T11:46:07.778Z",
       "path": "C:\\xampp\\htdocs\\smdr-backend"
+    },
+    "march": {
+      "port": 4146,
+      "deployedAt": "2025-08-03T07:38:25.446Z",
+      "path": "C:\\xampp\\htdocs\\march-backend"
+    },
+    "august": {
+      "port": 4147,
+      "deployedAt": "2025-08-03T08:22:45.065Z",
+      "path": "C:\\xampp\\htdocs\\august-backend"
+    },
+    "january": {
+      "port": 4148,
+      "deployedAt": "2025-08-03T08:31:26.216Z",
+      "path": "C:\\xampp\\htdocs\\january-backend"
+    },
+    "february": {
+      "port": 4149,
+      "deployedAt": "2025-08-03T08:51:58.694Z",
+      "path": "C:\\xampp\\htdocs\\february-backend"
+    },
+    "april": {
+      "port": 4150,
+      "deployedAt": "2025-08-03T09:16:17.033Z",
+      "path": "C:\\xampp\\htdocs\\april-backend"
+    },
+    "may": {
+      "port": 4151,
+      "deployedAt": "2025-08-03T09:28:25.264Z",
+      "path": "C:\\xampp\\htdocs\\may-backend"
+    },
+    "june": {
+      "port": 4152,
+      "deployedAt": "2025-08-03T09:40:09.352Z",
+      "path": "C:\\xampp\\htdocs\\june-backend"
+    },
+    "test7": {
+      "port": 4153,
+      "deployedAt": "2025-08-04T04:34:08.651Z",
+      "path": "C:\\xampp\\htdocs\\test7-backend"
     }
   }
 }

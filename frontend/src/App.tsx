@@ -25,8 +25,8 @@ import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
-import Prepaid from './pages_v2/Prepaid';   
-import Postpaid from './pages_v2/Postpaid';
+// import Prepaid from './pages_v2/Prepaid';   
+// import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
@@ -42,7 +42,7 @@ import DTRDetailPage from './pages/DTRDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
 // import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
 // import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
-import Dashboard from './pages_v2/Dashboard';
+import Dashboard from './pages_v2/ConsumerDashboard';
 
 const App: React.FC = () => {
     return (
@@ -89,8 +89,8 @@ const App: React.FC = () => {
                             <Route path="/feeder/:feederId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
                             <Route path="/" element={<DTRDashboard />} />
-                            <Route path="/prepaid" element={<Prepaid />} />
-                            <Route path="/postpaid" element={<Postpaid />} />
+                            {/* <Route path="/prepaid" element={<Prepaid />} />
+                            <Route path="/postpaid" element={<Postpaid />} /> */}
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />

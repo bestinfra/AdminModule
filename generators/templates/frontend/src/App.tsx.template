@@ -5,22 +5,7 @@ import { FederatedContextProvider } from './components/FederatedWrapper';
 import CSSLoader from './components/CSSLoader';
 import './App.css';
 import { Theme } from './Theme';
-import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';
-{{dashboardImport}}
-{{dashboardImportForConsumer}}
-{{consumersImport}}
-{{consumerViewImport}}
-{{usersImport}}
-{{roleManagementImport}}
-{{metersImport}}
-{{dtrDashboardImport}}
-{{assetManagementImport}}
-{{ticketsImport}}
-{{prepaidImport}}
-{{postpaidImport}}
-{{meterDetailsImport}}
-{{ticketViewImport}}
-{{feedersImport}}
+{{imports}}
 
 // Create safe lazy loading with error handling
 const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
@@ -267,12 +252,12 @@ const menuItems = useMemo(() => {
       const userData = localStorage.getItem('user');
       if (userData) {
         const user = JSON.parse(userData);
-        return user.role || 'accountant'; // Default to accountant if no role
+        return user.role || 'admin'; // Default to admin if no role
       }
     } catch (error) {
       console.error('Error parsing user data:', error);
     }
-    return 'accountant'; // Default role
+    return 'admin'; // Default role
   };
 
   const userRole = getUserRole();

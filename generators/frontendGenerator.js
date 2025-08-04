@@ -83,6 +83,7 @@ function generateFrontend(baseDir, formData) {
   // Generate additional files that need complex logic
   generateAppComponent(frontendDir, variables);
   generateContextFiles(frontendDir, variables);
+  generateHooksFiles(frontendDir, variables);
   generateComponentFiles(frontendDir, variables);
   generateTypeDefinitions(frontendDir, variables);
   generateThemeFile(frontendDir, variables);
@@ -182,7 +183,6 @@ function generateAppComponent(frontendDir, variables) {
                       <Route path="/dashboard" element={<Dashboard />} />`;
     variables.dashboardError = `<li>/ - Dashboard</li>
                                 <li>/dashboard - Dashboard</li>`;
-    variables.dashboardImport = 'import Dashboard from \'./pages/Dashboard\';';
   } else if (dashboardModules.length === 1) {
     // Single dashboard - make it the main dashboard
     const singleModule = dashboardModules[0];
@@ -191,13 +191,11 @@ function generateAppComponent(frontendDir, variables) {
                         <Route path="/dashboard" element={<Dashboard />} />`;
       variables.dashboardError = `<li>/ - Dashboard</li>
                                   <li>/dashboard - Dashboard</li>`;
-      variables.dashboardImport = 'import Dashboard from \'@/pages/Dashboard\';';
     } else if (singleModule === 'dtr_dashboard') {
       variables.dashboardRoute = `<Route path="/" element={<DTRDashboard />} />
                         <Route path="/dashboard" element={<DTRDashboard />} />`;
       variables.dashboardError = `<li>/ - DTRDashboard</li>
                                   <li>/dashboard - DTRDashboard</li>`;
-      variables.dashboardImport = 'import DTRDashboard from \'@/pages/DTRDashboard\';';
     }
   } else {
     // Multiple dashboards - create main dashboard with sub-routes
@@ -205,55 +203,9 @@ function generateAppComponent(frontendDir, variables) {
                       <Route path="/dashboard" element={<Dashboard />} />`;
     variables.dashboardError = `<li>/ - Dashboard</li>
                                 <li>/dashboard - Dashboard</li>`;
-    variables.dashboardImport = 'import Dashboard from \'@/pages/Dashboard\';';
-    if (modules.includes('dtr_dashboard')) {
-      variables.dashboardImportForConsumer = 'import DTRDashboard from \'@/pages/DTRDashboard\';';
-    }
   }
   
-  variables.consumersImport = modules.includes('consumer') ? 
-    'import Consumers from \'@/pages/Consumers\';' : '';
-  
-  variables.consumerViewImport = modules.includes('consumer') ? 
-    'import ConsumerView from \'@/pages/ConsumerView\';' : '';
-  
-  variables.usersImport = modules.includes('user_management_default') ? 
-    'import Users from \'@/pages/Users\';' : '';
-  
-  variables.roleManagementImport = (modules.includes('role_management') || modules.includes('user_management_default')) ? 
-    'import RoleManagement from \'@/pages/RoleManagement\';' : '';
-  
-  variables.metersImport = modules.includes('meter_management') ? 
-    'import Meters from \'@/pages/Meters\';' : '';
-  
-  // Data Logger import (commented out)
-  // variables.dataLoggerImport = modules.includes('meter_management') ? 
-  //   'import DataLogger from \'@/pages/DataLogger\';' : '';
-  
-  variables.dtrDashboardImport = modules.includes('dtr_dashboard') ? 
-    'import DTRDashboard from \'@/pages/DTRDashboard\';' : '';
 
-  // Add Feeders import for DTR dashboard navigation
-  variables.feedersImport = modules.includes('dtr_dashboard') ? 
-    'import Feeders from \'@/pages/Feeders\';' : '';
-  
-  variables.assetManagementImport = modules.includes('asset_management') ? 
-    'import AssetManagement from \'@/pages/AssetManagement\';' : '';
-  
-  variables.ticketsImport = modules.includes('tickets') ? 
-    'import Tickets from \'@/pages/Tickets\';' : '';
-  
-  variables.prepaidImport = (modules.includes('bills') || modules.includes('prepaid')) ? 
-    'import Prepaid from \'@/pages/Prepaid\';' : '';
-  
-  variables.postpaidImport = (modules.includes('bills') || modules.includes('postpaid')) ? 
-    'import Postpaid from \'@/pages/Postpaid\';' : '';
-  
-  variables.meterDetailsImport = modules.includes('meter_management') ? 
-    'import MeterDetails from \'@/pages/MeterDetails\';' : '';
-  
-  variables.ticketViewImport = modules.includes('tickets') ? 
-    'import TicketView from \'@/pages/TicketView\';' : '';
   
 
   
@@ -327,36 +279,49 @@ function generateAppComponent(frontendDir, variables) {
     variables.imports += 'import Dashboard from \'@/pages/Dashboard\';\n';
     variables.imports += 'import DTRDashboard from \'@/pages/DTRDashboard\';\n';
   }
+  
+  // Consumer imports
   if (modules.includes('consumer')) {
     variables.imports += 'import Consumers from \'@/pages/Consumers\';\n';
   }
   if (modules.includes('consumer_view')) {
     variables.imports += 'import ConsumerView from \'@/pages/ConsumerView\';\n';
   }
+  
+  // User management imports
   if (modules.includes('user_management_default') || modules.includes('users')) {
     variables.imports += 'import Users from \'@/pages/Users\';\n';
   }
   if (modules.includes('role_management')) {
     variables.imports += 'import RoleManagement from \'@/pages/RoleManagement\';\n';
   }
+  
+  // Meter management imports
   if (modules.includes('meter_management') || modules.includes('meter_list')) {
     variables.imports += 'import Meters from \'@/pages/Meters\';\n';
+    variables.imports += 'import MeterDetails from \'@/pages/MeterDetails\';\n';
   }
+  
+  // Asset management imports
   if (modules.includes('asset_management')) {
     variables.imports += 'import AssetManagement from \'@/pages/AssetManagement\';\n';
   }
+  
+  // Ticket imports
   if (modules.includes('tickets')) {
     variables.imports += 'import Tickets from \'@/pages/Tickets\';\n';
+    variables.imports += 'import TicketView from \'@/pages/TicketView\';\n';
   }
+  
+  // Bill imports
   if (modules.includes('prepaid')) {
     variables.imports += 'import Prepaid from \'@/pages/Prepaid\';\n';
   }
   if (modules.includes('postpaid')) {
     variables.imports += 'import Postpaid from \'@/pages/Postpaid\';\n';
   }
-  if (modules.includes('meter_details')) {
-    variables.imports += 'import MeterDetails from \'@/pages/MeterDetails\';\n';
-  }
+  
+  // DTR imports
   if (modules.includes('dtr_dashboard')) {
     variables.imports += 'import Feeders from \'@/pages/Feeders\';\n';
   }
@@ -419,8 +384,6 @@ function generateAppComponent(frontendDir, variables) {
   if (modules.includes('meter_management') || modules.includes('meter_list')) {
     variables.routes.push('            <Route path="/meters" element={<Meters />} />');
     variables.pageTitles.push('    \'/meters\': \'Meters\'');
-  }
-  if (modules.includes('meter_details')) {
     variables.routes.push('            <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />');
     variables.pageTitles.push('    \'/meter-details/:meterSlNo\': \'Meter Details\'');
   }
@@ -429,6 +392,8 @@ function generateAppComponent(frontendDir, variables) {
   if (modules.includes('tickets')) {
     variables.routes.push('            <Route path="/all-tickets" element={<Tickets />} />');
     variables.pageTitles.push('    \'/all-tickets\': \'All Tickets\'');
+    variables.routes.push('            <Route path="/tickets/:ticketId" element={<TicketView />} />');
+    variables.pageTitles.push('    \'/tickets/:ticketId\': \'Ticket View\'');
   }
   
   // User management routes
@@ -637,6 +602,7 @@ function generateAppComponent(frontendDir, variables) {
  * Generate context files
  */
 function generateContextFiles(frontendDir, variables) {
+  // Generate context folder (singular) for AppContext
   const contextDir = path.join(frontendDir, 'src', 'context');
   fs.mkdirSync(contextDir, { recursive: true });
 
@@ -644,6 +610,40 @@ function generateContextFiles(frontendDir, variables) {
   const appContextContent = loadAndProcessTemplate(appContextTemplate, variables);
   const appContextPath = path.join(contextDir, 'AppContext.tsx');
   fs.writeFileSync(appContextPath, appContextContent);
+
+  // Generate contexts folder (plural) for additional context providers
+  const contextsDir = path.join(frontendDir, 'src', 'contexts');
+  fs.mkdirSync(contextsDir, { recursive: true });
+
+  // Copy FilterStyleContext from the main frontend
+  const sourceFilterStyleContext = path.join(__dirname, '..', 'frontend', 'src', 'contexts', 'FilterStyleContext.tsx');
+  const targetFilterStyleContext = path.join(contextsDir, 'FilterStyleContext.tsx');
+  
+  if (fs.existsSync(sourceFilterStyleContext)) {
+    fs.copyFileSync(sourceFilterStyleContext, targetFilterStyleContext);
+    console.log('✅ Copied FilterStyleContext.tsx to sub-app');
+  } else {
+    console.warn('⚠️  FilterStyleContext.tsx not found in main frontend, skipping...');
+  }
+}
+
+/**
+ * Generate hooks files
+ */
+function generateHooksFiles(frontendDir, variables) {
+  const hooksDir = path.join(frontendDir, 'src', 'hooks');
+  fs.mkdirSync(hooksDir, { recursive: true });
+
+  // Copy useIconFilterStyle hook from the main frontend
+  const sourceIconFilterHook = path.join(__dirname, '..', 'frontend', 'src', 'hooks', 'useIconFilterStyle.ts');
+  const targetIconFilterHook = path.join(hooksDir, 'useIconFilterStyle.ts');
+  
+  if (fs.existsSync(sourceIconFilterHook)) {
+    fs.copyFileSync(sourceIconFilterHook, targetIconFilterHook);
+    console.log('✅ Copied useIconFilterStyle.ts to sub-app');
+  } else {
+    console.warn('⚠️  useIconFilterStyle.ts not found in main frontend, skipping...');
+  }
 }
 
 /**

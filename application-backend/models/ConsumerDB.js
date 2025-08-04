@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 class ConsumerDB {
     static async getAllConsumers() {
         try {
-            const consumers = await prisma.consumer.findMany({
+            const consumers = await prisma.consumers.findMany({
                 include: {
-                    location: true,
+                    locations: true,
                     meters: true
                 },
                 orderBy: { createdAt: 'desc' }
@@ -22,10 +22,10 @@ class ConsumerDB {
 
     static async getConsumerByNumber(consumerNumber) {
         try {
-            return await prisma.consumer.findUnique({
+            return await prisma.consumers.findUnique({
                 where: { consumerNumber },
                 include: {
-                    location: true,
+                    locations: true,
                     meters: true,
                 }
             });
@@ -78,10 +78,10 @@ class ConsumerDB {
 
     static async getPowerWidgets(meterSerial) {
         try {
-            const meter = await prisma.meter.findUnique({
+            const meter = await prisma.meters.findUnique({
                 where: { serialNumber: meterSerial },
                 include: {
-                    readings: {
+                    meter_readings: {
                         orderBy: { readingDate: 'desc' },
                         take: 1 // Get the latest reading
                     }
@@ -147,21 +147,21 @@ class ConsumerDB {
 
     static async getConsumerHistory(consumerNumber) {
         try {
-            const consumer = await prisma.consumer.findUnique({
+            const consumer = await prisma.consumers.findUnique({
                 where: { consumerNumber },
                 include: {
                     meters: {
                         include: {
-                            config: true,
-                            location: true,
-                            dtr: true,
-                            readings: {
+                            meter_configurations: true,
+                            locations: true,
+                            dtrs: true,
+                            meter_readings: {
                                 orderBy: { readingDate: 'desc' },
                                 take: 10
                             }
                         }
                     },
-                    location: true,
+                    locations: true,
                     bills: {
                         orderBy: { createdAt: 'desc' },
                         take: 10
@@ -251,7 +251,7 @@ class ConsumerDB {
             }
 
             // Check if consumer number already exists
-            const existingConsumer = await prisma.consumer.findUnique({
+            const existingConsumer = await prisma.consumers.findUnique({
                 where: { consumerNumber: consumerData.consumerNumber }
             });
             if (existingConsumer) {
@@ -267,7 +267,7 @@ class ConsumerDB {
             }
 
             // Create consumer with all related data
-            const newConsumer = await prisma.consumer.create({
+            const newConsumer = await prisma.consumers.create({
                 data: {
                     consumerNumber: consumerData.consumerNumber,
                     name: consumerData.name,

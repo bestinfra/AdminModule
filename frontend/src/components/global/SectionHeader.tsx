@@ -260,7 +260,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
 
   // Dynamically select the heading tag based on titleLevel
   const safeTitleLevel = Math.min(Math.max(Number(titleLevel) || 2, 1), 6); // Ensure 1-6
-  const Tag = `h${safeTitleLevel}`;
+  // const Tag = `h${safeTitleLevel}`;
 
   // Helper to generate suffix classes
   const generateSuffixClasses = (variant: string): string => {

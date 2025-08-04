@@ -5,11 +5,11 @@ const prisma = new PrismaClient();
 class RoleDB {
     static async getAllRoles() {
         try {
-            const roles = await prisma.role.findMany({
+            const roles = await prisma.roles.findMany({
                 include: {
-                    users: {
+                    user_roles: {
                         include: {
-                            user: {
+                            users: {
                                 select: {
                                     id: true,
                                     username: true,
@@ -21,9 +21,9 @@ class RoleDB {
                             }
                         }
                     },
-                    permissions: {
+                    role_permissions: {
                         include: {
-                            permission: true
+                            permissions: true
                         }
                     }
                 },
@@ -42,7 +42,7 @@ class RoleDB {
                 throw new Error('Role name is required');
             }
 
-            const existingRole = await prisma.role.findUnique({
+            const existingRole = await prisma.roles.findUnique({
                 where: { name: roleData.name }
             });
             if (existingRole) {
@@ -51,19 +51,19 @@ class RoleDB {
 
             let newRole;
             if (roleData.permissionIds && roleData.permissionIds.length > 0) {
-                newRole = await prisma.role.create({
+                newRole = await prisma.roles.create({
                     data: {
                         name: roleData.name,
-                        permissions: {
+                        role_permissions: {
                             create: roleData.permissionIds.map(permissionId => ({
                                 permissionId: parseInt(permissionId)
                             }))
                         }
                     },
                     include: {
-                        users: {
+                        user_roles: {
                             include: {
-                                user: {
+                                users: {
                                     select: {
                                         id: true,
                                         username: true,
@@ -75,22 +75,22 @@ class RoleDB {
                                 }
                             }
                         },
-                        permissions: {
+                        role_permissions: {
                             include: {
-                                permission: true
+                                permissions: true
                             }
                         }
                     }
                 });
             } else {
-                newRole = await prisma.role.create({
+                newRole = await prisma.roles.create({
                     data: {
                         name: roleData.name
                     },
                     include: {
-                        users: {
+                        user_roles: {
                             include: {
-                                user: {
+                                users: {
                                     select: {
                                         id: true,
                                         username: true,
@@ -102,9 +102,9 @@ class RoleDB {
                                 }
                             }
                         },
-                        permissions: {
+                        role_permissions: {
                             include: {
-                                permission: true
+                                permissions: true
                             }
                         }
                     }
@@ -120,12 +120,12 @@ class RoleDB {
 
     static async getRoleById(roleId) {
         try {
-            return await prisma.role.findUnique({
+            return await prisma.roles.findUnique({
                 where: { id: roleId },
                 include: {
-                    users: {
+                    user_roles: {
                         include: {
-                            user: {
+                            users: {
                                 select: {
                                     id: true,
                                     username: true,
@@ -137,9 +137,9 @@ class RoleDB {
                             }
                         }
                     },
-                    permissions: {
+                    role_permissions: {
                         include: {
-                            permission: true
+                            permissions: true
                         }
                     }
                 }
@@ -153,7 +153,7 @@ class RoleDB {
     static async updateRole(roleId, roleData) {
         try {
             if (roleData.name) {
-                const existingRole = await prisma.role.findFirst({
+                const existingRole = await prisma.roles.findFirst({
                     where: {
                         name: roleData.name,
                         id: { not: roleId }
@@ -164,13 +164,13 @@ class RoleDB {
                 }
             }
 
-            return await prisma.role.update({
+            return await prisma.roles.update({
                 where: { id: roleId },
                 data: roleData,
                 include: {
-                    users: {
+                    user_roles: {
                         include: {
-                            user: {
+                            users: {
                                 select: {
                                     id: true,
                                     username: true,
@@ -182,9 +182,9 @@ class RoleDB {
                             }
                         }
                     },
-                    permissions: {
+                    role_permissions: {
                         include: {
-                            permission: true
+                            permissions: true
                         }
                     }
                 }
@@ -197,7 +197,7 @@ class RoleDB {
 
     static async deleteRole(roleId) {
         try {
-            const usersWithRole = await prisma.userRole.findMany({
+            const usersWithRole = await prisma.user_roles.findMany({
                 where: { roleId }
             });
 
@@ -205,7 +205,7 @@ class RoleDB {
                 throw new Error('Cannot delete role that is assigned to users');
             }
 
-            return await prisma.role.delete({
+            return await prisma.roles.delete({
                 where: { id: roleId }
             });
         } catch (error) {
@@ -216,12 +216,12 @@ class RoleDB {
 
     static async assignPermissionsToRole(roleId, permissionIds) {
         try {
-            await prisma.rolePermission.deleteMany({
+            await prisma.role_permissions.deleteMany({
                 where: { roleId }
             });
 
             if (permissionIds && permissionIds.length > 0) {
-                await prisma.rolePermission.createMany({
+                await prisma.role_permissions.createMany({
                     data: permissionIds.map(permissionId => ({
                         roleId,
                         permissionId: parseInt(permissionId)
@@ -239,19 +239,19 @@ class RoleDB {
     static async getRoleStats() {
         try {
             
-            const roles = await prisma.role.findMany({
+            const roles = await prisma.roles.findMany({
                 include: {
-                    users: true,
-                    permissions: true
+                    user_roles: true,
+                    role_permissions: true
                 }
             });
 
             const totalRoles = roles.length;
-            const totalPermissions = await prisma.permission.count();
+            const totalPermissions = await prisma.permissions.count();
 
             const roleUserCounts = {};
             roles.forEach(role => {
-                roleUserCounts[role.name] = role.users.length;
+                roleUserCounts[role.name] = role.user_roles.length;
             });
 
             const stats = {
@@ -261,8 +261,8 @@ class RoleDB {
                 roles: roles.map(role => ({
                     id: role.id,
                     name: role.name,
-                    userCount: role.users.length,
-                    permissionCount: role.permissions.length
+                    userCount: role.user_roles.length,
+                    permissionCount: role.role_permissions.length
                 }))
             };
             
