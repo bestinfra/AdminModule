@@ -65,11 +65,6 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dashboard.svg',
                 link: '/superadmin',
             },
-            {
-                title: 'Dashboard', 
-                icon: '/icons/dashboard.svg',
-                link: '/consumer-dashboard',
-            },
             // {
             //     title: 'DTR Dashboard',
             //     icon: '/icons/dashboard.svg',
@@ -143,6 +138,22 @@ const defaultMenus: MenuCategory[] = [
                     icon: '/icons/dashboard.svg',
                     link: '/consumer-dashboard',
                 },
+                {
+                    title:'Role Permissions',
+                    icon:'/icons/roles.svg',
+                    link:'/roles-permissions',
+                },
+                {
+                    title:'Individual Detail',
+                    icon:'/icons/roles.svg',
+                    link:'/individual-detail',
+                }
+                ,
+                {
+                    title:'Data Logger',
+                    icon:'/icons/roles.svg',
+                    link:'/data-logger',
+                }
             
             // {   
             //     title: 'User Management',
