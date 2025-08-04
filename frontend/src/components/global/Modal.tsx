@@ -22,7 +22,6 @@ interface ModalProps {
   warningMessage?: string;
   // Data props for content
   content?: string;
-  contentType?: 'text' | 'html' | 'markdown';
   // Form props for edit/add role
   showForm?: boolean;
   formFields?: FormInputConfig[];
@@ -53,7 +52,6 @@ const Modal: React.FC<ModalProps> = React.memo(({
   message,
   warningMessage,
   content,
-  contentType = 'text',
   showForm = false,
   formFields = [],
   onSave,

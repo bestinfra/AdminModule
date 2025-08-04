@@ -30,7 +30,7 @@ export const subAppLogin = async (req, res) => {
         }
 
         // Find user by email or username
-        let user = await prisma.user.findFirst({
+        let user = await prisma.users.findFirst({
             where: {
                 OR: [
                     { email: identifier },
@@ -83,7 +83,7 @@ export const subAppLogin = async (req, res) => {
         // }
 
         // Reset failed login attempts on successful login
-        await prisma.user.update({
+        await prisma.users.update({
             where: { id: user.id },
             data: {
                 failedLoginAttempts: 0,

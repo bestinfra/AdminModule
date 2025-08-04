@@ -252,12 +252,12 @@ const menuItems = useMemo(() => {
       const userData = localStorage.getItem('user');
       if (userData) {
         const user = JSON.parse(userData);
-        return user.role || 'accountant'; // Default to accountant if no role
+        return user.role || 'admin'; // Default to admin if no role
       }
     } catch (error) {
       console.error('Error parsing user data:', error);
     }
-    return 'accountant'; // Default role
+    return 'admin'; // Default role
   };
 
   const userRole = getUserRole();

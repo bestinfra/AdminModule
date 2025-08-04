@@ -6,9 +6,9 @@ const prisma = new PrismaClient();
 class MeterDB {
     static async getAllMeters() {
         try {
-            const meters = await prisma.meter.findMany({
+            const meters = await prisma.meters.findMany({
                 include: {
-                    consumer: {
+                    consumers: {
                         select: {
                             id: true,
                             consumerNumber: true,
@@ -17,7 +17,7 @@ class MeterDB {
                             primaryPhone: true
                         }
                     },
-                    location: {
+                    locations: {
                         select: {
                             id: true,
                             name: true,
@@ -25,14 +25,14 @@ class MeterDB {
                             address: true
                         }
                     },
-                    config: true,
-                    dtr: {
+                    meter_configurations: true,
+                    dtrs: {
                         select: {
                             id: true,
                             dtrNumber: true
                         }
                     },
-                    readings: {
+                    meter_readings: {
                         orderBy: { readingDate: 'desc' },
                         take: 1
                     }
@@ -48,10 +48,10 @@ class MeterDB {
 
     static async findById(id) {
         try {
-            const meter = await prisma.meter.findUnique({
+            const meter = await prisma.meters.findUnique({
                 where: { id: parseInt(id) },
                 include: {
-                    consumer: {
+                    consumers: {
                         select: {
                             id: true,
                             consumerNumber: true,
@@ -65,7 +65,7 @@ class MeterDB {
                             connectionDate: true
                         }
                     },
-                    location: {
+                    locations: {
                         select: {
                             id: true,
                             name: true,
@@ -76,8 +76,8 @@ class MeterDB {
                             longitude: true
                         }
                     },
-                    config: true,
-                    dtr: {
+                    meter_configurations: true,
+                    dtrs: {
                         select: {
                             id: true,
                             dtrNumber: true,
@@ -85,8 +85,8 @@ class MeterDB {
                             type: true
                         }
                     },
-                    currentTransformers: true,
-                    potentialTransformers: true
+                    current_transformers: true,
+                    potential_transformers: true
                 }
             });
             return meter;
@@ -98,7 +98,7 @@ class MeterDB {
 
     static async findBySerialNumber(serialNumber) {
         try {
-            const meter = await prisma.meter.findUnique({
+            const meter = await prisma.meters.findUnique({
                 where: { serialNumber }
             });
             return meter;
@@ -118,7 +118,7 @@ class MeterDB {
                 throw new Error('Meter already exists with this serial number');
             }
 
-            const newMeter = await prisma.meter.create({
+            const newMeter = await prisma.meters.create({
                 data: {
                     meterNumber: meterData.meterNumber,
                     serialNumber: meterData.serialNumber,
@@ -144,7 +144,7 @@ class MeterDB {
 
     static async updateMeter(id, updateData) {
         try {
-            const updatedMeter = await prisma.meter.update({
+            const updatedMeter = await prisma.meters.update({
                 where: { id: parseInt(id) },
                 data: {
                     ...updateData,
@@ -161,7 +161,7 @@ class MeterDB {
 
     static async deleteMeter(id) {
         try {
-            const deletedMeter = await prisma.meter.update({
+            const deletedMeter = await prisma.meters.update({
                 where: { id: parseInt(id) },
                 data: {
                     status: 'DECOMMISSIONED',
@@ -179,18 +179,18 @@ class MeterDB {
 
     static async getMeterStats() {
         try {
-            const totalMeters = await prisma.meter.count();
-            const makes = await prisma.meter.groupBy({
+            const totalMeters = await prisma.meters.count();
+            const makes = await prisma.meters.groupBy({
                 by: ['manufacturer'],
                 _count: { manufacturer: true }
             });
-            const types = await prisma.meter.groupBy({
+            const types = await prisma.meters.groupBy({
                 by: ['type'],
                 _count: { type: true }
             });
-            const connectionTypes = await prisma.meter.findMany({
+            const connectionTypes = await prisma.meters.findMany({
                 select: {
-                    consumer: {
+                    consumers: {
                         select: { connectionType: true }
                     }
                 }
@@ -215,18 +215,18 @@ class MeterDB {
 
     static async getMeterView(meterId) {
         try {
-            const meter = await prisma.meter.findUnique({
+            const meter = await prisma.meters.findUnique({
                 where: { id: parseInt(meterId) },
                 include: {
-                    config: true,
-                    consumer: {
+                    meter_configurations: true,
+                    consumers: {
                         include: {
-                            location: true
+                            locations: true
                         }
                     },
-                    location: true,
-                    dtr: true,
-                    readings: {
+                    locations: true,
+                    dtrs: true,
+                    meter_readings: {
                         orderBy: { readingDate: 'desc' },
                         take: 10
                     }
@@ -260,21 +260,21 @@ class MeterDB {
                 whereClause.status = filters.status;
             }
             if (filters.consumerNumber) {
-                whereClause.consumer = {
+                whereClause.consumers = {
                     consumerNumber: { contains: filters.consumerNumber, mode: 'insensitive' }
                 };
             }
             if (filters.location) {
-                whereClause.location = {
+                whereClause.locations = {
                     name: { contains: filters.location, mode: 'insensitive' }
                 };
             }
-            const totalCount = await prisma.meter.count({ where: whereClause });
+            const totalCount = await prisma.meters.count({ where: whereClause });
 
-            const meters = await prisma.meter.findMany({
+            const meters = await prisma.meters.findMany({
                 where: whereClause,
                 include: {
-                    consumer: {
+                    consumers: {
                         select: {
                             consumerNumber: true,
                             name: true,
@@ -282,7 +282,7 @@ class MeterDB {
                             email: true
                         }
                     },
-                    location: {
+                    locations: {
                         select: {
                             name: true,
                             code: true
@@ -316,14 +316,14 @@ class MeterDB {
 
     static async getDataLoggersList() {
         try {
-            const dataLoggers = await prisma.modem.findMany({
+            const dataLoggers = await prisma.modems.findMany({
                 where: {
-                    meter: {
+                    meters: {
                         isNot: null
                     }
                 },
                 include: {
-                    meter: {
+                    meters: {
                         select: {
                             id: true,
                             meterNumber: true,
@@ -333,7 +333,7 @@ class MeterDB {
                             type: true,
                             status: true,
                             installationDate: true,
-                            consumer: {
+                            consumers: {
                                 select: {
                                     id: true,
                                     consumerNumber: true,
@@ -342,7 +342,7 @@ class MeterDB {
                                     email: true
                                 }
                             },
-                            location: {
+                            locations: {
                                 select: {
                                     id: true,
                                     name: true,
@@ -365,24 +365,24 @@ class MeterDB {
 
     static async getMeterHistory(meterId) {
         try {
-            const meter = await prisma.meter.findUnique({
+            const meter = await prisma.meters.findUnique({
                 where: { id: parseInt(meterId) },
                 include: {
-                    consumer: {
+                    consumers: {
                         select: {
                             id: true,
                             name: true,
                             consumerNumber: true
                         }
                     },
-                    location: {
+                    locations: {
                         select: {
                             id: true,
                             name: true,
                             code: true
                         }
                     },
-                    modem: true
+                    modems: true
                 }
             });
 
