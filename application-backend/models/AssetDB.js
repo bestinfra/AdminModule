@@ -5,9 +5,9 @@ const prisma = new PrismaClient();
 class AssetDB {
     static async getAllAssets() {
         try {
-            const assets = await prisma.location.findMany({
+            const assets = await prisma.locations.findMany({
                 include: {
-                    locationType: true
+                    location_types: true
                 },
                 orderBy: { createdAt: 'desc' }
             });
@@ -28,7 +28,7 @@ class AssetDB {
             }
 
             if (data.parent_location && data.parent_location !== '0') {
-                const parentLocation = await prisma.location.findFirst({
+                const parentLocation = await prisma.locations.findFirst({
                     where: {
                         name: data.parent_location
                     }
@@ -48,7 +48,7 @@ class AssetDB {
                 data.location_type_name &&
                 (!data.location_names || data.location_names.length === 0)
             ) {
-                const existingLocationType = await prisma.locationType.findFirst({
+                const existingLocationType = await prisma.location_types.findFirst({
                     where: {
                         name: data.location_type_name
                     }
@@ -64,7 +64,7 @@ class AssetDB {
                 }
 
                 // Create new location type if it doesn't exist
-                const newLocationType = await prisma.locationType.create({
+                const newLocationType = await prisma.location_types.create({
                     data: {
                         name: data.location_type_name
                     }
@@ -89,7 +89,7 @@ class AssetDB {
                 let locationTypeId = null;
 
                 // Check if location type exists
-                const existingLocationType = await prisma.locationType.findFirst({
+                const existingLocationType = await prisma.location_types.findFirst({
                     where: {
                         name: data.location_type_name
                     }
@@ -97,7 +97,7 @@ class AssetDB {
 
                 if (!existingLocationType) {
                     // Create new location type
-                    const newLocationType = await prisma.locationType.create({
+                    const newLocationType = await prisma.location_types.create({
                         data: {
                             name: data.location_type_name
                         }
@@ -116,7 +116,7 @@ class AssetDB {
                 const results = [];
                 for (const locationName of data.location_names) {
                     // Check if location name already exists
-                    const existingLocation = await prisma.location.findFirst({
+                    const existingLocation = await prisma.locations.findFirst({
                         where: {
                             name: locationName,
                             parentId: parentLocationId,
@@ -135,7 +135,7 @@ class AssetDB {
                     }
 
                     // Insert new location
-                    const newLocation = await prisma.location.create({
+                    const newLocation = await prisma.locations.create({
                         data: {
                             name: locationName,
                             code: locationName,

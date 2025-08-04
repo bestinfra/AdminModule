@@ -20,7 +20,7 @@ class DashboardDB {
             const startOfDayBeforeYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2);
             const endOfDayBeforeYesterday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 2, 23, 59, 59, 999);
 
-            const totalConsumers = await prisma.consumer.count({
+            const totalConsumers = await prisma.consumers.count({
                 where: {
                     meters: {
                         some: {} // Only count consumers that have at least one meter
@@ -53,7 +53,7 @@ class DashboardDB {
                 }
             });
 
-            const totalUnits = await prisma.meter.count();
+            const totalUnits = await prisma.meters.count();
 
             const threshold = totalUnits > 0 
                 ? parseFloat(totalConsumption._sum.consumption || 0) / parseFloat(totalUnits)
@@ -67,7 +67,7 @@ class DashboardDB {
                 }
             });
 
-            const usersCount = await prisma.consumer.groupBy({
+            const usersCount = await prisma.consumers.groupBy({
                 by: ['category'],
                 where: {
                     meters: {
