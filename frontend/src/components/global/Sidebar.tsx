@@ -65,11 +65,6 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dashboard.svg',
                 link: '/superadmin',
             },
-            {
-                title: 'Dashboard', 
-                icon: '/icons/dashboard.svg',
-                link: '/consumer-dashboard',
-            },
             // {
             //     title: 'DTR Dashboard',
             //     icon: '/icons/dashboard.svg',

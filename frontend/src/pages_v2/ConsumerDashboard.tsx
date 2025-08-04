@@ -375,7 +375,7 @@ const ConsumerDashboard: React.FC = () => {
                                     gridColumns: 2,
                                     gridRows: 1,
                                     span:{col:2,row:1},
-                                    gap: 'gap-0',
+                                    gap: 'gap-4',
                                     className:
                                         'pb-4',
                                     columns: [
@@ -385,10 +385,11 @@ const ConsumerDashboard: React.FC = () => {
                                             props: {
                                                 data: METER_STATUS_DATA,
                                                 height: 250,
+                                                title: 'Meter Status',
+                                                showLegend: false,
                                                 showNoDataMessage: false,
                                                 showHeader: false,
-                                                className: 'p-6',
-                                                title: '',
+                                                className: 'p-6 border border-primary-border rounded-3xl flex flex-col items-center justify-center',
                                                 onClick: (
                                                     segmentName?: string
                                                 ) => {
