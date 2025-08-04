@@ -8,6 +8,7 @@ import MainLayout from './components/layout/MainLayout';
 import PageDemo from './pages/PageDemo';
 import Login from './pages/Login';
 import DataLogger from './pages_v2/DataLogger';
+import DataLoggerDashboard from './pages_v2/DataLoggerDashboard';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import AssetManagment from './pages_v2/AssetManagement';
@@ -39,10 +40,11 @@ import UserDetail from './pages_v2/UserDetail';
 import RolesPermissions from './pages_v2/RolesPermissions';
 import SubLogin from './pages_v2/SubLogin';
 import DTRDetailPage from './pages/DTRDetailPage';
+import IndividualDetailPage from './pages_v2/IndividualDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
 // import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
 // import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
-import ConsumerDashboard from './pages_v2/ConsumerDashboard';
+import Dashboard from './pages_v2/ConsumerDashboard';
 
 const App: React.FC = () => {
     return (
@@ -64,14 +66,19 @@ const App: React.FC = () => {
                                 path="/data-logger"
                                 element={<DataLogger />}
                             />
+                            <Route
+                                path="/data-logger/:dataLoggerId"
+                                element={<DataLoggerDashboard />}
+                            />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            <Route path="/consumer-dashboard" element={<ConsumerDashboard />} />  
+                            <Route path="/consumer-dashboard" element={<Dashboard />} />  
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
+                            <Route path="/individual-detail" element={<IndividualDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
