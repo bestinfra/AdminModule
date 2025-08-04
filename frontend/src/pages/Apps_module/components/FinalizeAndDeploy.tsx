@@ -1,17 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '@components/global/Button';
+import Modal from '@components/global/Modal';
+import Spinner from '@/components/global/Spinner';
 
 interface FinalizeAndDeployProps {
   formData: any;
   onEditStep: (stepIndex: number) => void;
-  onSubmit: () => void;
+  onSubmit: () => Promise<any>; // Updated to return a promise
   isSubmitting?: boolean;
   onInputChange?: (e: React.ChangeEvent<any> | { target: { name: string; value: any } }) => void;
   currentStep?: number;
   onBack?: () => void;
+  appCredentials?: {
+    appName: string;
+    username: string;
+    password: string;
+  };
 }
 
-const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange, currentStep = 1, onBack }) => {
+const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditStep, onSubmit, isSubmitting = false, onInputChange, currentStep = 1, onBack, appCredentials: propAppCredentials }) => {
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [apiCredentials, setApiCredentials] = useState<any>(null);
+
+  const handleSubmit = async () => {
+    try {
+      // Call the original onSubmit function and wait for it to complete
+      const response = await onSubmit();
+
+      // Store the credentials from API response
+      if (response && response.credentials) {
+        setApiCredentials(response.credentials);
+      }
+
+      // Show success modal after the API call completes
+      setShowSuccessModal(true);
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      // Handle error appropriately
+    }
+  };
+
+  const handleCloseModal = () => {
+    setShowSuccessModal(false);
+  };
+
+  // Use credentials from API response, then props, then use exact form data
+  const appCredentials = apiCredentials || propAppCredentials || {
+    appName: formData.appName || 'My App',
+    username: formData.adminEmail || 'admin@example.com',
+    password: formData.adminPassword || 'admin123' // This should come from your backend/API response
+  };
+
   return (
     <div className=" bg-white dark:bg-primary-dark rounded-xl shadow p-6 md:p-8">
       <h2 className="text-2xl font-bold text-main dark:text-white mb-1">Terms & Conditions</h2>
@@ -19,31 +58,31 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
       <div className="space-y-6">
         {/* App Basics & Admin Access in 2 columns */}
         <div className=" dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6 relative">
-          <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-4">
             {/* App Basics Column */}
             <div className="flex-1 min-w-0">
               <div className="flex justify-between items-start">
                 <div className="flex flex-col gap-4 w-full">
                   <h3 className="text-sm font-semibold text-primary">App Basics</h3>
                   <div className="space-y-2">
-                    <div  className='flex flex-row justify-between w-full'>
-                    <p><span className="font-medium text-gray-700 dark:text-gray-300">Categories:</span> {(formData.categories || []).length > 0 ? formData.categories.join(', ') : 'Not specified'}</p>
-                    <p><span className="font-medium text-gray-700 dark:text-gray-300">Subdomain:</span> {formData.subdomain || 'Not specified'}</p>
+                    <div className='flex flex-row justify-between w-full'>
+                      <p><span className="font-medium text-gray-700 dark:text-gray-300">Categories:</span> {(formData.categories || []).length > 0 ? formData.categories.join(', ') : 'Not specified'}</p>
+                      <p><span className="font-medium text-gray-700 dark:text-gray-300">Subdomain:</span> {formData.subdomain || 'Not specified'}</p>
                     </div>
 
 
                     <div className='flex flex-row justify-between w-full'>
-                    <p><span className="font-medium text-gray-700 dark:text-gray-300">Name:</span> {formData.appName || 'Not specified'}</p>
-                    <p><span className="font-medium text-gray-700 dark:text-gray-300">Location:</span> {formData.city && formData.state && formData.country ? `${formData.city}, ${formData.state}, ${formData.country}` : 'Not specified'}</p>
+                      <p><span className="font-medium text-gray-700 dark:text-gray-300">Name:</span> {formData.appName || 'Not specified'}</p>
+                      <p><span className="font-medium text-gray-700 dark:text-gray-300">Location:</span> {formData.city && formData.state && formData.country ? `${formData.city}, ${formData.state}, ${formData.country}` : 'Not specified'}</p>
                     </div>
-                    
-                  
+
+
                     <p><span className="font-medium text-gray-700 dark:text-gray-300">Tariff Plans:</span> {(formData.tariffPlans || []).length > 0 ? formData.tariffPlans.join(', ') : 'Not specified'}</p>
                   </div>
                 </div>
-                <button 
-                  type="button" 
-                  onClick={() => onEditStep(0)} 
+                <button
+                  type="button"
+                  onClick={() => onEditStep(0)}
                   className="ml-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                   title="Edit Basics"
                 >
@@ -65,9 +104,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     <p><span className="font-medium text-gray-700 dark:text-gray-300">Role:</span> {formData.adminRole || 'Not specified'}</p>
                   </div>
                 </div>
-                <button 
-                  type="button" 
-                  onClick={() => onEditStep(1)} 
+                <button
+                  type="button"
+                  onClick={() => onEditStep(1)}
                   className=" p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
                   title="Edit Admin"
                 >
@@ -93,18 +132,18 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">App Description:</span> {formData.appDescription || 'Not specified'}</p>
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Timezone:</span> {formData.timezone || 'Not specified'}</p>
                 <p><span className="font-medium text-gray-700 dark:text-gray-300">Currency:</span> {formData.currency || 'Not specified'}</p>
-                
+
                 {/* Custom Colors Section */}
                 <div className="mt-4">
                   <p className="font-medium text-gray-700 dark:text-gray-300 mb-2">Custom Colors:</p>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                     {/* Main Page Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Page Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Page Background:</span>
                       {formData.colorPrimaryBg ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorPrimaryBg }}
                           />
                           {formData.colorPrimaryBg}
@@ -113,11 +152,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Card/Panel Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Panel Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Panel Background:</span>
                       {formData.colorPrimaryBgLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorPrimaryBgLight }}
                           />
                           {formData.colorPrimaryBgLight}
@@ -126,11 +165,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Section Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Section Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Section Background:</span>
                       {formData.colorPrimaryLightest ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorPrimaryLightest }}
                           />
                           {formData.colorPrimaryLightest}
@@ -139,11 +178,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Success Button Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Success Button Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success Button Background:</span>
                       {formData.colorSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorSecondary }}
                           />
                           {formData.colorSecondary}
@@ -152,11 +191,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Success Button Hover */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Success Button Hover:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success Button Hover:</span>
                       {formData.colorSecondaryLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorSecondaryLight }}
                           />
                           {formData.colorSecondaryLight}
@@ -165,11 +204,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Success State Highlight */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Success State Highlight:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success State Highlight:</span>
                       {formData.colorSecondaryPositive ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorSecondaryPositive }}
                           />
                           {formData.colorSecondaryPositive}
@@ -178,11 +217,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Success State Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Success State Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Success State Background:</span>
                       {formData.colorSecondaryPositiveLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorSecondaryPositiveLight }}
                           />
                           {formData.colorSecondaryPositiveLight}
@@ -191,11 +230,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Main Text Color */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Text Color:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Text Color:</span>
                       {formData.colorTextPrimary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorTextPrimary }}
                           />
                           {formData.colorTextPrimary}
@@ -204,11 +243,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Description Text Color */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Description Text Color:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Description Text Color:</span>
                       {formData.colorTextSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorTextSecondary }}
                           />
                           {formData.colorTextSecondary}
@@ -217,11 +256,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Card/Section Border */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Section Border:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Section Border:</span>
                       {formData.colorPrimaryBorder ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorPrimaryBorder }}
                           />
                           {formData.colorPrimaryBorder}
@@ -230,11 +269,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Warning/Alert Icon */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Icon:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Icon:</span>
                       {formData.colorWarning ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorWarning }}
                           />
                           {formData.colorWarning}
@@ -243,11 +282,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Warning/Alert Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Background:</span>
                       {formData.colorWarningAlt ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorWarningAlt }}
                           />
                           {formData.colorWarningAlt}
@@ -256,11 +295,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Warning/Alert Highlight */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Highlight:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Warning/Alert Highlight:</span>
                       {formData.colorWarningLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorWarningLight }}
                           />
                           {formData.colorWarningLight}
@@ -269,11 +308,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Error/Remove Button */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Button:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Button:</span>
                       {formData.colorDanger ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorDanger }}
                           />
                           {formData.colorDanger}
@@ -282,11 +321,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Error/Remove Hover */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Hover:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Hover:</span>
                       {formData.colorDangerAlt ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorDangerAlt }}
                           />
                           {formData.colorDangerAlt}
@@ -295,11 +334,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Error/Remove Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Error/Remove Background:</span>
                       {formData.colorDangerLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorDangerLight }}
                           />
                           {formData.colorDangerLight}
@@ -308,11 +347,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Info/Notification Icon */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Info/Notification Icon:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Info/Notification Icon:</span>
                       {formData.colorInfo ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorInfo }}
                           />
                           {formData.colorInfo}
@@ -321,11 +360,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Neutral Text */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Text:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Text:</span>
                       {formData.colorNeutralDark ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorNeutralDark }}
                           />
                           {formData.colorNeutralDark}
@@ -334,11 +373,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Neutral Subtext */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Subtext:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Neutral Subtext:</span>
                       {formData.colorNeutralDarker ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorNeutralDarker }}
                           />
                           {formData.colorNeutralDarker}
@@ -347,11 +386,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Page/Panel Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Page/Panel Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Page/Panel Background:</span>
                       {formData.colorNeutralLightest ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorNeutralLightest }}
                           />
                           {formData.colorNeutralLightest}
@@ -360,11 +399,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Highlight/Selection Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Highlight/Selection Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Highlight/Selection Background:</span>
                       {formData.colorAccentLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorAccentLight }}
                           />
                           {formData.colorAccentLight}
@@ -373,11 +412,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Card Shadow */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Card Shadow:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card Shadow:</span>
                       {formData.colorShadowPrimary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorShadowPrimary }}
                           />
                           {formData.colorShadowPrimary}
@@ -386,11 +425,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Panel Shadow */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Panel Shadow:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Panel Shadow:</span>
                       {formData.colorShadowSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorShadowSecondary }}
                           />
                           {formData.colorShadowSecondary}
@@ -399,11 +438,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Main Background (Dark Mode) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Background (Dark Mode):</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Background (Dark Mode):</span>
                       {formData.colorPrimaryDark ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorPrimaryDark }}
                           />
                           {formData.colorPrimaryDark}
@@ -412,11 +451,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Card/Panel Background (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Panel Background (Dark):</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Card/Panel Background (Dark):</span>
                       {formData.colorPrimaryDarkLight ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorPrimaryDarkLight }}
                           />
                           {formData.colorPrimaryDarkLight}
@@ -425,11 +464,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Main Text (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Text (Dark):</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Text (Dark):</span>
                       {formData.colorDarkPrimary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorDarkPrimary }}
                           />
                           {formData.colorDarkPrimary}
@@ -438,11 +477,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Subtext (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Subtext (Dark):</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Subtext (Dark):</span>
                       {formData.colorDarkSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorDarkSecondary }}
                           />
                           {formData.colorDarkSecondary}
@@ -451,11 +490,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Border (Dark Mode) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Border (Dark Mode):</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Border (Dark Mode):</span>
                       {formData.colorDarkBorder ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ backgroundColor: formData.colorDarkBorder }}
                           />
                           {formData.colorDarkBorder}
@@ -464,11 +503,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Main Gradient Background */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Gradient Background:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Gradient Background:</span>
                       {formData.colorPrimaryGradient ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ background: formData.colorPrimaryGradient }}
                           />
                           {formData.colorPrimaryGradient}
@@ -477,11 +516,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Main Gradient (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Gradient (Dark):</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Main Gradient (Dark):</span>
                       {formData.colorPrimaryDarkGradient ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ background: formData.colorPrimaryDarkGradient }}
                           />
                           {formData.colorPrimaryDarkGradient}
@@ -490,11 +529,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Panel Gradient (Dark) */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Panel Gradient (Dark):</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Panel Gradient (Dark):</span>
                       {formData.colorGradientSecondary ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ background: formData.colorGradientSecondary }}
                           />
                           {formData.colorGradientSecondary}
@@ -503,11 +542,11 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                     </p>
                     {/* Statistics Icon Gradient */}
                     <p>
-                      <span className="font-medium text-gray-700 dark:text-gray-300">Statistics Icon Gradient:</span> 
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Statistics Icon Gradient:</span>
                       {formData.colorStatIconGradient ? (
                         <span className="inline-flex items-center gap-2 ml-2 px-2 py-1 bg-white dark:bg-primary-dark border border-gray-300 dark:border-dark-border rounded text-sm font-mono">
-                          <div 
-                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border" 
+                          <div
+                            className="w-4 h-4 rounded border border-gray-300 dark:border-dark-border"
                             style={{ background: formData.colorStatIconGradient }}
                           />
                           {formData.colorStatIconGradient}
@@ -518,9 +557,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                 </div>
               </div>
             </div>
-            <button 
-              type="button" 
-              onClick={() => onEditStep(2)} 
+            <button
+              type="button"
+              onClick={() => onEditStep(2)}
               className="ml-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               title="Edit Branding"
             >
@@ -544,19 +583,19 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                       'dashboard': ['consumer_dashboard', 'dtr_dashboard'],
                       'bills': ['prepaid', 'postpaid']
                     };
-                    
+
                     // Debug logging
                     console.log('FinalizeAndDeploy - All modules:', formData.modules);
                     console.log('FinalizeAndDeploy - Parent-child map:', parentChildMap);
-                    
+
                     // Helper: check if a module is a parent
                     const isParent = (module: string) => parentChildMap[module] !== undefined;
-                    
+
                     // Helper: check if a module is a child
                     const isChild = (module: string) => {
                       return Object.values(parentChildMap).some(children => children.includes(module));
                     };
-                    
+
                     // Helper: get parent of a child module
                     const getParent = (childModule: string) => {
                       for (const [parent, children] of Object.entries(parentChildMap)) {
@@ -564,10 +603,10 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                       }
                       return null;
                     };
-                    
+
                     // Helper: get children of a parent module
                     const getChildren = (parentModule: string) => parentChildMap[parentModule] || [];
-                    
+
                     // Filter out children from top-level list if their parent is selected
                     const mainModules = (formData.modules || []).filter((module: string) => {
                       if (isChild(module)) {
@@ -578,16 +617,16 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                       }
                       return true;
                     });
-                    
+
                     console.log('FinalizeAndDeploy - Main modules after filtering:', mainModules);
-                    
+
                     return (
                       <div className="space-y-1">
                         {mainModules.map((module: string, index: number) => {
                           if (isParent(module)) {
                             const children = getChildren(module);
                             const selectedChildren = children.filter(child => formData.modules.includes(child));
-                            
+
                             return (
                               <div key={index}>
                                 <div className="font-medium text-gray-700 dark:text-gray-300">
@@ -609,7 +648,7 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                               </div>
                             );
                           }
-                          
+
                           // Show child modules as main menu if their parent is not selected
                           if (isChild(module)) {
                             return (
@@ -618,7 +657,7 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
                               </div>
                             );
                           }
-                          
+
                           // Show other modules as main menu
                           return (
                             <div key={index} className="text-sm text-gray-700 dark:text-gray-300">
@@ -636,9 +675,9 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
             </div>
 
 
-            <button 
-              type="button" 
-              onClick={() => onEditStep(3)} 
+            <button
+              type="button"
+              onClick={() => onEditStep(3)}
               className="ml-4 p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 transition-colors"
               title="Edit Modules"
             >
@@ -649,8 +688,8 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
           </div>
         </div>
 
-                {/* Terms & Conditions */}
-                <div className="dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
+        {/* Terms & Conditions */}
+        <div className="dark:bg-primary-dark-light border border-gray-200 dark:border-dark-border rounded-xl p-6">
           <h3 className="text-sm font-semibold text-primary">Terms & Conditions</h3>
           <div>
             <label className="flex items-center gap-2 text-sm font-medium text-main dark:text-white">
@@ -682,12 +721,112 @@ const FinalizeAndDeploy: React.FC<FinalizeAndDeployProps> = ({ formData, onEditS
             <Button
               label={isSubmitting ? 'Completing...' : 'Complete Configuration'}
               variant="primary"
-              onClick={onSubmit}
+              onClick={handleSubmit}
               disabled={isSubmitting}
             />
           </div>
         </div>
       </div>
+
+      {/* Combined Loading and Success Modal */}
+      <Modal
+        isOpen={isSubmitting || showSuccessModal}
+        onClose={showSuccessModal ? handleCloseModal : () => { }} // Only allow closing on success
+        showCloseIcon={false}
+        backdropClosable={showSuccessModal}
+        size="md"
+        className="border-0"
+      >
+        {isSubmitting ? (
+          // Loading Content
+          <div className="text-center min-h-[200px] gap-2 flex flex-col justify-center items-center">
+
+            <Spinner size="md" />
+            {/* Loading Message */}
+            <h3 className="text-lg font-bold text-gray-900">
+              Generating your App
+            </h3>
+            {/* Subtitle */}
+            <p className="text-gray-600 text-base">
+              Please wait while configuration is in progress
+            </p>
+          </div>
+
+        ) : (
+          // Success Content
+          <div className="relative text-center flex flex-col gap-4">
+
+            {/* Custom Close Button - Top Right */}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-0 right-0 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-all duration-300 hover:scale-110 z-10"
+              aria-label="Close modal"
+            >
+              <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+
+
+            {/* Success Icon */}
+            <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center m-2">
+              <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+
+            {/* Success Title */}
+            <h2 className="text-3xl font-bold text-gray-900">
+              Your App has been successfully created!
+            </h2>
+
+            {/* App Details */}
+            <div className="bg-gray-50 bg-opacity-80 rounded-xl p-4 flex flex-col gap-4">
+              <div>
+                <h2 className="font-bold text-left">
+                  Your Login Details
+                </h2>
+              </div>
+
+
+              <div className="text-left flex flex-col gap-2">
+                <div className="flex gap-2 items-center">
+                  <h3 className="text-main">App Name:</h3>
+                  <span className="text-gray-900">{appCredentials.appName}</span>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <h3 className="text-main">Username:</h3>
+                  <span className="text-gray-900">
+                    {appCredentials.username}
+                  </span>
+                </div>
+
+                <div className="flex gap-2 items-center">
+                  <h3 className="text-main">Password:</h3>
+                  <span className="text-gray-900">
+                    {appCredentials.password}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Action Button */}
+            <div className="flex justify-center w-full">
+              <Button
+                label="Login Here"
+                variant="primary"
+                onClick={() => {
+                  const webUrl = `https://${formData.subdomain || appCredentials.appName.toLowerCase().replace(/\s+/g, '')}`;
+                  window.open(webUrl, '_blank');
+                  handleCloseModal();
+                }}
+              />
+            </div>
+
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

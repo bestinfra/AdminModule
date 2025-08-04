@@ -1,5 +1,6 @@
 import Button from '@components/global/Button';
 import Card from '@components/global/Card';
+import Permissions from '@components/global/Permissions';
 
 // Reusable Header Component
 export const createHeaderComponent = (title: string, subtitle: string, metadata?: string) => (
@@ -144,4 +145,7 @@ export const commonHeaders = {
         subtitle: 'Generate and view detailed reports',
         metadata: 'Last generated: 1 hour ago'
     }
-}; 
+};
+
+// Export Permissions component for use in PageC
+export { Permissions }; 

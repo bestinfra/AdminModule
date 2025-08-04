@@ -1,11 +1,18 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
-import { exportChartData } from '@/utils/excelExport';
+import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
 const mockDTRData = {
     name: 'TGNP_DTR-03',
-    rating: '15.00 kVA',
+    dtrNo: 'DTR-001',
+    division: 'Warangal Division',
+    subDivision: 'Hanamkonda Sub-Division',
+    substation: 'Warangal Substation',
+    feeder: 'Main Feeder',
+    feederNo: 'F-001',
+    condition: '15.00 kVA',
+    capacity: '15.00 kVA',
     address: 'Prashanth Nagar, Hyderabad, Telangana, India, 500084',
     location: { lat: 17.470268, lng: 78.353907 },
     stats: [
@@ -19,28 +26,28 @@ const mockDTRData = {
         {
             title: 'Total kW',
             value: 3.73,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Active Power',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kVA',
             value: 3.98,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Apparent Power',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kWh',
             value: 20355.16,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Cumulative Active Energy',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kVAh',
             value: 20699.25,
-            icon: '/icons/consumption.svg',
+            icon: '/icons/energy.svg',
             subtitle1: 'Cumulative Apparent Energy',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
@@ -71,6 +78,8 @@ const mockDTRData = {
             icon: '/icons/power_failure.svg',
             subtitle1: '',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
+            bg: 'bg-[var(--color-danger)]',
+            iconStyle: FILTER_STYLES.WHITE,
         },
         {
             title: 'Status',
@@ -78,6 +87,8 @@ const mockDTRData = {
             icon: '/icons/units.svg',
             subtitle1: '0000-00-00 00:00:00',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
+            bg: 'bg-[var(--color-secondary)]',
+            iconStyle: FILTER_STYLES.WHITE,
         },
     ],
 };
@@ -114,28 +125,32 @@ const DTRDetailPage = () => {
             sNo: 1,
             feederName: 'D1F1(32500114)',
             loadStatus: 'Underload',
-            rating: '25.00 kVA',
+            condition: 'Good',
+            capacity: '30.00 kVA',
             address: 'Waddepally, Warangal, Telangana, India, 506001',
         },
         {
             sNo: 2,
             feederName: 'D1F2(32500115)',
             loadStatus: 'Normal',
-            rating: '25.00 kVA',
+            condition: 'Excellent',
+            capacity: '25.00 kVA',
             address: 'Hanamkonda, Warangal, Telangana, India, 506001',
         },
         {
             sNo: 3,
             feederName: 'D1F3(32500116)',
             loadStatus: 'Overload',
-            rating: '25.00 kVA',
+            condition: 'Fair',
+            capacity: '20.00 kVA',
             address: 'Kazipet, Warangal, Telangana, India, 506001',
         },
         {
             sNo: 4,
             feederName: 'D1F4(32500117)',
             loadStatus: 'Underload',
-            rating: '25.00 kVA',
+            condition: 'Good',
+            capacity: '35.00 kVA',
             address: 'Warangal Fort, Warangal, Telangana, India, 506001',
         },
     ]);
@@ -184,9 +199,90 @@ const DTRDetailPage = () => {
         setAlertsData((prev) => prev);
     }, []);
 
-    // Handle Excel download for daily consumption chart
-    const handleDailyChartDownload = () => {
-        exportChartData(dailyConsumptionData.xAxisData, dailyConsumptionData.seriesData, 'dtr-daily-consumption-data');
+    // Handle Excel download for all DTR data in a single file
+    const handleExportData = () => {
+        // Import XLSX library
+        import('xlsx').then((XLSX) => {
+            // Create a new workbook
+            const workbook = XLSX.utils.book_new();
+
+            // Prepare DTR Information data
+            const dtrInfoData = [
+                {
+                    'DTR No': dtr.dtrNo,
+                    'DTR Name': dtr.name,
+                    'Division': dtr.division,
+                    'Sub-Division': dtr.subDivision,
+                    'Substation': dtr.substation,
+                    'Feeder': dtr.feeder,
+                    'Feeder No': dtr.feederNo,
+                    'Rating': '15.00 kVA', // Using the rating from stats
+                    'Condition': dtr.condition,
+                    'Capacity': dtr.capacity,
+                    'Address': dtr.address,
+                    'Location': `${dtr.location.lat}, ${dtr.location.lng}`,
+                }
+            ];
+
+            // Prepare DTR Statistics data
+            const dtrStatsData = dtr.stats.map(stat => ({
+                'Metric': stat.title,
+                'Value': stat.value,
+                'Subtitle': stat.subtitle1 || '',
+            }));
+
+            // Prepare Feeders data
+            const feedersExportData = feedersData.map(feeder => ({
+                'S.No': feeder.sNo,
+                'Feeder Name': feeder.feederName,
+                'Load Status': feeder.loadStatus,
+                'Condition': feeder.condition,
+                'Capacity': feeder.capacity,
+                'Address': feeder.address,
+            }));
+
+            // Prepare Alerts data
+            const alertsExportData = alertsData.map(alert => ({
+                'Alert ID': alert.alertId,
+                'Type': alert.type,
+                'Feeder Name': alert.feederName,
+                'Occurred On': alert.occuredOn,
+            }));
+
+            // Prepare Daily Consumption data
+            const consumptionExportData = dailyConsumptionData.xAxisData.map((date, index) => ({
+                'Date': date,
+                'Consumption (kWh)': dailyConsumptionData.seriesData[0].data[index],
+            }));
+
+            // Convert data to worksheets
+            const dtrInfoSheet = XLSX.utils.json_to_sheet(dtrInfoData);
+            const dtrStatsSheet = XLSX.utils.json_to_sheet(dtrStatsData);
+            const feedersSheet = XLSX.utils.json_to_sheet(feedersExportData);
+            const alertsSheet = XLSX.utils.json_to_sheet(alertsExportData);
+            const consumptionSheet = XLSX.utils.json_to_sheet(consumptionExportData);
+
+            // Add worksheets to workbook
+            XLSX.utils.book_append_sheet(workbook, dtrInfoSheet, 'DTR Information');
+            XLSX.utils.book_append_sheet(workbook, dtrStatsSheet, 'DTR Statistics');
+            XLSX.utils.book_append_sheet(workbook, feedersSheet, 'DTR Feeders');
+            XLSX.utils.book_append_sheet(workbook, alertsSheet, 'DTR Alerts');
+            XLSX.utils.book_append_sheet(workbook, consumptionSheet, 'Daily Consumption');
+
+            // Generate Excel file
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            
+            // Create blob and download
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `dtr-${dtr.name}-complete-data.xlsx`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        });
     };
 
 
@@ -214,6 +310,17 @@ const DTRDetailPage = () => {
         }
     };
 
+    // Handle feeder view action
+    const handleFeederView = (row: any) => {
+        navigate(`/feeder/${row.feederName}`, { 
+            state: { 
+                feederData: row,
+                dtrId: dtrId,
+                dtrName: dtr.name
+            } 
+        });
+    };
+
     return (
         <PageC
             sections={[
@@ -235,7 +342,7 @@ const DTRDetailPage = () => {
                                             backButtonText: 'Back to Dashboard',
                                             buttonsLabel: 'Export Data',
                                             variant: 'primary',
-                                            onClick: () => handleDailyChartDownload(),
+                                            onClick: () => handleExportData(),
                                         },
                                     },
                                 ],
@@ -260,11 +367,14 @@ const DTRDetailPage = () => {
                                             title: 'DTR Information',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
+                                            titleVariant: 'primary-dark',
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             defaultTitleHeight:'0',
+                                            className:'w-full',
+                                            rightComponent: { name: 'LastComm', props: { value: lastComm } },
                                         },
+                                       
                                     },
                                 ],
                             },
@@ -276,37 +386,80 @@ const DTRDetailPage = () => {
                                     {   
                                        name: 'PageInformation',
                                        props: {
-                                        gridColumns: 3,
+                                        gridColumns: 5,
                                         rows: [
                                             {
                                                 layout: 'row',
                                                 className: 'justify-between w-full',
-                                                span: { col: 3, row: 1 },
+                                                span: { col: 5, row: 1 },
                                                 items: [
+                                                    {
+                                                        title: 'DTR No',
+                                                        value: dtr.dtrNo,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
                                                     {
                                                         title: 'DTR Name',
                                                         value: dtr.name,
                                                         align: 'start',
-                                                        gap: 'gap-1'
+                                                        gap: 'gap-1',
+                                                        statusIndicator: true
                                                     },
                                                     {
-                                                        title: 'Rating',
-                                                        value: dtr.rating,
+                                                        title: 'Division',
+                                                        value: dtr.division,
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
-                                                        title: 'Address',
-                                                        value: dtr.address,
+                                                        title: 'Sub-Division',
+                                                        value: dtr.subDivision,
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     },
                                                     {
-                                                        title:'Location',
-                                                        value:`${dtr.location.lat}, ${dtr.location.lng}`,
+                                                        title: 'Substation',
+                                                        value: dtr.substation,
                                                         align: 'start',
                                                         gap: 'gap-1'
                                                     }
+                                                ]
+                                            },
+                                            {
+                                                layout: 'row',
+                                                className: 'justify-between w-full',
+                                                span: { col: 5, row: 1 },
+                                                items: [
+                                                    {
+                                                        title: 'Feeder',
+                                                        value: dtr.feeder,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title: 'Feeder No',
+                                                        value: dtr.feederNo,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                   
+                                                    {
+                                                        title: 'Condition',
+                                                        value: dtr.condition,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title: 'Capacity',
+                                                        value: dtr.capacity,
+                                                        align: 'start',
+                                                        gap: 'gap-1'
+                                                    },
+                                                    {
+                                                        title:'',
+                                                        gap: 'gap-1'
+                                                    },
                                                 ]
                                             }
                                         ]
@@ -321,11 +474,11 @@ const DTRDetailPage = () => {
                     layout: {
                         type: 'grid' as const,
                         columns: 1,
-                        className: 'w-full p-4 border border-primary-border rounded-3xl',
+                        className: 'w-full p-4 border border-primary-border rounded-3xl bg-background-secondary',
                         rows: [
                             {
                                 layout: 'row' as const,
-                                className: 'justify-between w-full',
+                                className: 'justify-between w-full ',
                                 span: { col: 1, row: 1 },
                                 columns: [
                                     {
@@ -334,7 +487,7 @@ const DTRDetailPage = () => {
                                             title: 'Distribution Transformer (DTR) Statistics',
                                             titleLevel: 2,
                                             titleSize: 'md',
-                                            titleVariant: 'primary',
+                                            titleVariant: 'primary-dark',
                                             titleWeight: 'bold',
                                             titleAlign: 'left',
                                             className:'w-full',
@@ -355,7 +508,9 @@ const DTRDetailPage = () => {
                                         value: stat.value,
                                         subtitle1: stat.subtitle1,
                                         icon: stat.icon,
+                                        bg: stat.bg || 'bg-stat-icon-gradient',
                                         valueFontSize: stat.valueFontSize || 'text-lg lg:text-xl md:text-lg sm:text-base',
+                                        iconStyle: stat.iconStyle || FILTER_STYLES.BRAND_GREEN,
                                     },
                                     span: { col: 1, row: 1 },
                                 })),
@@ -381,7 +536,8 @@ const DTRDetailPage = () => {
                                                 { key: 'sNo', label: 'S.No' },
                                                 { key: 'feederName', label: 'Feeder Name' },
                                                 { key: 'loadStatus', label: 'Load Status' },
-                                                { key: 'rating', label: 'Rating' },
+                                                { key: 'condition', label: 'Condition' },
+                                                { key: 'capacity', label: 'Capacity' },
                                                 { key: 'address', label: 'Address' },
                                             ],
                                             data: feedersData,
@@ -399,6 +555,15 @@ const DTRDetailPage = () => {
                                             className: 'w-full',
                                             onExport: handleFeedersExport,
                                             onRowClick: (row: any) => handleFeederClick(row.feederName),
+                                            actions: [
+                                                {
+                                                    label: 'View',
+                                                    icon: '/icons/eye.svg',
+                                                    onClick: handleFeederView,
+                                                    variant: 'primary',
+                                                    size: 'sm'
+                                                }
+                                            ],
                                         },
                                     },
                                 ],
@@ -415,9 +580,11 @@ const DTRDetailPage = () => {
                             {
                                 layout: 'grid' as const,
                                 gridColumns: 1,
+                                className:'pb-4',
                                 columns: [
                                     {
                                         name: 'Table',
+                                        
                                         props: {
                                             columns: [
                                                 { key: 'alertId', label: 'Alert ID' },
@@ -431,13 +598,14 @@ const DTRDetailPage = () => {
                                             initialRowsPerPage: 10,
                                             rowsPerPageOptions: [5, 10, 15, 20, 25],
                                             emptyMessage: 'No Alerts Found',
-                                            showActions: true,
+                                            showActions: false,
                                             title: 'DTR Alerts',
                                             headerTitle: 'DTR Alerts',
                                             showHeader: true,
                                             showPaginationInfo: true,
                                             showRowsPerPageSelector: true,
                                             className: 'w-full',
+                                            
                                         },
                                     },
                                 ],

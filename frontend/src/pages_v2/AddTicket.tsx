@@ -102,6 +102,7 @@ export default function AddTicket() {
             label: 'Subject',
             placeholder: 'Enter Ticket Subject',
             required: true,
+
             row: 4,
             col: 1,
             colSpan: 3,
@@ -113,6 +114,7 @@ export default function AddTicket() {
             label: 'Description',
             placeholder: 'Enter detailed description of the issue',
             required: true,
+            
             row: 5,
             col: 1,
             colSpan: 3,
@@ -157,7 +159,7 @@ export default function AddTicket() {
                     {
                         layout: {
                             type: 'row' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -182,12 +184,12 @@ export default function AddTicket() {
                         layout: {
                             type: 'grid' as const,
                             columns: 1,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,
                                     gridColumns: 1,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: [
                                         {
                                             name: 'Form',
@@ -204,11 +206,11 @@ export default function AddTicket() {
                                                 gridLayout: {
                                                     gridRows: 6,
                                                     gridColumns: 3,
-                                                    gap: 'gap-6',
+                                                    gap: 'gap-4',
                                                     className: 'w-full',
                                                 },
                                                 formBackground:
-                                                    'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 rounded-3xl',
+                                                    'bg-white dark:bg-gray-800 border border-primary-border dark:border-gray-700 p-4 rounded-3xl',
                                                 className: 'w-full',
                                             },
                                         },

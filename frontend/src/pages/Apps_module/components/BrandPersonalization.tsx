@@ -313,7 +313,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                 <div className="mb-4">
                   <h3 className="text-sm font-semibold text-primary">Company Information</h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormInput
                     input={{
                       name: "companyName",
@@ -368,8 +368,8 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                 <div className="mb-4">
                   <h3 className="text-sm font-semibold text-primary">Company Logo</h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-xl">
-                  <div className="div1 flex justify-between w-full gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl">
+                  <div className="div1 flex justify-between w-full gap-4">
                     <div className="div2 w-full flex flex-col gap-4">
                       <DragDropFileUpload
                         id="appLogo"
@@ -472,7 +472,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                     timeRangeLabels={{ Light: "Light Mode", Dark: "Dark Mode" }}
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
                   {/* Light Mode Colors */}
                   {selectedMode === "Light" && <>
                     {/* Primary Colors */}

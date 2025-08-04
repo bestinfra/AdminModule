@@ -1,7 +1,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-
 import BACKEND_URL from '../config';
 
 const tableColumns = [
@@ -16,9 +15,7 @@ const tableColumns = [
     // Add actions column if you want to show action buttons
 ];
 
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
+
 
 export default function Users() {
     const navigate = useNavigate();
@@ -37,10 +34,6 @@ export default function Users() {
     // User stats state
     const [userStats, setUserStats] = useState<any>(null);
     const [statsLoading, setStatsLoading] = useState(true);
-
-    // Delete modal state
-    // const [showDeleteModal, setShowDeleteModal] = useState(false);
-    // const [userToDelete, setUserToDelete] = useState<any>(null);
 
     // Inactive modal state
     const [showInactiveModal, setShowInactiveModal] = useState(false);
@@ -175,57 +168,36 @@ export default function Users() {
                 icon: '/icons/total-users.svg',
                 subtitle1: `${userStats.activeUsers} Active Users`,
                 subtitle2: `${userStats.inactiveUsers} Inactive Users`,
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Admins',
                 value: userStats.totalAdmins,
                 icon: '/icons/admin.svg',
                 subtitle1: 'This Month',
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Accountants',
                 value: userStats.totalAccountants,
                 icon: '/icons/accountant.svg',
                 subtitle1: 'This Month',
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Moderators',
                 value: userStats.totalModerators,
                 icon: '/icons/moderator.svg',
                 subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
-                iconStyle: ICON_FILTER_STYLE,
             },
             {
                 title: 'Total Roles',
                 value: userStats.totalRoles,
                 icon: '/icons/roles.svg',
                 subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
-                iconStyle: ICON_FILTER_STYLE,
             },
         ]
         : [];
 
 
-    // const handleConfirmDelete = () => {
-    //     if (userToDelete) {
-    //         console.log('Deleting user:', userToDelete.sNo);
-    //         // Add your delete API call here
-    //         fetch(`${BACKEND_URL}/users/${userToDelete.sNo}`, { method: 'DELETE' })
-    //             .then(() => {
-    //                 setUsers(users.filter(user => user.sNo !== userToDelete.sNo));
-    //             });
-    //     }
-    //     setShowDeleteModal(false);
-    //     setUserToDelete(null);
-    // };
 
-    // const handleCancelDelete = () => {
-    //     setShowDeleteModal(false);
-    //     setUserToDelete(null);
-    // };
 
     const handleInactiveClick = (row: any) => {
         setUserToInactive(row);
@@ -289,6 +261,7 @@ export default function Users() {
             type: 'dropdown' as const,
             label: 'Reason for Inactivation',
             name: 'reason',
+            searchable: false,
             value: inactiveFormData.reason,
             required: true,
             options: [
@@ -310,7 +283,7 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -320,39 +293,24 @@ export default function Users() {
                                             props: {
                                                 title: 'Users',
                                                 onBackClick: () =>
-                                                    window.history.back(),
+                                                    navigate('/superadmin'),
                                                 backButtonText:
                                                     'Back to Dashboard',
                                                 buttonsLabel: 'Add User',
                                                 variant: 'primary',
                                                 onClick: () => navigate('/add-user'),
                                                 showMenu: true,
-                                                showDropdown: false,
+                                                showDropdown: true,
                                                 menuItems: [
                                                     {
-                                                        id: 'all',
-                                                        label: 'All Users',
-                                                    },
+                                                        id: 'RoleManagement',
+                                                        label: 'Role Management',
+                                                    },  
                                                     {
-                                                        id: 'active',
-                                                        label: 'Active Users',
+                                                        id: 'Export',
+                                                        label: 'Export ',
                                                     },
-                                                    {
-                                                        id: 'inactive',
-                                                        label: 'Inactive Users',
-                                                    },
-                                                    {
-                                                        id: 'admin',
-                                                        label: 'Administrators',
-                                                    },
-                                                    {
-                                                        id: 'moderator',
-                                                        label: 'Moderators',
-                                                    },
-                                                    {
-                                                        id: 'user',
-                                                        label: 'Regular Users',
-                                                    },
+                                                  
                                                 ],
                                                 onMenuItemClick: (
                                                     itemId: string
@@ -360,6 +318,9 @@ export default function Users() {
                                                     console.log(
                                                         `Filter by: ${itemId}`
                                                     );
+                                                    if (itemId === 'RoleManagement') {
+                                                        navigate('/role-management');
+                                                    }
                                                 },
                                             },
                                         },
@@ -372,7 +333,7 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,
@@ -410,6 +371,7 @@ export default function Users() {
                                                 value: filters.userTypes,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable: false,
                                             },
                                         },
                                         {
@@ -421,6 +383,7 @@ export default function Users() {
                                                 value: filters.userStatus,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable:false,
                                             },
                                         },
                                     ],
@@ -449,8 +412,10 @@ export default function Users() {
                                                 emptyMessage: loading
                                                     ? 'Loading users...'
                                                     : 'No users found',
-                                                onViewClick: (row: any) => {
-                                                    navigate('/basic-information', {
+                                                onView: (row: any) => {
+                                                    console.log('Users: onView triggered', row);
+                                                    console.log('Users: Navigating to', `/user-detail/${row.sNo}`);
+                                                    navigate(`/user-detail/${row.sNo}`, {
                                                         state: {
                                                             user: row
                                                         }
@@ -479,7 +444,7 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -496,6 +461,7 @@ export default function Users() {
                                                 onSave: handleConfirmInactive,
                                                 saveButtonLabel: 'Inactivate User',
                                                 cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
                                             },
                                         },
                                     ],

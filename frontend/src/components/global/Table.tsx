@@ -20,6 +20,11 @@ export interface Column {
     row: TableData
   ) => ReactNode;
   priorityBadge?: boolean; // New prop for automatic priority badge rendering
+  statusIndicator?: {
+    activeColor?: string;
+    inactiveColor?: string;
+  }; // New prop for automatic status indicator rendering
+  isActive?: (value: string | number | boolean | null | undefined) => boolean; // New prop to determine if value is active
 }
 
 interface Action {
@@ -122,6 +127,31 @@ const renderPriorityBadge = (
     >
       {priority}
     </span>
+  );
+};
+
+// Helper function to render status indicators with blinking dots
+const renderStatusIndicator = (
+  value: string | number | boolean | null | undefined,
+  config?: {
+    activeColor?: string;
+    inactiveColor?: string;
+  },
+  isActive?: boolean
+) => {
+  const activeColor = config?.activeColor || "bg-green-500";
+  const inactiveColor = config?.inactiveColor || "bg-red-500";
+
+  return (
+    <div className="flex items-center gap-2">
+      {isActive && (
+        <div className={`w-2 h-2 ${activeColor} rounded-full blink`}></div>
+      )}
+      {!isActive && (
+        <div className={`w-2 h-2 ${inactiveColor} rounded-full`}></div>
+      )}
+      <span>{String(value)}</span>
+    </div>
   );
 };
 
@@ -327,7 +357,7 @@ const Table: React.FC<TableProps> = ({
           {actions.map((action, index) => (
             <span
               key={index}
-              className="cursor-pointer"
+              className="cursor-pointer hover:border-3 hover:border-background-secondary hover:bg-transparent w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
               onClick={(e) => {
                 e.stopPropagation();
                 action.onClick(row);
@@ -671,6 +701,8 @@ const Table: React.FC<TableProps> = ({
                               ? column.render(row[column.key], row)
                               : column.priorityBadge
                               ? renderPriorityBadge(row[column.key])
+                              : column.statusIndicator
+                              ? renderStatusIndicator(row[column.key], column.statusIndicator, column.isActive ? column.isActive(row[column.key]) : undefined)
                               : !row[column.key] &&
                                 row[column.key] !== 0 &&
                                 row[column.key] !== "0"
@@ -752,9 +784,9 @@ const Table: React.FC<TableProps> = ({
           (serverPagination
             ? serverPagination.totalCount > serverPagination.limit
             : data.length > rowsPerPage) && (
-            <div className="font-manrope flex justify-between items-center">
-              <div className="flex items-center gap-5">
-                <div className="w-32">
+            <div className="font-manrope flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="w-40">
                   <Dropdown
                     name="rowsPerPage"
                     value={String(
@@ -770,7 +802,7 @@ const Table: React.FC<TableProps> = ({
                     }))}
                     placeholder="Select rows"
                     searchable={false}
-                    className="text-sm whitespace-nowrap"
+                    className="text-sm min-h-[40px] whitespace-nowrap"
                   />
                 </div>
                 {showCustomInput && (
@@ -789,7 +821,7 @@ const Table: React.FC<TableProps> = ({
                   {serverPagination ? serverPagination.totalCount : data.length}
                 </span>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
                 <Button
                   label="Previous"
                   variant="outlineSecondary"
@@ -807,7 +839,7 @@ const Table: React.FC<TableProps> = ({
                       : currentPage === 1
                   }
                 />
-                <span className="text-sm font-manrope text-[var(--color-secondary-300)]">
+                <span className="text-sm font-manrope text-secondary-300 text-center">
                   Page{" "}
                   {serverPagination
                     ? serverPagination.currentPage
@@ -842,10 +874,10 @@ const Table: React.FC<TableProps> = ({
             <div className="flex justify-between items-center">
               <div className="text-lg font-semibold">Delete Confirmation</div>
               <span
-                className="cursor-pointer"
+                className="cursor-pointer w-8 h-8 rounded-full bg-background-secondary flex items-center justify-center transition-all duration-200"
                 onClick={() => setShowDeleteModal(false)}
               >
-                <img src="icons/close.svg" alt="close" />
+                <img src="icons/close.svg" alt="close" className="w-5 h-5" />
               </span>
             </div>
             <p>

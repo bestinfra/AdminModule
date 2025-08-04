@@ -279,7 +279,7 @@ const AddConsumer = () => {
                 {
                     layout: {
                         type: 'column',
-                        gap: 'gap-6',
+                        gap: 'gap-4',
                         rows: [
                             {
                                 layout: 'row',
@@ -337,7 +337,7 @@ const AddConsumer = () => {
                     },
                 },
             ]}
-            sectionWrapperClassName="min-h-screen flex flex-col gap-6"
+            sectionWrapperClassName="min-h-screen flex flex-col gap-4"
         />
     );
 };

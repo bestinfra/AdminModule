@@ -113,7 +113,7 @@ export default function ${module.name}Index() {
       <h1 className="text-3xl font-bold mb-6">${module.name}</h1>
       <p className="text-gray-600 mb-8">${module.description}</p>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         ${module.pages.map(page => `
         <Link href="/${module.id}/${page.id}" key="${page.id}">
           <div className="border rounded-lg p-6 hover:shadow-lg transition-shadow">
@@ -787,7 +787,7 @@ export default Header;`,
         <p className="text-gray-600 dark:text-gray-400">Welcome to your ${appName || 'Admin'} application</p>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow">
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white">App Info</h3>
           <p className="text-gray-600 dark:text-gray-400">Name: ${appName || 'Not specified'}</p>

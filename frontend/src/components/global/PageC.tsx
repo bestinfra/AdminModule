@@ -9,6 +9,7 @@ import PageHeader from './PageHeader';
 import RecentActivities from './RecentActivities';
 import Search from './Search';
 import DatePicker from './DatePicker';
+import Calendar from './Calendar';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
 // import OrgChartAlt from './OrgChartAlt';
@@ -31,9 +32,17 @@ import ChatInput from '../Ticket/ChatInput';
 import TicketInfoCard from '../Ticket/TicketInfoCard';
 import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
+import ChatComponent from '../Ticket/ChatComponent';
 import PageInformation from './PageInformation';
 import SubappPanel from './SubAppPanel';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+import Permissions from './Permissions';
+import SummaryInfo from './SummaryInfo';
+import TicketConversationPanel from '../TicketConversationPanel';
+import TicketInformationPannel from './TIcketInformationPannel';
+import ActivityLog from './ActivityLog';
+import ChatApplication from '../ChatApplication';
+import ProfileSidebar from './ProfileSidebar';
+import ProfileContent from './ProfileContent';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -45,6 +54,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     RecentActivities,
     Search,
     DatePicker,
+    Calendar,
     ExpandableTable,
     OrgChart,
     OrgChartAlt,
@@ -64,10 +74,19 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     TicketInfoCard,
     UnitDetailsCard,
     ActivityLogCard,
+    ChatComponent,
     Carousel,
     LoginV2,
     PageInformation,
     SubappPanel,
+    SummaryInfo,
+    TicketConversationPanel,
+    TicketInformationPannel,
+    ActivityLog,
+    ChatApplication,
+    Permissions,
+    ProfileSidebar,
+    ProfileContent,  
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
@@ -280,12 +299,15 @@ const Page: React.FC<PageProps> = ({
                                                 );
                                             }
 
-                                            const componentElement = (
+                                            // Optimize Modal rendering - only render when needed
+                                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                                            
+                                            const componentElement = shouldRenderComponent ? (
                                                 <Component
                                                     key={cidx}
                                                     {...props}
                                                 />
-                                            );
+                                            ) : null;
                                             const spanClasses =
                                                 getSpanClasses(span);
                                             const alignClasses =
@@ -378,9 +400,12 @@ const Page: React.FC<PageProps> = ({
                                 );
                             }
 
-                            const componentElement = (
+                            // Optimize Modal rendering - only render when needed
+                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                            
+                            const componentElement = shouldRenderComponent ? (
                                 <Component key={cidx} {...props} />
-                            );
+                            ) : null;
                             const spanClasses = getSpanClasses(span);
                             const alignClasses = getAlignClasses(
                                 align,

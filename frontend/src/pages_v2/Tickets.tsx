@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { lazy } from 'react';
-const Page = lazy(() => import('SuperAdmin/Page'));
+const Page = lazy(() => import('@/components/global/PageC'));
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 import { exportChartData } from '@/utils/excelExport';
@@ -474,16 +474,6 @@ export default function Tickets() {
                                 buttonsLabel: "Add Ticket",
                                 variant: "primary",
                                 onClick: () => navigate('/add-ticket'),
-                                showMenu: true,
-                                showDropdown: true,
-                                menuItems: [
-                                    { id: 'all', label: 'All Tickets' },
-                                    { id: 'open', label: 'Open Tickets' },
-                                    { id: 'in-progress', label: 'In Progress' },
-                                    { id: 'resolved', label: 'Resolved' },
-                                    { id: 'closed', label: 'Closed' },
-                                    { id: 'escalated', label: 'Escalated' }
-                                ],
                                 onMenuItemClick: (itemId: string) => {
                                     console.log(`Filter by: ${itemId}`);
                                 }
@@ -549,12 +539,12 @@ export default function Tickets() {
                     layout: {
                         type: 'grid',
                         columns: 1,
-                        gap: 'gap-6',
+                        gap: 'gap-4',
                         rows: [
                             {
                                 layout: 'grid',
                                 gridColumns: 1,
-                                gap: 'gap-6',
+                                gap: 'gap-4',
                                 columns: [
                                     {
                                         name: 'Table',

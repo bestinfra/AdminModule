@@ -326,6 +326,10 @@ export default function RoleManagement() {
         });
     };
 
+    const handleManagePermissions = (row: any) => {
+        navigate('/roles-permissions', { state: { role: row } });
+    };
+
     // Form fields configuration for add role
     const addRoleFormFields = [
         {
@@ -399,15 +403,12 @@ export default function RoleManagement() {
     const tableActions = [
         {
             label: 'Manage Permissions',
-            onClick: (row: any) => {
-                console.log('Manage Permissions clicked for:', row);
-                navigate('/admin/permissions', { state: { role: row } });
-            },
+            onClick: handleManagePermissions,
             icon: '/icons/settings.svg',
         },
                             {
                         label: 'Edit',
-                        onClick: handleEditClick,
+            onClick: handleEditClick,
                         icon: '/icons/user-pen.svg',
                     },
         {
@@ -425,7 +426,7 @@ export default function RoleManagement() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -435,14 +436,14 @@ export default function RoleManagement() {
                                             props: {
                                                 title: 'Role Management',
                                                 onBackClick: () =>
-                                                    navigate('/'),
+                                                    navigate('/users'),
                                                 backButtonText:
-                                                    'Back to Dashboard',
+                                                    'Back to UserManagment',
                                                 buttonsLabel: 'Add Role',
                                                 variant: 'primary',
                                                 onClick: handleAddClick,
                                                 showMenu: true,
-                                                showDropdown: true,
+                                                showDropdown: false,
                                                 menuItems: [
                                                     {
                                                         id: 'all',
@@ -487,7 +488,7 @@ export default function RoleManagement() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -521,7 +522,7 @@ export default function RoleManagement() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -535,6 +536,7 @@ export default function RoleManagement() {
                                                 size: 'md',
                                                 showConfirmButton: true,
                                                 confirmButtonLabel: 'Delete Role',
+                                                confirmButtonVariant: 'danger',
                                                 onConfirm: handleConfirmDelete,
                                                 message: `Are you sure you want to delete the role "${roleToDelete?.roleName}"?`,
                                                 warningMessage: 'This action cannot be undone. All users assigned to this role will lose their permissions.',
@@ -549,7 +551,7 @@ export default function RoleManagement() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -577,7 +579,7 @@ export default function RoleManagement() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -601,6 +603,7 @@ export default function RoleManagement() {
                             ],
                         },
                     },
+
                 ]}
             />
         </Suspense>

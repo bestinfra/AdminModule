@@ -9,7 +9,7 @@ interface CardProps {
     subtitle2?: string;
     loading?: boolean;
     onValueClick?: () => void; // new prop
-    iconStyle?: React.CSSProperties; // new prop for custom icon styling
+    iconStyle?: keyof typeof FILTER_STYLES | typeof FILTER_STYLES[keyof typeof FILTER_STYLES]; // new prop for custom icon styling
     bg?: string; // new prop for dynamic background
     iconClassName?: string; // new prop for icon className
     width?: string; // new prop for icon container width
@@ -20,6 +20,8 @@ interface CardProps {
 
 import CardSkeleton from '@components/skeletons/CardSkeleton';
 import '@/styles/custom.css';
+import Icon from './Icon';
+import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
 const Card = ({
     title,
@@ -32,7 +34,7 @@ const Card = ({
     subtitle2,
     loading = false,
     onValueClick, // new prop
-    iconStyle, // new prop
+    iconStyle, // new prop - if provided, overrides global style
     bg,
     iconClassName = 'w-7 h-7 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-4 sm:h-4', // responsive icon sizing - decreases with smaller width
     width = 'w-14 h-14 lg:w-12 lg:h-12 md:w-10 md:h-10 sm:w-8 sm:h-8', // responsive container sizing - decreases with smaller width
@@ -46,7 +48,7 @@ const Card = ({
 
     return (
         <article className="rounded-3xl custom-shadow w-full h-full min-h-[140px] md:min-h-[130px] sm:min-h-[120px] bg-background-secondary">
-            <section className="flex justify-between items-start p-7 md:p-5.5 sm:p-4 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
+            <section className={`flex justify-between items-start p-7 md:p-5.5 sm:p-4 border border-primary-border rounded-3xl dark:border dark:border-dark-border bg-white dark:bg-primary-dark`}>
                 <div className="flex flex-col gap-4 md:gap-3 sm:gap-2">
                     <h3 className={`${titleFontSize} text-main dark:text-white`}>
                         {title}
@@ -88,7 +90,12 @@ const Card = ({
                 </div>
                 {icon && (
                     <figure className={`p-2.5 md:p-2 sm:p-1.5 ${bg || 'bg-stat-icon-gradient'} rounded-full ${width} ${height} flex items-center justify-center`}>
-                        <img src={icon} alt={`${title} Icon`} className={iconClassName} style={iconStyle} />
+                        <Icon 
+                            src={icon} 
+                            alt={`${title} Icon`} 
+                            className={iconClassName}
+                            iconStyle={iconStyle}
+                        />
                     </figure>
                 )}
             </section>

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { lazy } from 'react';
-const Page = lazy(() => import('SuperAdmin/Page'));
+const Page = lazy(() => import('@/components/global/PageC'));
 
 // --- Types ---
 interface HierarchyNode {
@@ -164,7 +164,7 @@ export default function AssetManagment() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',

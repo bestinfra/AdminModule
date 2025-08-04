@@ -1,27 +1,22 @@
 
 import { useNavigate } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
-
-// Brand green icon style
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
+// import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
 const SuperAdminDashboard: React.FC = () => {
     const navigate = useNavigate();
     
-    // KPI Cards Data
+    // KPI Cards Data - Using BRAND_GREEN (default) for all cards
     const kpiCards = [
         {
             title: 'Total Sub-Apps',
             value: '12',
-            icon: '/icons/apps-icon.svg',
+            icon: '/icons/apps-add.svg',
             showTrend: true,
             comparisonValue: 12.5,
             subtitle1: '3 created this month',
             subtitle2: '12.5% from last month',
             onValueClick: () => navigate("/sub-apps"),
-            iconStyle: ICON_FILTER_STYLE,
             bg: "bg-stat-icon-gradient",
         },
         {
@@ -33,19 +28,17 @@ const SuperAdminDashboard: React.FC = () => {
             subtitle1: 'Across all applications',
             subtitle2: '8.2% from last month',
             onValueClick: () => navigate("/active-users"),
-            iconStyle: ICON_FILTER_STYLE,
             bg: "bg-stat-icon-gradient",
         },
         {
             title: 'Daily Logins',
             value: '1,890',
-            icon: '/icons/secure-logins.svg',
+            icon: '/icons/daily-logins.svg',
             showTrend: true,
             comparisonValue: 15.3,
             subtitle1: 'Last 24 hours',
             subtitle2: '15.3% from last month',
             onValueClick: () => navigate("/daily-logins"),
-            iconStyle: ICON_FILTER_STYLE,
             bg: "bg-stat-icon-gradient",
         },
         {
@@ -57,7 +50,6 @@ const SuperAdminDashboard: React.FC = () => {
             subtitle1: 'Needs attention',
             subtitle2: '5% from last month',
             onValueClick: () => navigate("/issues"),
-            iconStyle: ICON_FILTER_STYLE,
             bg: "bg-stat-icon-gradient",
         }
     ];
@@ -131,7 +123,7 @@ const SuperAdminDashboard: React.FC = () => {
     };
     
     return (
-        <div className="p-2 min-h-screen">
+        <div className="">
             <PageC
                 sections={[
                     // Header section
@@ -181,7 +173,7 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 4,
-                            gap: "gap-6",
+                            gap: "gap-4",
                             className: '',
                         },
                         components: [
@@ -196,7 +188,7 @@ const SuperAdminDashboard: React.FC = () => {
                                     showTrend: card.showTrend,
                                     comparisonValue: card.comparisonValue,
                                     onValueClick: card.onValueClick,
-                                    iconStyle: card.iconStyle,
+
                                     bg: card.bg,
                                 },
                             })),
@@ -207,7 +199,7 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 2,
-                            gap: "gap-6",
+                            gap: "gap-4",
                             className: 'w-full',
                             rows: [
                                 {
@@ -286,12 +278,12 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 2,
-                            gap: "gap-6",
+                            gap: "gap-4",
                             className: 'w-full',
                             rows: [
                                 {
                                     layout: "grid",
-                                    gap: "gap-6",
+                                    gap: "gap-4",
                                     gridColumns: 2,
                                     gridRows: 1,
                                     span: { col: 2, row: 1 },

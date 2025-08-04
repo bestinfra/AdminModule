@@ -38,6 +38,9 @@ export interface FormInputConfig {
   showPasswordToggle?: boolean;
   accept?: string;
   onChange?: (value: FormInputValue) => void;
+  onClick?: () => void;
+  searchable?: boolean;
+  isMultiSelect?: boolean;
   validation?: {
     pattern?: RegExp;
     minLength?: number;
@@ -95,6 +98,7 @@ export interface FormInputProps {
   onInputChange: (name: string, value: FormInputValue, config: FormInputConfig) => void;
   onInputBlur: (name: string, value: FormInputValue, config: FormInputConfig) => void;
   fileInputRefs: React.MutableRefObject<{ [key: string]: HTMLInputElement | null }>;
+  labelClassName?: string;
 }
 
 export type FormInputEvent = 
