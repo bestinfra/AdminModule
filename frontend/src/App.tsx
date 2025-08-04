@@ -42,7 +42,7 @@ import DTRDetailPage from './pages/DTRDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
 // import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
 // import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
-import Dashboard from './pages_v2/ConsumerDashboard';
+import ConsumerDashboard from './pages_v2/ConsumerDashboard';
 
 const App: React.FC = () => {
     return (
@@ -69,7 +69,7 @@ const App: React.FC = () => {
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            <Route path="/consumer-dashboard" element={<Dashboard />} />  
+                            <Route path="/consumer-dashboard" element={<ConsumerDashboard />} />  
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
