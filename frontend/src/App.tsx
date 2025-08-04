@@ -26,7 +26,7 @@ import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
 // import Prepaid from './pages_v2/Prepaid';   
-import Postpaid from './pages_v2/Postpaid';
+// import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';

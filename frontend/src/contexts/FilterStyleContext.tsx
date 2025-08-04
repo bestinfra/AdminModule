@@ -79,4 +79,18 @@ export const useFilterStyle = (): FilterStyleContextType => {
     throw new Error('useFilterStyle must be used within a FilterStyleProvider');
   }
   return context;
+};
+
+// Safe version for federated modules
+export const useFilterStyleSafe = (): FilterStyleContextType => {
+  const context = useContext(FilterStyleContext);
+  if (context === undefined) {
+    // Return a default context for federated modules
+    return {
+      currentFilterStyle: FILTER_STYLES.BRAND_GREEN,
+      setFilterStyle: () => {}, // No-op function
+      availableStyles: FILTER_STYLES,
+    };
+  }
+  return context;
 }; 

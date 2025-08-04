@@ -9,6 +9,7 @@ import prepaidBilling from './prepaidBilling.js';
 import dashboard from './dashboard.js';
 import tickets from './tickets.js';
 import dtrs from './dtrs.js';
+import subAppAuth from './subAppAuth.js';
 
 const router = express.Router();
 
@@ -25,6 +26,7 @@ router.use('/prepaid-billing', prepaidBilling);
 router.use('/dashboard', dashboard);
 router.use('/tickets', tickets);
 router.use('/dtrs', dtrs);
+router.use('/sub-app/auth', subAppAuth);
 
 // Health check endpoint
 router.get('/health', (req, res) => res.json({
