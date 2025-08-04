@@ -25,7 +25,7 @@ import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
-// import Prepaid from './pages_v2/Prepaid';   
+import Prepaid from './pages_v2/Prepaid';   
 import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
@@ -40,8 +40,9 @@ import RolesPermissions from './pages_v2/RolesPermissions';
 import SubLogin from './pages_v2/SubLogin';
 import DTRDetailPage from './pages/DTRDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
-import BillsPrepaid from './pages/BillsPrepaid';
-import BillsPostpaid from './pages/BillsPostpaid';
+// import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
+// import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
+import Dashboard from './pages_v2/Dashboard';
 
 const App: React.FC = () => {
     return (
@@ -68,7 +69,7 @@ const App: React.FC = () => {
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            {/* <Route path="/" element={<Dashboard />} /> */}
+                            <Route path="/consumer-dashboard" element={<Dashboard />} />  
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
@@ -82,15 +83,14 @@ const App: React.FC = () => {
                             <Route path="/consumers" element={<Consumers />} />
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
-                            <Route path="/consumers/:unitId" element={<ConsumerView />} />
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/feeder/:feederId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
                             <Route path="/" element={<DTRDashboard />} />
-                            <Route path="/prepaid" element={<BillsPrepaid />} />
-                            <Route path="/postpaid" element={<BillsPostpaid />} />
+                            <Route path="/prepaid" element={<Prepaid />} />
+                            <Route path="/postpaid" element={<Postpaid />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
@@ -101,6 +101,8 @@ const App: React.FC = () => {
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             <Route path="/roles-permissions" element={<RolesPermissions />} />
                             <Route path="/filter-style-controller" element={<FilterStyleController />} />
+                            {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
+                            <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
