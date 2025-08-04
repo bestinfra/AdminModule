@@ -94,6 +94,8 @@ const Profile: React.FC = () => {
 
     const renderTabContent = () => {
         return (
+            <>
+            </>
         );
     };
 

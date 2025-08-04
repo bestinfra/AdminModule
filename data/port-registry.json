@@ -1,5 +1,5 @@
 {
-  "nextPort": 4146,
+  "nextPort": 4148,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -585,6 +585,16 @@
       "port": 4145,
       "deployedAt": "2025-08-02T11:46:07.778Z",
       "path": "C:\\xampp\\htdocs\\smdr-backend"
+    },
+    "knbd": {
+      "port": 4146,
+      "deployedAt": "2025-08-04T04:40:48.135Z",
+      "path": "C:\\xampp\\htdocs\\knbd-backend"
+    },
+    "bcd": {
+      "port": 4147,
+      "deployedAt": "2025-08-04T06:38:20.163Z",
+      "path": "C:\\xampp\\htdocs\\bcd-backend"
     }
   }
 }
