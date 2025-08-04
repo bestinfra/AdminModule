@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 class TicketDB {
     static async getTicketStats() {
         try {            
-            const tickets = await prisma.ticket.findMany({
+            const tickets = await prisma.tickets.findMany({
                 select: {
                     status: true
                 }
@@ -57,7 +57,7 @@ class TicketDB {
             }
 
             if (filters.consumerNumber) {
-                whereClause.consumer = {
+                whereClause.consumers = {
                     consumerNumber: {
                         contains: filters.consumerNumber,
                         mode: 'insensitive'
@@ -72,14 +72,14 @@ class TicketDB {
                 };
             }
 
-            const totalCount = await prisma.ticket.count({
+            const totalCount = await prisma.tickets.count({
                 where: whereClause
             });
 
-            const tickets = await prisma.ticket.findMany({
+            const tickets = await prisma.tickets.findMany({
                 where: whereClause,
                 include: {
-                    consumer: {
+                    consumers: {
                         select: {
                             consumerNumber: true,
                             name: true,
@@ -92,7 +92,7 @@ class TicketDB {
                             }
                         }
                     },
-                    raisedBy: {
+                    users_raisedBy: {
                         select: {
                             username: true,
                             firstName: true,
@@ -100,7 +100,7 @@ class TicketDB {
                             email: true
                         }
                     },
-                    assignedTo: {
+                    users_assignedTo: {
                         select: {
                             username: true,
                             firstName: true,
@@ -170,7 +170,7 @@ class TicketDB {
             const startMonth = new Date(today.getFullYear(), today.getMonth() - 11, 1);
             const endMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
-            const tickets = await prisma.ticket.findMany({
+            const tickets = await prisma.tickets.findMany({
                 where: {
                     createdAt: {
                         gte: startMonth,
@@ -207,15 +207,15 @@ class TicketDB {
 
     static async getTicketById(ticketId) {
         try {
-            return await prisma.ticket.findUnique({
+            return await prisma.tickets.findUnique({
                 where: { id: ticketId },
                 include: {
-                    consumer: {
+                    consumers: {
                         include: {
-                            location: true
+                            locations: true
                         }
                     },
-                    raisedBy: {
+                    users_raisedBy: {
                         select: {
                             username: true,
                             firstName: true,
@@ -223,7 +223,7 @@ class TicketDB {
                             email: true
                         }
                     },
-                    assignedTo: {
+                    users_assignedTo: {
                         select: {
                             username: true,
                             firstName: true,
@@ -241,17 +241,17 @@ class TicketDB {
 
     static async getTicketsByConsumerId(consumerId) {
         try {
-            return await prisma.ticket.findMany({
+            return await prisma.tickets.findMany({
                 where: { consumerId },
                 include: {
-                    raisedBy: {
+                    users_raisedBy: {
                         select: {
                             username: true,
                             firstName: true,
                             lastName: true
                         }
                     },
-                    assignedTo: {
+                    users_assignedTo: {
                         select: {
                             username: true,
                             firstName: true,
@@ -269,7 +269,7 @@ class TicketDB {
 
     static async updateTicketStatus(ticketId, status) {
         try {
-            return await prisma.ticket.update({
+            return await prisma.tickets.update({
                 where: { id: ticketId },
                 data: { 
                     status,
@@ -284,7 +284,7 @@ class TicketDB {
 
     static async assignTicket(ticketId, assignedToId) {
         try {
-            return await prisma.ticket.update({
+            return await prisma.tickets.update({
                 where: { id: ticketId },
                 data: { 
                     assignedToId,
@@ -299,11 +299,11 @@ class TicketDB {
 
     static async createTicket(ticketData) {
         try {
-            return await prisma.ticket.create({
+            return await prisma.tickets.create({
                 data: ticketData,
                 include: {
-                    consumer: true,
-                    raisedBy: true
+                    consumers: true,
+                    users_raisedBy: true
                 }
             });
         } catch (error) {

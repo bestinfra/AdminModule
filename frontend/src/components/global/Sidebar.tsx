@@ -65,6 +65,11 @@ const defaultMenus: MenuCategory[] = [
                 icon: '/icons/dashboard.svg',
                 link: '/superadmin',
             },
+            {
+                title: 'Dashboard', 
+                icon: '/icons/dashboard.svg',
+                link: '/consumer-dashboard',
+            },
             // {
             //     title: 'DTR Dashboard',
             //     icon: '/icons/dashboard.svg',
@@ -81,6 +86,30 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/dashboard.svg',
                 link:'/all-tickets',
             },
+            // {   
+            //         title: 'Bills',
+            //         icon: '/icons/bills.svg',
+            //         link: '/user-management',
+            //         hasSubmenu: true,
+            //         submenu: [
+                       
+                      
+            //             {
+            //                 title: 'Prepaid',
+            //                 link: '/prepaid ',
+            //             },
+            //             {
+            //                 title: 'Postpaid',
+            //                 link: '/postpaid ',
+            //             },
+            //         ],
+            //     },
+
+            // {
+            //     title:'ConsumerDetails',
+            //     icon:'/icons/dashboard.svg',
+            //     link:'/consumer-details',
+            // }
            
         ],
     },
@@ -108,6 +137,11 @@ const defaultMenus: MenuCategory[] = [
                     title: 'Meter List',
                     icon: '/icons/meter_managment.svg',
                     link: '/meters',
+                },
+                {
+                    title: 'Consumer Dashboard',
+                    icon: '/icons/dashboard.svg',
+                    link: '/consumer-dashboard',
                 },
             
             // {   

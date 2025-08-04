@@ -86,7 +86,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     ChatApplication,
     Permissions,
     ProfileSidebar,
-    ProfileContent,
+    ProfileContent,  
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
@@ -299,12 +299,15 @@ const Page: React.FC<PageProps> = ({
                                                 );
                                             }
 
-                                            const componentElement = (
+                                            // Optimize Modal rendering - only render when needed
+                                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                                            
+                                            const componentElement = shouldRenderComponent ? (
                                                 <Component
                                                     key={cidx}
                                                     {...props}
                                                 />
-                                            );
+                                            ) : null;
                                             const spanClasses =
                                                 getSpanClasses(span);
                                             const alignClasses =
@@ -397,9 +400,12 @@ const Page: React.FC<PageProps> = ({
                                 );
                             }
 
-                            const componentElement = (
+                            // Optimize Modal rendering - only render when needed
+                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                            
+                            const componentElement = shouldRenderComponent ? (
                                 <Component key={cidx} {...props} />
-                            );
+                            ) : null;
                             const spanClasses = getSpanClasses(span);
                             const alignClasses = getAlignClasses(
                                 align,

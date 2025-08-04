@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '@context/AuthContext';
+// import { useAuth } from '@context/AuthContext';
 import Button from '@components/global/Button';
 
 interface TabItem {
@@ -11,7 +11,7 @@ interface TabItem {
 }
 
 // Interface for profile tabs that expect user data
-interface ProfileUser {
+export interface ProfileUser {
     USER_ID?: string;
     id?: number;
     email?: string;
@@ -26,28 +26,28 @@ interface ProfileUser {
 const Profile: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { user: authUser } = useAuth();
+    // const { user: authUser } = useAuth();
     const [activeTab, setActiveTab] = useState('basic-info');
     const [sidebarOpen, setSidebarOpen] = useState(true);
 
     // Map AuthContext user to ProfileUser interface
-    const mapUserToProfile = (authUser: any): ProfileUser => {
-        if (!authUser) return {};
+    // const mapUserToProfile = (authUser: any): ProfileUser => {
+    //     if (!authUser) return {};
         
-        return {
-            USER_ID: authUser.id?.toString(),
-            id: authUser.id,
-            email: authUser.email,
-            name: authUser.username,
-            phone: undefined,
-            role_title: authUser.role,
-            client_name: undefined,
-            last_active: undefined,
-            created_at: undefined
-        };
-    };
+    //     return {
+    //         USER_ID: authUser.id?.toString(),
+    //         id: authUser.id,
+    //         email: authUser.email,
+    //         name: authUser.username,
+    //         phone: undefined,
+    //         role_title: authUser.role,
+    //         client_name: undefined,
+    //         last_active: undefined,
+    //         created_at: undefined
+    //     };
+    // };
 
-    const profileUser = mapUserToProfile(authUser);
+    // const profileUser = mapUserToProfile(authUser);
 
     const tabs: TabItem[] = [
         {
@@ -93,10 +93,7 @@ const Profile: React.FC = () => {
     };
 
     const renderTabContent = () => {
-        return (
-            <>
-            </>
-        );
+        return null;
     };
 
     const toggleSidebar = () => {

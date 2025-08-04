@@ -6,10 +6,10 @@ const prisma = new PrismaClient();
 class BillingDB {
     static async getPostpaidBillingStats() {
         try {
-            const bills = await prisma.bill.findMany({
+            const bills = await prisma.bills.findMany({
                 include: {
-                    consumer: true,
-                    meter: true,
+                    consumers: true,
+                    meters: true,
                     payments: true
                 }
             });
@@ -17,7 +17,6 @@ class BillingDB {
             const totalBills = bills.length;
             const totalAmount = bills.reduce((sum, bill) => sum + Number(bill.totalAmount || 0), 0);
             
-            // Calculate outstanding and paid amounts based on payments
             const outstandingAmount = bills.reduce((sum, bill) => {
                 const totalPaid = bill.payments.reduce((paymentSum, payment) => 
                     paymentSum + Number(payment.amount || 0), 0);
@@ -39,10 +38,9 @@ class BillingDB {
                 return sum + totalPaid;
             }, 0);
 
-            // Calculate realization percentage
             const realizationPercentage = totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
 
-            // Count by status
+            
             const pendingCount = bills.filter(bill => bill.status === 'GENERATED').length;
             const overdueCount = bills.filter(bill => {
                 const totalPaid = bill.payments.reduce((sum, payment) => sum + Number(payment.amount || 0), 0);
@@ -84,7 +82,7 @@ class BillingDB {
             }
 
             if (filters.consumerNumber) {
-                whereClause.consumer = {
+                whereClause.consumers = {
                     consumerNumber: {
                         contains: filters.consumerNumber,
                         mode: 'insensitive'
@@ -99,14 +97,14 @@ class BillingDB {
                 };
             }
 
-            const totalCount = await prisma.bill.count({
+            const totalCount = await prisma.bills.count({
                 where: whereClause
             });
 
-            const bills = await prisma.bill.findMany({
+            const bills = await prisma.bills.findMany({
                 where: whereClause,
                 include: {
-                    consumer: {
+                    consumers: {
                         select: {
                             consumerNumber: true,
                             name: true,
@@ -114,7 +112,7 @@ class BillingDB {
                             email: true
                         }
                     },
-                    meter: {
+                    meters: {
                         select: {
                             serialNumber: true,
                             type: true
@@ -143,12 +141,12 @@ class BillingDB {
                 return {
                     id: bill.id,
                     billNumber: bill.billNumber,
-                    consumerNumber: bill.consumer?.consumerNumber,
-                    consumerName: bill.consumer?.name,
-                    consumerPhone: bill.consumer?.primaryPhone,
-                    consumerEmail: bill.consumer?.email,
-                    meterSerial: bill.meter?.serialNumber,
-                    meterType: bill.meter?.type,
+                    consumerNumber: bill.consumers?.consumerNumber,
+                    consumerName: bill.consumers?.name,
+                    consumerPhone: bill.consumers?.primaryPhone,
+                    consumerEmail: bill.consumers?.email,
+                    meterSerial: bill.meters?.serialNumber,
+                    meterType: bill.meters?.type,
                     billingPeriod: `${bill.billMonth}/${bill.billYear}`,
                     dueDate: bill.dueDate,
                     totalAmount,
@@ -183,18 +181,18 @@ class BillingDB {
 
     static async getBillById(billId) {
         try {
-            return await prisma.bill.findUnique({
+            return await prisma.bills.findUnique({
                 where: { id: billId },
                 include: {
-                    consumer: {
+                    consumers: {
                         include: {
-                            location: true
+                            locations: true
                         }
                     },
-                    meter: {
+                    meters: {
                         include: {
-                            location: true,
-                            dtr: true
+                            locations: true,
+                            dtrs: true
                         }
                     },
                     payments: true
@@ -208,10 +206,10 @@ class BillingDB {
 
     static async getBillsByConsumerId(consumerId) {
         try {
-            return await prisma.bill.findMany({
+            return await prisma.bills.findMany({
                 where: { consumerId },
                 include: {
-                    meter: {
+                    meters: {
                         select: {
                             serialNumber: true,
                             type: true
@@ -229,10 +227,10 @@ class BillingDB {
 
     static async getLastBillByConsumerId(consumerId) {
         try {
-            return await prisma.bill.findFirst({
+            return await prisma.bills.findFirst({
                 where: { consumerId },
                 include: {
-                    meter: {
+                    meters: {
                         select: {
                             serialNumber: true,
                             type: true
@@ -250,7 +248,7 @@ class BillingDB {
 
     static async updateBillStatus(billId, status) {
         try {
-            return await prisma.bill.update({
+            return await prisma.bills.update({
                 where: { id: billId },
                 data: { 
                     status,
@@ -265,11 +263,11 @@ class BillingDB {
 
     static async createBill(billData) {
         try {
-            return await prisma.bill.create({
+            return await prisma.bills.create({
                 data: billData,
                 include: {
-                    consumer: true,
-                    meter: true
+                    consumers: true,
+                    meters: true
                 }
             });
         } catch (error) {
