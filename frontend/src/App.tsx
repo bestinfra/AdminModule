@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from '@/context/AppContext';
 import { AuthProvider } from '@/context/AuthContext';
+import { FilterStyleProvider } from '@/contexts/FilterStyleContext';
 import Tickets from './pages_v2/Tickets';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
@@ -9,7 +10,7 @@ import Login from './pages/Login';
 import DataLogger from './pages_v2/DataLogger';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
-import AssetManagment from './pages_v2/AssetManagment';
+import AssetManagment from './pages_v2/AssetManagement';
 // import Dashboard from './pages_v2/Dashboard';
 import DTRDashboard from './pages_v2/DTRDashboard';
 import AppManagement from './pages/Apps_module/AppManagement';
@@ -18,28 +19,39 @@ import ComponentsDocumentation from './pages/ComponentsDocumentation';
 import Connect from './pages_v2/ConnectDisconnect';
 import AddTicket from './pages_v2/AddTicket';
 import RoleManagement from './pages_v2/RoleManagement';
-import SuperAdminDashboard from './pages/SuperAdminDashboard';
 import UserManagement from './pages/UserManagment';
-import AllTickets from './pages/AllTickets';import ConsumerView from './pages_v2/ConsumerView';
+import AllTickets from './pages/AllTickets';
+import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
-import Prepaid from './pages_v2/Prepaid';
+// import Prepaid from './pages_v2/Prepaid';   
 import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
 import AddUser from './pages_v2/AddUser';
 import AddDataLogger from './pages_v2/AddDataLogger';
-import LoginV2 from './pages_v2/LoginV2';
+import SuperAdminDashboard from './pages_v2/SuperAdminDashboard';
+import EditRole from './pages_v2/EditRole';
+import EditUser from './pages_v2/EditUser';
+import UserDetail from './pages_v2/UserDetail';
+import RolesPermissions from './pages_v2/RolesPermissions';
+import SubLogin from './pages_v2/SubLogin';
+import DTRDetailPage from './pages/DTRDetailPage';
+import FilterStyleController from './components/global/FilterStyleController';
+import BillsPrepaid from './pages/BillsPrepaid';
+import BillsPostpaid from './pages/BillsPostpaid';
 
 const App: React.FC = () => {
     return (
         <AppProvider>
             <AuthProvider>
-                <Router>
+                <FilterStyleProvider initialStyle="BRAND_GREEN">
+                    <Router>
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
+                        <Route path="/sub-login" element={<SubLogin />} />
                         <Route
                             element={
                                 <ProtectedRoute>
@@ -52,38 +64,48 @@ const App: React.FC = () => {
                                 element={<DataLogger />}
                             />
                             <Route path="/meters" element={<Meters />} />
+                            <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
                             {/* <Route path="/" element={<Dashboard />} /> */}
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
+                            <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
                             <Route path="/connect-consumer" element={<Connect />} />
                             <Route path="/add-ticket" element={<AddTicket/>} />
                             <Route path="/role-management" element={<RoleManagement/>} />
-                            <Route path="/super-admin" element={<SuperAdminDashboard/>} />
                             <Route path="/user-management" element={<UserManagement/>} />
                             <Route path="/all-tickets" element={<AllTickets/>} />
                             <Route path="/consumers" element={<Consumers />} />
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
+                            <Route path="/consumers/:unitId" element={<ConsumerView />} />
                             <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
+                            <Route path="/feeder/:feederId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
-                            <Route path="/" element={<PageDemo />} />
-                            <Route path="/prepaid" element={<Prepaid />} />
-                            <Route path="/postpaid" element={<Postpaid />} />
+                            <Route path="/" element={<DTRDashboard />} />
+                            <Route path="/prepaid" element={<BillsPrepaid />} />
+                            <Route path="/postpaid" element={<BillsPostpaid />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
+                            <Route path="/edit-role/:roleId" element={<EditRole/>} />
                             <Route path="/add-user" element={<AddUser />} />
+                            <Route path="/edit-user/:userId" element={<EditUser />} />
+                            <Route path="/user-detail/:id" element={<UserDetail />} />
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
+                            <Route path="/roles-permissions" element={<RolesPermissions />} />
+                            <Route path="/filter-style-controller" element={<FilterStyleController />} />
+                            {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
                 </Router>
+                </FilterStyleProvider>
             </AuthProvider>
         </AppProvider>
     );

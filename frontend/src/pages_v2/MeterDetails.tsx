@@ -1,8 +1,22 @@
-import React, { Suspense, useState } from 'react';
+import React, { Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
+// Meter Information Data (moved outside component)
+const METER_INFO_ROW_1 = [
+    { title: 'Meter Sl No.', value: 'A9345417' },
+    { title: 'Modem Sl No', value: 'RFDCU_DCU101' },
+    { title: 'UID', value: 'BI25GMRA002' },
+    { title: 'Assigned To', value: 'Neo Travels' },
+    { title: 'Meter Make', value: 'Secure Meters Ltd' },
+];
 
-// Removed: import BACKEND_URL from '../config';
+const METER_INFO_ROW_2 = [
+    { title: 'Meter CT Ratio', value: '200/5' },
+    { title: 'Meter PT Ratio', value: '11000/110' },
+    { title: 'External CT Ratio', value: '150/5' },
+    { title: 'External PT Ratio', value: '11000/110' },
+    { title: 'Multiplication Factor', value: '40' },
+];
 
 const MeterDetails: React.FC = () => {
     const navigate = useNavigate();
@@ -33,7 +47,7 @@ const MeterDetails: React.FC = () => {
             },
         ],
         status: 'Active',
-        type: 'Three Phase',
+        type: 'Prepaid',
         phase: 'Three Phase',
         location: { name: 'Main Building' },
         installationDate: '2023-01-01T00:00:00Z',
@@ -51,37 +65,18 @@ const MeterDetails: React.FC = () => {
 
     const meter = DEMO_METER;
 
-    // Add Feeder Information section (modeled after Feeders.tsx)
-    const [meterData2,_setMeterData2] = useState([
-        { title: 'Meter CT Ratio', description: 'N/A' },
-        { title: 'Meter PT Ratio', description: '25.00 kVA' },
-        { title: 'External CT Ratio', description: 'N/A' },
-        { title: 'External PT Ratio', description: 'N/A' },
-        { title: 'Multiplication Factor', description: 'N/A' },
-    ]);
-    const [meterData, _setMeterData] = useState([
-        { title: 'Meter Sl No.', description: 'A9345417' },
-        { title: 'Modem Sl No', description: 'RFDCU_DCU101' },
-        { title: 'UID', description: 'BI25GMRA002' },
-        { title: 'Assigned To', description: 'Neo Travels' },
-        { title: 'Meter Make', description: 'N/A' },
-    ]);
-        // const _lastComm = meter.readings?.[0]?.readingDate
-        //     ? new Date(meter.readings[0].readingDate).toLocaleString()
-        //     : 'N/A';
-
-    // Prepare summary cards and info from API data
+    // Prepare summary cards and info from API data - Using BRAND_GREEN (default) for all cards
     const summaryCards = [
         {
             title: 'Current Reading',
             value: meter.readings?.[0]?.kWh
                 ? `${meter.readings[0].kWh} kWh`
                 : 'N/A',
-            icon: '/icons/reading.svg',
+            icon: '/icons/current-reading.svg',
             subtitle1: meter.readings?.[0]
                 ? `Last Reading: ${meter.readings[0].kWh || 'N/A'} kWh`
                 : '',
-            subtitle2: '',
+            subtitle2: 'Consumption: 160.99 kWh',
         },
         {
             title: 'Status',
@@ -97,7 +92,7 @@ const MeterDetails: React.FC = () => {
         {
             title: 'Meter Type',
             value: meter.type || 'N/A',
-            icon: '/icons/meter-type.svg',
+            icon: '/icons/units.svg',
             subtitle1: `Phase Type: ${meter.phase || 'N/A'}`,
             subtitle2: '',
         },
@@ -261,7 +256,7 @@ const MeterDetails: React.FC = () => {
                         {
                             layout: {
                                 type: 'column',
-                                gap: 'gap-6',
+                                gap: 'gap-4',
                             },
                             components: [
                                 {
@@ -286,6 +281,7 @@ const MeterDetails: React.FC = () => {
                                 props: {
                                     ...cardData,
                                     icon: cardData.icon || '/icons/default.svg',
+                                    bg: "bg-stat-icon-gradient",
                                 },
                             })),
                         },
@@ -294,168 +290,146 @@ const MeterDetails: React.FC = () => {
                             layout: {
                                 type: 'grid',
                                 columns: 3,
-                                className: 'mb-6 border border-primary-border rounded-3xl bg-white p-8',
+                                className: 'border border-primary-border rounded-3xl bg-white p-4',
                                 rows: [
-                                    // {
-                                    //     layout: 'row',
-                                    //     className: 'justify-between w-full',
-                                    //     span: { col: 3, row: 1 },
-                                    //     columns: [
-                                    //         {
-
-                                    //         }
-                                    //     ],
-                                    // },
                                     {
-                                        layout: 'grid',
-                                        gridColumns: 5,
+                                        layout: 'row' as const,
+                                        className: 'justify-between w-full',
                                         span: { col: 3, row: 1 },
-                                        columns: meterData.map((item) => ({
-                                            name: 'SectionHeader',
-                                            props: {
-                                                title: item.title,
-                                                value: item.description,
-                                                titleLevel: 2,
-                                                titleSize: 'md',
-                                                titleVariant: 'primary',
-                                                titleWeight: 'bold',
-                                                titleAlign: 'left',
-                                                layout: 'vertical',
-                                                rightComponent: {
-                                                    name: 'LastComm',
-                                                    props: { description: item.description },
-                                                },
-                                            },
-                                            span: { col: 1, row: 1 },
-                                        })),
+                                        columns: [
+                                            {   
+                                               name: 'PageInformation',
+                                               props: {
+                                                title: 'Meter Information',
+                                                isSectionHeader: true,
+                                                layout: 'row',
+                                                align: 'between',
+                                                gap: 'gap-4',
+                                                className: 'text-lg font-semibold'
+                                               }
+                                            }
+                                        ]
                                     },
+                                    // First Row - Basic Meter Information
                                     {
-                                        layout: 'grid',
-                                        gridColumns: 5,
+                                        layout: 'row' as const,
+                                        className: 'justify-between w-full mb-4',
                                         span: { col: 3, row: 1 },
-                                        columns: meterData2.map((item) => ({
-                                            name: 'SectionHeader',
-                                            props: {
-                                                title: item.title,
-                                                value: item.description,
-                                                titleLevel: 2,
-                                                titleSize: 'md',
-                                                titleVariant: 'primary',
-                                                titleWeight: 'bold',
-                                                titleAlign: 'left',
-                                                layout: 'vertical',
-                                                rightComponent: {
-                                                    name: 'LastComm',
-                                                    props: { description: item.description },
-                                                },
-                                            },
-                                            span: { col: 1, row: 1 },
-                                        })),
+                                        columns: [
+                                            {   
+                                               name: 'PageInformation',
+                                               props: {
+                                                gridColumns: 5,
+                                                rows: [
+                                                    {
+                                                        layout: 'row',
+                                                        className: 'justify-between w-full',
+                                                        span: { col: 5, row: 1 },
+                                                        items: METER_INFO_ROW_1.map(item => ({
+                                                            title: item.title,
+                                                            value: item.value,
+                                                            align: 'start',
+                                                            gap: 'gap-1'
+                                                        }))
+                                                    }
+                                                ]
+                                               }
+                                            }
+                                        ]
                                     },
-                                    // Meter Config Ratios row (now inside Feeder Information)
-                                    // {
-                                    //     layout: 'grid',
-                                    //     gridColumns: 5,
-                                    //     span: { col: 5, row: 1 },
-                                    //     columns: [
-                                    //         {
-                                    //             name: 'SectionHeader',
-                                    //             props: {
-                                    //                 title: 'Meter CT Ratio',
-                                    //                 value: meter.config?.ctRatio || 'N/A',
-                                    //                 titleLevel:2,
-                                    //                 titleSize: 'sm',
-                                    //                 titleVariant: 'primary',
-                                    //                 titleWeight: 'bold',
-                                    //                 titleAlign: 'left',
-                                    //                 layout: 'vertical',
-                                    //                 rightComponent: { name: 'LastComm', props: { value: lastComm } },
-                                    //             },
-                                    //             // span: { col: 1, row: 1 },
-                                    //         },
-                                    //         {
-                                    //             name: 'SectionHeader',
-                                    //             props: {
-                                    //                 title: 'Meter PT Ratio',
-                                    //                 value: meter.config?.ptRatio || 'N/A',
-                                    //                 titleLevel: 2,
-                                    //                 titleSize: 'sm',
-                                    //                 titleVariant: 'primary',
-                                    //                 titleWeight: 'bold',
-                                    //                 titleAlign: 'left',
-                                    //                 layout: 'vertical',
-                                                    
-                                    //             },
-                                    //         },
-                                    //         {
-                                    //             name: 'SectionHeader',
-                                    //             props: {
-                                    //                 title: 'External CT Ratio',
-                                    //                 value: meter.config?.adoptedCTRatio || 'N/A',
-                                    //                 titleLevel: 2,
-                                    //                 titleSize: 'sm',
-                                    //                 titleVariant: 'primary',
-                                    //                 titleWeight: 'bold',
-                                    //                 titleAlign: 'left',
-                                    //                 layout: 'vertical',
-                                    //             },
-                                    //             span: { col: 1, row: 1 },
-                                    //         },
-                                    //         {
-                                    //             name: 'SectionHeader',
-                                    //             props: {
-                                    //                 title: 'External PT Ratio',
-                                    //                 value: meter.config?.adoptedPTRatio || 'N/A',
-                                    //                 titleLevel: 2,
-                                    //                 titleSize: 'sm',
-                                    //                 titleVariant: 'primary',
-                                    //                 titleWeight: 'bold',
-                                    //                 titleAlign: 'left',
-                                    //                 layout: 'vertical',
-                                    //             },
-                                    //             span: { col: 1, row: 1 },
-                                    //         },
-                                    //         {
-                                    //             name: 'SectionHeader',
-                                    //             props: {
-                                    //                 title: 'Multiplication Factor',
-                                    //                 value: meter.config?.mf || 'N/A',
-                                    //                 titleLevel: 2,
-                                    //                 titleSize: 'sm',
-                                    //                 titleVariant: 'primary',
-                                    //                 titleWeight: 'bold',
-                                    //                 titleAlign: 'left',
-                                    //                 layout: 'vertical',
-                                    //             },
-                                    //             span: { col: 1, row: 1 },
-                                    //         },
-                                    //     ],
-                                    // },
-                                ],
+                                    // Second Row - Meter Configuration
+                                    {
+                                        layout: 'row' as const,
+                                        className: 'justify-between w-full',
+                                        span: { col: 3, row: 1 },
+                                        columns: [
+                                            {   
+                                               name: 'PageInformation',
+                                               props: {
+                                                gridColumns: 5,
+                                                rows: [
+                                                    {
+                                                        layout: 'row',
+                                                        className: 'justify-between w-full',
+                                                        span: { col: 5, row: 1 },
+                                                        items: METER_INFO_ROW_2.map(item => ({
+                                                            title: item.title,
+                                                            value: item.value,
+                                                            align: 'start',
+                                                            gap: 'gap-1'
+                                                        }))
+                                                    }
+                                                ]
+                                               }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        },
+                        // Meter Readings Chart Section
+                        {
+                            layout: {
+                                type: 'column',
+                                gap: 'gap-4',
                             },
+                            components: [
+                                {
+                                    name: 'BarChart',
+                                    props: {
+                                        showHeader: true,
+                                        headerTitle: 'Meter Readings',
+                                        dateRange: 'Last 7 Days',
+                                        availableTimeRanges: ['Daily', 'Weekly', 'Monthly'],
+                                        initialTimeRange: 'Daily',
+                                        showDownloadButton: true,
+                                        showViewToggle: true,
+                                        viewToggleOptions: ['Graph', 'Table'],
+                                        initialViewType: 'Graph',
+                                        height: '400px',
+                                        xAxisData: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                                        seriesData: [
+                                            {
+                                                name: 'Energy Consumption (kWh)',
+                                                data: [180, 195, 210, 185, 200, 175, 190]
+                                            },
+                                            {
+                                                name: 'Peak Demand (kW)',
+                                                data: [45, 52, 48, 43, 50, 38, 42]
+                                            }
+                                        ],
+                                        seriesColors: ['var(--color-primary)', 'var(--color-secondary)'],
+                                        showXAxisLabel: true,
+                                        xAxisLabel: 'kWh',
+                                        onTimeRangeChange: (range: string) => {
+                                            console.log('Time range changed:', range);
+                                        },
+                                        onViewTypeChange: (viewType: string) => {
+                                            console.log('View type changed:', viewType);
+                                        },
+                                        onDownload: (timeRange: string, viewType: string) => {
+                                            console.log('Download requested:', timeRange, viewType);
+                                        }
+                                    }
+                                }
+                            ]
                         },
                         // Meter History Section
                         {
                             layout:{
                                 type:"column" as const,
-                                className:"mb-8"
+                                gap:"gap-4"
                             },
                             components:[
-                                {
-                                    name:"Heading",
-                                    props:{
-                                        text:"Meter History",
-                                        level:2,
-                                        className:"text-lg font-semibold mb-4"
-                                    }
-                                },
                                 {
                                     name:'Table',
                                     props:{
                                         data:meterInfoData,
                                         columns:meterInfoColumns,
                                         actions:meterDetailAction,
-                                        showActions:true,
+                                        showActions:false,
+                                        showHeader: true,
+                                        headerTitle: 'Meter History',
                                         searchable:true,
                                         pagination:true,
                                         initialRowsPerPage:10,
@@ -463,8 +437,8 @@ const MeterDetails: React.FC = () => {
                                         emptyMessage:"No Meter Information Found",
                                         onRowClick:()=>{
                                             navigate(`/meters/${meter.serialNumber}`)
-                                        }
-                                        
+                                        },
+                                        availableTimeRanges: [],                                        
                                     }
                                 }
                             ]

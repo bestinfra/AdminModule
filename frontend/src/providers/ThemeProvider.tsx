@@ -147,6 +147,34 @@ interface ThemeProviderProps {
     initialTheme?: Partial<ThemeContextType['theme']>;
 }
 
+// Function to update Tailwind theme layer with CSS custom properties
+const updateTailwindThemeLayer = (themeVariables: Record<string, string>) => {
+    // Remove existing dynamic theme style if it exists
+    const existingStyle = document.getElementById('dynamic-tailwind-theme');
+    if (existingStyle) {
+        existingStyle.remove();
+    }
+
+    // Create CSS variables string
+    const cssVariables = Object.entries(themeVariables)
+        .map(([key, value]) => {
+            const cssVarName = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+            return `--${cssVarName}: ${value};`;
+        })
+        .join('\n    ');
+
+    // Create the CSS content for the theme layer
+    const cssContent = `@theme {
+    ${cssVariables}
+}`;
+
+    // Create and inject the style element
+    const styleElement = document.createElement('style');
+    styleElement.id = 'dynamic-tailwind-theme';
+    styleElement.textContent = cssContent;
+    document.head.appendChild(styleElement);
+};
+
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     children,
     initialTheme = {},
@@ -161,13 +189,17 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
             ...prev,
             ...newTheme,
         }));
-        Object.entries(newTheme).forEach(([key, value]) => {
-            console.log(key, value);
+        
+        // Update CSS custom properties on document element (existing functionality)
+        Object.entries(newTheme).forEach(([key, value]) => {    
             document.documentElement.style.setProperty(
                 `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`,
                 value
             );
         });
+
+        // Update Tailwind theme layer with new variables
+        updateTailwindThemeLayer(newTheme);
     };
 
     return (

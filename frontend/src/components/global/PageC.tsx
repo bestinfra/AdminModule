@@ -9,6 +9,7 @@ import PageHeader from './PageHeader';
 import RecentActivities from './RecentActivities';
 import Search from './Search';
 import DatePicker from './DatePicker';
+import Calendar from './Calendar';
 import ExpandableTable from './ExpandableTable';
 import OrgChart from './OrgChart';
 // import OrgChartAlt from './OrgChartAlt';
@@ -31,7 +32,17 @@ import ChatInput from '../Ticket/ChatInput';
 import TicketInfoCard from '../Ticket/TicketInfoCard';
 import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+import ChatComponent from '../Ticket/ChatComponent';
+import PageInformation from './PageInformation';
+import SubappPanel from './SubAppPanel';
+import Permissions from './Permissions';
+import SummaryInfo from './SummaryInfo';
+import TicketConversationPanel from '../TicketConversationPanel';
+import TicketInformationPannel from './TIcketInformationPannel';
+import ActivityLog from './ActivityLog';
+import ChatApplication from '../ChatApplication';
+import ProfileSidebar from './ProfileSidebar';
+import ProfileContent from './ProfileContent';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -43,6 +54,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     RecentActivities,
     Search,
     DatePicker,
+    Calendar,
     ExpandableTable,
     OrgChart,
     OrgChartAlt,
@@ -62,8 +74,19 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     TicketInfoCard,
     UnitDetailsCard,
     ActivityLogCard,
+    ChatComponent,
     Carousel,
     LoginV2,
+    PageInformation,
+    SubappPanel,
+    SummaryInfo,
+    TicketConversationPanel,
+    TicketInformationPannel,
+    ActivityLog,
+    ChatApplication,
+    Permissions,
+    ProfileSidebar,
+    ProfileContent,  
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
@@ -123,13 +146,13 @@ const getLayoutClass = (layout?: LayoutConfig) => {
     let baseClass = '';
     switch (type) {
         case 'row':
-            baseClass = `flex flex-row mb-2 ${gap || 'gap-4'}`;
+            baseClass = `flex flex-row  ${gap || 'gap-4'}`;
             break;
         case 'column':
-            baseClass = `flex flex-col mb-2 ${gap || 'gap-4'}`;
+            baseClass = `flex flex-col  ${gap || 'gap-4'}`;
             break;
         case 'grid': {
-            let gridClass = `grid mb-2 ${gap || 'gap-4'}`;
+            let gridClass = `grid ${gap || 'gap-4'}`;
             if (columns) gridClass += ` grid-cols-${columns}`;
             if (gridRows) gridClass += ` grid-rows-${gridRows}`;
             baseClass = gridClass;
@@ -224,7 +247,7 @@ const Page: React.FC<PageProps> = ({
     style = {},
 }) => {
     return (
-        <div className={`w-full h-full`} style={style}>
+        <div className={`w-full h-full  flex flex-col gap-4`} style={style}>
             {sections.map((section, idx) => {
                 if (section.layout && section.layout.rows) {
                     const sectionClass = getLayoutClass(section.layout);
@@ -238,7 +261,7 @@ const Page: React.FC<PageProps> = ({
                                 const rowElement = (
                                     <div
                                         key={rowIdx}
-                                        className={`${rowClass} mb-4`}>
+                                        className={`${rowClass}`}>
                                         {row.columns.map((comp, cidx) => {
                                             let name: string;
                                             let props: Record<string, unknown> =
@@ -276,12 +299,15 @@ const Page: React.FC<PageProps> = ({
                                                 );
                                             }
 
-                                            const componentElement = (
+                                            // Optimize Modal rendering - only render when needed
+                                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                                            
+                                            const componentElement = shouldRenderComponent ? (
                                                 <Component
                                                     key={cidx}
                                                     {...props}
                                                 />
-                                            );
+                                            ) : null;
                                             const spanClasses =
                                                 getSpanClasses(span);
                                             const alignClasses =
@@ -374,9 +400,12 @@ const Page: React.FC<PageProps> = ({
                                 );
                             }
 
-                            const componentElement = (
+                            // Optimize Modal rendering - only render when needed
+                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                            
+                            const componentElement = shouldRenderComponent ? (
                                 <Component key={cidx} {...props} />
-                            );
+                            ) : null;
                             const spanClasses = getSpanClasses(span);
                             const alignClasses = getAlignClasses(
                                 align,

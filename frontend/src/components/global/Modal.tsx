@@ -1,13 +1,15 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import Button from '@components/global/Button';
+import Form from '@components/Form/Form';
+import type { FormInputConfig, FormInputValue } from '@components/Form/types';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   showCloseIcon?: boolean;
-  children: React.ReactNode;
+  children?: React.ReactNode;
   size?: 'sm' | 'md' | 'lg' | 'xl';
   centered?: boolean;
   backdropClosable?: boolean;
@@ -16,9 +18,25 @@ interface ModalProps {
   showConfirmButton?: boolean;
   confirmButtonLabel?: string;
   onConfirm?: () => void;
+  message?: string;
+  warningMessage?: string;
+  // Data props for content
+  content?: string;
+  contentType?: 'text' | 'html' | 'markdown';
+  // Form props for edit/add role
+  showForm?: boolean;
+  formFields?: FormInputConfig[];
+  onSave?: (formData: Record<string, FormInputValue>) => void;
+  saveButtonLabel?: string;
+  cancelButtonLabel?: string;
+  cancelButtonVariant?: 'primary' | 'secondary' | 'outline';
+  confirmButtonVariant?: 'primary' | 'secondary' | 'outline' | 'danger';
+  formInitialData?: Record<string, FormInputValue>;
+  formErrorMessages?: Record<string, string>;
+  formId?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const Modal: React.FC<ModalProps> = React.memo(({
   isOpen,
   onClose,
   title,
@@ -31,7 +49,21 @@ const Modal: React.FC<ModalProps> = ({
   modalId,
   showConfirmButton = false,
   confirmButtonLabel = 'Confirm',
-  onConfirm
+  onConfirm,
+  message,
+  warningMessage,
+  content,
+  contentType = 'text',
+  showForm = false,
+  formFields = [],
+  onSave,
+  saveButtonLabel = 'Save',
+  cancelButtonLabel = 'Cancel',
+  cancelButtonVariant = 'secondary',
+  confirmButtonVariant = 'primary',
+  formInitialData,
+  formErrorMessages,
+  formId
 }) => {
   const uniqueModalId = modalId || `modal-${Math.random().toString(36).substr(2, 9)}`;
   
@@ -79,6 +111,24 @@ const Modal: React.FC<ModalProps> = ({
       onClose();
     }
   };
+
+  const handleFormSubmit = (formData: Record<string, FormInputValue>) => {
+    if (onSave) {
+      onSave(formData);
+    }
+  };
+
+  // Memoize content rendering to prevent unnecessary re-renders
+  const memoizedContent = useMemo(() => {
+    if (content) {
+      return (
+        <div className="text-gray-700 dark:text-gray-300 whitespace-pre-line max-h-[60vh] overflow-y-auto leading-relaxed scroll-y-hidden">
+          {content}
+        </div>
+      );
+    }
+    return null;
+  }, [content]);
 
   const sizeClasses = {
     sm: 'max-w-sm w-full mx-4',
@@ -148,18 +198,81 @@ const Modal: React.FC<ModalProps> = ({
                 </header>
               )}
 
-              <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white">
+              <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white  ">
                 <section id={`${uniqueModalId}-description`} className="space-y-4">
-                  {children}
+                  {children || (
+                    <>
+                      {showForm && formFields.length > 0 ? (
+                        <Form
+                          inputs={formFields.map(field => ({
+                            ...field,
+                            col: 1,
+                            colSpan: 3
+                          }))}
+                          onSubmit={handleFormSubmit}
+                          submitLabel={saveButtonLabel}
+                          cancelLabel={cancelButtonLabel}
+                          formId={formId || `${uniqueModalId}-form`}
+                          initialData={formInitialData}
+                          errorMessages={formErrorMessages}
+                          showFormActions={false}
+                          formBackground=""
+                          padding="p-0"
+                          border="none"
+                          gridLayout={{
+                            gridRows: formFields.length,
+                            gridColumns: 3,
+                            gap: "gap-4"
+                          }}
+                        />
+                      ) : content ? (
+                        memoizedContent
+                      ) : (
+                        <>
+                          {message && (
+                            <p className="text-gray-600 dark:text-gray-400">
+                              {message}
+                            </p>
+                          )}
+                          {warningMessage && (
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {warningMessage}
+                            </p>
+                          )}
+                        </>
+                      )}
+                    </>
+                  )}
                 </section>
               </main>
 
-              {showConfirmButton && (
-                <footer className="flex justify-end px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
-                  <Button
-                    label={confirmButtonLabel}
-                    onClick={onConfirm}
-                  />
+              {(showConfirmButton || (showForm && formFields.length > 0)) && (
+                <footer className="flex justify-end gap-3 px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
+                  {showForm && formFields.length > 0 ? (
+                    <>
+                      <Button
+                        label={cancelButtonLabel}
+                        variant={cancelButtonVariant}
+                        onClick={onClose}
+                      />
+                      <Button
+                        label={saveButtonLabel}
+                        onClick={() => {
+                          // Trigger form submission
+                          const formElement = document.getElementById(formId || `${uniqueModalId}-form`) as HTMLFormElement;
+                          if (formElement) {
+                            formElement.requestSubmit();
+                          }
+                        }}
+                      />
+                    </>
+                  ) : (
+                    <Button
+                      label={confirmButtonLabel}
+                      onClick={onConfirm}
+                      variant={confirmButtonVariant}
+                    />
+                  )}
                 </footer>
               )}
             </article>
@@ -169,6 +282,6 @@ const Modal: React.FC<ModalProps> = ({
       )}
     </>
   );
-};
+});
 
 export default Modal;

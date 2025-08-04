@@ -1,4 +1,4 @@
-import { AppCreationAPI } from '../../api/appCreation';
+import { AppCreationAPI, type AppCreationResponse } from '../../api/appCreation';
 import type { AllFormData, StepData } from './types';
 
 /**
@@ -94,7 +94,7 @@ export const combineFormData = (stepData: StepData): AllFormData => {
 /**
  * Handles the final app creation submission
  */
-export const submitAppCreation = async (formData: AllFormData): Promise<void> => {
+export const submitAppCreation = async (formData: AllFormData): Promise<AppCreationResponse> => {
   console.log('Submitting form data:', formData);
   
   // Check if server is running
@@ -114,14 +114,17 @@ export const submitAppCreation = async (formData: AllFormData): Promise<void> =>
         username: formData.adminUsername,
         password: formData.adminPassword,
       });
-      alert('Login credentials email sent to admin.');
+      console.log('Login credentials email sent to admin.');
     } catch (e) {
-      alert('App created, but failed to send credentials email: ' + (e instanceof Error ? e.message : e));
+      console.error('App created, but failed to send credentials email:', e);
     }
   }
   
-  // Handle success
-  alert(`${result.message}\n\nNext steps:\n${result.nextSteps?.join('\n') || ''}`);
+  // Handle success - return the result for the modal to display
+  console.log(`${result.message}\n\nNext steps:\n${result.nextSteps?.join('\n') || ''}`);
+  
+  // Return the result so it can be used by the success modal
+  return result;
 };
 
 /**

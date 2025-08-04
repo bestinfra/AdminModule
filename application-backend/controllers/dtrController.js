@@ -1,4 +1,5 @@
 import DTRDB from '../models/DTRDB.js';
+import { getDateTime, getDateInYMDFormat, getDateInMYFormat, fillMissingDatesDyno } from '../utils/utils.js';
 
 export const getDTRTable = async (req, res) => {
     try {
@@ -42,10 +43,43 @@ export const getDTRTable = async (req, res) => {
 export const getFeedersForDTR = async (req, res) => {
     try {
         const { dtrId } = req.params;
-        const feeders = await DTRDB.getFeedersForDTR(dtrId);
+        const feedersData = await DTRDB.getFeedersForDTR(dtrId);
+        
+        // Map feeders data to match frontend expectations
+        const mappedFeeders = feedersData.feeders.map((feeder, idx) => ({
+            sNo: idx + 1,
+            feederId: feeder.id,
+            meterNumber: feeder.meterNumber || 'NA',
+            serialNumber: feeder.serialNumber || 'NA',
+            manufacturer: feeder.manufacturer || 'NA',
+            model: feeder.model || 'NA',
+            type: feeder.type || 'NA',
+            phase: feeder.phase || 'NA',
+            status: feeder.status || 'NA',
+            location: feeder.location ? feeder.location.name : 'NA',
+            city: feeder.location ? feeder.location.city : 'NA',
+            latitude: feeder.location ? feeder.location.latitude : null,
+            longitude: feeder.location ? feeder.location.longitude : null
+        }));
+
+        const mappedDTR = {
+            dtrId: feedersData.dtr.id,
+            dtrNumber: feedersData.dtr.dtrNumber || 'NA',
+            serialNumber: feedersData.dtr.serialNumber || 'NA',
+            manufacturer: feedersData.dtr.manufacturer || 'NA',
+            model: feedersData.dtr.model || 'NA',
+            capacity: feedersData.dtr.capacity || 0,
+            loadPercentage: feedersData.dtr.loadPercentage || 0,
+            status: feedersData.dtr.status || 'NA'
+        };
+
         res.json({
             success: true,
-            data: feeders,
+            data: {
+                dtr: mappedDTR,
+                feeders: mappedFeeders,
+                totalFeeders: mappedFeeders.length
+            },
             message: 'Feeders fetched successfully'
         });
     } catch (error) {
@@ -191,8 +225,8 @@ export const getFeederStats = async (req, res) => {
 
 export const getInstantaneousStats = async (req, res) => {
     try {
-        const { meterId } = req.params;
-        const stats = await DTRDB.getInstantaneousStats(meterId);
+        const { dtrId } = req.params;
+        const stats = await DTRDB.getInstantaneousStats(dtrId);
         res.json({
             success: true,
             data: stats,
@@ -206,4 +240,96 @@ export const getInstantaneousStats = async (req, res) => {
             error: error.message
         });
     }
+};
+
+export const getConsolidatedDTRStats = async (req, res) => {
+    try {
+        const stats = await DTRDB.getConsolidatedDTRStats();
+        res.json({
+            success: true,
+            data: stats,
+            message: 'Consolidated DTR stats fetched successfully'
+        });
+    } catch (error) {
+        console.error('Error fetching consolidated DTR stats:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch consolidated DTR stats',
+            error: error.message
+        });
+    }
 }; 
+
+export const getDTRConsumptionAnalytics = async (req, res) => {
+    try {
+        const { dtrId } = req.params;
+        
+        const consumptionOnDaily = await DTRDB.getDTRMainGraphAnalytics(dtrId, 'daily');
+        const consumptionOnMonthly = await DTRDB.getDTRMainGraphAnalytics(dtrId, 'monthly');
+        
+        const { dailyxAxisData, dailysums } = consumptionOnDaily.reduce(
+            (acc, item) => {
+                acc.dailyxAxisData.push(item.consumption_date);
+                acc.dailysums.push((item.total_consumption || 0).toFixed(2));
+                return acc;
+            },
+            { dailyxAxisData: [], dailysums: [] }
+        );
+        
+        const daily = fillMissingDatesDyno(
+            dailyxAxisData,
+            dailysums,
+            'DD MMM, YYYY',
+            'day'
+        );
+        
+        const { monthlyxAxisData, monthlysums } = consumptionOnMonthly.reduce(
+            (acc, item) => {
+                acc.monthlyxAxisData.push(
+                    getDateInMYFormat(item.consumption_date)
+                );
+                acc.monthlysums.push((item.total_consumption || 0).toFixed(2));
+                return acc;
+            },
+            { monthlyxAxisData: [], monthlysums: [] }
+        );
+        
+        const monthly = fillMissingDatesDyno(
+            monthlyxAxisData,
+            monthlysums,
+            'DD MMM, YYYY',
+            'month'
+        );
+
+        const dailyData = {
+            xAxisData: daily.dates,
+            sums: daily.values,
+        };
+
+        const monthlyData = {
+            xAxisData: monthly.dates,
+            sums: monthly.values,
+        };
+        
+        res.status(200).json({
+            status: 'success',
+            data: {
+                dailyData,
+                monthlyData,
+            },
+        });
+    } catch (error) {
+        console.error('Error fetching DTR consumption analytics:', {
+            error: error.message,
+            stack: error.stack,
+            timestamp: getDateTime(),
+        });
+
+        res.status(500).json({
+            status: 'error',
+            message: 'An error occurred while fetching DTR consumption analytics',
+            errorId: error.code || 'INTERNAL_SERVER_ERROR',
+        });
+    }
+};
+

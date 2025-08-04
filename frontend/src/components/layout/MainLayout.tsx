@@ -174,10 +174,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                     onSidebarToggle={toggleSidebar}
                     actions={headerActions}
                     searchEnabled={true}
-                    searchPlaceholder="Search anything..."
+                    searchPlaceholder="Search by name or ID"
                     onSearch={(query) => console.log('Search:', query)}
                     />
-                <main className="flex-1 px-6  py-4  bg-white overflow-auto dark:bg-primary-dark hide-scrollbar-y">
+                <main className="flex-1 px-6 py-4  bg-white overflow-auto dark:bg-primary-dark hide-scrollbar-y">
                     <Outlet />
                 </main>
             </div>

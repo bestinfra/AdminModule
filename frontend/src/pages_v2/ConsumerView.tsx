@@ -1,11 +1,12 @@
-import { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
-import Card from '@components/global/Card';
+import Card from '@/components/global/Card';
 import PieChart from '../graphs/PieChart';
 import BarChart from '../graphs/BarChart';
-import Table from '@components/global/Table';
+import Table from '@/components/global/Table';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
+import { exportChartData } from '@/utils/excelExport';
 
 const ConsumerView: React.FC = () => {
     // Try to get unitId from useParams first, then fallback to URL parsing
@@ -52,6 +53,31 @@ const ConsumerView: React.FC = () => {
     const handleRefreshClick = () => {
         console.log('Refresh button clicked');
         // Add your refresh logic here
+    };
+
+    // Chart download handlers
+    const handlePowerMetricsDownload = () => {
+        if (consumer?.powerMetrics) {
+            const xAxisData = ['kVAh- (i)', 'kWh(i)', 'kWh(E)', 'kVArh-lag(i)', 'kVArh-Ld(i)'];
+            const seriesData = [{ name: 'Power', data: consumer.powerMetrics }];
+            exportChartData(xAxisData, seriesData, 'consumer-power-metrics-data');
+        }
+    };
+
+    const handleDailyConsumptionDownload = () => {
+        if (consumer?.dailyConsumption) {
+            const xAxisData = ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'];
+            const seriesData = [{ name: 'Daily Consumption', data: consumer.dailyConsumption }];
+            exportChartData(xAxisData, seriesData, 'consumer-daily-consumption-data');
+        }
+    };
+
+    const handleMonthlyConsumptionDownload = () => {
+        if (consumer?.monthlyConsumption) {
+            const xAxisData = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const seriesData = [{ name: 'Monthly Consumption', data: consumer.monthlyConsumption }];
+            exportChartData(xAxisData, seriesData, 'consumer-monthly-consumption-data');
+        }
     };
 
     // Fetch consumer data
@@ -425,10 +451,10 @@ const ConsumerView: React.FC = () => {
                                     availableTimeRanges: [],
                                     selectedTimeRange: '',
                                     handleTimeRangeChange: () => {},
-                                    handleDownload: () => {},
+                                    handleDownload: handlePowerMetricsDownload,
                                     loading: false,
                                     children: (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* Power Distribution Card */}
                                             <div className="rounded-2xl shadow p-0 flex flex-col h-full">
                                                 <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
@@ -452,7 +478,7 @@ const ConsumerView: React.FC = () => {
                                                 <div className="flex flex-col md:flex-row items-center justify-between px-6 pb-6 pt-2 gap-4">
                                                     <div className="flex flex-col items-center w-full md:w-2/3">
                                                         {/* Legend above chart */}
-                                                        <div className="flex items-center gap-6 mb-2">
+                                                        <div className="flex items-center gap-4 mb-2">
                                                             <span className="flex items-center gap-1 text-secondary font-medium text-sm">
                                                                 <span className="w-3 h-3 rounded-full bg-secondary inline-block"></span>
                                                                 Apparent Power
@@ -551,11 +577,7 @@ const ConsumerView: React.FC = () => {
                                                     </div>
                                                     <span
                                                         className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border"
-                                                        onClick={() =>
-                                                            alert(
-                                                                'Download Power Metrics'
-                                                            )
-                                                        }>
+                                                        onClick={handlePowerMetricsDownload}>
                                                         <img
                                                             alt="Download chart"
                                                             src="icons/download-icon.svg"
@@ -626,10 +648,10 @@ const ConsumerView: React.FC = () => {
                                     availableTimeRanges: [],
                                     selectedTimeRange: '',
                                     handleTimeRangeChange: () => {},
-                                    handleDownload: () => {},
+                                    handleDownload: handleDailyConsumptionDownload,
                                     loading: false,
                                     children: (
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {/* Daily Consumption Card */}
                                             <div className="rounded-2xl shadow p-0 flex flex-col h-full">
                                                 <div className="flex items-center justify-between px-6 pt-4 pb-2 bg-primary-lightest rounded-t-2xl">
@@ -642,11 +664,7 @@ const ConsumerView: React.FC = () => {
                                                     </div>
                                                     <span
                                                         className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border"
-                                                        onClick={() =>
-                                                            alert(
-                                                                'Download Daily Consumption'
-                                                            )
-                                                        }>
+                                                        onClick={handleDailyConsumptionDownload}>
                                                         <img
                                                             alt="Download chart"
                                                             src="icons/download-icon.svg"
@@ -697,11 +715,7 @@ const ConsumerView: React.FC = () => {
                                                     </div>
                                                     <span
                                                         className="cursor-pointer w-8 h-8 rounded-full bg-white flex justify-center items-center relative border border-primary-border"
-                                                        onClick={() =>
-                                                            alert(
-                                                                'Download Monthly Consumption'
-                                                            )
-                                                        }>
+                                                        onClick={handleMonthlyConsumptionDownload}>
                                                         <img
                                                             alt="Download chart"
                                                             src="icons/download-icon.svg"
@@ -750,7 +764,7 @@ const ConsumerView: React.FC = () => {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                         },
                         components: [
                             {
@@ -764,7 +778,7 @@ const ConsumerView: React.FC = () => {
                                     handleDownload: () => {},
                                     loading: false,
                                     children: (
-                                        <div className="flex flex-col gap-6">
+                                        <div className="flex flex-col gap-4">
                                             <div className="flex flex-col gap-2">
                                                 <div className="font-semibold text-base">
                                                     Unit History

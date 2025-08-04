@@ -313,7 +313,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                 <div className="mb-4">
                   <h3 className="text-sm font-semibold text-primary">Company Information</h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormInput
                     input={{
                       name: "companyName",
@@ -368,8 +368,8 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                 <div className="mb-4">
                   <h3 className="text-sm font-semibold text-primary">Company Logo</h3>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 bg-white rounded-xl">
-                  <div className="div1 flex justify-between w-full gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white rounded-xl">
+                  <div className="div1 flex justify-between w-full gap-4">
                     <div className="div2 w-full flex flex-col gap-4">
                       <DragDropFileUpload
                         id="appLogo"
@@ -472,7 +472,7 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                     timeRangeLabels={{ Light: "Light Mode", Dark: "Dark Mode" }}
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 max-h-96 overflow-y-auto scrollbar-hide justify-start items-center place-items-start">
                   {/* Light Mode Colors */}
                   {selectedMode === "Light" && <>
                     {/* Primary Colors */}
@@ -512,7 +512,6 @@ const BrandPersonalization: React.FC<BrandPersonalizationProps> = ({
                     <ColorPicker label="Main Background (Dark Mode)" name="colorPrimaryDark" value={formData.colorPrimaryDark || "#041328"} onChange={onInputChange} options={[{ value: "#041328", label: "Main Background (Dark Mode)", color: "#041328" }]} width={48} />
                     <ColorPicker label="Card/Panel Background (Dark)" name="colorPrimaryDarkLight" value={formData.colorPrimaryDarkLight || "#06152d"} onChange={onInputChange} options={[{ value: "#06152d", label: "Card/Panel Background (Dark)", color: "#06152d" }]} width={48} />
                     <ColorPicker label="Main Text (Dark)" name="colorDarkPrimary" value={formData.colorDarkPrimary || "#476189"} onChange={onInputChange} options={[{ value: "#476189", label: "Main Text (Dark)", color: "#476189" }]} width={48} />
-                    <ColorPicker label="Subtext (Dark)" name="colorDarkSecondary" value={formData.colorDarkSecondary || "#476189"} onChange={onInputChange} options={[{ value: "#476189", label: "Subtext (Dark)", color: "#476189" }]} width={48} />
                     <ColorPicker label="Border (Dark Mode)" name="colorDarkBorder" value={formData.colorDarkBorder || "#091b3b"} onChange={onInputChange} options={[{ value: "#091b3b", label: "Border (Dark Mode)", color: "#091b3b" }]} width={48} />
                     {/* Gradients (optional, can be removed if not needed) */}
                     <ColorPicker label="Main Gradient Background" name="colorPrimaryGradient" value={formData.colorPrimaryGradient || "linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))"} onChange={onInputChange} options={[{ value: "linear-gradient(135deg, var(--colorSecondaryLight), var(--colorSecondaryLightestTransperent))", label: "Main Gradient Background", color: "#163b7c" }]} allowGradient={true} gradientInputWidth="full" gradientColorOptions={{ light: lightModeColors, dark: darkModeColors }} currentMode={selectedMode.toLowerCase() === 'light' ? 'light' : 'dark'} />

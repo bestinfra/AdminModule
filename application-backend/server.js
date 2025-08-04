@@ -12,6 +12,8 @@ import dashboard from './routes/dashboard.js';
 import tickets from './routes/tickets.js';
 import dtrs from './routes/dtrs.js';
 import apiRoutes from './routes/apiRoutes.js';
+import subAppAuthRoutes from './routes/subAppAuth.js';
+import { initializeCronJobs } from './cron/jobs.js';
 
 dotenv.config();
 
@@ -36,11 +38,15 @@ app.use((req, res, next) => {
 
 app.use('/api', apiRoutes);
 
+// Sub-app authentication routes
+app.use('/api/sub-app/auth', subAppAuthRoutes);
+
 app.get('/api/health', (req, res) => res.json({ 
     status: 'ok',
     timestamp: new Date().toISOString(),
     message: 'Application Backend API is running'
 }));
+
 
 // 404 handler
 app.use('*', (req, res) => {
@@ -51,24 +57,24 @@ app.use('*', (req, res) => {
     });
 });
 
-// Database connection and server startup
 async function startServer() {
     try {
-        // Test database connection
         await prisma.$connect();
         console.log('✅ Connected to database successfully');
+        
+        await initializeCronJobs();
+        console.log('✅ Cron jobs initialized successfully');
         
         app.listen(PORT, () => {
             console.log(`🚀 Backend running on port ${PORT}`);
             console.log(`📊 API Documentation: http://localhost:${PORT}/api/health`);
         });
     } catch (error) {
-        console.error('❌ Database connection failed:', error);
+        console.error('❌ Server startup failed:', error);
         process.exit(1);
     }
 }
 
-// Graceful shutdown
 process.on('SIGINT', async () => {
     console.log('\n🛑 Shutting down server...');
     await prisma.$disconnect();

@@ -306,7 +306,7 @@ const SuperAdminDashboard: React.FC = () => {
     const analyticsSection: Section = {
         id: 'analytics',
         component: (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 {/* Project Status Distribution */}
                 <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
                     <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">

@@ -169,7 +169,6 @@ const renderFormInput = (
 );
 
 const Form = forwardRef<FormRef, FormProps>(({
-  // usefull
   inputs,
   onSubmit,
   submitLabel,
@@ -314,7 +313,7 @@ const Form = forwardRef<FormRef, FormProps>(({
 
   // Layout rendering functions
   const renderDefaultGridLayout = useCallback(() => (
-    <div className="grid gap-6 grid-cols-3">
+    <div className="grid gap-4 grid-cols-3">
       {inputs.map((inputConfig) => 
         renderFormInput(
           inputConfig,
@@ -408,9 +407,9 @@ const Form = forwardRef<FormRef, FormProps>(({
   const hasValidationErrors = allErrorMessages.length > 0;
 
   // Form container classes
-  const defaultPadding = 'p-8';
-  const defaultBorder = 'border border-gray-200 dark:border-gray-700';
-  const defaultClasses = `bg-white dark:bg-gray-800 rounded-lg ${border || defaultBorder} ${padding || defaultPadding}`;
+  const defaultPadding = 'p-4';
+  const defaultBorder = 'border border-primary-border dark:border-dark-border';
+  const defaultClasses = `bg-white dark:bg-gray-800 rounded-2xl ${border || defaultBorder} ${padding || defaultPadding}`;
   
   // Use formBackground prop if provided, otherwise use default background
   const backgroundClass = formBackground || defaultClasses;

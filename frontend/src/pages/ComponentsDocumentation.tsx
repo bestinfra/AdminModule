@@ -562,7 +562,7 @@ const ComponentsDocumentation: React.FC = () => {
   const splitLayoutSection: Section = {
     id: 'split-layout',
     component: (
-      <div className="flex flex-col lg:flex-row gap-6 h-[calc(100vh-200px)]">
+      <div className="flex flex-col lg:flex-row gap-4 h-[calc(100vh-200px)]">
         {/* Left Side - Component List */}
         <div className="lg:w-1/3 bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden">
           <div className="p-6 border-b border-primary-border dark:border-dark-border">

@@ -15,9 +15,7 @@ const tableColumns = [
     // Add actions column if you want to show action buttons
 ];
 
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
+
 
 export default function Users() {
     const navigate = useNavigate();
@@ -37,16 +35,55 @@ export default function Users() {
     const [userStats, setUserStats] = useState<any>(null);
     const [statsLoading, setStatsLoading] = useState(true);
 
+    // Inactive modal state
+    const [showInactiveModal, setShowInactiveModal] = useState(false);
+    const [userToInactive, setUserToInactive] = useState<any>(null);
+    const [inactiveFormData, setInactiveFormData] = useState({
+        userName: '',
+        reason: ''
+    });
+
+    // Filter state
+    const [filters, setFilters] = useState({
+        userTypes: '',
+        userStatus: '',
+    });
+
+    // Dropdown options
+    const userTypesOptions = [
+        { value: 'admin', label: 'Admin' },
+        { value: 'user', label: 'User' },
+        { value: 'moderator', label: 'Moderator' },
+        { value: 'accountant', label: 'Accountant' },
+    ];
+
+    const userStatusOptions = [
+        { value: 'active', label: 'Active' },
+        { value: 'inactive', label: 'Inactive' },
+    ];
+
+    // Filter change handler
+    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFilters(prev => ({
+            ...prev,
+            [name]: value
+        }));
+        console.log(`Filter changed: ${name} = ${value}`);
+        // Add your filter logic here
+    };
+
     useEffect(() => {
         setLoading(true);
         fetch(`${BACKEND_URL}/users`)
             .then(async (res) => {
-                // if (!res.ok) throw new Error('Failed to fetch users');
                 const result = await res.json();
                 console.log(result);
-                // if (!result.success)
-                //     throw new Error(result.message || 'Failed to fetch users');
-                // setUsers(result.data);
+                if (result.success) {
+                    setUsers(result.data);
+                } else {
+                    throw new Error('Failed to fetch users');
+                }
             })
             .catch((err) => {
                 console.log(err);
@@ -105,6 +142,7 @@ export default function Users() {
                         result.message || 'Failed to fetch user stats'
                     );
                 setUserStats(result.data);
+                console.log('User stats:', result.data);
             })
             .catch(() => {
                 // Demo user stats fallback
@@ -124,44 +162,118 @@ export default function Users() {
     // Widget cards array (same style as meters/tickets)
     const userWidgets = userStats
         ? [
-              {
-                  title: 'Total Users',
-                  value: userStats.totalUsers,
-                  icon: '/icons/account.svg',
-                  subtitle1: `${userStats.activeUsers} Active Users`,
-                  subtitle2: `${userStats.inactiveUsers} Inactive Users`,
-                  iconStyle: ICON_FILTER_STYLE,
-              },
-              {
-                  title: 'Total Admins',
-                  value: userStats.totalAdmins,
-                  icon: '/icons/admin.svg',
-                  subtitle1: 'This Month',
-                  iconStyle: ICON_FILTER_STYLE,
-              },
-              {
-                  title: 'Total Accountants',
-                  value: userStats.totalAccountants,
-                  icon: '/icons/accountant.svg',
-                  subtitle1: 'This Month',
-                  iconStyle: ICON_FILTER_STYLE,
-              },
-              {
-                  title: 'Total Moderators',
-                  value: userStats.totalModerators,
-                  icon: '/icons/moderator.svg',
-                  subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
-                  iconStyle: ICON_FILTER_STYLE,
-              },
-              {
-                  title: 'Total Roles',
-                  value: userStats.totalRoles,
-                  icon: '/icons/apps-icon.svg',
-                  subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
-                  iconStyle: ICON_FILTER_STYLE,
-              },
-          ]
+            {
+                title: 'Total Users',
+                value: userStats.totalUsers,
+                icon: '/icons/total-users.svg',
+                subtitle1: `${userStats.activeUsers} Active Users`,
+                subtitle2: `${userStats.inactiveUsers} Inactive Users`,
+            },
+            {
+                title: 'Total Admins',
+                value: userStats.totalAdmins,
+                icon: '/icons/admin.svg',
+                subtitle1: 'This Month',
+            },
+            {
+                title: 'Total Accountants',
+                value: userStats.totalAccountants,
+                icon: '/icons/accountant.svg',
+                subtitle1: 'This Month',
+            },
+            {
+                title: 'Total Moderators',
+                value: userStats.totalModerators,
+                icon: '/icons/moderator.svg',
+                subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
+            },
+            {
+                title: 'Total Roles',
+                value: userStats.totalRoles,
+                icon: '/icons/roles.svg',
+                subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
+            },
+        ]
         : [];
+
+
+
+
+    const handleInactiveClick = (row: any) => {
+        setUserToInactive(row);
+        setInactiveFormData({
+            userName: row.name || '',
+            reason: ''
+        });
+        setShowInactiveModal(true);
+    };
+
+    const handleConfirmInactive = async (data: any) => {
+        try {
+            console.log('Inactivating user:', userToInactive.sNo, data);
+            // Here you would make the actual API call to inactive the user
+            // const res = await fetch(`${BACKEND_URL}/users/${userToInactive.sNo}/inactive`, {
+            //     method: 'PUT',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ reason: data.reason })
+            // });
+            
+            // For demo purposes, update local state
+            setUsers(users.map(user => 
+                user.sNo === userToInactive.sNo 
+                    ? { ...user, status: 'inactive' }
+                    : user
+            ));
+        } catch (error) {
+            console.error('Error inactivating user:', error);
+        } finally {
+            setShowInactiveModal(false);
+            setUserToInactive(null);
+            setInactiveFormData({
+                userName: '',
+                reason: ''
+            });
+        }
+    };
+
+    const handleCancelInactive = () => {
+        setShowInactiveModal(false);
+        setUserToInactive(null);
+        setInactiveFormData({
+            userName: '',
+            reason: ''
+        });
+    };
+
+    // Form fields configuration for inactive user
+    const inactiveFormFields = [
+        {
+            type: 'input' as const,
+            label: 'User Name',
+            name: 'userName',
+            value: inactiveFormData.userName,
+            placeholder: 'User name',
+            required: true,
+            onChange: (value: string) => setInactiveFormData(prev => ({ ...prev, userName: value })),
+            disabled: true
+        },
+        {
+            type: 'dropdown' as const,
+            label: 'Reason for Inactivation',
+            name: 'reason',
+            searchable: false,
+            value: inactiveFormData.reason,
+            required: true,
+            options: [
+                { value: 'account_violation', label: 'Account Violation' },
+                { value: 'inactive_usage', label: 'Inactive Usage' },
+                { value: 'security_concern', label: 'Security Concern' },
+                { value: 'user_request', label: 'User Request' },
+                { value: 'other', label: 'Other' }
+            ],
+            onChange: (value: string) => setInactiveFormData(prev => ({ ...prev, reason: value }))
+        }
+    ];
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -171,7 +283,7 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -179,44 +291,26 @@ export default function Users() {
                                         {
                                             name: 'PageHeader',
                                             props: {
-                                                title: 'User Management',
+                                                title: 'Users',
                                                 onBackClick: () =>
-                                                    window.history.back(),
+                                                    navigate('/superadmin'),
                                                 backButtonText:
                                                     'Back to Dashboard',
                                                 buttonsLabel: 'Add User',
                                                 variant: 'primary',
-                                                onClick: () =>
-                                                    console.log(
-                                                        'Adding new user...'
-                                                    ),
+                                                onClick: () => navigate('/add-user'),
                                                 showMenu: true,
                                                 showDropdown: true,
                                                 menuItems: [
                                                     {
-                                                        id: 'all',
-                                                        label: 'All Users',
-                                                    },
+                                                        id: 'RoleManagement',
+                                                        label: 'Role Management',
+                                                    },  
                                                     {
-                                                        id: 'active',
-                                                        label: 'Active Users',
+                                                        id: 'Export',
+                                                        label: 'Export ',
                                                     },
-                                                    {
-                                                        id: 'inactive',
-                                                        label: 'Inactive Users',
-                                                    },
-                                                    {
-                                                        id: 'admin',
-                                                        label: 'Administrators',
-                                                    },
-                                                    {
-                                                        id: 'moderator',
-                                                        label: 'Moderators',
-                                                    },
-                                                    {
-                                                        id: 'user',
-                                                        label: 'Regular Users',
-                                                    },
+                                                  
                                                 ],
                                                 onMenuItemClick: (
                                                     itemId: string
@@ -224,6 +318,9 @@ export default function Users() {
                                                     console.log(
                                                         `Filter by: ${itemId}`
                                                     );
+                                                    if (itemId === 'RoleManagement') {
+                                                        navigate('/role-management');
+                                                    }
                                                 },
                                             },
                                         },
@@ -236,28 +333,69 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,
                                     gridColumns: 5,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: userWidgets.map((card) => ({
                                         name: 'Card',
                                         props: {
                                             ...card,
-                                            loading: statsLoading
+                                            loading: statsLoading,
+                                            bg: "bg-stat-icon-gradient"
                                         }
                                     }))
                                 }
                             ]
                         }
                     },
+                    {
+                        layout: {
+                            type: 'grid',
+                            columns: 1,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'grid',
+                                    gridColumns: 2,
+                                    gap: 'gap-4',
+                                    columns: [
+                                        {
+                                            name: 'Dropdown',
+                                            props: {
+                                                name: 'userTypes',
+                                                options: userTypesOptions,
+                                                placeholder: 'Filter By User Types',
+                                                value: filters.userTypes,
+                                                onChange: handleFilterChange,
+                                                className: 'w-48',
+                                                searchable: false,
+                                            },
+                                        },
+                                        {
+                                            name: 'Dropdown',
+                                            props: {
+                                                name: 'userStatus',
+                                                options: userStatusOptions,
+                                                placeholder: 'Filter By User Status',
+                                                value: filters.userStatus,
+                                                onChange: handleFilterChange,
+                                                className: 'w-48',
+                                                searchable:false,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
                     // Users Table Section
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'column',
@@ -274,13 +412,56 @@ export default function Users() {
                                                 emptyMessage: loading
                                                     ? 'Loading users...'
                                                     : 'No users found',
-                                                onViewClick: (row: any) => {
-                                                    navigate('/basic-information', {
+                                                onView: (row: any) => {
+                                                    console.log('Users: onView triggered', row);
+                                                    console.log('Users: Navigating to', `/user-detail/${row.sNo}`);
+                                                    navigate(`/user-detail/${row.sNo}`, {
                                                         state: {
                                                             user: row
                                                         }
                                                     });
                                                 },
+                                                onEdit: (row: any) => {
+                                                    console.log('Edit user:', row);
+                                                    // Navigate to edit page or open edit modal
+                                                    navigate(`/edit-user/${row.sNo}`, {
+                                                        state: {
+                                                            user: row
+                                                        }
+                                                    });
+                                                },
+                                                onInactive: (row: any) => {
+                                                    handleInactiveClick(row);
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Inactive User Modal Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: showInactiveModal,
+                                                onClose: handleCancelInactive,
+                                                title: 'Inactivate User',
+                                                size: 'md',
+                                                showForm: true,
+                                                formFields: inactiveFormFields,
+                                                onSave: handleConfirmInactive,
+                                                saveButtonLabel: 'Inactivate User',
+                                                cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
                                             },
                                         },
                                     ],

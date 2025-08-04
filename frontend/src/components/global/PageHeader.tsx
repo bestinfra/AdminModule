@@ -71,7 +71,7 @@ const Header: React.FC<HeaderProps> = ({
 
         if (headerRightRect) {
             setEditMenuPosition({
-                x: headerRightRect.right - headerRightRect.width - 60,
+                x: headerRightRect.right - headerRightRect.width - 20,
                 y: headerRightRect.bottom + 5,
             });
             setShowEditMenu(true);
@@ -224,7 +224,7 @@ const Header: React.FC<HeaderProps> = ({
 
                 {showMenu && showDropdown && (
                     <span
-                        className="flex items-center justify-center w-8 h-8 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md cursor-pointer border border-gray-300"
+                        className="flex items-center justify-center w-6 h-6 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md cursor-pointer"
                         ref={dropdownIconRef}
                         onClick={handleMenuClick}
                         title="Filter Menu"
@@ -232,7 +232,7 @@ const Header: React.FC<HeaderProps> = ({
                         <img 
                             src="/icons/menu-dots.svg" 
                             alt="dropdown" 
-                            className="w-4 h-4 filter dark:invert"
+                            className="w-3 h-3 filter dark:invert"
                         />
                     </span>
                 )}
@@ -251,7 +251,7 @@ const Header: React.FC<HeaderProps> = ({
                     {menuItems.map((item) => (
                         <div
                             key={item.id}
-                            className="px-5 py-3 text-sm cursor-pointer flex items-center gap-3 hover:bg-blue-600 hover:text-white rounded-lg active:bg-blue-600 active:text-white"
+                            className="px-5 py-3 text-sm cursor-pointer flex items-center gap-3 hover:bg-primary hover:text-white rounded-lg active:bg-primary active:text-white"
                             onClick={() => handleMenuItemClickWithLink(item)}
                         >
                             {item.label}

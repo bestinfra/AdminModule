@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
@@ -19,19 +19,19 @@ interface Role {
     updatedAt?: string;
 }
 
-interface NewRole {
-    name: string;
-    permissions?: string;
-}
-
 export default function RoleManagement() {
     const navigate = useNavigate();
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
-    const [_error, setError] = useState<string | null>(null);
-    const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-    const [isAddingRole, setIsAddingRole] = useState(false);
-    const [newRole, setNewRole] = useState<NewRole>({ name: '' });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [roleToDelete, setRoleToDelete] = useState<any>(null);
+    const [roleToEdit, setRoleToEdit] = useState<any>(null);
+    const [formData, setFormData] = useState({
+        roleName: '',
+        description: ''
+    });
 
     useEffect(() => {
         fetchRoles();
@@ -40,7 +40,6 @@ export default function RoleManagement() {
     const fetchRoles = async () => {
         try {
             setLoading(true);
-            setError(null);
             const res = await fetch(`${BACKEND_URL}/roles`);
             const data = await res.json();
             if (data.success) {
@@ -49,35 +48,26 @@ export default function RoleManagement() {
                 throw new Error(data.message || 'Failed to fetch roles');
             }
         } catch (err) {
-            setError('Failed to fetch roles');
             console.error('Error fetching roles:', err);
-            // DEMO DATA FALLBACK
+            // DEMO DATA FALLBACK - Updated to match the image content
             if (roles.length === 0) {
                 setRoles([
                     {
                         id: 1,
-                        name: 'Admin',
+                        name: 'admin',
                         users: [
                             {
                                 id: 1,
-                                username: 'admin',
-                                firstName: 'Admin',
-                                lastName: 'User',
-                                email: 'admin@example.com',
+                                username: 'gmr',
+                                firstName: 'GMR',
+                                lastName: '',
+                                email: 'gmr@example.com',
                                 isActive: true,
                             },
                         ],
                         permissions: [
-                            {
-                                id: 1,
-                                name: 'manage_users',
-                                description: 'Can manage users',
-                            },
-                            {
-                                id: 2,
-                                name: 'manage_roles',
-                                description: 'Can manage roles',
-                            },
+                            { id: 1, name: 'manage_users', description: 'Can manage users' },
+                            { id: 2, name: 'manage_roles', description: 'Can manage roles' },
                         ],
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString(),
@@ -88,19 +78,130 @@ export default function RoleManagement() {
                         users: [
                             {
                                 id: 2,
-                                username: 'user',
-                                firstName: 'Normal',
-                                lastName: 'User',
-                                email: 'user@example.com',
+                                username: 'lecs',
+                                firstName: 'LECS',
+                                lastName: '',
+                                email: 'lecs@example.com',
                                 isActive: true,
                             },
                         ],
                         permissions: [
+                            { id: 3, name: 'view_dashboard', description: 'Can view dashboard' },
+                        ],
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    },
+                    {
+                        id: 3,
+                        name: 'Accountant',
+                        users: [
                             {
                                 id: 3,
-                                name: 'view_dashboard',
-                                description: 'Can view dashboard',
+                                username: 'airborne',
+                                firstName: 'Airborne',
+                                lastName: 'General Store',
+                                email: 'airborne@example.com',
+                                isActive: true,
                             },
+                        ],
+                        permissions: [
+                            { id: 4, name: 'manage_financial', description: 'Can manage financial data' },
+                        ],
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    },
+                    {
+                        id: 4,
+                        name: 'Moderator',
+                        users: [
+                            {
+                                id: 4,
+                                username: 'akhil',
+                                firstName: 'Akhil',
+                                lastName: 'Bandaru',
+                                email: 'akhil@example.com',
+                                isActive: true,
+                            },
+                        ],
+                        permissions: [
+                            { id: 5, name: 'moderate_content', description: 'Can moderate content' },
+                        ],
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    },
+                    {
+                        id: 5,
+                        name: 'Accountant',
+                        users: [
+                            {
+                                id: 5,
+                                username: 'testaccountant',
+                                firstName: 'TestAccountant',
+                                lastName: '',
+                                email: 'testaccountant@example.com',
+                                isActive: true,
+                            },
+                        ],
+                        permissions: [
+                            { id: 6, name: 'manage_financial', description: 'Can manage financial data' },
+                        ],
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    },
+                    {
+                        id: 6,
+                        name: 'Moderator',
+                        users: [
+                            {
+                                id: 6,
+                                username: 'testmoderator',
+                                firstName: 'TestModerator',
+                                lastName: '',
+                                email: 'testmoderator@example.com',
+                                isActive: true,
+                            },
+                        ],
+                        permissions: [
+                            { id: 7, name: 'moderate_content', description: 'Can moderate content' },
+                        ],
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    },
+                    {
+                        id: 7,
+                        name: 'admin',
+                        users: [
+                            {
+                                id: 7,
+                                username: 'gmr_demo',
+                                firstName: 'GMR_DEMO',
+                                lastName: '',
+                                email: 'gmr_demo@example.com',
+                                isActive: true,
+                            },
+                        ],
+                        permissions: [
+                            { id: 8, name: 'manage_users', description: 'Can manage users' },
+                            { id: 9, name: 'manage_roles', description: 'Can manage roles' },
+                        ],
+                        createdAt: new Date().toISOString(),
+                        updatedAt: new Date().toISOString(),
+                    },
+                    {
+                        id: 8,
+                        name: 'User',
+                        users: [
+                            {
+                                id: 8,
+                                username: 'neo',
+                                firstName: 'Neo',
+                                lastName: 'Travels',
+                                email: 'neo@example.com',
+                                isActive: true,
+                            },
+                        ],
+                        permissions: [
+                            { id: 10, name: 'view_dashboard', description: 'Can view dashboard' },
                         ],
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString(),
@@ -112,206 +213,207 @@ export default function RoleManagement() {
         }
     };
 
-    // Event Handlers
-    const handleAddRole = () => {
-        setIsAddingRole(true);
-        setSelectedRole(null);
-        setNewRole({ name: '' });
+    const handleDeleteClick = (row: any) => {
+        setRoleToDelete(row);
+        setShowDeleteModal(true);
     };
 
-    const handleEditRole = (role: Role) => {
-        setSelectedRole(role);
-        setNewRole({
-            name: role.name,
-            permissions: role.permissions.map((p) => p.name).join(', '),
-        });
-        setIsAddingRole(true);
-    };
-
-    const handleDeleteRole = async (role: Role) => {
-        if (window.confirm('Are you sure you want to delete this role?')) {
-            try {
-                setLoading(true);
-
-                const res = await fetch(`${BACKEND_URL}/roles/${role.id}`, {
-                    method: 'DELETE',
-                });
-                const data = await res.json();
-
-                if (data.success) {
-                    setRoles((prevRoles) =>
-                        prevRoles.filter((r) => r.id !== role.id)
-                    );
-                } else {
-                    throw new Error(data.message || 'Failed to delete role');
-                }
-            } catch (err) {
-                setError('Failed to delete role');
-                console.error('Error deleting role:', err);
-                // DEMO DATA FALLBACK
-                setRoles((prevRoles) =>
-                    prevRoles.filter((r) => r.id !== role.id)
-                );
-            } finally {
-                setLoading(false);
-            }
-        }
-    };
-
-    const handleSaveRole = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleConfirmDelete = async () => {
+        if (!roleToDelete) return;
+        
         try {
-            setLoading(true);
-            setError(null);
-
-            const method = selectedRole ? 'PUT' : 'POST';
-            const url = selectedRole
-                ? `${BACKEND_URL}/roles/${selectedRole.id}`
-                : `${BACKEND_URL}/roles`;
-
-            const res = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newRole),
-            });
-            const data = await res.json();
-
-            if (data.success) {
-                if (selectedRole) {
-                    setRoles((prevRoles) =>
-                        prevRoles.map((role) =>
-                            role.id === selectedRole.id ? data.data : role
-                        )
-                    );
-                } else {
-                    setRoles((prevRoles) => [...prevRoles, data.data]);
-                }
-                setIsAddingRole(false);
-                setSelectedRole(null);
-                setNewRole({ name: '' });
-            } else {
-                throw new Error(data.message || 'Failed to save role');
-            }
-        } catch (err) {
-            setError('Failed to save role');
-            console.error('Error saving role:', err);
-            // DEMO DATA FALLBACK
-            if (selectedRole) {
-                setRoles((prevRoles) =>
-                    prevRoles.map((role) =>
-                        role.id === selectedRole.id
-                            ? {
-                                  ...role,
-                                  name: newRole.name,
-                                  updatedAt: new Date().toISOString(),
-                              }
-                            : role
-                    )
-                );
-            } else {
-                setRoles((prevRoles) => [
-                    ...prevRoles,
-                    {
-                        id: Math.max(0, ...prevRoles.map((r) => r.id)) + 1,
-                        name: newRole.name,
-                        users: [],
-                        permissions: [],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                ]);
-            }
-            setIsAddingRole(false);
-            setSelectedRole(null);
-            setNewRole({ name: '' });
+            console.log('Deleting role:', roleToDelete.id);
+            // Here you would make the actual API call to delete the role
+            // const res = await fetch(`${BACKEND_URL}/roles/${roleToDelete.id}`, {
+            //     method: 'DELETE',
+            // });
+            // if (res.ok) {
+            //     // Remove from local state
+            //     setRoles(roles.filter(role => role.id !== roleToDelete.id));
+            // }
+            
+            // For demo purposes, just remove from local state
+            setRoles(roles.filter(role => role.id !== roleToDelete.id));
+        } catch (error) {
+            console.error('Error deleting role:', error);
         } finally {
-            setLoading(false);
+            setShowDeleteModal(false);
+            setRoleToDelete(null);
         }
     };
 
-    const handleManagePermissions = (role: Role) => {
-        navigate('/admin/permissions', { state: { role } });
+    const handleCancelDelete = () => {
+        setShowDeleteModal(false);
+        setRoleToDelete(null);
     };
 
-    const handleCancelForm = () => {
-        setIsAddingRole(false);
-        setSelectedRole(null);
-        setNewRole({ name: '' });
+    const handleAddClick = () => {
+        setFormData({
+            roleName: '',
+            description: ''
+        });
+        setShowAddModal(true);
     };
 
-    // Utility Functions
-    const formatDate = (dateString: string): string => {
-        if (!dateString) return 'NA';
-        const date = new Date(dateString);
-        return date.toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
+    const handleEditClick = (row: any) => {
+        setRoleToEdit(row);
+        setFormData({
+            roleName: row.roleName || '',
+            description: row.description || ''
+        });
+        setShowEditModal(true);
+    };
+
+    const handleSaveRole = async (data: any) => {
+        try {
+            if (showEditModal && roleToEdit) {
+                // Update existing role
+                console.log('Updating role:', roleToEdit.id, data);
+                // Here you would make the actual API call to update the role
+                // const res = await fetch(`${BACKEND_URL}/roles/${roleToEdit.id}`, {
+                //     method: 'PUT',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(data)
+                // });
+                
+                // For demo purposes, update local state
+                setRoles(roles.map(role => 
+                    role.id === roleToEdit.id 
+                        ? { ...role, name: data.roleName, description: data.description }
+                        : role
+                ));
+            } else {
+                // Create new role
+                console.log('Creating new role:', data);
+                // Here you would make the actual API call to create the role
+                // const res = await fetch(`${BACKEND_URL}/roles`, {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify(data)
+                // });
+                
+                // For demo purposes, add to local state
+                const newRole = {
+                    id: Math.max(...roles.map(r => r.id)) + 1,
+                    name: data.roleName,
+                    users: [],
+                    permissions: [],
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString(),
+                };
+                setRoles([...roles, newRole]);
+            }
+        } catch (error) {
+            console.error('Error saving role:', error);
+        } finally {
+            setShowAddModal(false);
+            setShowEditModal(false);
+            setRoleToEdit(null);
+            setFormData({
+                roleName: '',
+                description: ''
+            });
+        }
+    };
+
+    const handleCancelModal = () => {
+        setShowAddModal(false);
+        setShowEditModal(false);
+        setRoleToEdit(null);
+        setFormData({
+            roleName: '',
+            description: ''
         });
     };
-    console.log(formatDate);
 
-    // Table data for the Table component
+    const handleManagePermissions = (row: any) => {
+        navigate('/roles-permissions', { state: { role: row } });
+    };
+
+    // Form fields configuration for add role
+    const addRoleFormFields = [
+        {
+            type: 'input' as const,
+            label: 'Role Name',
+            name: 'roleName',
+            value: formData.roleName,
+            placeholder: 'Enter role name',
+            required: true,
+            onChange: (value: string) => setFormData(prev => ({ ...prev, roleName: value }))
+        },
+        {
+            type: 'textarea' as const,
+            label: 'Description',
+            name: 'description',
+            value: formData.description,
+            placeholder: 'Enter role description',
+            required: false,
+            onChange: (value: string) => setFormData(prev => ({ ...prev, description: value }))
+        }
+    ];
+
+    // Form fields configuration for edit role
+    const editRoleFormFields = [
+        {
+            type: 'input' as const,
+            label: 'Current Role',
+            name: 'currentRole',
+            value: roleToEdit?.roleName || '',
+            placeholder: 'Current role name',
+            required: true,
+            onChange: (value: string) => setFormData(prev => ({ ...prev, roleName: value })),
+            disabled: true
+        },
+        {
+            type: 'dropdown' as const,
+            label: 'Select New Role',
+            name: 'roleName',
+            value: formData.roleName,
+            required: true,
+            options: [
+                { value: 'Admin', label: 'Admin' },
+                { value: 'Moderator', label: 'Moderator' },
+                { value: 'Accountant', label: 'Accountant' },
+                { value: 'User', label: 'User' }
+            ],
+            onChange: (value: string) => setFormData(prev => ({ ...prev, roleName: value }))
+        },
+    ];
+
+    // Table data for the Table component - Updated to match the image layout
     const tableData = roles.map((role) => ({
         id: role.id,
-        name: role.name,
+        fullName: role.users.length > 0 ? role.users[0].firstName + ' ' + role.users[0].lastName : 'N/A',
+        roleName: role.name,
+        client: 'GMR', // Default client as shown in the image
         users: role.users.length,
         permissions: role.permissions.map((p) => p.name).join(', '),
         createdAt: role.createdAt,
         updatedAt: role.updatedAt || 'NA',
     }));
 
-    // Table columns configuration
+    // Table columns configuration - Updated to match the image
     const tableColumns = [
-        { key: 'name', label: 'Role Name' },
-        { key: 'users', label: 'Users' },
-        { key: 'permissions', label: 'Permissions' },
-        //{ key: 'createdAt', label: 'Created Date' }
+        { key: 'fullName', label: 'Full Name' },
+        { key: 'roleName', label: 'Role Name' },
+        { key: 'client', label: 'Client' },
     ];
 
-    // Custom action handlers for the table
-    const handleTableEdit = (row: any) => {
-        const role = roles.find((r) => r.id === row.id);
-        if (role) {
-            handleEditRole(role);
-        }
-    };
-
-    const handleTableDelete = (row: any) => {
-        const role = roles.find((r) => r.id === row.id);
-        if (role) {
-            handleDeleteRole(role);
-        }
-    };
-
-    const handleTableManagePermissions = (row: any) => {
-        const role = roles.find((r) => r.id === row.id);
-        if (role) {
-            handleManagePermissions(role);
-        }
-    };
-
-    // Actions array for the table
+    // Actions array for the table - With icons
     const tableActions = [
         {
             label: 'Manage Permissions',
-            onClick: handleTableManagePermissions,
+            onClick: handleManagePermissions,
             icon: '/icons/settings.svg',
         },
-        {
-            label: 'Edit',
-            onClick: handleTableEdit,
-            icon: '/icons/user-pen.svg',
-        },
+                            {
+                        label: 'Edit',
+            onClick: handleEditClick,
+                        icon: '/icons/user-pen.svg',
+                    },
         {
             label: 'Delete',
-            onClick: handleTableDelete,
+            onClick: handleDeleteClick,
             icon: '/icons/delete.svg',
         },
     ];
@@ -324,7 +426,7 @@ export default function RoleManagement() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -334,14 +436,14 @@ export default function RoleManagement() {
                                             props: {
                                                 title: 'Role Management',
                                                 onBackClick: () =>
-                                                    navigate('/'),
+                                                    navigate('/users'),
                                                 backButtonText:
-                                                    'Back to Dashboard',
+                                                    'Back to UserManagment',
                                                 buttonsLabel: 'Add Role',
                                                 variant: 'primary',
-                                                onClick: handleAddRole,
+                                                onClick: handleAddClick,
                                                 showMenu: true,
-                                                showDropdown: true,
+                                                showDropdown: false,
                                                 menuItems: [
                                                     {
                                                         id: 'all',
@@ -382,163 +484,126 @@ export default function RoleManagement() {
                             ],
                         },
                     },
-                    // Error Section (if any)
-                    // ...(error
-                    //     ? [
-                    //           {
-                    //               layout: {
-                    //                   type: 'column' as const,
-                    //                   gap: 'gap-6',
-                    //                   rows: [
-                    //                       {
-                    //                           layout: 'row' as const,
-                    //                           columns: [
-                    //                               {
-                    //                                   name: 'Card',
-                    //                                   props: {
-                    //                                       className:
-                    //                                           'p-4 bg-red-50 border border-red-200',
-                    //                                       children: (
-                    //                                           <div className="flex items-center justify-between">
-                    //                                               <p className="text-red-600">
-                    //                                                   {error}
-                    //                                               </p>
-                    //                                               <button
-                    //                                                   onClick={() =>
-                    //                                                       setError(
-                    //                                                           null
-                    //                                                       )
-                    //                                                   }
-                    //                                                   className="text-red-400 hover:text-red-600">
-                    //                                                   ×
-                    //                                               </button>
-                    //                                           </div>
-                    //                                       ),
-                    //                                   },
-                    //                               },
-                    //                           ],
-                    //                       },
-                    //                   ],
-                    //               },
-                    //           },
-                    //       ]
-                    //     : []),
-                    // Main Content Section
+                    // Table Section
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
                                     columns: [
                                         {
-                                            name: isAddingRole
-                                                ? 'Card'
-                                                : 'Table',
-                                            props: isAddingRole
-                                                ? {
-                                                      className: 'p-6',
-                                                      children: (
-                                                          <div className="max-w-2xl mx-auto">
-                                                              <div className="flex items-center gap-3 mb-6">
-                                                                  <img
-                                                                      src="/icons/roles.svg"
-                                                                      alt="Role"
-                                                                      className="w-8 h-8"
-                                                                  />
-                                                                  <div>
-                                                                      <h3 className="text-lg font-semibold text-text-primary">
-                                                                          {selectedRole
-                                                                              ? 'Edit Role'
-                                                                              : 'Add New Role'}
-                                                                      </h3>
-                                                                      <p className="text-text-secondary text-sm">
-                                                                          {selectedRole
-                                                                              ? 'Update role information'
-                                                                              : 'Create a new role'}
-                                                                      </p>
-                                                                  </div>
-                                                              </div>
-
-                                                              <form
-                                                                  onSubmit={
-                                                                      handleSaveRole
-                                                                  }
-                                                                  className="space-y-6">
-                                                                  <div className="space-y-2">
-                                                                      <label className="block text-sm font-semibold text-text-secondary">
-                                                                          Role
-                                                                          Name *
-                                                                      </label>
-                                                                      <input
-                                                                          type="text"
-                                                                          value={
-                                                                              newRole.name
-                                                                          }
-                                                                          onChange={(
-                                                                              e
-                                                                          ) =>
-                                                                              setNewRole(
-                                                                                  {
-                                                                                      ...newRole,
-                                                                                      name: e
-                                                                                          .target
-                                                                                          .value,
-                                                                                  }
-                                                                              )
-                                                                          }
-                                                                          placeholder="Enter role name"
-                                                                          required
-                                                                          className="w-full px-4 py-2 border border-neutral-light rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
-                                                                      />
-                                                                  </div>
-                                                                  <div className="flex justify-end gap-3 pt-4 border-t">
-                                                                      <button
-                                                                          type="button"
-                                                                          onClick={
-                                                                              handleCancelForm
-                                                                          }
-                                                                          disabled={
-                                                                              loading
-                                                                          }
-                                                                          className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 disabled:opacity-50">
-                                                                          Cancel
-                                                                      </button>
-                                                                      <button
-                                                                          type="submit"
-                                                                          disabled={
-                                                                              loading
-                                                                          }
-                                                                          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50">
-                                                                          {loading
-                                                                              ? 'Saving...'
-                                                                              : selectedRole
-                                                                              ? 'Update Role'
-                                                                              : 'Create Role'}
-                                                                      </button>
-                                                                  </div>
-                                                              </form>
-                                                          </div>
-                                                      ),
-                                                  }
-                                                : {
-                                                      data: tableData,
-                                                      columns: tableColumns,
-                                                      loading: loading,
-                                                      emptyMessage:
-                                                          'No roles found',
-                                                      searchable: true,
-                                                      sortable: true,
-                                                      text: 'Role',
-                                                      actions: tableActions,
-                                                  },
+                                            name: 'Table',
+                                            props: {
+                                                data: tableData,
+                                                columns: tableColumns,
+                                                loading: loading,
+                                                emptyMessage: 'No roles found',
+                                                searchable: true,
+                                                pagination: true,
+                                                showActions: true,
+                                                actions: tableActions,
+                                                onEdit: (row: any) => {
+                                                    console.log('Edit clicked for:', row);
+                                                    navigate(`/edit-role/${row.id}`, { state: { role: row } });
+                                                },
+                                                onDelete: (row: any) => {
+                                                    console.log('Delete clicked for:', row);
+                                                },
+                                            },
                                         },
                                     ],
                                 },
                             ],
                         },
                     },
+                    // Delete Confirmation Modal Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: showDeleteModal,
+                                                onClose: handleCancelDelete,
+                                                title: 'Delete Role',
+                                                size: 'md',
+                                                showConfirmButton: true,
+                                                confirmButtonLabel: 'Delete Role',
+                                                confirmButtonVariant: 'danger',
+                                                onConfirm: handleConfirmDelete,
+                                                message: `Are you sure you want to delete the role "${roleToDelete?.roleName}"?`,
+                                                warningMessage: 'This action cannot be undone. All users assigned to this role will lose their permissions.',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Add Role Modal Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: showAddModal,
+                                                onClose: handleCancelModal,
+                                                title: 'Add New Role',
+                                                size: 'lg',
+                                                showForm: true,
+                                                formFields: addRoleFormFields,
+                                                onSave: handleSaveRole,
+                                                saveButtonLabel: 'Create Role',
+                                                cancelButtonLabel: 'Cancel',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Edit Role Modal Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: showEditModal,
+                                                onClose: handleCancelModal,
+                                                title: 'Edit Role',
+                                                size: 'lg',
+                                                showForm: true,
+                                                formFields: editRoleFormFields,
+                                                onSave: handleSaveRole,
+                                                saveButtonLabel: 'Update Role',
+                                                cancelButtonLabel: 'Cancel',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+
                 ]}
             />
         </Suspense>

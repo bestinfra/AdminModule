@@ -1042,4 +1042,42 @@ model PotentialTransformer {
   accuracy  String?
   burden    Float?
   @@map("potential_transformers")
-} 
+}
+
+model Alert {
+  alert_id         Int       @id @default(autoincrement())
+  alert_desc       String?   @db.VarChar(255)
+  status           String?   @db.VarChar(50)
+  meterId          Int?   @db.VarChar(100) 
+  location         String?   @db.VarChar(255)
+  datetime         DateTime
+  escalation_level String?   @db.VarChar(50)
+  escalation_time  DateTime
+  value            String?   @db.VarChar(250)
+  error_occured_at String?   @db.VarChar(50)
+
+  meter            Meter?    @relation(fields: [meterId], references: [id])
+}
+
+model AlertDescription {
+  id          Int     @id @default(autoincrement())
+  description String  @db.VarChar(255)
+
+  alerts      Alert[] 
+}
+
+model Alert {
+  alert_id             Int       @id @default(autoincrement())
+  alertDescriptionId   Int?      
+  status               String?   @db.VarChar(50)
+  meterId              Int?      
+  location             String?   @db.VarChar(255)
+  datetime             DateTime
+  escalation_level     String?   @db.VarChar(50)
+  escalation_time      DateTime
+  value                String?   @db.VarChar(250)
+  error_occured_at     String?   @db.VarChar(50)
+
+  meter                Meter?              @relation(fields: [meterId], references: [id])
+  alertDescription     AlertDescription?   @relation(fields: [alertDescriptionId], references: [id])
+}

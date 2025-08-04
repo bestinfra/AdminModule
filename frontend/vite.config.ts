@@ -16,7 +16,9 @@ export default defineConfig({
         './Header': './src/components/global/Header.tsx',
         './Page': './src/components/global/PageC.tsx',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
-        './Login': './src/pages/SubLogin.tsx',
+        './Login': './src/pages_v2/SubLogin.tsx',
+        './context/AuthContext': './src/context/AuthContext.tsx',
+        './components/auth/ProtectedRoute': './src/components/auth/ProtectedRoute.tsx',
       },
       shared : [
         'react', 
@@ -40,7 +42,7 @@ export default defineConfig({
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@assets': path.resolve(__dirname, './src/assets'),
       '@types': path.resolve(__dirname, './src/types'),
-      
+      '@pages_v2': path.resolve(__dirname, './src/pages_v2'),
     },
   },
   build: {
@@ -72,8 +74,23 @@ export default defineConfig({
       allow: ['..'],
     },
     proxy: {
-      '/api': {
-        target: 'http://localhost:4038',
+      '/api/auth': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/apps': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/sub-app-auth': {
+        target: 'http://localhost:4000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/sub-app/auth': {
+        target: 'http://localhost:4000',
         changeOrigin: true,
         secure: false,
       }

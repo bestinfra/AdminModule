@@ -228,3 +228,43 @@ export const getDataLoggersList = async (req, res) => {
     }
 }; 
 
+export const getMeterHistory = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        const meter = await MeterDB.getMeterHistory(id);
+        
+        if (!meter) {
+            return res.status(404).json({
+                success: false,
+                message: 'Meter not found'
+            });
+        }
+
+        // Format the data for the frontend table columns
+        const formattedMeter = {
+            slNo: 1,
+            meterSlNo: meter.meterNumber || 'N/A',
+            modemSlNo: meter.modem?.modem_sl_no || 'N/A',
+            meterType: meter.type || 'N/A',
+            meterMake: meter.manufacturer || 'N/A',
+            consumerName: meter.consumer?.name || 'N/A',
+            location: meter.location?.name || 'N/A',
+            installationDate: meter.installationDate ? new Date(meter.installationDate).toLocaleDateString() : 'N/A'
+        };
+
+        res.json({
+            success: true,
+            data: formattedMeter,
+            message: 'Meter details retrieved successfully'
+        });
+    } catch (error) {
+        console.error('❌ getMeterHistory: Error fetching meter history:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch meter details',
+            error: error.message
+        });
+    }
+}; 
+

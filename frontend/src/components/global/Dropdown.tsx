@@ -150,7 +150,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       <div
         key={option.value}
         className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer transition duration-200 text-base font-medium mb-1 mx-2 hover:dark:bg-primary hover:dark:text-white hover:bg-primary hover:text-white
-          ${isSelected ? 'dark:bg-primary-dark dark:text-white' : ''}
+          ${isSelected ? 'dark:bg-primary-dark dark:text-white text-base' : ''}
           ${focusedIndex === index ? 'dark:bg-primary-dark dark:text-white' : 'hover:bg-primary-dark hover:text-white'}`}
         onClick={() => handleSelect(option)}
         onMouseEnter={() => setFocusedIndex(index)}
@@ -222,8 +222,8 @@ const Dropdown: React.FC<DropdownProps> = ({
         <div
           onClick={() => !disabled && setIsOpen(!isOpen)}
           tabIndex={0}
-          className={`w-full flex items-center justify-between border px-4 py-3.5 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium
-            ${disabled ? ' text-gray-400' : 'text-current'}
+          className={`w-full flex items-center justify-between border px-4 py-3 rounded-full cursor-pointer dark:bg-primary-dark border border-primary-border dark:border-dark-border text-base font-medium
+            ${disabled ? '' : 'text-current'}
             ${error ? 'border-red-500' : 'border-gray-300'}`}
           role="combobox"
           aria-expanded={isOpen}

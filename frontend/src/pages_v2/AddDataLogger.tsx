@@ -1,7 +1,7 @@
 import { useState, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import type { FormInputConfig } from '@components/Form/types';
+import type { FormInputConfig } from '@/components/Form/types';
 
 export default function AddDataLogger() {
     const navigate = useNavigate();
@@ -92,7 +92,7 @@ export default function AddDataLogger() {
                     {
                         layout: {
                             type: 'row' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -117,12 +117,12 @@ export default function AddDataLogger() {
                         layout: {
                             type: 'grid' as const,
                             columns: 1,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,
                                     gridColumns: 1,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: [
                                         {
                                             name: 'Form',
@@ -140,7 +140,7 @@ export default function AddDataLogger() {
                                                 gridLayout: {
                                                     gridRows: 2,
                                                     gridColumns: 3,
-                                                    gap: 'gap-6',
+                                                    gap: 'gap-4',
                                                     className: 'w-full',
                                                 },
                                                 formBackground: 'bg-transparent',

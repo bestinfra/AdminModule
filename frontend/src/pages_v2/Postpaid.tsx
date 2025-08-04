@@ -196,7 +196,7 @@ export default function Postpaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -257,17 +257,17 @@ export default function Postpaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',
                                     gridColumns: 4,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: cardData
                                         .slice(0, 4)
                                         .map((card) => ({
                                             name: 'Card',
-                                            props: card,
+                                            props: { ...card, bg: "bg-stat-icon-gradient" },
                                         })),
                                 },
                             ],
@@ -277,16 +277,16 @@ export default function Postpaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',
                                     gridColumns: 4,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: [
                                         {
                                             name: 'Card',
-                                            props: cardData[4],
+                                            props: { ...cardData[4], bg: "bg-stat-icon-gradient" },
                                         },
                                     ],
                                 },
@@ -297,12 +297,12 @@ export default function Postpaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
                                     className:
-                                        'flex flex-col md:flex-row md:items-center md:gap-6 gap-4',
+                                        'flex flex-col md:flex-row md:items-center md:gap-4 gap-4',
                                     columns: [
                                         {
                                             name: 'Dropdown',
@@ -345,7 +345,7 @@ export default function Postpaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -372,7 +372,7 @@ export default function Postpaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',

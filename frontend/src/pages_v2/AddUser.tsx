@@ -1,7 +1,7 @@
 import { useState, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import type { FormInputConfig } from '@components/Form/types';
+import type { FormInputConfig } from '@/components/Form/types';
 
 const roles = ['Admin', 'Manager', 'User'];
 const parentRoles = ['None', 'Super Admin', 'Admin', 'Manager'];
@@ -47,6 +47,7 @@ export default function AddUser() {
         {
             name: 'role',
             type: 'dropdown',
+            placeholder: 'Select User Role',
             options: [
                 { value: '', label: 'Select Role' },
                 ...roles.map((role) => ({
@@ -61,6 +62,7 @@ export default function AddUser() {
         {
             name: 'parentRole',
             type: 'dropdown',
+            placeholder: 'Select Parent Role',
             options: [
                 { value: '', label: 'Select Parent Role' },
                 ...parentRoles.map((role) => ({
@@ -101,7 +103,7 @@ export default function AddUser() {
                     {
                         layout: {
                             type: 'row' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -109,7 +111,7 @@ export default function AddUser() {
                                         {
                                             name: 'PageHeader',
                                             props: {
-                                                title: 'Create User',
+                                                title: 'Add New User',
                                                 onBackClick: () => navigate('/users'),
                                                 backButtonText: 'Back to Users',
                                                 showMenu: false,
@@ -126,12 +128,12 @@ export default function AddUser() {
                         layout: {
                             type: 'grid' as const,
                             columns: 1,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,
                                     gridColumns: 1,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: [
                                         {
                                             name: 'Form',
@@ -148,10 +150,9 @@ export default function AddUser() {
                                                 gridLayout: {
                                                     gridRows: 3,
                                                     gridColumns: 2,
-                                                    gap: 'gap-6',
+                                                    gap: 'gap-3',
                                                     className: 'w-full',
                                                 },
-                                               
                                             },
                                         },
                                     ],

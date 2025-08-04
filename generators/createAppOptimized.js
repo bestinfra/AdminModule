@@ -66,43 +66,46 @@ function createAppProjectOptimized(formData) {
     const frontendFormData = { ...formData, backendPort: dynamicPort };
     generateFrontend(baseDir, frontendFormData);
 
-    // --- BACKEND DEPLOYMENT START ---
+  // --- BACKEND DEPLOYMENT START ---
+  // Deploy backend to XAMPP using optimized deployer
+  (async () => {
     try {
-        console.log('\n🚀 Deploying backend to XAMPP...');
-        const applicationBackendDir = path.join(
-            __dirname,
-            '..',
-            'application-backend'
-        );
-        const deploymentResult = deployer.deployBackend(
-            projectFolderName,
-            applicationBackendDir
-        );
-
-        if (deploymentResult.success) {
-            console.log('\n✅ Backend deployed successfully!');
-            console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
-            console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
-            console.log(`   • Environment: ${deploymentResult.envUrl}`);
-            console.log(`   • Port: ${deploymentResult.port}`);
-            console.log(`   • Mode: DEVELOPMENT`);
-        } else {
-            console.log(
-                '\n⚠️  Backend deployment failed:',
-                deploymentResult.error
-            );
-            console.log('   You can manually deploy using:');
-            console.log(
-                `   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`
-            );
-        }
-    } catch (error) {
-        console.log('\n⚠️  Backend deployment failed:', error.message);
+      console.log('\n🚀 Deploying backend to XAMPP...');
+      // Deploy directly from application-backend
+      const applicationBackendDir = path.join(__dirname, '..', 'application-backend');
+      
+      // Prepare credentials for database insertion
+      const credentials = {
+        adminFirstName: formData.adminFirstName || 'Admin',
+        adminLastName: formData.adminLastName || 'User',
+        adminEmail: formData.adminEmail || `admin@${projectFolderName}.com`,
+        adminUsername: formData.adminUsername || 'admin',
+        adminPassword: formData.adminPassword || 'admin123',
+        adminPhone: formData.adminPhone || '+1234567890'
+      };
+      
+      const deploymentResult = await deployer.deployBackend(projectFolderName, applicationBackendDir, credentials);
+      
+      if (deploymentResult.success) {
+        console.log('\n✅ Backend deployed successfully!');
+        console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
+        console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
+        console.log(`   • Port: ${deploymentResult.port}`);
+        console.log(`   • Database: ${deploymentResult.database}`);
+        console.log(`   • Admin User: ${credentials.adminUsername} (${credentials.adminEmail})`);
+        console.log(`   • Mode: DEVELOPMENT`);
+      } else {
+        console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
         console.log('   You can manually deploy using:');
-        console.log(
-            `   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`
-        );
+        console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`);
+      }
+    } catch (error) {
+      console.log('\n⚠️  Backend deployment failed:', error.message);
+      console.log('   You can manually deploy using:');
+      console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`);
     }
+  })();
+  // --- BACKEND DEPLOYMENT END ---
 
     console.log(
         `Project "${projectFolderName}" created successfully at: ${baseDir}`
@@ -125,14 +128,16 @@ function copyAssets(baseDir, formData) {
     
     // Module to page file mapping
     const moduleToPageMapping = {
+        // 'dashboard': ['Dashboard.tsx'], // Dashboard module maps to Dashboard component
         'consumer_dashboard': ['Dashboard.tsx'], // Consumer dashboard is part of main Dashboard
         'dtr_dashboard': ['DTRDashboard.tsx', 'Feeders.tsx'], // Separate DTR Dashboard component
         'consumer': ['Consumers.tsx', 'ConsumerView.tsx', 'AddConsumer'],
         'tickets': ['Tickets.tsx', 'TicketView.tsx', 'AddTicket.tsx'],
+        'bills': ['Prepaid.tsx', 'Postpaid.tsx'], // Bills module includes both prepaid and postpaid
         'prepaid': ['Prepaid.tsx'],
         'postpaid': ['Postpaid.tsx'],
-        'asset_management': ['AssetManagment.tsx'],
-        'meter_management': ['Meters.tsx', 'MeterDetails.tsx', 'DataLogger.tsx'],
+        'asset_management': ['AssetManagement.tsx'],
+        'meter_management': ['Meters.tsx', 'MeterDetails.tsx'], // DataLogger.tsx commented out
         'user_management_default': ['Users.tsx'],
         'role_management': ['RoleManagement.tsx'],
         'connect_disconnect': ['ConnectDisconnect.tsx']
@@ -149,31 +154,53 @@ function copyAssets(baseDir, formData) {
         
         // Copy only selected modules
         const selectedModules = formData.modules || [];
-        console.log('📁 Copying selected modules:', selectedModules);
         
-        selectedModules.forEach(module => {
+        // Add role_management automatically if user_management_default is selected (same logic as backend)
+        let modulesToProcess = [...selectedModules];
+        if (selectedModules.includes('user_management_default') && !selectedModules.includes('role_management')) {
+            modulesToProcess.push('role_management');
+            console.log('  🔧 Auto-added role_management (included with user_management_default)');
+        }
+        
+        console.log('📁 Copying selected modules:', selectedModules);
+        console.log('📁 Processing modules (including auto-added):', modulesToProcess);
+        console.log('📁 Source pages directory:', sourcePagesV2Dir);
+        console.log('📁 Destination pages directory:', destPagesDir);
+        
+        modulesToProcess.forEach(module => {
             const pageFiles = moduleToPageMapping[module];
             if (pageFiles) {
+                console.log(`  📂 Processing module: ${module}`);
+                console.log(`     Page files: ${pageFiles.join(', ')}`);
+                
                 pageFiles.forEach(pageFile => {
                     const sourcePath = path.join(sourcePagesV2Dir, pageFile);
                     const destPath = path.join(destPagesDir, pageFile);
+                    
+                    console.log(`     Checking: ${sourcePath}`);
                     
                     if (fs.existsSync(sourcePath)) {
                         if (fs.statSync(sourcePath).isDirectory()) {
                             // Copy directory recursively
                             copyDirectoryRecursive(sourcePath, destPath);
-                            console.log(`  ✅ Copied directory: ${pageFile}`);
+                            console.log(`       ✅ Copied directory: ${pageFile}`);
                         } else {
                             // Copy single file
-                            copyFileWithImportProcessing(sourcePath, destPath);
-                            console.log(`  ✅ Copied file: ${pageFile}`);
+                            try {
+                                copyFileWithImportProcessing(sourcePath, destPath);
+                                console.log(`       ✅ Copied file: ${pageFile}`);
+                            } catch (error) {
+                                console.log(`       ❌ Error copying ${pageFile}:`, error.message);
+                            }
                         }
                     } else {
-                        console.log(`  ⚠️  File not found: ${pageFile} for module: ${module}`);
+                        console.log(`       ⚠️  File not found: ${pageFile} for module: ${module}`);
+                        console.log(`       Source path: ${sourcePath}`);
                     }
                 });
             } else {
                 console.log(`  ⚠️  No page mapping found for module: ${module}`);
+                console.log(`     Available mappings:`, Object.keys(moduleToPageMapping));
             }
         });
         
@@ -187,6 +214,19 @@ function copyAssets(baseDir, formData) {
                 console.log(`  ✅ Copied essential file: ${file}`);
             }
         });
+        
+        // Summary of copied files
+        console.log('\n📋 Summary of copied files:');
+        if (fs.existsSync(destPagesDir)) {
+            const copiedFiles = fs.readdirSync(destPagesDir);
+            copiedFiles.forEach(file => {
+                console.log(`  - ${file}`);
+            });
+            console.log(`  Total files copied: ${copiedFiles.length}`);
+        } else {
+            console.log('  No files were copied');
+        }
+        console.log('');
     }
 
     copyPublicAssets(sourceFrontendDir, frontendDir);

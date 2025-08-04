@@ -1,206 +1,356 @@
-import React, { useState } from 'react';
-import Card from '@components/global/Card';
-import Table from '@components/global/Table';
-import type { Column } from '@components/global/Table';
-import Dropdown from '@components/global/Dropdown';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
-import PageHeader from '@components/global/PageHeader';
-
-const cardData = [
-  {
-    title: 'Total Bill Amount',
-    value: '₹0.00',
-    icon: '/icons/total-recharge-collection.svg',
-    subtitle2: '0 Total Bills Generated',
-  },
-  { 
-    title: 'Outstanding Amount',
-    value: '₹0.00',
-    icon: '/icons/wallet.svg',
-    subtitle2: '0 Pending Bills',
-  },
-  {
-    title: 'Overdue Amount',
-    value: '₹0.00',
-    icon: '/icons/credit-issued.svg',
-    subtitle2: '0 Overdue Bills',
-  },
-  {
-    title: 'Total Amount Paid',
-    value: '₹0.00',
-    icon: '/icons/paid.svg',
-    subtitle2: '0 Consumer Paid',
-  },
-  {
-    title: 'Realization Rate',
-    value: '0.00%',
-    icon: '/icons/percentage.svg',
-    subtitle2: '0 Consumer Paid',
-  },
-];
-
-const tableColumns: Column[] = [
-  { key: 'billNo', label: 'Bill No' },
-  { key: 'consumerName', label: 'Consumer Name' },
-  { key: 'uid', label: 'UID' },
-  { key: 'meterNo', label: 'Meter SI No' },
-  { key: 'billDate', label: 'Bill Date' },
-  { key: 'units', label: 'No. of Units' },
-  { key: 'billAmount', label: 'Bill Amount' },
-  { key: 'dueDate', label: 'Due Date' },
-  { key: 'status', label: 'Status' },
-  { key: 'actions', label: 'Actions' },
-];
-
-const tableData: any[] = [];
-
-const amountRangeOptions = [
-  { value: '', label: 'Select Amount Range' },
-  { value: '0-1000', label: '₹0 - ₹1,000' },
-  { value: '1000-5000', label: '₹1,000 - ₹5,000' },
-  { value: '5000+', label: '₹5,000+' },
-];
-const paymentStatusOptions = [
-  { value: '', label: 'Select Payment Status' },
-  { value: 'paid', label: 'Paid' },
-  { value: 'unpaid', label: 'Unpaid' },
-  { value: 'overdue', label: 'Overdue' },
-];
+import React, { useState, useEffect } from "react";
+import PageC from "@components/global/PageC";
 
 const BillsPostpaid: React.FC = () => {
-  const [amountRange, setAmountRange] = useState('');
-  const [paymentStatus, setPaymentStatus] = useState('');
-  const [search, setSearch] = useState('');
+  const [cardData, setCardData] = useState<any[]>([]);
+  const [tableData, setTableData] = useState<any[]>([]);
+  const [amountRange, setAmountRange] = useState("");
+  const [paymentStatus, setPaymentStatus] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [search, setSearch] = useState("");
 
-
-  const headerComponent = (
-    <PageHeader
-      title="Bills Postpaid"
-      onBackClick={() => window.history.back()}
-      backButtonText="Back to Dashboard"
-      buttonsLabel="Add Bill"
-      variant="primary"
-      onClick={() => console.log('Adding new bill...')}
-      showMenu={true}
-      showDropdown={true}
-      menuItems={[
-        { id: 'all', label: 'All Bills' },
-        { id: 'paid', label: 'Paid' },
-        { id: 'unpaid', label: 'Unpaid' },
-        { id: 'overdue', label: 'Overdue' },
-        { id: 'pending', label: 'Pending' },
-        { id: 'high-amount', label: 'High Amount' },
-        { id: 'low-amount', label: 'Low Amount' }
-      ]}
-      onMenuItemClick={(itemId) => {
-        console.log(`Filter by: ${itemId}`);
-        // Apply filters based on selection
-        if (itemId === 'paid' || itemId === 'unpaid' || itemId === 'overdue') {
-          setPaymentStatus(itemId);
-        } else if (itemId === 'high-amount') {
-          setAmountRange('5000+');
-        } else if (itemId === 'low-amount') {
-          setAmountRange('0-1000');
-        } else if (itemId === 'all') {
-          setPaymentStatus('');
-          setAmountRange('');
-        }
-      }}
-   
-    />
-  );
-
-  
-
-  // Overview Cards Section
-  const overviewCardsSection: Section = {
-    id: 'overview-cards',
-    component: (
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        {cardData.slice(0, 4).map((card, idx) => (
-          <Card key={idx} {...card} />
-        ))}
-      </div>
-    )
+  const fetchOverviewCardsData = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      throw new Error("API not available - using dummy data");
+    } catch (error) {
+             setCardData([
+         {
+           title: "Total Bill Amount",
+           value: "₹15,500.00",
+           icon: "/icons/total-recharge-collection.svg",
+           subtitle2: "4 Total Bills Generated",
+           showTrend: true,
+           comparisonValue: 2.5,
+         },
+         {
+           title: "Outstanding Amount",
+           value: "₹4,300.00",
+           icon: "/icons/wallet.svg",
+           subtitle2: "2 Pending Bills",
+           showTrend: true,
+           comparisonValue: -1.2,
+         },
+         {
+           title: "Overdue Amount",
+           value: "₹1,000.00",
+           icon: "/icons/credit-issued.svg",
+           subtitle2: "1 Overdue Bills",
+           showTrend: true,
+           comparisonValue: 0.8,
+         },
+         {
+           title: "Total Amount Paid",
+           value: "₹11,200.00",
+           icon: "/icons/paid.svg",
+           subtitle2: "2 Consumer Paid",
+           showTrend: true,
+           comparisonValue: 3.1,
+         },
+         {
+           title: "Realization Rate",
+           value: "72.26%",
+           icon: "/icons/average.svg",
+           subtitle2: "2 Consumer Paid",
+           showTrend: true,
+           comparisonValue: 1.8,
+         },
+       ]);
+    }
   };
 
-  // Realization Rate Section
-  const realizationRateSection: Section = {
-    id: 'realization-rate',
-    component: (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card {...cardData[4]} />
-      </div>
-    )
+  const fetchTableData = async () => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 400));
+      throw new Error("API not available - using dummy data");
+    } catch (error) {
+      setTableData([
+        {
+          billNo: "BILL001",
+          consumerName: "Airborne General Store",
+          uid: "UID12345",
+          meterNo: "MTR001",
+          billDate: "2025-07-05",
+          units: "150 kWh",
+          billAmount: "₹1,500.00",
+          dueDate: "2025-07-20",
+          status: "Unpaid",
+        },
+        {
+          billNo: "BILL002",
+          consumerName: "Neo Travels",
+          uid: "UID12346",
+          meterNo: "MTR002",
+          billDate: "2025-07-05",
+          units: "200 kWh",
+          billAmount: "₹2,000.00",
+          dueDate: "2025-07-20",
+          status: "Paid",
+        },
+        {
+          billNo: "BILL003",
+          consumerName: "Dormitory",
+          uid: "UID12347",
+          meterNo: "MTR003",
+          billDate: "2025-07-05",
+          units: "100 kWh",
+          billAmount: "₹1,000.00",
+          dueDate: "2025-07-15",
+          status: "Overdue",
+        },
+        {
+          billNo: "BILL004",
+          consumerName: "Mobikins",
+          uid: "UID12348",
+          meterNo: "MTR004",
+          billDate: "2025-07-05",
+          units: "180 kWh",
+          billAmount: "₹1,800.00",
+          dueDate: "2025-07-20",
+          status: "Unpaid",
+        },
+      ]);
+    }
   };
 
-  // Filters Section
-  const filtersSection: Section = {
-    id: 'filters',
-    component: (
-      <div className="flex flex-col md:flex-row md:items-center md:gap-6 gap-4 mb-4">
-        <Dropdown
-          name="amountRange"
-          value={amountRange}
-          onChange={e => setAmountRange(e.target.value as string)}
-          options={amountRangeOptions}
-          className="w-full md:w-1/3"
-        />
-        <input
-          type="date"
-          className="w-full md:w-1/3 px-4 py-3 border border-neutral-light rounded-full focus:outline-none"
-          placeholder="Select Date"
-        />
-        <Dropdown
-          name="paymentStatus"
-          value={paymentStatus}
-          onChange={e => setPaymentStatus(e.target.value as string)}
-          options={paymentStatusOptions}
-          className="w-full md:w-1/3"
-        />
-      </div>
-    )
+  useEffect(() => {
+    const loadAllData = async () => {
+      try {
+        await Promise.all([
+          fetchOverviewCardsData(),
+          fetchTableData(),
+        ]);
+      } catch (error) {
+        console.error("Error loading data:", error);
+      }
+    };
+
+    loadAllData();
+  }, []);
+
+  const handleBackClick = () => window.history.back();
+  const handleAddBill = () => console.log("Adding new bill...");
+  const handleMenuItemClick = (itemId: string) => {
+    console.log(`Filter by: ${itemId}`);
+    if (itemId === "paid" || itemId === "unpaid" || itemId === "overdue") {
+      setPaymentStatus(itemId);
+    } else if (itemId === "high-amount") {
+      setAmountRange("5000+");
+    } else if (itemId === "low-amount") {
+      setAmountRange("0-1000");
+    } else if (itemId === "all") {
+      setPaymentStatus("");
+      setAmountRange("");
+    }
   };
 
-  // Search Section
-  const searchSection: Section = {
-    id: 'search',
-    component: (
-      <div className="mb-4">
-        <input
-          type="text"
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder="Search"
-          className="w-full px-4 py-3 border border-neutral-light rounded-full focus:outline-none"
-        />
-      </div>
-    )
+  const handleAmountRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setAmountRange(e.target.value);
   };
 
-  // Bills Table Section
-  const billsTableSection: Section = {
-    id: 'bills-table',
-    component: (
-      <Table
-        data={tableData}
-        columns={tableColumns}
-        pagination
-        searchable={false}
-        emptyMessage="No Bills Found"
-      />
-    )
+  const handlePaymentStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setPaymentStatus(e.target.value);
   };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSelectedDate(e.target.value);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handleViewBill = (row: any) => alert(`View ${row.billNo}`);
+  const handleDownloadBill = (row: any) => alert(`Download ${row.billNo}`);
+  const handleShareBill = (row: any) => alert(`Share ${row.billNo}`);
+
+  const amountRangeOptions = [
+    { value: "", label: "Select Amount Range" },
+    { value: "0-1000", label: "₹0 - ₹1,000" },
+    { value: "1000-5000", label: "₹1,000 - ₹5,000" },
+    { value: "5000+", label: "₹5,000+" },
+  ];
+
+  const paymentStatusOptions = [
+    { value: "", label: "Select Payment Status" },
+    { value: "paid", label: "Paid" },
+    { value: "unpaid", label: "Unpaid" },
+    { value: "overdue", label: "Overdue" },
+  ];
 
   return (
-    <Page
-      layout="single-column"
-      sections={[overviewCardsSection, realizationRateSection, filtersSection, searchSection, billsTableSection]}
-      header={headerComponent}
-      sidebarPosition="right"
-      className=""
-      sectionClassName=""
+    <PageC
+      sections={[
+        {
+          layout: {
+            type: "row" as const,
+            className: "",
+          },
+          components: [
+            {
+              name: "PageHeader",
+              props: {
+                title: "Bills Postpaid",
+                onBackClick: handleBackClick,
+                backButtonText: "Back to Dashboard",
+                buttonsLabel: "Add Bill",
+                variant: "primary",
+                onClick: handleAddBill,
+                showMenu: true,
+                showDropdown: true,
+                menuItems: [
+                  { id: "all", label: "All Bills" },
+                  { id: "paid", label: "Paid" },
+                  { id: "unpaid", label: "Unpaid" },
+                  { id: "overdue", label: "Overdue" },
+                  { id: "pending", label: "Pending" },
+                  { id: "high-amount", label: "High Amount" },
+                  { id: "low-amount", label: "Low Amount" },
+                ],
+                onMenuItemClick: handleMenuItemClick,
+              },
+            },
+          ],
+        },
+        {
+          layout: {
+            type: "grid" as const,
+            columns: 4,
+            gap: "gap-4",
+            className: "",
+          },
+          components: cardData.slice(0, 4).map((card, index) => ({
+            name: "Card",
+            props: {
+              key: index,
+              ...card,
+            },
+          })),
+        },
+        {
+          layout: {
+            type: "grid" as const,
+            columns: 4,
+            gap: "gap-4",
+            className: "",
+            
+          },
+          components: [
+            {
+              name: "Card",
+              props: {
+                key: 4,
+                ...cardData[4],
+              },
+
+              span: {
+                col: 1,
+                row: 1,
+              },
+            },
+          ],
+        },
+        {
+          layout: {
+            type: "row" as const,
+            className: "",
+          },
+          components: [
+            {
+              name: "Dropdown",
+              props: {
+                name: "amountRange",
+                value: amountRange,
+                onChange: handleAmountRangeChange,
+                options: amountRangeOptions,
+                className: "w-full",
+              },
+            },
+            {
+              name: "DatePicker",
+              props: {
+                value: selectedDate,
+                onChange: handleDateChange,
+                placeholder: "Select Date",
+                className: "w-full",
+              },
+            },
+            {
+              name: "Dropdown",
+              props: {
+                name: "paymentStatus",
+                value: paymentStatus,
+                onChange: handlePaymentStatusChange,
+                options: paymentStatusOptions,
+                className: "w-full",
+              },
+            },
+          ],
+        },
+        {
+          layout: {
+            type: "row" as const,
+            className: "",
+          },
+          components: [
+                         {
+               name: "Search",
+               props: {
+                 value: search,
+                 onChange: handleSearchChange,
+                 placeholder: "Search bills...",
+                 className: "w-full",
+               },
+             },
+          ],
+        },
+        {
+          layout: {
+            type: "column" as const,
+            className: "pb-4",
+          },
+          components: [
+            {
+              name: "Table",
+              props: {
+                data: tableData,
+                columns: [
+                  { key: "billNo", label: "Bill No" },
+                  { key: "consumerName", label: "Consumer Name" },
+                  { key: "uid", label: "UID" },
+                  { key: "meterNo", label: "Meter SI No" },
+                  { key: "billDate", label: "Bill Date" },
+                  { key: "units", label: "No. of Units" },
+                  { key: "billAmount", label: "Bill Amount" },
+                  { key: "dueDate", label: "Due Date" },
+                  { key: "status", label: "Status" },
+                ],
+                actions: [
+                  {
+                    label: "View",
+                    icon: "/icons/eye.svg",
+                    onClick: handleViewBill,
+                  },
+                  {
+                    label: "Download",
+                    icon: "/icons/download.svg",
+                    onClick: handleDownloadBill,
+                  },
+                  {
+                    label: "Share",
+                    icon: "/icons/share.svg",
+                    onClick: handleShareBill,
+                  },
+                ],
+                showActions: true,
+                pagination: true,
+                searchable: true,
+                emptyMessage: "No Bills Found",
+              },
+            },
+          ],
+        },
+      ]}
     />
   );
 };

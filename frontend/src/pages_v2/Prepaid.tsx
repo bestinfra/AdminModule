@@ -47,7 +47,7 @@ const rechargeData = [
     {
         title: 'Total Amount Deducted',
         value: '₹2,201.80',
-        icon: '/icons/total-amount-deducted.svg',
+        icon: '/icons/amount-deducted.svg',
         subtitle1: 'vs. ₹2,249.52 Yesterday',
         subtitle2: 'Deducted from 4 Consumers',
     },
@@ -61,7 +61,7 @@ const rechargeData = [
     {
         title: 'Alerts Triggered',
         value: '0',
-        icon: '/icons/alerts.svg',
+        icon: '/icons/alert-triggered.svg',
         subtitle1: 'vs. 0 Yesterday',
         subtitle2: '0 sent Today',
     },
@@ -168,7 +168,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -184,7 +184,7 @@ export default function Prepaid() {
                                                 buttonsLabel: 'Generate Report',
                                                 variant: 'primary',
                                                 onClick: handleGenerateReport,
-                                                showMenu: true,
+                                                showMenu: false,
                                                 showDropdown: true,
                                                 menuItems: [
                                                     {
@@ -229,15 +229,15 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',
                                     gridColumns: 4,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: cardData.map((card) => ({
                                         name: 'Card',
-                                        props: card,
+                                        props: { ...card, bg: "bg-stat-icon-gradient" },
                                     })),
                                 },
                             ],
@@ -247,7 +247,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -280,11 +280,56 @@ export default function Prepaid() {
                                 {
                                     layout: 'grid',
                                     gridColumns: 4,
-                                    gap: 'gap-6',
+                                    gap: 'gap-4',
                                     columns: rechargeData.map((card) => ({
                                         name: 'Card',
-                                        props: card,
+                                        props: { ...card, bg: "bg-stat-icon-gradient" },
                                     })),
+                                },
+                            ],
+                        },
+                    },
+                    //Dropdown and calendar section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row',  
+                                    columns: [
+                                        {
+                                            name: 'Dropdown',
+                                            props: {
+                                                options: [
+                                                    { label: 'Select Amount Range', value: '' },
+                                                    { label: '0 – 33.3k', value: '0-33.3k' },
+                                                    { label: '33.3k – 66.6k', value: '33.3k-66.6k' },
+                                                    { label: '66.6k – 100k', value: '66.6k-100k' },
+                                                ],
+                                                placeholder: 'Select Amount Range',
+                                            },
+                                        },
+                                        {
+                                            name: 'Calendar',
+                                            props: {
+                                                value: '',
+                                                onChange: (e: React.ChangeEvent<HTMLInputElement>) => console.log('Search:', e.target.value),
+                                            },
+                                        },
+                                        {
+                                            name: 'Dropdown',
+                                            props: {
+                                                options: [
+                                                    { label: 'Select Payment Status', value: '' },
+                                                    { label: 'Paid', value: 'paid' },
+                                                    { label: 'Pending', value: 'pending' },
+                                                    { label: 'Overdue', value: 'overdue' },
+                                                ],
+                                                placeholder: 'Select Payment Status',
+                                            },
+                                        },
+                                    ],
                                 },
                             ],
                         },
@@ -293,7 +338,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row',
@@ -325,7 +370,7 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',

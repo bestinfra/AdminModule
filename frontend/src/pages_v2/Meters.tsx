@@ -4,11 +4,6 @@ import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
-// Brand green icon style
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
-
 export default function Meters() {
     const navigate = useNavigate();
     const [meterData, setMeterData] = useState<
@@ -18,6 +13,7 @@ export default function Meters() {
             value: string | number;
             icon: string;
             subtitle1: string;
+            subtitle2: string;
             iconStyle?: any;
         }[]
     >([]);
@@ -39,41 +35,41 @@ export default function Meters() {
         location: 'all',
     });
 
-    const [allMeters, setAllMeters] = useState<any[]>([]);
 
-    // Demo data for fallback
+
+    // Demo data for fallback - Using BRAND_GREEN (default) for all cards
     const [demoMeterData] = useState([
         {
             id: 1,
             title: 'Total Meters',
             value: 1200,
-            subtitle1: 'Total number of meters',
+            subtitle1: '1100 Active',
+            subtitle2: '100 In-Active',
             icon: 'icons/meter.svg',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 2,
             title: 'Meter Makes',
             value: 5,
-            subtitle1: 'Unique Makes',
-            icon: 'icons/meter-make.svg',
-            iconStyle: ICON_FILTER_STYLE,
+            subtitle1: '1 Used Meter Makes',
+            subtitle2: '',
+            icon: 'icons/meter-bolt.svg',
         },
         {
             id: 3,
-            title: 'Meter Types',
+            title: 'Mapped Meters',
             value: 3,
-            subtitle1: 'Unique Types',
-            icon: 'icons/meter.svg',
-            iconStyle: ICON_FILTER_STYLE,
+            subtitle1: '86 Unmapped',
+            subtitle2: '0 Replaced',
+            icon: 'icons/mapped-meter.svg',
         },
         {
             id: 4,
-            title: 'Connection Types',
-            value: 2,
-            subtitle1: 'Unique Connection Types',
+            title: 'Connection Type',
+            value: 'Prepaid',
+            subtitle1: '3 Prepaid',
+            subtitle2: '0 Postpaid',
             icon: 'icons/connection-type.svg',
-            iconStyle: ICON_FILTER_STYLE,
         },
     ]);
     const [demoTableData] = useState([
@@ -111,23 +107,23 @@ export default function Meters() {
             meterNumber: 'MTR-1003',
         },
     ]);
-    const [demoAllMeters] = useState([
-        {
-            meterType: 'Smart',
-            meterMake: 'MakeA',
-            location: 'Building 1',
-        },
-        {
-            meterType: 'Digital',
-            meterMake: 'MakeB',
-            location: 'Building 2',
-        },
-        {
-            meterType: 'Smart',
-            meterMake: 'MakeA',
-            location: 'Building 3',
-        },
-    ]);
+    // const [demoAllMeters] = useState([
+    //     {
+    //         meterType: 'Smart',
+    //         meterMake: 'MakeA',
+    //         location: 'Building 1',
+    //     },
+    //     {
+    //         meterType: 'Digital',
+    //         meterMake: 'MakeB',
+    //         location: 'Building 2',
+    //     },
+    //     {
+    //         meterType: 'Smart',
+    //         meterMake: 'MakeA',
+    //         location: 'Building 3',
+    //     },
+    // ]);
 
     const fetchMeters = (page = 1, limit = 8, filtersOverride = filters) => {
         const params = new URLSearchParams();
@@ -183,25 +179,25 @@ export default function Meters() {
                             id: 1,
                             title: 'Total Meters',
                             value: stats.totalMeters,
-                            subtitle1: 'Total number of meters',
+                            subtitle1: '1100 Active',
+                            subtitle2: '',
                             icon: 'icons/meter.svg',
-                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 2,
                             title: 'Meter Makes',
                             value: stats.makes?.length ?? 0,
                             subtitle1: 'Unique Makes',
+                            subtitle2: '',
                             icon: 'icons/meter-make.svg',
-                            iconStyle: ICON_FILTER_STYLE,
                         },
                         {
                             id: 3,
                             title: 'Meter Types',
                             value: stats.types?.length ?? 0,
                             subtitle1: 'Unique Types',
-                            icon: 'icons/meter.svg',
-                            iconStyle: ICON_FILTER_STYLE,
+                            subtitle2: '',
+                            icon: 'icons/mapped-meter.svg',
                         },
                         {
                             id: 4,
@@ -209,8 +205,8 @@ export default function Meters() {
                             value: Object.keys(stats.connectionTypes || {})
                                 .length,
                             subtitle1: 'Unique Connection Types',
+                            subtitle2: '',
                             icon: 'icons/connection-type.svg',
-                            iconStyle: ICON_FILTER_STYLE,
                         },
                     ];
                     setMeterData(cards);
@@ -228,26 +224,7 @@ export default function Meters() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        fetch(`${BACKEND_URL}/meters?page=1&limit=10`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.success) {
-                    setAllMeters(
-                        data.data.map((row: any) => ({
-                            ...row,
-                            meterMake: row.meterMake || row.manufacturer || '',
-                        }))
-                    );
-                }
-            })
-            .catch((err) => {
-                console.error(
-                    err.message || 'Failed to fetch all meters for filters'
-                );
-                setAllMeters(demoAllMeters);
-            });
-    }, []);
+
 
     const handleFilterChange = (e: {
         target: { name: string; value: string };
@@ -272,26 +249,34 @@ export default function Meters() {
         { key: 'consumerName', label: 'Consumer Name' },
         { key: 'location', label: 'Location' },
         { key: 'installationDate', label: 'Installation Date' },
+        { key: 'status', label: 'Status' },
     ]);
 
     // Generate filter options from allMeters
     const meterTypeOptions = [
-        { value: 'all', label: 'All Types' },
-        ...Array.from(new Set(allMeters.map((row) => row.meterType)))
-            .filter(Boolean)
-            .map((type) => ({ value: type, label: type })),
+        // { value: 'all', label: 'Filter By Status' },
+        // ...Array.from(new Set(allMeters.map((row) => row.meterType)))
+        //     .filter(Boolean)
+        //     .map((type) => ({ value: type, label: type })),
+        { value: 'active', label: 'Active' },
+        { value: 'replaced', label: 'Replaced' },
+        { value: 'inactive', label: 'Inactive' },
     ];
     const meterMakeOptions = [
-        { value: 'all', label: 'All Makes' },
-        ...Array.from(new Set(allMeters.map((row) => row.meterMake)))
-            .filter(Boolean)
-            .map((make) => ({ value: make, label: make })),
+        // { value: 'all', label: 'Filter By Meter Types' },
+        // ...Array.from(new Set(allMeters.map((row) => row.meterMake)))
+        //     .filter(Boolean)
+        //     .map((make) => ({ value: make, label: make })),
+        { value: 'prepaid', label: 'Prepaid' },
+        { value: 'postpaid', label: 'Postpaid' },
     ];
     const locationOptions = [
-        { value: 'all', label: 'All Locations' },
-        ...Array.from(new Set(allMeters.map((row) => row.location)))
-            .filter(Boolean)
-            .map((loc) => ({ value: loc, label: loc })),
+        // { value: 'all', label: 'Filter By Mapping' },
+        // ...Array.from(new Set(allMeters.map((row) => row.location)))
+        //     .filter(Boolean)
+        //     .map((loc) => ({ value: loc, label: loc })),
+        { value: 'mapped', label: 'Mapped' },
+        { value: 'unmapped', label: 'Unmapped' },
     ];
 
     return (
@@ -301,21 +286,21 @@ export default function Meters() {
                     {
                         layout: {
                             type: 'row',
-                            className: 'mb-6',
+                            className: '',
                         },
                         components: [
                             {
                                 name: 'PageHeader',
                                 props: {
-                                    title: 'Meter Management',
+                                    title: 'Meters List',
                                     onBackClick: () => window.history.back(),
                                     backButtonText: 'Back to Dashboard',
-                                    buttonsLabel: 'Add Meter',
+                                    // buttonsLabel: 'Add Meter',
                                     variant: 'primary',
                                     onClick: () =>
                                         console.log('Adding new meter...'),
                                     showMenu: true,
-                                    showDropdown: true,
+                                    showDropdown: false,
                                     menuItems: [
                                         { id: 'all', label: 'All Meters' },
                                         {
@@ -349,14 +334,15 @@ export default function Meters() {
                             rows: [
                                 {
                                     layout: 'row',
-                                                                         columns: meterData.map((meter) => ({
+                                    columns: meterData.map((meter) => ({
                                          name: 'Card',
                                          props: {
                                              title: meter.title,
                                              value: meter.value,
                                              icon: meter.icon,
                                              subtitle1: meter.subtitle1,
-                                             iconStyle: meter.iconStyle,
+                                             subtitle2: meter.subtitle2,
+                                             bg: "bg-stat-icon-gradient",
                                          },
                                      })),
                                 },
@@ -379,7 +365,7 @@ export default function Meters() {
                                             props: {
                                                 name: 'meterType',
                                                 options: meterTypeOptions,
-                                                placeholder: 'Filter by Type',
+                                                placeholder: 'Filter By Status',
                                                 value: filters.meterType,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
@@ -390,7 +376,7 @@ export default function Meters() {
                                             props: {
                                                 name: 'meterMake',
                                                 options: meterMakeOptions,
-                                                placeholder: 'Filter by Make',
+                                                placeholder: 'Filter By Meter Types',
                                                 value: filters.meterMake,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
@@ -402,7 +388,7 @@ export default function Meters() {
                                                 name: 'location',
                                                 options: locationOptions,
                                                 placeholder:
-                                                    'Filter by Location',
+                                                    'Filter By Mapping',
                                                 value: filters.location,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
@@ -416,7 +402,7 @@ export default function Meters() {
                     {
                         layout: {
                             type: 'row',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             className: 'w-full',
                             rows: [
                                 {
@@ -441,8 +427,6 @@ export default function Meters() {
                                                 onPageChange: handlePageChange,
                                                 onEdit: (row: TableData) =>
                                                     console.log('Edit:', row),
-                                                onDelete: (row: TableData) =>
-                                                    console.log('Delete:', row),
                                                 onView: (row: TableData) =>
                                                     navigate(
                                                         `/meter-details/${row.meterNumber}`

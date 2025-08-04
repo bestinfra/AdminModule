@@ -1,12 +1,9 @@
 import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
+import { exportChartData } from '@/utils/excelExport';
 
 // Constants
-
-const ICON_FILTER_STYLE = {
-    filter: 'brightness(0) saturate(100%) invert(52%) sepia(60%) saturate(497%) hue-rotate(105deg) brightness(95%) contrast(90%)',
-};
 
 const METER_STATUS_DATA = [
     { value: 284, name: 'Communicating' },
@@ -31,7 +28,6 @@ const Dashboard: React.FC = () => {
             icon: '/icons/account.svg',
             subtitle1: '284 Active',
             subtitle2: '8 In-Active',
-            iconStyle: ICON_FILTER_STYLE,
             onValueClick: handleTotalConsumersClick,
         },
         {
@@ -41,7 +37,6 @@ const Dashboard: React.FC = () => {
             icon: '/icons/coins.svg',
             subtitle1: '0 Disconnected',
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 3,
@@ -50,7 +45,6 @@ const Dashboard: React.FC = () => {
             icon: '/icons/document.svg',
             subtitle1: '11 Disconnected',
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 4,
@@ -59,7 +53,6 @@ const Dashboard: React.FC = () => {
             icon: '/icons/bills.svg',
             subtitle1: '1395 Overdue Consumers',
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 5,
@@ -68,7 +61,6 @@ const Dashboard: React.FC = () => {
             icon: '/icons/bills.svg',
             subtitle1: '614.98% of Total Billed Amount',
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 6,
@@ -77,7 +69,6 @@ const Dashboard: React.FC = () => {
             icon: '/icons/graph-bar.svg',
             subtitle1: '140.09 kWh Average Consumption',
             subtitle2: '',
-            iconStyle: ICON_FILTER_STYLE,
             onValueClick: handleHighUsageConsumersClick,
         },
     ]);
@@ -92,7 +83,6 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: 2.4,
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 2,
@@ -103,7 +93,6 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: -18.3,
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 3,
@@ -114,7 +103,6 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: 0,
-            iconStyle: ICON_FILTER_STYLE,
         },
         {
             id: 4,
@@ -125,7 +113,6 @@ const Dashboard: React.FC = () => {
             subtitle2: 'May 2025',
             showTrend: true,
             comparisonValue: 0,
-            iconStyle: ICON_FILTER_STYLE,
         },
     ]);
 
@@ -254,6 +241,11 @@ const Dashboard: React.FC = () => {
         ],
     });
 
+    // Chart download handler
+    const handleChartDownload = () => {
+        exportChartData(billingChartData.xAxisData, billingChartData.seriesData, 'billing-vs-collection-data');
+    };
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Page
@@ -261,7 +253,7 @@ const Dashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'grid',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             columns: 3,
                             // className: 'items-stretch',
                             rows: [
@@ -294,8 +286,8 @@ const Dashboard: React.FC = () => {
                                                 icon: stat.icon,
                                                 subtitle1: stat.subtitle1,
                                                 subtitle2: stat.subtitle2,
-                                                iconStyle: stat.iconStyle,
                                                 onValueClick: stat.onValueClick,
+                                                bg: "bg-stat-icon-gradient",
                                             },
                                         })),
                                     ],
@@ -351,7 +343,7 @@ const Dashboard: React.FC = () => {
                                                 showTrend: billing.showTrend,
                                                 comparisonValue:
                                                     billing.comparisonValue,
-                                                iconStyle: billing.iconStyle,
+                                                bg: "bg-stat-icon-gradient",
                                             },
                                         })),
                                     ],
@@ -445,6 +437,7 @@ const Dashboard: React.FC = () => {
                                                     'Monthly billing statistics chart',
                                                 yAxisMax: 300,
                                                 yAxisStep: 50,
+                                                onDownload: handleChartDownload,
                                             },
                                         },
                                     ],
