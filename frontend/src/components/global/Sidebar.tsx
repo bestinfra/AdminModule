@@ -127,7 +127,12 @@ const defaultMenus: MenuCategory[] = [
                 title: 'User Management',
                 link: '/users',
                 icon:'/icons/user_managment.svg',
-            },  
+            },
+            {
+                title: 'SubLogin',
+                link: '/sub-login',
+                icon:'/icons/user_managment.svg',
+            },    
             {
                 title: 'Consumer',
                 link: '/consumers',

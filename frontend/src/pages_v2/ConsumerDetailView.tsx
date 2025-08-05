@@ -4,14 +4,14 @@ import Page from "@/components/global/PageC";
 import BACKEND_URL from "../config";
 
 const ConsumerDetailView: React.FC = () => {
-    const { consumerId } = useParams<{ consumerId: string }>();
-    const navigate = useNavigate();
-    
+  const { consumerId } = useParams<{ consumerId: string }>();
+  const navigate = useNavigate();
+
     // State for consumer data
-    const [consumer, setConsumer] = useState<any>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-  const lastComm = '30/06/2025 22:31:38';
+  const [consumer, setConsumer] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const lastComm = "30/06/2025 22:31:38";
 
   // Mock consumer data for demonstration based on the image
   const mockConsumerData = {
@@ -112,7 +112,10 @@ const ConsumerDetailView: React.FC = () => {
   const CONSUMER_INFO_ROW_3 = [
     { title: "Connection Type", value: mockConsumerData.connectionType },
     { title: "Category", value: mockConsumerData.category },
-    { title: "Sanctioned Load", value: `${mockConsumerData.sanctionedLoad} kW` },
+    {
+      title: "Sanctioned Load",
+      value: `${mockConsumerData.sanctionedLoad} kW`,
+    },
     { title: "Meter Status", value: mockConsumerData.status },
   ];
 
@@ -135,7 +138,7 @@ const ConsumerDetailView: React.FC = () => {
     {
       title: "Monthly Consumption (kWh)",
       value: "8.45",
-      subtitle: "Last Month: 64.78 kWh",
+      subtitle1: "Last Month: 64.78 kWh",
       icon: "/icons/energy.svg",
       bg: "bg-success",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
@@ -144,7 +147,7 @@ const ConsumerDetailView: React.FC = () => {
     {
       title: "Daily Consumption (kWh)",
       value: "0.39",
-      subtitle: "Yesterday: 2.03 kWh",
+      subtitle1: "Yesterday: 2.03 kWh",
       icon: "/icons/consumption.svg",
       bg: "bg-success",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
@@ -153,7 +156,7 @@ const ConsumerDetailView: React.FC = () => {
     {
       title: "Total Outstanding (Rs.)",
       value: "0",
-      subtitle: "Last Month: ₹0",
+      subtitle1: "Last Month: ₹0",
       icon: "/icons/coins.svg",
       bg: "bg-success",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
@@ -162,7 +165,7 @@ const ConsumerDetailView: React.FC = () => {
     {
       title: "Bill Status",
       value: "Overdue",
-      subtitle: "Due Date: 9/7/2025",
+      subtitle1: "Due Date: 9/7/2025",
       icon: "/icons/bills.svg",
       bg: "bg-warning",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
@@ -171,138 +174,151 @@ const ConsumerDetailView: React.FC = () => {
   ];
 
   // Chart data for consumer consumption
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
   const consumptionSeries = [
     {
-      name: 'Energy Consumption (kWh)',
-      data: [180, 195, 210, 185, 200, 175, 190, 205, 220, 195, 180, 200]
+      name: "Energy Consumption (kWh)",
+      data: [180, 195, 210, 185, 200, 175, 190, 205, 220, 195, 180, 200],
     },
     {
-      name: 'Peak Demand (kW)',
-      data: [15, 16, 18, 14, 17, 13, 16, 19, 20, 16, 15, 17]
-    }
+      name: "Peak Demand (kW)",
+      data: [15, 16, 18, 14, 17, 13, 16, 19, 20, 16, 15, 17],
+    },
   ];
-  const consumptionColors = ['#10B981', '#3B82F6'];
+  const consumptionColors = ["#10B981", "#3B82F6"];
 
   // Pie chart data for billing distribution
   const billingPieData = [
-    { name: 'Paid Bills', value: 65, color: '#10B981' },
-    { name: 'Pending Bills', value: 20, color: '#F59E0B' },
-    { name: 'Overdue Bills', value: 15, color: '#EF4444' },
+    { name: "Paid Bills", value: 65, color: "#10B981" },
+    { name: "Pending Bills", value: 20, color: "#F59E0B" },
+    { name: "Overdue Bills", value: 15, color: "#EF4444" },
   ];
 
   // Daily consumption chart data
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
   const dailyConsumptionSeries = [
     {
-      name: 'Daily Consumption (kWh)',
-      data: [25, 28, 22, 30, 26, 20, 18]
-    }
+      name: "Daily Consumption (kWh)",
+      data: [25, 28, 22, 30, 26, 20, 18],
+    },
   ];
-  const dailyConsumptionColors = ['#8B5CF6'];
+  const dailyConsumptionColors = ["#8B5CF6"];
 
   // Billing history table data
-    const billingHistoryData = [
-        {
-            id: 1,
-            billNumber: 'BILL-001',
-            billDate: '2024-01-15',
-            dueDate: '2024-02-15',
-            amount: '₹1,250.00',
-            status: 'Paid',
-        },
-        {
-            id: 2,
-            billNumber: 'BILL-002',
-            billDate: '2024-02-15',
-            dueDate: '2024-03-15',
-            amount: '₹1,350.00',
-            status: 'Pending',
-        },
-        {
-            id: 3,
-            billNumber: 'BILL-003',
-            billDate: '2024-03-15',
-            dueDate: '2024-04-15',
-            amount: '₹1,450.00',
-            status: 'Overdue',
-        },
-    ];
+  const billingHistoryData = [
+    {
+      id: 1,
+      billNumber: "BILL-001",
+      billDate: "2024-01-15",
+      dueDate: "2024-02-15",
+      amount: "₹1,250.00",
+      status: "Paid",
+    },
+    {
+      id: 2,
+      billNumber: "BILL-002",
+      billDate: "2024-02-15",
+      dueDate: "2024-03-15",
+      amount: "₹1,350.00",
+      status: "Pending",
+    },
+    {
+      id: 3,
+      billNumber: "BILL-003",
+      billDate: "2024-03-15",
+      dueDate: "2024-04-15",
+      amount: "₹1,450.00",
+      status: "Overdue",
+    },
+  ];
 
-    const billingHistoryColumns = [
-        { key: 'billNumber', label: 'Bill Number' },
-        { key: 'billDate', label: 'Bill Date' },
-        { key: 'dueDate', label: 'Due Date' },
-        { key: 'amount', label: 'Amount' },
-        { key: 'status', label: 'Status' },
-    ];
+  const billingHistoryColumns = [
+    { key: "billNumber", label: "Bill Number" },
+    { key: "billDate", label: "Bill Date" },
+    { key: "dueDate", label: "Due Date" },
+    { key: "amount", label: "Amount" },
+    { key: "status", label: "Status" },
+  ];
 
   // Meter readings table data
   const meterReadingsData = [
     {
       id: 1,
-      uid: 'BI25GMRA001',
-      meterSerialNo: 'A9211434',
-      companyName: 'Airborne General Store',
-      unitName: 'Main Unit',
-      createdOn: '2024-01-15',
+      uid: "BI25GMRA001",
+      meterSerialNo: "A9211434",
+      companyName: "Airborne General Store",
+      unitName: "Main Unit",
+      createdOn: "2024-01-15",
     },
     {
       id: 2,
-      uid: 'BI25GMRA002',
-      meterSerialNo: 'A9345417',
-      companyName: 'Neo Travels',
-      unitName: 'Office Unit',
-      createdOn: '2024-01-16',
+      uid: "BI25GMRA002",
+      meterSerialNo: "A9345417",
+      companyName: "Neo Travels",
+      unitName: "Office Unit",
+      createdOn: "2024-01-16",
     },
     {
       id: 3,
-      uid: 'BI25GMRA003',
-      meterSerialNo: 'A9211433',
-      companyName: 'Mobikins',
-      unitName: 'Shop Unit',
-      createdOn: '2024-01-17',
+      uid: "BI25GMRA003",
+      meterSerialNo: "A9211433",
+      companyName: "Mobikins",
+      unitName: "Shop Unit",
+      createdOn: "2024-01-17",
     },
   ];
 
   const meterReadingsColumns = [
-    { key: 'uid', label: 'UID' },
-    { key: 'meterSerialNo', label: 'Meter Serial No' },
-    { key: 'companyName', label: 'Company Name' },
-    { key: 'unitName', label: 'Unit Name' },
-    { key: 'createdOn', label: 'Created On' },
+    { key: "uid", label: "UID" },
+    { key: "meterSerialNo", label: "Meter Serial No" },
+    { key: "companyName", label: "Company Name" },
+    { key: "unitName", label: "Unit Name" },
+    { key: "createdOn", label: "Created On" },
   ];
 
   // Payment history table data
   const paymentHistoryData = [
     {
       id: 1,
-      transactionId: 'TXN-001',
-      creditAmount: '₹1,250.00',
-      currentBalanceAmount: '₹0.00',
-      paymentDate: '2024-01-20',
+      transactionId: "TXN-001",
+      creditAmount: "₹1,250.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-01-20",
     },
     {
       id: 2,
-      transactionId: 'TXN-002',
-      creditAmount: '₹1,350.00',
-      currentBalanceAmount: '₹0.00',
-      paymentDate: '2024-02-18',
+      transactionId: "TXN-002",
+      creditAmount: "₹1,350.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-02-18",
     },
     {
       id: 3,
-      transactionId: 'TXN-003',
-      creditAmount: '₹1,450.00',
-      currentBalanceAmount: '₹0.00',
-      paymentDate: '2024-03-25',
+      transactionId: "TXN-003",
+      creditAmount: "₹1,450.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-03-25",
     },
   ];
 
   const paymentHistoryColumns = [
-    { key: 'transactionId', label: 'Transaction ID' },
-    { key: 'creditAmount', label: 'Credit Amount' },
-    { key: 'currentBalanceAmount', label: 'Current Balance Amount' },
-    { key: 'paymentDate', label: 'Payment Date' },
+    { key: "transactionId", label: "Transaction ID" },
+    { key: "creditAmount", label: "Credit Amount" },
+    { key: "currentBalanceAmount", label: "Current Balance Amount" },
+    { key: "paymentDate", label: "Payment Date" },
   ];
 
   // Alerts table data
@@ -310,31 +326,31 @@ const ConsumerDetailView: React.FC = () => {
     {
       id: 1,
       sNo: 1,
-      eventDescription: 'High consumption alert triggered',
-      status: 'Active',
-      eventDate: '2024-01-17',
+      eventDescription: "High consumption alert triggered",
+      status: "Active",
+      eventDate: "2024-01-17",
     },
     {
       id: 2,
       sNo: 2,
-      eventDescription: 'Payment due reminder sent',
-      status: 'Resolved',
-      eventDate: '2024-03-20',
+      eventDescription: "Payment due reminder sent",
+      status: "Resolved",
+      eventDate: "2024-03-20",
     },
     {
       id: 3,
       sNo: 3,
-      eventDescription: 'Meter communication restored',
-      status: 'Completed',
-      eventDate: '2024-01-25',
+      eventDescription: "Meter communication restored",
+      status: "Completed",
+      eventDate: "2024-01-25",
     },
   ];
 
   const alertsColumns = [
-    { key: 'sNo', label: 'S.No' },
-    { key: 'eventDescription', label: 'Event Description' },
-    { key: 'status', label: 'Status' },
-    { key: 'eventDate', label: 'Event Date' },
+    { key: "sNo", label: "S.No" },
+    { key: "eventDescription", label: "Event Description" },
+    { key: "status", label: "Status" },
+    { key: "eventDate", label: "Event Date" },
   ];
 
   // Menu items for PageHeader
@@ -431,27 +447,27 @@ const ConsumerDetailView: React.FC = () => {
 
   console.log("Rendering with consumer data:", consumer);
 
-    return (
-        <Page
-            sections={[
-                // Header Section
-                {
-                    layout: {
+  return (
+    <Page
+      sections={[
+        // Header Section
+        {
+          layout: {
             type: "column",
             gap: "gap-4",
-                    },
-                    components: [
-                        {
+          },
+          components: [
+            {
               name: "PageHeader",
-                            props: {
+              props: {
                 title: consumer.name || "Consumer Details",
-                                menuItems: menuItems,
-                                showMenu: true,
-                                showDropdown: true,
+                menuItems: menuItems,
+                showMenu: true,
+                showDropdown: true,
                 buttonsLabel: "Edit",
                 variant: "primary",
-                                onClick: handleEditClick,
-                                onBackClick: handleBackClick,
+                onClick: handleEditClick,
+                onBackClick: handleBackClick,
                 backButtonText: "Back to Consumers",
               },
             },
@@ -534,8 +550,8 @@ const ConsumerDetailView: React.FC = () => {
                             gap: "gap-1",
                           })),
                         },
-                    ],
-                },
+                      ],
+                    },
                   },
                 ],
               },
@@ -565,7 +581,10 @@ const ConsumerDetailView: React.FC = () => {
                       titleWeight: "normal",
                       titleAlign: "left",
                       className: "w-full",
-                      rightComponent: { name: 'LastComm', props: { value: lastComm } },
+                      rightComponent: {
+                        name: "LastComm",
+                        props: { value: lastComm },
+                      },
                     },
                     span: { col: 1, row: 1 },
                   },
@@ -597,27 +616,27 @@ const ConsumerDetailView: React.FC = () => {
         // Consumer Performance and Billing Section (2-column grid like DTRDashboard)
         {
           layout: {
-            type: 'grid' as const,
-            className: '',
+            type: "grid" as const,
+            className: "",
             columns: 2,
           },
           components: [
             {
-                name: 'PieChart',
-                
-                props: {
-                  data: billingPieData,
-                  height: 300,
-                  showLegendInteractions: true,
-                  showHeader: true,
-                  headerTitle: 'Billing Distribution',
-                  className:' ',
-                  showDownloadButton: true,
-                  onDownload: () => handleChartDownload(),
-                },
+              name: "PieChart",
+
+              props: {
+                data: billingPieData,
+                height: 300,
+                showLegendInteractions: true,
+                showHeader: true,
+                headerTitle: "Billing Distribution",
+                className: " ",
+                showDownloadButton: true,
+                onDownload: () => handleChartDownload(),
               },
+            },
             {
-              name: 'BarChart',
+              name: "BarChart",
               props: {
                 xAxisData: months,
                 seriesData: consumptionSeries,
@@ -625,25 +644,24 @@ const ConsumerDetailView: React.FC = () => {
                 height: 300,
                 showLegendInteractions: true,
                 showHeader: true,
-                headerTitle: 'Consumer Energy Consumption',
+                headerTitle: "Consumer Energy Consumption",
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
               },
-            }
-           
+            },
           ],
         },
         // Daily Consumption Chart and Tables Section
         {
           layout: {
-            type: 'grid' as const,
-            className: '',
+            type: "grid" as const,
+            className: "",
             columns: 1,
           },
           components: [
             // Daily Consumption Chart (1 row)
             {
-              name: 'BarChart',
+              name: "BarChart",
               props: {
                 xAxisData: days,
                 seriesData: dailyConsumptionSeries,
@@ -651,7 +669,7 @@ const ConsumerDetailView: React.FC = () => {
                 height: 300,
                 showLegendInteractions: true,
                 showHeader: true,
-                headerTitle: 'Energy Consumption',
+                headerTitle: "Energy Consumption",
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
               },
@@ -667,11 +685,35 @@ const ConsumerDetailView: React.FC = () => {
             rows: [
               {
                 layout: "row",
+                columns: [
+                  {
+                    name: "SectionHeader",
+                    span: { col: 1, row: 2 },
+                    props: {
+                      title: "Current Bill Details",
+                      titleVariant: "primary-dark",
+                      titleWeight: "normal",
+                      titleSize: "md",
+                      titleAlign: "left",
+                      layout: "horizontal",
+                      gap: "gap-4",
+                      className: "w-full",
+                      rightComponent: {
+                        name: "LastComm",
+                        props: { value: lastComm },
+                      },
+                    },
+                  },
+                ],
+              },
+              {
+                layout: "row",
                 className: "justify-between w-full",
                 span: { col: 2, row: 1 },
                 columns: [
                   {
                     name: "SectionHeader",
+                    span: { col: 1, row: 2 },
                     props: {
                       title: "Current Bill Details",
                       titleVariant: "primary-dark",
@@ -743,12 +785,13 @@ const ConsumerDetailView: React.FC = () => {
                   props: {
                     title: item.title,
                     value: item.value,
-                    subtitle: item.subtitle,
+                    subtitle1: item.subtitle1,
                     icon: item.icon,
                     bg: item.bg,
                     valueFontSize: item.valueFontSize,
                     iconStyle: item.iconStyle,
-                    className: "bg-background-secondary border border-primary-border",
+                    className:
+                      "bg-background-secondary border border-primary-border",
                   },
                 })),
               },
@@ -759,24 +802,24 @@ const ConsumerDetailView: React.FC = () => {
         // Unit History Table Section
         {
           layout: {
-            type: 'grid' as const,
-            className: '',
+            type: "grid" as const,
+            className: "",
             columns: 1,
           },
           components: [
             {
-              name: 'Table',
+              name: "Table",
               props: {
                 data: meterReadingsData,
                 columns: meterReadingsColumns,
                 showHeader: true,
-                headerTitle: 'Unit History',
+                headerTitle: "Unit History",
                 showActions: false,
                 searchable: true,
                 pagination: true,
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
-                emptyMessage: 'No unit history found',
+                emptyMessage: "No unit history found",
               },
             },
           ],
@@ -784,24 +827,24 @@ const ConsumerDetailView: React.FC = () => {
         // Transaction History Table Section
         {
           layout: {
-            type: 'grid' as const,
-            className: '',
+            type: "grid" as const,
+            className: "",
             columns: 1,
           },
           components: [
             {
-              name: 'Table',
+              name: "Table",
               props: {
                 data: paymentHistoryData,
                 columns: paymentHistoryColumns,
                 showHeader: true,
-                headerTitle: 'Transaction History',
+                headerTitle: "Transaction History",
                 showActions: false,
                 searchable: true,
                 pagination: true,
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
-                emptyMessage: 'No payment records found',
+                emptyMessage: "No payment records found",
               },
             },
           ],
@@ -809,31 +852,31 @@ const ConsumerDetailView: React.FC = () => {
         // Events Table Section
         {
           layout: {
-            type: 'grid' as const,
-            className: '',
+            type: "grid" as const,
+            className: "pb-4",
             columns: 1,
           },
           components: [
             {
-              name: 'Table',
+              name: "Table",
               props: {
                 data: alertsData,
                 columns: alertsColumns,
                 showHeader: true,
-                headerTitle: 'Events',
+                headerTitle: "Events",
                 showActions: false,
                 searchable: true,
                 pagination: true,
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
-                emptyMessage: 'No alerts found',
+                emptyMessage: "No alerts found",
               },
             },
           ],
         },
-            ]}
-        />
-    );
+      ]}
+    />
+  );
 };
 
 export default ConsumerDetailView;

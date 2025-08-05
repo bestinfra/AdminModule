@@ -1,12 +1,14 @@
 import React from "react";
 import TimeRangeSelector from "./TimeRangeSelector";
 import LastComm from "./LastComm";
+import SwitchInput from "../Form/renderers/SwitchInput";
 // Import other components you want to support as rightComponent
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const componentMap: Record<string, React.ComponentType<any>> = {
   TimeRangeSelector,
   LastComm,
+  SwitchInput,
   // Add more components here if needed
 };
 
@@ -119,6 +121,14 @@ interface SectionHeaderProps {
       | "semibold"
       | "bold"
       | "extrabold";
+    // Toggle props
+    toggle?: {
+      value: boolean;
+      onChange: (value: boolean) => void;
+      label?: string;
+      description?: string;
+      name?: string;
+    };
   };
   // Multiple right labels with click handlers
   rightLabels?: Array<{
@@ -464,8 +474,25 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
       </div>
     );
   } else if (rightContent && typeof rightContent === 'object' && 'rightLabel' in rightContent) {
-    const { rightLabel: nestedLabel, rightLabelSize: nestedSize = "sm", rightLabelVariant: nestedVariant = "muted", rightLabelWeight: nestedWeight = "normal" } = rightContent;
-    if (nestedLabel) {
+    const { rightLabel: nestedLabel, rightLabelSize: nestedSize = "sm", rightLabelVariant: nestedVariant = "muted", rightLabelWeight: nestedWeight = "normal", toggle } = rightContent;
+    
+    if (toggle) {
+      // Render toggle component
+      rightContentElement = (
+        <SwitchInput
+          value={toggle.value}
+          onChange={(event) => {
+            const target = event.target as HTMLInputElement;
+            toggle.onChange(target.checked);
+          }}
+          label={toggle.label || ""}
+          description={toggle.description}
+          name={toggle.name || "toggle"}
+          id={toggle.name || "toggle"}
+          className=""
+        />
+      );
+    } else if (nestedLabel) {
       rightContentElement = (
         <span className={generateLabelClasses(nestedSize, nestedVariant, nestedWeight)}>
           {nestedLabel}
