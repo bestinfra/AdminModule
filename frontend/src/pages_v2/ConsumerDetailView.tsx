@@ -108,6 +108,68 @@ const ConsumerDetailView: React.FC = () => {
     { title: "Email ID", value: mockConsumerData.emailId },
   ];
 
+  // Second Consumer Details Data (different data)
+  const CONSUMER_INFO_ROW_3 = [
+    { title: "Connection Type", value: mockConsumerData.connectionType },
+    { title: "Category", value: mockConsumerData.category },
+    { title: "Sanctioned Load", value: `${mockConsumerData.sanctionedLoad} kW` },
+    { title: "Meter Status", value: mockConsumerData.status },
+  ];
+
+  const CONSUMER_INFO_ROW_4 = [
+    { title: "Installation Date", value: "2023-01-15" },
+    { title: "Last Reading Date", value: "2024-01-20" },
+    { title: "Meter Type", value: "Smart Meter" },
+    { title: "Phase Type", value: "Three Phase" },
+  ];
+
+  // Current Bill Details Data
+  const BILL_DETAILS_ROW = [
+    { title: "Billing Month", value: "1/7/2025" },
+    { title: "Bill Period", value: "1/6/2025 - 30/6/2025" },
+    { title: "Due Date", value: "9/7/2025" },
+  ];
+
+  // Consumption Summary Cards Data
+  const consumptionSummaryCards = [
+    {
+      title: "Monthly Consumption (kWh)",
+      value: "8.45",
+      subtitle: "Last Month: 64.78 kWh",
+      icon: "/icons/energy.svg",
+      bg: "bg-success",
+      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+      iconStyle: "BRAND_GREEN",
+    },
+    {
+      title: "Daily Consumption (kWh)",
+      value: "0.39",
+      subtitle: "Yesterday: 2.03 kWh",
+      icon: "/icons/consumption.svg",
+      bg: "bg-success",
+      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+      iconStyle: "BRAND_GREEN",
+    },
+    {
+      title: "Total Outstanding (Rs.)",
+      value: "0",
+      subtitle: "Last Month: ₹0",
+      icon: "/icons/coins.svg",
+      bg: "bg-success",
+      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+      iconStyle: "BRAND_GREEN",
+    },
+    {
+      title: "Bill Status",
+      value: "Overdue",
+      subtitle: "Due Date: 9/7/2025",
+      icon: "/icons/bills.svg",
+      bg: "bg-warning",
+      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+      iconStyle: "BRAND_GREEN",
+    },
+  ];
+
   // Chart data for consumer consumption
   const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   const consumptionSeries = [
@@ -121,6 +183,13 @@ const ConsumerDetailView: React.FC = () => {
     }
   ];
   const consumptionColors = ['#10B981', '#3B82F6'];
+
+  // Pie chart data for billing distribution
+  const billingPieData = [
+    { name: 'Paid Bills', value: 65, color: '#10B981' },
+    { name: 'Pending Bills', value: 20, color: '#F59E0B' },
+    { name: 'Overdue Bills', value: 15, color: '#EF4444' },
+  ];
 
   // Daily consumption chart data
   const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -534,6 +603,20 @@ const ConsumerDetailView: React.FC = () => {
           },
           components: [
             {
+                name: 'PieChart',
+                
+                props: {
+                  data: billingPieData,
+                  height: 300,
+                  showLegendInteractions: true,
+                  showHeader: true,
+                  headerTitle: 'Billing Distribution',
+                  className:' ',
+                  showDownloadButton: true,
+                  onDownload: () => handleChartDownload(),
+                },
+              },
+            {
               name: 'BarChart',
               props: {
                 xAxisData: months,
@@ -546,29 +629,15 @@ const ConsumerDetailView: React.FC = () => {
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
               },
-            },
-            {
-              name: 'Table',
-              props: {
-                data: billingHistoryData,
-                columns: billingHistoryColumns,
-                showHeader: true,
-                headerTitle: 'Billing History',
-                showActions: false,
-                searchable: true,
-                pagination: true,
-                availableTimeRanges: [],
-                initialRowsPerPage: 3,
-                emptyMessage: 'No billing records found',
-              },
-            },
+            }
+           
           ],
         },
         // Daily Consumption Chart and Tables Section
         {
           layout: {
             type: 'grid' as const,
-            className: 'pb-4',
+            className: '',
             columns: 1,
           },
           components: [
@@ -582,12 +651,119 @@ const ConsumerDetailView: React.FC = () => {
                 height: 300,
                 showLegendInteractions: true,
                 showHeader: true,
-                headerTitle: 'Daily Energy Consumption',
+                headerTitle: 'Energy Consumption',
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
               },
             },
-            // Meter Readings Table (1 row)
+          ],
+        },
+        // Current Bill Details and Consumption Summary Section
+        {
+          layout: {
+            type: "grid",
+            columns: 2,
+            className: "border border-primary-border rounded-3xl p-4 ",
+            rows: [
+              {
+                layout: "row",
+                className: "justify-between w-full",
+                span: { col: 2, row: 1 },
+                columns: [
+                  {
+                    name: "SectionHeader",
+                    props: {
+                      title: "Current Bill Details",
+                      titleVariant: "primary-dark",
+                      titleWeight: "normal",
+                      titleSize: "md",
+                      titleAlign: "left",
+                      layout: "horizontal",
+                      gap: "gap-4",
+                      className: "w-full",
+                    },
+                  },
+                ],
+              },
+              // Billing Dates Information
+              {
+                layout: "row" as const,
+                className:
+                  "border border-primary-border rounded-3xl p-4 bg-background-secondary",
+                span: { col: 2, row: 1 },
+                columns: [
+                  {
+                    name: "PageInformation",
+                    props: {
+                      gridColumns: 3,
+                      rows: [
+                        {
+                          layout: "row",
+                          className: "justify-between w-full",
+                          span: { col: 3, row: 1 },
+                          items: BILL_DETAILS_ROW.map((item) => ({
+                            title: item.title,
+                            value: item.value,
+                            align: "start",
+                            gap: "gap-1",
+                          })),
+                        },
+                      ],
+                    },
+                  },
+                ],
+              },
+              {
+                layout: "row",
+                className: "justify-between w-full mt-4",
+                span: { col: 2, row: 1 },
+                columns: [
+                  {
+                    name: "SectionHeader",
+                    props: {
+                      title: "Consumption Summary",
+                      titleVariant: "primary-dark",
+                      titleWeight: "normal",
+                      titleSize: "md",
+                      titleAlign: "left",
+                      layout: "horizontal",
+                      gap: "gap-4",
+                      className: "w-full",
+                    },
+                  },
+                ],
+              },
+              // Consumption Summary Cards
+              {
+                layout: "row" as const,
+                className: "justify-between w-full",
+                span: { col: 2, row: 1 },
+                columns: consumptionSummaryCards.map((item) => ({
+                  name: "Card",
+                  props: {
+                    title: item.title,
+                    value: item.value,
+                    subtitle: item.subtitle,
+                    icon: item.icon,
+                    bg: item.bg,
+                    valueFontSize: item.valueFontSize,
+                    iconStyle: item.iconStyle,
+                    className: "bg-background-secondary border border-primary-border",
+                  },
+                })),
+              },
+            ],
+          },
+        },
+
+        // Unit History Table Section
+        {
+          layout: {
+            type: 'grid' as const,
+            className: '',
+            columns: 1,
+          },
+          components: [
             {
               name: 'Table',
               props: {
@@ -603,7 +779,16 @@ const ConsumerDetailView: React.FC = () => {
                 emptyMessage: 'No unit history found',
               },
             },
-            // Payment History Table (1 row)
+          ],
+        },
+        // Transaction History Table Section
+        {
+          layout: {
+            type: 'grid' as const,
+            className: '',
+            columns: 1,
+          },
+          components: [
             {
               name: 'Table',
               props: {
@@ -619,7 +804,16 @@ const ConsumerDetailView: React.FC = () => {
                 emptyMessage: 'No payment records found',
               },
             },
-            // Alerts Table (1 row)
+          ],
+        },
+        // Events Table Section
+        {
+          layout: {
+            type: 'grid' as const,
+            className: '',
+            columns: 1,
+          },
+          components: [
             {
               name: 'Table',
               props: {
