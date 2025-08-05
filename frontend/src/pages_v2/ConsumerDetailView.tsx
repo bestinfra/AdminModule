@@ -4,13 +4,13 @@ import Page from "@/components/global/PageC";
 import BACKEND_URL from "../config";
 
 const ConsumerDetailView: React.FC = () => {
-  const { consumerId } = useParams<{ consumerId: string }>();
-  const navigate = useNavigate();
-
-  // State for consumer data
-  const [consumer, setConsumer] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+    const { consumerId } = useParams<{ consumerId: string }>();
+    const navigate = useNavigate();
+    
+    // State for consumer data
+    const [consumer, setConsumer] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
   const lastComm = '30/06/2025 22:31:38';
 
   // Mock consumer data for demonstration based on the image
@@ -35,56 +35,56 @@ const ConsumerDetailView: React.FC = () => {
   // Consumer Statistics Cards Data
   const consumerStats = [
     {
-      title: "Current Balance",
-      value: mockConsumerData.currentBalance,
-      subtitle1: "Available Balance",
-      icon: "/icons/current-balance.svg",
-      bg: "bg-stat-icon-gradient",
+      title: "R-Phase Voltage",
+      value: "233.51",
+      subtitle1: "Volts",
+      icon: "/icons/voltage.svg",
+      bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
     {
-      title: "Meter Status",
-      value: mockConsumerData.status,
-      subtitle1: "Connection Status",
-      icon: "/icons/meter_managment.svg",
-      bg: "bg-stat-icon-gradient",
+      title: "Y-Phase Voltage",
+      value: "0.0",
+      subtitle1: "Volts",
+      icon: "/icons/voltage.svg",
+      bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
     {
-      title: "Sanctioned Load",
-      value: `${mockConsumerData.sanctionedLoad} kW`,
-      subtitle1: "Maximum Load",
-      icon: "/icons/energy.svg",
-      bg: "bg-stat-icon-gradient",
+      title: "B-Phase Voltage",
+      value: "0.0",
+      subtitle1: "Volts",
+      icon: "/icons/voltage.svg",
+      bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
     {
-      title: "Connection Type",
-      value: mockConsumerData.connectionType,
-      subtitle1: "Service Category",
-      icon: "/icons/connection.svg",
-      bg: "bg-stat-icon-gradient",
+      title: "R-Phase Current",
+      value: "0.45",
+      subtitle1: "Amps",
+      icon: "/icons/current.svg",
+      bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
     {
-      title: "Occupancy",
-      value: mockConsumerData.occupancyStatus,
-      subtitle1: "Property Status",
-      icon: "/icons/user_managment.svg",
-      bg: "bg-stat-icon-gradient",
+      title: "Y-Phase Current",
+      value: "0.0",
+      subtitle1: "Amps",
+      icon: "/icons/current.svg",
+      bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
     {
-      title: "Meter Number",
-      value: mockConsumerData.meterSerialNumber,
-      subtitle1: "Serial Number",
-      icon: "/icons/meter_managment.svg",
-      bg: "bg-stat-icon-gradient",
+      title: "B-Phase Current",
+      value: "0.0",
+      subtitle1: "Amps",
+      icon: "/icons/current.svg",
+      bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
@@ -133,147 +133,139 @@ const ConsumerDetailView: React.FC = () => {
   const dailyConsumptionColors = ['#8B5CF6'];
 
   // Billing history table data
-  const billingHistoryData = [
-    {
-      id: 1,
-      billNumber: 'BILL-001',
-      billDate: '2024-01-15',
-      dueDate: '2024-02-15',
-      amount: '₹1,250.00',
-      status: 'Paid',
-    },
-    {
-      id: 2,
-      billNumber: 'BILL-002',
-      billDate: '2024-02-15',
-      dueDate: '2024-03-15',
-      amount: '₹1,350.00',
-      status: 'Pending',
-    },
-    {
-      id: 3,
-      billNumber: 'BILL-003',
-      billDate: '2024-03-15',
-      dueDate: '2024-04-15',
-      amount: '₹1,450.00',
-      status: 'Overdue',
-    },
-  ];
+    const billingHistoryData = [
+        {
+            id: 1,
+            billNumber: 'BILL-001',
+            billDate: '2024-01-15',
+            dueDate: '2024-02-15',
+            amount: '₹1,250.00',
+            status: 'Paid',
+        },
+        {
+            id: 2,
+            billNumber: 'BILL-002',
+            billDate: '2024-02-15',
+            dueDate: '2024-03-15',
+            amount: '₹1,350.00',
+            status: 'Pending',
+        },
+        {
+            id: 3,
+            billNumber: 'BILL-003',
+            billDate: '2024-03-15',
+            dueDate: '2024-04-15',
+            amount: '₹1,450.00',
+            status: 'Overdue',
+        },
+    ];
 
-  const billingHistoryColumns = [
-    { key: 'billNumber', label: 'Bill Number' },
-    { key: 'billDate', label: 'Bill Date' },
-    { key: 'dueDate', label: 'Due Date' },
-    { key: 'amount', label: 'Amount' },
-    { key: 'status', label: 'Status' },
-  ];
+    const billingHistoryColumns = [
+        { key: 'billNumber', label: 'Bill Number' },
+        { key: 'billDate', label: 'Bill Date' },
+        { key: 'dueDate', label: 'Due Date' },
+        { key: 'amount', label: 'Amount' },
+        { key: 'status', label: 'Status' },
+    ];
 
   // Meter readings table data
   const meterReadingsData = [
     {
       id: 1,
-      date: '2024-01-15',
-      reading: '1250.50',
-      consumption: '45.20',
-      peakDemand: '12.5',
-      status: 'Normal',
+      uid: 'BI25GMRA001',
+      meterSerialNo: 'A9211434',
+      companyName: 'Airborne General Store',
+      unitName: 'Main Unit',
+      createdOn: '2024-01-15',
     },
     {
       id: 2,
-      date: '2024-01-16',
-      reading: '1295.70',
-      consumption: '42.30',
-      peakDemand: '11.8',
-      status: 'Normal',
+      uid: 'BI25GMRA002',
+      meterSerialNo: 'A9345417',
+      companyName: 'Neo Travels',
+      unitName: 'Office Unit',
+      createdOn: '2024-01-16',
     },
     {
       id: 3,
-      date: '2024-01-17',
-      reading: '1338.00',
-      consumption: '48.90',
-      peakDemand: '14.2',
-      status: 'High',
+      uid: 'BI25GMRA003',
+      meterSerialNo: 'A9211433',
+      companyName: 'Mobikins',
+      unitName: 'Shop Unit',
+      createdOn: '2024-01-17',
     },
   ];
 
   const meterReadingsColumns = [
-    { key: 'date', label: 'Date' },
-    { key: 'reading', label: 'Reading (kWh)' },
-    { key: 'consumption', label: 'Consumption (kWh)' },
-    { key: 'peakDemand', label: 'Peak Demand (kW)' },
-    { key: 'status', label: 'Status' },
+    { key: 'uid', label: 'UID' },
+    { key: 'meterSerialNo', label: 'Meter Serial No' },
+    { key: 'companyName', label: 'Company Name' },
+    { key: 'unitName', label: 'Unit Name' },
+    { key: 'createdOn', label: 'Created On' },
   ];
 
   // Payment history table data
   const paymentHistoryData = [
     {
       id: 1,
-      paymentId: 'PAY-001',
-      date: '2024-01-20',
-      amount: '₹1,250.00',
-      method: 'Online',
-      status: 'Completed',
+      transactionId: 'TXN-001',
+      creditAmount: '₹1,250.00',
+      currentBalanceAmount: '₹0.00',
+      paymentDate: '2024-01-20',
     },
     {
       id: 2,
-      paymentId: 'PAY-002',
-      date: '2024-02-18',
-      amount: '₹1,350.00',
-      method: 'Cash',
-      status: 'Completed',
+      transactionId: 'TXN-002',
+      creditAmount: '₹1,350.00',
+      currentBalanceAmount: '₹0.00',
+      paymentDate: '2024-02-18',
     },
     {
       id: 3,
-      paymentId: 'PAY-003',
-      date: '2024-03-25',
-      amount: '₹1,450.00',
-      method: 'Cheque',
-      status: 'Pending',
+      transactionId: 'TXN-003',
+      creditAmount: '₹1,450.00',
+      currentBalanceAmount: '₹0.00',
+      paymentDate: '2024-03-25',
     },
   ];
 
   const paymentHistoryColumns = [
-    { key: 'paymentId', label: 'Payment ID' },
-    { key: 'date', label: 'Date' },
-    { key: 'amount', label: 'Amount' },
-    { key: 'method', label: 'Method' },
-    { key: 'status', label: 'Status' },
+    { key: 'transactionId', label: 'Transaction ID' },
+    { key: 'creditAmount', label: 'Credit Amount' },
+    { key: 'currentBalanceAmount', label: 'Current Balance Amount' },
+    { key: 'paymentDate', label: 'Payment Date' },
   ];
 
   // Alerts table data
   const alertsData = [
     {
       id: 1,
-      type: 'High Consumption',
-      message: 'Daily consumption exceeded threshold',
-      date: '2024-01-17',
-      severity: 'Warning',
+      sNo: 1,
+      eventDescription: 'High consumption alert triggered',
       status: 'Active',
+      eventDate: '2024-01-17',
     },
     {
       id: 2,
-      type: 'Payment Due',
-      message: 'Bill payment overdue by 5 days',
-      date: '2024-03-20',
-      severity: 'Critical',
-      status: 'Active',
+      sNo: 2,
+      eventDescription: 'Payment due reminder sent',
+      status: 'Resolved',
+      eventDate: '2024-03-20',
     },
     {
       id: 3,
-      type: 'Meter Alert',
-      message: 'Meter communication issue detected',
-      date: '2024-01-25',
-      severity: 'Info',
-      status: 'Resolved',
+      sNo: 3,
+      eventDescription: 'Meter communication restored',
+      status: 'Completed',
+      eventDate: '2024-01-25',
     },
   ];
 
   const alertsColumns = [
-    { key: 'type', label: 'Alert Type' },
-    { key: 'message', label: 'Message' },
-    { key: 'date', label: 'Date' },
-    { key: 'severity', label: 'Severity' },
+    { key: 'sNo', label: 'S.No' },
+    { key: 'eventDescription', label: 'Event Description' },
     { key: 'status', label: 'Status' },
+    { key: 'eventDate', label: 'Event Date' },
   ];
 
   // Menu items for PageHeader
@@ -370,27 +362,27 @@ const ConsumerDetailView: React.FC = () => {
 
   console.log("Rendering with consumer data:", consumer);
 
-  return (
-    <Page
-      sections={[
-        // Header Section
-        {
-          layout: {
+    return (
+        <Page
+            sections={[
+                // Header Section
+                {
+                    layout: {
             type: "column",
             gap: "gap-4",
-          },
-          components: [
-            {
+                    },
+                    components: [
+                        {
               name: "PageHeader",
-              props: {
+                            props: {
                 title: consumer.name || "Consumer Details",
-                menuItems: menuItems,
-                showMenu: true,
-                showDropdown: true,
+                                menuItems: menuItems,
+                                showMenu: true,
+                                showDropdown: true,
                 buttonsLabel: "Edit",
                 variant: "primary",
-                onClick: handleEditClick,
-                onBackClick: handleBackClick,
+                                onClick: handleEditClick,
+                                onBackClick: handleBackClick,
                 backButtonText: "Back to Consumers",
               },
             },
@@ -473,8 +465,8 @@ const ConsumerDetailView: React.FC = () => {
                             gap: "gap-1",
                           })),
                         },
-                      ],
-                    },
+                    ],
+                },
                   },
                 ],
               },
@@ -576,7 +568,7 @@ const ConsumerDetailView: React.FC = () => {
         {
           layout: {
             type: 'grid' as const,
-            className: '',
+            className: 'pb-4',
             columns: 1,
           },
           components: [
@@ -602,13 +594,13 @@ const ConsumerDetailView: React.FC = () => {
                 data: meterReadingsData,
                 columns: meterReadingsColumns,
                 showHeader: true,
-                headerTitle: 'Meter Readings',
+                headerTitle: 'Unit History',
                 showActions: false,
                 searchable: true,
                 pagination: true,
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
-                emptyMessage: 'No meter readings found',
+                emptyMessage: 'No unit history found',
               },
             },
             // Payment History Table (1 row)
@@ -618,7 +610,7 @@ const ConsumerDetailView: React.FC = () => {
                 data: paymentHistoryData,
                 columns: paymentHistoryColumns,
                 showHeader: true,
-                headerTitle: 'Payment History',
+                headerTitle: 'Transaction History',
                 showActions: false,
                 searchable: true,
                 pagination: true,
@@ -634,7 +626,7 @@ const ConsumerDetailView: React.FC = () => {
                 data: alertsData,
                 columns: alertsColumns,
                 showHeader: true,
-                headerTitle: 'Consumer Alerts',
+                headerTitle: 'Events',
                 showActions: false,
                 searchable: true,
                 pagination: true,
@@ -645,9 +637,9 @@ const ConsumerDetailView: React.FC = () => {
             },
           ],
         },
-      ]}
-    />
-  );
+            ]}
+        />
+    );
 };
 
 export default ConsumerDetailView;

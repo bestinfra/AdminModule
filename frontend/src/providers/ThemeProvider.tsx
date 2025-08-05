@@ -101,6 +101,9 @@ const defaultTheme = {
     colorSecondaryPositiveLight: 'rgba(52, 199, 89, 0.15)', /*changed*/
     colorWarning: 'rgba(237, 140, 34, 1)',
     colorWarningAlt: 'rgba(255, 209, 8, 1)',
+    colorGoodToGo: 'rgba(255, 209, 8, 1)',
+    colorGoodToGoLight: 'rgba(52, 199, 89, 0.15)',
+
     colorWarningLight: 'rgba(255, 180, 0, 0.15)', /*changed*/
     colorDanger: 'rgba(220, 39, 44, 1)',
     colorDangerAlt: 'rgba(255, 124, 92, 1)',
