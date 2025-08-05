@@ -39,15 +39,12 @@ model bills {
 }
 
 model consumer_documents {
-  id                 Int                @id @default(autoincrement())
-  consumerId         Int
-  type               DocumentType
-  number             String
-  fileUrl            String
-  verificationStatus VerificationStatus @default(PENDING)
-  createdAt          DateTime           @default(now())
-  updatedAt          DateTime
-  consumers          consumers          @relation(fields: [consumerId], references: [id])
+  id         Int       @id @default(autoincrement())
+  consumerId Int
+  type       String
+  url        String
+  uploadedAt DateTime  @default(now())
+  consumers  consumers @relation(fields: [consumerId], references: [id])
 }
 
 model consumers {
@@ -75,40 +72,29 @@ model consumers {
   locations            locations            @relation(fields: [locationId], references: [id])
   meters               meters[]
   notifications        notifications[]
-  prepaid_accounts     prepaid_accounts?
   tickets              tickets[]
 }
 
 model current_transformers {
-  id               Int       @id @default(autoincrement())
-  meterId          Int
-  serialNumber     String    @unique
-  manufacturer     String
-  model            String
-  ratedPrimary     Float
-  ratedSecondary   Float
-  accuracyClass    String
-  burden           Float
-  installationDate DateTime
-  lastTestedDate   DateTime?
-  nextTestDue      DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime
-  meters           meters    @relation(fields: [meterId], references: [id])
+  id       Int     @id @default(autoincrement())
+  meterId  Int
+  ratio    String
+  accuracy String?
+  burden   Float?
+  meters   meters  @relation(fields: [meterId], references: [id])
 }
 
 model departments {
-  id                Int           @id @default(autoincrement())
-  name              String        @unique
-  code              String        @unique
-  description       String?
-  parentId          Int?
-  isActive          Boolean       @default(true)
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime
-  departments       departments?  @relation("departmentsTodepartments", fields: [parentId], references: [id])
-  other_departments departments[] @relation("departmentsTodepartments")
-  users             users[]
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
+  code        String      @default("")
+  description String?     @default("")
+  parentId    Int?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @default(now())
+  users       users[]
+  parent      departments? @relation("DepartmentHierarchy", fields: [parentId], references: [id])
+  children    departments[] @relation("DepartmentHierarchy")
 }
 
 model dtr_faults {
@@ -144,6 +130,7 @@ model dtr_maintenance {
   performedBy       String
   verifiedBy        String?
   status            MaintenanceStatus @default(SCHEDULED)
+  documents         Json?
   createdAt         DateTime          @default(now())
   updatedAt         DateTime
   dtrs              dtrs              @relation(fields: [dtrId], references: [id])
@@ -167,6 +154,9 @@ model dtr_readings {
   frequency          Float?
   voltageUnbalance   Float?
   currentUnbalance   Float?
+  isValid            Boolean        @default(true)
+  validatedBy        String?
+  validatedAt        DateTime?
   createdAt          DateTime       @default(now())
   updatedAt          DateTime
   dtrs               dtrs           @relation(fields: [dtrId], references: [id])
@@ -185,7 +175,7 @@ model dtrs {
   phase               Int
   primaryVoltage      Float
   secondaryVoltage    Float
-  frequency           Float             @default(50)
+  frequency           Float?
   impedance           Float?
   coolingType         CoolingType
   oilType             OilType?
@@ -211,14 +201,12 @@ model dtrs {
 }
 
 model location_types {
-  id          Int         @id @default(autoincrement())
-  name        String      @unique
-  level       Int
-  description String?
-  isActive    Boolean     @default(true)
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime
-  locations   locations[]
+  id        Int         @id @default(autoincrement())
+  name      String      @unique
+  level     Int         @default(1)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @default(now())
+  locations locations[]
 }
 
 model locations {
@@ -242,15 +230,12 @@ model locations {
 }
 
 model login_history {
-  id            Int      @id @default(autoincrement())
-  userId        Int
-  status        String
-  ipAddress     String?
-  deviceInfo    Json?
-  location      String?
-  failureReason String?
-  createdAt     DateTime @default(now())
-  users         users    @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  loginAt   DateTime @default(now())
+  ip        String?
+  userAgent String?
+  users     users    @relation(fields: [userId], references: [id])
 }
 
 model meter_configurations {
@@ -277,72 +262,75 @@ model meter_configurations {
 }
 
 model meter_readings {
-  id                   Int                    @id @default(autoincrement())
-  meterId              Int
-  readingDate          DateTime
-  readingType          ReadingType
-  readingSource        ReadingSource
-  currentReading       Float
-  previousReading      Float
-  consumption          Float
-  kWh                  Float
-  kVAh                 Float
-  kW                   Float?
-  kVA                  Float?
-  kVARh                Float?
-  powerFactor          Float?
-  averagePF            Float?
-  minimumPF            Float?
-  voltageR             Float?
-  voltageY             Float?
-  voltageB             Float?
-  averageVoltage       Float?
-  currentR             Float?
-  currentY             Float?
-  currentB             Float?
-  averageCurrent       Float?
-  isValid              Boolean                @default(true)
-  validatedBy          String?
-  validatedAt          DateTime?
-  billId               Int?
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime
-  bills                bills?                 @relation(fields: [billId], references: [id])
-  meters               meters                 @relation(fields: [meterId], references: [id])
-  prepaid_transactions prepaid_transactions[]
+  id              Int           @id @default(autoincrement())
+  meterId         Int
+  readingDate     DateTime
+  readingType     ReadingType
+  readingSource   ReadingSource
+  kWh             Float
+  kVAh            Float
+  kVARh           Float?
+  powerFactor     Float?
+  averagePF       Float?
+  minimumPF       Float?
+  voltageR        Float?
+  voltageY        Float?
+  voltageB        Float?
+  averageVoltage  Float?
+  currentR        Float?
+  currentY        Float?
+  currentB        Float?
+  averageCurrent  Float?
+  isValid         Boolean       @default(true)
+  validatedBy     String?
+  validatedAt     DateTime?
+  billId          Int?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime
+  kVA             Float?
+  kW              Float?
+  bphPowerFactor  Float?
+  frequency       Float?
+  rphPowerFactor  Float?
+  yphPowerFactor  Float?
+  consumption     Float         @default(0)
+  currentReading  Float         @default(0)
+  previousReading Float         @default(0)
+  bills           bills?        @relation(fields: [billId], references: [id])
+  meters          meters        @relation(fields: [meterId], references: [id])
 
   @@index([meterId, readingDate])
 }
 
 model meters {
-  id                     Int                      @id @default(autoincrement())
-  meterNumber            String                   @unique
-  serialNumber           String                   @unique
-  manufacturer           String
-  model                  String
-  type                   MeterType
-  phase                  Int
-  status                 MeterStatus              @default(ACTIVE)
-  isInUse                Boolean                  @default(true)
-  installationDate       DateTime
-  lastMaintenanceDate    DateTime?
-  decommissionDate       DateTime?
-  consumerId             Int
-  locationId             Int
-  dtrId                  Int?
-  createdAt              DateTime                 @default(now())
-  updatedAt              DateTime
-  bills                  bills[]
-  current_transformers   current_transformers[]
-  meter_configurations   meter_configurations?
-  meter_readings         meter_readings[]
-  consumers              consumers                @relation(fields: [consumerId], references: [id])
-  dtrs                   dtrs?                    @relation(fields: [dtrId], references: [id])
-  locations              locations                @relation(fields: [locationId], references: [id])
-  potential_transformers potential_transformers[]
-  tamper_events          tamper_events[]
-
-  @@index([dtrId])
+  id                      Int                       @id @default(autoincrement())
+  meterNumber             String                    @unique
+  serialNumber            String                    @unique
+  manufacturer            String
+  model                   String
+  type                    MeterType
+  phase                   Int
+  status                  MeterStatus               @default(ACTIVE)
+  isInUse                 Boolean                   @default(true)
+  installationDate        DateTime
+  lastMaintenanceDate     DateTime?
+  decommissionDate        DateTime?
+  consumerId              Int
+  locationId              Int
+  dtrId                   Int?
+  createdAt               DateTime                  @default(now())
+  updatedAt               DateTime
+  bills                   bills[]
+  consumption             consumption[]
+  current_transformers    current_transformers[]
+  meter_configurations    meter_configurations?
+  meter_connection_events meter_connection_events[]
+  meter_readings          meter_readings[]
+  consumers               consumers                 @relation(fields: [consumerId], references: [id])
+  dtrs                    dtrs?                     @relation(fields: [dtrId], references: [id])
+  locations               locations                 @relation(fields: [locationId], references: [id])
+  modems                  modems?
+  potential_transformers  potential_transformers[]
 }
 
 model notifications {
@@ -365,7 +353,7 @@ model payments {
   transactionId   String        @unique
   billId          Int
   amount          Float
-  paymentMode     PaymentMethod
+  paymentMode     PaymentMode
   paymentStatus   PaymentStatus @default(PENDING)
   gatewayResponse Json?
   receiptNumber   String?
@@ -376,136 +364,24 @@ model payments {
 
 model permissions {
   id               Int                @id @default(autoincrement())
-  code             String             @unique
-  name             String
-  description      String?
-  isActive         Boolean            @default(true)
-  createdAt        DateTime           @default(now())
-  updatedAt        DateTime
+  name             String             @unique
   role_permissions role_permissions[]
   user_permissions user_permissions[]
 }
 
 model potential_transformers {
-  id               Int       @id @default(autoincrement())
-  meterId          Int
-  serialNumber     String    @unique
-  manufacturer     String
-  model            String
-  ratedPrimary     Float
-  ratedSecondary   Float
-  accuracyClass    String
-  burden           Float
-  installationDate DateTime
-  lastTestedDate   DateTime?
-  nextTestDue      DateTime?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime
-  meters           meters    @relation(fields: [meterId], references: [id])
-}
-
-model prepaid_accounts {
-  id                    Int                    @id @default(autoincrement())
-  consumerId            Int                    @unique
-  accountNumber         String                 @unique
-  currentBalance        Float                  @default(0)
-  totalRecharged        Float                  @default(0)
-  totalConsumed         Float                  @default(0)
-  isActive              Boolean                @default(true)
-  isBlocked             Boolean                @default(false)
-  blockReason           String?
-  blockedAt             DateTime?
-  blockedBy             Int?
-  lowBalanceThreshold   Float                  @default(50)
-  emergencyThreshold    Float                  @default(10)
-  autoRechargeEnabled   Boolean                @default(false)
-  autoRechargeAmount    Float?
-  autoRechargeThreshold Float?
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime
-  consumers             consumers              @relation(fields: [consumerId], references: [id])
-  prepaid_alerts        prepaid_alerts[]
-  prepaid_recharges     prepaid_recharges[]
-  prepaid_transactions  prepaid_transactions[]
-}
-
-model prepaid_alerts {
-  id                 Int               @id @default(autoincrement())
-  accountId          Int
-  alertType          PrepaidAlertType
-  alertLevel         PrepaidAlertLevel
-  message            String
-  isRead             Boolean           @default(false)
-  readAt             DateTime?
-  balanceAtAlert     Float?
-  consumptionAtAlert Float?
-  thresholdValue     Float?
-  createdAt          DateTime          @default(now())
-  prepaid_accounts   prepaid_accounts  @relation(fields: [accountId], references: [id])
-
-  @@index([accountId, createdAt])
-}
-
-model prepaid_recharges {
-  id                   Int                   @id @default(autoincrement())
-  accountId            Int
-  rechargeId           String                @unique
-  amount               Float
-  paymentMethod        PaymentMethod
-  paymentStatus        PaymentStatus         @default(PENDING)
-  gatewayName          String?
-  gatewayTransactionId String?
-  gatewayResponse      Json?
-  rechargeType         PrepaidRechargeType   @default(MANUAL)
-  rechargeSource       PrepaidRechargeSource @default(ONLINE)
-  isPromotional        Boolean               @default(false)
-  promotionalCode      String?
-  discountAmount       Float                 @default(0)
-  bonusAmount          Float                 @default(0)
-  receiptNumber        String?
-  receiptUrl           String?
-  createdAt            DateTime              @default(now())
-  updatedAt            DateTime
-  prepaid_accounts     prepaid_accounts      @relation(fields: [accountId], references: [id])
-
-  @@index([accountId, createdAt])
-  @@index([rechargeId])
-}
-
-model prepaid_transactions {
-  id               Int                      @id @default(autoincrement())
-  accountId        Int
-  transactionId    String                   @unique
-  transactionType  PrepaidTransactionType
-  amount           Float
-  balanceBefore    Float
-  balanceAfter     Float
-  consumptionKWh   Float?
-  ratePerUnit      Float?
-  fixedCharges     Float?
-  taxes            Json?
-  readingId        Int?
-  status           PrepaidTransactionStatus @default(COMPLETED)
-  failureReason    String?
-  description      String?
-  metadata         Json?
-  createdAt        DateTime                 @default(now())
-  updatedAt        DateTime
-  prepaid_accounts prepaid_accounts         @relation(fields: [accountId], references: [id])
-  meter_readings   meter_readings?          @relation(fields: [readingId], references: [id])
-
-  @@index([accountId, createdAt])
-  @@index([transactionId])
+  id       Int     @id @default(autoincrement())
+  meterId  Int
+  ratio    String
+  accuracy String?
+  burden   Float?
+  meters   meters  @relation(fields: [meterId], references: [id])
 }
 
 model role_permissions {
   id           Int         @id @default(autoincrement())
   roleId       Int
   permissionId Int
-  isGranted    Boolean     @default(true)
-  restrictions Json?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime
   permissions  permissions @relation(fields: [permissionId], references: [id])
   roles        roles       @relation(fields: [roleId], references: [id])
 
@@ -515,66 +391,15 @@ model role_permissions {
 model roles {
   id               Int                @id @default(autoincrement())
   name             String             @unique
-  description      String?
-  level            Int
+  description      String?            @default("")
   isSystem         Boolean            @default(false)
   isActive         Boolean            @default(true)
-  accessLevel      AccessLevel
+  accessLevel      AccessLevel        @default(NORMAL)
+  level            Int                @default(1)
   createdAt        DateTime           @default(now())
-  updatedAt        DateTime
+  updatedAt        DateTime           @default(now())
   role_permissions role_permissions[]
   user_roles       user_roles[]
-}
-
-model tamper_code_desc {
-  id         Int      @id @default(autoincrement())
-  tamperCode Int      @unique
-  tamperDesc String   @db.VarChar(100)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime
-}
-
-model tamper_events {
-  id             Int          @id @default(autoincrement())
-  meterId        Int
-  tamperDatetime DateTime     @default(now())
-  tamperType     TamperType
-  tamperStatus   TamperStatus
-  avgCurrent     Float?
-  avgVoltage     Float?
-  avgPowerFactor Float?
-  frequency      Float?
-  kwh            Float?
-  kwhExport      Float?
-  kwhImport      Float?
-  kwhNet         Float?
-  kwhTotal       Float?
-  kwExport       Float?
-  kwImport       Float?
-  kvaExport      Float?
-  kvaImport      Float?
-  voltageR       Float?
-  voltageY       Float?
-  voltageB       Float?
-  currentR       Float?
-  currentY       Float?
-  currentB       Float?
-  powerFactorR   Float?
-  powerFactorY   Float?
-  powerFactorB   Float?
-  tamperCount    Int?
-  param1         Float?
-  param2         Float?
-  param3         Float?
-  param4         Float?
-  param5         Float?
-  isProcessed    Boolean      @default(false)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime
-  meters         meters       @relation(fields: [meterId], references: [id])
-
-  @@unique([meterId, tamperDatetime, tamperType, tamperStatus])
-  @@index([meterId, tamperDatetime])
 }
 
 model tickets {
@@ -601,8 +426,7 @@ model user_activity_logs {
   id        Int      @id @default(autoincrement())
   userId    Int
   action    String
-  details   Json?
-  ipAddress String?
+  details   String?
   createdAt DateTime @default(now())
   users     users    @relation(fields: [userId], references: [id])
 }
@@ -611,12 +435,6 @@ model user_permissions {
   id           Int         @id @default(autoincrement())
   userId       Int
   permissionId Int
-  isGranted    Boolean     @default(true)
-  reason       String?
-  validFrom    DateTime    @default(now())
-  validUntil   DateTime?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime
   permissions  permissions @relation(fields: [permissionId], references: [id])
   users        users       @relation(fields: [userId], references: [id])
 
@@ -629,11 +447,11 @@ model user_roles {
   roleId     Int
   isPrimary  Boolean   @default(false)
   assignedAt DateTime  @default(now())
-  assignedBy Int
+  assignedBy Int       @default(1)
   expiresAt  DateTime?
   isActive   Boolean   @default(true)
   createdAt  DateTime  @default(now())
-  updatedAt  DateTime
+  updatedAt  DateTime  @default(now())
   roles      roles     @relation(fields: [roleId], references: [id])
   users      users     @relation(fields: [userId], references: [id])
 
@@ -641,18 +459,12 @@ model user_roles {
 }
 
 model user_sessions {
-  id             Int      @id @default(autoincrement())
-  userId         Int
-  sessionToken   String   @unique
-  deviceInfo     Json?
-  ipAddress      String?
-  location       String?
-  isActive       Boolean  @default(true)
-  lastActivityAt DateTime @default(now())
-  expiresAt      DateTime
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime
-  users          users    @relation(fields: [userId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  users     users    @relation(fields: [userId], references: [id])
 }
 
 model users {
@@ -686,25 +498,104 @@ model users {
   departments                         departments?         @relation(fields: [departmentId], references: [id])
 }
 
+model consumption {
+  id              Int      @id @default(autoincrement())
+  meterId         Int
+  previousValue   Float
+  finalValue      Float
+  consumption     Float
+  consumptionDate DateTime
+  timestamp       DateTime @default(now())
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime
+  meters          meters   @relation(fields: [meterId], references: [id])
+
+  @@index([meterId, timestamp])
+}
+
+model meter_connection_events {
+  id          Int                 @id @default(autoincrement())
+  meterId     Int
+  eventType   ConnectionEventType
+  eventTime   DateTime            @default(now())
+  reason      String?
+  performedBy Int?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime
+  meters      meters              @relation(fields: [meterId], references: [id])
+
+  @@index([meterId, eventTime])
+}
+
+model modems {
+  modem_id         Int       @id @default(autoincrement())
+  modem_sl_no      String    @unique
+  hw_version       String?
+  fw_version       String?
+  mobile           String?
+  delivery_date    DateTime?
+  imei             String?
+  simno            String?
+  changed_by       String?
+  changed_datetime String?
+  ip               String?
+  log_timestamp    DateTime?
+  sim_no           String?
+  meters           meters    @relation(fields: [modem_sl_no], references: [serialNumber])
+}
+
+model tariff {
+  id                        Int      @id @default(autoincrement())
+  client_id                 Int
+  category                  Int
+  tariff_name               String
+  type                      String   // 'prepaid', 'postpaid'
+  device                    String
+  
+  // Min demand section
+  min_demand                Int
+  min_demand_unit_rate      Float
+  min_demand_excess_unit_rate Float
+
+  // Slab structure
+  slab1_limit               Int
+  slab1_unit_rate           Float
+  
+  slab2_limit               Int
+  slab2_unit_rate           Float
+  
+  slab3_limit               Int
+  slab3_unit_rate           Float
+
+  // Base rate fallback
+  base_unit_rate            Float
+
+  // Additional charges
+  elec_duty_unit_rate       Float
+  ims                       Float
+  gst                       Float
+
+  // Applicability window (optional)
+  valid_from                DateTime?
+  valid_to                  DateTime?
+
+  created_at                DateTime @default(now())
+  updated_at                DateTime @updatedAt
+}
+
+model raw_xml_import {
+  id        Int      @id @default(autoincrement())
+  doc       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+}
+
 enum AccessLevel {
   RESTRICTED
   NORMAL
   ELEVATED
   ADMIN
   SUPER_ADMIN
-}
-
-enum AlertLevel {
-  LOW
-  MEDIUM
-  CRITICAL
-}
-
-enum AlertType {
-  LOW_BALANCE
-  RECHARGE_SUCCESS
-  BLOCKED
-  THRESHOLD_REACHED
 }
 
 enum BillDeliveryMode {
@@ -772,14 +663,6 @@ enum DTRType {
   POWER
   AUTO
   SPECIAL_PURPOSE
-}
-
-enum DocumentType {
-  ID_PROOF
-  ADDRESS_PROOF
-  OWNERSHIP_PROOF
-  NOC
-  OTHER
 }
 
 enum FaultSeverity {
@@ -898,60 +781,6 @@ enum PaymentStatus {
   REFUNDED
 }
 
-enum PrepaidAlertLevel {
-  INFO
-  WARNING
-  CRITICAL
-  EMERGENCY
-}
-
-enum PrepaidAlertType {
-  LOW_BALANCE
-  EMERGENCY_LOW
-  CONSUMPTION_HIGH
-  RECHARGE_SUCCESS
-  RECHARGE_FAILED
-  DISCONNECTION_WARNING
-  DISCONNECTED
-  RECONNECTED
-}
-
-enum PrepaidRechargeSource {
-  ONLINE
-  OFFLINE
-  MOBILE_APP
-  SMS
-  USSD
-  AGENT
-}
-
-enum PrepaidRechargeType {
-  MANUAL
-  AUTO
-  PROMOTIONAL
-  REFUND
-  ADMIN
-}
-
-enum PrepaidTransactionStatus {
-  PENDING
-  COMPLETED
-  FAILED
-  CANCELLED
-  REVERSED
-}
-
-enum PrepaidTransactionType {
-  RECHARGE
-  CONSUMPTION
-  ADJUSTMENT
-  REFUND
-  PENALTY
-  BONUS
-  EXPIRY
-  TRANSFER
-}
-
 enum ReadingSource {
   AMR
   MANUAL
@@ -964,28 +793,6 @@ enum ReadingType {
   SPECIAL
   PROVISIONAL
   FINAL
-}
-
-enum TamperStatus {
-  DETECTED
-  CONFIRMED
-  RESOLVED
-  FALSE_ALARM
-  INVESTIGATING
-}
-
-enum TamperType {
-  METER_BYPASS
-  MAGNETIC_TAMPER
-  COVER_OPEN
-  TERMINAL_TAMPER
-  REVERSE_POLARITY
-  PHASE_MISMATCH
-  CURRENT_SHUNT
-  VOLTAGE_SHUNT
-  POWER_FAILURE
-  NO_LOAD
-  OTHER
 }
 
 enum TicketCategory {
@@ -1017,8 +824,16 @@ enum TicketType {
   INQUIRY
 }
 
-enum VerificationStatus {
-  PENDING
-  VERIFIED
-  REJECTED
+enum ConnectionEventType {
+  CONNECT
+  DISCONNECT
+}
+
+enum PaymentMode {
+  CASH
+  CHEQUE
+  CARD
+  UPI
+  NETBANKING
+  WALLET
 }
