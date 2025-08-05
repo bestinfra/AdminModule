@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Page from "@/components/global/PageC";
 // import BACKEND_URL from "../config";
+import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
 const ConsumerDetailView: React.FC = () => {
   const { consumerId } = useParams<{ consumerId: string }>();
@@ -41,7 +42,7 @@ const ConsumerDetailView: React.FC = () => {
       icon: "/icons/voltage.svg",
       bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
+      iconStyle: FILTER_STYLES.WHITE,
     },
     {
       title: "Y-Phase Voltage",
@@ -50,7 +51,7 @@ const ConsumerDetailView: React.FC = () => {
       icon: "/icons/voltage.svg",
       bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
+      iconStyle: FILTER_STYLES.WHITE,
     },
     {
       title: "B-Phase Voltage",
@@ -59,7 +60,7 @@ const ConsumerDetailView: React.FC = () => {
       icon: "/icons/voltage.svg",
       bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
+      iconStyle: FILTER_STYLES.WHITE,
     },
     {
       title: "R-Phase Current",
@@ -68,7 +69,7 @@ const ConsumerDetailView: React.FC = () => {
       icon: "/icons/current.svg",
       bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
+      iconStyle: FILTER_STYLES.WHITE,
     },
     {
       title: "Y-Phase Current",
@@ -77,7 +78,7 @@ const ConsumerDetailView: React.FC = () => {
       icon: "/icons/current.svg",
       bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
+      iconStyle: FILTER_STYLES.WHITE,
     },
     {
       title: "B-Phase Current",
@@ -86,7 +87,7 @@ const ConsumerDetailView: React.FC = () => {
       icon: "/icons/current.svg",
       bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
+      iconStyle: FILTER_STYLES.WHITE,
     },
   ];
 
@@ -638,14 +639,14 @@ const ConsumerDetailView: React.FC = () => {
           components: [
             {
               name: "PieChart",
-
+              
               props: {
                 data: billingPieData,
                 height: 300,
                 showLegendInteractions: true,
                 showHeader: true,
                 headerTitle: "Billing Distribution",
-                className: " ",
+                className: "border border-primary-border rounded-3xl p-4",
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
               },
