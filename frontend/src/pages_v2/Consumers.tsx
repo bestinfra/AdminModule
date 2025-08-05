@@ -108,7 +108,7 @@ const Consumers: React.FC = () => {
             : consumers;
 
     const handleRowClick = (row: any) => {
-        navigate(`/consumers/${row.consumerNumber}`);
+        navigate(`/consumer-detail-view/${row.consumerNumber}`);
     };
 
     const headerConfig = {

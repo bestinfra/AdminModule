@@ -45,7 +45,7 @@ import FilterStyleController from './components/global/FilterStyleController';
 // import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
 // import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
 import Dashboard from './pages_v2/ConsumerDashboard';
-
+import ConsumerDetailView from './pages_v2/ConsumerDetailView';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -70,6 +70,8 @@ const App: React.FC = () => {
                                 path="/data-logger/:dataLoggerId"
                                 element={<DataLoggerDashboard />}
                             />
+                            <Route path='/consumer-detail-view/:consumerId' element={<ConsumerDetailView />} />
+                            <Route path='/consumer-detail-view' element={<ConsumerDetailView />} />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             <Route path="/users" element={<Users />} />
