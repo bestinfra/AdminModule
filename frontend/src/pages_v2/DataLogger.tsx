@@ -1,9 +1,11 @@
 import { useState, useEffect, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
 export default function DataLogger() {
+    const navigate = useNavigate();
     const [dataLoggerData, setDataLoggerData] = useState<TableData[]>([]);
     const [loading, setLoading] = useState(true);
     const [serverPagination, setServerPagination] = useState({
@@ -104,7 +106,7 @@ export default function DataLogger() {
                                 name: 'PageHeader',
                                 props: {
                                     title: 'Data Logger Management',
-                                    onBackClick: () => window.history.back(),
+                                    onBackClick: () =>{navigate('/superadmin')},
                                     backButtonText: 'Back to Dashboard',
                                     buttonsLabel: 'Add Data Logger',
                                     variant: 'primary',
@@ -138,7 +140,7 @@ export default function DataLogger() {
                                         },
                                     ],
                                     onMenuItemClick: (itemId: string) => {
-                                        console.log(`Filter by: ${itemId}`);
+                                        console.log(`Filter by: ${itemId}`);    
                                     },
                                 },
                             },
@@ -181,8 +183,13 @@ export default function DataLogger() {
                                                     console.log('Edit:', row),
                                                 onDelete: (row: TableData) =>
                                                     console.log('Delete:', row),
-                                                onView: (row: TableData) =>
-                                                    console.log('View:', row),
+                                                onView: (row: TableData) => {
+                                                    // Navigate to the data logger dashboard with the row ID
+                                                    const dataLoggerId = row.modemSlNo || row.sNo?.toString();
+                                                    if (dataLoggerId) {
+                                                        navigate(`/data-logger/${dataLoggerId}`);
+                                                    }
+                                                },
                                             },
                                         },
                                     ],

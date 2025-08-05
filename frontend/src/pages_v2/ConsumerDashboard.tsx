@@ -10,7 +10,10 @@ const METER_STATUS_DATA = [
     { value: 8, name: 'Non-Communicating' },
 ];
 
-const Dashboard: React.FC = () => {
+const ConsumerDashboard: React.FC = () => {
+    const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>(
+        'Daily'
+    );
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
     const navigate = useNavigate();
 
@@ -147,83 +150,84 @@ const Dashboard: React.FC = () => {
                             columns: 4,
                             rows: [
                                 {
-                                    layout: 'grid',
+                                    layout: "grid",
+                                    gap: "gap-4",
                                     gridColumns: 2,
                                     gridRows: 2,
-                                    bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
-                                    gap: 'gap-4',
                                     span: { col: 2, row: 1 },
+                                    className: 'border border-primary-border rounded-3xl p-4 bg-primary-lightest',
                                     columns: [
                                         {
-                                            name: 'SectionHeader',
-                                            
+                                            name: "SectionHeader",
                                             props: {
-                                                title: 'Consumer Statistics',
-                                                level: 2,
-                                                size: 'md',
-                                                variant: 'primary',
-                                                weight: 'bold',
-                                                align: 'left',
+                                                title: "Consumer Statistics",
+                                                titleLevel: 2,
+                                                titleSize: "md",
+                                                titleVariant: "colorPrimaryDark",
+                                                titleWeight: "normal",
+                                                titleAlign: "left",
                                             },
-                                            span: { col: 3, row: 1 },
+                                            span: { col: 2, row: 1 },
                                         },
-                                        ...consumerStatsData.map((stat) => ({
+                                        ...consumerStatsData.map((card) => ({
                                             name: 'Card',
                                             props: {
-                                                title: stat.title,
-                                                value: stat.value,
-                                                icon: stat.icon,
-                                                subtitle1: stat.subtitle1,
-                                                subtitle2: stat.subtitle2,
-                                                onValueClick: stat.onValueClick,
+                                                title: card.title,
+                                                value: card.value,
+                                                icon: card.icon,
+                                                subtitle1: card.subtitle1,
+                                                subtitle2: card.subtitle2,
+                                                onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
                                             span: { col: 1, row: 1 },
-                                        })),
+                                        }))
                                     ],
                                 },
                                 {
-                                    layout: 'grid',
+                                    layout: "grid",
+                                    gap: "gap-4",
                                     gridColumns: 2,
                                     gridRows: 2,
-                                    bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
-                                    gap: 'gap-4',
                                     span: { col: 2, row: 1 },
+                                    className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                                     columns: [
                                         {
-                                            name: 'SectionHeader',
+                                            name: "SectionHeader",
                                             props: {
-                                                title: 'Consumer Statistics',
-                                                level: 2,
-                                                size: 'md',
-                                                variant: 'primary',
-                                                weight: 'bold',
-                                                align: 'left',
+                                                title: "Latest Alerts",
+                                                titleLevel: 2,
+                                                titleSize: "md",
+                                                titleVariant: "colorPrimaryDark",
+                                                titleWeight: "normal",
+                                                titleAlign: "left",
                                                 rightComponent: {
                                                     name: "TimeRangeSelector",
                                                     props: {
-                                                      availableTimeRanges: ["Daily", "Monthly"],
+                                                        availableTimeRanges: ["Daily", "Monthly"],
                                                         selectedTimeRange: selectedTimeRange,
                                                         handleTimeRangeChange: handleTimeRangeChange,
                                                         timeRangeLabels: {},
                                                     },
-                                                }
+                                                },
+                                                layout: "horizontal",
+                                                gap: "gap-4",
                                             },
-                                            span: { col: 3, row: 1 },
+                                            span: { col: 2, row: 1 },
                                         },
-                                        ...consumerStatsData.map((stat) => ({
+                                        ...consumerStatsData.map((card) => ({
                                             name: 'Card',
                                             props: {
-                                                title: stat.title,
-                                                value: stat.value,
-                                                icon: stat.icon,
-                                                subtitle1: stat.subtitle1,
-                                                subtitle2: stat.subtitle2,
-                                                onValueClick: stat.onValueClick,
+                                                title: card.title,
+                                                value: card.value,
+                                                icon: card.icon,
+                                                subtitle1: card.subtitle1,
+                                                subtitle2: card.subtitle2,
+                                                onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
                                             span: { col: 1, row: 1 },
-                                        })),
+                                        }))
                                     ],
                                 },
                             ],
@@ -287,7 +291,7 @@ const Dashboard: React.FC = () => {
                                     gridColumns: 2,
                                     gridRows: 1,
                                     span:{col:2,row:1},
-                                    gap: 'gap-0',
+                                    gap: 'gap-4',
                                     className:
                                         'pb-4',
                                     columns: [
@@ -297,10 +301,11 @@ const Dashboard: React.FC = () => {
                                             props: {
                                                 data: METER_STATUS_DATA,
                                                 height: 250,
+                                                title: 'Meter Status',
+                                                showLegend: false,
                                                 showNoDataMessage: false,
                                                 showHeader: false,
-                                                className: 'p-6',
-                                                title: '',
+                                                className: 'p-6 border border-primary-border rounded-3xl flex flex-col items-center justify-center',
                                                 onClick: (
                                                     segmentName?: string
                                                 ) => {
@@ -397,4 +402,4 @@ const Dashboard: React.FC = () => {
     );
 };
 
-export default Dashboard;
+export default ConsumerDashboard;
