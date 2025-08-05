@@ -218,32 +218,32 @@ const ConsumerDetailView: React.FC = () => {
   const dailyConsumptionColors = ["#8B5CF6"];
 
   // Billing history table data
-  // const billingHistoryData = [
-  //   {
-  //     id: 1,
-  //     billNumber: "BILL-001",
-  //     billDate: "2024-01-15",
-  //     dueDate: "2024-02-15",
-  //     amount: "₹1,250.00",
-  //     status: "Paid",
-  //   },
-  //   {
-  //     id: 2,
-  //     billNumber: "BILL-002",
-  //     billDate: "2024-02-15",
-  //     dueDate: "2024-03-15",
-  //     amount: "₹1,350.00",
-  //     status: "Pending",
-  //   },
-  //   {
-  //     id: 3,
-  //     billNumber: "BILL-003",
-  //     billDate: "2024-03-15",
-  //     dueDate: "2024-04-15",
-  //     amount: "₹1,450.00",
-  //     status: "Overdue",
-  //   },
-  // ];
+  const billingHistoryData = [
+    {
+      id: 1,
+      billNumber: "BILL-001",
+      billDate: "2024-01-15",
+      dueDate: "2024-02-15",
+      amount: "₹1,250.00",
+      status: "Paid",
+    },
+    {
+      id: 2,
+      billNumber: "BILL-002",
+      billDate: "2024-02-15",
+      dueDate: "2024-03-15",
+      amount: "₹1,350.00",
+      status: "Pending",
+    },
+    {
+      id: 3,
+      billNumber: "BILL-003",
+      billDate: "2024-03-15",
+      dueDate: "2024-04-15",
+      amount: "₹1,450.00",
+      status: "Overdue",
+    },
+  ];
 
   // const billingHistoryColumns = [
   //   { key: "billNumber", label: "Bill Number" },
