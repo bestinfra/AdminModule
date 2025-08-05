@@ -129,31 +129,20 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/user_managment.svg',
             },
             {
+                title: 'SubLogin',
+                link: '/sub-login',
+                icon:'/icons/user_managment.svg',
+            },    
+            {
+                title: 'Consumer',
+                link: '/consumers',
+                icon:'/icons/user_managment.svg',
+            },
+            {
                     title: 'Meter List',
                     icon: '/icons/meter_managment.svg',
                     link: '/meters',
                 },
-                {
-                    title: 'Consumer Dashboard',
-                    icon: '/icons/dashboard.svg',
-                    link: '/consumer-dashboard',
-                },
-                {
-                    title:'Role Permissions',
-                    icon:'/icons/roles.svg',
-                    link:'/roles-permissions',
-                },
-                {
-                    title:'Individual Detail',
-                    icon:'/icons/roles.svg',
-                    link:'/individual-detail',
-                }
-                ,
-                {
-                    title:'Data Logger',
-                    icon:'/icons/roles.svg',
-                    link:'/data-logger',
-                }
             
             // {   
             //     title: 'User Management',

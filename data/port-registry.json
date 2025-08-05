@@ -1,5 +1,5 @@
 {
-  "nextPort": 4150,
+  "nextPort": 4152,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -600,6 +600,16 @@
       "port": 4149,
       "deployedAt": "2025-08-05T04:44:25.170Z",
       "path": "C:\\xampp\\htdocs\\katre-backend"
+    },
+    "akob": {
+      "port": 4150,
+      "deployedAt": "2025-08-05T11:06:42.501Z",
+      "path": "C:\\xampp\\htdocs\\akob-backend"
+    },
+    "kotak": {
+      "port": 4151,
+      "deployedAt": "2025-08-05T11:37:48.073Z",
+      "path": "C:\\xampp\\htdocs\\kotak-backend"
     }
   }
 }

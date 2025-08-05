@@ -11,14 +11,24 @@ const METER_STATUS_DATA = [
 ];
 
 const ConsumerDashboard: React.FC = () => {
+    // const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>(
+    //     'Daily'
+    // );
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
+    // const [useDummyData, setUseDummyData] = useState(true);
     const navigate = useNavigate();
 
     const handleTotalConsumersClick = () => navigate('/consumers');
+    // const handleHighUsageConsumersClick = () =>
+    //     navigate('/consumers/high-usage');
 
     const handleTimeRangeChange = (range: string) => {
         setSelectedTimeRange(range as 'Daily' | 'Monthly');
     };
+
+    // const toggleDummyData = () => {
+    //     setUseDummyData(!useDummyData);
+    // };
 
     const [consumerStatsData] = useState([
         {
