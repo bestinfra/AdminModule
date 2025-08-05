@@ -11,9 +11,6 @@ const METER_STATUS_DATA = [
 ];
 
 const ConsumerDashboard: React.FC = () => {
-    const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>(
-        'Daily'
-    );
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
     const navigate = useNavigate();
 

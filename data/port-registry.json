@@ -1,5 +1,5 @@
 {
-  "nextPort": 4148,
+  "nextPort": 4150,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -595,6 +595,11 @@
       "port": 4147,
       "deployedAt": "2025-08-04T06:38:20.163Z",
       "path": "C:\\xampp\\htdocs\\bcd-backend"
+    },
+    "katre": {
+      "port": 4149,
+      "deployedAt": "2025-08-05T04:44:25.170Z",
+      "path": "C:\\xampp\\htdocs\\katre-backend"
     }
   }
 }
