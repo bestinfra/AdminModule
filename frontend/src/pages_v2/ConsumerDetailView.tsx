@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Page from "@/components/global/PageC";
-import BACKEND_URL from "../config";
+// import BACKEND_URL from "../config";
 
 const ConsumerDetailView: React.FC = () => {
   const { consumerId } = useParams<{ consumerId: string }>();
@@ -109,22 +109,22 @@ const ConsumerDetailView: React.FC = () => {
   ];
 
   // Second Consumer Details Data (different data)
-  const CONSUMER_INFO_ROW_3 = [
-    { title: "Connection Type", value: mockConsumerData.connectionType },
-    { title: "Category", value: mockConsumerData.category },
-    {
-      title: "Sanctioned Load",
-      value: `${mockConsumerData.sanctionedLoad} kW`,
-    },
-    { title: "Meter Status", value: mockConsumerData.status },
-  ];
+  // const CONSUMER_INFO_ROW_3 = [
+  //   { title: "Connection Type", value: mockConsumerData.connectionType },
+  //   { title: "Category", value: mockConsumerData.category },
+  //   {
+  //     title: "Sanctioned Load",
+  //     value: `${mockConsumerData.sanctionedLoad} kW`,
+  //   },
+  //   { title: "Meter Status", value: mockConsumerData.status },
+  // ];
 
-  const CONSUMER_INFO_ROW_4 = [
-    { title: "Installation Date", value: "2023-01-15" },
-    { title: "Last Reading Date", value: "2024-01-20" },
-    { title: "Meter Type", value: "Smart Meter" },
-    { title: "Phase Type", value: "Three Phase" },
-  ];
+  // const CONSUMER_INFO_ROW_4 = [
+  //   { title: "Installation Date", value: "2023-01-15" },
+  //   { title: "Last Reading Date", value: "2024-01-20" },
+  //   { title: "Meter Type", value: "Smart Meter" },
+  //   { title: "Phase Type", value: "Three Phase" },
+  // ];
 
   // Current Bill Details Data
   const BILL_DETAILS_ROW = [
@@ -218,40 +218,40 @@ const ConsumerDetailView: React.FC = () => {
   const dailyConsumptionColors = ["#8B5CF6"];
 
   // Billing history table data
-  const billingHistoryData = [
-    {
-      id: 1,
-      billNumber: "BILL-001",
-      billDate: "2024-01-15",
-      dueDate: "2024-02-15",
-      amount: "₹1,250.00",
-      status: "Paid",
-    },
-    {
-      id: 2,
-      billNumber: "BILL-002",
-      billDate: "2024-02-15",
-      dueDate: "2024-03-15",
-      amount: "₹1,350.00",
-      status: "Pending",
-    },
-    {
-      id: 3,
-      billNumber: "BILL-003",
-      billDate: "2024-03-15",
-      dueDate: "2024-04-15",
-      amount: "₹1,450.00",
-      status: "Overdue",
-    },
-  ];
+  // const billingHistoryData = [
+  //   {
+  //     id: 1,
+  //     billNumber: "BILL-001",
+  //     billDate: "2024-01-15",
+  //     dueDate: "2024-02-15",
+  //     amount: "₹1,250.00",
+  //     status: "Paid",
+  //   },
+  //   {
+  //     id: 2,
+  //     billNumber: "BILL-002",
+  //     billDate: "2024-02-15",
+  //     dueDate: "2024-03-15",
+  //     amount: "₹1,350.00",
+  //     status: "Pending",
+  //   },
+  //   {
+  //     id: 3,
+  //     billNumber: "BILL-003",
+  //     billDate: "2024-03-15",
+  //     dueDate: "2024-04-15",
+  //     amount: "₹1,450.00",
+  //     status: "Overdue",
+  //   },
+  // ];
 
-  const billingHistoryColumns = [
-    { key: "billNumber", label: "Bill Number" },
-    { key: "billDate", label: "Bill Date" },
-    { key: "dueDate", label: "Due Date" },
-    { key: "amount", label: "Amount" },
-    { key: "status", label: "Status" },
-  ];
+  // const billingHistoryColumns = [
+  //   { key: "billNumber", label: "Bill Number" },
+  //   { key: "billDate", label: "Bill Date" },
+  //   { key: "dueDate", label: "Due Date" },
+  //   { key: "amount", label: "Amount" },
+  //   { key: "status", label: "Status" },
+  // ];
 
   // Meter readings table data
   const meterReadingsData = [
