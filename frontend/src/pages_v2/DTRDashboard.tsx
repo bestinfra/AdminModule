@@ -773,7 +773,7 @@ const DTRDashboard: React.FC = () => {
                             ],
                         },
                     },
-                                         // // Latest Alerts section
+                     // // Latest Alerts section
                      {
                          layout: {
                              type: 'grid' as const,
@@ -814,17 +814,17 @@ const DTRDashboard: React.FC = () => {
                            
                          ],
                      },
-                    // Statistics Chart section
-                    {
-                        layout: {
-                            type: 'column' as const,
-                            className:
-                                '',
-                        },
-                        components: [
+                    // // Statistics Chart section
+                    // {
+                    //     layout: {  
+                    //         type: 'column' as const,
+                    //         className:
+                    //             '',
+                    //     },
+                    //     components: [
                            
-                        ],
-                    },
+                    //     ],
+                    // },
                 ]}
             />
         </div>
