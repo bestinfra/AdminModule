@@ -10,15 +10,25 @@ const METER_STATUS_DATA = [
     { value: 8, name: 'Non-Communicating' },
 ];
 
-const Dashboard: React.FC = () => {
+const ConsumerDashboard: React.FC = () => {
     const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>(
         'Daily'
     );
+    const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
+    const [useDummyData, setUseDummyData] = useState(true);
     const navigate = useNavigate();
 
     const handleTotalConsumersClick = () => navigate('/consumers');
     const handleHighUsageConsumersClick = () =>
         navigate('/consumers/high-usage');
+
+    const handleTimeRangeChange = (range: string) => {
+        setSelectedTimeRange(range as 'Daily' | 'Monthly');
+    };
+
+    const toggleDummyData = () => {
+        setUseDummyData(!useDummyData);
+    };
 
     const [consumerStatsData] = useState([
         {
@@ -32,44 +42,11 @@ const Dashboard: React.FC = () => {
         },
         {
             id: 2,
-            title: 'Prepaid Consumers',
+            title: 'High-Usage Consumers',
             value: '2',
             icon: '/icons/coins.svg',
-            subtitle1: '0 Disconnected',
-            subtitle2: '',
-        },
-        {
-            id: 3,
-            title: 'Postpaid Consumers',
-            value: '290',
-            icon: '/icons/document.svg',
-            subtitle1: '11 Disconnected',
-            subtitle2: '',
-        },
-        {
-            id: 4,
-            title: 'Overdue Amount',
-            value: '2590925.47',
-            icon: '/icons/bills.svg',
-            subtitle1: '1395 Overdue Consumers',
-            subtitle2: '',
-        },
-        {
-            id: 5,
-            title: 'Total Outstanding (Rs.)',
-            value: '2590925.47',
-            icon: '/icons/bills.svg',
-            subtitle1: '614.98% of Total Billed Amount',
-            subtitle2: '',
-        },
-        {
-            id: 6,
-            title: 'High-Usage Consumers',
-            value: '139',
-            icon: '/icons/graph-bar.svg',
             subtitle1: '140.09 kWh Average Consumption',
             subtitle2: '',
-            onValueClick: handleHighUsageConsumersClick,
         },
     ]);
 
@@ -254,98 +231,87 @@ const Dashboard: React.FC = () => {
                         layout: {
                             type: 'grid',
                             gap: 'gap-4',
-                            columns: 3,
-                            // className: 'items-stretch',
+                            columns: 4,
                             rows: [
                                 {
-                                    layout: 'grid',
-                                    gridColumns: 3,
+                                    layout: "grid",
+                                    gap: "gap-4",
+                                    gridColumns: 2,
                                     gridRows: 2,
-                                    bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
-                                    gap: 'gap-4',
                                     span: { col: 2, row: 1 },
-                                    // className: 'w-[60%] h-full', // width 70%, take full height
+                                    className: 'border border-primary-border rounded-3xl p-4 bg-primary-lightest',
                                     columns: [
                                         {
-                                            name: 'Heading',
+                                            name: "SectionHeader",
                                             props: {
-                                                text: 'Consumer Statistics',
-                                                level: 2,
-                                                size: 'md',
-                                                variant: 'primary',
-                                                weight: 'bold',
-                                                align: 'left',
+                                                title: "Consumer Statistics",
+                                                titleLevel: 2,
+                                                titleSize: "md",
+                                                titleVariant: "colorPrimaryDark",
+                                                titleWeight: "normal",
+                                                titleAlign: "left",
                                             },
-                                            span: { col: 3, row: 1 },
+                                            span: { col: 2, row: 1 },
                                         },
-                                        ...consumerStatsData.map((stat) => ({
+                                        ...consumerStatsData.map((card) => ({
                                             name: 'Card',
                                             props: {
-                                                title: stat.title,
-                                                value: stat.value,
-                                                icon: stat.icon,
-                                                subtitle1: stat.subtitle1,
-                                                subtitle2: stat.subtitle2,
-                                                onValueClick: stat.onValueClick,
+                                                title: card.title,
+                                                value: card.value,
+                                                icon: card.icon,
+                                                subtitle1: card.subtitle1,
+                                                subtitle2: card.subtitle2,
+                                                onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
-                                        })),
+                                            span: { col: 1, row: 1 },
+                                        }))
                                     ],
                                 },
                                 {
-                                    layout: 'grid',
+                                    layout: "grid",
+                                    gap: "gap-4",
                                     gridColumns: 2,
                                     gridRows: 2,
-                                    span: { col: 1, row: 2 },
-                                    bg: 'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
-                                    gap: 'gap-4',
-                                    // className: 'w-[50%] h-full', // width 30%, take full height
+                                    span: { col: 2, row: 1 },
+                                    className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                                     columns: [
                                         {
-                                            name: 'Heading',
+                                            name: "SectionHeader",
                                             props: {
-                                                text: 'Consumption & Billing (Jun 2025)',
-                                                level: 2,
-                                                size: 'md',
-                                                variant: 'primary',
-                                                weight: 'bold',
-                                                align: 'left',
+                                                title: "Latest Alerts",
+                                                titleLevel: 2,
+                                                titleSize: "md",
+                                                titleVariant: "colorPrimaryDark",
+                                                titleWeight: "normal",
+                                                titleAlign: "left",
+                                                rightComponent: {
+                                                    name: "TimeRangeSelector",
+                                                    props: {
+                                                        availableTimeRanges: ["Daily", "Monthly"],
+                                                        selectedTimeRange: selectedTimeRange,
+                                                        handleTimeRangeChange: handleTimeRangeChange,
+                                                        timeRangeLabels: {},
+                                                    },
+                                                },
+                                                layout: "horizontal",
+                                                gap: "gap-4",
                                             },
-                                            span: { col: 1, row: 1 },
+                                            span: { col: 2, row: 1 },
                                         },
-                                        {
-                                            name: 'TimeRangeSelector',
-                                            props: {
-                                                availableTimeRanges: [
-                                                    'Daily',
-                                                    'Monthly',
-                                                    'Yearly',
-                                                ],
-                                                selectedTimeRange: billingView,
-                                                handleTimeRangeChange: (
-                                                    v: string
-                                                ) =>
-                                                    setBillingView(
-                                                        v as 'Daily' | 'Monthly'
-                                                    ),
-                                            },
-                                            span: { col: 1, row: 1 },
-                                            align: 'end',
-                                        },
-                                        ...billingData.map((billing) => ({
+                                        ...consumerStatsData.map((card) => ({
                                             name: 'Card',
                                             props: {
-                                                title: billing.title,
-                                                value: billing.value,
-                                                icon: billing.icon,
-                                                subtitle1: billing.subtitle1,
-                                                subtitle2: billing.subtitle2,
-                                                showTrend: billing.showTrend,
-                                                comparisonValue:
-                                                    billing.comparisonValue,
+                                                title: card.title,
+                                                value: card.value,
+                                                icon: card.icon,
+                                                subtitle1: card.subtitle1,
+                                                subtitle2: card.subtitle2,
+                                                onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
-                                        })),
+                                            span: { col: 1, row: 1 },
+                                        }))
                                     ],
                                 },
                             ],
@@ -354,66 +320,19 @@ const Dashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'grid',
-                            columns: 3,
+                            columns: 2,
                             gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'column',
                                     gap: 'gap-0',
+                                    span:{col:2,row:1},
                                     className:
-                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
-                                    columns: [
-                                        {
-                                            name: 'Holder',
-                                            props: {
-                                                title: 'Meter Communication Status',
-                                                className:
-                                                    'border-none rounded-t-3xl',
-                                            },
-                                        },
-                                        {
-                                            name: 'PieChart',
-                                            props: {
-                                                data: METER_STATUS_DATA,
-                                                height: 250,
-                                                showNoDataMessage: false,
-                                                showHeader: false,
-                                                className: 'p-6',
-                                                title: '',
-                                                onClick: (
-                                                    segmentName?: string
-                                                ) => {
-                                                    if (
-                                                        segmentName ===
-                                                        'Communicating'
-                                                    )
-                                                        navigate(
-                                                            '/connect-disconnect/communicating'
-                                                        );
-                                                    else if (
-                                                        segmentName ===
-                                                        'Non-Communicating'
-                                                    )
-                                                        navigate(
-                                                            '/connect-disconnect/non-communicating'
-                                                        );
-                                                    else
-                                                        navigate(
-                                                            '/connect-disconnect'
-                                                        );
-                                                },
-                                            },
-                                        },
-                                    ],
-                                },
-                                {
-                                    layout: 'column',
-                                    gap: 'gap-0',
-                                    className:
-                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
+                                        '',
                                     columns: [
                                         {
                                             name: 'BarChart',
+                                            span:{col:1,row:1},
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
@@ -452,21 +371,52 @@ const Dashboard: React.FC = () => {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'column',
-                                    gap: 'gap-0',
+                                    layout: 'grid',
+                                    gridColumns: 2,
+                                    gridRows: 1,
+                                    span:{col:2,row:1},
+                                    gap: 'gap-4',
                                     className:
-                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
+                                        'pb-4',
                                     columns: [
                                         {
-                                            name: 'Holder',
+                                            name: 'PieChart',
+                                            span:{col:1,row:1},
                                             props: {
-                                                title: 'Overdue Consumers',
-                                                className:
-                                                    'border-none rounded-t-3xl',
+                                                data: METER_STATUS_DATA,
+                                                height: 250,
+                                                title: 'Meter Status',
+                                                showLegend: false,
+                                                showNoDataMessage: false,
+                                                showHeader: false,
+                                                className: 'p-6 border border-primary-border rounded-3xl flex flex-col items-center justify-center',
+                                                onClick: (
+                                                    segmentName?: string
+                                                ) => {
+                                                    if (
+                                                        segmentName ===
+                                                        'Communicating'
+                                                    )
+                                                        navigate(
+                                                            '/connect-disconnect/communicating'
+                                                        );
+                                                    else if (
+                                                        segmentName ===
+                                                        'Non-Communicating'
+                                                    )
+                                                        navigate(
+                                                            '/connect-disconnect/non-communicating'
+                                                        );
+                                                    else
+                                                        navigate(
+                                                            '/connect-disconnect'
+                                                        );
+                                                },
                                             },
                                         },
                                         {
                                             name: 'Table',
+                                            
                                             props: {
                                                 data: overdueConsumersData,
                                                 columns:
@@ -476,12 +426,13 @@ const Dashboard: React.FC = () => {
                                                 pagination: true,
                                                 title: 'Overdue Consumers',
                                                 showActions: true,
-                                                className:
-                                                    'p-4 [&_.relative]:mt-0',
+
                                                 totalItems: 1395,
                                                 itemsPerPage: 5,
                                                 currentPage: 1,
                                                 totalPages: 279,
+                                                showHeader: true,
+                                                headerTitle: 'Overdue Consumers',
                                                 actions: [
                                                     {
                                                         label: 'Send Notice',
@@ -513,79 +464,26 @@ const Dashboard: React.FC = () => {
                                                 ],
                                             },
                                         },
+                                       
                                     ],
                                 },
-                                {
-                                    layout: 'column',
-                                    gap: 'gap-0',
-                                    className:
-                                        'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl',
-                                    columns: [
-                                        {
-                                            name: 'Holder',
-                                            props: {
-                                                title: 'Disconnected Consumers',
-                                                className:
-                                                    'border-none rounded-t-3xl',
-                                            },
-                                        },
-                                        {
-                                            name: 'Table',
-                                            props: {
-                                                data: disconnectedConsumersData,
-                                                columns:
-                                                    disconnectedConsumersColumns,
-                                                loading: false,
-                                                searchable: true,
-                                                pagination: true,
-                                                title: 'Disconnected Consumers',
-                                                showActions: true,
-                                                className:
-                                                    'p-4 [&_.relative]:mt-0',
-                                                totalItems: 11,
-                                                itemsPerPage: 5,
-                                                currentPage: 1,
-                                                totalPages: 3,
-                                                actions: [
-                                                    {
-                                                        label: 'Send Notice',
-                                                        icon: '/icons/paper-plane.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'Send notice to',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                    {
-                                                        label: 'View Details',
-                                                        icon: '/icons/document.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'View details for',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                    {
-                                                        label: 'Reconnect',
-                                                        icon: '/icons/connect.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'Reconnect',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                ],
-                                            },
-                                        },
-                                    ],
-                                },
+                                // {
+                                //     layout: 'column',
+                                //     gap: 'gap-0',
+                                //     className:
+                                //         'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
+                                //     columns: [
+                                       
+                                //     ],
+                                // },
                             ],
                         },
                     },
+                  
                 ]}
             />
         </Suspense>
     );
 };
 
-export default Dashboard;
+export default ConsumerDashboard;
