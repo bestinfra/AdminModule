@@ -646,7 +646,7 @@ const ConsumerDetailView: React.FC = () => {
                 showLegendInteractions: true,
                 showHeader: true,
                 headerTitle: "Billing Distribution",
-                className: " ",
+                className: "border border-primary-border rounded-3xl p-4",
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
               },
