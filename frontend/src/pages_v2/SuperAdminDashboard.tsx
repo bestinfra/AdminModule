@@ -199,7 +199,7 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 2,
-                            gap: "gap-4",
+                            gap: "gap-6",
                             className: 'w-full',
                             rows: [
                                 {
@@ -278,12 +278,12 @@ const SuperAdminDashboard: React.FC = () => {
                         layout: {
                             type: "grid",
                             columns: 2,
-                            gap: "gap-4",
+                            gap: "gap-6",
                             className: 'w-full',
                             rows: [
                                 {
                                     layout: "grid",
-                                    gap: "gap-4",
+                                    gap: "gap-6",
                                     gridColumns: 2,
                                     gridRows: 1,
                                     span: { col: 2, row: 1 },
