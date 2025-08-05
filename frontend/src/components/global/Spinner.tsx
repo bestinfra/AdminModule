@@ -79,12 +79,12 @@ const Spinner: React.FC<SpinnerProps> = ({
 
   // If fullScreen is true, wrap in full screen container
   if (fullScreen) {
-    return (
+		return (
       <div className="fixed inset-0 bg-white z-50 flex items-center justify-center">
         {spinnerContent}
-      </div>
-    );
-  }
+			</div>
+		);
+}
 
   return spinnerContent;
 };
