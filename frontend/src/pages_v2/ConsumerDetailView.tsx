@@ -141,7 +141,7 @@ const ConsumerDetailView: React.FC = () => {
       value: "8.45",
       subtitle1: "Last Month: 64.78 kWh",
       icon: "/icons/energy.svg",
-      bg: "bg-success",
+      bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
@@ -150,7 +150,7 @@ const ConsumerDetailView: React.FC = () => {
       value: "0.39",
       subtitle1: "Yesterday: 2.03 kWh",
       icon: "/icons/consumption.svg",
-      bg: "bg-success",
+      bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
@@ -159,7 +159,7 @@ const ConsumerDetailView: React.FC = () => {
       value: "0",
       subtitle1: "Last Month: ₹0",
       icon: "/icons/coins.svg",
-      bg: "bg-success",
+      bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
@@ -168,7 +168,7 @@ const ConsumerDetailView: React.FC = () => {
       value: "Overdue",
       subtitle1: "Due Date: 9/7/2025",
       icon: "/icons/bills.svg",
-      bg: "bg-warning",
+      bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
     },
@@ -373,6 +373,21 @@ const ConsumerDetailView: React.FC = () => {
   const handleChartDownload = () => {
     console.log("Downloading chart data...");
     // Add chart download logic here
+  };
+
+  // TimeRangeSelector dummy data and handlers
+  const availableTimeRanges = ["Current Bill", "History"];
+  const [selectedTimeRange, setSelectedTimeRange] = useState("Current Bill");
+  
+  const handleTimeRangeChange = (range: string) => {
+    setSelectedTimeRange(range);
+    console.log("Time range changed to:", range);
+    // Add logic to fetch data based on selected time range
+  };
+
+  const timeRangeLabels = {
+    "Current Bill": "Current Bill",
+    "History": "History"
   };
 
   const fetchConsumerData = async () => {
@@ -691,17 +706,22 @@ const ConsumerDetailView: React.FC = () => {
                     name: "SectionHeader",
                     span: { col: 1, row: 2 },
                     props: {
-                      title: "Current Bill Details",
+                      title: "Billing & History",
                       titleVariant: "primary-dark",
                       titleWeight: "normal",
                       titleSize: "md",
                       titleAlign: "left",
-                      layout: "horizontal",
+                      layout: "vertical",
                       gap: "gap-4",
                       className: "w-full",
                       rightComponent: {
-                        name: "LastComm",
-                        props: { value: lastComm },
+                        name: "TimeRangeSelector",
+                        props: {
+                          availableTimeRanges: availableTimeRanges,
+                          selectedTimeRange: selectedTimeRange,
+                          handleTimeRangeChange: handleTimeRangeChange,
+                          timeRangeLabels: timeRangeLabels,
+                        },
                       },
                     },
                   },
