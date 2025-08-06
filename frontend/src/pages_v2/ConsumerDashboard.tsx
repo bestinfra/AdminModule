@@ -250,12 +250,18 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: 'column',
                                     gap: 'gap-0',
                                     span:{col:2,row:1},
-                                    className:
-                                        '',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
                                     columns: [
                                         {
+                                            name: "Holder",
+                                            props: {
+                                                title: "Billing vs Collection",
+                                                subtitle: "Monthly billing statistics and collection data",
+                                                className: "border-none rounded-t-3xl",
+                                            },
+                                        },
+                                        {
                                             name: 'BarChart',
-                                            span:{col:1,row:1},
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
@@ -264,9 +270,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
-                                                showHeader: true,
-                                                headerTitle:
-                                                    'Billing vs Collection',
+                                                showHeader: false,
                                                 dateRange: '2024',
                                                 showDownloadButton: true,
                                                 showViewToggle: true,
@@ -294,25 +298,28 @@ const ConsumerDashboard: React.FC = () => {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'grid',
-                                    gridColumns: 2,
-                                    gridRows: 1,
-                                    span:{col:2,row:1},
-                                    gap: 'gap-4',
-                                    className:
-                                        'pb-4',
+                                    layout: 'column',
+                                    gap: 'gap-0',
+                                    span:{col:1,row:1},
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
                                     columns: [
                                         {
+                                            name: "Holder",
+                                            props: {
+                                                title: "Meter Status",
+                                                subtitle: "Distribution of communicating and non-communicating meters",
+                                                className: "border-none rounded-t-3xl",
+                                            },
+                                        },
+                                        {
                                             name: 'PieChart',
-                                            span:{col:1,row:1},
                                             props: {
                                                 data: METER_STATUS_DATA,
-                                                height: 250,
-                                                title: 'Meter Status',
+                                                height: 330,
                                                 showLegend: false,
                                                 showNoDataMessage: false,
                                                 showHeader: false,
-                                                className: 'p-6 border border-primary-border rounded-3xl flex flex-col items-center justify-center',
+                                                className: 'p-4',
                                                 onClick: (
                                                     segmentName?: string
                                                 ) => {
@@ -337,9 +344,16 @@ const ConsumerDashboard: React.FC = () => {
                                                 },
                                             },
                                         },
+                                    ],
+                                },
+                                {
+                                    layout: 'column',
+                                    gap: 'gap-0',
+                                    span:{col:1,row:1},
+                                    className: '',
+                                    columns: [
                                         {
                                             name: 'Table',
-                                            
                                             props: {
                                                 data: overdueConsumersData,
                                                 columns:
@@ -347,15 +361,14 @@ const ConsumerDashboard: React.FC = () => {
                                                 loading: false,
                                                 searchable: true,
                                                 pagination: true,
-                                                title: 'Overdue Consumers',
                                                 showActions: true,
-
                                                 totalItems: 1395,
                                                 itemsPerPage: 5,
                                                 currentPage: 1,
                                                 totalPages: 279,
                                                 showHeader: true,
                                                 headerTitle: 'Overdue Consumers',
+                                                height: 330,
                                                 actions: [
                                                     {
                                                         label: 'Send Notice',
@@ -387,22 +400,11 @@ const ConsumerDashboard: React.FC = () => {
                                                 ],
                                             },
                                         },
-                                       
                                     ],
                                 },
-                                // {
-                                //     layout: 'column',
-                                //     gap: 'gap-0',
-                                //     className:
-                                //         'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
-                                //     columns: [
-                                       
-                                //     ],
-                                // },
                             ],
                         },
                     },
-                  
                 ]}
             />
         </Suspense>

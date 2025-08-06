@@ -148,11 +148,15 @@ const defaultMenus: MenuCategory[] = [
             //     link: '/sub-login',
             //     icon:'/icons/user_managment.svg',
             // },    
-            // {
-            //     title: 'Consumer',
-            //     link: '/consumers',
-            //     icon:'/icons/user_managment.svg',
-            // },
+            {
+                title: 'Consumer',
+                link: '/consumers',
+                icon:'/icons/user_managment.svg',
+            }, {
+                title: 'Consumer Dashboard',
+                link: '/consumer-dashboard',
+                icon:'/icons/user_managment.svg',
+            },
             
             
             // {   
