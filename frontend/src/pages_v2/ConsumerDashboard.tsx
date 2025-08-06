@@ -2,6 +2,7 @@ import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
 import { exportChartData } from '@/utils/excelExport';
+import { Pagination } from 'antd';
 
 // Constants
 
@@ -64,6 +65,54 @@ const ConsumerDashboard: React.FC = () => {
             consumerName: 'G Ramaraju',
             flatNo: 'C088',
             overdue: '22613.91',
+        },
+        {
+            uid: '2025UIDC087',
+            consumerName: 'S Meenakshi',
+            flatNo: 'C087',
+            overdue: '18500.00',
+        },
+        {
+            uid: '2025UIDC086',
+            consumerName: 'P Srinivas',
+            flatNo: 'C086',
+            overdue: '17250.50',
+        },
+        {
+            uid: '2025UIDC085',
+            consumerName: 'A Kumar',
+            flatNo: 'C085',
+            overdue: '16000.75',
+        },
+        {
+            uid: '2025UIDC084',
+            consumerName: 'R Priya',
+            flatNo: 'C084',
+            overdue: '15400.00',
+        },
+        {
+            uid: '2025UIDC083',
+            consumerName: 'V Ramesh',
+            flatNo: 'C083',
+            overdue: '14999.99',
+        },
+        {
+            uid: '2025UIDC082',
+            consumerName: 'K Suresh',
+            flatNo: 'C082',
+            overdue: '14000.00',
+        },
+        {
+            uid: '2025UIDC081',
+            consumerName: 'M Lakshmi',
+            flatNo: 'C081',
+            overdue: '13500.00',
+        },
+        {
+            uid: '2025UIDC080',
+            consumerName: 'T Anil',
+            flatNo: 'C080',
+            overdue: '13000.00',
         },
         {
             uid: '2025UIDC089',
@@ -369,35 +418,47 @@ const ConsumerDashboard: React.FC = () => {
                                                 showHeader: true,
                                                 headerTitle: 'Overdue Consumers',
                                                 height: 330,
-                                                actions: [
-                                                    {
-                                                        label: 'Send Notice',
-                                                        icon: '/icons/paper-plane.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'Send notice to',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                    {
-                                                        label: 'View Details',
-                                                        icon: '/icons/document.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'View details for',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                    {
-                                                        label: 'Disconnect',
-                                                        icon: '/icons/close.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'Disconnect',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                ],
+                                                
+                                                onView: (row: any) =>
+                                                    console.log(
+                                                        'View details for',
+                                                        row.uid
+                                                    ),
+                                                onDelete: (row: any) =>
+                                                    console.log(
+                                                        'Delete',
+                                                        row.uid
+                                                    ),
+                                                initialRowsPerPage: 5,
+                                                // actions: [
+                                                //     {
+                                                //         label: 'Send Notice',
+                                                //         icon: '/icons/paper-plane.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'Send notice to',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                //     {
+                                                //         label: 'View Details',
+                                                //         icon: '/icons/document.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'View details for',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                //     {
+                                                //         label: 'Disconnect',
+                                                //         icon: '/icons/close.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'Disconnect',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                // ],
                                             },
                                         },
                                     ],

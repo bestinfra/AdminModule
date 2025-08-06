@@ -26,8 +26,8 @@ import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
-// import Prepaid from './pages_v2/Prepaid';   
-// import Postpaid from './pages_v2/Postpaid';
+import Prepaid from './pages_v2/Prepaid';   
+import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
@@ -48,6 +48,7 @@ import Dashboard from './pages_v2/ConsumerDashboard';
 import ConsumerDetailView from './pages_v2/ConsumerDetailView';
 import Payment from './components/global/Payment';
 import FreezeStatus from './components/global/FreezeStatus';
+import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -100,8 +101,8 @@ const App: React.FC = () => {
                             <Route path="/feeder/:feederId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
                             <Route path="/" element={<DTRDashboard />} />
-                            {/* <Route path="/prepaid" element={<Prepaid />} />
-                            <Route path="/postpaid" element={<Postpaid />} /> */}
+                            <Route path="/prepaid" element={<Prepaid />} />
+                            <Route path="/postpaid" element={<Postpaid />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
@@ -114,6 +115,7 @@ const App: React.FC = () => {
                             <Route path="/filter-style-controller" element={<FilterStyleController />} />
                             <Route path="/payment" element={<Payment amount="100" />} />
                             <Route path="/freeze-status" element={<FreezeStatus />} />
+                            <Route path="/confirmation" element={<ConfirmationPage />} />
                             {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
                             <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
