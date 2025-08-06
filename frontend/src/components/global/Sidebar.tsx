@@ -133,28 +133,29 @@ const defaultMenus: MenuCategory[] = [
       {
         title: "Occupancy to Vacency",
         icon: "/icons/meter_managment.svg",
-        link: "/occupancy-to-vacency",
-      },
-      {
-        title: "Payment",
-        icon: "/icons/payment.svg",
-        link: "/payment",
-      },
-      {
-        title: "Freeze Status",
-        icon: "/icons/freeze-status.svg",
-        link: "/freeze-status",
-      },
-      {
-        title: "Confirmation",
-        icon: "/icons/freeze-status.svg",
-        link: "/confirmation",
-      },
-      {
-        title: "Usage Summary",
-        icon: "/icons/freeze-status.svg",
-        link: "/usage-summary",
-      },
+        link: "/occupancy-status",
+      }
+      // },
+      // {
+      //   title: "Payment",
+      //   icon: "/icons/payment.svg",
+      //   link: "/payment",
+      // },
+      // {
+      //   title: "Freeze Status",
+      //   icon: "/icons/freeze-status.svg",
+      //   link: "/freeze-status",
+      // },
+      // {
+      //   title: "Confirmation",
+      //   icon: "/icons/freeze-status.svg",
+      //   link: "/confirmation",
+      // },
+      // {
+      //   title: "Usage Summary",
+      //   icon: "/icons/freeze-status.svg",
+      //   link: "/usage-summary",
+      // },
       // {
       //     title: 'SubLogin',
       //     link: '/sub-login',

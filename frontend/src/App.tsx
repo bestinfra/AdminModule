@@ -51,6 +51,7 @@ import FreezeStatus from './components/Occupancy-Vacency/FreezeStatus';
 import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';     
 
 import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
+import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -119,6 +120,7 @@ const App: React.FC = () => {
                             <Route path="/freeze-status" element={<FreezeStatus />} />
                             <Route path="/confirmation" element={<ConfirmationPage />} />
                             <Route path="/usage-summary" element={<UsageSummaryPage />} />
+                            <Route path="/occupancy-status" element={<OccupancyStatus />} />
                             {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
                             <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}

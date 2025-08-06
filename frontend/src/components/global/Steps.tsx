@@ -53,7 +53,7 @@ const Steps: React.FC<StepsProps> = ({
     >
       {steps.map((step, index) => (
         <div key={step.id} className="flex items-center">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col gap-2 items-center">
             {/* Step Circle */}
             <button
               onClick={() => onStepClick?.(step.id)}
@@ -88,7 +88,7 @@ const Steps: React.FC<StepsProps> = ({
             </button>
 
             {/* Step Label */}
-            <span className={`text-sm font-medium mt-2 whitespace-nowrap ${getStepLabelStyle(step)}`}>
+            <span className={`text-sm font-medium whitespace-nowrap ${getStepLabelStyle(step)}`}>
               {step.label}
             </span>
           </div>
@@ -96,7 +96,7 @@ const Steps: React.FC<StepsProps> = ({
           {/* Connector Line */}
           {index < steps.length - 1 && (
             <div 
-              className={`w-16 h-0.5 mx-2 ${getConnectorStyle(index)}`} 
+              className={`w-50 h-0.5 ${getConnectorStyle(index)}`} 
               aria-hidden="true"
             />
           )}
@@ -106,4 +106,4 @@ const Steps: React.FC<StepsProps> = ({
   );
 };
 
-export default Steps;
+export default Steps; 
