@@ -365,7 +365,6 @@ model payments {
 model permissions {
   id               Int                @id @default(autoincrement())
   name             String             @unique
-  role_permissions role_permissions[]
   user_permissions user_permissions[]
 }
 
@@ -381,8 +380,7 @@ model potential_transformers {
 model role_permissions {
   id           Int         @id @default(autoincrement())
   roleId       Int
-  permissionId Int
-  permissions  permissions @relation(fields: [permissionId], references: [id])
+  permissionId Json
   roles        roles       @relation(fields: [roleId], references: [id])
 
   @@unique([roleId, permissionId])
@@ -399,7 +397,7 @@ model roles {
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @default(now())
   role_permissions role_permissions[]
-  user_roles       user_roles[]
+  users            users[]
 }
 
 model tickets {
@@ -441,22 +439,7 @@ model user_permissions {
   @@unique([userId, permissionId])
 }
 
-model user_roles {
-  id         Int       @id @default(autoincrement())
-  userId     Int
-  roleId     Int
-  isPrimary  Boolean   @default(false)
-  assignedAt DateTime  @default(now())
-  assignedBy Int       @default(1)
-  expiresAt  DateTime?
-  isActive   Boolean   @default(true)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now())
-  roles      roles     @relation(fields: [roleId], references: [id])
-  users      users     @relation(fields: [userId], references: [id])
 
-  @@unique([userId, roleId])
-}
 
 model user_sessions {
   id        Int      @id @default(autoincrement())
@@ -483,6 +466,7 @@ model users {
   failedLoginAttempts                 Int                  @default(0)
   lockoutUntil                        DateTime?
   departmentId                        Int?
+  roleId                              Int?
   accessLevel                         AccessLevel          @default(NORMAL)
   createdAt                           DateTime             @default(now())
   updatedAt                           DateTime
@@ -493,9 +477,9 @@ model users {
   tickets_tickets_raisedByIdTousers   tickets[]            @relation("tickets_raisedByIdTousers")
   user_activity_logs                  user_activity_logs[]
   user_permissions                    user_permissions[]
-  user_roles                          user_roles[]
   user_sessions                       user_sessions[]
   departments                         departments?         @relation(fields: [departmentId], references: [id])
+  roles                              roles?               @relation(fields: [roleId], references: [id])
 }
 
 model consumption {
@@ -591,11 +575,11 @@ model raw_xml_import {
 }
 
 enum AccessLevel {
-  RESTRICTED
-  NORMAL
-  ELEVATED
-  ADMIN
   SUPER_ADMIN
+  ADMIN
+  MODERATOR
+  ACCOUNTANT
+  NORMAL
 }
 
 enum BillDeliveryMode {
