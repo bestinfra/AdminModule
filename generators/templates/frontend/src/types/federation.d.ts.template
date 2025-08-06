@@ -8,15 +8,7 @@ declare module 'SuperAdmin/Consumers' {
   export default Consumers;
 }
 
-declare module 'SuperAdmin/Sidebar' {
-  const Sidebar: React.ComponentType<any>;
-  export default Sidebar;
-}
 
-declare module 'SuperAdmin/Header' {
-  const Header: React.ComponentType<any>;
-  export default Header;
-}
 
 declare module 'SuperAdmin/Ticket' {
   const Ticket: React.ComponentType<any>;

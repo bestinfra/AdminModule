@@ -153,7 +153,10 @@ export const createApp = async (req, res) => {
             appFavicon,
 
             // Modules
-            modules
+            modules,
+            
+            // New Accounts
+            newAccounts
         } = req.body;
 
         // Map frontend field names to backend expectations
@@ -196,7 +199,10 @@ export const createApp = async (req, res) => {
 
         try {
             // Create app files first
-            const projectPath = createAppProject(req.body);
+            const projectPath = createAppProject({
+                ...req.body,
+                newAccounts: newAccounts || []
+            });
             const projectFolderName = projectPath.split('/').pop();
 
             // Create app and related records in a transaction
@@ -349,6 +355,8 @@ export const createApp = async (req, res) => {
                 data: app,
                 projectPath: projectPath,
                 projectFolderName: projectFolderName,
+                newAccountsCount: newAccounts ? newAccounts.length : 0,
+                modulesCount: modules ? modules.length : 0,
                 nextSteps: [
                     `cd generated-apps/${projectFolderName}`,
                     'npm install',

@@ -42,4 +42,59 @@ export const getPostpaidBillingTable = async (req, res) => {
             error: error.message
         });
     }
+};
+
+export const generateMonthlyBills = async (req, res) => {
+    try {
+        const result = await BillingDB.generateMonthlyBills();
+        
+        res.json({
+            success: true,
+            message: result.message,
+            data: {
+                generatedBills: result.bills.length,
+                bills: result.bills
+            }
+        });
+    } catch (error) {
+        console.error('❌ generateMonthlyBills: Error generating bills:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to generate monthly bills',
+            error: error.message
+        });
+    }
+};
+
+export const getTariffByCategory = async (req, res) => {
+    try {
+        const { category, type } = req.params;
+        
+        // Handle both numeric and string category parameters
+        let categoryParam = category;
+        if (!isNaN(category)) {
+            categoryParam = parseInt(category);
+        }
+        
+        const tariff = await BillingDB.getTariffByCategory(categoryParam, type);
+        
+        if (!tariff) {
+            return res.status(404).json({
+                success: false,
+                message: 'Tariff not found for the specified category and type'
+            });
+        }
+        
+        res.json({
+            success: true,
+            data: tariff
+        });
+    } catch (error) {
+        console.error('❌ getTariffByCategory: Error fetching tariff:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch tariff',
+            error: error.message
+        });
+    }
 }; 
