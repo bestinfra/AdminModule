@@ -341,19 +341,19 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
             </div>
           </div>
           {/* Total Meters Section */}
-          <div>
+          {/* <div>
             <h3 className="text-sm font-medium text-gray-900 ">Total Meters</h3>
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
-                  {/* Icon removed */}
+                 Icon removed 
                   {meters.total}
                 </div>
                 <div className="text-sm text-gray-600">Total</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600 flex items-center justify-center gap-2">
-                  {/* Icon removed */}
+                 Icon removed 
                   {meters.active}
                 </div>
                 <div className="text-sm text-gray-600">Active</div>
@@ -361,14 +361,14 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
 
               <div className="text-center">
                 <div className="text-2xl font-bold text-red-600 flex items-center justify-center gap-2">
-                  {/* Icon removed */}
+                 Icon removed 
                   {meters.inactive}
                 </div>
                 <div className="text-sm text-gray-600">Inactive</div>
               </div>
             </div>
 
-            {/* Progress Bar */}
+            Progress Bar
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-green-500 h-2 rounded-full transition-all duration-300"
@@ -386,7 +386,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
               <span>{activePercentage.toFixed(1)}% Active</span>
               <span>{inactivePercentage.toFixed(1)}% Inactive</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

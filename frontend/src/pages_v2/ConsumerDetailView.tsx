@@ -98,7 +98,7 @@ const ConsumerDetailView: React.FC = () => {
       title: "Unique Identification No",
       value: mockConsumerData.uniqueIdentificationNo,
     },
-    { title: "Meter Serial Number", value: mockConsumerData.meterSerialNumber },
+    { title: "Meter Serial Number", value: mockConsumerData.meterSerialNumber, statusIndicator: true },
     { title: "Occupancy Status", value: mockConsumerData.occupancyStatus },
   ];
 
@@ -537,6 +537,7 @@ const ConsumerDetailView: React.FC = () => {
                             value: item.value,
                             align: "start",
                             gap: "gap-1",
+                            statusIndicator: item.statusIndicator,
                           })),
                         },
                       ],
