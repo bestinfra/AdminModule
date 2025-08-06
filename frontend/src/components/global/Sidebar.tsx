@@ -130,21 +130,26 @@ const defaultMenus: MenuCategory[] = [
         icon: "/icons/meter_managment.svg",
         link: "/meters",
       },
-      // {
-      //   title: "Payment",
-      //   icon: "/icons/payment.svg",
-      //   link: "/payment",
-      // },
-      // {
-      //   title: "Freeze Status",
-      //   icon: "/icons/freeze-status.svg",
-      //   link: "/freeze-status",
-      // },
-      // {
-      //   title: "Confirmation",
-      //   icon: "/icons/freeze-status.svg",
-      //   link: "/confirmation",
-      // },
+      {
+        title: "Payment",
+        icon: "/icons/payment.svg",
+        link: "/payment",
+      },
+      {
+        title: "Freeze Status",
+        icon: "/icons/freeze-status.svg",
+        link: "/freeze-status",
+      },
+      {
+        title: "Confirmation",
+        icon: "/icons/freeze-status.svg",
+        link: "/confirmation",
+      },
+      {
+        title: "Usage Summary",
+        icon: "/icons/freeze-status.svg",
+        link: "/usage-summary",
+      },
       // {
       //     title: 'SubLogin',
       //     link: '/sub-login',
@@ -179,40 +184,40 @@ const defaultMenus: MenuCategory[] = [
       // },
     ],
   },
-  {
-    category: "GMR Client",
-    items: [
-      {
-        title: "Dashboard",
-        link: "/consumer-dashboard",
-        icon: "/icons/dashboard.svg",
-      },
-      {
-        title: "All Consumer",
-        link: "/consumers",
-        icon: "/icons/units.svg",
-      },
+  // {
+  //   category: "GMR Client",
+  //   items: [
+  //     {
+  //       title: "Dashboard",
+  //       link: "/consumer-dashboard",
+  //       icon: "/icons/dashboard.svg",
+  //     },
+  //     {
+  //       title: "All Consumer",
+  //       link: "/consumers",
+  //       icon: "/icons/units.svg",
+  //     },
 
-      {
-        title: "Bills",
-        icon: "/icons/user_managment.svg",
-        link: "/user-management",
-        hasSubmenu: true,
-        submenu: [
-          {
-            title: "PostPaid",
-            icon: "/icons/dashboard.svg",
-            link: "/prepaid",
-          },
-          {
-            title: "Postpaid",
-            icon: "/icons/dashboard.svg",
-            link: "/postpaid",
-          },
-        ],
-      },
-    ],
-  },
+  //     {
+  //       title: "Bills",
+  //       icon: "/icons/user_managment.svg",
+  //       link: "/user-management",
+  //       hasSubmenu: true,
+  //       submenu: [
+  //         {
+  //           title: "PostPaid",
+  //           icon: "/icons/dashboard.svg",
+  //           link: "/prepaid",
+  //         },
+  //         {
+  //           title: "Postpaid",
+  //           icon: "/icons/dashboard.svg",
+  //           link: "/postpaid",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 ];
 
 const defaultProps: Partial<
