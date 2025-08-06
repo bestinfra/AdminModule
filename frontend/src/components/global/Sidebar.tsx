@@ -129,20 +129,31 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/user_managment.svg',
             },
             {
-                title: 'SubLogin',
-                link: '/sub-login',
-                icon:'/icons/user_managment.svg',
-            },    
-            {
-                title: 'Consumer',
-                link: '/consumers',
-                icon:'/icons/user_managment.svg',
-            },
-            {
                     title: 'Meter List',
                     icon: '/icons/meter_managment.svg',
                     link: '/meters',
                 },
+                {
+                    title: 'Payment',
+                    icon: '/icons/payment.svg',
+                    link: '/payment',
+                },
+                {
+                    title: 'Freeze Status',
+                    icon: '/icons/freeze-status.svg',
+                    link: '/freeze-status',
+                },
+            // {
+            //     title: 'SubLogin',
+            //     link: '/sub-login',
+            //     icon:'/icons/user_managment.svg',
+            // },    
+            // {
+            //     title: 'Consumer',
+            //     link: '/consumers',
+            //     icon:'/icons/user_managment.svg',
+            // },
+            
             
             // {   
             //     title: 'User Management',
