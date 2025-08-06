@@ -133,6 +133,16 @@ const defaultMenus: MenuCategory[] = [
                     icon: '/icons/meter_managment.svg',
                     link: '/meters',
                 },
+                {
+                    title: 'Payment',
+                    icon: '/icons/payment.svg',
+                    link: '/payment',
+                },
+                {
+                    title: 'Freeze Status',
+                    icon: '/icons/freeze-status.svg',
+                    link: '/freeze-status',
+                },
             // {
             //     title: 'SubLogin',
             //     link: '/sub-login',

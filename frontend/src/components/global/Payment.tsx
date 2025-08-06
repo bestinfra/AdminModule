@@ -66,13 +66,13 @@ const Payment: React.FC<PaymentProps> = ({
                 
                 {/* Payable Amount */}
                 <div className="flex flex-col gap-1">
-                    <h1 className="text-2xl font-bold text-gray-900 font-manrope">Payable</h1>
-                    <p className="text-sm text-gray-500 font-manrope">Amount</p>
+                    <h1 className="text-2xl font-bold text-gray-900 font-manrope">Payable Amount</h1>
+                    {/* <p className="text-2xl font-bold text-gray-900 font-manrope">Amount</p> */}
                 </div>
                 
                 {/* Main Amount */}
                 <div className="flex flex-col gap-2">
-                    <p className="text-4xl font-bold text-gray-900 font-manrope">₹{amount}</p>
+                    {/* <p className="text-4xl font-bold text-gray-900 font-manrope">₹{amount}</p> */}
                     <p className="text-sm text-gray-500 font-manrope">
                         {formattedDate && <span>{formattedDate}</span>}
                         {formattedDate && billId && <span className="mx-2">•</span>}
@@ -120,15 +120,11 @@ const Payment: React.FC<PaymentProps> = ({
             <div className="flex gap-3">
                 <Button
                     label={loading ? 'Processing...' : 'Pay Now'}
-                    variant="secondary"
+                    variant="warning"
                     onClick={onPayNow}
                     loading={loading}
                     disabled={disabled}
-                    className="flex-1 hover:bg-transparent hover:text-[var(--color-secondary)] hover:border-[var(--color-secondary)] hover:border-2 transition-all duration-200"
-                    style={{ 
-                        backgroundColor: 'var(--color-secondary)', 
-                        borderColor: 'var(--color-secondary)',
-                    }}
+                    className="flex-1"
                 />
                 <Button
                     label={loading ? 'Processing...' : 'Mark as paid'}
@@ -136,11 +132,7 @@ const Payment: React.FC<PaymentProps> = ({
                     onClick={onMarkAsPaid}
                     loading={loading}
                     disabled={disabled}
-                    className="flex-1 hover:bg-transparent hover:text-[var(--color-secondary)] hover:border-[var(--color-secondary)] hover:border-2 transition-all duration-200"
-                    style={{ 
-                        backgroundColor: 'var(--color-secondary)', 
-                        borderColor: 'var(--color-secondary)',
-                    }}
+                    className="flex-1"
                 />
             </div>
         </div>
