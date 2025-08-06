@@ -132,26 +132,26 @@ const defaultMenus: MenuCategory[] = [
                     link: '/meters',
                 },
                 {
-                    title: 'Consumer Dashboard',
-                    icon: '/icons/dashboard.svg',
-                    link: '/consumer-dashboard',
+                    title: 'Payment',
+                    icon: '/icons/payment.svg',
+                    link: '/payment',
                 },
                 {
-                    title:'Role Permissions',
-                    icon:'/icons/roles.svg',
-                    link:'/roles-permissions',
+                    title: 'Freeze Status',
+                    icon: '/icons/freeze-status.svg',
+                    link: '/freeze-status',
                 },
-                {
-                    title:'Individual Detail',
-                    icon:'/icons/roles.svg',
-                    link:'/individual-detail',
-                }
-                ,
-                {
-                    title:'Data Logger',
-                    icon:'/icons/roles.svg',
-                    link:'/data-logger',
-                }
+            // {
+            //     title: 'SubLogin',
+            //     link: '/sub-login',
+            //     icon:'/icons/user_managment.svg',
+            // },    
+            // {
+            //     title: 'Consumer',
+            //     link: '/consumers',
+            //     icon:'/icons/user_managment.svg',
+            // },
+            
             
             // {   
             //     title: 'User Management',

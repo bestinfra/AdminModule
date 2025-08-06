@@ -153,8 +153,8 @@ const Consumers: React.FC = () => {
               )
             : consumers;
 
-    const handlePageChange = (page: number, limit: number) => {
-        fetchConsumers(page, limit);
+    const handleRowClick = (row: any) => {
+        navigate(`/consumer-detail-view/${row.consumerNumber}`);
     };
 
     const headerConfig = {

@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
-    variant?: 'primary' | 'secondary' | 'outline' | 'outlineSecondary' | 'primarysmall' | 'success' | 'danger' | 'warning' | 'test' | 'asset';
+    variant?: 'primary' | 'secondary' | 'outline' | 'outlineSecondary' | 'primarysmall' | 'danger' | 'warning' | 'test' | 'asset';
     size?: 'small' | 'medium' | 'large';
     loading?: boolean;
     children?: React.ReactNode;
@@ -63,28 +63,28 @@ const Button = React.memo<ButtonProps>(({
     // Variant classes
     const variantClasses = {
         primary: [
-            'bg-[var(--color-secondary)]',
+            'bg-secondary',
             'text-white',
-            'border-[var(--color-secondary)]',
+            'border-secondary',
             'hover:bg-white',
-            'hover:text-[var(--color-secondary)]',
-            'hover:border-[var(--color-secondary)]',
+            'hover:text-secondary',
+            'hover:border-secondary',
         ],
         secondary: [
             'bg-primary',
             'text-white',
-            'border-[var(--color-primary)]',
+            'border-primary',
             'hover:bg-white',
-            'hover:text-[var(--color-primary)]',
-            'hover:border-[var(--color-primary)]',
+            'hover:text-primary',
+            'hover:border-primary',
         ],
         outline: [
-            'bg-[var(--brand-blue)]',
-            'text-[var(--white)]',
-            'border-[var(--brand-blue)]',
-            'hover:bg-[var(--brand-blue)]',
-            'hover:text-[var(--white)]',
-            'hover:border-[var(--brand-blue)]',
+            'bg-primary',
+            'text-white',
+            'border-primary',
+            'hover:bg-white',
+            'hover:text-primary',
+            'hover:border-primary',
         ],
         primarysmall: [
             'bg-[var(--blue-bright)]',
@@ -92,27 +92,24 @@ const Button = React.memo<ButtonProps>(({
             'h-8',
             'border-[var(--blue-bright)]',
         ],
-        success: [
-            'bg-[var(--new-positive)]',
-            'text-[var(--white)]',
-        ],
         danger: [
-            'bg-[var(--color-danger)]',
-            'text-[var(--white)]',
+            'bg-danger',
+            'text-white',
             'px-4',
             'rounded-[2.5rem]',
-            'border-[var(--color-danger)]',
-            'hover:bg-[var(--color-danger-alt)]',
-            'hover:border-[var(--color-danger-alt)]',
-            'hover:text-[var(--white)]',
-            'active:bg-[var(--color-danger)]',
-            'active:border-[var(--color-danger)]',
-            'focus:ring-2',
-            'focus:ring-[var(--color-danger-light)]',
+            'border-danger',
+            'hover:bg-danger-alt',
+            'hover:border-danger-alt',
+            'hover:text-danger',
+            'active:bg-danger',
         ],
         warning: [
-            'bg-[var(--new-warning)]',
-            'text-[var(--black)]',
+            'bg-warning',
+            'text-white',
+            'border-warning',
+            'hover:bg-white',
+            'hover:text-warning',
+            'hover:border-warning',
         ],
         test: [
             'bg-[var(--background-secondary)]',

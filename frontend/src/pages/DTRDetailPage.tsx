@@ -362,7 +362,7 @@ const DTRDetailPage = () => {
                                 span: { col: 3, row: 1 },
                                 columns: [
                                     {
-                                        name: 'SectionHeader',
+                                        name: 'SectionHeader',  
                                         props: {
                                             title: 'DTR Information',
                                             titleLevel: 2,

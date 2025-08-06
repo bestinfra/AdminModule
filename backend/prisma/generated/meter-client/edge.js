@@ -1063,7 +1063,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\BI\\AdminModule\\backend\\prisma\\generated\\meter-client",
+      "value": "D:\\OnGoing\\BestInfra Projects\\AdminModule\\backend\\prisma\\generated\\meter-client",
       "fromEnvVar": null
     },
     "config": {
@@ -1077,7 +1077,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\BI\\AdminModule\\backend\\prisma\\schema.meter.prisma",
+    "sourceFilePath": "D:\\OnGoing\\BestInfra Projects\\AdminModule\\backend\\prisma\\schema.meter.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
