@@ -131,6 +131,11 @@ const defaultMenus: MenuCategory[] = [
         link: "/meters",
       },
       {
+        title: "Occupancy to Vacency",
+        icon: "/icons/meter_managment.svg",
+        link: "/occupancy-to-vacency",
+      },
+      {
         title: "Payment",
         icon: "/icons/payment.svg",
         link: "/payment",

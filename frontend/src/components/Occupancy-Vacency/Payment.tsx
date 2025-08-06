@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Button from './Button';
-import Icon from './Icon';
+import Button from '../global/Button';
+import Icon from '../global/Icon';
 
 interface PaymentMethod {
     id: string;

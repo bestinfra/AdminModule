@@ -43,6 +43,7 @@ import ActivityLog from './ActivityLog';
 import ChatApplication from '../ChatApplication';
 import ProfileSidebar from './ProfileSidebar';
 import ProfileContent from './ProfileContent';
+import HeaderTest from './HeaderTest';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -81,12 +82,13 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     SubappPanel,
     SummaryInfo,
     TicketConversationPanel,
-    TicketInformationPannel,
+    TicketInformationPannel,    
     ActivityLog,
     ChatApplication,
     Permissions,
     ProfileSidebar,
     ProfileContent,  
+    HeaderTest,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

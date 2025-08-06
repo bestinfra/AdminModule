@@ -46,8 +46,8 @@ import FilterStyleController from './components/global/FilterStyleController';
 // import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
 import Dashboard from './pages_v2/ConsumerDashboard';
 import ConsumerDetailView from './pages_v2/ConsumerDetailView';
-import Payment from './components/global/Payment';
-import FreezeStatus from './components/global/FreezeStatus';
+import Payment from './components/Occupancy-Vacency/Payment';
+import FreezeStatus from './components/Occupancy-Vacency/FreezeStatus';
 import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';     
 
 import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
