@@ -1,7 +1,8 @@
 import React, { useState, useEffect, Suspense } from 'react';
-import type { Column } from '@/components/global/Table';
+import type { Column, TableData } from '@/components/global/Table';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import Page from '@/components/global/PageC';
+import BACKEND_URL from '../config';
 
 const columns: Column[] = [
     { key: 'sNo', label: 'S.No' },
@@ -58,8 +59,16 @@ const DUMMY_CONSUMERS = [
 
 const Consumers: React.FC = () => {
     const [menuValue, setMenuValue] = useState('');
-    const [consumers, setConsumers] = useState<any[]>([]);
+    const [consumers, setConsumers] = useState<TableData[]>([]);
     const [loading, setLoading] = useState(true);
+    const [serverPagination, setServerPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        limit: 8,
+        hasNextPage: false,
+        hasPrevPage: false,
+    });
     const params = useParams();
     const location = useLocation();
 
@@ -80,15 +89,49 @@ const Consumers: React.FC = () => {
         };
     }
 
-    // Load dummy data instead of API call
-    useEffect(() => {
+    // Fetch consumers data from API
+    const fetchConsumers = (page = 1, limit = 8) => {
         setLoading(true);
+        const params = new URLSearchParams();
+        params.append('page', String(page));
+        params.append('limit', String(limit));
+        
+        fetch(`${BACKEND_URL}/consumers?${params.toString()}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setConsumers(data.data);
+                    setServerPagination({
+                        currentPage: page,
+                        totalPages: data.pagination?.totalPages || 1,
+                        totalCount: data.pagination?.totalCount || data.data.length,
+                        limit,
+                        hasNextPage: data.pagination?.hasNextPage || false,
+                        hasPrevPage: data.pagination?.hasPrevPage || false,
+                    });
+                } else {
+                    throw new Error(data.message || 'Failed to fetch consumers');
+                }
+            })
+            .catch((err) => {
+                console.error(err.message || 'Failed to fetch consumers');
+                setConsumers(DUMMY_CONSUMERS);
+                setServerPagination({
+                    currentPage: 1,
+                    totalPages: 1,
+                    totalCount: DUMMY_CONSUMERS.length,
+                    limit: DUMMY_CONSUMERS.length,
+                    hasNextPage: false,
+                    hasPrevPage: false,
+                });
+            })
+            .finally(() => {
+                setLoading(false);
+            });
+    };
 
-        // Simulate API delay
-        setTimeout(() => {
-            setConsumers(DUMMY_CONSUMERS);
-            setLoading(false);
-        }, 500);
+    useEffect(() => {
+        fetchConsumers();
     }, []);
 
     // Check for filter parameter from route
@@ -103,12 +146,15 @@ const Consumers: React.FC = () => {
     const filteredConsumers =
         menuValue === 'high-usage'
             ? consumers.filter(
-                  (consumer) => parseFloat(consumer.reading) > 1000
+                  (consumer) => {
+                      const reading = consumer.reading;
+                      return reading && typeof reading === 'string' && parseFloat(reading) > 1000;
+                  }
               )
             : consumers;
 
     const handleRowClick = (row: any) => {
-        navigate(`/consumers/${row.consumerNumber}`);
+        navigate(`/consumer-detail-view/${row.consumerNumber}`);
     };
 
     const headerConfig = {
@@ -162,17 +208,19 @@ const Consumers: React.FC = () => {
                                                     columns: columns,
                                                     loading: loading,
                                                     searchable: true,
+                                                    sortable: true,
                                                     pagination: true,
                                                     showActions: true,
-                                                    actions: [
-                                                        {
-                                                            label: 'View',
-                                                            icon: '/icons/eye.svg',
-                                                            onClick:
-                                                                handleRowClick,
-                                                        },
-                                                    ],
-                                                    onRowClick: handleRowClick,
+                                                    serverPagination: serverPagination,
+                                                    onPageChange: handlePageChange,
+                                                    onEdit: (row: TableData) =>
+                                                        console.log('Edit:', row),
+                                                    onView: (row: TableData) =>
+                                                        navigate(`/consumers/${row.consumerNumber}`),
+                                                    headerTitle: 'Consumer Management',
+                                                    dateRange: 'Real-time data',
+                                                    text: 'Consumer Management Table',
+                                                    className: 'w-full',
                                                     emptyMessage: loading
                                                         ? 'Loading consumers...'
                                                         : 'No consumers found',

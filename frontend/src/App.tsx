@@ -45,7 +45,9 @@ import FilterStyleController from './components/global/FilterStyleController';
 // import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
 // import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
 import Dashboard from './pages_v2/ConsumerDashboard';
-
+import ConsumerDetailView from './pages_v2/ConsumerDetailView';
+import Payment from './components/global/Payment';
+import FreezeStatus from './components/global/FreezeStatus';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -70,6 +72,8 @@ const App: React.FC = () => {
                                 path="/data-logger/:dataLoggerId"
                                 element={<DataLoggerDashboard />}
                             />
+                            <Route path='/consumer-detail-view/:consumerId' element={<ConsumerDetailView />} />
+                            <Route path='/consumer-detail-view' element={<ConsumerDetailView />} />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             <Route path="/users" element={<Users />} />
@@ -90,7 +94,7 @@ const App: React.FC = () => {
                             <Route path="/consumers" element={<Consumers />} />
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
-                            <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
+                            <Route path="/consumers/:consumerId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/feeder/:feederId" element={<Feeders />} />
@@ -108,6 +112,8 @@ const App: React.FC = () => {
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             <Route path="/roles-permissions" element={<RolesPermissions />} />
                             <Route path="/filter-style-controller" element={<FilterStyleController />} />
+                            <Route path="/payment" element={<Payment amount="100" />} />
+                            <Route path="/freeze-status" element={<FreezeStatus />} />
                             {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
                             <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}

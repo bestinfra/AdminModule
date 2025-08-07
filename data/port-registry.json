@@ -1,5 +1,5 @@
 {
-  "nextPort": 4197,
+  "nextPort": 4178,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -586,32 +586,27 @@
       "deployedAt": "2025-08-02T11:46:07.778Z",
       "path": "C:\\xampp\\htdocs\\smdr-backend"
     },
-    "march": {
+    "knbd": {
       "port": 4146,
-      "deployedAt": "2025-08-03T07:38:25.446Z",
-      "path": "C:\\xampp\\htdocs\\march-backend"
+      "deployedAt": "2025-08-04T04:40:48.135Z",
+      "path": "C:\\xampp\\htdocs\\knbd-backend"
     },
-    "august": {
+    "bcd": {
       "port": 4147,
-      "deployedAt": "2025-08-03T08:22:45.065Z",
-      "path": "C:\\xampp\\htdocs\\august-backend"
+      "deployedAt": "2025-08-04T06:38:20.163Z",
+      "path": "C:\\xampp\\htdocs\\bcd-backend"
     },
-    "january": {
-      "port": 4148,
-      "deployedAt": "2025-08-03T08:31:26.216Z",
-      "path": "C:\\xampp\\htdocs\\january-backend"
-    },
-    "february": {
+    "katre": {
       "port": 4149,
-      "deployedAt": "2025-08-03T08:51:58.694Z",
-      "path": "C:\\xampp\\htdocs\\february-backend"
+      "deployedAt": "2025-08-05T04:44:25.170Z",
+      "path": "C:\\xampp\\htdocs\\katre-backend"
     },
-    "april": {
+    "akob": {
       "port": 4150,
-      "deployedAt": "2025-08-03T09:16:17.033Z",
-      "path": "C:\\xampp\\htdocs\\april-backend"
+      "deployedAt": "2025-08-05T11:06:42.501Z",
+      "path": "C:\\xampp\\htdocs\\akob-backend"
     },
-    "may": {
+    "kotak": {
       "port": 4151,
       "deployedAt": "2025-08-03T09:28:25.264Z",
       "path": "C:\\xampp\\htdocs\\may-backend"
@@ -625,166 +620,6 @@
       "port": 4153,
       "deployedAt": "2025-08-04T04:34:08.651Z",
       "path": "C:\\xampp\\htdocs\\test7-backend"
-    },
-    "prasanth": {
-      "port": 4154,
-      "deployedAt": "2025-08-05T05:47:52.199Z",
-      "path": "C:\\xampp\\htdocs\\prasanth-backend"
-    },
-    "sorry": {
-      "port": 4155,
-      "deployedAt": "2025-08-05T10:15:36.041Z",
-      "path": "C:\\xampp\\htdocs\\sorry-backend"
-    },
-    "switch": {
-      "port": 4156,
-      "deployedAt": "2025-08-05T10:27:12.329Z",
-      "path": "C:\\xampp\\htdocs\\switch-backend"
-    },
-    "harismita": {
-      "port": 4157,
-      "deployedAt": "2025-08-05T10:47:10.748Z",
-      "path": "C:\\xampp\\htdocs\\harismita-backend"
-    },
-    "speaker": {
-      "port": 4158,
-      "deployedAt": "2025-08-05T10:57:02.846Z",
-      "path": "C:\\xampp\\htdocs\\speaker-backend"
-    },
-    "cat": {
-      "port": 4159,
-      "deployedAt": "2025-08-05T11:14:28.590Z",
-      "path": "C:\\xampp\\htdocs\\cat-backend"
-    },
-    "sendoff": {
-      "port": 4160,
-      "deployedAt": "2025-08-05T11:25:03.500Z",
-      "path": "C:\\xampp\\htdocs\\sendoff-backend"
-    },
-    "john": {
-      "port": 4161,
-      "deployedAt": "2025-08-05T12:43:13.350Z",
-      "path": "C:\\xampp\\htdocs\\john-backend"
-    },
-    "kopiko": {
-      "port": 4162,
-      "deployedAt": "2025-08-05T13:52:21.213Z",
-      "path": "C:\\xampp\\htdocs\\kopiko-backend"
-    },
-    "sangeet": {
-      "port": 4163,
-      "deployedAt": "2025-08-05T14:11:02.482Z",
-      "path": "C:\\xampp\\htdocs\\sangeet-backend"
-    },
-    "cake": {
-      "port": 4169,
-      "deployedAt": "2025-08-05T16:04:14.577Z",
-      "path": "C:\\xampp\\htdocs\\cake-backend"
-    },
-    "prahladh": {
-      "port": 4170,
-      "deployedAt": "2025-08-06T05:17:24.478Z",
-      "path": "C:\\xampp\\htdocs\\prahladh-backend"
-    },
-    "kishan": {
-      "port": 4171,
-      "deployedAt": "2025-08-06T05:25:00.544Z",
-      "path": "C:\\xampp\\htdocs\\kishan-backend"
-    },
-    "test-fix": {
-      "port": 4172,
-      "deployedAt": "2025-08-06T06:36:53.614Z",
-      "path": "C:\\xampp\\htdocs\\test-fix-backend"
-    },
-    "test-dashboard-fix": {
-      "port": 4173,
-      "deployedAt": "2025-08-06T06:38:45.645Z",
-      "path": "C:\\xampp\\htdocs\\test-dashboard-fix-backend"
-    },
-    "neelima": {
-      "port": 4174,
-      "deployedAt": "2025-08-06T06:45:47.814Z",
-      "path": "C:\\xampp\\htdocs\\neelima-backend"
-    },
-    "test-fix-complete": {
-      "port": 4175,
-      "deployedAt": "2025-08-06T06:52:30.080Z",
-      "path": "C:\\xampp\\htdocs\\test-fix-complete-backend"
-    },
-    "test-correct-modules": {
-      "port": 4176,
-      "deployedAt": "2025-08-06T07:08:30.923Z",
-      "path": "C:\\xampp\\htdocs\\test-correct-modules-backend"
-    },
-    "orient": {
-      "port": 4177,
-      "deployedAt": "2025-08-06T07:13:00.316Z",
-      "path": "C:\\xampp\\htdocs\\orient-backend"
-    },
-    "test-federated": {
-      "port": 4178,
-      "deployedAt": "2025-08-06T07:24:19.575Z",
-      "path": "C:\\xampp\\htdocs\\test-federated-backend"
-    },
-    "balika": {
-      "port": 4179,
-      "deployedAt": "2025-08-06T07:28:47.575Z",
-      "path": "C:\\xampp\\htdocs\\balika-backend"
-    },
-    "test-pagec-fix": {
-      "port": 4180,
-      "deployedAt": "2025-08-06T07:38:03.034Z",
-      "path": "C:\\xampp\\htdocs\\test-pagec-fix-backend"
-    },
-    "shirt": {
-      "port": 4181,
-      "deployedAt": "2025-08-06T08:02:17.272Z",
-      "path": "C:\\xampp\\htdocs\\shirt-backend"
-    },
-    "test-duplicate-fix": {
-      "port": 4182,
-      "deployedAt": "2025-08-06T08:11:59.036Z",
-      "path": "C:\\xampp\\htdocs\\test-duplicate-fix-backend"
-    },
-    "test-route-fix": {
-      "port": 4183,
-      "deployedAt": "2025-08-06T11:26:10.128Z",
-      "path": "C:\\xampp\\htdocs\\test-route-fix-backend"
-    },
-    "emi": {
-      "port": 4184,
-      "deployedAt": "2025-08-06T11:51:12.974Z",
-      "path": "C:\\xampp\\htdocs\\emi-backend"
-    },
-    "jeans": {
-      "port": 4185,
-      "deployedAt": "2025-08-06T12:17:52.778Z",
-      "path": "C:\\xampp\\htdocs\\jeans-backend"
-    },
-    "jean": {
-      "port": 4186,
-      "deployedAt": "2025-08-06T12:24:09.033Z",
-      "path": "C:\\xampp\\htdocs\\jean-backend"
-    },
-    "cakes": {
-      "port": 4187,
-      "deployedAt": "2025-08-06T13:52:26.851Z",
-      "path": "C:\\xampp\\htdocs\\cakes-backend"
-    },
-    "kalyani": {
-      "port": 4189,
-      "deployedAt": "2025-08-06T18:29:55.324Z",
-      "path": "C:\\xampp\\htdocs\\kalyani-backend"
-    },
-    "ironman": {
-      "port": 4194,
-      "deployedAt": "2025-08-07T02:50:00.054Z",
-      "path": "C:\\xampp\\htdocs\\ironman-backend"
-    },
-    "vishnu": {
-      "port": 4196,
-      "deployedAt": "2025-08-07T03:23:50.221Z",
-      "path": "C:\\xampp\\htdocs\\vishnu-backend"
     }
   }
 }

@@ -326,8 +326,34 @@ function generateAppComponent(frontendDir, variables) {
   if (modules.includes('meters')) {
     menuItems.push('    { title: \'Meters\', icon: \'/icons/meter-bolt.svg\', link: \'/meters\' }');
   }
-  
-  variables.menuItems = menuItems.join(',\n');
+  // Create smart user menu
+  if (userSubmenus.length === 0) {
+    // No user modules selected - don't add anything
+  } else if (userSubmenus.length === 1) {
+    // Single user module - make it the main menu
+    const singleUser = userSubmenus[0];
+    variables.menuItems += '    {\n';
+    variables.menuItems += `      title: '${singleUser.title}',\n`;
+    variables.menuItems += '      icon: \'/icons/user.svg\',\n';
+    variables.menuItems += `      link: '${singleUser.link}',\n`;
+    variables.menuItems += '    },\n';
+  } else {
+    // Multiple user modules - create parent with submenus
+    variables.menuItems += '    {\n';
+    variables.menuItems += '      title: \'Users\',\n';
+    variables.menuItems += '      icon: \'/icons/user.svg\',\n';
+    variables.menuItems += '      hasSubmenu: true,\n';
+    variables.menuItems += '      submenu: [\n';
+    userSubmenus.forEach(submenu => {
+      variables.menuItems += '        {\n';
+      variables.menuItems += `          title: '${submenu.title}',\n`;
+      variables.menuItems += `          link: '${submenu.link}',\n`;
+      variables.menuItems += '        },\n';
+    });
+    variables.menuItems += '      ],\n';
+    variables.menuItems += '    },\n';
+  }
+  // variables.menuItems = menuItems.join(',\n');
   
   // Process the App.tsx template
   const templatePath = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');

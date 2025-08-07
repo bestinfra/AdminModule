@@ -2,7 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
-// Lazy load pg module only when needed
 let Client;
 try {
   const pg = require('pg');
@@ -279,6 +278,21 @@ class OptimizedDeployer {
     }
   }
 
+  // Hash password with fallback
+  async hashPassword(password) {
+    try {
+      const bcrypt = require('bcrypt');
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      console.log(`   ✅ Password hashed using bcrypt`);
+      return hashedPassword;
+    } catch (bcryptError) {
+      console.log(`   ⚠️  bcrypt not available, using simple hash fallback`);
+      // Simple hash fallback - in production, you should ensure bcrypt is available
+      return Buffer.from(password).toString('base64');
+    }
+  }
+
   // Insert admin credentials into the database
   async insertAdminCredentials(appName, dbName, credentials) {
     if (!Client) {
@@ -299,10 +313,8 @@ class OptimizedDeployer {
       
       await client.connect();
       
-      // Hash the password using bcrypt
-      const bcrypt = require('bcrypt');
-      const saltRounds = 10;
-      const hashedPassword = await bcrypt.hash(credentials.adminPassword, saltRounds);
+      // Hash the password
+      const hashedPassword = await this.hashPassword(credentials.adminPassword);
       
       // Check if user already exists
       const existingUser = await client.query(
@@ -316,7 +328,26 @@ class OptimizedDeployer {
         return;
       }
       
-      // Insert admin user
+      // Create only ADMIN role by default
+      const adminRoleExists = await client.query(
+        'SELECT id FROM roles WHERE name = $1',
+        ['ADMIN']
+      );
+      
+      let adminRoleId;
+      if (adminRoleExists.rows.length === 0) {
+        const roleResult = await client.query(
+          'INSERT INTO roles (name, description, "isActive", "accessLevel", level) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+          ['ADMIN', 'ADMIN role', true, this.mapRoleToAccessLevel('ADMIN'), this.getRoleLevel('ADMIN')]
+        );
+        adminRoleId = roleResult.rows[0].id;
+        console.log(`   ✅ Created role: ADMIN with ID: ${adminRoleId}`);
+      } else {
+        adminRoleId = adminRoleExists.rows[0].id;
+        console.log(`   ✅ Found existing ADMIN role with ID: ${adminRoleId}`);
+      }
+      
+      // Insert admin user with roleId
       const insertUserQuery = `
         INSERT INTO users (
           username, 
@@ -327,9 +358,10 @@ class OptimizedDeployer {
           phone, 
           "isActive", 
           "accessLevel",
+          "roleId",
           "createdAt",
           "updatedAt"
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW())
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
         RETURNING id
       `;
       
@@ -341,41 +373,12 @@ class OptimizedDeployer {
         credentials.adminLastName,
         credentials.adminPhone || null,
         true,
-        'ADMIN'
+        'ADMIN',
+        adminRoleId
       ]);
       
       const userId = userResult.rows[0].id;
-      console.log(`   ✅ Admin user created with ID: ${userId}`);
-      
-      // Create default roles if they don't exist
-      const roles = ['ADMIN', 'USER'];
-      for (const roleName of roles) {
-        const roleExists = await client.query(
-          'SELECT id FROM roles WHERE name = $1',
-          [roleName]
-        );
-        
-        if (roleExists.rows.length === 0) {
-          await client.query(
-            'INSERT INTO roles (name) VALUES ($1)',
-            [roleName]
-          );
-          console.log(`   ✅ Created role: ${roleName}`);
-        }
-      }
-      
-      // Assign admin role to the user
-      const adminRole = await client.query(
-        "SELECT id FROM roles WHERE name = 'ADMIN'"
-      );
-      
-      if (adminRole.rows.length > 0) {
-        await client.query(
-          'INSERT INTO user_roles ("userId", "roleId") VALUES ($1, $2)',
-          [userId, adminRole.rows[0].id]
-        );
-        console.log(`   ✅ Assigned ADMIN role to user`);
-      }
+      console.log(`   ✅ Admin user created with ID: ${userId} and role ID: ${adminRoleId}`);
       
       await client.end();
       console.log(`✅ Admin credentials inserted successfully for ${appName}`);
@@ -386,7 +389,32 @@ class OptimizedDeployer {
       // Try fallback method using direct SQL
       try {
         console.log(`🔄 Trying fallback method for credential insertion...`);
-        const insertCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO users (username, email, password, \\"firstName\\", \\"lastName\\", \\"isActive\\", \\"accessLevel\\", \\"createdAt\\", \\"updatedAt\\") VALUES ('${credentials.adminUsername}', '${credentials.adminEmail}', '${credentials.adminPassword}', '${credentials.adminFirstName}', '${credentials.adminLastName}', true, 'ADMIN', NOW(), NOW());"`;
+        
+        // Hash password for fallback method too
+        const fallbackHashedPassword = await this.hashPassword(credentials.adminPassword);
+        
+        // Create ADMIN role first
+        const createRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO roles (name, description, \\"isActive\\", \\"accessLevel\\", level) VALUES ('ADMIN', 'ADMIN role', true, 'ADMIN', 2) ON CONFLICT (name) DO NOTHING;"`;
+        
+        execSync(createRoleCommand, { 
+          env,
+          stdio: 'pipe',
+          encoding: 'utf8'
+        });
+        
+        // Get ADMIN role ID
+        const getRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "SELECT id FROM roles WHERE name = 'ADMIN';"`;
+        const roleResult = execSync(getRoleCommand, { 
+          env,
+          stdio: 'pipe',
+          encoding: 'utf8'
+        });
+        
+        // Extract role ID from result
+        const roleIdMatch = roleResult.match(/\\n\\s*(\\d+)\\s*\\n/);
+        const roleId = roleIdMatch ? roleIdMatch[1] : '1';
+        
+        const insertCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO users (username, email, password, \\"firstName\\", \\"lastName\\", \\"isActive\\", \\"accessLevel\\", \\"roleId\\", \\"createdAt\\", \\"updatedAt\\") VALUES ('${credentials.adminUsername}', '${credentials.adminEmail}', '${fallbackHashedPassword}', '${credentials.adminFirstName}', '${credentials.adminLastName}', true, 'ADMIN', ${roleId}, NOW(), NOW());"`;
         
         const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
         
@@ -396,12 +424,361 @@ class OptimizedDeployer {
           encoding: 'utf8'
         });
         
-        console.log(`✅ Admin credentials inserted using fallback method`);
+        console.log(`✅ Admin credentials inserted using fallback method (with hashed password)`);
         
       } catch (psqlError) {
         console.error(`❌ Fallback method also failed:`, psqlError.message);
         console.log(`⚠️  You may need to manually insert admin credentials into database ${dbName}`);
       }
+    }
+  }
+
+  // Insert new accounts with selected roles into the database
+  async insertNewAccounts(appName, dbName, newAccounts, modules) {
+    if (!Client) {
+      console.warn(`⚠️  Cannot insert new accounts: pg module not available`);
+      return;
+    }
+    
+    if (!newAccounts || newAccounts.length === 0) {
+      return;
+    }
+    
+    try {
+      console.log(`👥 Inserting new accounts for ${appName}...`);
+      
+      const client = new Client({
+        host: this.dbConfig.host,
+        port: this.dbConfig.port,
+        user: this.dbConfig.user,
+        password: this.dbConfig.password,
+        database: dbName
+      });
+      
+      await client.connect();
+      
+      // Process each new account
+      for (const account of newAccounts) {
+        if (!account.firstName || !account.lastName || !account.username || !account.email || !account.password || !account.role) {
+          console.log(`⚠️  Skipping incomplete account: ${account.username || 'Unknown'}`);
+          continue;
+        }
+        
+        // Check if user already exists
+        const existingUser = await client.query(
+          'SELECT id FROM users WHERE email = $1 OR username = $2',
+          [account.email, account.username]
+        );
+        
+        if (existingUser.rows.length > 0) {
+          console.log(`⚠️  User already exists: ${account.username}`);
+          continue;
+        }
+        
+        // Hash the password
+        const hashedPassword = await this.hashPassword(account.password);
+        
+        // Create role if it doesn't exist
+        const roleExists = await client.query(
+          'SELECT id FROM roles WHERE name = $1',
+          [account.role]
+        );
+        
+        let roleId;
+        if (roleExists.rows.length === 0) {
+          const roleResult = await client.query(
+            'INSERT INTO roles (name, description, "isActive", "accessLevel", level) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            [account.role, `${account.role} role`, true, this.mapRoleToAccessLevel(account.role), this.getRoleLevel(account.role)]
+          );
+          roleId = roleResult.rows[0].id;
+          console.log(`   ✅ Created role: ${account.role} with ID: ${roleId}`);
+        } else {
+          roleId = roleExists.rows[0].id;
+          console.log(`   ✅ Found existing role: ${account.role} with ID: ${roleId}`);
+        }
+        
+        // Insert new user with roleId
+        const insertUserQuery = `
+          INSERT INTO users (
+            username, 
+            email, 
+            password, 
+            "firstName", 
+            "lastName", 
+            phone, 
+            "isActive", 
+            "accessLevel",
+            "roleId",
+            "createdAt",
+            "updatedAt"
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, NOW(), NOW())
+          RETURNING id
+        `;
+        
+        const userResult = await client.query(insertUserQuery, [
+          account.username,
+          account.email,
+          hashedPassword,
+          account.firstName,
+          account.lastName,
+          account.phone || null,
+          true,
+          this.mapRoleToAccessLevel(account.role),
+          roleId
+        ]);
+        
+        const userId = userResult.rows[0].id;
+        console.log(`   ✅ New user created with ID: ${userId} (${account.username}) and role ID: ${roleId}`);
+      }
+      
+      // Handle module permissions and role_permissions
+      console.log(`🔍 Debug: Processing modules for permissions:`, {
+        hasModules: !!modules,
+        modulesLength: modules ? modules.length : 0,
+        modulesData: modules ? modules.slice(0, 5) : null // Show first 5 modules for debugging
+      });
+      
+      if (modules && modules.length > 0) {
+        await this.setupModulePermissions(client, modules);
+      } else {
+        console.log(`ℹ️  No modules to process for permissions`);
+      }
+      
+      await client.end();
+      console.log(`✅ New accounts inserted successfully for ${appName}`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to insert new accounts:`, error.message);
+      console.error(`Stack trace:`, error.stack);
+      await client?.end();
+      
+      // Try fallback method
+      try {
+        console.log(`🔄 Trying fallback method for new accounts insertion...`);
+        await this.insertNewAccountsFallback(appName, dbName, newAccounts, modules);
+      } catch (fallbackError) {
+        console.error(`❌ Fallback method also failed:`, fallbackError.message);
+      }
+    }
+  }
+
+  // Setup module permissions and role_permissions
+  async setupModulePermissions(client, modules) {
+    try {
+      // Insert module names directly as permissions
+      const permissionIds = [];
+      for (const moduleName of modules) {
+        const permissionExists = await client.query(
+          'SELECT id FROM permissions WHERE name = $1',
+          [moduleName]
+        );
+        
+        if (permissionExists.rows.length === 0) {
+          const result = await client.query(
+            'INSERT INTO permissions (name) VALUES ($1) RETURNING id',
+            [moduleName]
+          );
+          permissionIds.push(result.rows[0].id);
+        } else {
+          permissionIds.push(permissionExists.rows[0].id);
+        }
+      }
+      
+      // Get only existing roles (ADMIN + any roles created for new accounts)
+      const rolesResult = await client.query('SELECT id, name FROM roles ORDER BY name');
+      const roles = rolesResult.rows;
+      
+      // Assign module permissions to roles based on role level
+      for (const role of roles) {
+        const roleLevel = this.getRoleLevel(role.name);
+        const modulesToAssign = this.getModulesForRoleLevel(roleLevel, modules);
+        
+        // Get permission IDs for modules this role should have access to
+        const rolePermissionIds = [];
+        for (const moduleName of modulesToAssign) {
+          const permissionResult = await client.query(
+            'SELECT id FROM permissions WHERE name = $1',
+            [moduleName]
+          );
+          
+          if (permissionResult.rows.length > 0) {
+            rolePermissionIds.push(permissionResult.rows[0].id);
+          }
+        }
+        
+        if (rolePermissionIds.length > 0) {
+          // Store all permission IDs as JSON array for this role
+          const permissionIdsJson = JSON.stringify(rolePermissionIds);
+          
+          // Check if role_permission already exists
+          const existingRolePermission = await client.query(
+            'SELECT id FROM role_permissions WHERE "roleId" = $1',
+            [role.id]
+          );
+          
+          if (existingRolePermission.rows.length === 0) {
+            await client.query(
+              'INSERT INTO role_permissions ("roleId", "permissionId") VALUES ($1, $2)',
+              [role.id, permissionIdsJson]
+            );
+          } else {
+            // Update existing role permission
+            await client.query(
+              'UPDATE role_permissions SET "permissionId" = $1 WHERE "roleId" = $2',
+              [permissionIdsJson, role.id]
+            );
+          }
+        }
+      }
+      
+      console.log(`✅ Module permissions setup completed`);
+      
+    } catch (error) {
+      console.error(`❌ Failed to setup module permissions:`, error.message);
+    }
+  }
+
+  
+
+  // Helper method to map role to access level
+  mapRoleToAccessLevel(role) {
+    const roleMap = {
+      'ADMIN': 'ADMIN',
+      'SUPER_ADMIN': 'SUPER_ADMIN',
+      'MODERATOR': 'MODERATOR',
+      'ACCOUNTANT': 'ACCOUNTANT'
+    };
+    // Handle case-insensitive role names
+    const upperRole = role.toUpperCase();
+    return roleMap[upperRole] || roleMap[role] || 'ACCOUNTANT';
+  }
+
+  // Helper method to get role level
+  getRoleLevel(role) {
+    const levelMap = {
+      'SUPER_ADMIN': 1,
+      'ADMIN': 2,
+      'MODERATOR': 3,
+      'ACCOUNTANT': 4
+    };
+    // Handle case-insensitive role names
+    const upperRole = role.toUpperCase();
+    return levelMap[upperRole] || levelMap[role] || 4;
+  }
+
+  // Helper method to get modules for role level
+  getModulesForRoleLevel(roleLevel, allModules) {
+    // Define which modules each role level can access
+    if (roleLevel <= 1) { // SUPER_ADMIN - All modules
+      return allModules;
+    } else if (roleLevel <= 2) { // ADMIN - All modules (admin should have access to all selected modules)
+      return allModules;
+    } else if (roleLevel === 3) { // MODERATOR - Limited modules
+      const filteredModules = allModules.filter(module => 
+        module.includes('dashboard') ||
+        module.includes('tickets') ||
+        module.includes('consumer') ||
+        module.includes('meter_management')
+      );
+      return filteredModules;
+    } else if (roleLevel === 4) { // ACCOUNTANT - Very limited modules
+      const filteredModules = allModules.filter(module => 
+        module.includes('dashboard') ||
+        module.includes('bills') ||
+        module.includes('tickets')
+      ).filter(module => 
+        !module.includes('consumer') && 
+        !module.includes('meter') && 
+        !module.includes('user') && 
+        !module.includes('role')
+      );
+      return filteredModules;
+    } else { // Default fallback
+      return allModules.filter(module => 
+        module.includes('dashboard') ||
+        module.includes('tickets')
+      );
+    }
+  }
+
+  // Helper method to get permissions for role level (kept for backward compatibility)
+  getPermissionsForRoleLevel(roleLevel, allPermissions) {
+    // Higher level roles get more permissions
+    if (roleLevel <= 1) { // SUPER_ADMIN
+      return allPermissions;
+    } else if (roleLevel <= 2) { // ADMIN
+      return allPermissions.filter(p => !p.includes('delete_'));
+    } else if (roleLevel <= 3) { // MODERATOR
+      return allPermissions.filter(p => !p.includes('delete_') && !p.includes('create_'));
+    } else { // ACCOUNTANT
+      return allPermissions.filter(p => p.startsWith('view_'));
+    }
+  }
+
+  // Fallback method for inserting new accounts
+  async insertNewAccountsFallback(appName, dbName, newAccounts, modules) {
+    console.log(`🔄 Using fallback method for new accounts insertion...`);
+    
+    try {
+      // Use direct SQL commands as fallback
+      const insertCommands = [];
+      
+      for (const account of newAccounts) {
+        if (!account.firstName || !account.lastName || !account.username || !account.email || !account.password || !account.role) {
+          continue;
+        }
+        
+        // Hash password for fallback method
+        const fallbackHashedPassword = await this.hashPassword(account.password);
+        
+        // Insert role if not exists
+        const insertRoleCommand = `INSERT INTO roles (name, description, "isActive", "accessLevel", level) VALUES ('${account.role}', '${account.role} role', true, '${this.mapRoleToAccessLevel(account.role)}', ${this.getRoleLevel(account.role)}) ON CONFLICT (name) DO NOTHING;`;
+        
+        // Get role ID
+        const getRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "SELECT id FROM roles WHERE name = '${account.role}';"`;
+        
+        try {
+          const roleResult = execSync(getRoleCommand, { 
+          env,
+          stdio: 'pipe',
+          encoding: 'utf8'
+        });
+        
+          // Extract role ID from result
+          const roleIdMatch = roleResult.match(/\\n\\s*(\\d+)\\s*\\n/);
+          const roleId = roleIdMatch ? roleIdMatch[1] : '1';
+          
+          // Insert user with roleId
+          const insertUserCommand = `INSERT INTO users (username, email, password, "firstName", "lastName", phone, "isActive", "accessLevel", "roleId", "createdAt", "updatedAt") VALUES ('${account.username}', '${account.email}', '${fallbackHashedPassword}', '${account.firstName}', '${account.lastName}', '${account.phone || ''}', true, '${this.mapRoleToAccessLevel(account.role)}', ${roleId}, NOW(), NOW());`;
+          
+          insertCommands.push(insertRoleCommand, insertUserCommand);
+        } catch (error) {
+          console.error(`⚠️  Failed to get role ID for ${account.role}: ${error.message}`);
+        }
+      }
+      
+      // Execute commands using psql
+      const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
+      
+      for (const command of insertCommands) {
+        const psqlCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "${command}"`;
+        
+        try {
+          const { execSync } = require('child_process');
+          execSync(psqlCommand, { 
+            env,
+            stdio: 'pipe',
+            encoding: 'utf8'
+          });
+      } catch (psqlError) {
+          console.error(`⚠️  Failed to execute command: ${psqlError.message}`);
+        }
+      }
+      
+      console.log(`✅ New accounts inserted using fallback method`);
+      
+    } catch (error) {
+      console.error(`❌ Fallback method failed:`, error.message);
     }
   }
 
@@ -757,7 +1134,7 @@ APP_VERSION=1.0.0
   }
 
   // Main deployment method
-  async deployBackend(appName, backendPath, credentials = null) {
+  async deployBackend(appName, backendPath, credentials = null, newAccounts = null, modules = null) {
     console.log(`\n🚀 Starting optimized backend deployment for: ${appName}`);
     console.log(`📁 Backend source: ${backendPath}`);
     
@@ -791,6 +1168,32 @@ APP_VERSION=1.0.0
         await this.insertAdminCredentials(appName, dbName, credentials);
       }
       
+      // Insert new accounts with selected roles if provided
+      if (newAccounts && newAccounts.length > 0) {
+        await this.insertNewAccounts(appName, dbName, newAccounts, modules);
+      }
+      
+      // Setup module permissions even if no new accounts
+      if (modules && modules.length > 0) {
+        const { Client } = require('pg');
+        const client = new Client({
+          host: this.dbConfig.host,
+          port: this.dbConfig.port,
+          user: this.dbConfig.user,
+          password: this.dbConfig.password,
+          database: dbName
+        });
+        
+        try {
+          await client.connect();
+          await this.setupModulePermissions(client, modules);
+          await client.end();
+        } catch (error) {
+          console.error(`❌ Failed to setup module permissions:`, error.message);
+          await client?.end();
+        }
+      }
+      
       // Update port registry
       this.updatePortRegistry(appName, port);
       
@@ -805,6 +1208,12 @@ APP_VERSION=1.0.0
       console.log(`   • Database: ${dbName}`);
       console.log(`   • Root URL: http://localhost:${port}/`);
       console.log(`   • Health Check: http://localhost:${port}/api/health`);
+      if (newAccounts && newAccounts.length > 0) {
+        console.log(`   • New Accounts Created: ${newAccounts.length}`);
+      }
+      if (modules && modules.length > 0) {
+        console.log(`   • Modules Enabled: ${modules.length}`);
+      }
       
       return {
         success: true,
@@ -813,7 +1222,9 @@ APP_VERSION=1.0.0
         targetPath,
         database: dbName,
         rootUrl: `http://localhost:${port}/`,
-        healthUrl: `http://localhost:${port}/api/health`
+        healthUrl: `http://localhost:${port}/api/health`,
+        newAccountsCount: newAccounts ? newAccounts.length : 0,
+        modulesCount: modules ? modules.length : 0
       };
       
     } catch (error) {

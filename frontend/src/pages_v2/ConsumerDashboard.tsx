@@ -50,48 +50,7 @@ const ConsumerDashboard: React.FC = () => {
         },
     ]);
 
-    // const [billingData] = useState([
-    //     {
-    //         id: 1,
-    //         title: 'Electricity Usage (kWh)',
-    //         value: '64010.91',
-    //         icon: '/icons/plug-alt.svg',
-    //         subtitle1: '62506.77 kWh',
-    //         subtitle2: 'May 2025',
-    //         showTrend: true,
-    //         comparisonValue: 2.4,
-    //     },
-    //     {
-    //         id: 2,
-    //         title: 'Electricity Charges (Rs)',
-    //         value: '421302.79',
-    //         icon: '/icons/coins.svg',
-    //         subtitle1: '515396.81',
-    //         subtitle2: 'May 2025',
-    //         showTrend: true,
-    //         comparisonValue: -18.3,
-    //     },
-    //     {
-    //         id: 3,
-    //         title: 'Payment Receipts',
-    //         value: '281',
-    //         icon: '/icons/bills.svg',
-    //         subtitle1: '281',
-    //         subtitle2: 'May 2025',
-    //         showTrend: true,
-    //         comparisonValue: 0,
-    //     },
-    //     {
-    //         id: 4,
-    //         title: 'Service Requests',
-    //         value: '0',
-    //         icon: '/icons/bills.svg',
-    //         subtitle1: '0',
-    //         subtitle2: 'May 2025',
-    //         showTrend: true,
-    //         comparisonValue: 0,
-    //     },
-    // ]);
+
 
     const [overdueConsumersData] = useState([
         {
@@ -126,38 +85,7 @@ const ConsumerDashboard: React.FC = () => {
         },
     ]);
 
-    // const [disconnectedConsumersData] = useState([
-    //     {
-    //         uid: '2025UIDA006',
-    //         consumerName: 'T Vidyasagar',
-    //         flatNo: 'A006',
-    //         overdue: '4339.14',
-    //     },
-    //     {
-    //         uid: '2025UIDA009',
-    //         consumerName: 'Reading Room',
-    //         flatNo: 'A009',
-    //         overdue: '3802.83',
-    //     },
-    //     {
-    //         uid: '2025UIDA008',
-    //         consumerName: 'D Sudhakar Gupta',
-    //         flatNo: 'A008',
-    //         overdue: '2778.76',
-    //     },
-    //     {
-    //         uid: '2025UIDA011',
-    //         consumerName: 'M Nagaphani',
-    //         flatNo: 'A011',
-    //         overdue: '2627.91',
-    //     },
-    //     {
-    //         uid: '2025UIDA010',
-    //         consumerName: 'M Ramakrishna',
-    //         flatNo: 'A010',
-    //         overdue: '2244.91',
-    //     },
-    // ]);
+
 
     const [overdueConsumersColumns] = useState([
         { key: 'uid', label: 'UID' },
@@ -166,12 +94,7 @@ const ConsumerDashboard: React.FC = () => {
         { key: 'overdue', label: 'Overdue (Rs.)' },
     ]);
 
-    // const [disconnectedConsumersColumns] = useState([
-    //     { key: 'uid', label: 'UID' },
-    //     { key: 'consumerName', label: 'Consumer Name' },
-    //     { key: 'flatNo', label: 'Flat No' },
-    //     { key: 'overdue', label: 'Overdue (Rs.)' },
-    // ]);
+
 
     const [billingChartData] = useState({
         xAxisData: [

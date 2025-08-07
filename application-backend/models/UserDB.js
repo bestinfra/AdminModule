@@ -4,8 +4,12 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 class UserDB {
-    static async getAllUsers() {
+    static async getAllUsers(page = 1, limit = 10) {
         try {
+            const skip = (page - 1) * limit;
+            
+            const totalCount = await prisma.users.count();
+            
             const users = await prisma.users.findMany({
                 include: {
                     user_roles: {
@@ -15,9 +19,24 @@ class UserDB {
                     },
                     departments: true
                 },
-                orderBy: { createdAt: 'desc' }
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: limit
             });
-            return users;
+            
+            const totalPages = Math.ceil(totalCount / limit);
+            
+            return {
+                data: users,
+                pagination: {
+                    currentPage: page,
+                    totalPages,
+                    totalCount,
+                    limit,
+                    hasNextPage: page < totalPages,
+                    hasPrevPage: page > 1
+                }
+            };
         } catch (error) {
             console.error('Error getting all users:', error);
             throw error;
@@ -42,8 +61,8 @@ class UserDB {
 
             const roleCounts = {};
             users.forEach(user => {
-                user.roles.forEach(userRole => {
-                    const roleName = userRole.role.name;
+                user.user_roles.forEach(userRole => {
+                    const roleName = userRole.roles.name;
                     roleCounts[roleName] = (roleCounts[roleName] || 0) + 1;
                 });
             });
