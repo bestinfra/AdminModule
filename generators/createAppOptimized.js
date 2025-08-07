@@ -128,19 +128,15 @@ function copyAssets(baseDir, formData) {
     
     // Module to page file mapping
     const moduleToPageMapping = {
-        // 'dashboard': ['Dashboard.tsx'], // Dashboard module maps to Dashboard component
-        'consumer_dashboard': ['Dashboard.tsx'], // Consumer dashboard is part of main Dashboard
-        'dtr_dashboard': ['DTRDashboard.tsx', 'Feeders.tsx'], // Separate DTR Dashboard component
-        'consumer': ['Consumers.tsx', 'ConsumerView.tsx', 'AddConsumer'],
-        'tickets': ['Tickets.tsx', 'TicketView.tsx', 'AddTicket.tsx'],
-        'bills': ['Prepaid.tsx', 'Postpaid.tsx'], // Bills module includes both prepaid and postpaid
+        'consumer_dashboard': ['ConsumerDashboard.tsx'], // Consumer dashboard component (becomes main dashboard)
+        'dtr_dashboard': ['DTRDashboard.tsx', 'Feeders.tsx'], // DTR Dashboard includes Feeders (becomes main dashboard)
+        'users': ['Users.tsx'],
+        'role_management': ['RoleManagement.tsx'],
         'prepaid': ['Prepaid.tsx'],
         'postpaid': ['Postpaid.tsx'],
+        'tickets': ['Tickets.tsx', 'TicketView.tsx', 'AddTicket.tsx'], // Tickets includes all ticket pages
         'asset_management': ['AssetManagement.tsx'],
-        'meter_management': ['Meters.tsx', 'MeterDetails.tsx'], // DataLogger.tsx commented out
-        'user_management_default': ['Users.tsx'],
-        'role_management': ['RoleManagement.tsx'],
-        'connect_disconnect': ['ConnectDisconnect.tsx']
+        'meters': ['Meters.tsx', 'MeterDetails.tsx']
     };
 
     if (fs.existsSync(sourcePagesV2Dir)) {
@@ -155,11 +151,11 @@ function copyAssets(baseDir, formData) {
         // Copy only selected modules
         const selectedModules = formData.modules || [];
         
-        // Add role_management automatically if user_management_default is selected (same logic as backend)
+        // Add role_management automatically if users is selected (same logic as backend)
         let modulesToProcess = [...selectedModules];
-        if (selectedModules.includes('user_management_default') && !selectedModules.includes('role_management')) {
+        if (selectedModules.includes('users') && !selectedModules.includes('role_management')) {
             modulesToProcess.push('role_management');
-            console.log('  🔧 Auto-added role_management (included with user_management_default)');
+            console.log('  🔧 Auto-added role_management (included with users)');
         }
         
         console.log('📁 Copying selected modules:', selectedModules);
@@ -276,18 +272,74 @@ function copyFileWithImportProcessing(sourcePath, destPath) {
     
     if (/\.(js|jsx|ts|tsx)$/.test(path.basename(sourcePath))) {
         let content = fs.readFileSync(sourcePath, 'utf8');
-        const importToReplace = `import Page from '@/components/global/PageC';`;
-        const lazyImport = `const Page = lazy(() => import('SuperAdmin/Page'));`;
-        if (content.includes(importToReplace)) {
-            content = content.replace(importToReplace, lazyImport);
-            if (
-                !/import\s+\{\s*lazy\s*\}\s+from\s+['"]react['"]/.test(
-                    content
-                )
-            ) {
-                content = `import { lazy } from 'react';\n` + content;
-            }
+        
+        // Replace all @/ imports with relative imports
+        content = content.replace(/@\//g, '../');
+        
+        // Handle specific import replacements for sub-apps
+        
+        // 1. Replace PageC imports with SuperAdmin/Page
+        content = content.replace(
+            /import Page from ["']@\/components\/global\/PageC["'];?/g,
+            `const Page = lazy(() => import('SuperAdmin/Page'));`
+        );
+        content = content.replace(
+            /import PageC from ["']@\/components\/global\/PageC["'];?/g,
+            `const Page = lazy(() => import('SuperAdmin/Page'));`
+        );
+        content = content.replace(
+            /const Page = lazy\(\(\) => import\(["']@\/components\/global\/PageC["']\)\);?/g,
+            `const Page = lazy(() => import('SuperAdmin/Page'));`
+        );
+        content = content.replace(
+            /import Page from ["']\.\.\/components\/global\/PageC["'];?/g,
+            `const Page = lazy(() => import('SuperAdmin/Page'));`
+        );
+        content = content.replace(
+            /const Page = lazy\(\(\) => import\(["']\.\.\/components\/global\/PageC["']\)\);?/g,
+            `const Page = lazy(() => import('SuperAdmin/Page'));`
+        );
+        // Handle the specific pattern in Tickets.tsx (without quotes)
+        content = content.replace(
+            /import Page from \.\.\/components\/global\/PageC;?/g,
+            `const Page = lazy(() => import('SuperAdmin/Page'));`
+        );
+        
+        // 2. Replace TableData imports with local interface definition
+        content = content.replace(
+            /import type \{ TableData \} from ["']@\/components\/global\/Table["'];?\n?/g,
+            `// Define TableData type locally since we're using federated components\ninterface TableData {\n  [key: string]: string | number | boolean | null | undefined;\n}\n`
+        );
+        content = content.replace(
+            /import type \{ TableData \} from ["']\.\.\/components\/global\/Table["'];?\n?/g,
+            `// Define TableData type locally since we're using federated components\ninterface TableData {\n  [key: string]: string | number | boolean | null | undefined;\n}\n`
+        );
+        
+        // 3. Replace CarouselSlide imports with local interface definition
+        content = content.replace(
+            /import type \{ CarouselSlide \} from ["']@\/components\/global\/Carousel["'];?\n?/g,
+            `// Define CarouselSlide type locally since we're using federated components\ninterface CarouselSlide {\n  title: string;\n  img: string;\n}\n`
+        );
+        content = content.replace(
+            /import type \{ CarouselSlide \} from ["']\.\.\/components\/global\/Carousel["'];?\n?/g,
+            `// Define CarouselSlide type locally since we're using federated components\ninterface CarouselSlide {\n  title: string;\n  img: string;\n}\n`
+        );
+        
+        // 4. Replace FormInputValue imports with local type definition
+        content = content.replace(
+            /import type \{ FormInputValue \} from ["']@\/components\/Form\/types["'];?\n?/g,
+            `// Define FormInputValue type locally since we're using federated components\ntype FormInputValue = string | string[] | number | boolean | FileList | File | null | undefined;\n`
+        );
+        content = content.replace(
+            /import type \{ FormInputValue \} from ["']\.\.\/components\/Form\/types["'];?\n?/g,
+            `// Define FormInputValue type locally since we're using federated components\ntype FormInputValue = string | string[] | number | boolean | FileList | File | null | undefined;\n`
+        );
+        
+        // Add lazy import if it's used but not imported
+        if (content.includes('lazy(') && !/import\s+\{\s*lazy\s*\}\s+from\s+['"]react['"]/.test(content)) {
+            content = `import { lazy } from 'react';\n` + content;
         }
+        
         fs.writeFileSync(destPath, content, 'utf8');
     } else {
         fs.copyFileSync(sourcePath, destPath);
@@ -349,7 +401,7 @@ if (require.main === module) {
         gradientColor: '#163b7c',
         timezone: 'UTC',
         currency: 'USD',
-        modules: ['dashboard', 'user_management_default', 'role_management'],
+        modules: ['consumer_dashboard', 'users', 'role_management', 'prepaid', 'postpaid', 'tickets', 'asset_management', 'meters'],
     };
 
     createAppProjectOptimized(exampleFormData);

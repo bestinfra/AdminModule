@@ -161,14 +161,14 @@ const DataLoggerDashboard: React.FC = () => {
         },
     ];
 
-    const dataLoggerInfo = [
-        { title: 'DCU/Modem Serial No.', value: dataLogger.modemSlNo },
-        { title: 'Hardware Version', value: dataLogger.hwVersion },
-        { title: 'Firmware Version', value: dataLogger.fwVersion },
-        { title: 'Mobile Number', value: dataLogger.mobile },
-        { title: 'Installation Date', value: dataLogger.installationDate },
-        { title: 'Location', value: dataLogger.location || 'Not specified' },
-    ];
+    // const dataLoggerInfo = [
+    //     { title: 'DCU/Modem Serial No.', value: dataLogger.modemSlNo },
+    //     { title: 'Hardware Version', value: dataLogger.hwVersion },
+    //     { title: 'Firmware Version', value: dataLogger.fwVersion },
+    //     { title: 'Mobile Number', value: dataLogger.mobile },
+    //     { title: 'Installation Date', value: dataLogger.installationDate },
+    //     { title: 'Location', value: dataLogger.location || 'Not specified' },
+    // ];
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
