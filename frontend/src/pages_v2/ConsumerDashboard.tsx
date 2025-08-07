@@ -255,7 +255,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 bg: "bg-stat-icon-gradient",
                                             },
                                             span: { col: 1, row: 1 },
-                                        }))
+                                        })),
                                     ],
                                 },
                                 {
@@ -301,7 +301,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 bg: "bg-stat-icon-gradient",
                                             },
                                             span: { col: 1, row: 1 },
-                                        }))
+                                        })),
                                     ],
                                 },
                             ],
