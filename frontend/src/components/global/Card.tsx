@@ -70,7 +70,7 @@ const Card = ({
                                 className={`bg-secondary rounded-full p-1.5 md:p-1 sm:p-0.5 ${
                                     comparisonValue && comparisonValue > 0
                                         ? 'bg-secondary'
-                                        : 'bg-error'
+                                        : 'bg-danger'
                                 }`}>
                                 <img
                                     src={
