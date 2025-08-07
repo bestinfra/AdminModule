@@ -1,5 +1,5 @@
 {
-  "nextPort": 4178,
+  "nextPort": 4183,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -620,6 +620,31 @@
       "port": 4153,
       "deployedAt": "2025-08-04T04:34:08.651Z",
       "path": "C:\\xampp\\htdocs\\test7-backend"
+    },
+    "jio": {
+      "port": 4178,
+      "deployedAt": "2025-08-07T06:53:36.095Z",
+      "path": "C:\\xampp\\htdocs\\jio-backend"
+    },
+    "ramu": {
+      "port": 4179,
+      "deployedAt": "2025-08-07T12:15:29.086Z",
+      "path": "C:\\xampp\\htdocs\\ramu-backend"
+    },
+    "eno": {
+      "port": 4180,
+      "deployedAt": "2025-08-07T13:15:10.156Z",
+      "path": "C:\\xampp\\htdocs\\eno-backend"
+    },
+    "phonepay": {
+      "port": 4181,
+      "deployedAt": "2025-08-07T14:05:34.242Z",
+      "path": "C:\\xampp\\htdocs\\phonepay-backend"
+    },
+    "fever": {
+      "port": 4182,
+      "deployedAt": "2025-08-07T14:28:03.177Z",
+      "path": "C:\\xampp\\htdocs\\fever-backend"
     }
   }
 }

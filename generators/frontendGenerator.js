@@ -285,6 +285,9 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.pageTitles = pageTitles.join(',\n');
   
+  // Initialize menuItems variable
+  variables.menuItems = '';
+  
   // Generate menu items for AppLayout (only for selected modules)
   const menuItems = [];
   
@@ -326,6 +329,16 @@ function generateAppComponent(frontendDir, variables) {
   if (modules.includes('meters')) {
     menuItems.push('    { title: \'Meters\', icon: \'/icons/meter-bolt.svg\', link: \'/meters\' }');
   }
+  
+  // Define user submenus based on selected user-related modules
+  const userSubmenus = [];
+  if (modules.includes('users')) {
+    userSubmenus.push({ title: 'Users', link: '/users' });
+  }
+  if (modules.includes('role_management')) {
+    userSubmenus.push({ title: 'Role Management', link: '/role-management' });
+  }
+  
   // Create smart user menu
   if (userSubmenus.length === 0) {
     // No user modules selected - don't add anything
