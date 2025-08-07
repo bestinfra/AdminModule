@@ -2,6 +2,7 @@ import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
 import { exportChartData } from '@/utils/excelExport';
+// import { Pagination } from 'antd';
 
 // Constants
 
@@ -64,6 +65,54 @@ const ConsumerDashboard: React.FC = () => {
             consumerName: 'G Ramaraju',
             flatNo: 'C088',
             overdue: '22613.91',
+        },
+        {
+            uid: '2025UIDC087',
+            consumerName: 'S Meenakshi',
+            flatNo: 'C087',
+            overdue: '18500.00',
+        },
+        {
+            uid: '2025UIDC086',
+            consumerName: 'P Srinivas',
+            flatNo: 'C086',
+            overdue: '17250.50',
+        },
+        {
+            uid: '2025UIDC085',
+            consumerName: 'A Kumar',
+            flatNo: 'C085',
+            overdue: '16000.75',
+        },
+        {
+            uid: '2025UIDC084',
+            consumerName: 'R Priya',
+            flatNo: 'C084',
+            overdue: '15400.00',
+        },
+        {
+            uid: '2025UIDC083',
+            consumerName: 'V Ramesh',
+            flatNo: 'C083',
+            overdue: '14999.99',
+        },
+        {
+            uid: '2025UIDC082',
+            consumerName: 'K Suresh',
+            flatNo: 'C082',
+            overdue: '14000.00',
+        },
+        {
+            uid: '2025UIDC081',
+            consumerName: 'M Lakshmi',
+            flatNo: 'C081',
+            overdue: '13500.00',
+        },
+        {
+            uid: '2025UIDC080',
+            consumerName: 'T Anil',
+            flatNo: 'C080',
+            overdue: '13000.00',
         },
         {
             uid: '2025UIDC089',
@@ -250,12 +299,18 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: 'column',
                                     gap: 'gap-0',
                                     span:{col:2,row:1},
-                                    className:
-                                        '',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
                                     columns: [
                                         {
+                                            name: "Holder",
+                                            props: {
+                                                title: "Billing vs Collection",
+                                                subtitle: "Monthly billing statistics and collection data",
+                                                className: "border-none rounded-t-3xl",
+                                            },
+                                        },
+                                        {
                                             name: 'BarChart',
-                                            span:{col:1,row:1},
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
@@ -264,9 +319,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
-                                                showHeader: true,
-                                                headerTitle:
-                                                    'Billing vs Collection',
+                                                showHeader: false,
                                                 dateRange: '2024',
                                                 showDownloadButton: true,
                                                 showViewToggle: true,
@@ -294,25 +347,28 @@ const ConsumerDashboard: React.FC = () => {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'grid',
-                                    gridColumns: 2,
-                                    gridRows: 1,
-                                    span:{col:2,row:1},
-                                    gap: 'gap-4',
-                                    className:
-                                        'pb-4',
+                                    layout: 'column',
+                                    gap: 'gap-0',
+                                    span:{col:1,row:1},
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
                                     columns: [
                                         {
+                                            name: "Holder",
+                                            props: {
+                                                title: "Meter Status",
+                                                subtitle: "Distribution of communicating and non-communicating meters",
+                                                className: "border-none rounded-t-3xl",
+                                            },
+                                        },
+                                        {
                                             name: 'PieChart',
-                                            span:{col:1,row:1},
                                             props: {
                                                 data: METER_STATUS_DATA,
-                                                height: 250,
-                                                title: 'Meter Status',
+                                                height: 330,
                                                 showLegend: false,
                                                 showNoDataMessage: false,
                                                 showHeader: false,
-                                                className: 'p-6 border border-primary-border rounded-3xl flex flex-col items-center justify-center',
+                                                className: 'p-4',
                                                 onClick: (
                                                     segmentName?: string
                                                 ) => {
@@ -337,9 +393,16 @@ const ConsumerDashboard: React.FC = () => {
                                                 },
                                             },
                                         },
+                                    ],
+                                },
+                                {
+                                    layout: 'column',
+                                    gap: 'gap-0',
+                                    span:{col:1,row:1},
+                                    className: '',
+                                    columns: [
                                         {
                                             name: 'Table',
-                                            
                                             props: {
                                                 data: overdueConsumersData,
                                                 columns:
@@ -347,62 +410,62 @@ const ConsumerDashboard: React.FC = () => {
                                                 loading: false,
                                                 searchable: true,
                                                 pagination: true,
-                                                title: 'Overdue Consumers',
                                                 showActions: true,
-
                                                 totalItems: 1395,
                                                 itemsPerPage: 5,
                                                 currentPage: 1,
                                                 totalPages: 279,
                                                 showHeader: true,
                                                 headerTitle: 'Overdue Consumers',
-                                                actions: [
-                                                    {
-                                                        label: 'Send Notice',
-                                                        icon: '/icons/paper-plane.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'Send notice to',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                    {
-                                                        label: 'View Details',
-                                                        icon: '/icons/document.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'View details for',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                    {
-                                                        label: 'Disconnect',
-                                                        icon: '/icons/close.svg',
-                                                        onClick: (row: any) =>
-                                                            console.log(
-                                                                'Disconnect',
-                                                                row.uid
-                                                            ),
-                                                    },
-                                                ],
+                                                height: 330,
+                                                
+                                                onView: (row: any) =>
+                                                    console.log(
+                                                        'View details for',
+                                                        row.uid
+                                                    ),
+                                                onDelete: (row: any) =>
+                                                    console.log(
+                                                        'Delete',
+                                                        row.uid
+                                                    ),
+                                                initialRowsPerPage: 5,
+                                                // actions: [
+                                                //     {
+                                                //         label: 'Send Notice',
+                                                //         icon: '/icons/paper-plane.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'Send notice to',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                //     {
+                                                //         label: 'View Details',
+                                                //         icon: '/icons/document.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'View details for',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                //     {
+                                                //         label: 'Disconnect',
+                                                //         icon: '/icons/close.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'Disconnect',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                // ],
                                             },
                                         },
-                                       
                                     ],
                                 },
-                                // {
-                                //     layout: 'column',
-                                //     gap: 'gap-0',
-                                //     className:
-                                //         'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
-                                //     columns: [
-                                       
-                                //     ],
-                                // },
                             ],
                         },
                     },
-                  
                 ]}
             />
         </Suspense>
