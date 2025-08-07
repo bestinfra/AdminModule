@@ -83,6 +83,46 @@ const ConsumerDashboard: React.FC = () => {
         setConsumerStats(dummyStats);
     };
 
+<<<<<<< HEAD
+    const [consumerStatsData] = useState([
+        {
+            id: 1,
+            title: 'Total Consumers',
+            value: '292',
+            icon: '/icons/units.svg',
+            subtitle1: '284 Active',
+            subtitle2: '8 In-Active',
+            onValueClick: handleTotalConsumersClick,
+        },
+        {
+            id: 2,
+            title: 'High-Usage Consumers',
+            value: '2',
+            icon: '/icons/heavy-user.svg',
+            subtitle1: '140.09 kWh Average Consumption',
+            subtitle2: '',
+        },
+    ]);
+    const [consumptionBillingData] = useState([
+        {
+            id: 1,
+            title: 'Electricity Usage (kWh)',
+            value: '165.87',
+            icon: '/icons/plug-alt.svg',
+            subtitle1: '284 Active',
+            subtitle2: '8 In-Active',
+            onValueClick: handleTotalConsumersClick,
+        },
+        {
+            id: 2,
+            title: 'High-Usage Consumers',
+            value: '2',
+            icon: '/icons/rupee.svg',
+            subtitle1: '140.09 kWh Average Consumption',
+            subtitle2: '',
+        },
+    ]);
+=======
     const fetchConsumptionBillingData = async () => {
         // Simulate API delay
         await new Promise(resolve => setTimeout(resolve, 300));
@@ -176,6 +216,7 @@ const ConsumerDashboard: React.FC = () => {
         
         setOverdueConsumersData(dummyOverdueData);
     };
+>>>>>>> ff88ac0ebf65a32c4dbf38d7f8dff6920c92e702
 
     // Load all data on component mount
     useEffect(() => {
@@ -243,28 +284,28 @@ const ConsumerDashboard: React.FC = () => {
             'Nov',
             'Dec',
         ],
-        seriesData: [
-            {
-                name: 'Bills Generated',
-                data: [
-                    260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
-                ],
-            },
-            {
-                name: 'Paid',
-                data: [
-                    240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
-                ],
-            },
-            {
-                name: 'Pending',
-                data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
-            },
-            {
-                name: 'Overdue',
-                data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
-            },
-        ],
+        // seriesData: [
+        //     {
+        //         name: 'Bills Generated',
+        //         data: [
+        //             260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
+        //         ],
+        //     },
+        //     {
+        //         name: 'Paid',
+        //         data: [
+        //             240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
+        //         ],
+        //     },
+        //     {
+        //         name: 'Pending',
+        //         data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
+        //     },
+        //     {
+        //         name: 'Overdue',
+        //         data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
+        //     },
+        // ],
         seriesColors: [
             '#3B82F6', // Blue for Bills Generated
             '#10B981', // Green for Paid
@@ -274,9 +315,9 @@ const ConsumerDashboard: React.FC = () => {
     });
 
     // Chart download handler
-    const handleChartDownload = () => {
-        exportChartData(billingChartData.xAxisData, billingChartData.seriesData, 'billing-vs-collection-data');
-    };
+    // const handleChartDownload = () => {
+    //     exportChartData(billingChartData.xAxisData, billingChartData.seriesData, 'billing-vs-collection-data');
+    // };
 
     if (loading) {
         return <div className="flex items-center justify-center h-screen">Loading...</div>;
@@ -346,7 +387,9 @@ const ConsumerDashboard: React.FC = () => {
                                                 bg: "bg-stat-icon-gradient",
                                             },
                                             span: { col: 1, row: 1 },
-                                        }))
+                                        })),
+
+
                                     ],
                                 },
                                 {
@@ -391,7 +434,19 @@ const ConsumerDashboard: React.FC = () => {
                                                 onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
+                                            ...consumptionBillingData.map((card) => ({
+                                            name: 'Card',
+                                            props: {
+                                                title: card.title,
+                                                value: card.value,
+                                                icon: card.icon,
+                                                subtitle1: card.subtitle1,
+                                                subtitle2: card.subtitle2,
+                                                onValueClick: card.onValueClick,
+                                                bg: "bg-stat-icon-gradient",
+                                            },
                                             span: { col: 1, row: 1 },
+                                        }))
                                         }))
                                     ],
                                 },
@@ -408,6 +463,18 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: 'column',
                                     gap: 'gap-0',
                                     span:{col:2,row:1},
+<<<<<<< HEAD
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2 p-4',
+                                    columns: [
+                                        {
+                                            name: "Holder",
+                                            props: {
+                                                title: "Daily Consumption Metrics",
+                                                subtitle: "Monthly billing statistics and collection data",
+                                                className: "border-none rounded-t-3xl",
+                                            },
+                                        },
+=======
                                     className: '',
                                     columns: [
                                         // {
@@ -418,13 +485,17 @@ const ConsumerDashboard: React.FC = () => {
                                         //         className: "border-none rounded-t-3xl",
                                         //     },
                                         // },
+>>>>>>> ff88ac0ebf65a32c4dbf38d7f8dff6920c92e702
                                         {
                                             name: 'BarChart',
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
+<<<<<<< HEAD
+=======
                                                 // seriesData:
                                                 //     billingChartData.seriesData,
+>>>>>>> ff88ac0ebf65a32c4dbf38d7f8dff6920c92e702
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
@@ -442,7 +513,7 @@ const ConsumerDashboard: React.FC = () => {
                                                     'Monthly billing statistics chart',
                                                 yAxisMax: 300,
                                                 yAxisStep: 50,
-                                                onDownload: handleChartDownload,
+                                                onDownload: "   ",
                                             },
                                         },
                                     ],
