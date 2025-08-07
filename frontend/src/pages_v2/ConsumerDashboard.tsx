@@ -83,7 +83,6 @@ const ConsumerDashboard: React.FC = () => {
         setConsumerStats(dummyStats);
     };
 
-<<<<<<< HEAD
     const [consumerStatsData] = useState([
         {
             id: 1,
@@ -122,121 +121,26 @@ const ConsumerDashboard: React.FC = () => {
             subtitle2: '',
         },
     ]);
-=======
-    const fetchConsumptionBillingData = async () => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // Dummy data matching the DTR dashboard structure with different values for daily/monthly
-        const dummyData = {
-            daily: {
-                totalKwh: '16.09',
-                totalKvah: '16.50',
-                totalKw: '17.40',
-                totalKva: '1.86'
-            },
-            monthly: {
-                totalKwh: '4850.25',
-                totalKvah: '5020.75',
-                totalKw: '32.15',
-                totalKva: '3.45'
-            }
-        };
-        
-        setConsumptionBillingData(dummyData);
-    };
-
-    const fetchOverdueConsumers = async () => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 400));
-        
-        // Dummy data for overdue consumers
-        const dummyOverdueData = [
-            {
-                uid: '2025UIDC089',
-                consumerName: 'I Lakshmana Rao',
-                flatNo: 'C089',
-                overdue: '32004.12',
-            },
-            {
-                uid: '2025UIDC088',
-                consumerName: 'G Ramaraju',
-                flatNo: 'C088',
-                overdue: '22613.91',
-            },
-            {
-                uid: '2025UIDC087',
-                consumerName: 'S Meenakshi',
-                flatNo: 'C087',
-                overdue: '18500.00',
-            },
-            {
-                uid: '2025UIDC086',
-                consumerName: 'P Srinivas',
-                flatNo: 'C086',
-                overdue: '17250.50',
-            },
-            {
-                uid: '2025UIDC085',
-                consumerName: 'A Kumar',
-                flatNo: 'C085',
-                overdue: '16000.75',
-            },
-            {
-                uid: '2025UIDC084',
-                consumerName: 'R Priya',
-                flatNo: 'C084',
-                overdue: '15400.00',
-            },
-            {
-                uid: '2025UIDC083',
-                consumerName: 'V Ramesh',
-                flatNo: 'C083',
-                overdue: '14999.99',
-            },
-            {
-                uid: '2025UIDC082',
-                consumerName: 'K Suresh',
-                flatNo: 'C082',
-                overdue: '14000.00',
-            },
-            {
-                uid: '2025UIDC081',
-                consumerName: 'M Lakshmi',
-                flatNo: 'C081',
-                overdue: '13500.00',
-            },
-            {
-                uid: '2025UIDC080',
-                consumerName: 'T Anil',
-                flatNo: 'C080',
-                overdue: '13000.00',
-            },
-        ];
-        
-        setOverdueConsumersData(dummyOverdueData);
-    };
->>>>>>> ff88ac0ebf65a32c4dbf38d7f8dff6920c92e702
 
     // Load all data on component mount
-    useEffect(() => {
-        const loadData = async () => {
-            setLoading(true);
-            try {
-                await Promise.all([
-                    fetchConsumerStats(),
-                    fetchConsumptionBillingData(),
-                    fetchOverdueConsumers()
-                ]);
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    // useEffect(() => {
+    //     const loadData = async () => {
+    //         setLoading(true);
+    //         try {
+    //             await Promise.all([
+    //                 fetchConsumerStats(),
+    //                 fetchConsumptionBillingData(),
+    //                 fetchOverdueConsumers()
+    //             ]);
+    //         } catch (error) {
+    //             console.error('Error loading dashboard data:', error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-        loadData();
-    }, []);
+    //     loadData();
+    // }, []);
 
     // Get current consumption billing data based on selected time range
     const getCurrentConsumptionBillingData = () => {
@@ -463,7 +367,6 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: 'column',
                                     gap: 'gap-0',
                                     span:{col:2,row:1},
-<<<<<<< HEAD
                                     className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2 p-4',
                                     columns: [
                                         {
@@ -474,28 +377,11 @@ const ConsumerDashboard: React.FC = () => {
                                                 className: "border-none rounded-t-3xl",
                                             },
                                         },
-=======
-                                    className: '',
-                                    columns: [
-                                        // {
-                                        //     name: "Holder",
-                                        //     props: {
-                                        //         title: "Billing vs Collection",
-                                        //         subtitle: "Monthly billing statistics and collection data",
-                                        //         className: "border-none rounded-t-3xl",
-                                        //     },
-                                        // },
->>>>>>> ff88ac0ebf65a32c4dbf38d7f8dff6920c92e702
                                         {
                                             name: 'BarChart',
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
-<<<<<<< HEAD
-=======
-                                                // seriesData:
-                                                //     billingChartData.seriesData,
->>>>>>> ff88ac0ebf65a32c4dbf38d7f8dff6920c92e702
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
