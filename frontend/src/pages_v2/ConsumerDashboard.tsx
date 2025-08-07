@@ -1,225 +1,158 @@
-import React, { useState, Suspense, useEffect } from 'react';
+import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
 import { exportChartData } from '@/utils/excelExport';
+// import { Pagination } from 'antd';
 
 // Constants
+
 const METER_STATUS_DATA = [
     { value: 284, name: 'Communicating' },
     { value: 8, name: 'Non-Communicating' },
 ];
 
-interface ConsumerStats {
-    totalConsumers: number;
-    activeConsumers: number;
-    inactiveConsumers: number;
-    highUsageConsumers: number;
-    averageConsumption: number;
-}
-
-interface ConsumptionBillingData {
-    daily: {
-        totalKwh: string;
-        totalKvah: string;
-        totalKw: string;
-        totalKva: string;
-    };
-    monthly: {
-        totalKwh: string;
-        totalKvah: string;
-        totalKw: string;
-        totalKva: string;
-    };
-}
-
-interface OverdueConsumer {
-    uid: string;
-    consumerName: string;
-    flatNo: string;
-    overdue: string;
-}
-
 const ConsumerDashboard: React.FC = () => {
+    // const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>(
+    //     'Daily'
+    // );
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
+    // const [useDummyData, setUseDummyData] = useState(true);
     const navigate = useNavigate();
-    
-    // State for API data
-    const [consumerStats, setConsumerStats] = useState<ConsumerStats>({
-        totalConsumers: 0,
-        activeConsumers: 0,
-        inactiveConsumers: 0,
-        highUsageConsumers: 0,
-        averageConsumption: 0
-    });
-    
-    const [consumptionBillingData, setConsumptionBillingData] = useState<ConsumptionBillingData>({
-        daily: { totalKwh: '0', totalKvah: '0', totalKw: '0', totalKva: '0' },
-        monthly: { totalKwh: '0', totalKvah: '0', totalKw: '0', totalKva: '0' }
-    });
-    
-    const [overdueConsumersData, setOverdueConsumersData] = useState<OverdueConsumer[]>([]);
-    const [loading, setLoading] = useState(true);
 
     const handleTotalConsumersClick = () => navigate('/consumers');
+    // const handleHighUsageConsumersClick = () =>
+    //     navigate('/consumers/high-usage');
 
     const handleTimeRangeChange = (range: string) => {
         setSelectedTimeRange(range as 'Daily' | 'Monthly');
     };
 
-    // Simulate API calls with dummy data
-    const fetchConsumerStats = async () => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Dummy data matching the structure you provided
-        const dummyStats = {
-            totalConsumers: 292,
-            activeConsumers: 284,
-            inactiveConsumers: 8,
-            highUsageConsumers: 2,
-            averageConsumption: 140.09
-        };
-        
-        setConsumerStats(dummyStats);
-    };
+    // const toggleDummyData = () => {
+    //     setUseDummyData(!useDummyData);
+    // };
 
-    const fetchConsumptionBillingData = async () => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // Dummy data matching the DTR dashboard structure with different values for daily/monthly
-        const dummyData = {
-            daily: {
-                totalKwh: '16.09',
-                totalKvah: '16.50',
-                totalKw: '17.40',
-                totalKva: '1.86'
-            },
-            monthly: {
-                totalKwh: '4850.25',
-                totalKvah: '5020.75',
-                totalKw: '32.15',
-                totalKva: '3.45'
-            }
-        };
-        
-        setConsumptionBillingData(dummyData);
-    };
+    const [consumerStatsData] = useState([
+        {
+            id: 1,
+            title: 'Total Consumers',
+            value: '292',
+            icon: '/icons/account.svg',
+            subtitle1: '284 Active',
+            subtitle2: '8 In-Active',
+            onValueClick: handleTotalConsumersClick,
+        },
+        {
+            id: 2,
+            title: 'High-Usage Consumers',
+            value: '2',
+            icon: '/icons/coins.svg',
+            subtitle1: '140.09 kWh Average Consumption',
+            subtitle2: '',
+        },
+    ]);
+    const [consumptionBillingData] = useState([
+        {
+            id: 1,
+            title: 'Total Consumption',
+            value: '16.09 kWh',
+            icon: '/icons/account.svg',
+            subtitle1: '284 Active Consumption',
+            subtitle2: '8 In-Active Consumption',
+            onValueClick: handleTotalConsumersClick,
+        },
+        {
+            id: 2,
+            title: 'Total Billing',
+            value: '₹ 16,090.00',
+            icon: '/icons/coins.svg',
+            subtitle1: '140.09 kWh Average Billing',
+            subtitle2: '',
+        },
+    ]);
 
-    const fetchOverdueConsumers = async () => {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 400));
-        
-        // Dummy data for overdue consumers
-        const dummyOverdueData = [
-            {
-                uid: '2025UIDC089',
-                consumerName: 'I Lakshmana Rao',
-                flatNo: 'C089',
-                overdue: '32004.12',
-            },
-            {
-                uid: '2025UIDC088',
-                consumerName: 'G Ramaraju',
-                flatNo: 'C088',
-                overdue: '22613.91',
-            },
-            {
-                uid: '2025UIDC087',
-                consumerName: 'S Meenakshi',
-                flatNo: 'C087',
-                overdue: '18500.00',
-            },
-            {
-                uid: '2025UIDC086',
-                consumerName: 'P Srinivas',
-                flatNo: 'C086',
-                overdue: '17250.50',
-            },
-            {
-                uid: '2025UIDC085',
-                consumerName: 'A Kumar',
-                flatNo: 'C085',
-                overdue: '16000.75',
-            },
-            {
-                uid: '2025UIDC084',
-                consumerName: 'R Priya',
-                flatNo: 'C084',
-                overdue: '15400.00',
-            },
-            {
-                uid: '2025UIDC083',
-                consumerName: 'V Ramesh',
-                flatNo: 'C083',
-                overdue: '14999.99',
-            },
-            {
-                uid: '2025UIDC082',
-                consumerName: 'K Suresh',
-                flatNo: 'C082',
-                overdue: '14000.00',
-            },
-            {
-                uid: '2025UIDC081',
-                consumerName: 'M Lakshmi',
-                flatNo: 'C081',
-                overdue: '13500.00',
-            },
-            {
-                uid: '2025UIDC080',
-                consumerName: 'T Anil',
-                flatNo: 'C080',
-                overdue: '13000.00',
-            },
-        ];
-        
-        setOverdueConsumersData(dummyOverdueData);
-    };
 
-    // Load all data on component mount
-    useEffect(() => {
-        const loadData = async () => {
-            setLoading(true);
-            try {
-                await Promise.all([
-                    fetchConsumerStats(),
-                    fetchConsumptionBillingData(),
-                    fetchOverdueConsumers()
-                ]);
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
+    const [overdueConsumersData] = useState([
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '32004.12',
+        },
+        {
+            uid: '2025UIDC088',
+            consumerName: 'G Ramaraju',
+            flatNo: 'C088',
+            overdue: '22613.91',
+        },
+        {
+            uid: '2025UIDC087',
+            consumerName: 'S Meenakshi',
+            flatNo: 'C087',
+            overdue: '18500.00',
+        },
+        {
+            uid: '2025UIDC086',
+            consumerName: 'P Srinivas',
+            flatNo: 'C086',
+            overdue: '17250.50',
+        },
+        {
+            uid: '2025UIDC085',
+            consumerName: 'A Kumar',
+            flatNo: 'C085',
+            overdue: '16000.75',
+        },
+        {
+            uid: '2025UIDC084',
+            consumerName: 'R Priya',
+            flatNo: 'C084',
+            overdue: '15400.00',
+        },
+        {
+            uid: '2025UIDC083',
+            consumerName: 'V Ramesh',
+            flatNo: 'C083',
+            overdue: '14999.99',
+        },
+        {
+            uid: '2025UIDC082',
+            consumerName: 'K Suresh',
+            flatNo: 'C082',
+            overdue: '14000.00',
+        },
+        {
+            uid: '2025UIDC081',
+            consumerName: 'M Lakshmi',
+            flatNo: 'C081',
+            overdue: '13500.00',
+        },
+        {
+            uid: '2025UIDC080',
+            consumerName: 'T Anil',
+            flatNo: 'C080',
+            overdue: '13000.00',
+        },
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '21679.76',
+        },
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '20745.27',
+        },
+        {
+            uid: '2025UIDC089',
+            consumerName: 'I Lakshmana Rao',
+            flatNo: 'C089',
+            overdue: '19731.31',
+        },
+    ]);
 
-        loadData();
-    }, []);
 
-    // Get current consumption billing data based on selected time range
-    const getCurrentConsumptionBillingData = () => {
-        const data = selectedTimeRange === 'Daily' ? consumptionBillingData.daily : consumptionBillingData.monthly;
-        return [
-            {
-                id: 1,
-                title: 'Electricity Usage (kWh)',
-                value: `${data.totalKwh} kWh`,
-                icon: '/icons/plug-alt.svg',
-                subtitle1: `${consumerStats.activeConsumers} Active Consumption`,
-                subtitle2: `${consumerStats.inactiveConsumers} In-Active Consumption`,
-                onValueClick: handleTotalConsumersClick,
-            },
-            {
-                id: 2,
-                title: 'Electricity Charges',
-                value: `₹ ${(parseFloat(data.totalKwh) * 1000).toFixed(2)}`,
-                icon: '/icons/rupee.svg',
-                subtitle1: `${consumerStats.averageConsumption} kWh Average Billing`,
-                subtitle2: '',
-            },
-        ];
-    };
 
     const [overdueConsumersColumns] = useState([
         { key: 'uid', label: 'UID' },
@@ -227,6 +160,8 @@ const ConsumerDashboard: React.FC = () => {
         { key: 'flatNo', label: 'Flat No' },
         { key: 'overdue', label: 'Overdue (Rs.)' },
     ]);
+
+
 
     const [billingChartData] = useState({
         xAxisData: [
@@ -277,32 +212,6 @@ const ConsumerDashboard: React.FC = () => {
     const handleChartDownload = () => {
         exportChartData(billingChartData.xAxisData, billingChartData.seriesData, 'billing-vs-collection-data');
     };
-
-    if (loading) {
-        return <div className="flex items-center justify-center h-screen">Loading...</div>;
-    }
-
-    const consumerStatsData = [
-        {
-            id: 1,
-            title: 'Total Consumers',
-            value: consumerStats.totalConsumers.toString(),
-            icon: '/icons/units.svg',
-            subtitle1: `${consumerStats.activeConsumers} Active`,
-            subtitle2: `${consumerStats.inactiveConsumers} In-Active`,
-            onValueClick: handleTotalConsumersClick,
-        },
-        {
-            id: 2,
-            title: 'High-Usage Consumers',
-            value: consumerStats.highUsageConsumers.toString(),
-            icon: '/icons/heavy-user.svg',
-            subtitle1: `${consumerStats.averageConsumption} kWh Average Consumption`,
-            subtitle2: '',
-        },
-    ];
-
-    const currentConsumptionBillingData = getCurrentConsumptionBillingData();
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -360,7 +269,7 @@ const ConsumerDashboard: React.FC = () => {
                                         {
                                             name: "SectionHeader",
                                             props: {
-                                                title: `Consumption & Billing (${selectedTimeRange === 'Daily' ? 'Aug 6, 2025' : 'August 2025'})`,
+                                                title: "Consumption & Billing (Aug 6, 2025)",
                                                 titleLevel: 2,
                                                 titleSize: "md",
                                                 titleVariant: "colorPrimaryDark",
@@ -380,7 +289,7 @@ const ConsumerDashboard: React.FC = () => {
                                             },
                                             span: { col: 2, row: 1 },
                                         },
-                                        ...currentConsumptionBillingData.map((card) => ({
+                                        ...consumptionBillingData.map((card) => ({
                                             name: 'Card',
                                             props: {
                                                 title: card.title,
@@ -408,29 +317,28 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: 'column',
                                     gap: 'gap-0',
                                     span:{col:2,row:1},
-                                    className: '',
+                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
                                     columns: [
-                                        // {
-                                        //     name: "Holder",
-                                        //     props: {
-                                        //         title: "Billing vs Collection",
-                                        //         subtitle: "Monthly billing statistics and collection data",
-                                        //         className: "border-none rounded-t-3xl",
-                                        //     },
-                                        // },
+                                        {
+                                            name: "Holder",
+                                            props: {
+                                                title: "Billing vs Collection",
+                                                subtitle: "Monthly billing statistics and collection data",
+                                                className: "border-none rounded-t-3xl",
+                                            },
+                                        },
                                         {
                                             name: 'BarChart',
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
-                                                // seriesData:
-                                                //     billingChartData.seriesData,
+                                                seriesData:
+                                                    billingChartData.seriesData,
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
-                                                showHeader: true,
+                                                showHeader: false,
                                                 dateRange: '2024',
-                                                
                                                 showDownloadButton: true,
                                                 showViewToggle: true,
                                                 viewToggleOptions: [
@@ -455,7 +363,6 @@ const ConsumerDashboard: React.FC = () => {
                             type: 'grid',
                             columns: 2,
                             gap: 'gap-4',
-                            className:'pb-4',
                             rows: [
                                 {
                                     layout: 'column',
@@ -466,7 +373,7 @@ const ConsumerDashboard: React.FC = () => {
                                         {
                                             name: "Holder",
                                             props: {
-                                                title: "Meter Communication Status",
+                                                title: "Meter Status",
                                                 subtitle: "Distribution of communicating and non-communicating meters",
                                                 className: "border-none rounded-t-3xl",
                                             },
@@ -527,7 +434,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 currentPage: 1,
                                                 totalPages: 279,
                                                 showHeader: true,
-                                                headerTitle: 'Latest Meter Events',
+                                                headerTitle: 'Overdue Consumers',
                                                 height: 330,
                                                 
                                                 onView: (row: any) =>
@@ -541,6 +448,35 @@ const ConsumerDashboard: React.FC = () => {
                                                         row.uid
                                                     ),
                                                 initialRowsPerPage: 5,
+                                                // actions: [
+                                                //     {
+                                                //         label: 'Send Notice',
+                                                //         icon: '/icons/paper-plane.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'Send notice to',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                //     {
+                                                //         label: 'View Details',
+                                                //         icon: '/icons/document.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'View details for',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                //     {
+                                                //         label: 'Disconnect',
+                                                //         icon: '/icons/close.svg',
+                                                //         onClick: (row: any) =>
+                                                //             console.log(
+                                                //                 'Disconnect',
+                                                //                 row.uid
+                                                //             ),
+                                                //     },
+                                                // ],
                                             },
                                         },
                                     ],
