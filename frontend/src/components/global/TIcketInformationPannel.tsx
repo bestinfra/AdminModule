@@ -3,6 +3,7 @@ import PageC from '@/components/global/PageC';
 
 interface Ticket {
     id: number;
+    uid:string,
     ticketNumber: string;
     subject: string;
     status: string;
@@ -13,6 +14,7 @@ interface Ticket {
     createdAt: string;
     lastUpdated: string;
     description: string;
+    location:string,
 }
 
 interface ActivityLogEntry {
@@ -102,27 +104,43 @@ export default function TicketInformationPannel({
                                 name: 'SummaryInfo',
                                 span: { col: 2, row: 1 },
                                 props: {
-                                    title: 'Issue Description',
+                                    title: 'Unit Details',
                                     className:"bg-background-secondary",
                                     data: {
                                         leftColumn: [
                                             {
-                                                label: 'Priority',
-                                                value: ticket.priority,
+                                                label: 'Unit Name',
+                                                value: ticket.customerName,
                                             },
                                             {
-                                                label: 'Category',
-                                                value: ticket.category,
+                                                label: 'UID',
+                                                value: ticket.uid,
                                             },
                                             {
-                                                label: 'Customer',
+                                                label: 'Location',
+                                                value: ticket.location,
+                                            },
+                                            {
+                                                label: 'Email',
                                                 value: ticket.customerName,
                                             },
                                         ],
                                         rightColumn: [
                                             {
-                                                label: 'Description',
+                                                label: 'Unit Number',
                                                 value: ticket.description,
+                                            },
+                                            {
+                                                label: 'Meter ID',
+                                                value: ticket.customerName,
+                                            },
+                                            {
+                                                label: 'Connection Type',
+                                                value: ticket.customerName,
+                                            },
+                                            {
+                                                label: 'Mobile',
+                                                value: ticket.customerName,
                                             },
                                         ],
                                     },

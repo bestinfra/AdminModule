@@ -191,7 +191,7 @@ export default function AssetManagment() {
                                 {
                                     layout: 'row',
                                     className:
-                                        'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
+                                        'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
                                     columns: [
                                         {
                                             name: 'TopLevelHierarchy',
