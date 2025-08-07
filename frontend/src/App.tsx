@@ -46,9 +46,12 @@ import FilterStyleController from './components/global/FilterStyleController';
 // import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
 import Dashboard from './pages_v2/ConsumerDashboard';
 import ConsumerDetailView from './pages_v2/ConsumerDetailView';
-import Payment from './components/global/Payment';
-import FreezeStatus from './components/global/FreezeStatus';
+import Payment from './components/Occupancy-Vacency/Payment';
+import FreezeStatus from './components/Occupancy-Vacency/FreezeStatus';
+import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';     
+
 import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
+import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -58,6 +61,7 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
                         <Route path="/sub-login" element={<SubLogin />} />
+                        <Route path="/occupancy-status" element={<OccupancyStatus />} />
                         <Route
                             element={
                                 <ProtectedRoute>
@@ -116,6 +120,8 @@ const App: React.FC = () => {
                             <Route path="/payment" element={<Payment amount="100" />} />
                             <Route path="/freeze-status" element={<FreezeStatus />} />
                             <Route path="/confirmation" element={<ConfirmationPage />} />
+                            <Route path="/usage-summary" element={<UsageSummaryPage />} />
+                       
                             {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
                             <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}

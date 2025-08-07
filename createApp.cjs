@@ -349,18 +349,7 @@ import './App.css';
 import { Theme } from './Theme';
 
 
-// Create safe lazy loading with error handling
-const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
-  return lazy(async () => {
-    try {
-      const module = await importFn();
-      return module;
-    } catch (error) {
-      console.warn('Failed to load remote component:', error);
-      return { default: fallback };
-    }
-  });
-};
+// Note: Using React.lazy directly instead of createSafeLazyComponent
 
 // Fallback components
 const DashboardFallback = () => (

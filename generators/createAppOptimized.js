@@ -84,7 +84,13 @@ function createAppProjectOptimized(formData) {
         adminPhone: formData.adminPhone || '+1234567890'
       };
       
-      const deploymentResult = await deployer.deployBackend(projectFolderName, applicationBackendDir, credentials);
+      // Prepare new accounts data
+      const newAccounts = formData.newAccounts || [];
+      
+      // Prepare modules data
+      const modules = formData.modules || [];
+      
+      const deploymentResult = await deployer.deployBackend(projectFolderName, applicationBackendDir, credentials, newAccounts, modules);
       
       if (deploymentResult.success) {
         console.log('\n✅ Backend deployed successfully!');
@@ -94,6 +100,12 @@ function createAppProjectOptimized(formData) {
         console.log(`   • Database: ${deploymentResult.database}`);
         console.log(`   • Admin User: ${credentials.adminUsername} (${credentials.adminEmail})`);
         console.log(`   • Mode: DEVELOPMENT`);
+        if (deploymentResult.newAccountsCount > 0) {
+          console.log(`   • New Accounts Created: ${deploymentResult.newAccountsCount}`);
+        }
+        if (deploymentResult.modulesCount > 0) {
+          console.log(`   • Modules Enabled: ${deploymentResult.modulesCount}`);
+        }
       } else {
         console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
         console.log('   You can manually deploy using:');

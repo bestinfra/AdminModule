@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getDateInYMDFormat } from '../utils/utils.js';
+import { getDateInYMDFormat, generateBillNumber, getCategoryInt } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -272,6 +272,372 @@ class BillingDB {
             });
         } catch (error) {
             console.error('BillingDB.createBill: Database error:', error);
+            throw error;
+        }
+    }
+
+    static async generateMonthlyBills() {
+        try {
+            console.log('🚀 [BILLING] Starting monthly bill generation process...');
+            console.log('⏰ [BILLING] Timestamp:', new Date().toISOString());
+            
+            const now = new Date();
+            const currentYear = now.getFullYear();
+            const currentMonth = now.getMonth() + 1;
+
+            console.log(`📅 [BILLING] Current period: ${currentMonth}/${currentYear}`);
+
+            const currentMonthFormatted = `${currentYear}-${String(currentMonth).padStart(2, '0')}`;
+
+            let previousMonth = currentMonth - 1;
+            let previousYear = currentYear;
+
+            if (previousMonth === 0) {
+                previousMonth = 12;
+                previousYear -= 1;
+            }
+
+            console.log(`📊 [BILLING] Generating bills for: ${previousMonth}/${previousYear}`);
+
+            const previousMonthFormatted = `${previousYear}-${String(previousMonth).padStart(2, '0')}`;
+
+            const startOfMonth = new Date(previousYear, previousMonth - 1, 1);
+            const endOfMonth = new Date(previousYear, previousMonth, 0);
+            const dueDate = new Date(currentYear, currentMonth - 1, 9);
+
+            console.log(`📅 [BILLING] Billing period: ${startOfMonth.toDateString()} to ${endOfMonth.toDateString()}`);
+            console.log(`📅 [BILLING] Due date: ${dueDate.toDateString()}`);
+
+            // Get all active meters with their consumers
+            console.log('🔍 [BILLING] Fetching active meters from database...');
+            const meters = await prisma.meters.findMany({
+                where: {
+                    status: 'ACTIVE',
+                    isInUse: true
+                },
+                include: {
+                    consumers: true,
+                    meter_readings: {
+                        where: {
+                            readingDate: {
+                                gte: startOfMonth,
+                                lte: endOfMonth
+                            }
+                        },
+                        orderBy: {
+                            readingDate: 'asc'
+                        }
+                    }
+                }
+            });
+
+            console.log(`✅ [BILLING] Found ${meters.length} active meters to process`);
+
+            const generatedBills = [];
+
+            for (const meter of meters) {
+                try {
+                    console.log(`\n📋 [BILLING] Processing meter: ${meter.meterNumber}`);
+                    console.log(`   👤 Consumer: ${meter.consumers.name} (Category: ${meter.consumers.category})`);
+                    console.log(`   📊 Meter type: ${meter.type}`);
+                    console.log(`   ⚡ Sanctioned load: ${meter.consumers.sanctionedLoad}kVA`);
+                    
+                    // Convert consumer category enum to integer for tariff lookup
+                    const categoryInt = getCategoryInt(meter.consumers.category);
+                    
+                    // Get tariff settings for the consumer category
+                    console.log(`   🔍 [BILLING] Searching for tariff (Category: ${meter.consumers.category} -> ${categoryInt}, Type: ${meter.type.toLowerCase()})...`);
+                    const tariff = await prisma.tariff.findFirst({
+                        where: {
+                            category: categoryInt,
+                            type: meter.type.toLowerCase(),
+                            valid_from: {
+                                lte: startOfMonth
+                            },
+                            OR: [
+                                { valid_to: null },
+                                { valid_to: { gte: endOfMonth } }
+                            ]
+                        },
+                        orderBy: {
+                            created_at: 'desc'
+                        }
+                    });
+
+                    if (!tariff) {
+                        console.warn(`⚠️ [BILLING] No tariff found for meter ${meter.meterNumber} with category ${meter.consumers.category}`);
+                        continue;
+                    }
+
+                    console.log(`   ✅ [BILLING] Found tariff: ${tariff.tariff_name}`);
+
+                    // Get meter readings for the billing period
+                    const readings = meter.meter_readings;
+                    console.log(`   📊 [BILLING] Found ${readings.length} meter readings for billing period`);
+                    
+                    if (readings.length === 0) {
+                        console.warn(`⚠️ [BILLING] No readings found for meter ${meter.meterNumber}`);
+                        continue;
+                    }
+
+                    let openingUnits = 0;
+                    let closingUnits = 0;
+                    let unitsConsumed = 0;
+
+                    if (readings.length === 1) {
+                        // Single reading - use it as closing reading and estimate opening
+                        const singleReading = readings[0];
+                        closingUnits = singleReading.kVAh || 0;
+                        
+                        // Try to get previous month's last reading as opening
+                        const previousMonth = new Date(startOfMonth);
+                        previousMonth.setMonth(previousMonth.getMonth() - 1);
+                        
+                        const previousReadings = await prisma.meter_readings.findMany({
+                            where: {
+                                meterId: meter.id,
+                                readingDate: {
+                                    gte: new Date(previousMonth.getFullYear(), previousMonth.getMonth(), 1),
+                                    lte: new Date(previousMonth.getFullYear(), previousMonth.getMonth() + 1, 0)
+                                }
+                            },
+                            orderBy: {
+                                readingDate: 'desc'
+                            },
+                            take: 1
+                        });
+
+                        if (previousReadings.length > 0) {
+                            openingUnits = previousReadings[0].kVAh || 0;
+                            console.log(`   📊 [BILLING] Using previous month reading as opening: ${openingUnits}`);
+                        } else {
+                            // No previous reading, estimate based on consumption pattern
+                            // For now, assume 80% of current reading as opening
+                            openingUnits = closingUnits * 0.8;
+                            console.log(`   📊 [BILLING] No previous reading found, estimating opening as 80% of current: ${openingUnits}`);
+                        }
+                        
+                        unitsConsumed = parseFloat((closingUnits - openingUnits).toFixed(2));
+                        console.log(`   📊 [BILLING] Single reading calculation: ${openingUnits} → ${closingUnits} = ${unitsConsumed} units consumed`);
+                    } else {
+                        // Multiple readings - use first and last
+                        const firstReading = readings[0];
+                        const lastReading = readings[readings.length - 1];
+
+                        openingUnits = firstReading.kVAh || 0;
+                        closingUnits = lastReading.kVAh || 0;
+                        unitsConsumed = parseFloat((closingUnits - openingUnits).toFixed(2));
+                        console.log(`   📊 [BILLING] Multiple readings: ${openingUnits} → ${closingUnits} = ${unitsConsumed} units consumed`);
+                    }
+
+                    if (unitsConsumed <= 0) {
+                        console.warn(`⚠️ [BILLING] Invalid consumption for meter ${meter.meterNumber}: ${unitsConsumed}`);
+                        continue;
+                    }
+
+                    // Calculate demand charges
+                    let recordedMD = 0;
+                    
+                    if (readings.length === 1) {
+                        // Use the single reading for demand calculation
+                        recordedMD = readings[0].kVA || 0;
+                    } else {
+                        // Use the last reading for demand calculation
+                        recordedMD = readings[readings.length - 1].kVA || 0;
+                    }
+                    
+                    const contractMD = meter.consumers.sanctionedLoad;
+                    const minBillingDemand = contractMD * 0.8;
+                    
+                    const demandPenaltyFlag = recordedMD > minBillingDemand;
+                    const billedMD = demandPenaltyFlag ? recordedMD : minBillingDemand;
+
+                    console.log(`   ⚡ [BILLING] Demand calculation:`);
+                    console.log(`      - Recorded MD: ${recordedMD}kVA`);
+                    console.log(`      - Contract MD: ${contractMD}kVA`);
+                    console.log(`      - Min Billing Demand: ${minBillingDemand}kVA`);
+                    console.log(`      - Billed MD: ${billedMD}kVA`);
+                    console.log(`      - Penalty Flag: ${demandPenaltyFlag}`);
+
+                    let demandCharge = 0;
+                    let demandPenaltyCharge = 0;
+
+                    if (!demandPenaltyFlag) {
+                        demandCharge = billedMD * tariff.min_demand_unit_rate;
+                        console.log(`   💰 [BILLING] Demand charge: ${billedMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
+                    } else if (billedMD <= contractMD) {
+                        demandCharge = billedMD * tariff.min_demand_unit_rate;
+                        console.log(`   💰 [BILLING] Demand charge (within contract): ${billedMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
+                    } else {
+                        demandCharge = contractMD * tariff.min_demand_unit_rate;
+                        demandPenaltyCharge = (billedMD - contractMD) * tariff.min_demand_excess_unit_rate;
+                        console.log(`   💰 [BILLING] Demand charge: ${contractMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
+                        console.log(`   💰 [BILLING] Demand penalty: (${billedMD} - ${contractMD}) × ${tariff.min_demand_excess_unit_rate} = ₹${demandPenaltyCharge}`);
+                    }
+
+                    const totalDemandCharge = demandCharge + demandPenaltyCharge;
+                    console.log(`   💰 [BILLING] Total demand charge: ₹${totalDemandCharge}`);
+
+                    // Calculate energy charges based on slabs
+                    let unitRate = tariff.base_unit_rate;
+                    
+                    console.log(`   📊 [BILLING] Energy rate calculation:`);
+                    console.log(`      - Slab1: ${recordedMD}kVA <= ${(tariff.slab1_limit / 100) * contractMD}kVA (${tariff.slab1_limit}% of ${contractMD})`);
+                    console.log(`      - Slab2: ${recordedMD}kVA <= ${(tariff.slab2_limit / 100) * contractMD}kVA (${tariff.slab2_limit}% of ${contractMD})`);
+                    console.log(`      - Slab3: ${recordedMD}kVA <= ${(tariff.slab3_limit / 100) * contractMD}kVA (${tariff.slab3_limit}% of ${contractMD})`);
+                    
+                    if (recordedMD <= (tariff.slab1_limit / 100) * contractMD) {
+                        unitRate = tariff.slab1_unit_rate;
+                        console.log(`   💰 [BILLING] Using Slab1 rate: ₹${tariff.slab1_unit_rate}/unit`);
+                    } else if (recordedMD <= (tariff.slab2_limit / 100) * contractMD) {
+                        unitRate = tariff.slab2_unit_rate;
+                        console.log(`   💰 [BILLING] Using Slab2 rate: ₹${tariff.slab2_unit_rate}/unit`);
+                    } else {
+                        unitRate = tariff.slab3_unit_rate;
+                        console.log(`   💰 [BILLING] Using Slab3 rate: ₹${tariff.slab3_unit_rate}/unit`);
+                    }
+
+                    const energyCharge = parseFloat((unitsConsumed * unitRate).toFixed(2));
+                    const electricityDutyCharge = parseFloat((unitsConsumed * tariff.elec_duty_unit_rate).toFixed(2));
+                    const imsCharge = parseFloat((unitsConsumed * unitRate * (tariff.ims / 100)).toFixed(2));
+                    const gstCharge = parseFloat(((energyCharge + electricityDutyCharge + imsCharge) * (tariff.gst / 100)).toFixed(2));
+
+                    console.log(`   💰 [BILLING] Energy charges:`);
+                    console.log(`      - Energy charge: ${unitsConsumed} × ${unitRate} = ₹${energyCharge}`);
+                    console.log(`      - Electricity duty: ${unitsConsumed} × ${tariff.elec_duty_unit_rate} = ₹${electricityDutyCharge}`);
+                    console.log(`      - IMS charge: ${unitsConsumed} × ${unitRate} × ${tariff.ims}% = ₹${imsCharge}`);
+                    console.log(`      - GST: (${energyCharge} + ${electricityDutyCharge} + ${imsCharge}) × ${tariff.gst}% = ₹${gstCharge}`);
+
+                    const subTotal = energyCharge + electricityDutyCharge + imsCharge + totalDemandCharge;
+                    const totalAmount = subTotal + gstCharge;
+
+                    console.log(`   💰 [BILLING] Total calculation:`);
+                    console.log(`      - Subtotal: ${energyCharge} + ${electricityDutyCharge} + ${imsCharge} + ${totalDemandCharge} = ₹${subTotal}`);
+                    console.log(`      - Total amount: ${subTotal} + ${gstCharge} = ₹${totalAmount}`);
+
+                    // Generate bill number
+                    const billNumber = generateBillNumber(meter.meterNumber, startOfMonth);
+                    console.log(`   📄 [BILLING] Generated bill number: ${billNumber}`);
+
+                    // Check if bill already exists
+                    console.log(`   🔍 [BILLING] Checking for existing bill...`);
+                    const existingBill = await prisma.bills.findFirst({
+                        where: {
+                            meterId: meter.id,
+                            billMonth: previousMonth,
+                            billYear: previousYear
+                        }
+                    });
+
+                    if (existingBill) {
+                        console.warn(`⚠️ [BILLING] Bill already exists for meter ${meter.meterNumber} for ${previousMonth}/${previousYear}`);
+                        console.log(`   📄 [BILLING] Existing bill: ${existingBill.billNumber}`);
+                        continue;
+                    }
+
+                    console.log(`   ✅ [BILLING] No existing bill found, proceeding with generation...`);
+
+                    // Create bill data
+                    const billData = {
+                        billNumber,
+                        meterId: meter.id,
+                        consumerId: meter.consumers.id,
+                        billMonth: previousMonth,
+                        billYear: previousYear,
+                        fromDate: startOfMonth,
+                        toDate: endOfMonth,
+                        dueDate,
+                        previousReading: openingUnits,
+                        currentReading: closingUnits,
+                        unitsConsumed,
+                        fixedCharge: totalDemandCharge,
+                        energyCharge,
+                        powerFactorCharge: 0, // Can be calculated if power factor data is available
+                        otherCharges: {
+                            electricityDuty: electricityDutyCharge,
+                            ims: imsCharge,
+                            gst: gstCharge,
+                            demandPenalty: demandPenaltyCharge
+                        },
+                        subTotal,
+                        taxes: {
+                            gst: gstCharge
+                        },
+                        totalAmount,
+                        status: 'GENERATED',
+                        isPaid: false,
+                        paidAmount: 0,
+                        createdAt: new Date(),
+                        updatedAt: new Date()
+                    };
+
+                    console.log(`   💾 [BILLING] Saving bill to database...`);
+                    const newBill = await prisma.bills.create({
+                        data: billData,
+                        include: {
+                            consumers: true,
+                            meters: true
+                        }
+                    });
+
+                    generatedBills.push(newBill);
+                    console.log(`   ✅ [BILLING] Successfully generated bill ${billNumber} for meter ${meter.meterNumber} - Amount: ₹${totalAmount}`);
+                    console.log(`   📊 [BILLING] Bill details:`);
+                    console.log(`      - Consumer: ${newBill.consumers.name}`);
+                    console.log(`      - Period: ${previousMonth}/${previousYear}`);
+                    console.log(`      - Consumption: ${unitsConsumed} units`);
+                    console.log(`      - Total Amount: ₹${totalAmount}`);
+
+                } catch (error) {
+                    console.error(`❌ [BILLING] Error generating bill for meter ${meter.meterNumber}:`, error);
+                    console.error(`   🔍 [BILLING] Error details:`, error.message);
+                }
+            }
+
+            console.log('\n📊 [BILLING] BILL GENERATION SUMMARY');
+            console.log('=====================================');
+            console.log(`✅ [BILLING] Successfully generated: ${generatedBills.length} bills`);
+            console.log(`📅 [BILLING] Period: ${previousMonth}/${previousYear}`);
+            
+            const totalAmount = generatedBills.reduce((sum, bill) => sum + Number(bill.totalAmount || 0), 0);
+            console.log(`💰 [BILLING] Total amount generated: ₹${totalAmount.toFixed(2)}`);
+            console.log(`⏰ [BILLING] Process completed at: ${new Date().toISOString()}`);
+
+            return {
+                success: true,
+                message: `Generated ${generatedBills.length} bills for ${previousMonth}/${previousYear}`,
+                bills: generatedBills
+            };
+
+        } catch (error) {
+            console.error('BillingDB.generateMonthlyBills: Error generating bills:', error);
+            throw error;
+        }
+    }
+
+    static async getTariffByCategory(category, type) {
+        try {
+            // Convert category string to integer if needed
+            const categoryInt = getCategoryInt(category);
+            
+            return await prisma.tariff.findFirst({
+                where: {
+                    category: categoryInt,
+                    type: type.toLowerCase(),
+                    valid_from: {
+                        lte: new Date()
+                    },
+                    OR: [
+                        { valid_to: null },
+                        { valid_to: { gte: new Date() } }
+                    ]
+                },
+                orderBy: {
+                    created_at: 'desc'
+                }
+            });
+        } catch (error) {
+            console.error('BillingDB.getTariffByCategory: Database error:', error);
             throw error;
         }
     }
