@@ -13,7 +13,7 @@ interface Ticket {
     createdAt: string;
     lastUpdated: string;
     description: string;
-    UID: string;
+    uid: string;
     location: string;
     email:string;
     unitNumber:string;
@@ -62,7 +62,7 @@ export default function TicketInformationPannel() {
             createdAt: new Date().toISOString(),
             lastUpdated: new Date().toISOString(),
             description: 'Issue with meter connection.',
-            UID: '#56B0000',
+            uid: '#56B0000',
             location: 'Hydrabad',
             email: 'ravin1109@gmail.com',
             unitNumber: 'N/A',
@@ -140,7 +140,7 @@ export default function TicketInformationPannel() {
                                     data: {
                                         leftColumn: [
                                             { label: 'Unit Name', value: ticket.customerName },
-                                            { label: 'UID', value: ticket.UID },
+                                            { label: 'UID', value: ticket.uid },
                                             { label: 'Location', value: ticket.location },
                                             { label: 'Email', value: ticket.email },
                                         ],

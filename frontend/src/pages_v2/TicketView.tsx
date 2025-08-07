@@ -15,7 +15,7 @@ interface Ticket {
     createdAt: string;
     lastUpdated: string;
     description: string;
-    UID:string;
+    uid:string;
     location:string;
     email:string;
     unitNumber:string;
@@ -46,6 +46,7 @@ const TicketView: React.FC = () => {
     const [ticket] = useState<Ticket>({
         id: 336,
         ticketNumber: '336',
+        uid: '#B00133344',
         subject: 'Connection Issue with Meter',
         status: 'Open',
         customerName: 'Airborne General Store',
@@ -55,7 +56,6 @@ const TicketView: React.FC = () => {
         createdAt: 'new Date().toISOString(),',
         lastUpdated: 'new Date().toISOString(),',
         description: 'Issue with meter connection',
-        UID: '#56B0000',
         location:'Hydrabad',
         email:'ravin1109@gmail.com',
         unitNumber:'N/A',
