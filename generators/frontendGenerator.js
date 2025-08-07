@@ -222,35 +222,18 @@ function generateAppComponent(frontendDir, variables) {
   </div>
 );`;
 
-  variables.sidebarFallback = `const SidebarFallback = () => (
-  <div className="w-72 bg-gray-100 h-screen p-4">
-    <div className="text-center">Sidebar Loading...</div>
-  </div>
-);`;
 
-  variables.headerFallback = `const HeaderFallback = () => (
-  <div className="h-16 bg-gray-100 border-b flex items-center px-6">
-    <span>Header Loading...</span>
-  </div>
-);`;
 
   // Calculate theme provider import
   variables.themeProviderImport = `import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';`;
 
-  // Calculate federated components
-  variables.sidebarComponent = `const Sidebar = createSafeLazyComponent(
-  () => import('SuperAdmin/Sidebar'),
-  SidebarFallback
-);`;
 
-  variables.headerComponent = `const Header = createSafeLazyComponent(
-  () => import('SuperAdmin/Header'),
-  HeaderFallback
-);`;
 
-  variables.loginComponent = `const Login = createSafeLazyComponent(
-  () => import('SuperAdmin/Login'),
-  LoginFallback
+  variables.loginComponent = `const Login = React.lazy(() => 
+  import('SuperAdmin/Login').catch(error => {
+    console.error('Failed to load Login:', error);
+    return { default: () => <div>Login Error - Please refresh the page</div> };
+  })
 );`;
 
   // Generate all imports
@@ -416,7 +399,10 @@ function generateAppComponent(frontendDir, variables) {
   variables.routes = variables.routes.join('\n');
   variables.pageTitles = variables.pageTitles.join(',\n');
   
-  // Generate menu items for sidebar
+  // Generate page titles for AppLayout
+  variables.pageTitles = variables.pageTitles || '';
+  
+  // Generate menu items for AppLayout
   variables.menuItems = '';
   
   // Dashboard menu items - smart submenu logic
@@ -571,6 +557,8 @@ function generateAppComponent(frontendDir, variables) {
     variables.menuItems += '      ],\n';
     variables.menuItems += '    },\n';
   }
+  
+
   const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const appContent = loadAndProcessTemplate(appTemplate, variables);
   
@@ -583,7 +571,7 @@ function generateAppComponent(frontendDir, variables) {
   
   const appPath = path.join(frontendDir, 'src', 'App.tsx');
   fs.writeFileSync(appPath, appContent);
-  
+
   // Generate AppLayout component
   const appLayoutTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'AppLayout.tsx.template');
   const appLayoutContent = loadAndProcessTemplate(appLayoutTemplate, variables);
@@ -596,6 +584,8 @@ function generateAppComponent(frontendDir, variables) {
   
   // Write the AppLayout.tsx file
   fs.writeFileSync(path.join(componentsDir, 'AppLayout.tsx'), appLayoutContent);
+  
+
 }
 
 /**

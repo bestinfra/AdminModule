@@ -3,184 +3,16 @@ import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, Navig
 import { AppProvider, useApp } from './context/AppContext';
 import { FederatedContextProvider } from './components/FederatedWrapper';
 import CSSLoader from './components/CSSLoader';
+import AppLayout from './components/AppLayout';
 import './App.css';
 import { Theme } from './Theme';
 {{imports}}
 
-// Create safe lazy loading with error handling
-const createSafeLazyComponent = (importFn: () => Promise<{ default: ComponentType<any> }>, fallback: ComponentType<any>) => {
-  return lazy(async () => {
-    try {
-      const module = await importFn();
-      return module;
-    } catch (error) {
-      console.warn('Failed to load remote component:', error);
-      return { default: fallback };
-    }
-  });
-};
-
-{{loginFallback}}
-{{sidebarFallback}}
-{{headerFallback}}
 
 {{themeProviderImport}}
-
-{{sidebarComponent}}
-{{headerComponent}}
 {{loginComponent}}
 
-// Generate dynamic menu items based on selected modules
-const generateModuleBasedMenuItems = (modules: string[] = []) => {
-  const mandatoryMenus = [];
 
-  // Add Consumers only if consumer module is selected
-  if (modules.includes('consumer')) {
-    mandatoryMenus.push({
-      title: 'Consumers',
-      icon: '/icons/units.svg',
-      link: '/consumers',
-    });
-  }
-
-  // Create dynamic dashboard menu logic
-  const dashboardSubmenus = [];
-  if (modules.includes('consumer_dashboard')) {
-    dashboardSubmenus.push({
-      title: 'Consumer Dashboard',
-      link: '/consumer-dashboard',
-    });
-  }
-  if (modules.includes('dtr_dashboard')) {
-    dashboardSubmenus.push({
-      title: 'DTR Dashboard',
-      link: '/dtr-dashboard',
-    });
-  }
-
-  // Smart dashboard menu logic
-  if (dashboardSubmenus.length === 0) {
-    // No dashboard modules selected - add default dashboard
-    mandatoryMenus.push({
-      title: 'Dashboard',
-      icon: '/icons/dashboard.svg',
-      link: '/dashboard',
-    });
-  } else if (dashboardSubmenus.length === 1) {
-    // Only one dashboard selected - make it the main dashboard
-    const singleDashboard = dashboardSubmenus[0];
-    mandatoryMenus.push({
-      title: singleDashboard.title,
-      icon: '/icons/dashboard.svg',
-      link: singleDashboard.link,
-    });
-  } else {
-    // Multiple dashboards selected - create parent with submenus
-    mandatoryMenus.push({
-      title: 'Dashboard',
-      icon: '/icons/dashboard.svg',
-      link: '/dashboard',
-      hasSubmenu: true,
-      submenu: dashboardSubmenus,
-    });
-  }
-
-  const moduleMenuMap = {
-    tickets: {
-      title: 'Tickets',
-      icon: '/icons/customer-service.svg',
-      link: '/all-tickets',
-    },
-    bills: {
-      title: 'Bills',
-      icon: '/icons/bills.svg',
-      hasSubmenu: true,
-      submenu: [
-        {
-          title: 'Prepaid',
-          link: '/bills/prepaid',
-        },
-        {
-          title: 'Postpaid',
-          link: '/bills/postpaid',
-        },
-      ],
-    },
-    // asset_management: {
-    //   title: 'Assets',
-    //   icon: '/icons/workflow-setting-alt.svg',
-    //   link: '/asset-management',
-    // },
-    meter_management: {
-      title: 'Meters',
-      icon: '/icons/meter-bolt.svg',
-      link: '/meters',
-      hasSubmenu: true,
-      submenu: [
-        {
-          title: 'Meter List',
-          link: '/meters',
-        },
-      ],
-    },
-    user_management_default: {
-      title: 'Users',
-      icon: '/icons/user.svg',
-      link: '/users',
-      hasSubmenu: true,
-      submenu: [
-        {
-          title: 'Users',
-          icon: '/icons/user-gear.svg',
-          link: '/users',
-        },
-        {
-          title: 'Role Management',
-          icon: '/icons/roles.svg',
-          link: '/role-management',
-        },
-      ],
-    },
-    dtr: {
-      title: 'DTR Dashboard',
-      icon: '/icons/transformer.svg',
-      link: '/dtr-dashboard',
-    },
-  };
-
-  const selectedModuleMenus = modules
-    .map(module => moduleMenuMap[module])
-    .filter(Boolean);
-
-  return [...mandatoryMenus, ...selectedModuleMenus];
-};
-
-// Role-based menu filtering
-const filterMenuItemsByRole = (menuItems: any[], userRole: string) => {
-
-  
-  // Define role-based access rules
-  const roleAccessRules = {
-    admin: ['all'], // Admin can access everything
-    moderator: ['tickets', 'meter_management'], // Moderator access (removed asset_management)
-    accountant: ['tickets', 'bills'], // Accountant access (bills only)
-  };
-
-  const allowedModules = roleAccessRules[userRole] || ['tickets'];
-  
-  return menuItems.filter(item => {
-    // Always allow dashboard items
-    if (item.title === 'Dashboard' || item.title === 'DTR Dashboard' || item.title === 'Consumer Dashboard') {
-      return true;
-    }
-    
-    // Check if item is allowed for this role
-    return allowedModules.includes('all') || allowedModules.some(module => 
-      item.title.toLowerCase().includes(module.replace('_', ' ')) ||
-      item.link?.includes(module.replace('_', '-'))
-    );
-  });
-};
 
 // Local authentication components with error handling
 const AuthProvider = React.lazy(() => 
@@ -244,33 +76,7 @@ function AppContent() {
     checkRemoteApp();
   }, []);
   
-// Generate menu items based on modules and filter by role
-const menuItems = useMemo(() => {
-  // Get user from localStorage to determine role
-  const getUserRole = () => {
-    try {
-      const userData = localStorage.getItem('user');
-      if (userData) {
-        const user = JSON.parse(userData);
-        return user.role || 'admin'; // Default to admin if no role
-      }
-    } catch (error) {
-      console.error('Error parsing user data:', error);
-    }
-    return 'admin'; // Default role
-  };
 
-  const userRole = getUserRole();
-  
-  // First, generate menu items based on selected modules
-  const selectedModules = {{modulesArray}};
-  const moduleBasedMenuItems = generateModuleBasedMenuItems(selectedModules);
-  
-  // Then, filter by user role
-  const roleFilteredMenuItems = filterMenuItemsByRole(moduleBasedMenuItems, userRole);
-  
-  return roleFilteredMenuItems;
-}, [location.pathname]); // Re-compute when route changes (indicates login/logout)
 
   return (
     <FederatedContextProvider value={contextValue}>
@@ -291,34 +97,8 @@ const menuItems = useMemo(() => {
               <AuthProvider>
                 <Suspense fallback={<ProtectedRouteFallback />}>
                   <ProtectedRoute>
-                    <div className="flex h-screen bg-white">
-                      {/* Sidebar and Header only for authenticated users */}
-                      <Suspense fallback={<SidebarFallback />}>
-                        <Sidebar 
-                          currentPath={location.pathname}
-                          onNavigate={(path: string) => navigate(path)}
-                          menus={[
-                            {
-                              category: 'GENERAL',
-                              items: menuItems,
-                            },
-                          ]}
-                          logo={{
-                            src: '/images/bi-blue-logo.svg',
-                            alt: '{{appName}}',
-                            collapsedSrc: '/images/changed-logo.svg',
-                          }}
-                          footer={{
-                            copyright: '© 2024 {{companyName}}',
-                            showThemeToggle: true,
-                            showShareButton: false,
-                          }}
-                        />
-                      </Suspense>
-                      <div className="flex flex-col flex-1">
-                        <Suspense fallback={<HeaderFallback />}>
-                          <Header title={getPageTitle()} />
-                        </Suspense>
+                    <Suspense fallback={<div className="flex items-center justify-center h-screen">Loading layout...</div>}>
+                      <AppLayout>
                         <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
                           {/* All protected routes here */}
                           <Routes>
@@ -350,7 +130,7 @@ const menuItems = useMemo(() => {
                                 <p className="text-gray-600 mb-4">The page you're looking for doesn't exist.</p>
                                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                                   <h3 className="font-semibold text-red-800 mb-2">404 Error</h3>
-                                  <p className="text-sm text-red-700">Please check the URL or navigate using the sidebar.</p>
+                                  <p className="text-sm text-red-700">Please check the URL or navigate using the menu.</p>
                                   <div className="mt-4">
                                     <h4 className="font-semibold text-red-800 mb-2">Available Routes:</h4>
                                     <ul className="text-sm text-red-700 space-y-1">
@@ -374,8 +154,8 @@ const menuItems = useMemo(() => {
                             } />
                           </Routes>
                         </main>
-                      </div>
-                    </div>
+                      </AppLayout>
+                    </Suspense>
                   </ProtectedRoute>
                 </Suspense>
               </AuthProvider>

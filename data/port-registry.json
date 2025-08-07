@@ -1,5 +1,5 @@
 {
-  "nextPort": 4152,
+  "nextPort": 4178,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -608,8 +608,138 @@
     },
     "kotak": {
       "port": 4151,
-      "deployedAt": "2025-08-05T11:37:48.073Z",
-      "path": "C:\\xampp\\htdocs\\kotak-backend"
+      "deployedAt": "2025-08-03T09:28:25.264Z",
+      "path": "C:\\xampp\\htdocs\\may-backend"
+    },
+    "june": {
+      "port": 4152,
+      "deployedAt": "2025-08-03T09:40:09.352Z",
+      "path": "C:\\xampp\\htdocs\\june-backend"
+    },
+    "test7": {
+      "port": 4153,
+      "deployedAt": "2025-08-04T04:34:08.651Z",
+      "path": "C:\\xampp\\htdocs\\test7-backend"
+    },
+    "test8": {
+      "port": 4154,
+      "deployedAt": "2025-08-05T04:25:23.862Z",
+      "path": "C:\\xampp\\htdocs\\test8-backend"
+    },
+    "test9": {
+      "port": 4155,
+      "deployedAt": "2025-08-05T04:37:07.651Z",
+      "path": "C:\\xampp\\htdocs\\test9-backend"
+    },
+    "test10": {
+      "port": 4156,
+      "deployedAt": "2025-08-05T07:55:51.115Z",
+      "path": "C:\\xampp\\htdocs\\test10-backend"
+    },
+    "test11": {
+      "port": 4157,
+      "deployedAt": "2025-08-05T10:16:00.385Z",
+      "path": "C:\\xampp\\htdocs\\test11-backend"
+    },
+    "test12": {
+      "port": 4158,
+      "deployedAt": "2025-08-05T10:57:37.604Z",
+      "path": "C:\\xampp\\htdocs\\test12-backend"
+    },
+    "test13": {
+      "port": 4159,
+      "deployedAt": "2025-08-05T14:20:56.510Z",
+      "path": "C:\\xampp\\htdocs\\test13-backend"
+    },
+    "test14": {
+      "port": 4160,
+      "deployedAt": "2025-08-05T14:31:03.206Z",
+      "path": "C:\\xampp\\htdocs\\test14-backend"
+    },
+    "test15": {
+      "port": 4161,
+      "deployedAt": "2025-08-05T14:36:41.467Z",
+      "path": "C:\\xampp\\htdocs\\test15-backend"
+    },
+    "test16": {
+      "port": 4162,
+      "deployedAt": "2025-08-05T15:53:12.419Z",
+      "path": "C:\\xampp\\htdocs\\test16-backend"
+    },
+    "test17": {
+      "port": 4163,
+      "deployedAt": "2025-08-05T16:05:59.199Z",
+      "path": "C:\\xampp\\htdocs\\test17-backend"
+    },
+    "test18": {
+      "port": 4164,
+      "deployedAt": "2025-08-06T06:35:00.622Z",
+      "path": "C:\\xampp\\htdocs\\test18-backend"
+    },
+    "test19": {
+      "port": 4165,
+      "deployedAt": "2025-08-06T07:03:03.318Z",
+      "path": "C:\\xampp\\htdocs\\test19-backend"
+    },
+    "test20": {
+      "port": 4166,
+      "deployedAt": "2025-08-06T10:14:04.389Z",
+      "path": "C:\\xampp\\htdocs\\test20-backend"
+    },
+    "test21": {
+      "port": 4167,
+      "deployedAt": "2025-08-06T10:31:08.664Z",
+      "path": "C:\\xampp\\htdocs\\test21-backend"
+    },
+    "test24": {
+      "port": 4168,
+      "deployedAt": "2025-08-06T11:26:34.223Z",
+      "path": "C:\\xampp\\htdocs\\test24-backend"
+    },
+    "test25": {
+      "port": 4169,
+      "deployedAt": "2025-08-06T11:43:08.903Z",
+      "path": "C:\\xampp\\htdocs\\test25-backend"
+    },
+    "test26": {
+      "port": 4170,
+      "deployedAt": "2025-08-06T11:48:59.200Z",
+      "path": "C:\\xampp\\htdocs\\test26-backend"
+    },
+    "test27": {
+      "port": 4171,
+      "deployedAt": "2025-08-06T11:53:05.208Z",
+      "path": "C:\\xampp\\htdocs\\test27-backend"
+    },
+    "test28": {
+      "port": 4172,
+      "deployedAt": "2025-08-06T11:56:22.651Z",
+      "path": "C:\\xampp\\htdocs\\test28-backend"
+    },
+    "test29": {
+      "port": 4173,
+      "deployedAt": "2025-08-06T11:59:33.452Z",
+      "path": "C:\\xampp\\htdocs\\test29-backend"
+    },
+    "test30": {
+      "port": 4174,
+      "deployedAt": "2025-08-06T12:02:14.211Z",
+      "path": "C:\\xampp\\htdocs\\test30-backend"
+    },
+    "test31": {
+      "port": 4175,
+      "deployedAt": "2025-08-06T12:06:07.865Z",
+      "path": "C:\\xampp\\htdocs\\test31-backend"
+    },
+    "test32": {
+      "port": 4176,
+      "deployedAt": "2025-08-06T12:27:31.765Z",
+      "path": "C:\\xampp\\htdocs\\test32-backend"
+    },
+    "test33": {
+      "port": 4177,
+      "deployedAt": "2025-08-06T12:31:00.278Z",
+      "path": "C:\\xampp\\htdocs\\test33-backend"
     }
   }
 }
