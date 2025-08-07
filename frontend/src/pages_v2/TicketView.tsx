@@ -6,6 +6,7 @@ import Page from '@/components/global/PageC';
 interface Ticket {
     id: number;
     ticketNumber: string;
+    uid: string;
     subject: string;
     status: string;
     customerName: string;
@@ -15,6 +16,7 @@ interface Ticket {
     createdAt: string;
     lastUpdated: string;
     description: string;
+    location:string,
 }
 
 interface ActivityLogEntry {
@@ -38,10 +40,12 @@ const TicketView: React.FC = () => {
     const [ticket] = useState<Ticket>({
         id: 336,
         ticketNumber: '336',
+        uid: '#B00133344',
         subject: 'Connection Issue with Meter',
         status: 'Open',
         customerName: 'Airborne General Store',
         category: 'Connection Issue',
+        location:"Hyderabad,kondapur",
         priority: 'High',
         assignedTo: 'BI - Tech Team',
         createdAt: '2025-07-14T17:24:00',

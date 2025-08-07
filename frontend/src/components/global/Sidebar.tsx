@@ -144,11 +144,16 @@ const defaultMenus: MenuCategory[] = [
       //   icon: "/icons/freeze-status.svg",
       //   link: "/freeze-status",
       // },
-      // {
-      //   title: "Confirmation",
-      //   icon: "/icons/freeze-status.svg",
-      //   link: "/confirmation",
-      // },
+      {
+        title: "COnsumer Dashbaord",
+        icon: "/icons/freeze-status.svg",
+        link: "/consumer-dashboard",
+      },
+      {
+        title: "TIcket",
+        icon: "/icons/freeze-status.svg",
+        link: "/tickets",
+      },
       // {
       //   title: "Usage Summary",
       //   icon: "/icons/freeze-status.svg",
@@ -176,7 +181,7 @@ const defaultMenus: MenuCategory[] = [
       // {
       //     title: 'User Management',
       //     icon: '/icons/user_managment.svg',
-      //     link: '/user-management',
+      //     link: '/user-management',  
       //     hasSubmenu: true,
       //     submenu: [
 
