@@ -1,5 +1,5 @@
 {
-  "nextPort": 4152,
+  "nextPort": 4156,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -610,6 +610,21 @@
       "port": 4151,
       "deployedAt": "2025-08-05T11:37:48.073Z",
       "path": "C:\\xampp\\htdocs\\kotak-backend"
+    },
+    "kskdjsah": {
+      "port": 4153,
+      "deployedAt": "2025-08-06T11:28:46.088Z",
+      "path": "C:\\xampp\\htdocs\\kskdjsah-backend"
+    },
+    "mosi": {
+      "port": 4154,
+      "deployedAt": "2025-08-06T11:42:09.212Z",
+      "path": "C:\\xampp\\htdocs\\mosi-backend"
+    },
+    "crom": {
+      "port": 4155,
+      "deployedAt": "2025-08-06T14:01:15.982Z",
+      "path": "C:\\xampp\\htdocs\\crom-backend"
     }
   }
 }

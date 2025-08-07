@@ -2,22 +2,28 @@ import UserDB from '../models/UserDB.js';
 
 export const getAllUsers = async (req, res) => {
     try {
-        const users = await UserDB.getAllUsers();
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        
+        const result = await UserDB.getAllUsers(page, limit);
+        
         // Format the data for the frontend table
-        const formatted = users.map((u, idx) => ({
-            sNo: idx + 1,
+        const formatted = result.data.map((u, idx) => ({
+            sNo: (page - 1) * limit + idx + 1,
             userId: u.userId || u.id,
             name: u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim(),
             email: u.email,
             phone: u.phone || u.phoneNumber || '-',
-            role: u.roles && u.roles.length > 0 ? u.roles.map(r => r.role?.name).join(', ') : '',
-            client:u.department?.name || '-',
+            role: u.user_roles && u.user_roles.length > 0 ? u.user_roles.map(ur => ur.roles?.name).join(', ') : '',
+            client: u.departments?.name || '-',
             lastActive: u.lastActive || '-',
             createdDate: u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-',
         }));
+        
         res.json({
             success: true,
             data: formatted,
+            pagination: result.pagination,
             message: 'Users retrieved successfully'
         });
     } catch (error) {
