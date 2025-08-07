@@ -51,7 +51,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   category,
   modules,
   connectedApis,
-  meters,
+  // meters,
   tickets,
   appIcon,
 }) => {
@@ -143,10 +143,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
     }
   };
 
-  const activePercentage =
-    meters.total > 0 ? (meters.active / meters.total) * 100 : 0;
-  const inactivePercentage =
-    meters.total > 0 ? (meters.inactive / meters.total) * 100 : 0;
+
 
   // Demo images for fallback
   const demoImages = [

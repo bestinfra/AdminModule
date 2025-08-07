@@ -1,5 +1,5 @@
 import React from "react";
-import PageC from "@/components/global/PageC";
+import Page from "@/components/global/PageC";
 import type { CarouselSlide } from "@/components/global/Carousel";
 import { useState } from "react";
 import type { FormInputValue } from "@/components/Form/types";
@@ -232,7 +232,7 @@ If you have any questions about this Privacy Policy, please contact us.`;
 
   return (
     <div className="h-screen overflow-hidden scroll-y-hidden">
-      <PageC
+      <Page
         sections={[
           {
             layout: {

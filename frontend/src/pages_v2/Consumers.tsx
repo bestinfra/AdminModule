@@ -153,9 +153,12 @@ const Consumers: React.FC = () => {
               )
             : consumers;
 
-    const handleRowClick = (row: any) => {
-        navigate(`/consumer-detail-view/${row.consumerNumber}`);
+    const handlePageChange = (page: number) => {
+        // Handle page change logic here
+        console.log('Page changed to:', page);
     };
+
+
 
     const headerConfig = {
         title: 'Consumers',
