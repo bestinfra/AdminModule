@@ -58,7 +58,7 @@ export function generateBillNumber(meterNumber, billingDate) {
 export function getCategoryInt(category) {
     const categoryMapping = {
         'DOMESTIC': 0,
-        'SMALL_COMMERCIAL': 3,
+        'SMALL_COMMERCIAL': 3,  // Based on your tariff data
         'LARGE_COMMERCIAL': 2,
         'INDUSTRIAL': 1,
         'AGRICULTURAL': 4,
@@ -76,7 +76,7 @@ export function getCategoryInt(category) {
 export function getCategoryName(categoryInt) {
     const categoryNames = {
         0: 'DOMESTIC',
-        3: 'SMALL_COMMERCIAL',
+        3: 'SMALL_COMMERCIAL',  // Based on your tariff data
         2: 'LARGE_COMMERCIAL',
         1: 'INDUSTRIAL',
         4: 'AGRICULTURAL',
