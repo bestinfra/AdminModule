@@ -145,14 +145,81 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
 
 
 
+  // Demo images for fallback
+  const demoImages = [
+    "/images/gmr-logo.png",
+  ];
+
+  // Get fallback image based on app name or category
+  const getFallbackImage = () => {
+    // If backend provides a valid image, use it
+    if (appIcon && appIcon !== "" && appIcon !== "null" && appIcon !== "undefined") {
+      return appIcon;
+    }
+    
+    // Otherwise use category-based fallback
+    const categoryLower = category?.toLowerCase() || "";
+    if (categoryLower.includes("energy") || categoryLower.includes("power")) {
+      return "/icons/alert-triggered.svg";
+    } else if (categoryLower.includes("transport") || categoryLower.includes("railway")) {
+      return "/icons/active-users.svg";
+    } else if (categoryLower.includes("industrial") || categoryLower.includes("manufacturing")) {
+      return "/icons/apps-add.svg";
+    } else {
+      // Random demo image based on app name hash
+      const hash = appName.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0);
+      return demoImages[Math.abs(hash) % demoImages.length];
+    }
+  };
+
+  const [imageError, setImageError] = useState(false);
+  const [currentImage, setCurrentImage] = useState(getFallbackImage());
+
+  const handleImageError = () => {
+    if (!imageError) {
+      setImageError(true);
+      // If the backend image failed, try fallback images
+      if (appIcon && appIcon !== "" && appIcon !== "null" && appIcon !== "undefined") {
+        // Backend image failed, use category-based fallback
+        const categoryLower = category?.toLowerCase() || "";
+        if (categoryLower.includes("energy") || categoryLower.includes("power")) {
+          setCurrentImage("/icons/alert-triggered.svg");
+        } else if (categoryLower.includes("transport") || categoryLower.includes("railway")) {
+          setCurrentImage("/icons/active-users.svg");
+        } else if (categoryLower.includes("industrial") || categoryLower.includes("manufacturing")) {
+          setCurrentImage("/icons/apps-add.svg");
+        } else {
+          // Use hash-based fallback
+          const hash = appName.split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+          }, 0);
+          setCurrentImage(demoImages[Math.abs(hash) % demoImages.length]);
+        }
+      } else {
+        // Already using fallback, try next one
+        const currentIndex = demoImages.indexOf(currentImage);
+        const nextIndex = (currentIndex + 1) % demoImages.length;
+        setCurrentImage(demoImages[nextIndex]);
+      }
+    }
+  };
+
   return (
     <div className="bg-white rounded-3xl flex flex-col gap-4 border border-primary-border p-6 w-full">
       {/* Header Section */}
       <div className="flex items-start justify-between w-full items-center h-full gap-8">
         <div className="flex items-center gap-4 items-start">
           <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center overflow-hidden">
-            {/* Icon removed */}
-            <img src={appIcon} alt="app-icon" className="w-full h-full object-contain" />
+            <img 
+              src={currentImage} 
+              alt="app-icon" 
+              className="w-full h-full object-contain" 
+              onError={handleImageError}
+            />
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900">{appName}</h2>
@@ -338,7 +405,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
             </div>
           </div>
           {/* Total Meters Section */}
-          {/* <div>
+          <div>
             <h3 className="text-sm font-medium text-gray-900 ">Total Meters</h3>
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
@@ -383,7 +450,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
               <span>{activePercentage.toFixed(1)}% Active</span>
               <span>{inactivePercentage.toFixed(1)}% Inactive</span>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
     </div>

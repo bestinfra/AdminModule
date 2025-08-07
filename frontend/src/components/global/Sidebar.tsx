@@ -6,75 +6,75 @@ import '@/styles/custom.css';
 import Button from './Button';
 
 interface SubMenuItem {
-    title: string;
-    link?: string;
-    icon?: string;
-    count?: number;
-    hasSubmenu?: boolean;
-    submenu?: SubMenuItem[];
+  title: string;
+  link?: string;
+  icon?: string;
+  count?: number;
+  hasSubmenu?: boolean;
+  submenu?: SubMenuItem[];
 }
 
 interface MenuItem {
-    title: string;
-    icon: string;
-    link?: string;
-    hasSubmenu?: boolean;
-    submenu?: SubMenuItem[];
-    count?: number;
+  title: string;
+  icon: string;
+  link?: string;
+  hasSubmenu?: boolean;
+  submenu?: SubMenuItem[];
+  count?: number;
 }
 
 interface MenuCategory {
-    category: string;
-    items: MenuItem[];
+  category: string;
+  items: MenuItem[];
 }
 
 interface SidebarProps {
-    isCollapsed: boolean;
-    currentPath?: string;
-    onNavigate?: (path: string) => void;
-    menus?: MenuCategory[];
-    appDownload?: {
-        enabled: boolean;
-        title: string;
-        subtitle: string;
-        buttonText: string;
-        backgroundImage: string;
-        downloadUrl: string;
-        logo: {
-            src: string;
-            alt: string;
-        };
+  isCollapsed: boolean;
+  currentPath?: string;
+  onNavigate?: (path: string) => void;
+  menus?: MenuCategory[];
+  appDownload?: {
+    enabled: boolean;
+    title: string;
+    subtitle: string;
+    buttonText: string;
+    backgroundImage: string;
+    downloadUrl: string;
+    logo: {
+      src: string;
+      alt: string;
     };
-    footer?: {
-        showShareButton: boolean;
-    };
-    showThemeToggle?: boolean;
-    showAppDownload?: boolean;
-    className?: string;
-    onThemeToggle?: () => void;
-    onShareClick?: () => void;
-    onLogout?: () => void;
+  };
+  footer?: {
+    showShareButton: boolean;
+  };
+  showThemeToggle?: boolean;
+  showAppDownload?: boolean;
+  className?: string;
+  onThemeToggle?: () => void;
+  onShareClick?: () => void;
+  onLogout?: () => void;
 }
 
 const defaultMenus: MenuCategory[] = [
-    {
-        category: 'GENERAL',
-        items: [
-            {
-                title: 'SuperAdmin Dashboard', 
-                icon: '/icons/dashboard.svg',
-                link: '/superadmin',
-            },
-            // {
-            //     title: 'DTR Dashboard',
-            //     icon: '/icons/dashboard.svg',
-            //     link: '/dtr-dashboard',
-            // },
-            // {
-            //     title: 'Tickets',
-            //     icon: '/icons/customer-service.svg',
-            //     link: '/tickets',   
-            // },
+  {
+    category: "GENERAL",
+    items: [
+      {
+        title: "SuperAdmin Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/superadmin",
+      },
+      // {
+      //     title: 'DTR Dashboard',
+      //     icon: '/icons/dashboard.svg',
+      //     link: '/dtr-dashboard',
+      // },
+      {
+        title: "Tickets",
+        icon: "/icons/customer-service.svg",
+        link: "/tickets",
+      },
 
             {
                 title:'All Tickets',
@@ -98,118 +98,162 @@ const defaultMenus: MenuCategory[] = [
                 ],
             },
 
-            // {
-            //     title:'ConsumerDetails',
-            //     icon:'/icons/dashboard.svg',
-            //     link:'/consumer-details',
-            // }
-           
-        ],
-    },
-    {
-        category: 'ADMIN SETTINGS',
-        items: [
-            // {
-            //     title: 'Asset Management',
-            //     icon: '/icons/Asset_managment.svg',
-            //     link: '/asset-managment',
-            // },
-            
-          
-            // {
-            //     title: 'Meter List',
-            //     icon: '/icons/meter_managment.svg',
-            //     link: '/meters',
-            // },
-            {
-                title: 'User Management',
-                link: '/users',
-                icon:'/icons/user_managment.svg',
-            },
-            {
-                    title: 'Meter List',
-                    icon: '/icons/meter_managment.svg',
-                    link: '/meters',
-                },
-                {
-                    title: 'Payment',
-                    icon: '/icons/payment.svg',
-                    link: '/payment',
-                },
-                {
-                    title: 'Freeze Status',
-                    icon: '/icons/freeze-status.svg',
-                    link: '/freeze-status',
-                },
-            // {
-            //     title: 'SubLogin',
-            //     link: '/sub-login',
-            //     icon:'/icons/user_managment.svg',
-            // },    
-            // {
-            //     title: 'Consumer',
-            //     link: '/consumers',
-            //     icon:'/icons/user_managment.svg',
-            // },
-            
-            
-            // {   
-            //     title: 'User Management',
-            //     icon: '/icons/user_managment.svg',
-            //     link: '/user-management',
-            //     hasSubmenu: true,
-            //     submenu: [
-                   
-                  
-            //         {
-            //             title: 'Role Management',
-            //             link: '/role-management ',
-            //         },
-            //     ],
-            // },
-            // {
-            //     title: 'User Management',
-            //     icon: '/icons/user_managment.svg',
-            //     link: '/user-management',
-            //     hasSubmenu: true,
-            //     submenu: [
-                 
-                  
-            //         {
-            //             title: 'Role Management',
-            //             link: '/role-management ',
-            //         },
-            //     ],
-            // },
-        ],
-    },
+      // {
+      //     title:'ConsumerDetails',
+      //     icon:'/icons/dashboard.svg',
+      //     link:'/consumer-details',
+      // }
+    ],
+  },
+  {
+    category: "ADMIN SETTINGS",
+    items: [
+      // {
+      //     title: 'Asset Management',
+      //     icon: '/icons/Asset_managment.svg',
+      //     link: '/asset-managment',
+      // },
+
+      // {
+      //     title: 'Meter List',
+      //     icon: '/icons/meter_managment.svg',
+      //     link: '/meters',
+      // },
+      {
+        title: "User Management",
+        link: "/users",
+        icon: "/icons/user_managment.svg",
+      },
+      {
+        title: "Meter List",
+        icon: "/icons/meter_managment.svg",
+        link: "/meters",
+      },
+      {
+        title: "Occupancy to Vacency",
+        icon: "/icons/meter_managment.svg",
+        link: "/occupancy-status",
+      },
+      // {
+      //   title: "Payment",
+      //   icon: "/icons/payment.svg",
+      //   link: "/payment",
+      // },
+      // {
+      //   title: "Freeze Status",
+      //   icon: "/icons/freeze-status.svg",
+      //   link: "/freeze-status",
+      // },
+      {
+        title: "COnsumer Dashbaord",
+        icon: "/icons/freeze-status.svg",
+        link: "/consumer-dashboard",
+      },
+      {
+        title: "TIcket",
+        icon: "/icons/freeze-status.svg",
+        link: "/tickets",
+      },
+      // {
+      //   title: "Usage Summary",
+      //   icon: "/icons/freeze-status.svg",
+      //   link: "/usage-summary",
+      // },
+      // {
+      //     title: 'SubLogin',
+      //     link: '/sub-login',
+      //     icon:'/icons/user_managment.svg',
+      // },
+
+      // {
+      //     title: 'User Management',
+      //     icon: '/icons/user_managment.svg',
+      //     link: '/user-management',
+      //     hasSubmenu: true,
+      //     submenu: [
+
+      //         {
+      //             title: 'Role Management',
+      //             link: '/role-management ',
+      //         },
+      //     ],
+      // },
+      // {
+      //     title: 'User Management',
+      //     icon: '/icons/user_managment.svg',
+      //     link: '/user-management',  
+      //     hasSubmenu: true,
+      //     submenu: [
+
+      //         {
+      //             title: 'Role Management',
+      //             link: '/role-management ',
+      //         },
+      //     ],
+      // },
+    ],
+  },
+  // {
+  //   category: "GMR Client",
+  //   items: [
+  //     {
+  //       title: "Dashboard",
+  //       link: "/consumer-dashboard",
+  //       icon: "/icons/dashboard.svg",
+  //     },
+  //     {
+  //       title: "All Consumer",
+  //       link: "/consumers",
+  //       icon: "/icons/units.svg",
+  //     },
+
+  //     {
+  //       title: "Bills",
+  //       icon: "/icons/user_managment.svg",
+  //       link: "/user-management",
+  //       hasSubmenu: true,
+  //       submenu: [
+  //         {
+  //           title: "PostPaid",
+  //           icon: "/icons/dashboard.svg",
+  //           link: "/prepaid",
+  //         },
+  //         {
+  //           title: "Postpaid",
+  //           icon: "/icons/dashboard.svg",
+  //           link: "/postpaid",
+  //         },
+  //       ],
+  //     },
+  //   ],
+  // },
 ];
 
 const defaultProps: Partial<
-    Omit<SidebarProps, 'isCollapsed' | 'onThemeToggle'>
+  Omit<SidebarProps, "isCollapsed" | "onThemeToggle">
 > = {
-    appDownload: {
-        enabled: true,
-        title: 'Download our Mobile App',
-        subtitle: 'Get easy in another way',
-        buttonText: 'Download App',
-        backgroundImage: '/images/download-app.svg',
-        downloadUrl: 'https://your-app-download-url.com',
-        logo: {
-            src: '/images/changed-logo.svg',
-            alt: 'App Logo',
-        },
+  appDownload: {
+    enabled: true,
+    title: "Download our Mobile App",
+    subtitle: "Get easy in another way",
+    buttonText: "Download App",
+    backgroundImage: "/images/download-app.svg",
+    downloadUrl: "https://your-app-download-url.com",
+    logo: {
+      src: "/images/changed-logo.svg",
+      alt: "App Logo",
     },
-    onLogout: () => {
-        const allCookies = Cookies.get();
-        Object.keys(allCookies).forEach((cookieName) => {
-            Cookies.remove(cookieName);
-        });
+  },
+  onLogout: () => {
+    const allCookies = Cookies.get();
+    Object.keys(allCookies).forEach((cookieName) => {
+      Cookies.remove(cookieName);
+    });
 
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = '/auth/logout';
-    },
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = "/auth/logout";
+  },
 };
 
 const Sidebar = ({
@@ -355,22 +399,22 @@ const Sidebar = ({
         (window as any).clearSidebarPermissions = clearPermissions;
     }
 
-    // Use currentPath prop if provided, otherwise fallback to useLocation for standalone usage
-    let pathname = currentPath;
-    try {
-        const location = useLocation();
-        if (!pathname) pathname = location.pathname;
-    } catch {
-        // useLocation failed, use currentPath or default to '/'
-        pathname = currentPath || '/';
-    }
+  // Use currentPath prop if provided, otherwise fallback to useLocation for standalone usage
+  let pathname = currentPath;
+  try {
+    const location = useLocation();
+    if (!pathname) pathname = location.pathname;
+  } catch {
+    // useLocation failed, use currentPath or default to '/'
+    pathname = currentPath || "/";
+  }
 
-    const toggleSubmenu = (menuTitle: string) => {
-        setExpandedMenus((prev) => ({
-            ...prev,
-            [menuTitle]: !prev[menuTitle],
-        }));
-    };
+  const toggleSubmenu = (menuTitle: string) => {
+    setExpandedMenus((prev) => ({
+      ...prev,
+      [menuTitle]: !prev[menuTitle],
+    }));
+  };
 
     return (
         <div
@@ -624,103 +668,97 @@ const Sidebar = ({
                                             />
                                         </span>
 
-                                        <span className="bg-secondary text-white text-xs font-medium rounded-lg px-2 py-1">
-                                            New
-                                        </span>
-                                    </div>
-                                    <div className="flex flex-col">
-                                        <h3 className="text-white text-2xl font-bold">
-                                            {appDownload.title}
-                                        </h3>
-                                        <p className="text-white text-sm font-semibold">
-                                            {appDownload.subtitle}
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Button
-                                            label={appDownload.buttonText}
-                                            variant="primary"
-                                            onClick={() => {
-                                                window.open(
-                                                    appDownload.downloadUrl,
-                                                    '_blank'
-                                                );
-                                            }}
-                                        />
-                                        {footer?.showShareButton && (
-                                            <span
-                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-primary-lightest"
-                                                aria-label="Share app"
-                                                onClick={onShareClick}>
-                                                <img
-                                                    src="/icons/share.svg"
-                                                    alt=""
-                                                    className="w-5 h-5 filter"
-                                                    aria-hidden="true"
-                                                />
-                                            </span>
-                                        )}
-                                    </div>
-                                </section>
-                            )}
-                            <div className="flex items-center justify-between w-full">
-                                <p className="text-xs text-light dark:text-subinfo">
-                                    © {new Date().getFullYear()} Bestinfra Pvt. Ltd.
-                                </p>
-
-                                {showThemeToggle && (
-                                    <button
-                                        className="w-10 h-10 border border-primary-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
-                                        aria-label="Toggle dark mode"
-                                        onClick={onThemeToggle}>
-                                        <img
-                                            className="w-5 h-5"
-                                            src={`${
-                                                isDarkMode
-                                                    ? '/icons/sun.svg'
-                                                    : '/icons/moon.svg'
-                                            }`}
-                                            alt=""
-                                            aria-hidden="true"
-                                        />
-                                    </button>
-                                )}
-                            </div>
-                        </>
-                    ) : (
-                        <div className="flex flex-col items-center justify-center py-4 gap-4 w-full">
-                            <span className="w-10 h-10 bg-transparent p-2 rounded-full">
-                                <img
-                                    src="/icons/andriod-app.svg"
-                                    alt=""
-                                    className="filter"
-                                    aria-hidden="true"
-                                />
-                            </span>
-                            {showThemeToggle && (
-                                <button
-                                    className="w-10 h-10 border border-light-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
-                                    aria-label="Toggle dark mode"
-                                    onClick={onThemeToggle}>
-                                    <img
-                                        className="w-5 h-5"
-                                        src={`${
-                                            isDarkMode
-                                                ? '/icons/sun.svg'
-                                                : '/icons/moon.svg'
-                                        }`}
-                                        alt=""
-                                        aria-hidden="true"
-                                    />
-                                </button>
-                            )}
-                        </div>
+                    <span className="bg-secondary text-white text-xs font-medium rounded-lg px-2 py-1">
+                      New
+                    </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <h3 className="text-white text-2xl font-bold">
+                      {appDownload.title}
+                    </h3>
+                    <p className="text-white text-sm font-semibold">
+                      {appDownload.subtitle}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      label={appDownload.buttonText}
+                      variant="primary"
+                      onClick={() => {
+                        window.open(appDownload.downloadUrl, "_blank");
+                      }}
+                    />
+                    {footer?.showShareButton && (
+                      <span
+                        className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-primary-lightest"
+                        aria-label="Share app"
+                        onClick={onShareClick}
+                      >
+                        <img
+                          src="/icons/share.svg"
+                          alt=""
+                          className="w-5 h-5 filter"
+                          aria-hidden="true"
+                        />
+                      </span>
                     )}
-                </footer>
-            </nav>
-        </div>
-    );
+                  </div>
+                </section>
+              )}
+              <div className="flex items-center justify-between w-full">
+                <p className="text-xs text-light dark:text-subinfo">
+                  © {new Date().getFullYear()} Bestinfra Pvt. Ltd.
+                </p>
+
+                {showThemeToggle && (
+                  <button
+                    className="w-10 h-10 border border-primary-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
+                    aria-label="Toggle dark mode"
+                    onClick={onThemeToggle}
+                  >
+                    <img
+                      className="w-5 h-5"
+                      src={`${
+                        isDarkMode ? "/icons/sun.svg" : "/icons/moon.svg"
+                      }`}
+                      alt=""
+                      aria-hidden="true"
+                    />
+                  </button>
+                )}
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-4 gap-4 w-full">
+              <span className="w-10 h-10 bg-transparent p-2 rounded-full">
+                <img
+                  src="/icons/andriod-app.svg"
+                  alt=""
+                  className="filter"
+                  aria-hidden="true"
+                />
+              </span>
+              {showThemeToggle && (
+                <button
+                  className="w-10 h-10 border border-light-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
+                  aria-label="Toggle dark mode"
+                  onClick={onThemeToggle}
+                >
+                  <img
+                    className="w-5 h-5"
+                    src={`${isDarkMode ? "/icons/sun.svg" : "/icons/moon.svg"}`}
+                    alt=""
+                    aria-hidden="true"
+                  />
+                </button>
+              )}
+            </div>
+          )}
+        </footer>
+      </nav>
+    </div>
+  );
 };
 
 export default Sidebar;
-// font-medium	
+// font-medium

@@ -1,60 +1,111 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback, useRef } from "react";
 import PageC from "@/components/global/PageC";
-// import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
+import { getSuperAdminDashboardStats } from "@/api/dashboardApi";
+import type { DashboardStats } from "@/api/dashboardApi";
+import Search from "@/components/global/Search";
+// @ts-ignore
+import { debounce } from "throttle-debounce";
 
 const SuperAdminDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const [dashboardData, setDashboardData] = useState<DashboardStats | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [appsPerPage] = useState(6);
+  const [searchValue, setSearchValue] = useState('');
+  const [displaySearchValue, setDisplaySearchValue] = useState(''); // For immediate UI updates
+  const [isSearching, setIsSearching] = useState(false);
 
-  // KPI Cards Data - Using BRAND_GREEN (default) for all cards
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce(300, (searchTerm: string) => {
+      setIsSearching(true);
+      setSearchValue(searchTerm);
+      setCurrentPage(1); // Reset to first page when searching
+      // Reset searching state after a short delay
+      setTimeout(() => setIsSearching(false), 100);
+    }),
+    []
+  );
+
+  // Fetch dashboard data from backend
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true);
+        const data = await getSuperAdminDashboardStats(currentPage, appsPerPage);
+        setDashboardData(data);
+        setError(null);
+      } catch (err) {
+        console.error('Error fetching dashboard data:', err);
+        setError('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, [currentPage, appsPerPage]);
+
+  // Cleanup debounced function on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
+  // KPI Cards Data - Using real data from backend
   const kpiCards = [
     {
       title: "Total Sub-Apps",
-      value: "12",
+      value: dashboardData?.kpiCards?.totalSubApps?.value || "0",
       icon: "/icons/apps-add.svg",
       showTrend: true,
-      comparisonValue: 12.5,
-      subtitle1: "3 created this month",
-      subtitle2: "12.5% from last month",
+      comparisonValue: parseFloat(dashboardData?.kpiCards?.totalSubApps?.percentageChange || "0"),
+      subtitle1: `${dashboardData?.kpiCards?.totalSubApps?.thisMonth || 0} created this month`,
+      subtitle2: `${dashboardData?.kpiCards?.totalSubApps?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/sub-apps"),
       bg: "bg-stat-icon-gradient",
     },
     {
       title: "Active Users",
-      value: "490",
+      value: dashboardData?.kpiCards?.activeUsers?.value || "0",
       icon: "/icons/active-users.svg",
       showTrend: true,
-      comparisonValue: 8.2,
+      comparisonValue: dashboardData?.kpiCards?.activeUsers?.percentageChange || 0,
       subtitle1: "Across all applications",
-      subtitle2: "8.2% from last month",
+      subtitle2: `${dashboardData?.kpiCards?.activeUsers?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/active-users"),
       bg: "bg-stat-icon-gradient",
     },
     {
       title: "Daily Logins",
-      value: "1,890",
+      value: dashboardData?.kpiCards?.dailyLogins?.value || "0",
       icon: "/icons/daily-logins.svg",
       showTrend: true,
-      comparisonValue: 15.3,
+      comparisonValue: dashboardData?.kpiCards?.dailyLogins?.percentageChange || 0,
       subtitle1: "Last 24 hours",
-      subtitle2: "15.3% from last month",
+      subtitle2: `${dashboardData?.kpiCards?.dailyLogins?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/daily-logins"),
       bg: "bg-stat-icon-gradient",
     },
     {
       title: "Issues",
-      value: "1",
+      value: dashboardData?.kpiCards?.issues?.value || "0",
       icon: "/icons/alert-triggered.svg",
       showTrend: true,
-      comparisonValue: -5,
+      comparisonValue: dashboardData?.kpiCards?.issues?.percentageChange || 0,
       subtitle1: "Needs attention",
-      subtitle2: "5% from last month",
+      subtitle2: `${dashboardData?.kpiCards?.issues?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/issues"),
       bg: "bg-stat-icon-gradient",
     },
   ];
 
-  // Daily Login Trends Data for Pie Chart
-  const dailyLoginTrendsData = [
+  // Daily Login Trends Data for Pie Chart - Using real data from backend
+  const dailyLoginTrendsData = dashboardData?.charts?.dailyLoginTrends || [
     { value: 45, name: "TGNPDCL" },
     { value: 25, name: "GMR" },
     { value: 20, name: "Railway" },
@@ -62,10 +113,10 @@ const SuperAdminDashboard: React.FC = () => {
     { value: 10, name: "NTPC" },
   ];
 
-  // App Usage Distribution Data for Bar Chart
+  // App Usage Distribution Data for Bar Chart - Using real data from backend
   const appUsageData = {
-    xAxisData: ["TGNPDCL", "GMR", "Railway", "Lkea", "NTPC"],
-    seriesData: [
+    xAxisData: dashboardData?.charts?.appUsageDistribution?.xAxisData || ["TGNPDCL", "GMR", "Railway", "Lkea", "NTPC"],
+    seriesData: dashboardData?.charts?.appUsageDistribution?.seriesData || [
       {
         name: "Active Users",
         data: [320, 180, 150, 120, 95, 80],
@@ -81,39 +132,62 @@ const SuperAdminDashboard: React.FC = () => {
     ],
   };
 
-  // Sample SubApp Data
-  const sampleSubApp = {
-    appIcon: "/images/gmr-logo.png",
-    appName: "TGNPDCL Application",
-    appId: "app_2024_001",
-    subdomain: "store.techcorp.com",
-    health: "Live" as const,
-    status: "Active" as const,
-    created: "1/15/2024",
-    updated: "7/28/2024",
-    company: "TechCorp Solutions",
-    website: "techcorp.com",
-    category: "Power Distribution",
-    modules: [
-      { name: "DTR Dashboard", icon: "/icons/inventory.svg" },
-      { name: "Meter Details", icon: "/icons/payments.svg" },
-      { name: "Feeder Details", icon: "/icons/analytics.svg" },
-    ],
-    connectedApis: [
-      { name: "Payment Gateway", status: "connected" as const },
-      { name: "Inventory System", status: "error" as const },
-      { name: "Analytics API", status: "connected" as const },
-    ],
-    meters: {
-      total: 1250,
-      active: 1180,
-      inactive: 70,
-    },
-    tickets: {
-      count: 12,
-      icon: "/icons/tickets.svg",
-    },
+  // Recent Apps Data - Using real data from backend
+  const recentApps = dashboardData?.recentApps || [];
+  const pagination = dashboardData?.pagination;
+
+  // Filter apps based on search term
+  const filteredApps = recentApps.filter((app: any) => {
+    if (!searchValue.trim()) return true;
+    
+    const searchTerms = searchValue.toLowerCase().trim().split(/\s+/);
+    const appData = [
+      app.appName || '',
+      app.company || '',
+      app.category || '',
+      app.subdomain || '',
+      app.status || ''
+    ].join(' ').toLowerCase();
+    
+    return searchTerms.every(term => appData.includes(term));
+  });
+
+  // Pagination handlers
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
   };
+
+  const handleNextPage = () => {
+    if (pagination && currentPage < pagination.totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Search handler with debouncing
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setDisplaySearchValue(newValue); // Update UI immediately
+    debouncedSearch(newValue); // Debounce the actual search
+  };
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading dashboard data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state - Display dashboard with zero data instead of error page
+  if (error) {
+    // Error occurred but dashboard will show with zero data
+  }
 
   return (
     <div className="">
@@ -139,21 +213,14 @@ const SuperAdminDashboard: React.FC = () => {
                   menuItems: [
                     { id: "create-project", label: "Create Project" },
                     { id: "export", label: "Export Report" },
-                    { id: "settings", label: "Dashboard Settings" },
                   ],
                   onMenuItemClick: (itemId: string) => {
                     switch (itemId) {
                       case "create-project":
                         navigate("/apps");
                         break;
-                      case "refresh":
-                        console.log("Refreshing dashboard data");
-                        break;
                       case "export":
-                        console.log("Exporting dashboard report");
-                        break;
-                      case "settings":
-                        navigate("/dashboard-settings");
+                        // Export functionality
                         break;
                     }
                   },
@@ -220,14 +287,8 @@ const SuperAdminDashboard: React.FC = () => {
                         className: "p-6",
                         title: "",
                         onClick: (segmentName?: string) => {
-                          console.log("Clicked on:", segmentName);
-                          // Navigate to specific app dashboard
                           if (segmentName) {
-                            navigate(
-                              `/sub-apps/${segmentName
-                                .toLowerCase()
-                                .replace(/\s+/g, "-")}`
-                            );
+                            navigate(`/sub-apps/${segmentName.toLowerCase().replace(/\s+/g, "-")}`);
                           }
                         },
                       },
@@ -265,7 +326,7 @@ const SuperAdminDashboard: React.FC = () => {
                         yAxisMax: 500,
                         yAxisStep: 100,
                         onDownload: () => {
-                          console.log("Downloading app usage data");
+                          // Download functionality
                         },
                       },
                     },
@@ -278,27 +339,84 @@ const SuperAdminDashboard: React.FC = () => {
           {
             layout: {
               type: "grid",
-              columns: 2,
-              gap: "gap-6",
-              className: "w-full",
+              columns: 1,
+              gap: "gap-3",
+              className: "w-full border border-primary-border dark:border-dark-border rounded-3xl p-3",
               rows: [
+                // Search Bar
+                {
+                  layout: "row",
+                  gap: "gap-4",
+                  className: "flex items-center justify-between mb-4",
+                  columns: [
+                    {
+                      name: "Search",
+                      props: {
+                        value: displaySearchValue, // Use display value for immediate UI updates
+                        onChange: handleSearchChange,
+                        placeholder: "Search apps by name, company, category...",
+                        className: "flex-1 w-full",
+                        showShortcut: false,
+                        results: [],
+                        isLoading: isSearching,
+                        disabled: false,
+                        required: false,
+                        error: null,
+                        name: "search"
+                      }
+                    },
+                  ]
+                },
+                // Apps Grid
                 {
                   layout: "grid",
                   gap: "gap-6",
                   gridColumns: 2,
-                  gridRows: 1,
-                  span: { col: 2, row: 1 },
+                  gridRows: 3,
+                  className: "p-3",
+                  span: { col: 1, row: 1 },
+                  columns: filteredApps.length > 0 
+                    ? filteredApps.map((app: any) => ({
+                        name: "SubappPanel",
+                        props: app,
+                      }))
+                    : [{
+                        name: "Holder",
+                        props: {
+                          title: "No matching apps found",
+                          subtitle: searchValue ? `No apps match "${searchValue}"` : "No apps available",
+                          className: "col-span-3 text-center py-8",
+                        }
+                      }]
+                },
+                // Pagination Controls - Only show when not searching and results exist
+                ...(searchValue.trim() === '' && filteredApps.length > 0 ? [{
+                  layout: "row" as const,
+                  gap: "gap-4",
+                  className: "flex justify-center items-center mt-4",
                   columns: [
                     {
-                      name: "SubappPanel",
-                      props: sampleSubApp,
+                      name: "Button",
+                      props: {
+                        variant: "primary",
+                        onClick: handlePreviousPage,
+                        disabled: currentPage <= 1,
+                        children: "← Previous",
+                        className: "px-4 py-2"
+                      }
                     },
                     {
-                      name: "SubappPanel",
-                      props: sampleSubApp,
-                    },
-                  ],
-                },
+                      name: "Button",
+                      props: {
+                        variant: "primary",
+                        onClick: handleNextPage,
+                        disabled: !pagination || currentPage >= pagination.totalPages,
+                        children: "Next →",
+                        className: "px-4 py-2"
+                      }
+                    }
+                  ]
+                }] : [])
               ],
             },
           },
