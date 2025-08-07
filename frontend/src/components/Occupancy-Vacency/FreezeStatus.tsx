@@ -17,11 +17,12 @@ interface TransactionStep {
 }
 
 interface FreezeStatusProps {
+    currentStep?: number;
+    onStepChange?: (step: number) => void;
     title?: string;
     subtitle?: string;
     statusCards?: StatusCard[];
     transactionSteps?: TransactionStep[];
-    onDownloadReceipt?: () => void;
     onDone?: () => void;
     loading?: boolean;
     disabled?: boolean;
@@ -34,9 +35,15 @@ interface FreezeStatusProps {
     doneButtonLabel?: string;
     showTransactionSummary?: boolean;
     showWhatHappensNext?: boolean;
+    electricity_usage?: string;
+    final_reading?: string;
+    final_amount?: string;
+    payment_method?: string;
 }
 
 const FreezeStatus: React.FC<FreezeStatusProps> = ({
+    currentStep = 4,
+    onStepChange,
     title = 'Account Successfully Frozen',
     subtitle = 'The property has been marked as vacant and all billing has been finalized.',
     statusCards = [
@@ -80,7 +87,6 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
             icon: '/icons/calendar.svg',
         },
     ],
-    onDownloadReceipt,
     onDone,
     loading = false,
     disabled = false,
@@ -98,7 +104,48 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
     doneButtonLabel = 'Done',
     showTransactionSummary = true,
     showWhatHappensNext = true,
+    electricity_usage,
+    final_reading,
+    final_amount,
+    payment_method,
 }) => {
+    // Use props data if available, otherwise use defaults
+    const finalStatusCards = statusCards.map(card => {
+        if (card.label === 'Electricity Usage' && electricity_usage) {
+            return { ...card, value: `${electricity_usage} kWh` };
+        }
+        if (card.label === 'Final Reading' && final_reading) {
+            return { ...card, value: `${final_reading} kWh` };
+        }
+        if (card.label === 'Final Amount' && final_amount) {
+            return { ...card, value: `₹${final_amount}` };
+        }
+        return card;
+    });
+
+    const finalTransactionSteps = transactionSteps.map(step => {
+        if (step.title === 'Final bill generated and settled' && final_amount) {
+            return { ...step, description: `Amount: ₹${final_amount}` };
+        }
+        return step;
+    });
+
+    const handleDownloadReceipt = () => {
+        // Handle download receipt functionality
+        console.log('Downloading receipt...');
+    };
+
+    const handleDone = () => {
+        if (onDone) {
+            onDone();
+        } else {
+            // Default behavior - navigate to dashboard or home
+            console.log('Occupancy process completed');
+            // You can add navigation logic here
+            // window.location.href = '/dashboard';
+        }
+    };
+
     return (
         <main className={`max-w-2xl mx-auto bg-white rounded-3xl shadow-lg p-8 flex flex-col gap-8 ${className}`}>
             {/* Header Section with Success Checkmark */}
@@ -124,10 +171,10 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
             </header>
 
             {/* Status Cards Grid */}
-            {statusCards.length > 0 && (
+            {finalStatusCards.length > 0 && (
                 <section aria-label="Account status information">
                     <div className="grid grid-cols-2 gap-4">
-                        {statusCards.map((card, index) => (
+                        {finalStatusCards.map((card, index) => (
                             <article
                                 key={index}
                                 className="bg-blue-50 rounded-2xl p-4 flex flex-col gap-3"
@@ -155,11 +202,11 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
             )}
 
             {/* Transaction Summary */}
-            {showTransactionSummary && transactionSteps.length > 0 && (
+            {showTransactionSummary && finalTransactionSteps.length > 0 && (
                 <section aria-label="Transaction summary">
                     <h2 className="text-xl font-semibold text-gray-900 font-manrope mb-4">Transaction Summary</h2>
                     <div className="space-y-4">
-                        {transactionSteps.map((step, index) => (
+                        {finalTransactionSteps.map((step, index) => (
                             <div key={index} className="flex items-start gap-3">
                                 <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                                     <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -178,7 +225,7 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
 
             {/* Action Buttons */}
             {showButtons && (
-                <footer className="flex  gap-3">
+                <footer className="flex gap-3">
                     {customButtons ? (
                         customButtons
                     ) : (
@@ -186,7 +233,7 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
                             <Button
                                 label={loading ? 'Processing...' : downloadButtonLabel}
                                 variant="primary"
-                                onClick={onDownloadReceipt}
+                                onClick={handleDownloadReceipt}
                                 loading={loading}
                                 disabled={disabled}
                                 className='w-full'
@@ -194,10 +241,10 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
                             <Button
                                 label={doneButtonLabel}
                                 variant="secondary"
-                                onClick={onDone}
+                                onClick={handleDone}
                                 loading={loading}
                                 disabled={disabled}
-                                className='w-full '
+                                className='w-full'
                             />
                         </>
                     )}

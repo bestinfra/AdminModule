@@ -2,26 +2,51 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import Buttons from '../global/Button';
 
-const ConfirmationPage = () => {
+interface ConfirmationPageProps {
+  currentStep?: number;
+  onStepChange?: (step: number) => void;
+  unit_id?: string;
+  meter_no?: string;
+  consumer_name?: string;
+  property_address?: string;
+  className?: string;
+}
+
+const ConfirmationPage: React.FC<ConfirmationPageProps> = ({
+  currentStep = 1,
+  onStepChange,
+  unit_id,
+  meter_no,
+  consumer_name,
+  property_address,
+  className = ''
+}) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { unit_id, meter_no } = location.state || {};
+    const { unit_id: locationUnitId, meter_no: locationMeterNo } = location.state || {};
     
+    // Use props data if available, otherwise fall back to location state
+    const finalUnitId = unit_id || locationUnitId;
+    const finalMeterNo = meter_no || locationMeterNo;
 
     const handleReview = () => {
-        if (meter_no) {
-            navigate(`/occupancy/usage-summary/${meter_no}`, {
+        if (onStepChange) {
+            // Use step navigation if available
+            onStepChange(2); // Navigate to Usage Summary step
+        } else if (finalMeterNo) {
+            // Fallback to traditional navigation
+            navigate(`/occupancy/usage-summary/${finalMeterNo}`, {
                 state: {
-                    unit_id,
-                    meter_no
+                    unit_id: finalUnitId,
+                    meter_no: finalMeterNo
                 }
             });
         }
     };
 
     return (
-        <main className="min-h-full flex justify-center items-start w-full bg-background-secondary">
-            <article className="rounded-2xl p-6 md:p-8 w-full max-w-2xl border border-primary-border bg-neutral-lightest flex flex-col gap-6 max-h-[90vh] overflow-y-auto scrollbar-hide">
+        <main className={`min-h-full flex justify-center items-start w-full bg-background-secondary ${className}`}>
+            <article className="rounded-2xl bg-white p-6 md:p-8 w-full max-w-2xl border border-primary-border bg-neutral-lightest flex flex-col gap-6 max-h-[90vh] overflow-y-auto scrollbar-hide">
                 <section className="flex flex-col gap-6 overflow-y-auto scrollbar-hide">
                     <header>
                         <h1 className="font-semibold text-text-primary text-xl md:text-2xl">
@@ -78,7 +103,6 @@ const ConfirmationPage = () => {
                         label="Yes, Review"
                         variant="primary"
                         onClick={handleReview}
-                        disabled={!meter_no}
                         className="w-full"
                     />
                     <Buttons

@@ -9,27 +9,30 @@ interface PaymentMethod {
 }
 
 interface PaymentProps {
+    currentStep?: number;
+    onStepChange?: (step: number) => void;
     amount?: string;
     billId?: string;
     billDate?: string;
-    onPayNow?: () => void;
-    onMarkAsPaid?: () => void;
+    onPaymentComplete?: (paymentMethod: string) => void;
     loading?: boolean;
     disabled?: boolean;
     className?: string;
 }
 
 const Payment: React.FC<PaymentProps> = ({
+    currentStep = 3,
+    onStepChange,
     amount = '90.43',
     billId = 'BILL00123',
     billDate = 'August 6, 2025',
-    onPayNow,
-    onMarkAsPaid,
+    onPaymentComplete,
     loading = false,
     disabled = false,
     className = '',
 }) => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('cash');
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const paymentMethods: PaymentMethod[] = [
         {
@@ -43,6 +46,44 @@ const Payment: React.FC<PaymentProps> = ({
             icon: '/icons/rupee.svg',
         },
     ];
+
+    const handlePayNow = async () => {
+        setIsProcessing(true);
+        try {
+            // Simulate payment processing
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            
+            if (onPaymentComplete) {
+                onPaymentComplete(selectedPaymentMethod);
+            } else if (onStepChange) {
+                // Use step navigation if available
+                onStepChange(4); // Navigate to FreezeStatus step
+            }
+        } catch (error) {
+            console.error('Payment failed:', error);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
+
+    const handleMarkAsPaid = async () => {
+        setIsProcessing(true);
+        try {
+            // Simulate marking as paid
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            if (onPaymentComplete) {
+                onPaymentComplete(selectedPaymentMethod);
+            } else if (onStepChange) {
+                // Use step navigation if available
+                onStepChange(4); // Navigate to FreezeStatus step
+            }
+        } catch (error) {
+            console.error('Mark as paid failed:', error);
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     return (
         <div className={`max-w-lg mx-auto bg-white rounded-3xl shadow-lg p-6 flex flex-col gap-6 ${className}`}>
@@ -140,20 +181,20 @@ const Payment: React.FC<PaymentProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex  gap-3">
+            <div className="flex gap-3">
                 <Button
-                    label={loading ? 'Processing...' : 'Pay Now'}
+                    label={isProcessing ? 'Processing...' : 'Pay Now'}
                     variant="primary"
-                    onClick={onPayNow}
-                    loading={loading}
+                    onClick={handlePayNow}
+                    loading={isProcessing}
                     disabled={disabled}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 />
                 <Button
-                    label={loading ? 'Processing...' : 'Mark as Paid'}
+                    label={isProcessing ? 'Processing...' : 'Mark as Paid'}
                     variant="outline"
-                    onClick={onMarkAsPaid}
-                    loading={loading}
+                    onClick={handleMarkAsPaid}
+                    loading={isProcessing}
                     disabled={disabled}
                     className="w-full border-gray-300 text-gray-700 hover:bg-gray-50"
                 />

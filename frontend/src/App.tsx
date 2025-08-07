@@ -61,6 +61,7 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
                         <Route path="/sub-login" element={<SubLogin />} />
+                        <Route path="/occupancy-status" element={<OccupancyStatus />} />
                         <Route
                             element={
                                 <ProtectedRoute>
@@ -120,7 +121,7 @@ const App: React.FC = () => {
                             <Route path="/freeze-status" element={<FreezeStatus />} />
                             <Route path="/confirmation" element={<ConfirmationPage />} />
                             <Route path="/usage-summary" element={<UsageSummaryPage />} />
-                            <Route path="/occupancy-status" element={<OccupancyStatus />} />
+                       
                             {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
                             <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}

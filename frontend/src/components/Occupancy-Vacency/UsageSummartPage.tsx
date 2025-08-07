@@ -32,11 +32,39 @@ interface AdvanceAmountDetail {
     description: string;
 }
 
-const UsageSummaryPage: React.FC = () => {
+interface UsageSummaryPageProps {
+    currentStep?: number;
+    onStepChange?: (step: number) => void;
+    meter_no?: string;
+    unit_id?: string;
+    previous_reading?: string;
+    final_reading?: string;
+    electricity_usage?: string;
+    electricity_charges?: string;
+    onDataUpdate?: (data: any) => void;
+    className?: string;
+}
+
+const UsageSummaryPage: React.FC<UsageSummaryPageProps> = ({
+    currentStep = 2,
+    onStepChange,
+    meter_no: propMeterNo,
+    unit_id: propUnitId,
+    previous_reading: propPreviousReading,
+    final_reading: propFinalReading,
+    electricity_usage: propElectricityUsage,
+    electricity_charges: propElectricityCharges,
+    onDataUpdate,
+    className = ''
+}) => {
     const navigate = useNavigate();
-    const { meter_no } = useParams<{ meter_no: string }>();
+    const { meter_no: paramMeterNo } = useParams<{ meter_no: string }>();
     const location = useLocation();
-    const { unit_id } = location.state || {};
+    const { unit_id: locationUnitId } = location.state || {};
+    
+    // Use props data if available, otherwise fall back to params/location
+    const finalMeterNo = propMeterNo || paramMeterNo;
+    const finalUnitId = propUnitId || locationUnitId;
     
     const [isConfirmed, setIsConfirmed] = useState(false);
     const [lastUpdated, setLastUpdated] = useState(new Date());
@@ -55,10 +83,10 @@ const UsageSummaryPage: React.FC = () => {
         electricity_charges: ''
     });
     const [usageData, setUsageData] = useState<UsageData>({
-        previous_reading: '',
-        final_reading: '',
-        electricity_usage: '',
-        electricity_charges: '',
+        previous_reading: propPreviousReading || '',
+        final_reading: propFinalReading || '',
+        electricity_usage: propElectricityUsage || '',
+        electricity_charges: propElectricityCharges || '',
         tariff_applied: '',
         previous_reading_timestamp: '',
         final_reading_timestamp: '',
@@ -118,11 +146,18 @@ const UsageSummaryPage: React.FC = () => {
         try {
             setLoading(true);
             // Here you would typically make an API call to update the reading
-            setUsageData(prev => ({
-                ...prev,
+            const updatedData = {
+                ...usageData,
                 [field]: editedValues[field as keyof typeof editedValues],
                 [`${field}_timestamp`]: new Date().toISOString()
-            }));
+            };
+            setUsageData(updatedData);
+            
+            // Update parent component data
+            if (onDataUpdate) {
+                onDataUpdate(updatedData);
+            }
+            
             setEditingField(null);
             handleRefresh();
         } catch (err) {
@@ -148,6 +183,26 @@ const UsageSummaryPage: React.FC = () => {
             ...prev,
             [field]: value
         }));
+    };
+
+    const handleFreezeAndFinalize = () => {
+        if (onStepChange) {
+            // Use step navigation if available
+            onStepChange(3); // Navigate to Payment step
+        } else if (finalMeterNo) {
+            // Fallback to traditional navigation
+            navigate('/occupancy/payment', { 
+                state: { 
+                    unit_id: finalUnitId,
+                    meter_no: finalMeterNo,
+                    totalAmount: `₹${usageData.electricity_charges}`,
+                    dueDate: new Date().toISOString().split('T')[0],
+                    final_reading: usageData.final_reading,
+                    electricity_charges: usageData.electricity_charges,
+                    electricity_usage: usageData.electricity_usage
+                } 
+            });
+        }
     };
 
     const renderEditableField = (field: string, label: string, unit: string = '') => {
@@ -259,23 +314,23 @@ const UsageSummaryPage: React.FC = () => {
             setError(null);
             
             // Mock API call - replace with actual API client
-            // Example: const response = await fetch(`/api/occupancy/${meter_no}`);
+            // Example: const response = await fetch(`/api/occupancy/${finalMeterNo}`);
             
             // Simulate API delay
             await new Promise(resolve => setTimeout(resolve, 1000));
             
             // Mock data for demonstration
             const mockData = {
-                previous_reading: '1000.00',
-                final_reading: '1200.00',
-                electricity_usage: '200.00',
-                electricity_charges: '1500.00',
+                previous_reading: propPreviousReading || '1000.00',
+                final_reading: propFinalReading || '1200.00',
+                electricity_usage: propElectricityUsage || '200.00',
+                electricity_charges: propElectricityCharges || '1500.00',
                 tariff_applied: '7.50',
                 previous_reading_timestamp: new Date(Date.now() - 86400000).toISOString(),
                 final_reading_timestamp: new Date().toISOString(),
             };
 
-            setUsageData({
+            const updatedUsageData = {
                 ...mockData,
                 items: [
                     { 
@@ -301,7 +356,14 @@ const UsageSummaryPage: React.FC = () => {
                         cost: `₹${mockData.electricity_charges}`,
                     },
                 ],
-            });
+            };
+
+            setUsageData(updatedUsageData);
+            
+            // Update parent component data
+            if (onDataUpdate) {
+                onDataUpdate(updatedUsageData);
+            }
         } catch (err) {
             console.error('Error fetching usage summary:', err);
             setError('Failed to load usage summary. Please try again later.');
@@ -312,10 +374,10 @@ const UsageSummaryPage: React.FC = () => {
 
     useEffect(() => {
         fetchUsageSummary();
-    }, [meter_no]);
+    }, [finalMeterNo]);
 
     return (
-        <main className="min-h-full flex justify-center items-start w-full bg-background-secondary">
+        <main className={`min-h-full flex justify-center items-start w-full bg-background-secondary ${className}`}>
             <article className="rounded-2xl p-6 w-full max-w-xl bg-white flex flex-col gap-6 max-h-[90vh] overflow-y-auto scrollbar-hide">
                 <section className="flex flex-col gap-6 overflow-y-auto scrollbar-hide">
                     <header>
@@ -454,19 +516,7 @@ const UsageSummaryPage: React.FC = () => {
                                 <Button
                                     label="Freeze Account & Finalize"
                                     variant="primary"
-                                    onClick={() => { 
-                                        navigate('/occupancy/payment', { 
-                                            state: { 
-                                                unit_id,
-                                                meter_no: meter_no,
-                                                totalAmount: `₹${usageData.electricity_charges}`,
-                                                dueDate: new Date().toISOString().split('T')[0],
-                                                final_reading: usageData.final_reading,
-                                                electricity_charges: usageData.electricity_charges,
-                                                electricity_usage: usageData.electricity_usage
-                                            } 
-                                        }); 
-                                    }}
+                                    onClick={handleFreezeAndFinalize}
                                     disabled={!isConfirmed}
                                     className="w-full"
                                 />

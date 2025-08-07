@@ -20,89 +20,97 @@ const Steps: React.FC<StepsProps> = ({
   onStepClick,
   className = ''
 }) => {
-  const getStepCircleStyle = (step: Step) => {
+  const getStepClass = (step: Step) => {
     if (step.isCompleted) {
-      return 'bg-green-500 text-white border-green-500';
+      return 'done';
     }
     if (step.isActive) {
-      return 'bg-blue-600 text-white border-blue-600';
+      return 'active';
     }
-    return 'bg-white text-gray-400 border-gray-300';
+    return '';
   };
 
-  const getStepLabelStyle = (step: Step) => {
+  const getStepNumberClass = (step: Step) => {
     if (step.isCompleted) {
-      return 'text-green-600';
+      return 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium text-white bg-green-500 border-2 border-green-500 mb-2 relative z-10';
     }
     if (step.isActive) {
-      return 'text-blue-600';
+      return 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium text-white bg-blue-600 border-2 border-blue-600 mb-2 relative z-10';
     }
-    return 'text-gray-400';
+    return 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium text-gray-500 bg-white border-2 border-gray-300 mb-2 relative z-10';
   };
 
-  const getConnectorStyle = (index: number) => {
+  const getStepLabelClass = (step: Step) => {
+    if (step.isCompleted) {
+      return 'text-sm text-green-600 font-medium text-center whitespace-nowrap';
+    }
+    if (step.isActive) {
+      return 'text-sm text-blue-600 font-medium text-center whitespace-nowrap';
+    }
+    return 'text-sm text-gray-500 text-center whitespace-nowrap';
+  };
+
+  const getConnectorClass = (index: number) => {
     if (index === 0) return 'bg-green-500'; // First connector is always green
     if (currentStep > index + 1) return 'bg-green-500'; // Completed steps
     return 'bg-gray-300'; // Pending steps
   };
 
+  const getConnectorWidth = (index: number) => {
+    if (index === 0) return 'w-[calc(90%-1rem)]';
+    if (index === steps.length - 2) return 'w-[calc(100%-2rem)]';
+    return 'w-[calc(100%-2rem)]';
+  };
+
   return (
-    <nav 
-      className={`flex items-center justify-center space-x-4 ${className}`}
-      aria-label="Progress steps"
-    >
+    <div className={`flex items-center relative w-full max-w-2xl mx-auto px-4 ${className}`}>
       {steps.map((step, index) => (
-        <div key={step.id} className="flex items-center">
-          <div className="flex flex-col gap-2 items-center">
-            {/* Step Circle */}
-            <button
-              onClick={() => onStepClick?.(step.id)}
-              disabled={!onStepClick}
-              className={`
-                w-10 h-10 rounded-full flex items-center justify-center 
-                font-bold text-sm border-2 transition-all duration-200
-                ${getStepCircleStyle(step)}
-                ${onStepClick ? 'cursor-pointer hover:scale-105' : 'cursor-default'}
-              `}
-              aria-label={`Go to step ${step.id}: ${step.label}`}
-              aria-current={step.isActive ? 'step' : undefined}
-            >
-              {step.isCompleted ? (
-                <svg 
-                  className="w-5 h-5" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                  aria-hidden="true"
-                >
-                  <path 
-                    strokeLinecap="round" 
-                    strokeLinejoin="round" 
-                    strokeWidth={2} 
-                    d="M5 13l4 4L19 7" 
-                  />
-                </svg>
-              ) : (
-                <span>{step.id}</span>
-              )}
-            </button>
-
-            {/* Step Label */}
-            <span className={`text-sm font-medium whitespace-nowrap ${getStepLabelStyle(step)}`}>
-              {step.label}
-            </span>
-          </div>
-
-          {/* Connector Line */}
+        <div 
+          key={step.id} 
+          className={`flex flex-col items-center relative z-10 flex-1 px-4 ${getStepClass(step)}`}
+        >
+          {/* Connector Line - positioned absolutely */}
           {index < steps.length - 1 && (
             <div 
-              className={`w-50 h-0.5 ${getConnectorStyle(index)}`} 
-              aria-hidden="true"
+              className={`absolute top-4 left-[calc(50%+1rem)] h-0.5 ${getConnectorClass(index)} z-0 ${getConnectorWidth(index)}`}
             />
           )}
+          
+          {/* Step Circle */}
+          <button
+            onClick={() => onStepClick?.(step.id)}
+            disabled={!onStepClick}
+            className={getStepNumberClass(step)}
+            aria-label={`Go to step ${step.id}: ${step.label}`}
+            aria-current={step.isActive ? 'step' : undefined}
+          >
+            {step.isCompleted ? (
+              <svg 
+                className="w-4 h-4" 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+              >
+                <path 
+                  strokeLinecap="round" 
+                  strokeLinejoin="round" 
+                  strokeWidth={2} 
+                  d="M5 13l4 4L19 7" 
+                />
+              </svg>
+            ) : (
+              <span>{step.id}</span>
+            )}
+          </button>
+
+          {/* Step Label */}
+          <span className={getStepLabelClass(step)}>
+            {step.label}
+          </span>
         </div>
       ))}
-    </nav>
+    </div>
   );
 };
 

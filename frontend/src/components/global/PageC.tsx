@@ -44,6 +44,11 @@ import ChatApplication from '../ChatApplication';
 import ProfileSidebar from './ProfileSidebar';
 import ProfileContent from './ProfileContent';
 import Steps from './Steps';
+import OccupancyHeader from './OccupancyHeader';
+import ConfirmationPage from '../Occupancy-Vacency/ConfirmationPage';
+import UsageSummaryPage from '../Occupancy-Vacency/UsageSummartPage';
+import Payment from '../Occupancy-Vacency/Payment';
+import FreezeStatus from '../Occupancy-Vacency/FreezeStatus';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -89,6 +94,11 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     ProfileSidebar,
     ProfileContent,  
     Steps,
+    OccupancyHeader,
+    ConfirmationPage,
+    UsageSummaryPage,
+    Payment,
+    FreezeStatus,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
