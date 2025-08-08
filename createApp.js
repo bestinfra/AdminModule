@@ -31,7 +31,7 @@ const formData = {
   gradientColor: "#163b7c",
   timezone: "UTC",
   currency: "USD",
-  modules: ["dashboard", "user_management_default", "role_management"],
+  modules: ["dashboard", "consumer_dashboard", "users", "tickets"],
 };
 
 console.log('🚀 Creating Multi-Tenant Sub-App');
