@@ -114,15 +114,36 @@ export default function TicketInformationPannel() {
                                     className: 'bg-background-secondary',
                                     data: {
                                         leftColumn: [
-                                            { label: 'Ticket ID', value: `#${ticket.ticketNumber}` },
-                                            { label: 'Subject', value: ticket.subject },
-                                            { label: 'Created On', value: new Date(ticket.createdAt).toLocaleString() },
-                                            { label: 'Assigned To', value: ticket.assignedTo },
+                                            { 
+                                                label: 'Ticket ID', 
+                                                value: `#${ticket.ticketNumber}` 
+                                            },
+                                            { 
+                                                label: 'Subject',
+                                                value: ticket.subject 
+                                            },
+                                            { 
+                                                label: 'Created On', 
+                                                value: new Date(ticket.createdAt).toLocaleString() 
+                                            },
+                                            { 
+                                                label: 'Assigned To', 
+                                                value: ticket.assignedTo 
+                                            },
                                         ],
                                         rightColumn: [
-                                            { label: 'Ticket Type', value: ticket.category },
-                                            { label: 'Created By', value: ticket.customerName },
-                                            { label: 'Last Updated', value: new Date(ticket.lastUpdated).toLocaleString() },
+                                            { 
+                                                label: 'Ticket Type',
+                                                value: ticket.category 
+                                            },
+                                            { 
+                                                label: 'Created By', 
+                                                value: ticket.customerName
+                                             },
+                                            { 
+                                                label: 'Last Updated', 
+                                                value: new Date(ticket.lastUpdated).toLocaleString() 
+                                            },
                                         ],
                                     },
                                     rightStatus: {
@@ -139,16 +160,40 @@ export default function TicketInformationPannel() {
                                     className: 'bg-background-secondary',
                                     data: {
                                         leftColumn: [
-                                            { label: 'Unit Name', value: ticket.customerName },
-                                            { label: 'UID', value: ticket.uid },
-                                            { label: 'Location', value: ticket.location },
-                                            { label: 'Email', value: ticket.email },
+                                            { 
+                                                label: 'Unit Name', 
+                                                value: ticket.customerName 
+                                            },
+                                            { 
+                                                label: 'UID', 
+                                                value: ticket.uid 
+                                            },
+                                            { 
+                                                label: 'Location', 
+                                                value: ticket.location 
+                                            },
+                                            { 
+                                                label: 'Email', 
+                                                value: ticket.email 
+                                            },
                                         ],
                                         rightColumn: [
-                                            { label: 'Unit Number', value: ticket.unitNumber },
-                                            { label: 'Meter ID', value: ticket.meterId },
-                                            { label: 'Connection Type', value: ticket.connectionType },
-                                            { label: 'Mobile', value: ticket.mobile },
+                                            { 
+                                                label: 'Unit Number', 
+                                                value: ticket.unitNumber 
+                                            },
+                                            { 
+                                                label: 'Meter ID', 
+                                                value: ticket.meterId 
+                                            },
+                                            { 
+                                                label: 'Connection Type', 
+                                                value: ticket.connectionType 
+                                            },
+                                            { 
+                                                label: 'Mobile', 
+                                                value: ticket.mobile 
+                                            },
                                         ],
                                     },
                                 },
