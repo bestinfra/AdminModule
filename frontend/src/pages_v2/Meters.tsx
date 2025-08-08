@@ -1,7 +1,9 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
+import Form from '@/components/Form/Form';
 import type { TableData } from '@/components/global/Table';
+import type { FormInputConfig, FormInputValue } from '@/components/Form/types';
 import BACKEND_URL from '../config';
 
 export default function Meters() {
@@ -34,6 +36,99 @@ export default function Meters() {
         meterMake: 'all',
         location: 'all',
     });
+
+    // Loading state
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Modal state
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedMeter, setSelectedMeter] = useState<TableData | null>(null);
+
+    // Form configuration for editing meter
+    const editMeterFormFields: FormInputConfig[] = [
+        {
+            name: 'meterSerialNumber',
+            label: 'Meter Serial Number',
+            type: 'text',
+            placeholder: 'Enter meter serial number',
+            required: true,
+            row: 1,
+            col: 1,
+        },
+        {
+            name: 'modemSerialNumber',
+            label: 'Modem Serial Number',
+            type: 'text',
+            placeholder: 'Enter modem serial number',
+            required: true,
+            row: 1,
+            col: 2,
+        },
+        {
+            name: 'meterType',
+            label: 'Meter Type',
+            type: 'dropdown',
+            placeholder: 'Select meter type',
+            required: true,
+            row: 2,
+            col: 1,
+            options: [
+                { value: 'Smart', label: 'Smart' },
+                { value: 'Digital', label: 'Digital' },
+                { value: 'Analog', label: 'Analog' },
+            ],
+        },
+        {
+            name: 'meterMake',
+            label: 'Meter Make',
+            type: 'text',
+            placeholder: 'Enter meter make',
+            required: true,
+            row: 2,
+            col: 2,
+        },
+        {
+            name: 'consumerName',
+            label: 'Consumer Name',
+            type: 'text',
+            placeholder: 'Enter consumer name',
+            required: true,
+            row: 3,
+            col: 1,
+        },
+        {
+            name: 'location',
+            label: 'Location',
+            type: 'text',
+            placeholder: 'Enter location',
+            required: true,
+            row: 3,
+            col: 2,
+        },
+        {
+            name: 'installationDate',
+            label: 'Installation Date',
+            type: 'date',
+            placeholder: 'Select installation date',
+            required: true,
+            row: 4,
+            col: 1,
+        },
+        {
+            name: 'status',
+            label: 'Status',
+            type: 'dropdown',
+            placeholder: 'Select status',
+            required: true,
+            row: 4,
+            col: 2,
+            options: [
+                { value: 'active', label: 'Active' },
+                { value: 'inactive', label: 'Inactive' },
+                { value: 'maintenance', label: 'Maintenance' },
+            ],
+        },
+    ];
 
 
 
@@ -240,6 +335,56 @@ export default function Meters() {
         fetchMeters(page, limit);
     };
 
+    // Handle edit meter
+    const handleEditMeter = (row: TableData) => {
+        setSelectedMeter(row);
+        setIsEditModalOpen(true);
+    };
+
+    // Handle save meter changes
+    const handleSaveMeter = async (formData: Record<string, FormInputValue>) => {
+        setIsLoading(true);
+        try {
+            // Here you would typically make an API call to update the meter
+            console.log('Saving meter data:', formData);
+            
+            // Simulate API call
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            
+            // Update the table data with the new values
+            setTableData(prevData => 
+                prevData.map(meter => 
+                    meter.meterNumber === selectedMeter?.meterNumber 
+                        ? { 
+                            ...meter, 
+                            meterSerialNumber: String(formData.meterSerialNumber || ''),
+                            modemSerialNumber: String(formData.modemSerialNumber || ''),
+                            meterType: String(formData.meterType || ''),
+                            meterMake: String(formData.meterMake || ''),
+                            consumerName: String(formData.consumerName || ''),
+                            location: String(formData.location || ''),
+                            installationDate: String(formData.installationDate || ''),
+                            status: String(formData.status || ''),
+                        }
+                        : meter
+                )
+            );
+            
+            setIsEditModalOpen(false);
+            setSelectedMeter(null);
+        } catch (error) {
+            console.error('Error saving meter:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    // Handle close modal
+    const handleCloseModal = () => {
+        setIsEditModalOpen(false);
+        setSelectedMeter(null);
+    };
+
     const [tableColumns] = useState([
         { key: 'sNo', label: 'Sl No' },
         { key: 'meterSerialNumber', label: 'Meter SI No' },
@@ -425,8 +570,7 @@ export default function Meters() {
                                                 serverPagination:
                                                     serverPagination,
                                                 onPageChange: handlePageChange,
-                                                onEdit: (row: TableData) =>
-                                                    console.log('Edit:', row),
+                                                onEdit: handleEditMeter,
                                                 onView: (row: TableData) =>
                                                     navigate(
                                                         `/meter-details/${row.meterNumber}`
@@ -438,9 +582,50 @@ export default function Meters() {
                                 },
                             ],
                         },
-                    },
-                ]}
-            />
+                                         },
+                     // Edit Meter Modal Section
+                     {
+                         layout: {
+                             type: 'row',
+                             className: '',
+                         },
+                         components: [
+                             {
+                                 name: 'Modal',
+                                 props: {
+                                     isOpen: isEditModalOpen,
+                                     onClose: handleCloseModal,
+                                     title: `Edit Meter - ${selectedMeter?.meterSerialNumber || selectedMeter?.meterNumber || ''}`,
+                                     size: 'lg',
+                                     showCloseIcon: true,
+                                     backdropClosable: !isLoading,
+                                     showForm: true,
+                                     formFields: editMeterFormFields,
+                                     onSave: handleSaveMeter,
+                                     saveButtonLabel: isLoading ? "Saving..." : "Save Changes",
+                                     cancelButtonLabel: "Cancel",
+                                     formInitialData: selectedMeter ? {
+                                         meterSerialNumber: selectedMeter.meterSerialNumber || '',
+                                         modemSerialNumber: selectedMeter.modemSerialNumber || '',
+                                         meterType: selectedMeter.meterType || '',
+                                         meterMake: selectedMeter.meterMake || '',
+                                         consumerName: selectedMeter.consumerName || '',
+                                         location: selectedMeter.location || '',
+                                         installationDate: selectedMeter.installationDate || '',
+                                         status: selectedMeter.status || '',
+                                     } : {},
+                                     gridLayout: {
+                                         gridRows: 4,
+                                         gridColumns: 2,
+                                         gap: 'gap-4',
+                                         className: 'w-full',
+                                     },
+                                 },
+                             },
+                         ],
+                     },
+                 ]}
+             />
         </Suspense>
     );
 }

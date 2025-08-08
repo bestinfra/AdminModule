@@ -33,6 +33,12 @@ interface ModalProps {
   formInitialData?: Record<string, FormInputValue>;
   formErrorMessages?: Record<string, string>;
   formId?: string;
+  gridLayout?: {
+    gridRows: number;
+    gridColumns: number;
+    gap: string;
+    className?: string;
+  };
 }
 
 const Modal: React.FC<ModalProps> = React.memo(({
@@ -61,7 +67,8 @@ const Modal: React.FC<ModalProps> = React.memo(({
   confirmButtonVariant = 'primary',
   formInitialData,
   formErrorMessages,
-  formId
+  formId,
+  gridLayout
 }) => {
   const uniqueModalId = modalId || `modal-${Math.random().toString(36).substr(2, 9)}`;
   
@@ -201,12 +208,8 @@ const Modal: React.FC<ModalProps> = React.memo(({
                   {children || (
                     <>
                       {showForm && formFields.length > 0 ? (
-                        <Form
-                          inputs={formFields.map(field => ({
-                            ...field,
-                            col: 1,
-                            colSpan: 3
-                          }))}
+                                                 <Form
+                           inputs={formFields}
                           onSubmit={handleFormSubmit}
                           submitLabel={saveButtonLabel}
                           cancelLabel={cancelButtonLabel}
@@ -217,7 +220,7 @@ const Modal: React.FC<ModalProps> = React.memo(({
                           formBackground=""
                           padding="p-0"
                           border="none"
-                          gridLayout={{
+                          gridLayout={gridLayout || {
                             gridRows: formFields.length,
                             gridColumns: 3,
                             gap: "gap-4"
