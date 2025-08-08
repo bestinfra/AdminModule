@@ -350,7 +350,10 @@ class BillingDB {
                     const tariff = await prisma.tariff.findFirst({
                         where: {
                             category: categoryInt,
-                            type: meter.type.toLowerCase(),
+                            type: {
+                                mode: 'insensitive',
+                                equals: meter.type.toLowerCase()
+                            },
                             valid_from: {
                                 lte: startOfMonth
                             },
@@ -462,39 +465,97 @@ class BillingDB {
                     let demandCharge = 0;
                     let demandPenaltyCharge = 0;
 
-                    if (!demandPenaltyFlag) {
-                        demandCharge = billedMD * tariff.min_demand_unit_rate;
-                        console.log(`   💰 [BILLING] Demand charge: ${billedMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
-                    } else if (billedMD <= contractMD) {
-                        demandCharge = billedMD * tariff.min_demand_unit_rate;
-                        console.log(`   💰 [BILLING] Demand charge (within contract): ${billedMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
+                    // Only calculate demand charges if tariff has demand charges configured
+                    if (tariff.min_demand > 0) {
+                        if (!demandPenaltyFlag) {
+                            demandCharge = billedMD * tariff.min_demand_unit_rate;
+                            console.log(`   💰 [BILLING] Demand charge: ${billedMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
+                        } else if (billedMD <= contractMD) {
+                            demandCharge = billedMD * tariff.min_demand_unit_rate;
+                            console.log(`   💰 [BILLING] Demand charge (within contract): ${billedMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
+                        } else {
+                            demandCharge = contractMD * tariff.min_demand_unit_rate;
+                            demandPenaltyCharge = (billedMD - contractMD) * tariff.min_demand_excess_unit_rate;
+                            console.log(`   💰 [BILLING] Demand charge: ${contractMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
+                            console.log(`   💰 [BILLING] Demand penalty: (${billedMD} - ${contractMD}) × ${tariff.min_demand_excess_unit_rate} = ₹${demandPenaltyCharge}`);
+                        }
                     } else {
-                        demandCharge = contractMD * tariff.min_demand_unit_rate;
-                        demandPenaltyCharge = (billedMD - contractMD) * tariff.min_demand_excess_unit_rate;
-                        console.log(`   💰 [BILLING] Demand charge: ${contractMD} × ${tariff.min_demand_unit_rate} = ₹${demandCharge}`);
-                        console.log(`   💰 [BILLING] Demand penalty: (${billedMD} - ${contractMD}) × ${tariff.min_demand_excess_unit_rate} = ₹${demandPenaltyCharge}`);
+                        console.log(`   💰 [BILLING] No demand charges configured for this tariff (min_demand = 0)`);
                     }
 
                     const totalDemandCharge = demandCharge + demandPenaltyCharge;
                     console.log(`   💰 [BILLING] Total demand charge: ₹${totalDemandCharge}`);
 
-                    // Calculate energy charges based on slabs
+                    // Calculate energy charges based on dynamic slabs
                     let unitRate = tariff.base_unit_rate;
                     
-                    console.log(`   📊 [BILLING] Energy rate calculation:`);
-                    console.log(`      - Slab1: ${recordedMD}kVA <= ${(tariff.slab1_limit / 100) * contractMD}kVA (${tariff.slab1_limit}% of ${contractMD})`);
-                    console.log(`      - Slab2: ${recordedMD}kVA <= ${(tariff.slab2_limit / 100) * contractMD}kVA (${tariff.slab2_limit}% of ${contractMD})`);
-                    console.log(`      - Slab3: ${recordedMD}kVA <= ${(tariff.slab3_limit / 100) * contractMD}kVA (${tariff.slab3_limit}% of ${contractMD})`);
+                    // Determine which slab to use based on consumption or demand
+                    let slabDeterminer = 0;
                     
-                    if (recordedMD <= (tariff.slab1_limit / 100) * contractMD) {
-                        unitRate = tariff.slab1_unit_rate;
-                        console.log(`   💰 [BILLING] Using Slab1 rate: ₹${tariff.slab1_unit_rate}/unit`);
-                    } else if (recordedMD <= (tariff.slab2_limit / 100) * contractMD) {
-                        unitRate = tariff.slab2_unit_rate;
-                        console.log(`   💰 [BILLING] Using Slab2 rate: ₹${tariff.slab2_unit_rate}/unit`);
+                    if (tariff.min_demand > 0) {
+                        // Use demand (kVA) for slab determination when demand charges exist
+                        slabDeterminer = recordedMD;
+                        console.log(`   📊 [BILLING] Using demand (kVA) for slab determination: ${recordedMD}kVA`);
                     } else {
-                        unitRate = tariff.slab3_unit_rate;
-                        console.log(`   💰 [BILLING] Using Slab3 rate: ₹${tariff.slab3_unit_rate}/unit`);
+                        // Use consumption (kVAh) for slab determination when no demand charges
+                        slabDeterminer = unitsConsumed;
+                        console.log(`   📊 [BILLING] Using consumption (kVAh) for slab determination: ${unitsConsumed}kVAh`);
+                    }
+                    
+                    // Dynamic slab calculation - fetch slabs from tariff_slabs table
+                    console.log(`   📊 [BILLING] Fetching slabs for tariff ${tariff.id}...`);
+                    
+                    const tariffSlabs = await prisma.tariff_slabs.findMany({
+                        where: {
+                            tariff_id: tariff.id
+                        },
+                        orderBy: {
+                            slab_order: 'asc'
+                        }
+                    });
+                    
+                    console.log(`   📊 [BILLING] Found ${tariffSlabs.length} slabs in tariff`);
+                    
+                    const slabs = tariffSlabs.map(slab => {
+                        const slabLimit = tariff.min_demand > 0 ? 
+                            (slab.unit_limit / 100) * contractMD : slab.unit_limit;
+                        
+                        return {
+                            name: `Slab${slab.slab_order}`,
+                            limit: slabLimit,
+                            rate: slab.unit_rate,
+                            originalLimit: slab.unit_limit,
+                            order: slab.slab_order
+                        };
+                    });
+                    
+                    // Log each slab
+                    slabs.forEach(slab => {
+                        console.log(`   📊 [BILLING] ${slab.name}: ${slabDeterminer} <= ${slab.limit} (${slab.originalLimit}${tariff.min_demand > 0 ? '% of ' + contractMD + 'kVA' : 'kVAh'})`);
+                    });
+                    
+                    console.log(`   📊 [BILLING] Found ${slabs.length} slabs in tariff`);
+                    
+                    // Determine which slab to use
+                    let selectedSlab = null;
+                    for (const slab of slabs) {
+                        if (slabDeterminer <= slab.limit) {
+                            selectedSlab = slab;
+                            break;
+                        }
+                    }
+                    
+                    // If no slab matches, use the last slab (highest tier) or base rate
+                    if (!selectedSlab && slabs.length > 0) {
+                        selectedSlab = slabs[slabs.length - 1];
+                        console.log(`   💰 [BILLING] Consumption exceeds all slabs, using highest tier: ${selectedSlab.name}`);
+                    }
+                    
+                    if (selectedSlab) {
+                        unitRate = selectedSlab.rate;
+                        console.log(`   💰 [BILLING] Using ${selectedSlab.name} rate: ₹${selectedSlab.rate}/unit`);
+                    } else {
+                        console.log(`   💰 [BILLING] No slabs configured, using base rate: ₹${unitRate}/unit`);
                     }
 
                     const energyCharge = parseFloat((unitsConsumed * unitRate).toFixed(2));
