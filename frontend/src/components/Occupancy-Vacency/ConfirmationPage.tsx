@@ -13,12 +13,12 @@ interface ConfirmationPageProps {
 }
 
 const ConfirmationPage: React.FC<ConfirmationPageProps> = ({
-  currentStep = 1,
+//   currentStep = 1,
   onStepChange,
   unit_id,
   meter_no,
-  consumer_name,
-  property_address,
+//   consumer_name,
+//   property_address,
   className = ''
 }) => {
     const navigate = useNavigate();

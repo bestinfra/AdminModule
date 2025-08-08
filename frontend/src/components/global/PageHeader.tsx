@@ -255,7 +255,7 @@ const Header: React.FC<HeaderProps> = ({
                             onClick={() => handleMenuItemClickWithLink(item)}
                         >
                             {item.label}
-                        </div>
+                        </div>  
                     ))}
                 </div>
             )}

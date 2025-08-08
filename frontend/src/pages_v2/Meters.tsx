@@ -1,7 +1,6 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
-import Form from '@/components/Form/Form';
 import type { TableData } from '@/components/global/Table';
 import type { FormInputConfig, FormInputValue } from '@/components/Form/types';
 import BACKEND_URL from '../config';
