@@ -2,7 +2,6 @@ import { Suspense, useState } from 'react';
 import { lazy } from 'react';
 const Page = lazy(() => import('@/components/global/PageC'));
 
-// --- Types ---
 interface HierarchyNode {
     hierarchy_id: string | number;
     hierarchy_name: string;
@@ -10,7 +9,6 @@ interface HierarchyNode {
     children?: HierarchyNode[];
 }
 
-// --- New data structure types ---
 interface AreaNode {
     name: string;
 }
@@ -24,7 +22,6 @@ interface LocationData {
     Location: LocationNode[];
 }
 
-// --- Location2 data structure types (with SubAreas) ---
 interface SubAreaNode {
     name: string;
 }
@@ -43,155 +40,50 @@ interface Location2Data {
     Location: LocationWithSubAreasNode[];
 }
 
+const PlusIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+    </svg>
+);
+
+const ListIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+    </svg>
+);
+
+const DownloadIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+);
+
 export default function AssetManagment() {
-    // --- State management for modal ---
     const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState(0);
 
-    // --- Dummy data from backend (replace with actual API call) ---
-    // TODO: Replace with actual API call
-    // const [locationData, setLocationData] = useState<LocationData | null>(null);
-    // useEffect(() => {
-    //     // API call to fetch location data
-    //     fetchLocationData().then(setLocationData);
-    // }, []);
+    const handleTabChange = (newTabIndex: number) => {
+        setActiveTab(newTabIndex);
+        console.log('Switched to tab:', newTabIndex);
+    };
 
-    // --- Original demo data (commented for reference) ---
-    // const demoTree: HierarchyNode[] = [
-    //     {
-    //         hierarchy_id: 'gmr',
-    //         hierarchy_name: 'GMR',
-    //         hierarchy_type_title: 'Company',
-    //         children: [
-    //             {
-    //                 hierarchy_id: 1,
-    //                 hierarchy_name: 'Airborne General Store',
-    //                 hierarchy_type_title: 'Site',
-    //             },
-    //             {
-    //                 hierarchy_id: 2,
-    //                 hierarchy_name: 'Neo Travels',
-    //                 hierarchy_type_title: 'Site',
-    //             },
-    //             {
-    //                 hierarchy_id: 3,
-    //                 hierarchy_name: 'Mobikins',
-    //                 hierarchy_type_title: 'Site',
-    //             },
-    //             {
-    //                 hierarchy_id: 4,
-    //                 hierarchy_name: 'Dormitary',
-    //                 hierarchy_type_title: 'Site',
-    //             },
-    //             {
-    //                 hierarchy_id: 5,
-    //                 hierarchy_name: '10 MGW - Solar Plant',
-    //                 hierarchy_type_title: 'Site',
-    //             },
-    //         ],
-    //     },
-    //     {
-    //         hierarchy_id: 'chennai',
-    //         hierarchy_name: 'Chennai',
-    //         hierarchy_type_title: 'City',
-    //         children: [
-    //             {
-    //                 hierarchy_id: 'hyd',
-    //                 hierarchy_name: 'Hyderabad',
-    //                 hierarchy_type_title: 'Zone',
-    //                 children: [
-    //                     {
-    //                         hierarchy_id: 9,
-    //                         hierarchy_name: 'Hitech City',
-    //                         hierarchy_type_title: 'Area',
-    //                     },
-    //                     {
-    //                         hierarchy_id: 10,
-    //                         hierarchy_name: 'Gachibowli',
-    //                         hierarchy_type_title: 'Area',
-    //                         children: [
-    //                             {
-    //                                 hierarchy_id: 11,
-    //                                 hierarchy_name: 'Hyderabad Subarea',
-    //                                 hierarchy_type_title: 'Subarea',
-    //                             },
-    //                         ],
-    //                     },
-    //                 ],
-    //             },
-    //             {
-    //                 hierarchy_id: 7,
-    //                 hierarchy_name: 'Egmore',
-    //                 hierarchy_type_title: 'Zone',
-    //             },
-    //             {
-    //                 hierarchy_id: 8,
-    //                 hierarchy_name: 'Vizag',
-    //                 hierarchy_type_title: 'Zone',
-    //                 children: [
-    //                     {
-    //                         hierarchy_id: 12,
-    //                         hierarchy_name: 'RK Beach',
-    //                         hierarchy_type_title: 'Area',
-    //                     },
-    //                     {
-    //                         hierarchy_id: 13,
-    //                         hierarchy_name: 'Warangal',
-    //                         hierarchy_type_title: 'Area',
-    //                     },
-    //                 ],
-    //             },
-    //         ],
-    //     },
-    //     {
-    //         hierarchy_id: 14,
-    //         hierarchy_name: 'Ameerpet',
-    //         hierarchy_type_title: 'Standalone',
-    //     },
-    //     {
-    //         hierarchy_id: 15,
-    //         hierarchy_name: 'Kukatpally',
-    //         hierarchy_type_title: 'Standalone',
-    //     },
-    //     {
-    //         hierarchy_id: 16,
-    //         hierarchy_name: 'Hyderabad2',
-    //         hierarchy_type_title: 'Standalone',
-    //     },
-    //     {
-    //         hierarchy_id: 17,
-    //         hierarchy_name: 'Hyderabad5',
-    //         hierarchy_type_title: 'Standalone',
-    //     },
-    // ];
-
-    // --- Original flattenTree function (commented for reference) ---
-    // function flattenTree(
-    //     nodes: HierarchyNode[]
-    // ): { id: string | number; name: string; hierarchy_type_title: string }[] {
-    //     let flat: {
-    //         id: string | number;
-    //         name: string;
-    //         hierarchy_type_title: string;
-    //     }[] = [];
-    //     for (const node of nodes) {
-    //         const {
-    //             children,
-    //             hierarchy_id,
-    //             hierarchy_name,
-    //             hierarchy_type_title,
-    //         } = node;
-    //         flat.push({
-    //             id: hierarchy_id,
-    //             name: hierarchy_name,
-    //             hierarchy_type_title,
-    //         });
-    //         if (children && children.length > 0) {
-    //             flat = flat.concat(flattenTree(children));
-    //         }
-    //     }
-    //     return flat;
-    // }
-    // const demoNodes = flattenTree(demoTree);
+    const tabs = [
+        {
+            label: 'Add Asset Name',
+            content: null,
+            icon: <PlusIcon />
+        },
+        {
+            label: 'Upload List',
+            content: null,
+            icon: <ListIcon />
+        },
+        {
+            label: 'Template',
+            content: null,
+            icon: <DownloadIcon />
+        }
+    ];
 
     const dummyLocationData: LocationData = {
         "Location": [
@@ -358,7 +250,6 @@ export default function AssetManagment() {
         ]
     };
 
-    // --- Location2 data with SubAreas (three-level hierarchy) ---
     const dummyLocation2Data: Location2Data = {
         "Location": [
             {
@@ -601,6 +492,127 @@ export default function AssetManagment() {
         ? convertLocation2ToOrgChartFormat(dummyLocation2Data)
         : convertToOrgChartFormat(dummyLocationData);
 
+    // --- Generate form fields for each tab (moved after useLocation2Data is defined) ---
+    const generateFormFieldsForTab = (tabIndex: number) => {
+        // const locationData = useLocation2Data ? dummyLocation2Data : dummyLocationData;
+        
+        // Extract all location names
+        // const locationNames = locationData.Location.map(location => location.name);
+        
+        // Extract all area names
+        // const areaNames = locationData.Location.flatMap(location => 
+        //     location.Areas.map(area => area.name)
+        // );
+        
+        // Extract all subarea names (if using Location2Data)
+        // const subAreaNames = useLocation2Data 
+        //     ? (locationData as Location2Data).Location.flatMap(location => 
+        //         location.Areas.flatMap(area => 
+        //             area.SubAreas.map((subArea: SubAreaNode) => subArea.name)
+        //         )
+        //     )
+        //     : [];
+
+        switch (tabIndex) {
+            case 0: // Add Asset Name - Search and Input fields
+                return [
+                    {
+                        name: 'assetTitle',
+                        type: 'text',
+                        label: 'Asset Title',
+                        placeholder: 'Asset Title (Ex. Locations)',
+                        required: true,
+                        validation: {
+                            required: 'Asset title is required'
+                        },
+                        rightIcon: '/icons/search.svg'
+                    },
+                    {
+                        name: 'assetName',
+                        type: 'text',
+                        label: 'Asset Name',
+                        placeholder: 'Search and select asset name',
+                        required: true,
+                        validation: {
+                            required: 'Asset name is required'
+                        },
+                    },
+                    {
+                        name: 'isSubNode',
+                        type: 'checkbox',
+                        label: 'Choose an asset below to assign this as a Sub Node.',
+                        labelClassName: 'text-sm text-TextSecondary dark:text-gray-400',
+                        checkboxLabelClassName: 'text-TextSecondary font-normal'
+                    }
+                ];
+            
+            case 1: // Upload List - Drag and Drop
+                return [
+                    {
+                        name: 'uploadFile',
+                        type: 'chosenfile',
+                        label: 'Upload File',
+                        placeholder: 'Drag and drop files here or click to browse',
+                        required: true,
+                        validation: {
+                            required: 'File is required'
+                        },
+                        accept: '.csv,.xlsx,.xls',
+                        multiple: true,
+                        dragAndDrop: true
+                    },
+                    // {
+                    //     name: 'fileType',
+                    //     type: 'dropdown',
+                    //     label: 'File Type',
+                    //     placeholder: 'Select file type',
+                    //     required: true,
+                    //     validation: {
+                    //         required: 'File type is required'
+                    //     },
+                    //     options: [
+                    //         { value: 'csv', label: 'CSV File' },
+                    //         { value: 'excel', label: 'Excel File' }
+                    //     ]
+                    // },
+                    // {
+                    //     name: 'overwriteExisting',
+                    //     type: 'checkbox',
+                    //     label: 'Overwrite existing assets',
+                    //     required: false
+                    // }
+                ];
+            
+            case 2: // Template - Search only
+                return [
+                    {
+                        name: 'templateSearch',
+                        type: 'text',
+                        label: 'Search Templates',
+                        placeholder: 'Asset Title (Ex. Locations)',
+                        required: false,
+                        rightIcon: '/icons/search.svg'
+                    },
+                ];
+            
+            default:
+                return [];
+        }
+    };
+
+    // --- Get current form fields based on active tab ---
+    const currentFormFields = generateFormFieldsForTab(activeTab);
+
+    // --- Get current save button label ---
+    const getSaveButtonLabel = () => {
+        switch (activeTab) {
+            case 0: return 'Create Asset';
+            case 1: return 'Create List';
+            case 2: return 'Download';
+            default: return 'Save';
+        }
+    };
+
     // --- OrgChart expects a single root node ---
     const orgChartRoot: HierarchyNode = {
         hierarchy_id: 'root',
@@ -680,7 +692,7 @@ export default function AssetManagment() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-4',
+                            gap: 'gap-0',
                             rows: [
                                 {
                                     layout: 'row',
@@ -689,79 +701,41 @@ export default function AssetManagment() {
                                             name: 'Modal',
                                             props: {
                                                 isOpen: isAddAssetModalOpen,
-                                                onClose: () => setIsAddAssetModalOpen(false),
+                                                onClose: () => {
+                                                    setIsAddAssetModalOpen(false);
+                                                    setActiveTab(0); // Reset to first tab when closing
+                                                },
                                                 title: 'Add New Asset',
-                                                size: 'lg',
+                                                size: 'xl',
                                                 showCloseIcon: true,
-                                                // children: (
-                                                //     <div className="flex flex-col gap-6 p-4">
-                                                //         {/* Asset Form Content */}
-                                                //         <div className="space-y-4">
-                                                //             <div>
-                                                //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                //                     Asset Name
-                                                //                 </label>
-                                                //                 <input
-                                                //                     type="text"
-                                                //                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                                                //                     placeholder="Enter asset name"
-                                                //                 />
-                                                //             </div>
-                                                //             <div>
-                                                //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                //                     Asset Type
-                                                //                 </label>
-                                                //                 <select className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white">
-                                                //                     <option value="">Select asset type</option>
-                                                //                     <option value="equipment">Equipment</option>
-                                                //                     <option value="vehicle">Vehicle</option>
-                                                //                     <option value="building">Building</option>
-                                                //                     <option value="land">Land</option>
-                                                //                     <option value="software">Software</option>
-                                                //                 </select>
-                                                //             </div>
-                                                //             <div>
-                                                //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                //                     Location
-                                                //                 </label>
-                                                //                 <input
-                                                //                     type="text"
-                                                //                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                                                //                     placeholder="Enter asset location"
-                                                //                 />
-                                                //             </div>
-                                                //             <div>
-                                                //                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                                //                     Description
-                                                //                 </label>
-                                                //                 <textarea
-                                                //                     rows={3}
-                                                //                     className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
-                                                //                     placeholder="Enter asset description"
-                                                //                 />
-                                                //             </div>
-                                                //         </div>
-                                                        
-                                                //         {/* Action Buttons */}
-                                                //         <div className="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-600">
-                                                //             <button
-                                                //                 onClick={() => setIsAddAssetModalOpen(false)}
-                                                //                 className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-600 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors"
-                                                //             >
-                                                //                 Cancel
-                                                //             </button>
-                                                //             <button
-                                                //                 onClick={() => {
-                                                //                     console.log('Asset saved');
-                                                //                     setIsAddAssetModalOpen(false);
-                                                //                 }}
-                                                //                 className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors"
-                                                //             >
-                                                //                 Add Asset
-                                                //             </button>
-                                                //         </div>
-                                                //     </div>
-                                                // )
+                                                showTabs: true,
+                                                tabs: tabs,
+                                                activeTabIndex: activeTab,
+                                                onTabChange: handleTabChange,
+                                                showForm: true,
+                                                formFields: currentFormFields,
+                                                onSave: (formData: Record<string, any>) => {
+                                                    console.log('Asset form data:', formData);
+                                                    console.log('Active tab:', activeTab);
+                                                    // TODO: Implement asset creation logic based on active tab
+                                                    setIsAddAssetModalOpen(false);
+                                                },
+                                                saveButtonLabel: getSaveButtonLabel(),
+                                                cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
+                                                confirmButtonVariant: 'primary',
+                                                formId: 'add-asset-form',
+                                                gridLayout: {
+                                                    gridRows: currentFormFields.length,
+                                                    gridColumns: 1,
+                                                    gap: 'gap-4'
+                                                },
+                                                tabsSize: 'md',
+                                                tabsShowTabIcons: true,
+                                                tabsShowTabLabels: true,
+                                                tabsTabListClassName: 'bg-gray-50 border-gray-200',
+                                                tabsActiveTabButtonClassName: 'bg-blue-600 text-white',
+                                                tabsInactiveTabButtonClassName: 'text-gray-600 hover:bg-gray-100',
                                             },
                                         },
                                     ],
