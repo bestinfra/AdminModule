@@ -233,7 +233,7 @@ export default function AssetManagment() {
                     { "name": "Salt Lake" },
                     { "name": "Park Street" },
                     { "name": "Alipore" }
-                ]
+                ]   
             },
             {
                 "name": "Bangalore",
