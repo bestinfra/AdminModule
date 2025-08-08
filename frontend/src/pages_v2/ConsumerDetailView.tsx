@@ -17,7 +17,7 @@ const ConsumerDetailView: React.FC = () => {
   // Mock consumer data for demonstration based on the image
   const mockConsumerData = {
     id: consumerId,
-    name: `Consumer ${consumerId}`,
+    name: ` ,${consumerId}`,
     consumerNumber: consumerId,
     currentBalance: "₹0.00",
     uniqueIdentificationNo: consumerId,
@@ -39,52 +39,61 @@ const ConsumerDetailView: React.FC = () => {
       title: "R-Phase Voltage",
       value: "233.51",
       subtitle1: "Volts",
-      icon: "/icons/voltage.svg",
+      icon: "/icons/r-phase-voltage.svg",
       bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
+      iconClassName: 'w-3 h-3',
+       width: 'w-4', height: 'h-4',
     },
     {
       title: "Y-Phase Voltage",
       value: "0.0",
       subtitle1: "Volts",
-      icon: "/icons/voltage.svg",
+      icon: "/icons/r-phase-current.svg",
       bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
+       iconClassName: 'w-3 h-3', width: 'w-4', height: 'h-4',
     },
     {
       title: "B-Phase Voltage",
       value: "0.0",
       subtitle1: "Volts",
-      icon: "/icons/voltage.svg",
+      icon: "/icons/r-phase-current.svg",
       bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
+       iconClassName: 'w-3 h-3', 
+       width: 'w-4', height: 'h-4',
     },
     {
       title: "R-Phase Current",
       value: "0.45",
       subtitle1: "Amps",
-      icon: "/icons/current.svg",
+      icon: "/icons/r-phase-current.svg",
       bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
+       iconClassName: 'w-3 h-3',
+        width: 'w-4', height: 'h-4',
     },
     {
       title: "Y-Phase Current",
       value: "0.0",
       subtitle1: "Amps",
-      icon: "/icons/current.svg",
+      icon: "/icons/r-phase-current.svg",
       bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
+      iconClassName: 'md', 
+      width: 'w-4', height: 'h-4',
     },
     {
       title: "B-Phase Current",
       value: "0.0",
       subtitle1: "Amps",
-      icon: "/icons/current.svg",
+      icon: "/icons/r-phase-current.svg",
       bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
@@ -140,7 +149,7 @@ const ConsumerDetailView: React.FC = () => {
       title: "Monthly Consumption (kWh)",
       value: "8.45",
       subtitle1: "Last Month: 64.78 kWh",
-      icon: "/icons/energy.svg",
+      icon: "/icons/electric.svg",
       bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
@@ -149,7 +158,7 @@ const ConsumerDetailView: React.FC = () => {
       title: "Daily Consumption (kWh)",
       value: "0.39",
       subtitle1: "Yesterday: 2.03 kWh",
-      icon: "/icons/consumption.svg",
+      icon: "/icons/coins.svg",
       bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
@@ -158,7 +167,7 @@ const ConsumerDetailView: React.FC = () => {
       title: "Total Outstanding (Rs.)",
       value: "0",
       subtitle1: "Last Month: ₹0",
-      icon: "/icons/coins.svg",
+      icon: "/icons/search.svg",
       bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
@@ -167,7 +176,7 @@ const ConsumerDetailView: React.FC = () => {
       title: "Bill Status",
       value: "Overdue",
       subtitle1: "Due Date: 9/7/2025",
-      icon: "/icons/bills.svg",
+      icon: "/icons/bills2.svg",
       bg: "bg-stat-icon-gradient",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: "BRAND_GREEN",
@@ -280,6 +289,37 @@ const ConsumerDetailView: React.FC = () => {
       unitName: "Shop Unit",
       createdOn: "2024-01-17",
     },
+
+{
+      id: 4,
+      uid: "BI25GMRA001",
+      meterSerialNo: "A9211434",
+      companyName: "Airborne General Store",
+      unitName: "Main Unit",
+      createdOn: "2024-01-15",
+    },
+    {
+      id: 5,
+      uid: "BI25GMRA002",
+      meterSerialNo: "A9345417",
+      companyName: "Neo Travels",
+      unitName: "Office Unit",
+      createdOn: "2024-01-16",
+    },
+    {
+      id: 6,
+      uid: "BI25GMRA003",
+      meterSerialNo: "A9211433",
+      companyName: "Mobikins",
+      unitName: "Shop Unit",
+      createdOn: "2024-01-17",
+    },
+
+
+
+
+
+
   ];
 
   const meterReadingsColumns = [
@@ -313,6 +353,54 @@ const ConsumerDetailView: React.FC = () => {
       currentBalanceAmount: "₹0.00",
       paymentDate: "2024-03-25",
     },
+
+    {
+      id: 1,
+      transactionId: "TXN-001",
+      creditAmount: "₹1,250.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-01-20",
+    },
+    {
+      id: 2,
+      transactionId: "TXN-002",
+      creditAmount: "₹1,350.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-02-18",
+    },
+    {
+      id: 3,
+      transactionId: "TXN-003",
+      creditAmount: "₹1,450.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-03-25",
+    },
+    {
+      id: 1,
+      transactionId: "TXN-001",
+      creditAmount: "₹1,250.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-01-20",
+    },
+    {
+      id: 2,
+      transactionId: "TXN-002",
+      creditAmount: "₹1,350.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-02-18",
+    },
+    {
+      id: 3,
+      transactionId: "TXN-003",
+      creditAmount: "₹1,450.00",
+      currentBalanceAmount: "₹0.00",
+      paymentDate: "2024-03-25",
+    },
+
+
+
+
+
   ];
 
   const paymentHistoryColumns = [
@@ -345,6 +433,31 @@ const ConsumerDetailView: React.FC = () => {
       status: "Completed",
       eventDate: "2024-01-25",
     },
+
+    {
+      id: 4,
+      sNo: 1,
+      eventDescription: "High consumption alert triggered",
+      status: "Active",
+      eventDate: "2024-01-17",
+    },
+    {
+      id: 5,
+      sNo: 2,
+      eventDescription: "Payment due reminder sent",
+      status: "Resolved",
+      eventDate: "2024-03-20",
+    },
+    {
+      id: 6,
+      sNo: 3,
+      eventDescription: "Meter communication restored",
+      status: "Completed",
+      eventDate: "2024-01-25",
+    },
+
+
+
   ];
 
   const alertsColumns = [
@@ -809,6 +922,7 @@ const ConsumerDetailView: React.FC = () => {
                     value: item.value,
                     subtitle1: item.subtitle1,
                     icon: item.icon,
+                  width:4,
                     bg: item.bg,
                     valueFontSize: item.valueFontSize,
                     iconStyle: item.iconStyle,
@@ -888,7 +1002,7 @@ const ConsumerDetailView: React.FC = () => {
                 headerTitle: "Events",
                 showActions: false,
                 searchable: true,
-                pagination: true,
+                 pagination: true,
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
                 emptyMessage: "No alerts found",

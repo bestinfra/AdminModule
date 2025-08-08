@@ -48,7 +48,8 @@ import Dashboard from './pages_v2/ConsumerDashboard';
 import ConsumerDetailView from './pages_v2/ConsumerDetailView';
 import Payment from './components/Occupancy-Vacency/Payment';
 import FreezeStatus from './components/Occupancy-Vacency/FreezeStatus';
-import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';     
+import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';
+     
 
 import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
 import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';

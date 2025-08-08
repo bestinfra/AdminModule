@@ -170,7 +170,7 @@ const Consumers: React.FC = () => {
         menuItems: [
             { id: 'occupied', label: 'Occupied' },
             { id: 'vacant', label: 'Vacant' },
-            { id: 'high-usage', label: 'High Usage' },
+            { id: 'high-usage', label: '' },
         ],
         onMenuItemClick: (itemId: string) => {
             setMenuValue(itemId);
@@ -212,11 +212,11 @@ const Consumers: React.FC = () => {
                                                     pagination: true,
                                                     showActions: true,
                                                     serverPagination: serverPagination,
-                                                    onPageChange: handlePageChange,
+                                                    // onPageChange: handlePageChange,
                                                     onEdit: (row: TableData) =>
                                                         console.log('Edit:', row),
                                                     onView: (row: TableData) =>
-                                                        navigate(`/consumers/${row.consumerNumber}`),
+                                                        navigate(`/consumer-detail-view/${row.consumerNumber}`),
                                                     headerTitle: 'Consumer Management',
                                                     dateRange: 'Real-time data',
                                                     text: 'Consumer Management Table',
