@@ -153,10 +153,10 @@ const Consumers: React.FC = () => {
               )
             : consumers;
 
-    const handlePageChange = (page: number) => {
-        // Handle page change logic here
-        console.log('Page changed to:', page);
-    };
+    // const handlePageChange = (page: number) => {
+    //     // Handle page change logic here
+    //     console.log('Page changed to:', page);
+    // };
 
 
 
