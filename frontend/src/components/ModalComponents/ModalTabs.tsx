@@ -61,7 +61,7 @@ const ModalTabs: React.FC<ModalTabsProps> = ({
   
   // Layout props
   orientation = 'horizontal',
-  tabPosition = 'top',
+
   size = 'md',
   
   // Behavior props

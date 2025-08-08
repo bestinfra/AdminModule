@@ -94,7 +94,7 @@ const Modal: React.FC<ModalProps> = React.memo(({
   onSave,
   saveButtonLabel = 'Save',
   cancelButtonLabel = 'Cancel',
-  cancelButtonVariant = 'secondary',
+  // cancelButtonVariant = 'secondary',
   confirmButtonVariant = 'primary',
   formInitialData,
   formErrorMessages,

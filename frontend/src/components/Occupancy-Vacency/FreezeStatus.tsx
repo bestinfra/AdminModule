@@ -42,8 +42,8 @@ interface FreezeStatusProps {
 }
 
 const FreezeStatus: React.FC<FreezeStatusProps> = ({
-    currentStep = 4,
-    onStepChange,
+    // currentStep = 4,
+    // onStepChange,
     title = 'Account Successfully Frozen',
     subtitle = 'The property has been marked as vacant and all billing has been finalized.',
     statusCards = [
@@ -107,7 +107,7 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
     electricity_usage,
     final_reading,
     final_amount,
-    payment_method,
+    // payment_method,
 }) => {
     // Use props data if available, otherwise use defaults
     const finalStatusCards = statusCards.map(card => {
