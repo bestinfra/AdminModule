@@ -3,50 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@components/global/Sidebar';
 import HeaderTest from '@components/global/HeaderTest';
 import { useApp } from '@context/AppContext';
-import Cookies from 'js-cookie';
-
-// Define action configurations for header
-const headerActions = [
-    {
-        icon: '/icons/user.svg',
-        onClick: () => console.log('User Profile clicked'),
-        ariaLabel: 'User Profile',
-        className: 'hover:bg-blue-100 dark:hover:bg-blue-900'
-    },
-    {
-        icon: '/icons/bell.svg',
-        onClick: () => console.log('Notifications clicked'),
-        ariaLabel: 'Notifications',
-        className: 'hover:bg-yellow-100 dark:hover:bg-yellow-900',
-        count: 5 // Example notification count
-    },
-    {
-        icon: '/icons/settings.svg',
-        onClick: () => console.log('Settings clicked'),
-        ariaLabel: 'Settings',
-        className: 'hover:bg-green-100 dark:hover:bg-green-900'
-    },
-    {
-        icon: '/icons/logout.svg',
-        onClick: () => {
-            // Clear all cookies
-            const allCookies = Cookies.get();
-            Object.keys(allCookies).forEach((cookieName) => {
-                Cookies.remove(cookieName);
-            });
-
-            // Clear all storage
-            localStorage.clear();
-            sessionStorage.clear();
-            
-            // Redirect to login page
-            window.location.href = '/login';
-        },
-        ariaLabel: 'Logout',
-        className: 'hover:bg-red-100 dark:hover:bg-red-900'
-    }
-];
-
+// import Cookies from 'js-cookie';
 
 interface MainLayoutProps {
     children?: React.ReactNode;
@@ -80,7 +37,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     const navigate = useNavigate();
     const [, forceUpdate] = useState({});
 
-    // Listen for custom events from fallback context
     useEffect(() => {
         const handleThemeChange = () => {
             forceUpdate({});
@@ -99,8 +55,25 @@ const MainLayout: React.FC<MainLayoutProps> = ({
         };
     }, []);
 
-    // Function to get page title based on current route
-    const getPageTitle = () => {
+    const handleNavigate = (path: string) => {
+        navigate(path);
+    };
+
+    const handleShareClick = () => {
+        if (!appDownload) return;
+        
+        if (navigator.share) {
+            navigator.share({
+                title: 'Download our Mobile App',
+                text: 'Check out our mobile app!',
+                url: appDownload.downloadUrl,
+            });
+        } else {
+            navigator.clipboard.writeText(appDownload.downloadUrl);
+            alert('Download link copied to clipboard!');
+        }
+    };
+ const getPageTitle = () => {
         switch (location.pathname) {
             case '/':
                 return 'Dashboard';
@@ -154,29 +127,6 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 return 'Dashboard';
         }
     };
-
-    // Navigation handler for sidebar
-    const handleNavigate = (path: string) => {
-        navigate(path);
-    };
-
-    // Share handler for sidebar
-    const handleShareClick = () => {
-        if (!appDownload) return;
-        
-        if (navigator.share) {
-            navigator.share({
-                title: 'Download our Mobile App',
-                text: 'Check out our mobile app!',
-                url: appDownload.downloadUrl,
-            });
-        } else {
-            // Fallback for browsers that don't support Web Share API
-            navigator.clipboard.writeText(appDownload.downloadUrl);
-            alert('Download link copied to clipboard!');
-        }
-    };
-
     return (
         <div className="flex h-screen bg-white ">
             <Sidebar 
@@ -189,14 +139,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 showAppDownload={showAppDownload}
             />
             <div className="flex flex-col flex-1">
-                <HeaderTest
-                    title={getPageTitle()}
-                    onSidebarToggle={toggleSidebar}
-                    actions={headerActions}
-                    searchEnabled={true}
-                    searchPlaceholder="Search by name or ID"
-                    onSearch={(query) => console.log('Search:', query)}
-                    />
+                {/* Removed all props, just use HeaderTest */}
+                <HeaderTest />
                 <main className="flex-1 px-6 py-4  bg-white overflow-auto dark:bg-primary-dark hide-scrollbar-y">
                     <Outlet />
                 </main>
