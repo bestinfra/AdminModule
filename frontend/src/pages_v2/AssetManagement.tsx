@@ -672,6 +672,20 @@ export default function AssetManagment() {
                                         },
                                     ],
                                 },
+                                // {
+                                //     layout: 'row',
+                                //     span: { col: 3, row: 1 },
+                                //     className: 'h-full',
+                                //     columns: [
+                                //         {
+                                //             name: 'OrgChartAlt',
+                                //             props: {
+                                //                 data: [orgChartRoot],
+                                //                 // height: '400px',
+                                //             },
+                                //         },
+                                //     ],
+                                // },
                                 {
                                     layout: 'row',
                                     span: { col: 3, row: 1 },

@@ -21,13 +21,12 @@ interface PaymentProps {
 }
 
 const Payment: React.FC<PaymentProps> = ({
-    currentStep = 3,
+    // currentStep = 3,
     onStepChange,
     amount = '90.43',
     billId = 'BILL00123',
     billDate = 'August 6, 2025',
     onPaymentComplete,
-    loading = false,
     disabled = false,
     className = '',
 }) => {

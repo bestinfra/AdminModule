@@ -29,7 +29,7 @@ const TopLevelHierarchy: React.FC<TopLevelHierarchyProps> = ({ nodes}) => {
   }, {});
 
   // Recursive component to render nested nodes with connecting lines
-  const renderNode = (node: NodeType, level: number = 0, parentKey: string = '', isLastChild: boolean = false) => {
+  const renderNode = (node: NodeType, level: number = 0, parentKey: string = '') => {
     const nodeKey = `${parentKey}-${node.id}`;
     const hasChildren = node.children && node.children.length > 0;
     const isExpanded = expandedNodes[nodeKey] ?? false;
@@ -93,12 +93,11 @@ const TopLevelHierarchy: React.FC<TopLevelHierarchyProps> = ({ nodes}) => {
               
               <div className="space-y-2 mt-2">
                 {node.children?.map((child, index) => {
-                  const isLastChildNode = index === node.children!.length - 1;
                   return (
                     <div key={`${nodeKey}-child-${index}`} className="relative">
                       {/* Horizontal line for each child item */}
                       <span className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-gray-200 z-20"></span>
-                      {renderNode(child, level + 1, nodeKey, isLastChildNode)}
+                      {renderNode(child, level + 1, nodeKey)}
                     </div>
                   );
                 })}
@@ -120,7 +119,7 @@ const TopLevelHierarchy: React.FC<TopLevelHierarchyProps> = ({ nodes}) => {
           <span className="absolute left-6 top-0 bottom-0 w-0.5 bg-gray-200 z-0"></span>
           
           <div className="space-y-3">
-            {Object.entries(topLevelGroups).map(([type, groupNodes], groupIndex) => {
+            {Object.entries(topLevelGroups).map(([type, groupNodes]) => {
               const groupId = `top-${type.replace(/\s+/g, '-').toLowerCase()}`;
               const isExpanded = expandedNodes[groupId] ?? false;
 
@@ -172,12 +171,11 @@ const TopLevelHierarchy: React.FC<TopLevelHierarchyProps> = ({ nodes}) => {
                       
                       <div className="space-y-2 mt-2">
                         {groupNodes.map((node, index) => {
-                          const isLastChildNode = index === groupNodes.length - 1;
                           return (
                             <div key={`${groupId}-child-${index}`} className="relative">
                               {/* Horizontal line for each child item */}
                               <span className="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-0.5 bg-gray-200 z-20"></span>
-                              {renderNode(node, 1, groupId, isLastChildNode)}
+                              {renderNode(node, 1, groupId)}
                             </div>
                           );
                         })}

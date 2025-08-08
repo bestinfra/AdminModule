@@ -1,7 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
-import { exportChartData } from '@/utils/excelExport';
+// import { exportChartData } from '@/utils/excelExport';
 // import { Pagination } from 'antd';
 
 // Constants
