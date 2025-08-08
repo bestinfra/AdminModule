@@ -55,7 +55,7 @@ const Logo: React.FC<LogoProps> = ({
       >
         <div className="flex justify-center">
           <div className="bg-stat-icon-gradient p-4 rounded-full rotate-180 flex items-center justify-center w-[160px] h-[160px]">
-            <div className="bg-white rounded-full flex items-center justify-center w-[120px] h-[120px] shadow-md border border-neutral-light p-2 rotate-180">
+            <div className="bg-white rounded-full flex items-center justify-center w-[110px] h-[110px] shadow-md border-neutral-light p-2 rotate-180">
               <div className="transition-transform duration-300 hover:scale-105 flex items-center justify-center w-[100px] h-[100px]">
                 <img
                   src={getLogoPath()}

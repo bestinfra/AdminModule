@@ -4,20 +4,39 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 class UserDB {
-    static async getAllUsers() {
+    static async getAllUsers(page = 1, limit = 10) {
         try {
-            const users = await prisma.user.findMany({
+            const skip = (page - 1) * limit;
+            
+            const totalCount = await prisma.users.count();
+            
+            const users = await prisma.users.findMany({
                 include: {
-                    roles: {
+                    user_roles: {
                         include: {
-                            role: true
+                            roles: true
                         }
                     },
-                    department: true
+                    departments: true
                 },
-                orderBy: { createdAt: 'desc' }
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: limit
             });
-            return users;
+            
+            const totalPages = Math.ceil(totalCount / limit);
+            
+            return {
+                data: users,
+                pagination: {
+                    currentPage: page,
+                    totalPages,
+                    totalCount,
+                    limit,
+                    hasNextPage: page < totalPages,
+                    hasPrevPage: page > 1
+                }
+            };
         } catch (error) {
             console.error('Error getting all users:', error);
             throw error;
@@ -26,11 +45,11 @@ class UserDB {
 
     static async getUserStats() {
         try {
-            const users = await prisma.user.findMany({
+            const users = await prisma.users.findMany({
                 include: {
-                    roles: {
+                    user_roles: {
                         include: {
-                            role: true
+                            roles: true
                         }
                     }
                 }
@@ -42,13 +61,13 @@ class UserDB {
 
             const roleCounts = {};
             users.forEach(user => {
-                user.roles.forEach(userRole => {
-                    const roleName = userRole.role.name;
+                user.user_roles.forEach(userRole => {
+                    const roleName = userRole.roles.name;
                     roleCounts[roleName] = (roleCounts[roleName] || 0) + 1;
                 });
             });
 
-            const totalRoles = await prisma.role.count();
+            const totalRoles = await prisma.roles.count();
 
             const stats = {
                 totalUsers,
@@ -78,14 +97,14 @@ class UserDB {
                 }
             }
 
-            const existingUsername = await prisma.user.findUnique({
+            const existingUsername = await prisma.users.findUnique({
                 where: { username: userData.username }
             });
             if (existingUsername) {
                 throw new Error('Username already exists');
             }
 
-            const existingEmail = await prisma.user.findUnique({
+            const existingEmail = await prisma.users.findUnique({
                 where: { email: userData.email }
             });
             if (existingEmail) {
@@ -112,35 +131,35 @@ class UserDB {
             // Create user with roles if provided
             let newUser;
             if (userData.roleIds && userData.roleIds.length > 0) {
-                newUser = await prisma.user.create({
+                newUser = await prisma.users.create({
                     data: {
                         ...userCreateData,
-                        roles: {
+                        user_roles: {
                             create: userData.roleIds.map(roleId => ({
                                 roleId: parseInt(roleId)
                             }))
                         }
                     },
                     include: {
-                        roles: {
+                        user_roles: {
                             include: {
-                                role: true
+                                roles: true
                             }
                         },
-                        department: true
+                        departments: true
                     }
                 });
             } else {
                 // Create user without roles
-                newUser = await prisma.user.create({
+                newUser = await prisma.users.create({
                     data: userCreateData,
                     include: {
-                        roles: {
+                        user_roles: {
                             include: {
-                                role: true
+                                roles: true
                             }
                         },
-                        department: true
+                        departments: true
                     }
                 });
             }
@@ -154,18 +173,18 @@ class UserDB {
 
     static async getUserById(userId) {
         try {
-            return await prisma.user.findUnique({
+            return await prisma.users.findUnique({
                 where: { id: userId },
                 include: {
-                    roles: {
+                    user_roles: {
                         include: {
-                            role: true
+                            roles: true
                         }
                     },
-                    department: true,
-                    permissions: {
+                    departments: true,
+                    user_permissions: {
                         include: {
-                            permission: true
+                            permissions: true
                         }
                     }
                 }
@@ -185,16 +204,16 @@ class UserDB {
                 userData.passwordChangedAt = new Date();
             }
 
-            return await prisma.user.update({
+            return await prisma.users.update({
                 where: { id: userId },
                 data: userData,
                 include: {
-                    roles: {
+                    user_roles: {
                         include: {
-                            role: true
+                            roles: true
                         }
                     },
-                    department: true
+                    departments: true
                 }
             });
         } catch (error) {
@@ -205,7 +224,7 @@ class UserDB {
 
     static async deleteUser(userId) {
         try {
-            return await prisma.user.delete({
+            return await prisma.users.delete({
                 where: { id: userId }
             });
         } catch (error) {
@@ -216,12 +235,12 @@ class UserDB {
 
     static async assignRolesToUser(userId, roleIds) {
         try {
-            await prisma.userRole.deleteMany({
+            await prisma.user_roles.deleteMany({
                 where: { userId }
             });
 
             if (roleIds && roleIds.length > 0) {
-                await prisma.userRole.createMany({
+                await prisma.user_roles.createMany({
                     data: roleIds.map(roleId => ({
                         userId,
                         roleId: parseInt(roleId)

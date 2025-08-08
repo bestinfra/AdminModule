@@ -1,6 +1,6 @@
 import React, { Suspense, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 
 // Interfaces
 interface Ticket {
@@ -15,6 +15,14 @@ interface Ticket {
     createdAt: string;
     lastUpdated: string;
     description: string;
+    uid:string;
+    location:string;
+    email:string;
+    unitNumber:string;
+    meterId:string,
+    mobile:string,
+    connectionType:string,
+
 }
 
 interface ActivityLogEntry {
@@ -38,15 +46,24 @@ const TicketView: React.FC = () => {
     const [ticket] = useState<Ticket>({
         id: 336,
         ticketNumber: '336',
+        uid: '#B00133344',
         subject: 'Connection Issue with Meter',
         status: 'Open',
         customerName: 'Airborne General Store',
         category: 'Connection Issue',
         priority: 'High',
         assignedTo: 'BI - Tech Team',
-        createdAt: '2025-07-14T17:24:00',
-        lastUpdated: '2025-07-14T17:24:00',
-        description: 'Customer reported connection issue with meter A9211434. The meter shows connection error on the display and is not communicating with the system.'
+        createdAt: 'new Date().toISOString(),',
+        lastUpdated: 'new Date().toISOString(),',
+        description: 'Issue with meter connection',
+        location:'Hydrabad',
+        email:'ravin1109@gmail.com',
+        unitNumber:'N/A',
+        meterId:'A9211434',
+        mobile:'9989923312',
+        connectionType:'NA',
+
+
     });
 
     // Dummy activity log data
@@ -98,12 +115,12 @@ const TicketView: React.FC = () => {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-                <PageC
+                <Page
                     sections={[
                         {   
                             layout: {
                                 type: 'column',
-                                gap: 'gap-6',
+                                gap: 'gap-4',
                                 
                             },
                             components: [
@@ -129,8 +146,12 @@ const TicketView: React.FC = () => {
                             layout: {
                                 type: 'grid',
                                 columns: 5,
+<<<<<<< HEAD
                                 gap: 'gap-6',
                                 className: 'pb-5',
+=======
+                                gap: 'gap-4',
+>>>>>>> b0278cf5dba8e0a8bdf9418e216f4ddbabbbb69f
                                 rows:[
                                     {
                                         layout: "grid",

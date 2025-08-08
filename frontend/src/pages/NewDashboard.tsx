@@ -9,7 +9,7 @@ const NewDashboard: React.FC = () => {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid',

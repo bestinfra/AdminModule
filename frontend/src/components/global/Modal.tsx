@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import Button from '@components/global/Button';
 import Form from '@components/Form/Form';
@@ -20,6 +20,8 @@ interface ModalProps {
   onConfirm?: () => void;
   message?: string;
   warningMessage?: string;
+  // Data props for content
+  content?: string;
   // Form props for edit/add role
   showForm?: boolean;
   formFields?: FormInputConfig[];
@@ -33,7 +35,7 @@ interface ModalProps {
   formId?: string;
 }
 
-const Modal: React.FC<ModalProps> = ({
+const Modal: React.FC<ModalProps> = React.memo(({
   isOpen,
   onClose,
   title,
@@ -49,6 +51,7 @@ const Modal: React.FC<ModalProps> = ({
   onConfirm,
   message,
   warningMessage,
+  content,
   showForm = false,
   formFields = [],
   onSave,
@@ -112,6 +115,18 @@ const Modal: React.FC<ModalProps> = ({
       onSave(formData);
     }
   };
+
+  // Memoize content rendering to prevent unnecessary re-renders
+  const memoizedContent = useMemo(() => {
+    if (content) {
+      return (
+        <div className="text-gray-700 dark:text-gray-300 whitespace-pre-line max-h-[60vh] overflow-y-auto leading-relaxed scroll-y-hidden">
+          {content}
+        </div>
+      );
+    }
+    return null;
+  }, [content]);
 
   const sizeClasses = {
     sm: 'max-w-sm w-full mx-4',
@@ -181,7 +196,7 @@ const Modal: React.FC<ModalProps> = ({
                 </header>
               )}
 
-              <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white">
+              <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white  ">
                 <section id={`${uniqueModalId}-description`} className="space-y-4">
                   {children || (
                     <>
@@ -208,15 +223,17 @@ const Modal: React.FC<ModalProps> = ({
                             gap: "gap-4"
                           }}
                         />
+                      ) : content ? (
+                        memoizedContent
                       ) : (
                         <>
                           {message && (
-                            <p className="text-gray-600">
+                            <p className="text-gray-600 dark:text-gray-400">
                               {message}
                             </p>
                           )}
                           {warningMessage && (
-                            <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
                               {warningMessage}
                             </p>
                           )}
@@ -263,6 +280,6 @@ const Modal: React.FC<ModalProps> = ({
       )}
     </>
   );
-};
+});
 
 export default Modal;

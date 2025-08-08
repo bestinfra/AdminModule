@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
-import { exportChartData } from '@/utils/excelExport';
 import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
 const mockDTRData = {
@@ -363,7 +362,7 @@ const DTRDetailPage = () => {
                                 span: { col: 3, row: 1 },
                                 columns: [
                                     {
-                                        name: 'SectionHeader',
+                                        name: 'SectionHeader',  
                                         props: {
                                             title: 'DTR Information',
                                             titleLevel: 2,

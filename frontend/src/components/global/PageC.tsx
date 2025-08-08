@@ -43,6 +43,12 @@ import ActivityLog from './ActivityLog';
 import ChatApplication from '../ChatApplication';
 import ProfileSidebar from './ProfileSidebar';
 import ProfileContent from './ProfileContent';
+import Steps from './Steps';
+import OccupancyHeader from './OccupancyHeader';
+import ConfirmationPage from '../Occupancy-Vacency/ConfirmationPage';
+import UsageSummaryPage from '../Occupancy-Vacency/UsageSummartPage';
+import Payment from '../Occupancy-Vacency/Payment';
+import FreezeStatus from '../Occupancy-Vacency/FreezeStatus';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -86,7 +92,13 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     ChatApplication,
     Permissions,
     ProfileSidebar,
-    ProfileContent,
+    ProfileContent,  
+    Steps,
+    OccupancyHeader,
+    ConfirmationPage,
+    UsageSummaryPage,
+    Payment,
+    FreezeStatus,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
@@ -299,12 +311,15 @@ const Page: React.FC<PageProps> = ({
                                                 );
                                             }
 
-                                            const componentElement = (
+                                            // Optimize Modal rendering - only render when needed
+                                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                                            
+                                            const componentElement = shouldRenderComponent ? (
                                                 <Component
                                                     key={cidx}
                                                     {...props}
                                                 />
-                                            );
+                                            ) : null;
                                             const spanClasses =
                                                 getSpanClasses(span);
                                             const alignClasses =
@@ -397,9 +412,12 @@ const Page: React.FC<PageProps> = ({
                                 );
                             }
 
-                            const componentElement = (
+                            // Optimize Modal rendering - only render when needed
+                            const shouldRenderComponent = name === 'Modal' ? props.isOpen : true;
+                            
+                            const componentElement = shouldRenderComponent ? (
                                 <Component key={cidx} {...props} />
-                            );
+                            ) : null;
                             const spanClasses = getSpanClasses(span);
                             const alignClasses = getAlignClasses(
                                 align,

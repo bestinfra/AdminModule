@@ -31,6 +31,14 @@ export default function Users() {
         }>
     >([]);
     const [loading, setLoading] = useState(true);
+    const [serverPagination, setServerPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        limit: 8,
+        hasNextPage: false,
+        hasPrevPage: false,
+    });
     // User stats state
     const [userStats, setUserStats] = useState<any>(null);
     const [statsLoading, setStatsLoading] = useState(true);
@@ -73,20 +81,35 @@ export default function Users() {
         // Add your filter logic here
     };
 
-    useEffect(() => {
+    const handlePageChange = (page: number, limit: number) => {
+        fetchUsers(page, limit);
+    };
+
+    const fetchUsers = (page = 1, limit = 8) => {
         setLoading(true);
-        fetch(`${BACKEND_URL}/users`)
-            .then(async (res) => {
-                const result = await res.json();
-                console.log(result);
-                if (result.success) {
-                    setUsers(result.data);
+        const params = new URLSearchParams();
+        params.append('page', String(page));
+        params.append('limit', String(limit));
+        
+        fetch(`${BACKEND_URL}/users?${params.toString()}`)
+            .then((res) => res.json())
+            .then((data) => {
+                if (data.success) {
+                    setUsers(data.data);
+                    setServerPagination({
+                        currentPage: page,
+                        totalPages: data.pagination?.totalPages || 1,
+                        totalCount: data.pagination?.totalCount || data.data.length,
+                        limit,
+                        hasNextPage: data.pagination?.hasNextPage || false,
+                        hasPrevPage: data.pagination?.hasPrevPage || false,
+                    });
                 } else {
-                    throw new Error('Failed to fetch users');
+                    throw new Error(data.message || 'Failed to fetch users');
                 }
             })
             .catch((err) => {
-                console.log(err);
+                console.error(err.message || 'Failed to fetch users');
                 // Demo users fallback
                 setUsers([
                     {
@@ -126,8 +149,20 @@ export default function Users() {
                         createdDate: '2024-04-05',
                     },
                 ]);
+                setServerPagination({
+                    currentPage: 1,
+                    totalPages: 1,
+                    totalCount: 4,
+                    limit: 4,
+                    hasNextPage: false,
+                    hasPrevPage: false,
+                });
             })
             .finally(() => setLoading(false));
+    };
+
+    useEffect(() => {
+        fetchUsers();
     }, []);
 
     // Fetch user stats (widgets)
@@ -261,6 +296,7 @@ export default function Users() {
             type: 'dropdown' as const,
             label: 'Reason for Inactivation',
             name: 'reason',
+            searchable: false,
             value: inactiveFormData.reason,
             required: true,
             options: [
@@ -282,7 +318,7 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,
@@ -332,7 +368,7 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'grid' as const,
@@ -370,6 +406,7 @@ export default function Users() {
                                                 value: filters.userTypes,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable: false,
                                             },
                                         },
                                         {
@@ -381,6 +418,7 @@ export default function Users() {
                                                 value: filters.userStatus,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable:false,
                                             },
                                         },
                                     ],
@@ -404,11 +442,11 @@ export default function Users() {
                                                 columns: tableColumns,
                                                 loading: loading,
                                                 searchable: true,
+                                                sortable: true,
                                                 pagination: true,
                                                 showActions: true,
-                                                emptyMessage: loading
-                                                    ? 'Loading users...'
-                                                    : 'No users found',
+                                                serverPagination: serverPagination,
+                                                onPageChange: handlePageChange,
                                                 onView: (row: any) => {
                                                     console.log('Users: onView triggered', row);
                                                     console.log('Users: Navigating to', `/user-detail/${row.sNo}`);
@@ -430,6 +468,13 @@ export default function Users() {
                                                 onInactive: (row: any) => {
                                                     handleInactiveClick(row);
                                                 },
+                                                headerTitle: 'User Management',
+                                                dateRange: 'Real-time data',
+                                                text: 'User Management Table',
+                                                className: 'w-full',
+                                                emptyMessage: loading
+                                                    ? 'Loading users...'
+                                                    : 'No users found',
                                             },
                                         },
                                     ],
@@ -441,7 +486,7 @@ export default function Users() {
                     {
                         layout: {
                             type: 'column' as const,
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'row' as const,

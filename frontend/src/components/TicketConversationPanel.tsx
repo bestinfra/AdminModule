@@ -1,4 +1,4 @@
-    import { useState, useEffect, Suspense } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
 import type { ChatMessage, ChatUser } from './ChatApplication';
@@ -164,7 +164,7 @@ export default function TicketConversationPanel() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                         },
                         components: [
                             {

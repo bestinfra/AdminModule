@@ -11,7 +11,7 @@ const router = express.Router();
 // Public routes
 router.post('/login', subAppLogin);
 
-// Protected routes (require authentication)
+// Protected routes
 router.get('/verify-token', authenticateToken, verifySubAppToken);
 router.get('/profile', authenticateToken, getSubAppProfile);
 

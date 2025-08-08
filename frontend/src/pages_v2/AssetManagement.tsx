@@ -164,8 +164,12 @@ export default function AssetManagment() {
                     {
                         layout: {
                             type: 'column',
+<<<<<<< HEAD
                             gap: 'gap-6',
                         
+=======
+                            gap: 'gap-4',
+>>>>>>> b0278cf5dba8e0a8bdf9418e216f4ddbabbbb69f
                             rows: [
                                 {
                                     layout: 'row',
@@ -192,7 +196,7 @@ export default function AssetManagment() {
                                 {
                                     layout: 'row',
                                     className:
-                                        'bg-primary-lightest p-4 border border-primary-border dark:border-dark-border rounded-3xl',
+                                        'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
                                     columns: [
                                         {
                                             name: 'TopLevelHierarchy',

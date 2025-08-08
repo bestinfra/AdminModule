@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from '@components/global/Sidebar';
 import HeaderTest from '@components/global/HeaderTest';
@@ -78,6 +78,26 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     const { toggleSidebar, toggleTheme } = useApp();
     const location = useLocation();
     const navigate = useNavigate();
+    const [, forceUpdate] = useState({});
+
+    // Listen for custom events from fallback context
+    useEffect(() => {
+        const handleThemeChange = () => {
+            forceUpdate({});
+        };
+
+        const handleSidebarToggle = () => {
+            forceUpdate({});
+        };
+
+        window.addEventListener('themeChanged', handleThemeChange);
+        window.addEventListener('sidebarToggled', handleSidebarToggle);
+
+        return () => {
+            window.removeEventListener('themeChanged', handleThemeChange);
+            window.removeEventListener('sidebarToggled', handleSidebarToggle);
+        };
+    }, []);
 
     // Function to get page title based on current route
     const getPageTitle = () => {

@@ -19,8 +19,8 @@ export const getAllMeters = async (req, res) => {
                 modemSerialNumber: m.serialNumber || 'NA',
                 meterType: m.type || m.meterType || 'NA',
                 meterMake: m.manufacturer || 'NA',
-                consumerName: m.consumer?.name || 'NA',
-                location: m.location?.name || 'NA',
+                consumerName: m.consumers?.name || 'NA',
+                location: m.locations?.name || 'NA',
                 installationDate: m.installationDate || m.createdAt || 'NA',
             };
         });

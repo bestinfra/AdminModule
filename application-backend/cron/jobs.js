@@ -1,4 +1,5 @@
 import { escalateTickets } from './escalation.js';
+import { generateMonthlyBillsTask } from './billing.js';
 import cronHandler from '../utils/cronHandler.js';
 
 export async function initializeCronJobs() {
@@ -15,6 +16,18 @@ export async function initializeCronJobs() {
                     onError: (error, jobName) => {
                         console.error(`🚨 Critical error in ${jobName}:`, error);
                         
+                    }
+                }
+            },
+            {
+                name: 'billing-generation',
+                schedule: '* * * * *', // Every minute
+                task: generateMonthlyBillsTask,
+                options: {
+                    timezone: 'Asia/Kolkata',
+                    onError: (error, jobName) => {
+                        console.error(`🚨 Critical error in ${jobName}:`, error);
+                        console.error(`   🔍 Error details:`, error.message);
                     }
                 }
             },

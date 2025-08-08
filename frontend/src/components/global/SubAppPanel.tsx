@@ -51,7 +51,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   category,
   modules,
   connectedApis,
-  meters,
+  // meters,
   tickets,
   appIcon,
 }) => {
@@ -143,19 +143,83 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
     }
   };
 
-  const activePercentage =
-    meters.total > 0 ? (meters.active / meters.total) * 100 : 0;
-  const inactivePercentage =
-    meters.total > 0 ? (meters.inactive / meters.total) * 100 : 0;
+
+
+  // Demo images for fallback
+  const demoImages = [
+    "/images/gmr-logo.png",
+  ];
+
+  // Get fallback image based on app name or category
+  const getFallbackImage = () => {
+    // If backend provides a valid image, use it
+    if (appIcon && appIcon !== "" && appIcon !== "null" && appIcon !== "undefined") {
+      return appIcon;
+    }
+    
+    // Otherwise use category-based fallback
+    const categoryLower = category?.toLowerCase() || "";
+    if (categoryLower.includes("energy") || categoryLower.includes("power")) {
+      return "/icons/alert-triggered.svg";
+    } else if (categoryLower.includes("transport") || categoryLower.includes("railway")) {
+      return "/icons/active-users.svg";
+    } else if (categoryLower.includes("industrial") || categoryLower.includes("manufacturing")) {
+      return "/icons/apps-add.svg";
+    } else {
+      // Random demo image based on app name hash
+      const hash = appName.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0);
+      return demoImages[Math.abs(hash) % demoImages.length];
+    }
+  };
+
+  const [imageError, setImageError] = useState(false);
+  const [currentImage, setCurrentImage] = useState(getFallbackImage());
+
+  const handleImageError = () => {
+    if (!imageError) {
+      setImageError(true);
+      // If the backend image failed, try fallback images
+      if (appIcon && appIcon !== "" && appIcon !== "null" && appIcon !== "undefined") {
+        // Backend image failed, use category-based fallback
+        const categoryLower = category?.toLowerCase() || "";
+        if (categoryLower.includes("energy") || categoryLower.includes("power")) {
+          setCurrentImage("/icons/alert-triggered.svg");
+        } else if (categoryLower.includes("transport") || categoryLower.includes("railway")) {
+          setCurrentImage("/icons/active-users.svg");
+        } else if (categoryLower.includes("industrial") || categoryLower.includes("manufacturing")) {
+          setCurrentImage("/icons/apps-add.svg");
+        } else {
+          // Use hash-based fallback
+          const hash = appName.split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+          }, 0);
+          setCurrentImage(demoImages[Math.abs(hash) % demoImages.length]);
+        }
+      } else {
+        // Already using fallback, try next one
+        const currentIndex = demoImages.indexOf(currentImage);
+        const nextIndex = (currentIndex + 1) % demoImages.length;
+        setCurrentImage(demoImages[nextIndex]);
+      }
+    }
+  };
 
   return (
-    <div className="bg-white rounded-3xl flex flex-col gap-6 border border-primary-border p-6 w-full">
+    <div className="bg-white rounded-3xl flex flex-col gap-4 border border-primary-border p-6 w-full">
       {/* Header Section */}
       <div className="flex items-start justify-between w-full items-center h-full gap-8">
         <div className="flex items-center gap-4 items-start">
           <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center overflow-hidden">
-            {/* Icon removed */}
-            <img src={appIcon} alt="app-icon" className="w-full h-full object-contain" />
+            <img 
+              src={currentImage} 
+              alt="app-icon" 
+              className="w-full h-full object-contain" 
+              onError={handleImageError}
+            />
           </div>
           <div>
             <h2 className="text-xl font-bold text-gray-900">{appName}</h2>
@@ -218,7 +282,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
 
       <div className="flex flex-col gap-10">
           {/* Core Information Section */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4">
             {/* Left Column */}
             <div className="space-y-4">
               <div className="flex items-center gap-2 flex-col items-start">
@@ -296,7 +360,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
               </div>
             </div>
           </div>
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
         
           {/* Modules Section */}
           <div className="flex flex-col gap-2">
@@ -346,14 +410,14 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
             <div className="grid grid-cols-3 gap-4">
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
-                  {/* Icon removed */}
+                 Icon removed 
                   {meters.total}
                 </div>
                 <div className="text-sm text-gray-600">Total</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600 flex items-center justify-center gap-2">
-                  {/* Icon removed */}
+                 Icon removed 
                   {meters.active}
                 </div>
                 <div className="text-sm text-gray-600">Active</div>
@@ -361,14 +425,14 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
 
               <div className="text-center">
                 <div className="text-2xl font-bold text-red-600 flex items-center justify-center gap-2">
-                  {/* Icon removed */}
+                 Icon removed 
                   {meters.inactive}
                 </div>
                 <div className="text-sm text-gray-600">Inactive</div>
               </div>
             </div>
 
-            {/* Progress Bar */}
+            Progress Bar
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div
                 className="bg-green-500 h-2 rounded-full transition-all duration-300"

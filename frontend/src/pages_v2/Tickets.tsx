@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { lazy } from 'react';
-const Page = lazy(() => import('@/components/global/PageC'));
+// const Page = lazy(() => import('@/components/global/PageC'));
+import Page from '../components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 import { exportChartData } from '@/utils/excelExport';
@@ -545,7 +545,7 @@ export default function Tickets() {
                             {
                                 layout: 'grid',
                                 gridColumns: 1,
-                                gap: 'gap-6',
+                                gap: 'gap-4',
                                 columns: [
                                     {
                                         name: 'Table',

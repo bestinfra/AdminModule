@@ -35,7 +35,7 @@ const SidebarMenu = ({ selected = 4 }) => {
 const AccountStatus: React.FC = () => {
   const [checked, setChecked] = useState(false);
   const content = (
-    <div className="w-full max-w-4xl flex flex-col gap-6">
+    <div className="w-full max-w-4xl flex flex-col gap-4">
       <div className="font-bold text-lg">Permanently Delete Your Account</div>
       <div className="text-neutral">
         Deleting your account will revoke access to all Front services and permanently erase your personal data from our systems.<br />

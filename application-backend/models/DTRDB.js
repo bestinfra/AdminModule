@@ -24,11 +24,11 @@ class DTRDB {
         }
 
         const [total, data] = await Promise.all([
-            prisma.dTR.count({ where }),
-            prisma.dTR.findMany({
+            prisma.dtrs.count({ where }),
+            prisma.dtrs.findMany({
                 where,
                 include: {
-                    location: true
+                    locations: true
                 },
                 skip,
                 take: pageSize,
@@ -39,7 +39,7 @@ class DTRDB {
         // Get feeders count for each DTR
         const dtrsWithFeedersCount = await Promise.all(
             data.map(async (dtr) => {
-                const feedersCount = await prisma.meter.count({
+                const feedersCount = await prisma.meters.count({
                     where: { dtrId: dtr.id }
                 });
                 return {
@@ -59,7 +59,7 @@ class DTRDB {
 
     static async getFeedersForDTR(dtrId) {
         try {
-            const dtr = await prisma.dTR.findUnique({
+            const dtr = await prisma.dtrs.findUnique({
                 where: { id: parseInt(dtrId) }
             });
 
@@ -67,7 +67,7 @@ class DTRDB {
                 throw new Error('DTR not found');
             }
 
-            const feedersRaw = await prisma.meter.findMany({
+            const feedersRaw = await prisma.meters.findMany({
                 where: { dtrId: parseInt(dtrId) },
                 select: {
                     id: true,
@@ -83,7 +83,7 @@ class DTRDB {
             });
 
             const locationIds = [...new Set(feedersRaw.map(f => f.locationId))];
-            const locations = await prisma.location.findMany({
+            const locations = await prisma.locations.findMany({
                 where: { id: { in: locationIds } },
                 select: { id: true, name: true, code: true, latitude: true, longitude: true }
             });
@@ -115,11 +115,11 @@ class DTRDB {
 
     static async getDTRAlerts() {
         try {
-            const alerts = await prisma.dTRFault.findMany({
+            const alerts = await prisma.dtr_faults.findMany({
                 include: {
-                    dtr: {
+                    dtrs: {
                         include: {
-                            location: true
+                            locations: true
                         }
                     }
                 },
@@ -146,7 +146,7 @@ class DTRDB {
             const startMonth = new Date(today.getFullYear(), today.getMonth() - 11, 1);
             const endMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
-            const faults = await prisma.dTRFault.findMany({
+            const faults = await prisma.dtr_faults.findMany({
                 where: {
                     createdAt: {
                         gte: startMonth,
@@ -182,17 +182,17 @@ class DTRDB {
 
     static async getDTRStats() {
         try {
-            const totalDTRs = await prisma.dTR.count();
-            const totalLTFeeders = await prisma.meter.count();
+            const totalDTRs = await prisma.dtrs.count();
+            const totalLTFeeders = await prisma.meters.count();
 
             // Active/Inactive DTRs
-            const activeDTRs = await prisma.dTR.count({ where: { status: 'ACTIVE' } });
-            const inactiveDTRs = await prisma.dTR.count({ where: { status: 'INACTIVE' } });
+            const activeDTRs = await prisma.dtrs.count({ where: { status: 'ACTIVE' } });
+            const inactiveDTRs = await prisma.dtrs.count({ where: { status: 'INACTIVE' } });
 
-            const meterIds = (await prisma.meter.findMany({ select: { id: true } })).map(m => m.id);
+            const meterIds = (await prisma.meters.findMany({ select: { id: true } })).map(m => m.id);
             const latestReadings = await Promise.all(
                 meterIds.map(async meterId =>
-                    await prisma.meterReading.findFirst({
+                    await prisma.meter_readings.findFirst({
                         where: { meterId },
                         orderBy: { readingDate: 'desc' }
                     })
@@ -212,13 +212,13 @@ class DTRDB {
 
             const totalFuseBlown = ltFuseBlown + htFuseBlown;
 
-            const overloadedDTRs = await prisma.dTR.count({
+            const overloadedDTRs = await prisma.dtrs.count({
                 where: {
                     loadPercentage: { gt: 90 }
                 }
             });
 
-            const underloadedDTRs = await prisma.dTR.count({
+            const underloadedDTRs = await prisma.dtrs.count({
                 where: {
                     loadPercentage: { lt: 30 }
                 }
@@ -261,7 +261,7 @@ class DTRDB {
 
     static async getConsumptionStats() {
         try {
-            const agg = await prisma.meterReading.aggregate({
+            const agg = await prisma.meter_readings.aggregate({
                 _sum: {
                     kWh: true,
                     kVAh: true,
@@ -284,16 +284,16 @@ class DTRDB {
     static async getConsolidatedDTRStats() {
         try {
             // Get basic DTR stats
-            const totalDTRs = await prisma.dTR.count();
-            const totalLTFeeders = await prisma.meter.count();
-            const activeDTRs = await prisma.dTR.count({ where: { status: 'ACTIVE' } });
-            const inactiveDTRs = await prisma.dTR.count({ where: { status: 'INACTIVE' } });
+            const totalDTRs = await prisma.dtrs.count();
+            const totalLTFeeders = await prisma.meters.count();
+            const activeDTRs = await prisma.dtrs.count({ where: { status: 'ACTIVE' } });
+            const inactiveDTRs = await prisma.dtrs.count({ where: { status: 'INACTIVE' } });
 
             // Get meter readings for calculations
-            const meterIds = (await prisma.meter.findMany({ select: { id: true } })).map(m => m.id);
+            const meterIds = (await prisma.meters.findMany({ select: { id: true } })).map(m => m.id);
             const latestReadings = await Promise.all(
                 meterIds.map(async meterId =>
-                    await prisma.meterReading.findFirst({
+                    await prisma.meter_readings.findFirst({
                         where: { meterId },
                         orderBy: { readingDate: 'desc' }
                     })
@@ -315,13 +315,13 @@ class DTRDB {
             const totalFuseBlown = ltFuseBlown + htFuseBlown;
 
             // Calculate overloaded/underloaded stats
-            const overloadedDTRs = await prisma.dTR.count({
+            const overloadedDTRs = await prisma.dtrs.count({
                 where: {
                     loadPercentage: { gt: 90 }
                 }
             });
 
-            const underloadedDTRs = await prisma.dTR.count({
+            const underloadedDTRs = await prisma.dtrs.count({
                 where: {
                     loadPercentage: { lt: 30 }
                 }
@@ -339,7 +339,7 @@ class DTRDB {
             const percent = (num, denom) => denom > 0 ? +(num / denom * 100).toFixed(2) : 0;
 
             // Get consumption stats
-            const agg = await prisma.meterReading.aggregate({
+            const agg = await prisma.meter_readings.aggregate({
                 _sum: {
                     kWh: true,
                     kVAh: true,
@@ -393,7 +393,7 @@ class DTRDB {
 
     static async getFeederStats(dtrId) {
         try {
-            const meters = await prisma.meter.findMany({
+            const meters = await prisma.meters.findMany({
                 where: { dtrId: parseInt(dtrId) },
                 select: { id: true }
             });
@@ -402,7 +402,7 @@ class DTRDB {
 
             const latestReadings = await Promise.all(
                 meterIds.map(async meterId =>
-                    await prisma.meterReading.findFirst({
+                    await prisma.meter_readings.findFirst({
                         where: { meterId },
                         orderBy: { readingDate: 'desc' }
                     })
@@ -427,7 +427,7 @@ class DTRDB {
                 r.currentB !== null && r.currentB > 15
             ).length;
 
-            const dtr = await prisma.dTR.findUnique({
+            const dtr = await prisma.dtrs.findUnique({
                 where: { id: parseInt(dtrId) },
                 select: { loadPercentage: true }
             });
@@ -461,7 +461,7 @@ class DTRDB {
     static async getInstantaneousStats(dtrId) {
         try {
             // Get all meters associated with this DTR
-            const meters = await prisma.meter.findMany({
+            const meters = await prisma.meters.findMany({
                 where: { dtrId: parseInt(dtrId) },
                 select: { id: true }
             });
@@ -484,10 +484,10 @@ class DTRDB {
             // Get latest readings for all meters in this DTR
             const latestReadings = await Promise.all(
                 meterIds.map(async meterId => {
-                    return await prisma.meterReading.findFirst({
-                        where: { meterId },
-                        orderBy: { readingDate: 'desc' }
-                    });
+                                    return await prisma.meter_readings.findFirst({
+                    where: { meterId },
+                    orderBy: { readingDate: 'desc' }
+                });
                 })
             );
 
@@ -507,7 +507,7 @@ class DTRDB {
             }
 
             // Get all readings for all meters in this DTR for cumulative calculations
-            const allReadings = await prisma.meterReading.findMany({
+            const allReadings = await prisma.meter_readings.findMany({
                 where: { meterId: { in: meterIds } }
             });
 
@@ -569,7 +569,7 @@ class DTRDB {
     static async getDTRConsumptionAnalytics(dtrId, period) {
         try {
             // Get all meters associated with this DTR
-            const meters = await prisma.meter.findMany({
+            const meters = await prisma.meters.findMany({
                 where: { dtrId: parseInt(dtrId) },
                 select: { id: true }
             });
@@ -595,7 +595,7 @@ class DTRDB {
                     }
                 };
 
-                const result = await prisma.meterReading.groupBy({
+                const result = await prisma.meter_readings.groupBy({
                     by: ['readingDate'],
                     where: whereClause,
                     _count: {
@@ -637,7 +637,7 @@ class DTRDB {
                 }
             };
 
-            const result = await prisma.meterReading.groupBy({
+            const result = await prisma.meter_readings.groupBy({
                 by: ['readingDate'],
                 where: whereClause,
                 _count: {
@@ -685,7 +685,7 @@ class DTRDB {
     static async getDTRConsumptionStats(dtrId) {
         try {
             // Get all meters associated with this DTR
-            const meters = await prisma.meter.findMany({
+            const meters = await prisma.meters.findMany({
                 where: { dtrId: parseInt(dtrId) },
                 select: { id: true }
             });
@@ -702,7 +702,7 @@ class DTRDB {
                 };
             }
 
-            const agg = await prisma.meterReading.aggregate({
+            const agg = await prisma.meter_readings.aggregate({
                 where: {
                     meterId: { in: meterIds }
                 },
@@ -732,7 +732,7 @@ class DTRDB {
     static async getDTRMainGraphAnalytics(dtrId, period) {
         try {
             // Get all meters associated with this DTR
-            const meters = await prisma.meter.findMany({
+            const meters = await prisma.meters.findMany({
                 where: { dtrId: parseInt(dtrId) },
                 select: { id: true }
             });

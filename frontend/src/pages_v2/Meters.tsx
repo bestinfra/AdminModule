@@ -402,7 +402,7 @@ export default function Meters() {
                     {
                         layout: {
                             type: 'row',
-                            gap: 'gap-6',
+                            gap: 'gap-4',
                             className: 'w-full',
                             rows: [
                                 {

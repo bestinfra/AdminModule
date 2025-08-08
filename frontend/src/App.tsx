@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from '@/context/AppContext';
 import { AuthProvider } from '@/context/AuthContext';
@@ -8,6 +9,7 @@ import MainLayout from './components/layout/MainLayout';
 import PageDemo from './pages/PageDemo';
 import Login from './pages/Login';
 import DataLogger from './pages_v2/DataLogger';
+import DataLoggerDashboard from './pages_v2/DataLoggerDashboard';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import AssetManagment from './pages_v2/AssetManagement';
@@ -37,15 +39,28 @@ import EditRole from './pages_v2/EditRole';
 import EditUser from './pages_v2/EditUser';
 import UserDetail from './pages_v2/UserDetail';
 import RolesPermissions from './pages_v2/RolesPermissions';
-
+import SubLogin from './pages_v2/SubLogin';
 import DTRDetailPage from './pages/DTRDetailPage';
+import IndividualDetailPage from './pages_v2/IndividualDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
+<<<<<<< HEAD
 import FinalUsageSummary from './pages_v2/FinalUsageMangement';
 import Confirmation from './pages_v2/Confirmation';
 
 
 
+=======
+// import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
+// import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
+import Dashboard from './pages_v2/ConsumerDashboard';
+import ConsumerDetailView from './pages_v2/ConsumerDetailView';
+import Payment from './components/Occupancy-Vacency/Payment';
+import FreezeStatus from './components/Occupancy-Vacency/FreezeStatus';
+import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';     
+>>>>>>> b0278cf5dba8e0a8bdf9418e216f4ddbabbbb69f
 
+import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
+import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -54,7 +69,8 @@ const App: React.FC = () => {
                     <Router>
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
-                        {/* <Route path="/sub-login" element={<SubLogin />} /> */}
+                        <Route path="/sub-login" element={<SubLogin />} />
+                        <Route path="/occupancy-status" element={<OccupancyStatus />} />
                         <Route
                             element={
                                 <ProtectedRoute>
@@ -66,15 +82,22 @@ const App: React.FC = () => {
                                 path="/data-logger"
                                 element={<DataLogger />}
                             />
+                            <Route
+                                path="/data-logger/:dataLoggerId"
+                                element={<DataLoggerDashboard />}
+                            />
+                            <Route path='/consumer-detail-view/:consumerId' element={<ConsumerDetailView />} />
+                            <Route path='/consumer-detail-view' element={<ConsumerDetailView />} />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            {/* <Route path="/" element={<Dashboard />} /> */}
+                            <Route path="/consumer-dashboard" element={<Dashboard />} />  
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
+                            <Route path="/individual-detail" element={<IndividualDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
@@ -86,7 +109,7 @@ const App: React.FC = () => {
                             <Route path="/consumers" element={<Consumers />} />
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
-                            <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
+                            <Route path="/consumers/:consumerId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/feeder/:feederId" element={<Feeders />} />
@@ -104,8 +127,18 @@ const App: React.FC = () => {
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             <Route path="/roles-permissions" element={<RolesPermissions />} />
                             <Route path="/filter-style-controller" element={<FilterStyleController />} />
+<<<<<<< HEAD
                             <Route path="/final-usage-summary" element={<FinalUsageSummary />} />
                             <Route path="/confirmation" element={<Confirmation/>}/>
+=======
+                            <Route path="/payment" element={<Payment amount="100" />} />
+                            <Route path="/freeze-status" element={<FreezeStatus />} />
+                            <Route path="/confirmation" element={<ConfirmationPage />} />
+                            <Route path="/usage-summary" element={<UsageSummaryPage />} />
+                       
+                            {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
+                            <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
+>>>>>>> b0278cf5dba8e0a8bdf9418e216f4ddbabbbb69f
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
