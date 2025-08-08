@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useApp } from '@context/AppContext';
 
@@ -37,6 +37,20 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
 }) => {
     const { isDarkMode: contextIsDarkMode } = useApp();
     const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
+    const [, forceUpdate] = useState({});
+
+    // Listen for custom events from fallback context
+    useEffect(() => {
+        const handleThemeChange = () => {
+            forceUpdate({});
+        };
+
+        window.addEventListener('themeChanged', handleThemeChange);
+
+        return () => {
+            window.removeEventListener('themeChanged', handleThemeChange);
+        };
+    }, []);
 
     const getAxisColor = useCallback((lightVar: string, darkVar: string) =>
         isDarkMode ? `var(${darkVar})` : `var(${lightVar})`, [isDarkMode]);
