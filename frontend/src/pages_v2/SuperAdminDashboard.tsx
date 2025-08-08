@@ -27,7 +27,7 @@ const SuperAdminDashboard: React.FC = () => {
             comparisonValue: 8.2,
             subtitle1: 'Across all applications',
             subtitle2: '8.2% from last month',
-            onValueClick: () => navigate("/active-users"),
+            onValueClick: () => navigate("/Consumers"),
             bg: "bg-stat-icon-gradient",
         },
         {
@@ -38,7 +38,7 @@ const SuperAdminDashboard: React.FC = () => {
             comparisonValue: 15.3,
             subtitle1: 'Last 24 hours',
             subtitle2: '15.3% from last month',
-            onValueClick: () => navigate("/daily-logins"),
+            onValueClick: () => navigate("/consumers"),
             bg: "bg-stat-icon-gradient",
         },
         {
@@ -49,7 +49,7 @@ const SuperAdminDashboard: React.FC = () => {
             comparisonValue: -5,
             subtitle1: 'Needs attention',
             subtitle2: '5% from last month',
-            onValueClick: () => navigate("/issues"),
+            onValueClick: () => navigate("consumers"),
             bg: "bg-stat-icon-gradient",
         }
     ];

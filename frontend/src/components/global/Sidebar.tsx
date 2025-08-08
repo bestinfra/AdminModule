@@ -81,6 +81,19 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/dashboard.svg',
                 link:'/all-tickets',
             },
+            {
+                      title: 'Final Usage Summary',
+      icon: '/icons/summary-icon.svg', // Add an icon or use an existing one
+      link: '/final-usage-summary',
+
+            },
+            {
+  title: 'Confirmation',
+  icon: '/icons/confirmation.svg',
+  link: '/confirmation',
+}
+
+            
            
         ],
     },

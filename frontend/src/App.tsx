@@ -40,6 +40,11 @@ import RolesPermissions from './pages_v2/RolesPermissions';
 
 import DTRDetailPage from './pages/DTRDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
+import FinalUsageSummary from './pages_v2/FinalUsageMangement';
+import Confirmation from './pages_v2/Confirmation';
+
+
+
 
 const App: React.FC = () => {
     return (
@@ -63,6 +68,7 @@ const App: React.FC = () => {
                             />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/superadmin" element={<SuperAdminDashboard />} />
+                            
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
@@ -98,6 +104,8 @@ const App: React.FC = () => {
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             <Route path="/roles-permissions" element={<RolesPermissions />} />
                             <Route path="/filter-style-controller" element={<FilterStyleController />} />
+                            <Route path="/final-usage-summary" element={<FinalUsageSummary />} />
+                            <Route path="/confirmation" element={<Confirmation/>}/>
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
