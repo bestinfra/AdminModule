@@ -23,7 +23,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         return savedTheme === 'dark' || (!savedTheme && prefersDark);
     });
 
-
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+        const savedState = localStorage.getItem('sidebarCollapsed');
+        return savedState ? JSON.parse(savedState) : false;
+    });
 
     useEffect(() => {
         if (isDarkMode) {
