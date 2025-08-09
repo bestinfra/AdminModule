@@ -541,16 +541,6 @@ model tariff {
   min_demand_unit_rate      Float
   min_demand_excess_unit_rate Float
 
-  // Slab structure
-  slab1_limit               Int
-  slab1_unit_rate           Float
-  
-  slab2_limit               Int
-  slab2_unit_rate           Float
-  
-  slab3_limit               Int
-  slab3_unit_rate           Float
-
   // Base rate fallback
   base_unit_rate            Float
 
@@ -565,6 +555,23 @@ model tariff {
 
   created_at                DateTime @default(now())
   updated_at                DateTime @updatedAt
+
+  // Relation to tariff_slabs
+  tariff_slabs              tariff_slabs[]
+}
+
+model tariff_slabs {
+  id         Int      @id @default(autoincrement())
+  tariff_id  Int
+  slab_order Int
+  unit_limit Int
+  unit_rate  Float
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  // Relation to tariff
+  tariff     tariff   @relation(fields: [tariff_id], references: [id], onDelete: Cascade)
 }
 
 model raw_xml_import {
