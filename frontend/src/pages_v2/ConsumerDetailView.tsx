@@ -14,10 +14,13 @@ const ConsumerDetailView: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const lastComm = "30/06/2025 22:31:38";
 
+  // State to control chart time range
+  const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly' | 'Yearly'>('Daily');
+
   // Mock consumer data for demonstration based on the image
   const mockConsumerData = {
     id: consumerId,
-    name: ` ,${consumerId}`,
+    name: ` ${consumerId}`,
     consumerNumber: consumerId,
     currentBalance: "₹0.00",
     uniqueIdentificationNo: consumerId,
@@ -43,8 +46,9 @@ const ConsumerDetailView: React.FC = () => {
       bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: 'w-3 h-3',
-       width: 'w-4', height: 'h-4',
+      iconClassName: "w-4 h-4",
+      width: "w-8",
+      height: "h-8",
     },
     {
       title: "Y-Phase Voltage",
@@ -54,7 +58,9 @@ const ConsumerDetailView: React.FC = () => {
       bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
-       iconClassName: 'w-3 h-3', width: 'w-4', height: 'h-4',
+      iconClassName: "w-4 h-4 ",
+      width: "w-8",
+      height: "h-8",
     },
     {
       title: "B-Phase Voltage",
@@ -64,8 +70,9 @@ const ConsumerDetailView: React.FC = () => {
       bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
-       iconClassName: 'w-3 h-3', 
-       width: 'w-4', height: 'h-4',
+      iconClassName: "w-4 h-4",
+      width: "w-8",
+      height: "h-8",
     },
     {
       title: "R-Phase Current",
@@ -75,8 +82,9 @@ const ConsumerDetailView: React.FC = () => {
       bg: "bg-danger",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
-       iconClassName: 'w-3 h-3',
-        width: 'w-4', height: 'h-4',
+      iconClassName: "w-4 h-4",
+      width: "w-8",
+      height: "h-8",
     },
     {
       title: "Y-Phase Current",
@@ -86,8 +94,9 @@ const ConsumerDetailView: React.FC = () => {
       bg: "bg-warning-alt",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: 'md', 
-      width: 'w-4', height: 'h-4',
+      iconClassName: "w-4 h-4",
+      width: "w-8",
+      height: "h-8",
     },
     {
       title: "B-Phase Current",
@@ -97,8 +106,16 @@ const ConsumerDetailView: React.FC = () => {
       bg: "bg-primary",
       valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
       iconStyle: FILTER_STYLES.WHITE,
+      iconClassName: "w-4 h-4",
+      width: "w-8",
+      height: "h-8",
     },
   ];
+
+  // Handler for occupancy status click
+  const handleOccupancyStatusClick = () => {
+    navigate('/occupancy-status');
+  };
 
   // Consumer Information Data Arrays (similar to MeterDetails structure)
   const CONSUMER_INFO_ROW_1 = [
@@ -108,7 +125,13 @@ const ConsumerDetailView: React.FC = () => {
       value: mockConsumerData.uniqueIdentificationNo,
     },
     { title: "Meter Serial Number", value: mockConsumerData.meterSerialNumber, statusIndicator: true },
-    { title: "Occupancy Status", value: mockConsumerData.occupancyStatus },
+      { 
+    title: "Occupancy Status", 
+    value: mockConsumerData.occupancyStatus,
+    onClick: handleOccupancyStatusClick,
+    clickable: true,
+    className: "hover:text-primary"
+  },
   ];
 
   const CONSUMER_INFO_ROW_2 = [
@@ -183,32 +206,78 @@ const ConsumerDetailView: React.FC = () => {
     },
   ];
 
-  // Chart data for consumer consumption
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  const consumptionSeries = [
+  // Comprehensive Chart data for different time ranges
+  const dailyChartData = {
+    xAxisData: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+    seriesData: [
     {
       name: "Energy Consumption (kWh)",
-      data: [180, 195, 210, 185, 200, 175, 190, 205, 220, 195, 180, 200],
+        data: [12.5, 18.2, 16.8, 19.5, 17.3, 20.1, 14.7],
     },
     {
       name: "Peak Demand (kW)",
-      data: [15, 16, 18, 14, 17, 13, 16, 19, 20, 16, 15, 17],
-    },
-  ];
-  const consumptionColors = ["#10B981", "#3B82F6"];
+        data: [2.1, 3.2, 2.8, 3.5, 2.9, 3.8, 2.4],
+      },
+    ],
+    seriesColors: ["#10B981", "#3B82F6"],
+  };
+
+  const monthlyChartData = {
+    xAxisData: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    seriesData: [
+      { name: 'Consumption (kWh)', data: [120, 140, 100, 130, 150, 170, 165, 180, 190, 175, 160, 185] }
+    ],
+    seriesColors: ["#10B981", "#3B82F6"],
+  };
+
+  const yearlyChartData = {
+    xAxisData: ['2020', '2021', '2022', '2023', '2024', '2025'],
+    seriesData: [
+      {
+        name: "Energy Consumption (kWh)",
+        data: [1850, 2100, 1950, 2200, 2050, 1800],
+      },
+      {
+        name: "Peak Demand (kW)",
+        data: [18, 22, 20, 25, 23, 19],
+      },
+    ],
+    seriesColors: ["#10B981", "#3B82F6"],
+  };
+
+  // Dynamic chart data based on selected time range
+  const getChartData = () => {
+    switch (selectedTimeRange) {
+      case 'Daily':
+        return dailyChartData;
+      case 'Monthly':
+        return monthlyChartData;
+      case 'Yearly':
+        return yearlyChartData;
+      default:
+        return dailyChartData;
+    }
+  };
+
+  const currentChartData = getChartData();
+
+  // Separate chart data for the first chart (with its own time range state)
+  const [firstChartTimeRange, setFirstChartTimeRange] = useState<'Daily' | 'Monthly' | 'Yearly'>('Monthly');
+  
+  const getFirstChartData = () => {
+    switch (firstChartTimeRange) {
+      case 'Daily':
+        return dailyChartData;
+      case 'Monthly':
+        return monthlyChartData;
+      case 'Yearly':
+        return yearlyChartData;
+      default:
+        return monthlyChartData;
+    }
+  };
+
+  const firstChartData = getFirstChartData();
 
   // Pie chart data for billing distribution
   const billingPieData = [
@@ -216,52 +285,6 @@ const ConsumerDetailView: React.FC = () => {
     { name: "Pending Bills", value: 20, color: "#F59E0B" },
     { name: "Overdue Bills", value: 15, color: "#EF4444" },
   ];
-
-  // Daily consumption chart data
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const dailyConsumptionSeries = [
-    {
-      name: "Daily Consumption (kWh)",
-      data: [25, 28, 22, 30, 26, 20, 18],
-    },
-  ];
-  const dailyConsumptionColors = ["#8B5CF6"];
-
-  // Billing history table data
-  // const billingHistoryData = [
-  //   {
-  //     id: 1,
-  //     billNumber: "BILL-001",
-  //     billDate: "2024-01-15",
-  //     dueDate: "2024-02-15",
-  //     amount: "₹1,250.00",
-  //     status: "Paid",
-  //   },
-  //   {
-  //     id: 2,
-  //     billNumber: "BILL-002",
-  //     billDate: "2024-02-15",
-  //     dueDate: "2024-03-15",
-  //     amount: "₹1,350.00",
-  //     status: "Pending",
-  //   },
-  //   {
-  //     id: 3,
-  //     billNumber: "BILL-003",
-  //     billDate: "2024-03-15",
-  //     dueDate: "2024-04-15",
-  //     amount: "₹1,450.00",
-  //     status: "Overdue",
-  //   },
-  // ];
-
-  // const billingHistoryColumns = [
-  //   { key: "billNumber", label: "Bill Number" },
-  //   { key: "billDate", label: "Bill Date" },
-  //   { key: "dueDate", label: "Due Date" },
-  //   { key: "amount", label: "Amount" },
-  //   { key: "status", label: "Status" },
-  // ];
 
   // Meter readings table data
   const meterReadingsData = [
@@ -355,8 +378,8 @@ const ConsumerDetailView: React.FC = () => {
     },
 
     {
-      id: 1,
-      transactionId: "TXN-001",
+      id: 4,
+      transactionId: "TXN-004",
       creditAmount: "₹1,250.00",
       currentBalanceAmount: "₹0.00",
       paymentDate: "2024-01-20",
@@ -433,7 +456,6 @@ const ConsumerDetailView: React.FC = () => {
       status: "Completed",
       eventDate: "2024-01-25",
     },
-
     {
       id: 4,
       sNo: 4,
@@ -443,42 +465,18 @@ const ConsumerDetailView: React.FC = () => {
     },
     {
       id: 5,
-      sNo: 2,
+      sNo: 5,
       eventDescription: "Payment due reminder sent",
       status: "Resolved",
       eventDate: "2024-03-20",
     },
     {
       id: 6,
-      sNo: 3,
+      sNo: 6,
       eventDescription: "Meter communication restored",
       status: "Completed",
       eventDate: "2024-01-25",
     },
-
-{
-      id: 6,
-      sNo: 3,
-      eventDescription: "Meter communication restored",
-      status: "Completed",
-      eventDate: "2024-01-25",
-    },
-{
-      id: 6,
-      sNo: 3,
-      eventDescription: "Meter communication restored",
-      status: "Completed",
-      eventDate: "2024-01-25",
-    },
-{
-      id: 6,
-      sNo: 3,
-      eventDescription: "Meter communication restored",
-      status: "Completed",
-      eventDate: "2024-01-25",
-    },
-
-
   ];
 
   const alertsColumns = [
@@ -491,7 +489,6 @@ const ConsumerDetailView: React.FC = () => {
   // Menu items for PageHeader
   const menuItems = [
     { id: "refresh", label: "Edit", icon: "/icons/Edit.svg" },
-    
   ];
 
   const handleBackClick = () => {
@@ -508,19 +505,20 @@ const ConsumerDetailView: React.FC = () => {
     // Add chart download logic here
   };
 
-  // TimeRangeSelector dummy data and handlers
-  const availableTimeRanges = ["Current Bill", "History"];
-  const [selectedTimeRange, setSelectedTimeRange] = useState("Current Bill");
-  
+  // Time range change handler for main chart
   const handleTimeRangeChange = (range: string) => {
-    setSelectedTimeRange(range);
-    console.log("Time range changed to:", range);
-    // Add logic to fetch data based on selected time range
+    if (range === 'Daily' || range === 'Monthly' || range === 'Yearly') {
+      setSelectedTimeRange(range as 'Daily' | 'Monthly' | 'Yearly');
+    }
+    console.log("Main chart time range changed to:", range);
   };
 
-  const timeRangeLabels = {
-    "Current Bill": "Current Bill",
-    "History": "History"
+  // Time range change handler for first chart
+  const handleFirstChartTimeRangeChange = (range: string) => {
+    if (range === 'Daily' || range === 'Monthly' || range === 'Yearly') {
+      setFirstChartTimeRange(range as 'Daily' | 'Monthly' | 'Yearly');
+    }
+    console.log("First chart time range changed to:", range);
   };
 
   const fetchConsumerData = async () => {
@@ -671,6 +669,9 @@ const ConsumerDetailView: React.FC = () => {
                             align: "start",
                             gap: "gap-1",
                             statusIndicator: item.statusIndicator,
+                            onClick: item.onClick,
+                            clickable: item.clickable,
+                            className: item.className,
                           })),
                         },
                       ],
@@ -756,6 +757,9 @@ const ConsumerDetailView: React.FC = () => {
                       stat.valueFontSize ||
                       "text-lg lg:text-xl md:text-lg sm:text-base",
                     iconStyle: stat.iconStyle || "BRAND_GREEN",
+                    iconClassName: stat.iconClassName,
+                    width: stat.width,
+                    height: stat.height,
                   },
                   span: { col: 1, row: 1 },
                 })),
@@ -791,7 +795,7 @@ const ConsumerDetailView: React.FC = () => {
                       height: 300,
                       showLegendInteractions: true,
                       showHeader: false,
-                      className: "p-6 flex justify-center",
+                      className: "px-2 flex justify-center",
                       showDownloadButton: true,
                       onDownload: () => handleChartDownload(),
                     },
@@ -801,26 +805,22 @@ const ConsumerDetailView: React.FC = () => {
               {
                 layout: "column",
                 gap: "gap-0",
-                className: "bg-white border border-primary-border rounded-3xl  col-span-1",
+                className: "",
                 columns: [
-                  {
-                    name: "Holder",
-                    props: {
-                      title: "Consumer Energy Consumption",
-                      subtitle: "Monthly and peak demand",
-                      className: "border-none rounded-t-3xl ",
-                    },
-                  },
                   {
                     name: "BarChart",
                     props: {
-                      xAxisData: months,
-                      seriesData: consumptionSeries,
-                      seriesColors: consumptionColors,
+                      xAxisData: firstChartData.xAxisData,
+                      seriesData: firstChartData.seriesData,
+                      seriesColors: firstChartData.seriesColors,
                       height: 300,
                       showLegendInteractions: true,
-                      showHeader: false,
-                      className: "p-6",
+                      showHeader: true,
+                      headerTitle: "Energy Consumption",
+                      prependTimeRangeInTitle: false,
+                      availableTimeRanges: ['Daily', 'Monthly', 'Yearly'],
+                      initialTimeRange: firstChartTimeRange,
+                      onTimeRangeChange: handleFirstChartTimeRangeChange,
                       showDownloadButton: true,
                       onDownload: () => handleChartDownload(),
                     },
@@ -843,13 +843,17 @@ const ConsumerDetailView: React.FC = () => {
             {
               name: "BarChart",
               props: {
-                xAxisData: days,
-                seriesData: dailyConsumptionSeries,
-                seriesColors: dailyConsumptionColors,
+                xAxisData: currentChartData.xAxisData,
+                seriesData: currentChartData.seriesData,
+                seriesColors: currentChartData.seriesColors,
                 height: 300,
                 showLegendInteractions: true,
                 showHeader: true,
                 headerTitle: "Energy Consumption",
+                prependTimeRangeInTitle: false,
+                availableTimeRanges: ['Daily', 'Monthly', 'Yearly'],
+                initialTimeRange: selectedTimeRange,
+                onTimeRangeChange: handleTimeRangeChange,
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
               },
@@ -878,15 +882,6 @@ const ConsumerDetailView: React.FC = () => {
                       layout: "vertical",
                       gap: "gap-4",
                       className: "w-full",
-                      rightComponent: {
-                        name: "TimeRangeSelector",
-                        props: {
-                          availableTimeRanges: availableTimeRanges,
-                          selectedTimeRange: selectedTimeRange,
-                          handleTimeRangeChange: handleTimeRangeChange,
-                          timeRangeLabels: timeRangeLabels,
-                        },
-                      },
                     },
                   },
                 ],
@@ -972,7 +967,9 @@ const ConsumerDetailView: React.FC = () => {
                     value: item.value,
                     subtitle1: item.subtitle1,
                     icon: item.icon,
-                  width:4,
+                  width:2,
+                  height:2,
+
                     bg: item.bg,
                     valueFontSize: item.valueFontSize,
                     iconStyle: item.iconStyle,

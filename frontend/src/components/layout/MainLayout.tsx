@@ -144,6 +144,8 @@ const MainLayout: React.FC<MainLayoutProps> = ({
                 return 'Users';
             case '/role-management':
                 return 'Role Management';
+            case '/occupancy-status':
+                return 'Occupancy Status';
             case '/bills/prepaid':
                 return 'Prepaid Bills';
             case '/bills/postpaid':

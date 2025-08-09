@@ -134,11 +134,7 @@ const defaultMenus: MenuCategory[] = [
         icon: "/icons/freeze-status.svg",
         link: "/asset-managment",
       },
-      {
-        title: "Occupancy to Vacency",
-        icon: "/icons/meter_managment.svg",
-        link: "/occupancy-status",
-      },
+    
       // {
       //   title: "Payment",
       //   icon: "/icons/payment.svg",
@@ -149,16 +145,7 @@ const defaultMenus: MenuCategory[] = [
       //   icon: "/icons/freeze-status.svg",
       //   link: "/freeze-status",
       // },
-      {
-        title: "COnsumer Dashbaord",
-        icon: "/icons/freeze-status.svg",
-        link: "/consumer-dashboard",
-      },
-      {
-        title: "All Consumers",
-        icon: "/icons/freeze-status.svg",
-        link: "/consumers",
-      },
+     
       
       // {
       //   title: "Usage Summary",
@@ -199,6 +186,21 @@ const defaultMenus: MenuCategory[] = [
       // },
     ],
   },
+  {
+    category: "CONSUMER SETTINGS",
+    items: [ 
+      {
+      title: "COnsumer Dashbaord",
+      icon: "/icons/freeze-status.svg",
+      link: "/consumer-dashboard",
+    },
+    {
+      title: "All Consumers",
+      icon: "/icons/freeze-status.svg",
+      link: "/consumers",
+    },
+  ]
+  }
   // {
   //   category: "GMR Client",
   //   items: [

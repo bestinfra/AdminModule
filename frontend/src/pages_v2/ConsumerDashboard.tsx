@@ -36,7 +36,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 1,
             title: 'Total Consumers',
             value: '292',
-            icon: '/icons/account.svg',
+            icon: '/icons/units.svg',
             subtitle1: '284 Active',
             subtitle2: '8 In-Active',
             onValueClick: handleTotalConsumersClick,
@@ -45,7 +45,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 2,
             title: 'High-Usage Consumers',
             value: '2',
-            icon: '/icons/coins.svg',
+            icon: '/icons/heavy-user.svg',
             subtitle1: '140.09 kWh Average Consumption',
             subtitle2: '',
         },
@@ -55,7 +55,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 1,
             title: 'Total Consumption',
             value: '16.09 kWh',
-            icon: '/icons/account.svg',
+            icon: '/icons/plug-alt.svg',
             subtitle1: '284 Active Consumption',
             subtitle2: '8 In-Active Consumption',
             onValueClick: handleTotalConsumersClick,
@@ -64,7 +64,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 2,
             title: 'Total Billing',
             value: '₹ 16,090.00',
-            icon: '/icons/coins.svg',
+            icon: '/icons/rupee.svg',
             subtitle1: '140.09 kWh Average Billing',
             subtitle2: '',
         },
@@ -315,16 +315,28 @@ const ConsumerDashboard: React.FC = () => {
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-0',
+                                    gap: 'gap-4',
                                     span:{col:2,row:1},
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
+                                    className: '',
                                     columns: [
                                         {
-                                            name: "Holder",
+                                            name: "SectionHeader",
                                             props: {
-                                                title: "Billing vs Collection",
-                                                subtitle: "Monthly billing statistics and collection data",
-                                                className: "border-none rounded-t-3xl",
+                                                title: "Consumption Metrics",
+                                                titleLevel: 2,
+                                                titleSize: "md",
+                                                titleVariant: "colorPrimaryDark",
+                                                titleWeight: "normal",
+                                                titleAlign: "left",
+                                                rightComponent:{
+                                                    name: "TimeRangeSelector",
+                                                    props: {
+                                                        availableTimeRanges: ["Graph", "Table"],
+                                                        selectedTimeRange: selectedTimeRange,
+                                                        handleTimeRangeChange: handleTimeRangeChange,
+                                                        timeRangeLabels: {},
+                                                    },
+                                                }
                                             },
                                         },
                                         {
@@ -337,15 +349,11 @@ const ConsumerDashboard: React.FC = () => {
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
-                                                showHeader: false,
-                                                dateRange: '2024',
+                                                headerTitle: ' Consumption Metrics',
+                                                showHeader: true,
+                                                dateRange: '8 Jun, 2025 - 9 Aug, 2025',
+                                                className:'p-4',
                                                 showDownloadButton: true,
-                                                showViewToggle: true,
-                                                viewToggleOptions: [
-                                                    'Graph',
-                                                    'Table',
-                                                ],
-                                                showTableView: true,
                                                 ariaLabel:
                                                     'Monthly billing statistics chart',
                                                 yAxisMax: 300,
