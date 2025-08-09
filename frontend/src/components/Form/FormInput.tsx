@@ -40,6 +40,7 @@ const FormInput: React.FC<FormInputProps> = ({
     options,
     className: inputClassName,
     icon,
+    rightIcon,
     description,
   } = input;
 
@@ -101,7 +102,7 @@ const FormInput: React.FC<FormInputProps> = ({
     const fileValue = value === null ? null : (value as FileList);
     const fileSingleValue = value === null ? null : (value as File);
 
-    const finalClassName = `${commonProps.className} ${icon ? "pr-12" : ""} ${
+    const finalClassName = `${commonProps.className} ${icon ? "pr-12" : ""} ${rightIcon ? "pr-12" : ""} ${
       showError ? "border-red-500" : ""
     }`.trim();
 
@@ -340,6 +341,28 @@ const FormInput: React.FC<FormInputProps> = ({
         const textInputType = allowedTextInputTypes.includes(type as any)
           ? type
           : "text";
+        
+        if (rightIcon) {
+          return (
+            <div className="relative">
+              <input
+                {...commonProps}
+                ref={inputRef}
+                key={name}
+                type={textInputType}
+                value={stringValue}
+                placeholder={placeholder || label}
+                className={finalClassName}
+              />
+              <img
+                src={rightIcon}
+                alt="icon"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 pointer-events-none"
+              />
+            </div>
+          );
+        }
+        
         return (
           <input
             {...commonProps}
@@ -352,7 +375,7 @@ const FormInput: React.FC<FormInputProps> = ({
           />
         );
     }
-  }, [type, value, commonProps, placeholder, label, options, icon, fileInputRefs, description, name, onInputChange, input, showError, error, required, disabled, inputClassName, showError, showPassword, setShowPassword]);
+  }, [type, value, commonProps, placeholder, label, options, icon, fileInputRefs, description, name, onInputChange, input, showError, error, required, disabled, inputClassName, showError, showPassword, setShowPassword, rightIcon]);
 
   return (
     <div className={`w-full  ${inputClassName || ""}`}>

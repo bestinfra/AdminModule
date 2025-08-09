@@ -1,5 +1,5 @@
 {
-  "nextPort": 4154,
+  "nextPort": 4178,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -7,8 +7,8 @@
       "path": "C:\\xampp\\htdocs\\example-backend"
     },
     "example-app": {
-      "port": 4089,
-      "deployedAt": "2025-07-28T19:41:54.460Z",
+      "port": 4195,
+      "deployedAt": "2025-08-07T02:58:01.225Z",
       "path": "C:\\xampp\\htdocs\\example-app-backend"
     },
     "madhu": {
@@ -586,45 +586,155 @@
       "deployedAt": "2025-08-02T11:46:07.778Z",
       "path": "C:\\xampp\\htdocs\\smdr-backend"
     },
-    "march": {
-      "port": 4146,
-      "deployedAt": "2025-08-03T07:38:25.446Z",
-      "path": "C:\\xampp\\htdocs\\march-backend"
-    },
-    "august": {
-      "port": 4147,
-      "deployedAt": "2025-08-03T08:22:45.065Z",
-      "path": "C:\\xampp\\htdocs\\august-backend"
-    },
-    "january": {
-      "port": 4148,
-      "deployedAt": "2025-08-03T08:31:26.216Z",
-      "path": "C:\\xampp\\htdocs\\january-backend"
-    },
-    "february": {
-      "port": 4149,
-      "deployedAt": "2025-08-03T08:51:58.694Z",
-      "path": "C:\\xampp\\htdocs\\february-backend"
-    },
-    "april": {
-      "port": 4150,
-      "deployedAt": "2025-08-03T09:16:17.033Z",
-      "path": "C:\\xampp\\htdocs\\april-backend"
-    },
-    "may": {
-      "port": 4151,
-      "deployedAt": "2025-08-03T09:28:25.264Z",
-      "path": "C:\\xampp\\htdocs\\may-backend"
-    },
-    "june": {
-      "port": 4152,
-      "deployedAt": "2025-08-03T09:40:09.352Z",
-      "path": "C:\\xampp\\htdocs\\june-backend"
-    },
     "knbd": {
-      "port": 4153,
-      "deployedAt": "2025-08-04T04:44:18.245Z",
+      "port": 4146,
+      "deployedAt": "2025-08-04T04:40:48.135Z",
       "path": "C:\\xampp\\htdocs\\knbd-backend"
+    },
+    "bcd": {
+      "port": 4147,
+      "deployedAt": "2025-08-04T06:38:20.163Z",
+      "path": "C:\\xampp\\htdocs\\bcd-backend"
+    },
+    "katre": {
+      "port": 4149,
+      "deployedAt": "2025-08-05T04:44:25.170Z",
+      "path": "C:\\xampp\\htdocs\\katre-backend"
+    },
+    "akob": {
+      "port": 4150,
+      "deployedAt": "2025-08-05T11:06:42.501Z",
+      "path": "C:\\xampp\\htdocs\\akob-backend"
+    },
+    "kotak": {
+      "port": 4151,
+      "deployedAt": "2025-08-05T11:37:48.073Z",
+      "path": "C:\\xampp\\htdocs\\kotak-backend"
+    },
+    "kskdjsah": {
+      "port": 4153,
+      "deployedAt": "2025-08-06T11:28:46.088Z",
+      "path": "C:\\xampp\\htdocs\\kskdjsah-backend"
+    },
+    "test8": {
+      "port": 4154,
+      "deployedAt": "2025-08-05T04:25:23.862Z",
+      "path": "C:\\xampp\\htdocs\\test8-backend"
+    },
+    "test9": {
+      "port": 4155,
+      "deployedAt": "2025-08-05T04:37:07.651Z",
+      "path": "C:\\xampp\\htdocs\\test9-backend"
+    },
+    "test10": {
+      "port": 4156,
+      "deployedAt": "2025-08-05T07:55:51.115Z",
+      "path": "C:\\xampp\\htdocs\\test10-backend"
+    },
+    "test11": {
+      "port": 4157,
+      "deployedAt": "2025-08-05T10:16:00.385Z",
+      "path": "C:\\xampp\\htdocs\\test11-backend"
+    },
+    "test12": {
+      "port": 4158,
+      "deployedAt": "2025-08-05T10:57:37.604Z",
+      "path": "C:\\xampp\\htdocs\\test12-backend"
+    },
+    "test13": {
+      "port": 4159,
+      "deployedAt": "2025-08-05T14:20:56.510Z",
+      "path": "C:\\xampp\\htdocs\\test13-backend"
+    },
+    "test14": {
+      "port": 4160,
+      "deployedAt": "2025-08-05T14:31:03.206Z",
+      "path": "C:\\xampp\\htdocs\\test14-backend"
+    },
+    "test15": {
+      "port": 4161,
+      "deployedAt": "2025-08-05T14:36:41.467Z",
+      "path": "C:\\xampp\\htdocs\\test15-backend"
+    },
+    "test16": {
+      "port": 4162,
+      "deployedAt": "2025-08-05T15:53:12.419Z",
+      "path": "C:\\xampp\\htdocs\\test16-backend"
+    },
+    "test17": {
+      "port": 4163,
+      "deployedAt": "2025-08-05T16:05:59.199Z",
+      "path": "C:\\xampp\\htdocs\\test17-backend"
+    },
+    "test18": {
+      "port": 4164,
+      "deployedAt": "2025-08-06T06:35:00.622Z",
+      "path": "C:\\xampp\\htdocs\\test18-backend"
+    },
+    "test19": {
+      "port": 4165,
+      "deployedAt": "2025-08-06T07:03:03.318Z",
+      "path": "C:\\xampp\\htdocs\\test19-backend"
+    },
+    "test20": {
+      "port": 4166,
+      "deployedAt": "2025-08-06T10:14:04.389Z",
+      "path": "C:\\xampp\\htdocs\\test20-backend"
+    },
+    "test21": {
+      "port": 4167,
+      "deployedAt": "2025-08-06T10:31:08.664Z",
+      "path": "C:\\xampp\\htdocs\\test21-backend"
+    },
+    "test24": {
+      "port": 4168,
+      "deployedAt": "2025-08-06T11:26:34.223Z",
+      "path": "C:\\xampp\\htdocs\\test24-backend"
+    },
+    "test25": {
+      "port": 4169,
+      "deployedAt": "2025-08-06T11:43:08.903Z",
+      "path": "C:\\xampp\\htdocs\\test25-backend"
+    },
+    "test26": {
+      "port": 4170,
+      "deployedAt": "2025-08-06T11:48:59.200Z",
+      "path": "C:\\xampp\\htdocs\\test26-backend"
+    },
+    "test27": {
+      "port": 4171,
+      "deployedAt": "2025-08-06T11:53:05.208Z",
+      "path": "C:\\xampp\\htdocs\\test27-backend"
+    },
+    "test28": {
+      "port": 4172,
+      "deployedAt": "2025-08-06T11:56:22.651Z",
+      "path": "C:\\xampp\\htdocs\\test28-backend"
+    },
+    "test29": {
+      "port": 4173,
+      "deployedAt": "2025-08-06T11:59:33.452Z",
+      "path": "C:\\xampp\\htdocs\\test29-backend"
+    },
+    "test30": {
+      "port": 4174,
+      "deployedAt": "2025-08-06T12:02:14.211Z",
+      "path": "C:\\xampp\\htdocs\\test30-backend"
+    },
+    "test31": {
+      "port": 4175,
+      "deployedAt": "2025-08-06T12:06:07.865Z",
+      "path": "C:\\xampp\\htdocs\\test31-backend"
+    },
+    "test32": {
+      "port": 4176,
+      "deployedAt": "2025-08-06T12:27:31.765Z",
+      "path": "C:\\xampp\\htdocs\\test32-backend"
+    },
+    "test33": {
+      "port": 4177,
+      "deployedAt": "2025-08-06T12:31:00.278Z",
+      "path": "C:\\xampp\\htdocs\\test33-backend"
     }
   }
 }

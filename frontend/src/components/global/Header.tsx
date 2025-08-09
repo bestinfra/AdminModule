@@ -1,7 +1,7 @@
 import Input from '@components/Form/Input';
 import { useApp } from '@context/AppContext';
 import Cookies from 'js-cookie';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface HeaderAction {
     icon: string;
@@ -27,6 +27,20 @@ function Header({
 }: HeaderProps) {
     const { isSidebarCollapsed } = useApp();
     const [isFullScreen, setIsFullScreen] = useState(false);
+    const [, forceUpdate] = useState({});
+
+    // Listen for custom events from fallback context
+    useEffect(() => {
+        const handleSidebarToggle = () => {
+            forceUpdate({});
+        };
+
+        window.addEventListener('sidebarToggled', handleSidebarToggle);
+
+        return () => {
+            window.removeEventListener('sidebarToggled', handleSidebarToggle);
+        };
+    }, []);
 
     const toggleFullScreen = () => {
         if (!document.fullscreenElement) {

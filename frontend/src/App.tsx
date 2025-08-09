@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AppProvider } from '@/context/AppContext';
 import { AuthProvider } from '@/context/AuthContext';
@@ -8,6 +9,7 @@ import MainLayout from './components/layout/MainLayout';
 import PageDemo from './pages/PageDemo';
 import Login from './pages/Login';
 import DataLogger from './pages_v2/DataLogger';
+import DataLoggerDashboard from './pages_v2/DataLoggerDashboard';
 import Meters from './pages_v2/Meters';
 import Users from './pages_v2/Users';
 import AssetManagment from './pages_v2/AssetManagement';
@@ -25,8 +27,8 @@ import ConsumerView from './pages_v2/ConsumerView';
 import Consumers from './pages_v2/Consumers';
 import MeterDetails from './pages_v2/MeterDetails';
 import TicketView from './pages_v2/TicketView';
-// import Prepaid from './pages_v2/Prepaid';   
-// import Postpaid from './pages_v2/Postpaid';
+import Prepaid from './pages_v2/Prepaid';   
+import Postpaid from './pages_v2/Postpaid';
 import Feeders from './pages_v2/Feeders';
 import AddMeter from './pages_v2/AddMeter';
 import AddRole from './pages_v2/AddRole';
@@ -39,10 +41,18 @@ import UserDetail from './pages_v2/UserDetail';
 import RolesPermissions from './pages_v2/RolesPermissions';
 import SubLogin from './pages_v2/SubLogin';
 import DTRDetailPage from './pages/DTRDetailPage';
+import IndividualDetailPage from './pages_v2/IndividualDetailPage';
 import FilterStyleController from './components/global/FilterStyleController';
-import BillsPrepaid from './pages/BillsPrepaid';
-import BillsPostpaid from './pages/BillsPostpaid';
+// import ConsumerVacantConfirmation from './pages/ConsumerVacantConfirmation';
+// import ConfirmationDialogExamples from './pages/ConfirmationDialogExamples';
+import Dashboard from './pages_v2/ConsumerDashboard';
+import ConsumerDetailView from './pages_v2/ConsumerDetailView';
+import Payment from './components/Occupancy-Vacency/Payment';
+import FreezeStatus from './components/Occupancy-Vacency/FreezeStatus';
+import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';     
 
+import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
+import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -52,6 +62,7 @@ const App: React.FC = () => {
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
                         <Route path="/sub-login" element={<SubLogin />} />
+                        <Route path="/occupancy-status" element={<OccupancyStatus />} />
                         <Route
                             element={
                                 <ProtectedRoute>
@@ -63,14 +74,21 @@ const App: React.FC = () => {
                                 path="/data-logger"
                                 element={<DataLogger />}
                             />
+                            <Route
+                                path="/data-logger/:dataLoggerId"
+                                element={<DataLoggerDashboard />}
+                            />
+                            <Route path='/consumer-detail-view/:consumerId' element={<ConsumerDetailView />} />
+                            <Route path='/consumer-detail-view' element={<ConsumerDetailView />} />
                             <Route path="/meters" element={<Meters />} />
                             <Route path="/superadmin" element={<SuperAdminDashboard />} />
                             <Route path="/users" element={<Users />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/pagedemo" element={<PageDemo />} />
-                            {/* <Route path="/" element={<Dashboard />} /> */}
+                            <Route path="/consumer-dashboard" element={<Dashboard />} />  
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
                             <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
+                            <Route path="/individual-detail" element={<IndividualDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />
                             <Route path="/add-consumer" element={<AddConsumer />} />
                             <Route path="/components-documentation" element={<ComponentsDocumentation />} />
@@ -82,15 +100,14 @@ const App: React.FC = () => {
                             <Route path="/consumers" element={<Consumers />} />
                             <Route path="/consumers/high-usage" element={<Consumers />} />
                             <Route path="/consumers/add" element={<AddConsumer />} />
-                            <Route path="/consumers/:unitId" element={<ConsumerView />} />
-                            <Route path="/consumer-view/:unitId" element={<ConsumerView />} />
+                            <Route path="/consumers/:consumerId" element={<ConsumerView />} />
                             <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />
                             <Route path="/dtr/:dtrId" element={<Feeders />} />
                             <Route path="/feeder/:feederId" element={<Feeders />} />
                             <Route path="/tickets/:ticketId" element={<TicketView />} />
                             <Route path="/" element={<DTRDashboard />} />
-                            <Route path="/prepaid" element={<BillsPrepaid />} />
-                            <Route path="/postpaid" element={<BillsPostpaid />} />
+                            <Route path="/prepaid" element={<Prepaid />} />
+                            <Route path="/postpaid" element={<Postpaid />} />
                             <Route path="/asset-managment" element={<AssetManagment />} />
                             <Route path="/add-meter" element={<AddMeter />} />
                             <Route path="/add-role" element={<AddRole />} />
@@ -101,6 +118,13 @@ const App: React.FC = () => {
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             <Route path="/roles-permissions" element={<RolesPermissions />} />
                             <Route path="/filter-style-controller" element={<FilterStyleController />} />
+                            <Route path="/payment" element={<Payment amount="100" />} />
+                            <Route path="/freeze-status" element={<FreezeStatus />} />
+                            <Route path="/confirmation" element={<ConfirmationPage />} />
+                            <Route path="/usage-summary" element={<UsageSummaryPage />} />
+                       
+                            {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
+                            <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>

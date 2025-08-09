@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useState } from 'react';
+import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useApp } from '@context/AppContext';
 import TimeRangeSelector from '@components/global/TimeRangeSelector';
@@ -73,6 +73,20 @@ const BarChart: React.FC<BarChartProps> = React.memo(
     }) => {
         const { isDarkMode: contextIsDarkMode } = useApp();
         const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
+        const [, forceUpdate] = useState({});
+
+        // Listen for custom events from fallback context
+        useEffect(() => {
+            const handleThemeChange = () => {
+                forceUpdate({});
+            };
+
+            window.addEventListener('themeChanged', handleThemeChange);
+
+            return () => {
+                window.removeEventListener('themeChanged', handleThemeChange);
+            };
+        }, []);
 
         // Internal state for time range and view type
         const [selectedTimeRange, setSelectedTimeRange] =

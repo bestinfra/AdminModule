@@ -44,6 +44,46 @@ export function generateInvoiceNumber() {
     const timePart = isoString.slice(11, 19).replace(/:/g, '');
     const randomPart = Math.floor(1000 + Math.random() * 9000);
     return `${prefix}${datePart.substring(2)}${timePart}${randomPart}`;
+}
+
+// Generates a bill number for a specific billing period
+export function generateBillNumber(meterNumber, billingDate) {
+    const year = billingDate.getFullYear();
+    const month = String(billingDate.getMonth() + 1).padStart(2, '0');
+    const randomPart = Math.floor(1000 + Math.random() * 9000);
+    return `BILL-${year}${month}-${meterNumber}-${randomPart}`;
+}
+
+// Convert consumer category enum to integer for tariff lookup
+export function getCategoryInt(category) {
+    const categoryMapping = {
+        'DOMESTIC': 0,
+        'SMALL_COMMERCIAL': 3,  // Based on your tariff data
+        'LARGE_COMMERCIAL': 2,
+        'INDUSTRIAL': 1,
+        'AGRICULTURAL': 4,
+        'GOVERNMENT': 5
+    };
+    
+    if (typeof category === 'string') {
+        return categoryMapping[category] || parseInt(category) || 0;
+    }
+    
+    return category || 0;
+}
+
+// Get category name from integer
+export function getCategoryName(categoryInt) {
+    const categoryNames = {
+        0: 'DOMESTIC',
+        3: 'SMALL_COMMERCIAL',  // Based on your tariff data
+        2: 'LARGE_COMMERCIAL',
+        1: 'INDUSTRIAL',
+        4: 'AGRICULTURAL',
+        5: 'GOVERNMENT'
+    };
+    
+    return categoryNames[categoryInt] || 'UNKNOWN';
 } 
 
 // Returns date in MM-YYYY format

@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { copyTemplateDirectory, loadAndProcessTemplate } = require('./utils/templateProcessor');
+const { copyTemplateDirectory, loadAndProcessTemplate, processTemplate } = require('./utils/templateProcessor');
 
 /**
  * Generate frontend application structure
@@ -101,447 +101,242 @@ function generateAppComponent(frontendDir, variables) {
   // Calculate conditional cases based on selected modules
   const modules = variables.modules || [];
   
-  // Ensure modulesArray is properly set for template replacement
-  variables.modulesArray = JSON.stringify(modules);
+  // Generate imports based on selected modules
+  const imports = [];
+  
+  // Array-based module configuration
+  const moduleConfig = [
+    {
+      name: 'dashboard',
+      title: 'Dashboard',
+      icon: '/icons/dashboard.svg',
+      subModules: [
+        { name: 'consumer_dashboard', component: 'ConsumerDashboard', route: '/consumer-dashboard', title: 'Consumer Dashboard' },
+        { name: 'dtr_dashboard', component: 'DTRDashboard', route: '/dtr-dashboard', title: 'DTR Dashboard' },
+        { name: 'super_admin_dashboard', component: 'SuperAdminDashboard', route: '/super-admin', title: 'Super Admin Dashboard' }
+      ]
+    },
+    {
+      name: 'bills',
+      title: 'Billing',
+      icon: '/icons/bills.svg',
+      subModules: [
+        { name: 'prepaid', component: 'Prepaid', route: '/bills/prepaid', title: 'Prepaid Bills' },
+        { name: 'postpaid', component: 'Postpaid', route: '/bills/postpaid', title: 'Postpaid Bills' }
+      ]
+    },
+    {
+      name: 'user_management',
+      title: 'User Management',
+      icon: '/icons/user.svg',
+      subModules: [
+        { name: 'users', component: 'Users', route: '/users', title: 'Users' },
+        { name: 'role_management', component: 'RoleManagement', route: '/role-management', title: 'Role Management' }
+      ]
+    },
+    {
+      name: 'asset_management',
+      title: 'Asset Management',
+      icon: '/icons/workflow-setting-alt.svg',
+      subModules: [
+        { name: 'asset_management', component: 'AssetManagement', route: '/asset-management', title: 'Assets' },
+        { name: 'meters', component: 'Meters', route: '/meters', title: 'Meters' },
+        { name: 'feeders', component: 'Feeders', route: '/feeders', title: 'Feeders' }
+      ]
+    },
+    {
+      name: 'tickets',
+      title: 'Tickets',
+      icon: '/icons/customer-service.svg',
+      subModules: [
+        { name: 'tickets', component: 'Tickets', route: '/tickets', title: 'All Tickets' },
+        { name: 'ticket_view', component: 'TicketView', route: '/tickets/:ticketId', title: 'Ticket Details' },
+        { name: 'add_ticket', component: 'AddTicket', route: '/add-ticket', title: 'Add Ticket' }
+      ]
+    }
+  ];
+
+  // Process each selected module independently
+  const processedComponents = new Set(); // Track processed components to avoid duplicates
+  
+  // Create a mapping of all available sub-modules for easy lookup
+  const allSubModules = [];
+  moduleConfig.forEach(parentModule => {
+    parentModule.subModules.forEach(subModule => {
+      allSubModules.push(subModule);
+    });
+  });
+  
+  modules.forEach(selectedModule => {
+    // Find the sub-module in the config
+    const subModule = allSubModules.find(sub => sub.name === selectedModule);
+    if (subModule && !processedComponents.has(subModule.component)) {
+      // Use local imports for better sub-app performance
+      imports.push(`import ${subModule.component} from './pages/${subModule.component}';`);
+      processedComponents.add(subModule.component);
+    }
+  });
+  
+  // Add Navigate import if we need fallback routes
+  if (!modules.includes('dashboard') && modules.length > 0) {
+    imports.push('import { Navigate } from \'react-router-dom\';');
+  }
+  
+  variables.imports = imports.join('\n');
+  
+  // Routes are now generated from the moduleConfig array
+
+  // Generate routes based on selected modules
+  const routes = [];
+  const processedRoutes = new Set(); // Track processed routes to avoid duplicates
+  
+  // Process each selected module for routes
+  modules.forEach(selectedModule => {
+    // Find the sub-module in the config
+    const subModule = allSubModules.find(sub => sub.name === selectedModule);
+    if (subModule) {
+      const routeKey = `${subModule.route}-${subModule.component}`;
+      if (!processedRoutes.has(routeKey)) {
+        routes.push(`<Route path="${subModule.route}" element={<${subModule.component} />} />`);
+        processedRoutes.add(routeKey);
+      }
+    }
+  });
+  
+  // Handle dashboard sub-modules
+  let mainDashboard = null;
+  if (modules.includes('consumer_dashboard')) {
+    mainDashboard = 'ConsumerDashboard';
+  } else if (modules.includes('dtr_dashboard')) {
+    mainDashboard = 'DTRDashboard';
+  }
+  
+  // Add main dashboard route if any dashboard sub-module is selected
+  if (mainDashboard) {
+    routes.push(`<Route path="/" element={<${mainDashboard} />} />`);
+    routes.push(`<Route path="/dashboard" element={<${mainDashboard} />} />`);
+  }
+  
+  // If no modules selected, show a welcome page
+  if (modules.length === 0) {
+    routes.push('<Route path="/" element={<div className="flex items-center justify-center min-h-screen"><h1 className="text-2xl font-bold">Welcome to ' + variables.appName + '</h1></div>} />');
+  }
+  
+  variables.routes = routes.join('\n              ');
   
   // Set basic app variables
   variables.appName = variables.appName || 'Admin App';
   variables.companyName = variables.companyName || 'Company';
   
-  variables.userManagementCase = modules.includes('user_management_default') ? `
-      case '/users':
-        return 'Users';` : '';
-  
-  variables.roleManagementCase = (modules.includes('role_management') || modules.includes('user_management_default')) ? `
-      case '/role-management':
-        return 'Role Management';` : '';
-  
-  variables.consumerCase = modules.includes('consumer') ? `
-      case '/consumers':
-        return 'Consumers';` : '';
-  
-  variables.billsPrepaidCase = (modules.includes('bills') || modules.includes('prepaid')) ? `
-      case '/bills/prepaid':
-        return 'Prepaid Bills';` : '';
-  
-  variables.billsPostpaidCase = (modules.includes('bills') || modules.includes('postpaid')) ? `
-      case '/bills/postpaid':
-        return 'Postpaid Bills';` : '';
-  
-  variables.ticketsCase = modules.includes('tickets') ? `
-      case '/all-tickets':
-        return 'All Tickets';
-      case '/tickets/:ticketId':
-        return 'Ticket View';` : '';
-  
-  variables.assetManagementCase = modules.includes('asset_management') ? `
-      case '/asset-management':
-        return 'Asset Management';` : '';
-  
-  variables.meterManagementCase = modules.includes('meter_management') ? `
-      case '/meters':
-        return 'Meters';
-      case '/data-logger-master':
-        return 'Data Logger Master';
-      case '/meter-details/:meterSlNo':
-        return 'Meter Details';` : '';
-  
-  // Dashboard submenu case variables - smart logic
-  const dashboardCaseModules = [];
-  if (modules.includes('consumer_dashboard')) dashboardCaseModules.push('consumer_dashboard');
-  if (modules.includes('dtr_dashboard')) dashboardCaseModules.push('dtr_dashboard');
-  
-  // Old case-based variables removed - now using simplified pageTitles object
+  // Define module to page title mappings
+  const modulePageTitles = {
+    'dtr_dashboard': [
+      { path: '/dtr-dashboard', title: 'DTR Dashboard' },
+      { path: '/', title: 'DTR Dashboard' },
+      { path: '/dashboard', title: 'DTR Dashboard' }
+    ],
+    'consumer_dashboard': [
+      { path: '/consumer-dashboard', title: 'Consumer Dashboard' },
+      { path: '/', title: 'Consumer Dashboard' },
+      { path: '/dashboard', title: 'Consumer Dashboard' }
+    ],
+    'users': [
+      { path: '/users', title: 'Users' }
+    ],
+    'role_management': [
+      { path: '/role-management', title: 'Role Management' }
+    ],
+    'prepaid': [
+      { path: '/bills/prepaid', title: 'Prepaid Bills' }
+    ],
+    'postpaid': [
+      { path: '/bills/postpaid', title: 'Postpaid Bills' }
+    ],
+    'tickets': [
+      { path: '/tickets', title: 'Tickets' },
+      { path: '/tickets/:ticketId', title: 'Ticket View' },
+      { path: '/add-ticket', title: 'Add Ticket' }
+    ],
+    'asset_management': [
+      { path: '/asset-management', title: 'Asset Management' }
+    ],
+    'meters': [
+      { path: '/meters', title: 'Meters' },
+      { path: '/meter-details/:meterId', title: 'Meter Details' }
+    ],
+    // Feeders is included in dtr_dashboard module
+  };
 
-  // Old route variables removed - now using simplified routes array
-   
-  variables.meterDetailsRoute = modules.includes('meter_management') ? 
-    '<Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />' : '';
-
-  // Add feeders route for DTR dashboard navigation
-  variables.feedersRoute = modules.includes('dtr_dashboard') ? 
-    '<Route path="/dtr/:dtrId" element={<Feeders />} />' : '';
+  // Generate page titles for AppLayout (only for selected modules)
+  const pageTitles = [];
+  const addedPaths = new Set(); // Track added paths to prevent duplicates
   
-  variables.ticketViewRoute = modules.includes('tickets') ? 
-    '<Route path="/tickets/:ticketId" element={<TicketView />} />' : '';
-  
- // Dashboard submenu routes - always create routes for selected sub-dashboards
- variables.consumerDashboardRoute = modules.includes('consumer_dashboard') ? 
-   '<Route path="/consumer-dashboard" element={<Dashboard />} />' : '';
-
- variables.dtrDashboardRoute = modules.includes('dtr_dashboard') ? 
-   '<Route path="/dtr-dashboard" element={<DTRDashboard />} />' : '';
-
-  // Smart dashboard route and import logic
-  const dashboardModules = [];
-  if (modules.includes('consumer_dashboard')) dashboardModules.push('consumer_dashboard');
-  if (modules.includes('dtr_dashboard')) dashboardModules.push('dtr_dashboard');
-  
-  if (dashboardModules.length === 0) {
-    // No dashboard modules - use default
-    variables.dashboardRoute = `<Route path="/" element={<Dashboard />} />
-                      <Route path="/dashboard" element={<Dashboard />} />`;
-    variables.dashboardError = `<li>/ - Dashboard</li>
-                                <li>/dashboard - Dashboard</li>`;
-  } else if (dashboardModules.length === 1) {
-    // Single dashboard - make it the main dashboard
-    const singleModule = dashboardModules[0];
-    if (singleModule === 'consumer_dashboard') {
-      variables.dashboardRoute = `<Route path="/" element={<Dashboard />} />
-                        <Route path="/dashboard" element={<Dashboard />} />`;
-      variables.dashboardError = `<li>/ - Dashboard</li>
-                                  <li>/dashboard - Dashboard</li>`;
-    } else if (singleModule === 'dtr_dashboard') {
-      variables.dashboardRoute = `<Route path="/" element={<DTRDashboard />} />
-                        <Route path="/dashboard" element={<DTRDashboard />} />`;
-      variables.dashboardError = `<li>/ - DTRDashboard</li>
-                                  <li>/dashboard - DTRDashboard</li>`;
+  // Process each selected module for page titles independently
+  modules.forEach(module => {
+    if (modulePageTitles[module]) {
+      modulePageTitles[module].forEach(pageTitle => {
+        if (!addedPaths.has(pageTitle.path)) {
+          pageTitles.push(`    '${pageTitle.path}': '${pageTitle.title}'`);
+          addedPaths.add(pageTitle.path);
+        }
+      });
     }
-  } else {
-    // Multiple dashboards - create main dashboard with sub-routes
-    variables.dashboardRoute = `<Route path="/" element={<Dashboard />} />
-                      <Route path="/dashboard" element={<Dashboard />} />`;
-    variables.dashboardError = `<li>/ - Dashboard</li>
-                                <li>/dashboard - Dashboard</li>`;
-  }
+  });
   
-
+  variables.pageTitles = pageTitles.join(',\n');
   
-
-  
-  // Calculate fallback components
-  variables.loginFallback = `const LoginFallback = () => (
-  <div className="p-6">
-    <h1 className="text-2xl font-bold">Login</h1>
-    <p className="text-gray-600">Loading login page...</p>
-    <div className="mt-4 p-4 bg-blue-100 border border-blue-400 rounded">
-      <h3 className="font-semibold text-blue-800">Debug Info:</h3>
-      <p className="text-sm text-blue-700">This is the fallback component. The remote Login component failed to load.</p>
-      <p className="text-sm text-blue-700">Make sure SuperAdmin app is running on port 3000 and accessible.</p>
-    </div>
-  </div>
-);`;
-
-  variables.sidebarFallback = `const SidebarFallback = () => (
-  <div className="w-72 bg-gray-100 h-screen p-4">
-    <div className="text-center">Sidebar Loading...</div>
-  </div>
-);`;
-
-  variables.headerFallback = `const HeaderFallback = () => (
-  <div className="h-16 bg-gray-100 border-b flex items-center px-6">
-    <span>Header Loading...</span>
-  </div>
-);`;
-
-  // Calculate theme provider import
-  variables.themeProviderImport = `import { ThemeProvider } from 'SuperAdmin/providers/ThemeProvider';`;
-
-  // Calculate federated components
-  variables.sidebarComponent = `const Sidebar = createSafeLazyComponent(
-  () => import('SuperAdmin/Sidebar'),
-  SidebarFallback
-);`;
-
-  variables.headerComponent = `const Header = createSafeLazyComponent(
-  () => import('SuperAdmin/Header'),
-  HeaderFallback
-);`;
-
-  variables.loginComponent = `const Login = createSafeLazyComponent(
-  () => import('SuperAdmin/Login'),
-  LoginFallback
-);`;
-
-  // Generate all imports
-  variables.imports = '';
-  
-  // Dashboard imports - smart import logic
-  const dashboardImportModules = [];
-  if (modules.includes('consumer_dashboard')) dashboardImportModules.push('consumer_dashboard');
-  if (modules.includes('dtr_dashboard')) dashboardImportModules.push('dtr_dashboard');
-  
-  if (dashboardImportModules.length === 0) {
-    // No dashboard modules - use default dashboard
-    if (modules.includes('dashboard')) {
-      variables.imports += 'import Dashboard from \'@/pages/Dashboard\';\n';
-    }
-  } else if (dashboardImportModules.length === 1) {
-    // Single dashboard module - import the specific dashboard
-    const singleModule = dashboardImportModules[0];
-    if (singleModule === 'consumer_dashboard') {
-      variables.imports += 'import Dashboard from \'@/pages/Dashboard\';\n';
-    } else if (singleModule === 'dtr_dashboard') {
-      variables.imports += 'import DTRDashboard from \'@/pages/DTRDashboard\';\n';
-    }
-  } else {
-    // Multiple dashboard modules - import both
-    variables.imports += 'import Dashboard from \'@/pages/Dashboard\';\n';
-    variables.imports += 'import DTRDashboard from \'@/pages/DTRDashboard\';\n';
-  }
-  
-  // Consumer imports
-  if (modules.includes('consumer')) {
-    variables.imports += 'import Consumers from \'@/pages/Consumers\';\n';
-  }
-  if (modules.includes('consumer_view')) {
-    variables.imports += 'import ConsumerView from \'@/pages/ConsumerView\';\n';
-  }
-  
-  // User management imports
-  if (modules.includes('user_management_default') || modules.includes('users')) {
-    variables.imports += 'import Users from \'@/pages/Users\';\n';
-  }
-  if (modules.includes('role_management')) {
-    variables.imports += 'import RoleManagement from \'@/pages/RoleManagement\';\n';
-  }
-  
-  // Meter management imports
-  if (modules.includes('meter_management') || modules.includes('meter_list')) {
-    variables.imports += 'import Meters from \'@/pages/Meters\';\n';
-    variables.imports += 'import MeterDetails from \'@/pages/MeterDetails\';\n';
-  }
-  
-  // Asset management imports
-  if (modules.includes('asset_management')) {
-    variables.imports += 'import AssetManagement from \'@/pages/AssetManagement\';\n';
-  }
-  
-  // Ticket imports
-  if (modules.includes('tickets')) {
-    variables.imports += 'import Tickets from \'@/pages/Tickets\';\n';
-    variables.imports += 'import TicketView from \'@/pages/TicketView\';\n';
-  }
-  
-  // Bill imports
-  if (modules.includes('prepaid')) {
-    variables.imports += 'import Prepaid from \'@/pages/Prepaid\';\n';
-  }
-  if (modules.includes('postpaid')) {
-    variables.imports += 'import Postpaid from \'@/pages/Postpaid\';\n';
-  }
-  
-  // DTR imports
-  if (modules.includes('dtr_dashboard')) {
-    variables.imports += 'import Feeders from \'@/pages/Feeders\';\n';
-  }
-
-  // Generate all routes
-  variables.routes = [];
-  variables.pageTitles = [];
-  
-  // Dashboard routes - smart route generation
-  const dashboardRouteModules = [];
-  if (modules.includes('consumer_dashboard')) dashboardRouteModules.push('consumer_dashboard');
-  if (modules.includes('dtr_dashboard')) dashboardRouteModules.push('dtr_dashboard');
-  
-  if (dashboardRouteModules.length === 0) {
-    // No dashboard modules - don't add any dashboard routes
-  } else if (dashboardRouteModules.length === 1) {
-    // Single dashboard module - make it the main dashboard
-    const singleModule = dashboardRouteModules[0];
-    if (singleModule === 'consumer_dashboard') {
-      variables.routes.push('            <Route path="/" element={<Dashboard />} />');
-      variables.pageTitles.push('    \'/\': \'Consumer Dashboard\'');
-    } else if (singleModule === 'dtr_dashboard') {
-      variables.routes.push('            <Route path="/" element={<DTRDashboard />} />');
-      variables.pageTitles.push('    \'/\': \'DTR Dashboard\'');
-    }
-  } else {
-    // Multiple dashboard modules - Consumer Dashboard is default, DTR Dashboard gets its own route
-    variables.routes.push('            <Route path="/" element={<Dashboard />} />');
-    variables.routes.push('            <Route path="/dtr-dashboard" element={<DTRDashboard />} />');
-    variables.pageTitles.push('    \'/\': \'Consumer Dashboard\'');
-    variables.pageTitles.push('    \'/dtr-dashboard\': \'DTR Dashboard\'');
-  }
-  
-  // Consumer routes
-  if (modules.includes('consumer')) {
-    variables.routes.push('            <Route path="/consumers" element={<Consumers />} />');
-    variables.pageTitles.push('    \'/consumers\': \'Consumers\'');
-  }
-  if (modules.includes('consumer_view')) {
-    variables.routes.push('            <Route path="/consumer/:consumerId" element={<ConsumerView />} />');
-  }
-  
-  // Bills routes
-  if (modules.includes('prepaid')) {
-    variables.routes.push('            <Route path="/bills/prepaid" element={<Prepaid />} />');
-    variables.pageTitles.push('    \'/bills/prepaid\': \'Prepaid Bills\'');
-  }
-  if (modules.includes('postpaid')) {
-    variables.routes.push('            <Route path="/bills/postpaid" element={<Postpaid />} />');
-    variables.pageTitles.push('    \'/bills/postpaid\': \'Postpaid Bills\'');
-  }
-  
-  // Asset management routes
-  if (modules.includes('asset_management')) {
-    variables.routes.push('            <Route path="/asset-management" element={<AssetManagement />} />');
-    variables.pageTitles.push('    \'/asset-management\': \'Asset Management\'');
-  }
-  
-  // Meter management routes
-  if (modules.includes('meter_management') || modules.includes('meter_list')) {
-    variables.routes.push('            <Route path="/meters" element={<Meters />} />');
-    variables.pageTitles.push('    \'/meters\': \'Meters\'');
-    variables.routes.push('            <Route path="/meter-details/:meterSlNo" element={<MeterDetails />} />');
-    variables.pageTitles.push('    \'/meter-details/:meterSlNo\': \'Meter Details\'');
-  }
-  
-  // Tickets routes
-  if (modules.includes('tickets')) {
-    variables.routes.push('            <Route path="/all-tickets" element={<Tickets />} />');
-    variables.pageTitles.push('    \'/all-tickets\': \'All Tickets\'');
-    variables.routes.push('            <Route path="/tickets/:ticketId" element={<TicketView />} />');
-    variables.pageTitles.push('    \'/tickets/:ticketId\': \'Ticket View\'');
-  }
-  
-  // User management routes
-  if (modules.includes('user_management_default') || modules.includes('users')) {
-    variables.routes.push('            <Route path="/users" element={<Users />} />');
-    variables.pageTitles.push('    \'/users\': \'Users\'');
-  }
-  if (modules.includes('role_management')) {
-    variables.routes.push('            <Route path="/role-management" element={<RoleManagement />} />');
-    variables.pageTitles.push('    \'/role-management\': \'Role Management\'');
-  }
-  
-  // DTR routes
-  if (modules.includes('dtr_dashboard')) {
-    variables.routes.push('            <Route path="/dtr/:dtrId" element={<Feeders />} />');
-    variables.pageTitles.push('    \'/dtr/:dtrId\': \'Feeders\'');
-  }
-
-  // Convert arrays to template strings
-  variables.routes = variables.routes.join('\n');
-  variables.pageTitles = variables.pageTitles.join(',\n');
-  
-  // Generate menu items for sidebar
+  // Initialize menuItems variable
   variables.menuItems = '';
   
-  // Dashboard menu items - smart submenu logic
-  const dashboardSubmenus = [];
-  if (modules.includes('consumer_dashboard')) {
-    dashboardSubmenus.push({
-      title: 'Consumer Dashboard',
-      link: '/',
-    });
-  }
+  // Generate menu items for AppLayout (only for selected modules)
+  const menuItems = [];
+  
+  // Add module-specific menu items (only if selected)
   if (modules.includes('dtr_dashboard')) {
-    dashboardSubmenus.push({
-      title: 'DTR Dashboard',
-      link: '/dtr-dashboard',
-    });
+    // If dtr_dashboard is selected, it becomes the main dashboard
+    menuItems.push('    { title: \'DTR Dashboard\', icon: \'/icons/transformer.svg\', link: \'/dashboard\' }');
   }
   
-  // Create smart dashboard menu
-  if (dashboardSubmenus.length === 0) {
-    // No dashboard modules selected - don't add dashboard menu
-  } else if (dashboardSubmenus.length === 1) {
-    // Single dashboard module - make it the main menu
-    const singleDashboard = dashboardSubmenus[0];
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Dashboard\',\n'; // Always show as "Dashboard"
-    variables.menuItems += '      icon: \'/icons/dashboard.svg\',\n';
-    variables.menuItems += '      link: \'/\',\n'; // Always link to root path
-    variables.menuItems += '    },\n';
-  } else {
-    // Multiple dashboard modules - create parent with submenus
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Dashboard\',\n';
-    variables.menuItems += '      icon: \'/icons/dashboard.svg\',\n';
-    variables.menuItems += '      hasSubmenu: true,\n';
-    variables.menuItems += '      submenu: [\n';
-    dashboardSubmenus.forEach(submenu => {
-      variables.menuItems += '        {\n';
-      variables.menuItems += `          title: '${submenu.title}',\n`;
-      variables.menuItems += `          link: '${submenu.link}',\n`;
-      variables.menuItems += '        },\n';
-    });
-    variables.menuItems += '      ],\n';
-    variables.menuItems += '    },\n';
+  if (modules.includes('consumer_dashboard')) {
+    // If consumer_dashboard is selected, it becomes the main dashboard
+    menuItems.push('    { title: \'Consumer Dashboard\', icon: \'/icons/users.svg\', link: \'/dashboard\' }');
   }
   
-  // Consumer menu items
-  if (modules.includes('consumer')) {
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Consumers\',\n';
-    variables.menuItems += '      icon: \'/icons/units.svg\',\n';
-    variables.menuItems += '      link: \'/consumers\',\n';
-    variables.menuItems += '    },\n';
+  if (modules.includes('users')) {
+    menuItems.push('    { title: \'Users\', icon: \'/icons/user.svg\', link: \'/users\' }');
   }
   
-  // Bills menu items
-  if (modules.includes('prepaid') && modules.includes('postpaid')) {
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Bills\',\n';
-    variables.menuItems += '      icon: \'/icons/bills.svg\',\n';
-    variables.menuItems += '      hasSubmenu: true,\n';
-    variables.menuItems += '      submenu: [\n';
-    variables.menuItems += '        {\n';
-    variables.menuItems += '          title: \'Prepaid\',\n';
-    variables.menuItems += '          link: \'/bills/prepaid\',\n';
-    variables.menuItems += '        },\n';
-    variables.menuItems += '        {\n';
-    variables.menuItems += '          title: \'Postpaid\',\n';
-    variables.menuItems += '          link: \'/bills/postpaid\',\n';
-    variables.menuItems += '        },\n';
-    variables.menuItems += '      ],\n';
-    variables.menuItems += '    },\n';
-  } else if (modules.includes('prepaid')) {
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Prepaid Bills\',\n';
-    variables.menuItems += '      icon: \'/icons/bills.svg\',\n';
-    variables.menuItems += '      link: \'/bills/prepaid\',\n';
-    variables.menuItems += '    },\n';
-  } else if (modules.includes('postpaid')) {
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Postpaid Bills\',\n';
-    variables.menuItems += '      icon: \'/icons/bills.svg\',\n';
-    variables.menuItems += '      link: \'/bills/postpaid\',\n';
-    variables.menuItems += '    },\n';
+  if (modules.includes('role_management')) {
+    menuItems.push('    { title: \'Role Management\', icon: \'/icons/roles.svg\', link: \'/role-management\' }');
   }
   
-  // Asset management menu items
-  if (modules.includes('asset_management')) {
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Assets\',\n';
-    variables.menuItems += '      icon: \'/icons/workflow-setting-alt.svg\',\n';
-    variables.menuItems += '      link: \'/asset-management\',\n';
-    variables.menuItems += '    },\n';
+  if (modules.includes('prepaid')) {
+    menuItems.push('    { title: \'Prepaid Bills\', icon: \'/icons/bills.svg\', link: \'/bills/prepaid\' }');
   }
   
-  // Meter management menu items
-  if (modules.includes('meter_management') || modules.includes('meter_list')) {
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Meters\',\n';
-    variables.menuItems += '      icon: \'/icons/meter-bolt.svg\',\n';
-    variables.menuItems += '      link: \'/meters\',\n';
-    variables.menuItems += '    },\n';
+  if (modules.includes('postpaid')) {
+    menuItems.push('    { title: \'Postpaid Bills\', icon: \'/icons/bills.svg\', link: \'/bills/postpaid\' }');
   }
   
-  // Tickets menu items
   if (modules.includes('tickets')) {
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Tickets\',\n';
-    variables.menuItems += '      icon: \'/icons/customer-service.svg\',\n';
-    variables.menuItems += '      link: \'/all-tickets\',\n';
-    variables.menuItems += '    },\n';
+    menuItems.push('    { title: \'Tickets\', icon: \'/icons/customer-service.svg\', link: \'/tickets\' }');
   }
   
-  // User management menu items - smart submenu logic
+  if (modules.includes('asset_management')) {
+    menuItems.push('    { title: \'Assets\', icon: \'/icons/workflow-setting-alt.svg\', link: \'/asset-management\' }');
+  }
+  
+  if (modules.includes('meters')) {
+    menuItems.push('    { title: \'Meters\', icon: \'/icons/meter-bolt.svg\', link: \'/meters\' }');
+  }
+  
+  // Define user submenus based on selected user-related modules
   const userSubmenus = [];
-  if (modules.includes('user_management_default') || modules.includes('users')) {
-    userSubmenus.push({
-      title: 'Users',
-      link: '/users',
-    });
+  if (modules.includes('users')) {
+    userSubmenus.push({ title: 'Users', link: '/users' });
   }
   if (modules.includes('role_management')) {
-    userSubmenus.push({
-      title: 'Role Management',
-      link: '/role-management',
-    });
+    userSubmenus.push({ title: 'Role Management', link: '/role-management' });
   }
   
   // Create smart user menu
@@ -571,31 +366,21 @@ function generateAppComponent(frontendDir, variables) {
     variables.menuItems += '      ],\n';
     variables.menuItems += '    },\n';
   }
-  const appTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
-  const appContent = loadAndProcessTemplate(appTemplate, variables);
+  // variables.menuItems = menuItems.join(',\n');
   
-  // Debug: Check if any placeholders were not replaced
-  const placeholders = appContent.match(/{{[^}]+}}/g);
-  if (placeholders && placeholders.length > 0) {
-    console.error('Warning: Template placeholders were not replaced!');
-    console.error('Unreplaced placeholders:', placeholders);
+  // Process the App.tsx template
+  const templatePath = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
+  const outputPath = path.join(frontendDir, 'src', 'App.tsx');
+  
+  try {
+    const templateContent = fs.readFileSync(templatePath, 'utf8');
+    const processedContent = processTemplate(templateContent, variables);
+    fs.writeFileSync(outputPath, processedContent);
+    console.log('✅ App.tsx generated successfully');
+  } catch (error) {
+    console.error('❌ Error generating App.tsx:', error);
+    throw error;
   }
-  
-  const appPath = path.join(frontendDir, 'src', 'App.tsx');
-  fs.writeFileSync(appPath, appContent);
-  
-  // Generate AppLayout component
-  const appLayoutTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'AppLayout.tsx.template');
-  const appLayoutContent = loadAndProcessTemplate(appLayoutTemplate, variables);
-  
-  // Ensure components directory exists
-  const componentsDir = path.join(frontendDir, 'src', 'components');
-  if (!fs.existsSync(componentsDir)) {
-    fs.mkdirSync(componentsDir, { recursive: true });
-  }
-  
-  // Write the AppLayout.tsx file
-  fs.writeFileSync(path.join(componentsDir, 'AppLayout.tsx'), appLayoutContent);
 }
 
 /**
@@ -616,7 +401,7 @@ function generateContextFiles(frontendDir, variables) {
   fs.mkdirSync(contextsDir, { recursive: true });
 
   // Copy FilterStyleContext from the main frontend
-  const sourceFilterStyleContext = path.join(__dirname, '..', 'frontend', 'src', 'contexts', 'FilterStyleContext.tsx');
+  const sourceFilterStyleContext = path.join(__dirname, '..', 'frontend', 'src', 'contexts', 'FilterStyleContext.tsx', 'api');
   const targetFilterStyleContext = path.join(contextsDir, 'FilterStyleContext.tsx');
   
   if (fs.existsSync(sourceFilterStyleContext)) {
@@ -657,7 +442,8 @@ function generateComponentFiles(frontendDir, variables) {
   const componentTemplates = [
     'Input.tsx.template',
     'FederatedWrapper.tsx.template',
-    'CSSLoader.tsx.template'
+    'CSSLoader.tsx.template',
+    'AppLayout.tsx.template'
   ];
 
   componentTemplates.forEach(templateName => {
@@ -937,6 +723,51 @@ export default apiClient;
   const apiUtilsPath = path.join(apiDir, 'apiUtils.ts');
   fs.writeFileSync(apiUtilsPath, apiUtilsContent);
   console.log('✅ Created API utilities for frontend-backend connection');
+  
+  // Copy additional API files that sub-apps need
+  copyApiFiles(frontendDir, variables);
+}
+
+/**
+ * Copy necessary API files from main frontend to sub-app
+ */
+function copyApiFiles(frontendDir, variables) {
+  const apiDir = path.join(frontendDir, 'src', 'api');
+  const sourceApiDir = path.join(__dirname, '..', 'frontend', 'src', 'api');
+  
+  // Files to copy from main frontend API
+  const filesToCopy = [
+    'subAppAuth.ts',
+    'meterConnection.ts',
+    'exportModules.ts'
+  ];
+  
+  filesToCopy.forEach(fileName => {
+    const sourcePath = path.join(sourceApiDir, fileName);
+    const destPath = path.join(apiDir, fileName);
+    
+    if (fs.existsSync(sourcePath)) {
+      try {
+        // Read the source file
+        let content = fs.readFileSync(sourcePath, 'utf8');
+        
+        // Update the BACKEND_URL import for sub-apps
+        if (fileName === 'subAppAuth.ts') {
+          content = content.replace(
+            "import BACKEND_URL from '../config';",
+            "const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:" + variables.backendPort + "';"
+          );
+        }
+        
+        fs.writeFileSync(destPath, content);
+        console.log('✅ Copied ' + fileName + ' to sub-app API folder');
+      } catch (error) {
+        console.log('⚠️  Warning: Could not copy ' + fileName + ': ' + error.message);
+      }
+    } else {
+      console.log('⚠️  Warning: Source file ' + fileName + ' not found');
+    }
+  });
 }
 
 module.exports = { generateFrontend }; 

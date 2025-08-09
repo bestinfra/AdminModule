@@ -8,7 +8,8 @@ import {
     publishApp,
     unpublishApp,
     getAppCustomColors,
-    updateAppCustomColors
+    updateAppCustomColors,
+    getSuperAdminDashboardStats
 } from '../controllers/appController.js';
 
 const router = express.Router();
@@ -39,5 +40,8 @@ router.get('/:id/colors', getAppCustomColors);
 
 // Update app custom colors
 router.put('/:id/colors', updateAppCustomColors);
+
+// SuperAdmin Dashboard Stats
+router.get('/dashboard/stats', getSuperAdminDashboardStats);
 
 export default router; 

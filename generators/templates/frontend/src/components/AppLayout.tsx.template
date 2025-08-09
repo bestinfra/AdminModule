@@ -1,25 +1,14 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useApp } from '@/context/AppContext';
-import { FederatedContextProvider } from './FederatedWrapper';
-
-// Simple lazy components with fallbacks
+const Header =lazy(() => import('SuperAdmin/Header'));
 const Sidebar = lazy(() => import('SuperAdmin/Sidebar'));
-const Header = lazy(() => import('SuperAdmin/Header'));
 
-// Simple fallback components
-const LoadingFallback = ({ className, text }: { className: string; text: string }) => (
-  <div className={className}>
-    <div className="text-center">{text}</div>
-  </div>
-);
 
 interface AppLayoutProps {
   children: React.ReactNode;
 }
 
 function AppLayout({ children }: AppLayoutProps) {
-  const contextValue = useApp();
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -34,10 +23,8 @@ function AppLayout({ children }: AppLayoutProps) {
   ];
 
   return (
-    <FederatedContextProvider value={contextValue}>
       <div className="flex h-screen bg-white">
         {/* Sidebar */}
-        <Suspense fallback={<LoadingFallback className="w-72 bg-gray-100 h-screen p-4" text="Sidebar Loading..." />}>
           <Sidebar 
             currentPath={location.pathname}
             onNavigate={(path: string) => navigate(path)}
@@ -53,13 +40,10 @@ function AppLayout({ children }: AppLayoutProps) {
               showShareButton: false,
             }}
           />
-        </Suspense>
 
         <div className="flex flex-col flex-1">
           {/* Header */}
-          <Suspense fallback={<LoadingFallback className="h-16 bg-gray-100 border-b flex items-center px-6" text="Header Loading..." />}>
             <Header title={pageTitles[location.pathname] || 'Dashboard'} />
-          </Suspense>
 
           {/* Main Content */}
           <main className="flex-1 p-6 bg-white overflow-auto dark:bg-primary-dark">
@@ -67,7 +51,6 @@ function AppLayout({ children }: AppLayoutProps) {
           </main>
         </div>
       </div>
-    </FederatedContextProvider>
   );
 }
 
