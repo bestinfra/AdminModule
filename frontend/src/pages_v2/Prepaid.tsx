@@ -32,45 +32,63 @@ const cardData = [
 const rechargeData = [
     {
         title: 'Total Recharge Collection',
-        value: '₹0.00',
+        value: '₹5,250.00',
         icon: '/icons/total-recharge-collection.svg',
-        subtitle1: 'vs. ₹0.00 Yesterday',
-        subtitle2: '0 Recharges Processed',
+        subtitle1: 'vs. ₹4,800.00 Yesterday',
+        subtitle2: '15 Recharges Processed',
+        showTrend: true,
+        comparisonValue: 450, // Positive value for up trend
+        previousValue: 'vs. ₹4,800.00 Yesterday',
     },
     {
         title: 'Total Units Consumed',
-        value: '51.07 kWh',
+        value: '181.96 kWh',
         icon: '/icons/units-consumed.svg',
-        subtitle1: 'vs. 181.96 kWh Yesterday',
+        subtitle1: 'vs. 220.45 kWh Yesterday',
         subtitle2: 'Consumed from 4 Meters',
+        showTrend: true,
+        comparisonValue: -38.49, // Negative value for down trend
+        previousValue: 'vs. 220.45 kWh Yesterday',
     },
     {
         title: 'Total Amount Deducted',
         value: '₹2,201.80',
         icon: '/icons/amount-deducted.svg',
-        subtitle1: 'vs. ₹2,249.52 Yesterday',
+        subtitle1: 'vs. ₹2,449.52 Yesterday',
         subtitle2: 'Deducted from 4 Consumers',
+        showTrend: true,
+        comparisonValue: -247.72, // Negative value for down trend
+        previousValue: 'vs. ₹2,449.52 Yesterday',
     },
     {
         title: 'No.of Transactions',
-        value: '0',
+        value: '12',
         icon: '/icons/transactions.svg',
-        subtitle1: 'vs. 0 Yesterday',
-        subtitle2: 'Transactions From 0 Consumers',
+        subtitle1: 'vs. 8 Yesterday',
+        subtitle2: 'Transactions From 12 Consumers',
+        showTrend: true,
+        comparisonValue: 4, // Positive value for up trend
+        previousValue: 'vs. 8 Yesterday',
     },
     {
         title: 'Alerts Triggered',
-        value: '0',
+        value: '3',
         icon: '/icons/alert-triggered.svg',
-        subtitle1: 'vs. 0 Yesterday',
-        subtitle2: '0 sent Today',
+        subtitle1: 'vs. 1 Yesterday',
+        subtitle2: '3 sent Today',
+        showTrend: true,
+        comparisonValue: 2, // Positive value for up trend
+        previousValue: 'vs. 1 Yesterday',
     },
     {
         title: 'Auto Triggered Disconnects',
-        value: '4',
+        value: '2',
         icon: '/icons/disconnect.svg',
-        subtitle1: 'vs. 2 Yesterday',
-        subtitle2: '4 Consumers Today',
+        subtitle1: 'vs. 4 Yesterday',
+        subtitle2: '2 Consumers Today',
+        showTrend: true,
+        comparisonValue: -2, // Negative value for down trend
+        previousValue: 'vs. 4 Yesterday',
     },
 ];
 

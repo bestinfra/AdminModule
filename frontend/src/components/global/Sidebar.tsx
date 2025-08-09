@@ -199,6 +199,16 @@ const defaultMenus: MenuCategory[] = [
       icon: "/icons/freeze-status.svg",
       link: "/consumers",
     },
+    {
+      title: "Prepaid",
+      icon: "/icons/freeze-status.svg",
+      link: "/prepaid",
+    },
+    {
+      title: "Postpaid",
+      icon: "/icons/freeze-status.svg",
+      link: "/postpaid",
+    },
   ]
   }
   // {
