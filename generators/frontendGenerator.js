@@ -171,8 +171,8 @@ function generateAppComponent(frontendDir, variables) {
     // Find the sub-module in the config
     const subModule = allSubModules.find(sub => sub.name === selectedModule);
     if (subModule && !processedComponents.has(subModule.component)) {
-      // Use local imports for better sub-app performance
-      imports.push(`import ${subModule.component} from './pages/${subModule.component}';`);
+      // Use @ alias for imports
+      imports.push(`import ${subModule.component} from '@/pages/${subModule.component}';`);
       processedComponents.add(subModule.component);
     }
   });
