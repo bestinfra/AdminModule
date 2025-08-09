@@ -1,12 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import type { ReactNode } from 'react';
 
-/**
- * FilterStyleContext - Global icon color management
- * 
- * Provides centralized control over icon filter styles across the application.
- * Supports mixed color usage: global styles + individual icon colors.
- */
 
 // Define the filter style interface
 export interface IconFilterStyle {
@@ -72,7 +66,6 @@ export const FilterStyleProvider: React.FC<FilterStyleProviderProps> = ({
   );
 };
 
-// Custom hook to use the context
 export const useFilterStyle = (): FilterStyleContextType => {
   const context = useContext(FilterStyleContext);
   if (context === undefined) {

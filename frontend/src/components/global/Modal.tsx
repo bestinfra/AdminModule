@@ -53,7 +53,7 @@ const Modal: React.FC<ModalProps> = React.memo(({
   message,
   warningMessage,
   content,
-  contentType = 'text',
+  // contentType = 'text',
   showForm = false,
   formFields = [],
   onSave,
