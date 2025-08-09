@@ -59,6 +59,9 @@ const ConsumerDashboard: React.FC = () => {
             subtitle1: '284 Active Consumption',
             subtitle2: '8 In-Active Consumption',
             onValueClick: handleTotalConsumersClick,
+            showTrend: true,
+            comparisonValue: -10.09,
+            previousValue: 'vs. 14.09 kWh Yesterday',
         },
         {
             id: 2,
@@ -67,6 +70,9 @@ const ConsumerDashboard: React.FC = () => {
             icon: '/icons/rupee.svg',
             subtitle1: '140.09 kWh Average Billing',
             subtitle2: '',
+            showTrend: true,
+            comparisonValue: 15000,
+            previousValue: 'vs. 14090.00 Yesterday',
         },
     ]);
 
@@ -299,6 +305,8 @@ const ConsumerDashboard: React.FC = () => {
                                                 subtitle2: card.subtitle2,
                                                 onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
+                                                showTrend: card.showTrend,
+                                                comparisonValue: card.comparisonValue,
                                             },
                                             span: { col: 1, row: 1 },
                                         })),
@@ -371,6 +379,7 @@ const ConsumerDashboard: React.FC = () => {
                             type: 'grid',
                             columns: 2,
                             gap: 'gap-4',
+                            className:'pb-4',
                             rows: [
                                 {
                                     layout: 'column',
@@ -378,47 +387,39 @@ const ConsumerDashboard: React.FC = () => {
                                     span:{col:1,row:1},
                                     className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
                                     columns: [
-                                        {
-                                            name: "Holder",
-                                            props: {
-                                                title: "Meter Status",
-                                                subtitle: "Distribution of communicating and non-communicating meters",
-                                                className: "border-none rounded-t-3xl",
-                                            },
-                                        },
-                                        {
-                                            name: 'PieChart',
-                                            props: {
-                                                data: METER_STATUS_DATA,
-                                                height: 330,
-                                                showLegend: false,
-                                                showNoDataMessage: false,
-                                                showHeader: false,
-                                                className: 'p-4',
-                                                onClick: (
-                                                    segmentName?: string
-                                                ) => {
-                                                    if (
-                                                        segmentName ===
-                                                        'Communicating'
-                                                    )
-                                                        navigate(
-                                                            '/connect-disconnect/communicating'
-                                                        );
-                                                    else if (
-                                                        segmentName ===
-                                                        'Non-Communicating'
-                                                    )
-                                                        navigate(
-                                                            '/connect-disconnect/non-communicating'
-                                                        );
-                                                    else
-                                                        navigate(
-                                                            '/connect-disconnect'
-                                                        );
-                                                },
-                                            },
-                                        },
+                                        // {
+                                        //     name: 'PieChart',
+                                        //     props: {
+                                        //         data: METER_STATUS_DATA,
+                                        //         height: 330,
+                                        //         showLegend: false,
+                                        //         showNoDataMessage: false,
+                                        //         showHeader: false,
+                                        //         className: 'p-4',
+                                        //         onClick: (
+                                        //             segmentName?: string
+                                        //         ) => {
+                                        //             if (
+                                        //                 segmentName ===
+                                        //                 'Communicating'
+                                        //             )
+                                        //                 navigate(
+                                        //                     '/connect-disconnect/communicating'
+                                        //                 );
+                                        //             else if (
+                                        //                 segmentName ===
+                                        //                 'Non-Communicating'
+                                        //             )
+                                        //                 navigate(
+                                        //                     '/connect-disconnect/non-communicating'
+                                        //                 );
+                                        //             else
+                                        //                 navigate(
+                                        //                     '/connect-disconnect'
+                                        //                 );
+                                        //         },
+                                        //     },
+                                        // },
                                     ],
                                 },
                                 {
