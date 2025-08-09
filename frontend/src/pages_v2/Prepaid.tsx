@@ -388,11 +388,12 @@ export default function Prepaid() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-4',
+                            gap: 'gap-4',   
                             rows: [
                                 {
                                     layout: 'grid',
                                     gridColumns: 1,
+                                    className:'pb-4',
                                     columns: [
                                         {
                                             name: 'Table',
@@ -420,7 +421,7 @@ export default function Prepaid() {
                                                     },
                                                 ],
                                                 showActions: true,
-                                                searchable: false, // Disable table search since we have dedicated search component
+                                                searchable: true, // Disable table search since we have dedicated search component
                                                 pagination: true,
                                                 rowsPerPageOptions: [
                                                     5, 10, 15, 25,
