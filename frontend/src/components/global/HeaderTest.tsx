@@ -18,7 +18,7 @@ const headerActions = [
         // onClick removed here, will override inside component
         ariaLabel: 'Notifications',
         className: 'hover:bg-yellow-100 dark:hover:bg-yellow-900',
-        count: '2',
+        count: 2,
     },
     {
         icon: '/icons/settings.svg',
