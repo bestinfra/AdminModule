@@ -436,7 +436,7 @@ const ConsumerDetailView: React.FC = () => {
 
     {
       id: 4,
-      sNo: 1,
+      sNo: 4,
       eventDescription: "High consumption alert triggered",
       status: "Active",
       eventDate: "2024-01-17",
@@ -456,6 +456,27 @@ const ConsumerDetailView: React.FC = () => {
       eventDate: "2024-01-25",
     },
 
+{
+      id: 6,
+      sNo: 3,
+      eventDescription: "Meter communication restored",
+      status: "Completed",
+      eventDate: "2024-01-25",
+    },
+{
+      id: 6,
+      sNo: 3,
+      eventDescription: "Meter communication restored",
+      status: "Completed",
+      eventDate: "2024-01-25",
+    },
+{
+      id: 6,
+      sNo: 3,
+      eventDescription: "Meter communication restored",
+      status: "Completed",
+      eventDate: "2024-01-25",
+    },
 
 
   ];
@@ -469,9 +490,8 @@ const ConsumerDetailView: React.FC = () => {
 
   // Menu items for PageHeader
   const menuItems = [
-    { id: "refresh", label: "Refresh Data", icon: "/icons/refresh.svg" },
-    { id: "export", label: "Export Data", icon: "/icons/export.svg" },
-    { id: "settings", label: "Settings", icon: "/icons/settings.svg" },
+    { id: "refresh", label: "Edit", icon: "/icons/Edit.svg" },
+    
   ];
 
   const handleBackClick = () => {
@@ -593,7 +613,7 @@ const ConsumerDetailView: React.FC = () => {
                 menuItems: menuItems,
                 showMenu: true,
                 showDropdown: true,
-                buttonsLabel: "Edit",
+                buttonsLabel: "Recharge",
                 variant: "primary",
                 onClick: handleEditClick,
                 onBackClick: handleBackClick,
@@ -619,7 +639,7 @@ const ConsumerDetailView: React.FC = () => {
                     props: {
                       title: "Consumer Details",
                       titleVariant: "primary-dark",
-                      titleWeight: "bold",
+                      titleWeight: "normal",
                       titleSize: "md",
                       titleAlign: "left",
                       layout: "horizontal",
@@ -746,41 +766,71 @@ const ConsumerDetailView: React.FC = () => {
         // Consumer Performance and Billing Section (2-column grid like DTRDashboard)
         {
           layout: {
-            type: "grid" as const,
-            className: "",
+            type: "grid",
             columns: 2,
+            gap: "gap-6",
+            className: "w-full",
+            rows: [
+              {
+                layout: "column",
+                gap: "gap-0",
+                className: "bg-white border border-primary-border rounded-3xl  col-span-1",
+                columns: [
+                  {
+                    name: "Holder",
+                    props: {
+                      title: "Billing Distribution",
+                      subtitle: "Overview of bill statuses",
+                      className: "border-none rounded-t-3xl text-center",
+                    },
+                  },
+                  {
+                    name: "PieChart",
+                    props: {
+                      data: billingPieData,
+                      height: 300,
+                      showLegendInteractions: true,
+                      showHeader: false,
+                      className: "p-6 flex justify-center",
+                      showDownloadButton: true,
+                      onDownload: () => handleChartDownload(),
+                    },
+                  },
+                ],
+              },
+              {
+                layout: "column",
+                gap: "gap-0",
+                className: "bg-white border border-primary-border rounded-3xl  col-span-1",
+                columns: [
+                  {
+                    name: "Holder",
+                    props: {
+                      title: "Consumer Energy Consumption",
+                      subtitle: "Monthly and peak demand",
+                      className: "border-none rounded-t-3xl ",
+                    },
+                  },
+                  {
+                    name: "BarChart",
+                    props: {
+                      xAxisData: months,
+                      seriesData: consumptionSeries,
+                      seriesColors: consumptionColors,
+                      height: 300,
+                      showLegendInteractions: true,
+                      showHeader: false,
+                      className: "p-6",
+                      showDownloadButton: true,
+                      onDownload: () => handleChartDownload(),
+                    },
+                  },
+                ],
+              },
+            ],
           },
-          components: [
-            {
-              name: "PieChart",
-              
-              props: {
-                data: billingPieData,
-                height: 300,
-                showLegendInteractions: true,
-                showHeader: true,
-                headerTitle: "Billing Distribution",
-                className: "border border-primary-border rounded-3xl p-4",
-                showDownloadButton: true,
-                onDownload: () => handleChartDownload(),
-              },
-            },
-            {
-              name: "BarChart",
-              props: {
-                xAxisData: months,
-                seriesData: consumptionSeries,
-                seriesColors: consumptionColors,
-                height: 300,
-                showLegendInteractions: true,
-                showHeader: true,
-                headerTitle: "Consumer Energy Consumption",
-                showDownloadButton: true,
-                onDownload: () => handleChartDownload(),
-              },
-            },
-          ],
         },
+        
         // Daily Consumption Chart and Tables Section
         {
           layout: {

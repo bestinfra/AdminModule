@@ -7,8 +7,8 @@
       "path": "C:\\xampp\\htdocs\\example-backend"
     },
     "example-app": {
-      "port": 4089,
-      "deployedAt": "2025-07-28T19:41:54.460Z",
+      "port": 4195,
+      "deployedAt": "2025-08-07T02:58:01.225Z",
       "path": "C:\\xampp\\htdocs\\example-app-backend"
     },
     "madhu": {
@@ -608,18 +608,13 @@
     },
     "kotak": {
       "port": 4151,
-      "deployedAt": "2025-08-03T09:28:25.264Z",
-      "path": "C:\\xampp\\htdocs\\may-backend"
+      "deployedAt": "2025-08-05T11:37:48.073Z",
+      "path": "C:\\xampp\\htdocs\\kotak-backend"
     },
-    "june": {
-      "port": 4152,
-      "deployedAt": "2025-08-03T09:40:09.352Z",
-      "path": "C:\\xampp\\htdocs\\june-backend"
-    },
-    "test7": {
+    "kskdjsah": {
       "port": 4153,
-      "deployedAt": "2025-08-04T04:34:08.651Z",
-      "path": "C:\\xampp\\htdocs\\test7-backend"
+      "deployedAt": "2025-08-06T11:28:46.088Z",
+      "path": "C:\\xampp\\htdocs\\kskdjsah-backend"
     },
     "test8": {
       "port": 4154,

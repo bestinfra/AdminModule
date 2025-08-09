@@ -2,7 +2,7 @@ import React from 'react';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     label: string;
-    variant?: 'primary' | 'secondary' | 'outline' | 'outlineSecondary' | 'primarysmall' | 'danger' | 'warning' | 'test' | 'asset';
+    variant?: 'primary' | 'secondary' | 'outline' | 'outlineSecondary' | 'primarysmall' | 'danger' | 'warning' | 'test' | 'asset' | 'success';
     size?: 'small' | 'medium' | 'large';
     loading?: boolean;
     children?: React.ReactNode;
@@ -135,6 +135,14 @@ const Button = React.memo<ButtonProps>(({
             'hover:bg-[var(--white)]',
             'hover:text-[var(--brand-green)]',
             'hover:border-[var(--asset-color)]',
+        ],
+        success: [
+            'bg-secondary',
+            'text-white',
+            'border-secondary',
+            'hover:bg-white',
+            'hover:text-secondary',
+            'hover:border-secondary',
         ],
     };
 

@@ -144,11 +144,16 @@ const defaultMenus: MenuCategory[] = [
       //   icon: "/icons/freeze-status.svg",
       //   link: "/freeze-status",
       // },
-      // {
-      //   title: "Confirmation",
-      //   icon: "/icons/freeze-status.svg",
-      //   link: "/confirmation",
-      // },
+      {
+        title: "COnsumer Dashbaord",
+        icon: "/icons/freeze-status.svg",
+        link: "/consumer-dashboard",
+      },
+      {
+        title: "TIcket",
+        icon: "/icons/freeze-status.svg",
+        link: "/tickets",
+      },
       // {
       //   title: "Usage Summary",
       //   icon: "/icons/freeze-status.svg",
@@ -176,7 +181,7 @@ const defaultMenus: MenuCategory[] = [
       // {
       //     title: 'User Management',
       //     icon: '/icons/user_managment.svg',
-      //     link: '/user-management',
+      //     link: '/user-management',  
       //     hasSubmenu: true,
       //     submenu: [
 
@@ -271,7 +276,26 @@ const Sidebar = ({
     const [filteredMenus, setFilteredMenus] = useState<MenuCategory[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [userPermissions, setUserPermissions] = useState<string[]>([]);
-    const [userRoles, setUserRoles] = useState<string[]>([]);
+    const [, forceUpdate] = useState({});
+
+    // Listen for custom events from fallback context
+    useEffect(() => {
+        const handleThemeChange = () => {
+            forceUpdate({});
+        };
+
+        const handleSidebarToggle = () => {
+            forceUpdate({});
+        };
+
+        window.addEventListener('themeChanged', handleThemeChange);
+        window.addEventListener('sidebarToggled', handleSidebarToggle);
+
+        return () => {
+            window.removeEventListener('themeChanged', handleThemeChange);
+            window.removeEventListener('sidebarToggled', handleSidebarToggle);
+        };
+    }, []);
 
     // Get user permissions from JWT token (only once on mount)
     useEffect(() => {
@@ -290,20 +314,16 @@ const Sidebar = ({
                 
                 const decodedToken = JSON.parse(jsonPayload);
                 const permissions = decodedToken.permissions || [];
-                const roles = decodedToken.roles || [];
                 
-                // Store permissions and roles in state
+                // Store permissions in state
                 setUserPermissions(permissions);
-                setUserRoles(roles);
                 
             } catch (error) {
                 console.error('❌ Sidebar: Error decoding JWT token:', error);
                 setUserPermissions([]);
-                setUserRoles([]);
             }
         } else {
             setUserPermissions([]);
-            setUserRoles([]);
         }
         
         setIsLoading(false);
@@ -371,7 +391,6 @@ const Sidebar = ({
     // Utility function to clear permissions (can be called on logout)
     const clearPermissions = () => {
         setUserPermissions([]);
-        setUserRoles([]);
         setFilteredMenus([]);
     };
     

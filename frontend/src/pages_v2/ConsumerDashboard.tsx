@@ -50,7 +50,25 @@ const ConsumerDashboard: React.FC = () => {
             subtitle2: '',
         },
     ]);
-
+    const [consumptionBillingData] = useState([
+        {
+            id: 1,
+            title: 'Total Consumption',
+            value: '16.09 kWh',
+            icon: '/icons/account.svg',
+            subtitle1: '284 Active Consumption',
+            subtitle2: '8 In-Active Consumption',
+            onValueClick: handleTotalConsumersClick,
+        },
+        {
+            id: 2,
+            title: 'Total Billing',
+            value: '₹ 16,090.00',
+            icon: '/icons/coins.svg',
+            subtitle1: '140.09 kWh Average Billing',
+            subtitle2: '',
+        },
+    ]);
 
 
     const [overdueConsumersData] = useState([
@@ -197,7 +215,7 @@ const ConsumerDashboard: React.FC = () => {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Page
+            <Page   
                 sections={[
                     {
                         layout: {
@@ -237,7 +255,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 bg: "bg-stat-icon-gradient",
                                             },
                                             span: { col: 1, row: 1 },
-                                        }))
+                                        })),
                                     ],
                                 },
                                 {
@@ -251,7 +269,7 @@ const ConsumerDashboard: React.FC = () => {
                                         {
                                             name: "SectionHeader",
                                             props: {
-                                                title: "Latest Alerts",
+                                                title: "Consumption & Billing (Aug 6, 2025)",
                                                 titleLevel: 2,
                                                 titleSize: "md",
                                                 titleVariant: "colorPrimaryDark",
@@ -271,7 +289,7 @@ const ConsumerDashboard: React.FC = () => {
                                             },
                                             span: { col: 2, row: 1 },
                                         },
-                                        ...consumerStatsData.map((card) => ({
+                                        ...consumptionBillingData.map((card) => ({
                                             name: 'Card',
                                             props: {
                                                 title: card.title,
@@ -283,7 +301,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 bg: "bg-stat-icon-gradient",
                                             },
                                             span: { col: 1, row: 1 },
-                                        }))
+                                        })),
                                     ],
                                 },
                             ],
