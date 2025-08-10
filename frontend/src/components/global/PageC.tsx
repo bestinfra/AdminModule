@@ -495,4 +495,5 @@ const Page: React.FC<PageProps> = ({
     );
 };
 
+export type { SectionConfig };
 export default Page;

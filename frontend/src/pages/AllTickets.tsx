@@ -358,14 +358,14 @@ const AllTickets: React.FC = () => {
               {
                 layout: {
                   type: "grid" as const,
-                  columns: 5,
+                  columns: 5 as const,
                   className: "w-full gap-4",
                   rows: [
                     {
                       layout: "row" as const,
                       className: "w-full",
-                      gridColumns: 5,
-                      span: { col: 5, row: 1 },
+                      gridColumns: 5 as const,
+                      span: { col: 5 as const, row: 1 as const },
                       columns: cardStats.map((card) => ({
                         name: "Card",
                         props: {
@@ -387,7 +387,7 @@ const AllTickets: React.FC = () => {
               {
                 layout: {
                   type: "grid" as const,
-                  columns: 1,
+                  columns: 1 as const,
                   className: "w-full",
                   rows: [
                     {
@@ -419,12 +419,12 @@ const AllTickets: React.FC = () => {
         {
           layout: {
             type: "grid" as const,
-            columns: 1,
+            columns: 1 as const,
             className: "w-full ",
             rows: [
               {
                 layout: "grid" as const,
-                gridColumns: 1,
+                gridColumns: 1 as const,
                 className:'pb-4',
                 columns: [
                   {
@@ -463,7 +463,7 @@ const AllTickets: React.FC = () => {
               {
                 layout: {
                   type: "grid" as const,
-                  columns: 1,
+                  columns: 1 as const,
                   className: "w-full",
                   rows: [
                     {

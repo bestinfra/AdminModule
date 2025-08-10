@@ -29,7 +29,14 @@ export default defineConfig({
       ],
     }),
   ],
-  // ],
+  build: {
+    target: 'es2022',
+    rollupOptions: {
+      output: {
+        format: 'es',
+      },
+    },
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

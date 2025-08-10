@@ -253,7 +253,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
-                                            span: { col: 1, row: 1 },
+                                            span: { col: 1 as const, row: 1 as const },
                                         })),
                                     ],
                                 },
@@ -298,7 +298,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
-                                            span: { col: 1, row: 1 },
+                                            span: { col: 1 as const, row: 1 as const },
                                         })),
                                     ],
                                 },
@@ -313,8 +313,8 @@ const ConsumerDashboard: React.FC = () => {
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-0',
-                                    span:{col:2,row:1},
+                                    gap: 'gap-1',
+                                    span:{col:2 as const,row:1 as const},
                                     className: '',
                                     columns: [
                                         // {
@@ -365,8 +365,8 @@ const ConsumerDashboard: React.FC = () => {
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-0',
-                                    span:{col:1,row:1},
+                                    gap: 'gap-1',
+                                    span:{col:1 as const,row:1 as const},
                                     className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
                                     columns: [
                                         {
@@ -414,8 +414,8 @@ const ConsumerDashboard: React.FC = () => {
                                 },
                                 {
                                     layout: 'column',
-                                    gap: 'gap-0',
-                                    span:{col:1,row:1},
+                                    gap: 'gap-1',
+                                    span:{col:1 as const,row:1 as const},
                                     className: '',
                                     columns: [
                                         {
