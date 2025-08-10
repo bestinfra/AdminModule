@@ -189,7 +189,6 @@ function createAppProject(formData) {
                     '@vitejs/plugin-react': '^3.1.0',
                     '@originjs/vite-plugin-federation': '^1.4.1',
                     tailwindcss: '^3.2.7',
-                    postcss: '^8.4.21',
                     autoprefixer: '^10.4.14',
                 },
                 devDependencies: {
@@ -294,13 +293,6 @@ module.exports = {
   },
   plugins: [],
   darkMode: 'class'
-}`,
-
-        'postcss.config.js': `module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
 }`,
 
         'index.html': `<!doctype html>
