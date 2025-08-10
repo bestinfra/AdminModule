@@ -377,7 +377,7 @@ const SuperAdminDashboard: React.FC = () => {
                   span: { col: 1, row: 1 },
                   columns: filteredApps.length > 0 
                     ? filteredApps.map((app: any) => ({
-                        name: "SubappPanel",
+                        name: "ApplicationCard",
                         props: app,
                       }))
                     : [{
