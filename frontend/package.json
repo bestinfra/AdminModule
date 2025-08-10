@@ -18,6 +18,7 @@
     "federation:simple": "vite build && vite preview --port 3000 --host"
   },
   "dependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
     "@tailwindcss/vite": "^4.1.11",
     "@types/echarts": "^4.9.22",
     "@types/js-cookie": "^3.0.6",
@@ -35,6 +36,7 @@
     "js-cookie": "^3.0.5",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
+    "postcss": "^8.5.6",
     "prop-types": "^15.8.1",
     "react": "^19.1.0",
     "react-color": "^2.19.3",

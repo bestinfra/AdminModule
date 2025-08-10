@@ -6,14 +6,14 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [
-    react(),
     tailwindcss(),
+    react(),
     federation({
       name: 'SuperAdmin',
       filename: 'remoteEntry.js',
       exposes: {
-         './Sidebar': './src/components/global/Sidebar.tsx',
-         './Header': './src/components/global/Header.tsx',
+        './Sidebar': './src/components/global/Sidebar.tsx',
+        './Header': './src/components/global/Header.tsx',
         './Page': './src/components/global/PageC.tsx',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
         './Login': './src/pages_v2/SubLogin.tsx',
@@ -29,6 +29,7 @@ export default defineConfig({
       ],
     }),
   ],
+  // ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -43,28 +44,6 @@ export default defineConfig({
       '@assets': path.resolve(__dirname, './src/assets'),
       '@types': path.resolve(__dirname, './src/types'),
       '@pages_v2': path.resolve(__dirname, './src/pages_v2'),
-    },
-  },
-  build: {
-    target: 'esnext',
-    minify: false,
-    cssCodeSplit: false,
-    rollupOptions: {
-      output: {
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'global.css') {
-            return 'assets/global.css';
-          }
-          return 'assets/[name]-[hash][extname]';
-        },
-      },
-    },
-  },
-  css: {
-    postcss: {
-      plugins: [
-        // Tailwind CSS v4 handles this automatically
-      ],
     },
   },
   server: {
