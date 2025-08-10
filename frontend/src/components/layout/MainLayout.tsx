@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import Sidebar from '@components/global/Sidebar';
 import HeaderTest from '@components/global/HeaderTest';
 import { useApp } from '@context/AppContext';
@@ -32,8 +32,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
     showThemeToggle = true,
     showAppDownload = true
 }) => {
-    const { toggleSidebar, toggleTheme } = useApp();
-    const location = useLocation();
+    const { toggleTheme } = useApp();
     const navigate = useNavigate();
     const [, forceUpdate] = useState({});
 
@@ -73,60 +72,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({
             alert('Download link copied to clipboard!');
         }
     };
- const getPageTitle = () => {
-        switch (location.pathname) {
-            case '/':
-                return 'Dashboard';
-            case '/super-admin':
-                return 'Super Admin Dashboard';
-            case '/apps':
-                return 'Apps Management';
-            case '/apps/pages':
-                return 'Pages Module';
-            case '/apps/media-library':
-                return 'Media Library';
-            case '/apps/applications':
-                return 'Applications';
-            case '/apps/branding':
-                return 'Branding';
-            case '/apps/domain-hosting':
-                return 'Domain & Hosting';
-            case '/apps/modules':
-                return 'Modules';
-            case '/all-tickets':
-                return 'All Tickets';
-            case '/tickets-filtered':
-                // Get the filter from URL to show appropriate title
-                const urlParams = new URLSearchParams(window.location.search);
-                const filter = urlParams.get('filter');
-                switch (filter) {
-                    case 'high-priority':
-                        return 'High Priority Tickets';
-                    case 'open':
-                        return 'Open Tickets';
-                    case 'in-progress':
-                        return 'In Progress Tickets';
-                    case 'closed':
-                        return 'Closed Tickets';
-                    default:
-                        return 'All Tickets';
-                }
-            case '/consumers':
-                return 'Consumers';
-            case '/users':
-                return 'Users';
-            case '/role-management':
-                return 'Role Management';
-            case '/bills/prepaid':
-                return 'Prepaid Bills';
-            case '/bills/postpaid':
-                return 'Postpaid Bills';
-            case '/profile':
-                return 'Profile';
-            default:
-                return 'Dashboard';
-        }
-    };
+    
     return (
         <div className="flex h-screen bg-white ">
             <Sidebar 

@@ -1,5 +1,5 @@
 {
-  "nextPort": 4178,
+  "nextPort": 4180,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -735,6 +735,16 @@
       "port": 4177,
       "deployedAt": "2025-08-06T12:31:00.278Z",
       "path": "C:\\xampp\\htdocs\\test33-backend"
+    },
+    "sleep": {
+      "port": 4178,
+      "deployedAt": "2025-08-09T05:05:37.616Z",
+      "path": "C:\\xampp\\htdocs\\sleep-backend"
+    },
+    "excel": {
+      "port": 4179,
+      "deployedAt": "2025-08-09T11:27:49.579Z",
+      "path": "C:\\xampp\\htdocs\\excel-backend"
     }
   }
 }
