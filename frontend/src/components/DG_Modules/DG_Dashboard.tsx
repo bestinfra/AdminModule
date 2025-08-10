@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '../global/PageC';
+import Search from '@components/global/Search';
+import Dropdown from '@components/global/Dropdown';
+import DGCard from './DGCard';
 
 const DGDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 6;
 
   // Enhanced mock data for DG sets with more comprehensive information
   const dgSets = [
@@ -18,8 +23,8 @@ const DGDashboard: React.FC = () => {
       fuel: 45,
       runningHoursToday: '8.5 hrs',
       runningHoursTotal: '2,450 hrs',
-      efficiency: '92%',
-      efficiencyTrend: 'up' as const,
+      efficiency: '3.0 kWh/L',
+      efficiencyTrend: 'down' as const,
       alerts: { count: 2, type: 'warning' as const },
       lastUpdate: '2 min ago',
       // Additional data for better display
@@ -52,7 +57,7 @@ const DGDashboard: React.FC = () => {
       fuel: 80,
       runningHoursToday: '0 hrs',
       runningHoursTotal: '1,890 hrs',
-      efficiency: '89%',
+      efficiency: '2.8 kWh/L',
       efficiencyTrend: 'down' as const,
       alerts: { count: 0, type: 'warning' as const },
       lastUpdate: '15 min ago',
@@ -83,7 +88,7 @@ const DGDashboard: React.FC = () => {
       fuel: 65,
       runningHoursToday: '0 hrs',
       runningHoursTotal: '3,120 hrs',
-      efficiency: '87%',
+      efficiency: '2.5 kWh/L',
       efficiencyTrend: 'down' as const,
       alerts: { count: 5, type: 'critical' as const },
       lastUpdate: '1 min ago',
@@ -116,7 +121,7 @@ const DGDashboard: React.FC = () => {
       fuel: 55,
       runningHoursToday: '6.2 hrs',
       runningHoursTotal: '2,100 hrs',
-      efficiency: '94%',
+      efficiency: '3.2 kWh/L',
       efficiencyTrend: 'up' as const,
       alerts: { count: 1, type: 'warning' as const },
       lastUpdate: '5 min ago',
@@ -149,7 +154,7 @@ const DGDashboard: React.FC = () => {
       fuel: 70,
       runningHoursToday: '7.8 hrs',
       runningHoursTotal: '1,750 hrs',
-      efficiency: '91%',
+      efficiency: '2.9 kWh/L',
       efficiencyTrend: 'up' as const,
       alerts: { count: 0, type: 'warning' as const },
       lastUpdate: '3 min ago',
@@ -180,7 +185,7 @@ const DGDashboard: React.FC = () => {
       fuel: 90,
       runningHoursToday: '0 hrs',
       runningHoursTotal: '2,890 hrs',
-      efficiency: '88%',
+      efficiency: '2.7 kWh/L',
       efficiencyTrend: 'down' as const,
       alerts: { count: 2, type: 'warning' as const },
       lastUpdate: '20 min ago',
@@ -211,7 +216,7 @@ const DGDashboard: React.FC = () => {
       fuel: 35,
       runningHoursToday: '9.1 hrs',
       runningHoursTotal: '3,450 hrs',
-      efficiency: '93%',
+      efficiency: '3.1 kWh/L',
       efficiencyTrend: 'up' as const,
       alerts: { count: 1, type: 'warning' as const },
       lastUpdate: '1 min ago',
@@ -244,7 +249,7 @@ const DGDashboard: React.FC = () => {
       fuel: 40,
       runningHoursToday: '0 hrs',
       runningHoursTotal: '2,200 hrs',
-      efficiency: '85%',
+      efficiency: '2.6 kWh/L',
       efficiencyTrend: 'down' as const,
       alerts: { count: 3, type: 'critical' as const },
       lastUpdate: '10 min ago',
@@ -284,6 +289,18 @@ const DGDashboard: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
+  // Reset to first page when search or filter changes
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, statusFilter]);
+
+  // Calculate summary statistics
+  const runningCount = dgSets.filter(dg => dg.status === 'running').length;
+  const faultCount = dgSets.filter(dg => dg.status === 'fault').length;
+  const stoppedCount = dgSets.filter(dg => dg.status === 'stopped').length;
+  const totalAlerts = dgSets.reduce((sum, dg) => sum + dg.alerts.count, 0);
+  const avgLoad = Math.round(dgSets.reduce((sum, dg) => sum + dg.load, 0) / dgSets.length);
+
   const dashboardConfig = {
     sections: [
       // Header section
@@ -316,29 +333,7 @@ const DGDashboard: React.FC = () => {
           },
         ],
       },
-      // Page Title and Description
-    //   {
-    //     layout: {
-    //       type: 'column' as const,
-    //       className: 'mb-8',
-    //     },
-    //     components: [
-    //       {
-    //         name: 'SectionHeader',
-    //         props: {
-    //           title: 'DG Monitor Dashboard',
-    //           titleLevel: 1,
-    //           titleSize: '2xl',
-    //           titleVariant: 'colorPrimaryDark',
-    //           titleWeight: 'bold',
-    //           titleAlign: 'left',
-    //           subtitle: 'Welcome back, Admin User. Monitor all your diesel generators in real-time.',
-    //           layout: 'vertical',
-    //           gap: 'gap-2',
-    //         },
-    //       },
-    //     ],
-    //   },
+
       // Summary Cards
       {
         layout: {
@@ -352,65 +347,87 @@ const DGDashboard: React.FC = () => {
             name: 'Card',
             props: {
               title: 'Running',
-              value: '4',
+              value: runningCount.toString(),
               icon: '/icons/check-circle.svg',
               bg: 'bg-green-100',
+              subtitle1: 'Active DG Sets',
+              onValueClick: () => setStatusFilter('running'),
             },
           },
           {
             name: 'Card',
             props: {
               title: 'Fault',
-              value: '2',
+              value: faultCount.toString(),
               icon: '/icons/close.svg',
               bg: 'bg-red-100',
+              subtitle1: 'Critical Issues',
+              onValueClick: () => setStatusFilter('fault'),
             },
           },
           {
             name: 'Card',
             props: {
               title: 'Stopped',
-              value: '2',
+              value: stoppedCount.toString(),
               icon: '/icons/minus.svg',
               bg: 'bg-blue-100',
+              subtitle1: 'Inactive Sets',
+              onValueClick: () => setStatusFilter('stopped'),
             },
           },
           {
             name: 'Card',
             props: {
               title: 'Alerts',
-              value: '10',
+              value: totalAlerts.toString(),
               icon: '/icons/alert-triangle.svg',
               bg: 'bg-yellow-100',
+              subtitle1: 'Total Warnings',
             },
           },
           {
             name: 'Card',
             props: {
               title: 'Avg Load',
-              value: '34%',
+              value: `${avgLoad}%`,
               icon: '/icons/bolt.svg',
               bg: 'bg-gray-100',
+              subtitle1: 'System Load',
             },
           },
         ],
       },
-      // Search and Filter
+      // DG Sets Container with Header, Search, and Pagination
       {
         layout: {
           type: 'grid' as const,
-          columns: 2,
-          gap: 'gap-4',
-          className: 'mb-8',
-        },
-        components: [
+          columns: 1,
+          gap: 'gap-0',
+          className: 'w-full border border-primary-border dark:border-dark-border bg-white dark:bg-primary-dark font-manrope',
+          rows: [
+
+            // Search and Filter Row
+            {
+              layout: 'row' as const,
+              gap: 'gap-4',
+              className: 'px-4 py-4 border-b border-primary-border dark:border-dark-border',
+              columns: [
           {
             name: 'Search',
             props: {
               value: searchQuery,
               onChange: (e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value),
-              placeholder: 'Search by name, location, or ID...',
-            },
+                    placeholder: 'Search DG sets by name, location, or ID...',
+                    className: 'w-full',
+                    showShortcut: false,
+                    results: [],
+                    isLoading: false,
+                    disabled: false,
+                    required: false,
+                    error: null,
+                    name: 'search'
+                  }
           },
           {
             name: 'Dropdown',
@@ -419,76 +436,106 @@ const DGDashboard: React.FC = () => {
               value: statusFilter,
               onChange: (e: { target: { name: string; value: string | string[] } }) => setStatusFilter(e.target.value as string),
               options: statusOptions,
+                    className: 'w-48',
+                  },
+                }
+              ]
             },
-          },
-        ],
-      },
-      // DG Set Cards Grid
+            // DG Sets Grid Row
       {
-        layout: {
-          type: 'grid' as const,
-          columns: 3,
+              layout: 'grid' as const,
           gap: 'gap-6',
-          className: '',
-        },
-        components: filteredDGSets.map(dg => ({
-          name: 'ApplicationCard',
+              gridColumns: 3,
+              className: 'p-4',
+              columns: filteredDGSets.length > 0 
+                ? filteredDGSets.slice((currentPage - 1) * cardsPerPage, currentPage * cardsPerPage).map((dg: any) => ({
+          name: 'DGCard',
           props: {
-            // Core DG set data
-            appName: dg.name,
-            appId: dg.id,
-            status: dg.status === 'running' ? 'Running' : dg.status === 'stopped' ? 'Stopped' : 'Fault',
-            health: dg.health,
-            category: dg.category,
-            company: dg.company,
-            subdomain: dg.subdomain,
-            created: dg.created,
-            updated: dg.updated,
-            website: dg.website,
-            
-            // Modules and connections
-            modules: dg.modules,
-            connectedApis: dg.connectedApis,
-            meters: dg.meters,
-            tickets: dg.tickets,
-            
-            // Enhanced metrics display
-            metrics: [
-              {
-                label: 'Load',
-                value: dg.load,
-                unit: '%',
-                color: dg.load > 80 ? 'text-red-600' : dg.load > 50 ? 'text-yellow-600' : 'text-green-600'
-              },
-              {
-                label: 'Fuel',
-                value: dg.fuel,
-                unit: '%',
-                color: dg.fuel < 30 ? 'text-red-600' : dg.fuel < 50 ? 'text-yellow-600' : 'text-green-600'
-              },
-              {
-                label: 'Efficiency',
-                value: dg.efficiency,
-                color: dg.efficiency === '94%' ? 'text-green-600' : dg.efficiency === '93%' ? 'text-green-600' : dg.efficiency === '92%' ? 'text-green-600' : dg.efficiency === '91%' ? 'text-green-600' : dg.efficiency === '90%' ? 'text-yellow-600' : 'text-red-600'
-              },
-              {
-                label: 'Running Hours',
-                value: dg.runningHoursToday,
-                color: 'text-blue-600'
-              }
-            ],
-            
-            // Navigation props
-            onCardClick: () => navigate(`/dg-detail/${dg.id}`),
-            isClickable: true,
+            id: dg.id,
+            name: dg.name,
+            plant: dg.location.split(' - ')[0] || 'Plant',
+            building: dg.location.split(' - ')[1] || 'Building',
+            status: dg.status,
+            load: dg.load,
+            fuel: dg.fuel,
+            runningHoursToday: dg.runningHoursToday,
+            runningHoursTotal: dg.runningHoursTotal,
+            efficiency: dg.efficiency,
+            efficiencyTrend: dg.efficiencyTrend,
+            lastUpdate: dg.lastUpdate,
+            onViewDetails: () => navigate(`/dg-detail/${dg.id}`),
           },
-        })),
+                  }))
+                : [{
+                    name: 'Holder',
+                    props: {
+                      title: 'No matching DG sets found',
+                      subtitle: searchQuery ? `No DG sets match "${searchQuery}"` : 'No DG sets available',
+                      className: 'col-span-3 text-center py-8',
+                    }
+                  }]
+            },
+
+          ]
+        }
       },
+     
     ],
   };
 
-  return (
-    <Page sections={dashboardConfig.sections} />
+    return (
+    <div className="">
+      {/* Use PageC component for the main dashboard layout */}
+      <Page sections={dashboardConfig.sections} />
+      
+      {/* Manual pagination controls since they're not in the config */}
+      {filteredDGSets.length > cardsPerPage && (
+        <div className="flex justify-center items-center gap-4 w-full mt-4 pt-4 border-t border-primary-border dark:border-dark-border">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              currentPage === 1
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-background-secondary hover:bg-background-secondary/80 text-neutral-darker dark:text-surface'
+            }`}
+          >
+            Previous
+          </button>
+          
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-neutral-dark dark:text-surface font-medium">
+              Page {currentPage} of {Math.ceil(filteredDGSets.length / cardsPerPage)}
+            </span>
+            {Array.from({ length: Math.ceil(filteredDGSets.length / cardsPerPage) }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`w-8 h-8 rounded-lg font-medium transition-colors ${
+                  currentPage === i + 1
+                    ? 'bg-primary text-white'
+                    : 'bg-background-secondary hover:bg-background-secondary/80 text-neutral-darker dark:text-surface'
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+          
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(filteredDGSets.length / cardsPerPage), prev + 1))}
+            disabled={currentPage === Math.ceil(filteredDGSets.length / cardsPerPage)}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+              currentPage === Math.ceil(filteredDGSets.length / cardsPerPage)
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                : 'bg-background-secondary hover:bg-background-secondary/80 text-neutral-darker dark:text-surface'
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

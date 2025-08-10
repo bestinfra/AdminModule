@@ -50,6 +50,7 @@ import Payment from '../Occupancy-Vacency/Payment';
 import FreezeStatus from '../Occupancy-Vacency/FreezeStatus';
 import ApplicationCard from './ApplicationCard';
 import StatusCard from './StatusCard';
+import DGCard from '../DG_Modules/DGCard';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -101,6 +102,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     FreezeStatus,
     ApplicationCard,
     StatusCard,
+    DGCard,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
