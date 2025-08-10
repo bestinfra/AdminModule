@@ -225,7 +225,7 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
     // Otherwise use category-based fallback
     const categoryLower = category?.toLowerCase() || "";
     if (categoryLower.includes("energy") || categoryLower.includes("power")) {
-      return "/icons/alert-triggered.svg";
+      return "/icons/dg_icon.svg";
     } else if (categoryLower.includes("transport") || categoryLower.includes("railway")) {
       return "/icons/active-users.svg";
     } else if (categoryLower.includes("industrial") || categoryLower.includes("manufacturing")) {
@@ -301,11 +301,11 @@ const ApplicationCard: React.FC<ApplicationCardProps> = ({
       {/* Header Section */}
       <div className="flex items-start justify-between w-full items-center h-full gap-8">
         <div className="flex items-center gap-4 items-start">
-          <div className="w-12 h-12 bg-background-secondary rounded-lg flex items-center justify-center overflow-hidden">
+          <div className="w-22 h-15 bg-stat-icon-gradient    rounded-full flex items-center justify-center overflow-hidden">
             <img 
               src={currentImage} 
               alt="app-icon" 
-              className="w-full h-full object-contain" 
+              className="w-6 h-6 object-contain" 
               onError={handleImageError}
             />
           </div>

@@ -23,7 +23,6 @@ const DGDashboard: React.FC = () => {
       alerts: { count: 2, type: 'warning' as const },
       lastUpdate: '2 min ago',
       // Additional data for better display
-      description: 'Primary backup generator for Building A operations',
       category: 'Industrial Power',
       health: 'Live' as const,
       company: 'PowerCorp Industries',
@@ -57,7 +56,6 @@ const DGDashboard: React.FC = () => {
       efficiencyTrend: 'down' as const,
       alerts: { count: 0, type: 'warning' as const },
       lastUpdate: '15 min ago',
-      description: 'Secondary generator for Building B emergency systems',
       category: 'Emergency Power',
       health: 'Down' as const,
       company: 'PowerCorp Industries',
@@ -89,7 +87,6 @@ const DGDashboard: React.FC = () => {
       efficiencyTrend: 'down' as const,
       alerts: { count: 5, type: 'critical' as const },
       lastUpdate: '1 min ago',
-      description: 'High-capacity generator with critical fault condition',
       category: 'Industrial Power',
       health: 'Down' as const,
       company: 'PowerCorp Industries',
@@ -123,7 +120,6 @@ const DGDashboard: React.FC = () => {
       efficiencyTrend: 'up' as const,
       alerts: { count: 1, type: 'warning' as const },
       lastUpdate: '5 min ago',
-      description: 'Efficient backup generator for Building D operations',
       category: 'Industrial Power',
       health: 'Live' as const,
       company: 'PowerCorp Industries',
@@ -157,7 +153,6 @@ const DGDashboard: React.FC = () => {
       efficiencyTrend: 'up' as const,
       alerts: { count: 0, type: 'warning' as const },
       lastUpdate: '3 min ago',
-      description: 'Medium-capacity generator for Building E support systems',
       category: 'Support Power',
       health: 'Live' as const,
       company: 'PowerCorp Industries',
@@ -189,7 +184,6 @@ const DGDashboard: React.FC = () => {
       efficiencyTrend: 'down' as const,
       alerts: { count: 2, type: 'warning' as const },
       lastUpdate: '20 min ago',
-      description: 'Legacy generator system in maintenance mode',
       category: 'Legacy Power',
       health: 'Maintenance' as const,
       company: 'PowerCorp Industries',
@@ -221,7 +215,6 @@ const DGDashboard: React.FC = () => {
       efficiencyTrend: 'up' as const,
       alerts: { count: 1, type: 'warning' as const },
       lastUpdate: '1 min ago',
-      description: 'High-performance generator for Building G critical operations',
       category: 'Critical Power',
       health: 'Live' as const,
       company: 'PowerCorp Industries',
@@ -255,7 +248,6 @@ const DGDashboard: React.FC = () => {
       efficiencyTrend: 'down' as const,
       alerts: { count: 3, type: 'critical' as const },
       lastUpdate: '10 min ago',
-      description: 'Backup generator experiencing critical system faults',
       category: 'Backup Power',
       health: 'Down' as const,
       company: 'PowerCorp Industries',
@@ -435,7 +427,7 @@ const DGDashboard: React.FC = () => {
       {
         layout: {
           type: 'grid' as const,
-          columns: 2,
+          columns: 3,
           gap: 'gap-6',
           className: '',
         },
@@ -453,7 +445,6 @@ const DGDashboard: React.FC = () => {
             created: dg.created,
             updated: dg.updated,
             website: dg.website,
-            description: dg.description,
             
             // Modules and connections
             modules: dg.modules,
@@ -484,28 +475,6 @@ const DGDashboard: React.FC = () => {
                 label: 'Running Hours',
                 value: dg.runningHoursToday,
                 color: 'text-blue-600'
-              }
-            ],
-            
-            // Quick actions
-            actions: [
-              {
-                label: 'View Details',
-                onClick: () => navigate(`/dg-detail/${dg.id}`),
-                icon: '/icons/eye.svg',
-                variant: 'primary' as const
-              },
-              {
-                label: 'Edit',
-                onClick: () => console.log(`Edit ${dg.name}`),
-                icon: '/icons/edit.svg',
-                variant: 'secondary' as const
-              },
-              {
-                label: 'Delete',
-                onClick: () => console.log(`Delete ${dg.name}`),
-                icon: '/icons/delete.svg',
-                variant: 'danger' as const
               }
             ],
             

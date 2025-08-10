@@ -34,7 +34,6 @@ import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
 import ChatComponent from '../Ticket/ChatComponent';
 import PageInformation from './PageInformation';
-
 import Permissions from './Permissions';
 import SummaryInfo from './SummaryInfo';
 import TicketConversationPanel from '../TicketConversationPanel';
@@ -50,6 +49,7 @@ import UsageSummaryPage from '../Occupancy-Vacency/UsageSummartPage';
 import Payment from '../Occupancy-Vacency/Payment';
 import FreezeStatus from '../Occupancy-Vacency/FreezeStatus';
 import ApplicationCard from './ApplicationCard';
+import StatusCard from './StatusCard';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -85,7 +85,6 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Carousel,
     LoginV2,
     PageInformation,
-
     SummaryInfo,
     TicketConversationPanel,
     TicketInformationPannel,
@@ -101,6 +100,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Payment,
     FreezeStatus,
     ApplicationCard,
+    StatusCard,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';

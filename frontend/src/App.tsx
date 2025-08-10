@@ -54,6 +54,7 @@ import DG_Dashboard from './components/DG_Modules/DG_Dashboard';
 import DgDetailView from './pages_v2/DgDetailView';
 import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
 import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';
+    
 const App: React.FC = () => {
     return (
         <AppProvider>
