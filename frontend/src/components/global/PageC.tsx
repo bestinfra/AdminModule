@@ -107,16 +107,16 @@ interface RowConfig {
     bg?: string;
     className?: string;
     layout?: 'row' | 'column' | 'grid';
-    gridColumns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+    gridColumns?: number;
     gridRows?: 1 | 2 | 3 | 4 | 5 | 6;
-    gap?: 'gap-1' | 'gap-2' | 'gap-3' | 'gap-4' | 'gap-5' | 'gap-6' | 'gap-8' | 'gap-10' | 'gap-12' | 'gap-16' | 'gap-20' | 'gap-24';
-    span?: number | { col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12; row?: 1 | 2 | 3 | 4 | 5 | 6 };
+    gap?: string;
+    span?: number | { col?: number; row?: number };
     columns: Array<
         | string
         | {
               name: string;
               props?: Record<string, unknown>;
-              span?: number | { col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12; row?: 1 | 2 | 3 | 4 | 5 | 6 };
+              span?: number | { col?: number; row?: number };
               align?: 'start' | 'center' | 'end' | 'stretch';
           }
     >;
@@ -124,9 +124,9 @@ interface RowConfig {
 
 interface LayoutConfig {
     type: LayoutType;
-    columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+    columns?: number;
     gridRows?: 1 | 2 | 3 | 4 | 5 | 6;
-    gap?: 'gap-1' | 'gap-2' | 'gap-3' | 'gap-4' | 'gap-5' | 'gap-6' | 'gap-8' | 'gap-10' | 'gap-12' | 'gap-16' | 'gap-20' | 'gap-24';
+    gap?: string;
     className?: string;
     bg?: string;
     rows?: RowConfig[];
@@ -139,7 +139,7 @@ interface SectionConfig {
         | {
               name: string;
               props?: Record<string, unknown>;
-              span?: number | { col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12; row?: 1 | 2 | 3 | 4 | 5 | 6 };
+              span?: number | { col?: number; row?: number };
               align?: 'start' | 'center' | 'end' | 'stretch';
           }
     >;
@@ -229,34 +229,30 @@ const getRowClass = (row: RowConfig) => {
 };
 
 const getSpanClasses = (
-    span: number | { col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12; row?: 1 | 2 | 3 | 4 | 5 | 6 } | undefined
+    span: number | { col?: number; row?: number } | undefined
 ) => {
     if (!span) return '';
 
     if (typeof span === 'number') {
-        const colSpanMap: Record<number, string> = {
-            1: 'col-span-1', 2: 'col-span-2', 3: 'col-span-3', 4: 'col-span-4',
-            5: 'col-span-5', 6: 'col-span-6', 7: 'col-span-7', 8: 'col-span-8',
-            9: 'col-span-9', 10: 'col-span-10', 11: 'col-span-11', 12: 'col-span-12'
-        };
-        return colSpanMap[span] || '';
+        // Handle number span (col-span only)
+        if (span >= 1 && span <= 12) {
+            return `col-span-${span}`;
+        }
+        return '';
     }
 
     const classes = [];
     if (span.col) {
-        const colSpanMap: Record<number, string> = {
-            1: 'col-span-1', 2: 'col-span-2', 3: 'col-span-3', 4: 'col-span-4',
-            5: 'col-span-5', 6: 'col-span-6', 7: 'col-span-7', 8: 'col-span-8',
-            9: 'col-span-9', 10: 'col-span-10', 11: 'col-span-11', 12: 'col-span-12'
-        };
-        classes.push(colSpanMap[span.col]);
+        // Handle col span with any number
+        if (span.col >= 1 && span.col <= 12) {
+            classes.push(`col-span-${span.col}`);
+        }
     }
     if (span.row) {
-        const rowSpanMap: Record<number, string> = {
-            1: 'row-span-1', 2: 'row-span-2', 3: 'row-span-3',
-            4: 'row-span-4', 5: 'row-span-5', 6: 'row-span-6'
-        };
-        classes.push(rowSpanMap[span.row]);
+        // Handle row span with any number
+        if (span.row >= 1 && span.row <= 6) {
+            classes.push(`row-span-${span.row}`);
+        }
     }
 
     return classes.join(' ');
@@ -324,7 +320,7 @@ const Page: React.FC<PageProps> = ({
                                                 {};
                                             let span:
                                                 | number
-                                                | { col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12; row?: 1 | 2 | 3 | 4 | 5 | 6 }
+                                                | { col?: number; row?: number }
                                                 | undefined;
                                             let align:
                                                 | 'start'
@@ -429,7 +425,7 @@ const Page: React.FC<PageProps> = ({
                             let props: Record<string, unknown> = {};
                             let span:
                                 | number
-                                | { col?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12; row?: 1 | 2 | 3 | 4 | 5 | 6 }
+                                | { col?: number; row?: number }
                                 | undefined;
                             let align:
                                 | 'start'

@@ -50,6 +50,7 @@ const generateSubAppToken = (userId, appId = null, userRoles = [], userPermissio
 export const subAppLogin = async (req, res) => {
     try {
         const { identifier, password, appId } = req.body;
+        console.log('🔐 subAppLogin called', { identifier, appId });
 
         // Validate required fields
         if (!identifier || !password) {
@@ -77,11 +78,21 @@ export const subAppLogin = async (req, res) => {
         });
 
         if (!user) {
+            console.warn('⚠️ subAppLogin: User not found for identifier', identifier);
             return res.status(401).json({
                 success: false,
                 message: 'Invalid username/email or password'
             });
         }
+
+        console.log('👤 User found', {
+            userId: user.id,
+            username: user.username,
+            accessLevel: user.accessLevel,
+            hasRole: !!user.roles,
+            roleName: user.roles?.name || null,
+            rolePermCount: user.roles?.role_permissions?.length || 0
+        });
 
         // Check if user is active
         if (!user.isActive) {
@@ -112,32 +123,51 @@ export const subAppLogin = async (req, res) => {
         // Extract user roles and permissions
         const userRoles = user.roles ? [user.roles.name] : [];
         const userPermissions = [];
+
+        // Log raw role_permissions content for debugging
+        if (user.roles?.role_permissions) {
+            console.log('🔎 Raw role_permissions rows:', user.roles.role_permissions.map(rp => ({
+                id: rp.id,
+                permissionIdType: typeof rp.permissionId,
+                permissionIdValue: rp.permissionId
+            })));
+        }
         
         // Extract permissions from role_permissions
         if (user.roles?.role_permissions) {
             user.roles.role_permissions.forEach(rolePerm => {
-                if (rolePerm.permissionId) {
-                    // permissionId is stored as PostgreSQL JSON format like {1,2,4}
-                    const permissionIds = parsePostgresJson(rolePerm.permissionId);
-                    if (Array.isArray(permissionIds)) {
-                        permissionIds.forEach(permId => {
-                            // We'll fetch permission names separately
-                            console.log(`   🔍 Found permission ID: ${permId}`);
-                        });
-                    }
+                if (rolePerm.permissionId === null || rolePerm.permissionId === undefined) {
+                    console.log('   ⚠️ role_permission has null/undefined permissionId', { rolePermId: rolePerm.id });
+                    return;
+                }
+                try {
+                    const parsed = parsePostgresJson(rolePerm.permissionId);
+                    const idsArray = Array.isArray(parsed)
+                        ? parsed
+                        : (typeof parsed === 'number' && !Number.isNaN(parsed))
+                            ? [parsed]
+                            : [];
+                    console.log('   📥 Parsed permission IDs from rolePerm', { rolePermId: rolePerm.id, permissionIds: idsArray });
+                } catch (e) {
+                    console.error('   ❌ Failed parsing permissionId for rolePerm', { rolePermId: rolePerm.id, value: rolePerm.permissionId, error: e.message });
                 }
             });
+        } else {
+            console.log('   ⚠️ User has no role_permissions associated');
         }
         
         // Fetch permission names from permission IDs
         if (user.roles?.role_permissions) {
             const allPermissionIds = [];
             user.roles.role_permissions.forEach(rolePerm => {
-                if (rolePerm.permissionId) {
-                    const permissionIds = parsePostgresJson(rolePerm.permissionId);
-                    if (Array.isArray(permissionIds)) {
-                        allPermissionIds.push(...permissionIds);
-                    }
+                if (rolePerm.permissionId !== null && rolePerm.permissionId !== undefined) {
+                    const parsed = parsePostgresJson(rolePerm.permissionId);
+                    const idsArray = Array.isArray(parsed)
+                        ? parsed
+                        : (typeof parsed === 'number' && !Number.isNaN(parsed))
+                            ? [parsed]
+                            : [];
+                    allPermissionIds.push(...idsArray);
                 }
             });
             
@@ -154,7 +184,7 @@ export const subAppLogin = async (req, res) => {
                         }
                     }
                 });
-                
+                console.log('   📦 permissions rows fetched:', permissions.length);
                 userPermissions.push(...permissions.map(p => p.name));
                 console.log(`   📋 Permission names: ${permissions.map(p => p.name).join(', ')}`);
             }
@@ -163,9 +193,8 @@ export const subAppLogin = async (req, res) => {
         // Check if user has permissions
         if (userPermissions.length === 0) {
             console.log(`⚠️ Warning: User ${user.username} has NO permissions in JWT token`);
-            console.log(`   📋 This user will see ALL menu items in the sidebar`);
         } else {
-            console.log(`✅ User ${user.username} has ${userPermissions.length} permissions`);
+            console.log(`✅ User ${user.username} has ${userPermissions.length} permissions`, userPermissions);
         }
         
         // Generate sub-app specific token with roles and permissions
@@ -178,8 +207,7 @@ export const subAppLogin = async (req, res) => {
         });
         
         const token = generateSubAppToken(user.id, appId, userRoles, userPermissions);
-        console.log(`   ✅ JWT token generated successfully`);
-        console.log(`   📏 Token length: ${token.length} characters`);
+        console.log(`   ✅ JWT token generated successfully (length=${token.length})`);
 
         // Map accessLevel to role (fallback)
         const accessLevelToRole = {
@@ -192,14 +220,12 @@ export const subAppLogin = async (req, res) => {
         
         const userRole = userRoles.length > 0 ? userRoles[0] : (accessLevelToRole[user.accessLevel] || 'accountant');
         
-        console.log(`📤 Sending login response for user ${user.username}...`);
-        console.log(`   📋 Response data:`, {
+        console.log(`📤 Sending login response for user ${user.username}...`, {
             userId: user.id,
             username: user.username,
             role: userRole,
             rolesCount: userRoles.length,
-            permissionsCount: userPermissions.length,
-            hasToken: !!token
+            permissionsCount: userPermissions.length
         });
         
         res.json({
@@ -236,6 +262,7 @@ export const subAppLogin = async (req, res) => {
 // Verify sub-app token
 export const verifySubAppToken = async (req, res) => {
     try {
+        console.log('🔎 verifySubAppToken for userId', req.user?.userId);
         const user = await prisma.users.findFirst({
             where: { id: req.user.userId },
             include: {
@@ -248,11 +275,19 @@ export const verifySubAppToken = async (req, res) => {
         });
         
         if (!user) {
+            console.warn('⚠️ verifySubAppToken: User not found');
             return res.status(404).json({
                 success: false,
                 message: 'User not found'
             });
         }
+
+        console.log('👤 verifySubAppToken user', {
+            userId: user.id,
+            username: user.username,
+            roleName: user.roles?.name || null,
+            rolePermCount: user.roles?.role_permissions?.length || 0
+        });
 
         // Extract user roles and permissions
         const userRoles = user.roles ? [user.roles.name] : [];
@@ -262,14 +297,15 @@ export const verifySubAppToken = async (req, res) => {
         if (user.roles?.role_permissions) {
             user.roles.role_permissions.forEach(rolePerm => {
                 if (rolePerm.permissionId) {
-                    // permissionId is stored as PostgreSQL JSON format like {1,2,4}
-                    const permissionIds = parsePostgresJson(rolePerm.permissionId);
-                    if (Array.isArray(permissionIds)) {
-                        permissionIds.forEach(permId => {
-                            // We'll fetch permission names separately
-                            console.log(`   🔍 Found permission ID: ${permId}`);
-                        });
-                    }
+                    const parsed = parsePostgresJson(rolePerm.permissionId);
+                    const idsArray = Array.isArray(parsed)
+                        ? parsed
+                        : (typeof parsed === 'number' && !Number.isNaN(parsed))
+                            ? [parsed]
+                            : [];
+                    console.log('   📥 Parsed permission IDs from rolePerm', { rolePermId: rolePerm.id, permissionIds: idsArray });
+                } else {
+                    console.log('   ⚠️ role_permission has null/undefined permissionId', { rolePermId: rolePerm.id });
                 }
             });
         }
@@ -279,29 +315,24 @@ export const verifySubAppToken = async (req, res) => {
             const allPermissionIds = [];
             user.roles.role_permissions.forEach(rolePerm => {
                 if (rolePerm.permissionId) {
-                    const permissionIds = parsePostgresJson(rolePerm.permissionId);
-                    if (Array.isArray(permissionIds)) {
-                        allPermissionIds.push(...permissionIds);
-                    }
+                    const parsed = parsePostgresJson(rolePerm.permissionId);
+                    const idsArray = Array.isArray(parsed)
+                        ? parsed
+                        : (typeof parsed === 'number' && !Number.isNaN(parsed))
+                            ? [parsed]
+                            : [];
+                    allPermissionIds.push(...idsArray);
                 }
             });
-            
-            // Remove duplicates
             const uniquePermissionIds = [...new Set(allPermissionIds)];
-            console.log(`   📋 Unique permission IDs: ${uniquePermissionIds.join(', ')}`);
-            
-            // Fetch permission names from the permissions table
+            console.log('   📋 Unique permission IDs', uniquePermissionIds);
             if (uniquePermissionIds.length > 0) {
                 const permissions = await prisma.permissions.findMany({
-                    where: {
-                        id: {
-                            in: uniquePermissionIds
-                        }
-                    }
+                    where: { id: { in: uniquePermissionIds } }
                 });
-                
+                console.log('   📦 permissions rows fetched:', permissions.length);
                 userPermissions.push(...permissions.map(p => p.name));
-                console.log(`   📋 Permission names: ${permissions.map(p => p.name).join(', ')}`);
+                console.log('   📋 Permission names', userPermissions);
             }
         }
         

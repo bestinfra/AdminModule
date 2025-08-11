@@ -8,7 +8,7 @@ export const createTicketSchema = z.object({
     type: z.string().min(1, 'Type is required'),
     category: z.string().min(1, 'Category is required'),
     priority: z.enum(['low', 'medium', 'high', 'critical']).optional().default('medium'),
-    consumerId: z.number().positive('Consumer ID must be a positive number'),
+    dtrId: z.number().positive('DTR ID must be a positive number').optional(),
     raisedById: z.number().positive('Raised by ID must be a positive number'),
     assignedToId: z.number().positive('Assigned to ID must be a positive number').optional(),
     status: z.enum(['open', 'in_progress', 'resolved', 'closed']).optional().default('open'),

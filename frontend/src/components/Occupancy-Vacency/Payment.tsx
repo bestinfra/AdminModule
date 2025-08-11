@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Button from '../global/Button';
 import Icon from '../global/Icon';
 
@@ -9,27 +9,28 @@ interface PaymentMethod {
 }
 
 interface PaymentProps {
-    currentStep?: number;
-    onStepChange?: (step: number) => void;
-    amount?: string;
-    billId?: string;
-    billDate?: string;
-    onPaymentComplete?: (paymentMethod: string) => void;
-    loading?: boolean;
-    disabled?: boolean;
-    className?: string;
+  // onBack?: () => void;
+  amount?: string;
+  billId?: string;
+  billDate?: string;
+  onPaymentComplete?: (method: string) => void;
+  onStepChange?: (step: number) => void;
+  // loading?: boolean;
+  disabled?: boolean;
+  className?: string;
 }
 
-const Payment: React.FC<PaymentProps> = ({
-    // currentStep = 3,
-    onStepChange,
-    amount = '90.43',
-    billId = 'BILL00123',
-    billDate = 'August 6, 2025',
-    onPaymentComplete,
-    disabled = false,
-    className = '',
-}) => {
+const Payment = ({
+  // onBack,
+  amount = '90.43',
+  billId = 'BILL00123',
+  billDate = 'August 6, 2025',
+  onPaymentComplete,
+  onStepChange,
+  // loading = false,
+  disabled = false,
+  className = '',
+}: PaymentProps) => {
     const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('cash');
     const [isProcessing, setIsProcessing] = useState(false);
 
