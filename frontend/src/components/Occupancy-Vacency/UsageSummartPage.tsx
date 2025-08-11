@@ -24,7 +24,7 @@ interface UsageData {
 }
 
 interface UsageSummaryPageProps {
-    currentStep?: number;
+    // currentStep?: number;
     onStepChange?: (step: number) => void;
     meter_no?: string;
     unit_id?: string;
@@ -37,6 +37,7 @@ interface UsageSummaryPageProps {
 }
 
 const UsageSummaryPage: React.FC<UsageSummaryPageProps> = ({
+    // currentStep = 2,
     // currentStep = 2,
     onStepChange,
     meter_no: propMeterNo,

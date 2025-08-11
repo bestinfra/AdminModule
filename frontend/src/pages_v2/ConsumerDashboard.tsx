@@ -1,7 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
-import { exportChartData } from '@/utils/excelExport';
+// import { exportChartData } from '@/utils/excelExport';
 // import { Pagination } from 'antd';
 
 // Constants
@@ -55,7 +55,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 1,
             title: 'Total Consumption',
             value: '16.09 kWh',
-            icon: '/icons/account.svg',
+            icon: '/icons/plug-alt.svg',
             subtitle1: '284 Active Consumption',
             subtitle2: '8 In-Active Consumption',
             onValueClick: handleTotalConsumersClick,
@@ -64,7 +64,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 2,
             title: 'Total Billing',
             value: '₹ 16,090.00',
-            icon: '/icons/coins.svg',
+            icon: '/icons/rupee.svg',
             subtitle1: '140.09 kWh Average Billing',
             subtitle2: '',
         },
@@ -178,28 +178,28 @@ const ConsumerDashboard: React.FC = () => {
             'Nov',
             'Dec',
         ],
-        seriesData: [
-            {
-                name: 'Bills Generated',
-                data: [
-                    260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
-                ],
-            },
-            {
-                name: 'Paid',
-                data: [
-                    240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
-                ],
-            },
-            {
-                name: 'Pending',
-                data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
-            },
-            {
-                name: 'Overdue',
-                data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
-            },
-        ],
+        // seriesData: [
+        //     {
+        //         name: 'Bills Generated',
+        //         data: [
+        //             260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
+        //         ],
+        //     },
+        //     {
+        //         name: 'Paid',
+        //         data: [
+        //             240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
+        //         ],
+        //     },
+        //     {
+        //         name: 'Pending',
+        //         data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
+        //     },
+        //     {
+        //         name: 'Overdue',
+        //         data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
+        //     },
+        // ],
         seriesColors: [
             '#3B82F6', // Blue for Bills Generated
             '#10B981', // Green for Paid
@@ -209,9 +209,9 @@ const ConsumerDashboard: React.FC = () => {
     });
 
     // Chart download handler
-    const handleChartDownload = () => {
-        exportChartData(billingChartData.xAxisData, billingChartData.seriesData, 'billing-vs-collection-data');
-    };
+    // const handleChartDownload = () => {
+    //     exportChartData(billingChartData.xAxisData, 'billing-vs-collection-data');
+    // };
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -227,7 +227,6 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: "grid",
                                     gap: "gap-4",
                                     gridColumns: 2,
-                                    gridRows: 2,
                                     span: { col: 2, row: 1 },
                                     className: 'border border-primary-border rounded-3xl p-4 bg-primary-lightest',
                                     columns: [
@@ -262,7 +261,6 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: "grid",
                                     gap: "gap-4",
                                     gridColumns: 2,
-                                    gridRows: 2,
                                     span: { col: 2, row: 1 },
                                     className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                                     columns: [
@@ -317,30 +315,31 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: 'column',
                                     gap: 'gap-0',
                                     span:{col:2,row:1},
-                                    className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-2',
+                                    className: '',
                                     columns: [
-                                        {
-                                            name: "Holder",
-                                            props: {
-                                                title: "Billing vs Collection",
-                                                subtitle: "Monthly billing statistics and collection data",
-                                                className: "border-none rounded-t-3xl",
-                                            },
-                                        },
+                                        // {
+                                        //     name: "Holder",
+                                        //     props: {
+                                        //         title:"Daily consumption metrics",
+                                        //         subtitle: "Monthly billing statistics and collection data",
+                                        //         className: "border-none rounded-t-3xl",
+                                        //     },
+                                        // },
                                         {
                                             name: 'BarChart',
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
-                                                seriesData:
-                                                    billingChartData.seriesData,
+                                                // seriesData:
+                                                //     billingChartData.seriesData,
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
-                                                showHeader: false,
-                                                dateRange: '2024',
+                                                showHeader: true,
+                                                headerTitle:'Consumption Metrics',
+                                                dateRange: '(7 Jun, 2025 - 8 Aug, 2025)',
                                                 showDownloadButton: true,
-                                                showViewToggle: true,
+                                                showViewToggle: false,
                                                 viewToggleOptions: [
                                                     'Graph',
                                                     'Table',
@@ -350,7 +349,7 @@ const ConsumerDashboard: React.FC = () => {
                                                     'Monthly billing statistics chart',
                                                 yAxisMax: 300,
                                                 yAxisStep: 50,
-                                                onDownload: handleChartDownload,
+                                                onDownload: "",
                                             },
                                         },
                                     ],
@@ -375,7 +374,7 @@ const ConsumerDashboard: React.FC = () => {
                                             props: {
                                                 title: "Meter Status",
                                                 subtitle: "Distribution of communicating and non-communicating meters",
-                                                className: "border-none rounded-t-3xl",
+                                                className: "border-none rounded-t-3xl ",
                                             },
                                         },
                                         {

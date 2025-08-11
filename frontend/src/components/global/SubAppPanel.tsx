@@ -55,6 +55,10 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   tickets,
   appIcon,
 }) => {
+  // Calculate percentages for meter stats
+  const activePercentage = meters?.total > 0 ? (meters.active / meters.total) * 100 : 0;
+  const inactivePercentage = meters?.total > 0 ? (meters.inactive / meters.total) * 100 : 0;
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -415,14 +419,14 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
               <div className="text-center">
                 <div className="text-2xl font-bold text-gray-900 flex items-center justify-center gap-2">
                  Icon removed 
-                  {meters.total}
+                  {meters?.total || 0}
                 </div>
                 <div className="text-sm text-gray-600">Total</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold text-green-600 flex items-center justify-center gap-2">
                  Icon removed 
-                  {meters.active}
+                  {meters?.active || 0}
                 </div>
                 <div className="text-sm text-gray-600">Active</div>
               </div>
@@ -430,7 +434,7 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
               <div className="text-center">
                 <div className="text-2xl font-bold text-red-600 flex items-center justify-center gap-2">
                  Icon removed 
-                  {meters.inactive}
+                  {meters?.inactive || 0}
                 </div>
                 <div className="text-sm text-gray-600">Inactive</div>
               </div>

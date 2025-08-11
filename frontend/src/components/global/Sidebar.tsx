@@ -130,6 +130,11 @@ const defaultMenus: MenuCategory[] = [
         link: "/meters",
       },
       {
+        title: "Asset Managment",
+        icon: "/icons/freeze-status.svg",
+        link: "/asset-managment",
+      },
+      {
         title: "Occupancy to Vacency",
         icon: "/icons/meter_managment.svg",
         link: "/occupancy-status",
@@ -150,10 +155,11 @@ const defaultMenus: MenuCategory[] = [
         link: "/consumer-dashboard",
       },
       {
-        title: "TIcket",
+        title: "All Consumers",
         icon: "/icons/freeze-status.svg",
-        link: "/tickets",
+        link: "/consumers",
       },
+      
       // {
       //   title: "Usage Summary",
       //   icon: "/icons/freeze-status.svg",

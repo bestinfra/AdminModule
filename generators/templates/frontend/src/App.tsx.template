@@ -1,10 +1,10 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AppProvider } from './context/AppContext';
-import { AuthProvider } from './components/auth/LocalAuthWrapper';
-import ProtectedRoute from './components/auth/LocalProtectedRoute';
-import AppLayout from './components/AppLayout';
-import Login from './pages/SubLogin';
+import { AppProvider } from '@/context/AppContext';
+import { AuthProvider } from '@/components/auth/LocalAuthWrapper';
+import ProtectedRoute from '@/components/auth/LocalProtectedRoute';
+import AppLayout from '@/components/AppLayout';
+import Login from '@/pages/SubLogin';
 
 {{imports}}
 

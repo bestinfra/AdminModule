@@ -4,7 +4,7 @@ import Page from '@/components/global/PageC';
 import Button from '@/components/global/Button';
 import Modal from '@/components/global/Modal';
 import LoadingSpinner from '@/components/global/LoadingSpinner';
-import meterConnectionAPI, { MeterConnectionAPI } from '@api/meterConnection';
+import meterConnectionAPI, { MeterConnectionAPI } from '@/api/meterConnection';
 import * as React from 'react';
 
 interface MeterData {
