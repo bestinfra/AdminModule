@@ -1,5 +1,5 @@
 {
-  "nextPort": 4180,
+  "nextPort": 4182,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -745,6 +745,16 @@
       "port": 4179,
       "deployedAt": "2025-08-09T11:27:49.579Z",
       "path": "C:\\xampp\\htdocs\\excel-backend"
+    },
+    "junk-food": {
+      "port": 4180,
+      "deployedAt": "2025-08-09T12:14:27.663Z",
+      "path": "C:\\xampp\\htdocs\\junk-food-backend"
+    },
+    "good": {
+      "port": 4181,
+      "deployedAt": "2025-08-11T04:52:11.927Z",
+      "path": "C:\\xampp\\htdocs\\good-backend"
     }
   }
 }
