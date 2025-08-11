@@ -303,7 +303,7 @@ const Page: React.FC<PageProps> = ({
     style = {},
 }) => {
     return (
-        <div className={`w-full h-full  flex flex-col gap-4`} style={style}>
+        <div className={`w-full h-full  flex flex-col gap-4 grid-cols-5`} style={style}>
             {sections.map((section, idx) => {
                 if (section.layout && section.layout.rows) {
                     const sectionClass = getLayoutClass(section.layout);
