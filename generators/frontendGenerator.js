@@ -140,8 +140,17 @@ function generateAppComponent(frontendDir, variables) {
       icon: '/icons/workflow-setting-alt.svg',
       subModules: [
         { name: 'asset_management', component: 'AssetManagement', route: '/asset-management', title: 'Assets' },
-        { name: 'meters', component: 'Meters', route: '/meters', title: 'Meters' },
         { name: 'feeders', component: 'Feeders', route: '/feeders', title: 'Feeders' }
+      ]
+    },
+    {
+      name: 'meter_management',
+      title: 'Meter Management',
+      icon: '/icons/meter-bolt.svg',
+      subModules: [
+        { name: 'meters', component: 'Meters', route: '/meters', title: 'Meters' },
+        { name: 'meter_details', component: 'MeterDetails', route: '/meter-details/:meterId', title: 'Meter Details' },
+        { name: 'add_meter', component: 'AddMeter', route: '/add-meter', title: 'Add Meter' }
       ]
     },
     {
@@ -190,8 +199,39 @@ function generateAppComponent(frontendDir, variables) {
   const routes = [];
   const processedRoutes = new Set(); // Track processed routes to avoid duplicates
   
-  // Process each selected module for routes
+  // Handle dashboard sub-modules first
+  const dashboardSubModules = ['consumer_dashboard', 'dtr_dashboard'];
+  const selectedDashboardModules = modules.filter(module => dashboardSubModules.includes(module));
+  let mainDashboard = null;
+  
+  if (selectedDashboardModules.length === 1) {
+    // If only one dashboard sub-module is selected, use it as the main dashboard
+    const selectedModule = selectedDashboardModules[0];
+    const subModule = allSubModules.find(sub => sub.name === selectedModule);
+    if (subModule) {
+      mainDashboard = subModule.component;
+      // For single dashboard, only add the / route
+      routes.push(`<Route path="/" element={<${mainDashboard} />} />`);
+    }
+  } else if (selectedDashboardModules.length > 1) {
+    // If multiple dashboard sub-modules are selected, use the first one as default
+    const firstSelectedModule = selectedDashboardModules[0];
+    const subModule = allSubModules.find(sub => sub.name === firstSelectedModule);
+    if (subModule) {
+      mainDashboard = subModule.component;
+      // For multiple dashboards, add both / and /dashboard routes
+      routes.push(`<Route path="/" element={<${mainDashboard} />} />`);
+      routes.push(`<Route path="/dashboard" element={<${mainDashboard} />} />`);
+    }
+  }
+  
+  // Process each selected module for routes (excluding dashboard sub-modules that were already handled)
   modules.forEach(selectedModule => {
+    // Skip dashboard sub-modules as they were already handled above
+    if (dashboardSubModules.includes(selectedModule)) {
+      return;
+    }
+    
     // Find the sub-module in the config
     const subModule = allSubModules.find(sub => sub.name === selectedModule);
     if (subModule) {
@@ -203,18 +243,18 @@ function generateAppComponent(frontendDir, variables) {
     }
   });
   
-  // Handle dashboard sub-modules
-  let mainDashboard = null;
-  if (modules.includes('consumer_dashboard')) {
-    mainDashboard = 'ConsumerDashboard';
-  } else if (modules.includes('dtr_dashboard')) {
-    mainDashboard = 'DTRDashboard';
-  }
-  
-  // Add main dashboard route if any dashboard sub-module is selected
-  if (mainDashboard) {
-    routes.push(`<Route path="/" element={<${mainDashboard} />} />`);
-    routes.push(`<Route path="/dashboard" element={<${mainDashboard} />} />`);
+  // Add specific dashboard routes only if multiple dashboard sub-modules are selected
+  if (selectedDashboardModules.length > 1) {
+    selectedDashboardModules.forEach(selectedModule => {
+      const subModule = allSubModules.find(sub => sub.name === selectedModule);
+      if (subModule) {
+        const routeKey = `${subModule.route}-${subModule.component}`;
+        if (!processedRoutes.has(routeKey)) {
+          routes.push(`<Route path="${subModule.route}" element={<${subModule.component} />} />`);
+          processedRoutes.add(routeKey);
+        }
+      }
+    });
   }
   
   // If no modules selected, show a welcome page
@@ -231,14 +271,13 @@ function generateAppComponent(frontendDir, variables) {
   // Define module to page title mappings
   const modulePageTitles = {
     'dtr_dashboard': [
-      { path: '/dtr-dashboard', title: 'DTR Dashboard' },
-      { path: '/', title: 'DTR Dashboard' },
-      { path: '/dashboard', title: 'DTR Dashboard' }
+      { path: '/dtr-dashboard', title: 'DTR Dashboard' }
     ],
     'consumer_dashboard': [
-      { path: '/consumer-dashboard', title: 'Consumer Dashboard' },
-      { path: '/', title: 'Consumer Dashboard' },
-      { path: '/dashboard', title: 'Consumer Dashboard' }
+      { path: '/consumer-dashboard', title: 'Consumer Dashboard' }
+    ],
+    'super_admin_dashboard': [
+      { path: '/super-admin', title: 'Super Admin Dashboard' }
     ],
     'users': [
       { path: '/users', title: 'Users' }
@@ -283,6 +322,26 @@ function generateAppComponent(frontendDir, variables) {
     }
   });
   
+  // Add dynamic dashboard routes based on selected dashboard sub-modules
+  if (mainDashboard) {
+    if (selectedDashboardModules.length === 1) {
+      // If only one dashboard sub-module is selected, use it only for the / route
+      const selectedModule = selectedDashboardModules[0];
+      const subModule = allSubModules.find(sub => sub.name === selectedModule);
+      if (subModule) {
+        pageTitles.push(`    '/': '${subModule.title}'`);
+      }
+    } else if (selectedDashboardModules.length > 1) {
+      // If multiple dashboard sub-modules are selected, use the first one for both / and /dashboard routes
+      const firstSelectedModule = selectedDashboardModules[0];
+      const subModule = allSubModules.find(sub => sub.name === firstSelectedModule);
+      if (subModule) {
+        pageTitles.push(`    '/': '${subModule.title}'`);
+        pageTitles.push(`    '/dashboard': '${subModule.title}'`);
+      }
+    }
+  }
+  
   variables.pageTitles = pageTitles.join(',\n');
   
   // Initialize menuItems variable
@@ -291,15 +350,21 @@ function generateAppComponent(frontendDir, variables) {
   // Generate menu items for AppLayout (only for selected modules)
   const menuItems = [];
   
-  // Add module-specific menu items (only if selected)
-  if (modules.includes('dtr_dashboard')) {
-    // If dtr_dashboard is selected, it becomes the main dashboard
-    menuItems.push('    { title: \'DTR Dashboard\', icon: \'/icons/transformer.svg\', link: \'/dashboard\' }');
-  }
-  
-  if (modules.includes('consumer_dashboard')) {
-    // If consumer_dashboard is selected, it becomes the main dashboard
-    menuItems.push('    { title: \'Consumer Dashboard\', icon: \'/icons/users.svg\', link: \'/dashboard\' }');
+  // Handle dashboard sub-modules for menu items
+  if (selectedDashboardModules.length === 1) {
+    // If only one dashboard sub-module is selected, add it as the main dashboard
+    const selectedModule = selectedDashboardModules[0];
+    const subModule = allSubModules.find(sub => sub.name === selectedModule);
+    if (subModule) {
+      menuItems.push(`    { title: '${subModule.title}', icon: '/icons/dashboard.svg', link: '/' }`);
+    }
+  } else if (selectedDashboardModules.length > 1) {
+    // If multiple dashboard sub-modules are selected, add the first one as main dashboard
+    const firstSelectedModule = selectedDashboardModules[0];
+    const subModule = allSubModules.find(sub => sub.name === firstSelectedModule);
+    if (subModule) {
+      menuItems.push(`    { title: '${subModule.title}', icon: '/icons/dashboard.svg', link: '/dashboard' }`);
+    }
   }
   
   if (modules.includes('users')) {
