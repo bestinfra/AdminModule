@@ -8,7 +8,6 @@ export const createMeterSchema = z.object({
     model: z.string().min(1, 'Model is required'),
     type: z.string().min(1, 'Type is required'),
     phase: z.string().min(1, 'Phase is required'),
-    consumerId: z.number().positive('Consumer ID must be a positive number'),
     locationId: z.number().positive('Location ID must be a positive number'),
     installationDate: z.string().min(1, 'Installation date is required')
         .refine((val) => !isNaN(new Date(val).getTime()), 'Invalid installation date'),

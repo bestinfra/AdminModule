@@ -19,18 +19,18 @@ export async function initializeCronJobs() {
                     }
                 }
             },
-            {
-                name: 'billing-generation',
-                schedule: '* * * * *', // Every minute
-                task: generateMonthlyBillsTask,
-                options: {
-                    timezone: 'Asia/Kolkata',
-                    onError: (error, jobName) => {
-                        console.error(`🚨 Critical error in ${jobName}:`, error);
-                        console.error(`   🔍 Error details:`, error.message);
-                    }
-                }
-            },
+            // {
+            //     name: 'billing-generation',
+            //     schedule: '* * * * *', // Every minute
+            //     task: generateMonthlyBillsTask,
+            //     options: {
+            //         timezone: 'Asia/Kolkata',
+            //         onError: (error, jobName) => {
+            //             console.error(`🚨 Critical error in ${jobName}:`, error);
+            //             console.error(`   🔍 Error details:`, error.message);
+            //         }
+            //     }
+            // },
         ];
 
         jobs.forEach(job => {

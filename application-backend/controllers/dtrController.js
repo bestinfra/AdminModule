@@ -17,9 +17,10 @@ export const getDTRTable = async (req, res) => {
             dtrId: dtr.dtrNumber || 'NA',
             dtrName: dtr.serialNumber || 'NA',
             feedersCount: dtr.feedersCount || 0,
-            streetName: dtr.location?.name || 'NA',
-            city: dtr.location?.city || 'NA',
-            commStatus: dtr.status || 'NA'
+            streetName: dtr.locations?.address || 'NA',
+            city: dtr.locations?.name || 'NA',
+            commStatus: dtr.status || 'NA',
+            lastCommunication: dtr.lastCommunication ? new Date(dtr.lastCommunication).toLocaleString() : 'NA'
         }));
 
         res.json({

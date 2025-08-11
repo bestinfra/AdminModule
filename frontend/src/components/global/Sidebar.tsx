@@ -300,9 +300,7 @@ const Sidebar = ({
     // Get user permissions from JWT token (only once on mount)
     useEffect(() => {
         setIsLoading(true);
-        
         const token = Cookies.get('token') || localStorage.getItem('token');
-        
         if (token) {
             try {
                 // Decode JWT token to get permissions
@@ -311,80 +309,84 @@ const Sidebar = ({
                 const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
                     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
                 }).join(''));
-                
                 const decodedToken = JSON.parse(jsonPayload);
                 const permissions = decodedToken.permissions || [];
-                
-                // Store permissions in state
                 setUserPermissions(permissions);
-                
             } catch (error) {
-                console.error('❌ Sidebar: Error decoding JWT token:', error);
                 setUserPermissions([]);
             }
         } else {
             setUserPermissions([]);
         }
-        
         setIsLoading(false);
     }, []); // Empty dependency array - only run once on mount
-    
+
     // Filter menus based on stored permissions
     useEffect(() => {
         if (isLoading) return; // Don't filter while loading
-        
+
+        // Helper: build grouped menus strictly from permissions
+        const buildGroupedMenusFromPermissions = (perms: string[]): MenuCategory[] => {
+            // Parents we'll populate conditionally
+            const items: MenuItem[] = [];
+
+            // Top-level pages based on permissions
+            if (perms.includes('dtr_dashboard')) {
+                items.push({ title: 'DTR Dashboard', icon: '/icons/dashboard.svg', link: '/dtr-dashboard' });
+            }
+            if (perms.includes('asset_management')) {
+                items.push({ title: 'Asset Management', icon: '/icons/Asset_managment.svg', link: '/asset-management' });
+            }
+            if (perms.includes('consumer_dashboard')) {
+                items.push({ title: 'Consumer Dashboard', icon: '/icons/dashboard.svg', link: '/consumer-dashboard' });
+            }
+            if (perms.includes('tickets')) {
+                items.push({ title: 'Tickets', icon: '/icons/customer-service.svg', link: '/tickets' });
+            }
+            // Bills parent if any billing permission exists
+            if (perms.includes('bills') || perms.includes('prepaid') || perms.includes('postpaid')) {
+                const billsChildren: SubMenuItem[] = [];
+                if (perms.includes('prepaid')) billsChildren.push({ title: 'Prepaid', link: '/prepaid' });
+                if (perms.includes('postpaid')) billsChildren.push({ title: 'Postpaid', link: '/postpaid' });
+                if (billsChildren.length > 0) {
+                    items.push({ title: 'Bills', icon: '/icons/bills.svg', hasSubmenu: true, submenu: billsChildren });
+                }
+            }
+
+            // Meter Management group
+            const meterChildren: SubMenuItem[] = [];
+            if (perms.includes('meter_list')) {
+                meterChildren.push({ title: 'Meter List', link: '/meters' });
+            }
+            if (perms.includes('data_logger_master')) {
+                meterChildren.push({ title: 'Data Logger', link: '/data-logger' });
+            }
+            if (meterChildren.length > 0 || perms.includes('meter_management')) {
+                items.push({ title: 'Meter Management', icon: '/icons/meter_managment.svg', hasSubmenu: true, submenu: meterChildren });
+            }
+
+            // User Management group
+            const userChildren: SubMenuItem[] = [];
+            if (perms.includes('users') || perms.includes('user_management_default')) {
+                userChildren.push({ title: 'Users', link: '/users' });
+            }
+            if (perms.includes('role_management')) {
+                userChildren.push({ title: 'Role Management', link: '/role-management' });
+            }
+            if (userChildren.length > 0) {
+                items.push({ title: 'User Management', icon: '/icons/user_managment.svg', hasSubmenu: true, submenu: userChildren });
+            }
+
+            const seen: Record<string, boolean> = {};
+            const deduped = items.filter(it => (seen[it.title] ? false : (seen[it.title] = true)));
+            return deduped.length ? [{ category: 'GENERAL', items: deduped }] : [];
+        };
+
         if (userPermissions && userPermissions.length > 0) {
-            // Filter menus based on permissions
-            const filtered = menus.map(category => ({
-                ...category,
-                items: category.items.filter(item => {
-                    // Map menu items to permissions
-                    const permissionMap: Record<string, string> = {
-                        // Federated component menu item mappings (from logs)
-                        'Dashboard': 'dashboard',
-                        'Consumers': 'consumer_dashboard',
-                        'Bills': 'bills',
-                        'Meters': 'meter_management',
-                        'Tickets': 'tickets',
-                        'Users': 'users',
-                        
-                        // Additional mappings for submenu items
-                        'Prepaid': 'prepaid',
-                        'Postpaid': 'postpaid',
-                        
-                        // Fallback mappings for local component
-                        'SuperAdmin Dashboard': 'dashboard',
-                        'All Tickets': 'tickets',
-                        'User Management': 'users',
-                        'Meter List': 'meter_management',
-                        'Consumer Dashboard': 'consumer_dashboard',
-                        'Role Permissions': 'role_management',
-                        'Individual Detail': 'consumer',
-                        'Data Logger': 'meter_management'
-                    };
-                    
-                    // Check if this is a submenu item
-                    if (item.hasSubmenu && item.submenu) {
-                        // For parent menu items with submenus, check if any submenu item has permission
-                        const hasSubmenuPermission = item.submenu.some(subItem => {
-                            const subPermission = permissionMap[subItem.title];
-                            return !subPermission || userPermissions.includes(subPermission);
-                        });
-                        
-                        return hasSubmenuPermission;
-                    }
-                    
-                    const requiredPermission = permissionMap[item.title];
-                    const hasPermission = !requiredPermission || userPermissions.includes(requiredPermission);
-                    
-                    return hasPermission;
-                })
-            })).filter(category => category.items.length > 0);
-            
-            setFilteredMenus(filtered);
-            
+            const built = buildGroupedMenusFromPermissions(userPermissions);
+            setFilteredMenus(built);
         } else {
-            setFilteredMenus(menus); // Show all menus when no permissions
+            setFilteredMenus(menus);
         }
     }, [userPermissions, menus, isLoading]);
     
@@ -398,6 +400,45 @@ const Sidebar = ({
     if (typeof window !== 'undefined') {
         (window as any).clearSidebarPermissions = clearPermissions;
     }
+
+    // Debug: log raw token preview on mount
+    useEffect(() => {
+        try {
+            const t = Cookies.get('token') || localStorage.getItem('token');
+            if (t) {
+                const preview = t.length > 24 ? `${t.slice(0, 12)}...${t.slice(-12)}` : t;
+                console.log('Sidebar: token detected', { length: t.length, preview });
+            } else {
+                console.log('Sidebar: no token found');
+            }
+        } catch (e) {
+            console.log('Sidebar: token read error', e);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // Debug: log permissions, loading and incoming menus
+    useEffect(() => {
+        console.log('Sidebar: isLoading', isLoading);
+        console.log('Sidebar: userPermissions', userPermissions);
+        console.log('Sidebar: input menus', menus);
+    }, [isLoading, userPermissions, menus]);
+
+    // Debug: log filtered menus whenever computed
+    useEffect(() => {
+        console.log('Sidebar: filtered menus', filteredMenus);
+    }, [filteredMenus]);
+
+    // Debug: log current path when it changes
+    useEffect(() => {
+        try {
+            const loc = useLocation();
+            console.log('Sidebar: currentPath', currentPath || loc.pathname);
+        } catch {
+            console.log('Sidebar: currentPath (from prop)', currentPath || '/');
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentPath]);
 
   // Use currentPath prop if provided, otherwise fallback to useLocation for standalone usage
   let pathname = currentPath;

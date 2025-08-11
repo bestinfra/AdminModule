@@ -43,12 +43,15 @@ export const getTicketsTable = async (req, res) => {
         const formatted = ticketsData.data.map((t, idx) => ({
             sNo: (page - 1) * limit + idx + 1,
             ticketNumber: t.ticketNumber,
-            consumerUid: t.consumerNumber,
+            dtrNumber: t.dtrNumber,
             subject: t.subject,
-            meterSerialNo: t.meterSerialNo,
+            // Show first meter serial number or count of meters
+            meterSerialNo: t.connectedMeters.length > 0 ? t.connectedMeters[0].serialNumber : `${t.meterCount} meters`,
             category: t.category || 'NA',
             priority: t.priority,
             status: t.status,
+            assignedTo: t.assignedTo || 'NA',
+            createdAt: t.createdAt ? new Date(t.createdAt).toLocaleDateString() : 'NA',
         }));
         res.json({
             success: true,
@@ -118,7 +121,12 @@ export const getTicketTrends = async (req, res) => {
 export const getTicketById = async (req, res) => {
     try {
         const { id } = req.params;
-        const ticket = await TicketDB.getTicketById(parseInt(id));
+        const numericId = Number(id);
+        if (!Number.isFinite(numericId) || numericId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid ticket id' });
+        }
+        
+        const ticket = await TicketDB.getTicketById(numericId);
         
         if (!ticket) {
             return res.status(404).json({
@@ -141,20 +149,20 @@ export const getTicketById = async (req, res) => {
     }
 };
 
-export const getTicketsByConsumerId = async (req, res) => {
+export const getTicketsByDtrId = async (req, res) => {
     try {
-        const { consumerId } = req.params;
-        const tickets = await TicketDB.getTicketsByConsumerId(parseInt(consumerId));
+        const { dtrId } = req.params;
+        const tickets = await TicketDB.getTicketsByDtrId(parseInt(dtrId));
         
         res.json({
             success: true,
             data: tickets
         });
     } catch (error) {
-        console.error(' getTicketsByConsumerId: Error fetching consumer tickets:', error);
+        console.error(' getTicketsByDtrId: Error fetching DTR tickets:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch consumer tickets',
+            message: 'Failed to fetch DTR tickets',
             error: error.message
         });
     }

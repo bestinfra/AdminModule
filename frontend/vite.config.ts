@@ -84,6 +84,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/api/tickets': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
       '/api/sub-app-auth': {
         target: 'http://localhost:4000',
         changeOrigin: true,

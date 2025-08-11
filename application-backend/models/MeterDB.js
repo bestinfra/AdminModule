@@ -126,7 +126,7 @@ class MeterDB {
                     model: meterData.model,
                     type: meterData.type,
                     phase: parseInt(meterData.phase),
-                    consumerId: parseInt(meterData.consumerId),
+        
                     locationId: parseInt(meterData.locationId),
                     installationDate: new Date(getDateInYMDFormat(new Date(meterData.installationDate))),
                     dtrId: meterData.dtrId ? parseInt(meterData.dtrId) : null,

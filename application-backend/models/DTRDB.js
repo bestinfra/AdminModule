@@ -36,15 +36,36 @@ class DTRDB {
             })
         ]);
 
-        // Get feeders count for each DTR
+        // Get feeders count and latest communication date for each DTR
         const dtrsWithFeedersCount = await Promise.all(
             data.map(async (dtr) => {
                 const feedersCount = await prisma.meters.count({
                     where: { dtrId: dtr.id }
                 });
+
+                // Get latest reading date for this DTR's meters
+                const meters = await prisma.meters.findMany({
+                    where: { dtrId: dtr.id },
+                    select: { id: true }
+                });
+
+                let lastCommunication = null;
+                if (meters.length > 0) {
+                    const meterIds = meters.map(m => m.id);
+                    const latestReading = await prisma.meter_readings.findFirst({
+                        where: {
+                            meterId: { in: meterIds }
+                        },
+                        orderBy: { readingDate: 'desc' },
+                        select: { readingDate: true }
+                    });
+                    lastCommunication = latestReading?.readingDate || null;
+                }
+
                 return {
                     ...dtr,
-                    feedersCount
+                    feedersCount,
+                    lastCommunication
                 };
             })
         );
@@ -752,14 +773,14 @@ class DTRDB {
 
                 let whereClause = {
                     meterId: { in: meterIds },
-                    consumptionDate: {
+                    readingDate: {
                         gte: new Date(presDate),
                         lt: new Date(nextDate)
                     }
                 };
 
-                const result = await prisma.consumption.groupBy({
-                    by: ['consumptionDate'],
+                const result = await prisma.meter_readings.groupBy({
+                    by: ['readingDate'],
                     where: whereClause,
                     _count: {
                         id: true
@@ -768,12 +789,12 @@ class DTRDB {
                         consumption: true
                     },
                     orderBy: {
-                        consumptionDate: 'asc'
+                        readingDate: 'asc'
                     }
                 });
 
                 return result.map(item => ({
-                    consumption_date: getDateInYMDFormat(item.consumptionDate),
+                    consumption_date: getDateInYMDFormat(item.readingDate),
                     count: item._count.id,
                     total_consumption: item._sum.consumption || 0
                 }));
@@ -788,14 +809,14 @@ class DTRDB {
 
             let whereClause = {
                 meterId: { in: meterIds },
-                consumptionDate: {
+                readingDate: {
                     gte: new Date(presDate),
                     lt: new Date(nextDate)
                 }
             };
 
-            const result = await prisma.consumption.groupBy({
-                by: ['consumptionDate'],
+            const result = await prisma.meter_readings.groupBy({
+                by: ['readingDate'],
                 where: whereClause,
                 _count: {
                     id: true
@@ -804,14 +825,14 @@ class DTRDB {
                     consumption: true
                 },
                 orderBy: {
-                    consumptionDate: 'asc'
+                    readingDate: 'asc'
                 }
             });
 
             // Group by month
             const monthlyData = {};
             result.forEach(item => {
-                const monthKey = getDateInYMDFormat(item.consumptionDate).slice(0, 7); // YYYY-MM format
+                const monthKey = getDateInYMDFormat(item.readingDate).slice(0, 7); // YYYY-MM format
                 if (!monthlyData[monthKey]) {
                     monthlyData[monthKey] = {
                         consumption_date: monthKey,

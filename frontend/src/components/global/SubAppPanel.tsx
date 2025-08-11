@@ -51,12 +51,16 @@ const SubappPanel: React.FC<SubappPanelProps> = ({
   category,
   modules,
   connectedApis,
-  // meters,
+  meters,
   tickets,
   appIcon,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  // Calculate percentages for the progress bar
+  const activePercentage = meters.total > 0 ? (meters.active / meters.total) * 100 : 0;
+  const inactivePercentage = meters.total > 0 ? (meters.inactive / meters.total) * 100 : 0;
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
