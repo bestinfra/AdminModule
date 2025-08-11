@@ -51,6 +51,7 @@ import FreezeStatus from '../Occupancy-Vacency/FreezeStatus';
 import ApplicationCard from './ApplicationCard';
 import StatusCard from './StatusCard';
 import DGCard from '../DG_Modules/DGCard';
+import ElectricalMetricsCard from './ElectricalMetricsCard';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -98,6 +99,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     OccupancyHeader,
     ConfirmationPage,
     UsageSummaryPage,
+    ElectricalMetricsCard,
     Payment,
     FreezeStatus,
     ApplicationCard,

@@ -490,7 +490,7 @@ const DGDashboard: React.FC = () => {
       
       {/* Manual pagination controls since they're not in the config */}
       {filteredDGSets.length > cardsPerPage && (
-        <div className="flex justify-center items-center gap-4 w-full mt-4 pt-4 border-t border-primary-border dark:border-dark-border">
+        <div className="flex justify-center items-center gap-4 w-full  pt-4  dark:border-dark-border">
           <button
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
             disabled={currentPage === 1}
