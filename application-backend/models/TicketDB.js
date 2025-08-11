@@ -56,10 +56,10 @@ class TicketDB {
                 whereClause.priority = filters.priority;
             }
 
-            if (filters.consumerNumber) {
-                whereClause.consumers = {
-                    consumerNumber: {
-                        contains: filters.consumerNumber,
+            if (filters.dtrNumber) {
+                whereClause.dtrs = {
+                    dtrNumber: {
+                        contains: filters.dtrNumber,
                         mode: 'insensitive'
                     }
                 };
@@ -79,20 +79,29 @@ class TicketDB {
             const tickets = await prisma.tickets.findMany({
                 where: whereClause,
                 include: {
-                    consumers: {
+                    dtrs: {
                         select: {
-                            consumerNumber: true,
-                            name: true,
-                            primaryPhone: true,
-                            email: true,
+                            dtrNumber: true,
+                            serialNumber: true,
+                            locations: {
+                                select: {
+                                    name: true,
+                                    address: true
+                                }
+                            },
                             meters: {
                                 select: {
-                                    serialNumber: true
+                                    meterNumber: true,
+                                    serialNumber: true,
+                                    manufacturer: true,
+                                    model: true,
+                                    type: true,
+                                    status: true
                                 }
                             }
                         }
                     },
-                    users_raisedBy: {
+                    users_tickets_raisedByIdTousers: {
                         select: {
                             username: true,
                             firstName: true,
@@ -100,7 +109,7 @@ class TicketDB {
                             email: true
                         }
                     },
-                    users_assignedTo: {
+                    users_tickets_assignedToIdTousers: {
                         select: {
                             username: true,
                             firstName: true,
@@ -124,13 +133,22 @@ class TicketDB {
                 priority: ticket.priority,
                 status: ticket.status,
                 resolution: ticket.resolution,
-                consumerNumber: ticket.consumer?.consumerNumber,
-                consumerName: ticket.consumer?.name,
-                consumerPhone: ticket.consumer?.primaryPhone,
-                consumerEmail: ticket.consumer?.email,
-                meterSerialNo: ticket.consumer?.meters?.[0]?.serialNumber || 'NA',
-                raisedBy: ticket.raisedBy ? `${ticket.raisedBy.firstName} ${ticket.raisedBy.lastName}` : null,
-                assignedTo: ticket.assignedTo ? `${ticket.assignedTo.firstName} ${ticket.assignedTo.lastName}` : null,
+                dtrNumber: ticket.dtrs?.dtrNumber || 'NA',
+                dtrSerialNumber: ticket.dtrs?.serialNumber || 'NA',
+                locationName: ticket.dtrs?.locations?.name || 'NA',
+                locationAddress: ticket.dtrs?.locations?.address || 'NA',
+                // Get connected meters information
+                connectedMeters: ticket.dtrs?.meters?.map(meter => ({
+                    meterNumber: meter.meterNumber,
+                    serialNumber: meter.serialNumber,
+                    manufacturer: meter.manufacturer,
+                    model: meter.model,
+                    type: meter.type,
+                    status: meter.status
+                })) || [],
+                meterCount: ticket.dtrs?.meters?.length || 0,
+                raisedBy: ticket.users_tickets_raisedByIdTousers ? `${ticket.users_tickets_raisedByIdTousers.firstName} ${ticket.users_tickets_raisedByIdTousers.lastName}` : null,
+                assignedTo: ticket.users_tickets_assignedToIdTousers ? `${ticket.users_tickets_assignedToIdTousers.firstName} ${ticket.users_tickets_assignedToIdTousers.lastName}` : null,
                 createdAt: ticket.createdAt,
                 updatedAt: ticket.updatedAt
             }));
@@ -207,15 +225,20 @@ class TicketDB {
 
     static async getTicketById(ticketId) {
         try {
-            return await prisma.tickets.findUnique({
+            const ticket = await prisma.tickets.findUnique({
                 where: { id: ticketId },
                 include: {
-                    consumers: {
+                    dtrs: {
                         include: {
-                            locations: true
+                            locations: true,
+                            meters: {
+                                include: {
+                                    locations: true
+                                }
+                            }
                         }
                     },
-                    users_raisedBy: {
+                    users_tickets_raisedByIdTousers: {
                         select: {
                             username: true,
                             firstName: true,
@@ -223,7 +246,7 @@ class TicketDB {
                             email: true
                         }
                     },
-                    users_assignedTo: {
+                    users_tickets_assignedToIdTousers: {
                         select: {
                             username: true,
                             firstName: true,
@@ -233,16 +256,63 @@ class TicketDB {
                     }
                 }
             });
+
+            if (!ticket) {
+                return null;
+            }
+
+            // Map the data similar to getTicketsTable
+            const raisedBy = ticket.users_tickets_raisedByIdTousers;
+            const assignedTo = ticket.users_tickets_assignedToIdTousers;
+            const dtr = ticket.dtrs;
+            const location = dtr?.locations?.name ?? dtr?.locations?.address;
+            const firstMeter = Array.isArray(dtr?.meters) && dtr.meters.length > 0 ? dtr.meters[0] : undefined;
+            const meterNumber = firstMeter?.meterNumber ?? firstMeter?.serialNumber;
+            const connectionType = firstMeter?.type ?? dtr?.type;
+
+            const mappedTicket = {
+                id: ticket.id,
+                ticketNumber: ticket.ticketNumber,
+                subject: ticket.subject,
+                description: ticket.description,
+                type: ticket.type,
+                category: ticket.category,
+                priority: ticket.priority,
+                status: ticket.status,
+                resolution: ticket.resolution,
+                dtrNumber: dtr?.dtrNumber || 'NA',
+                dtrSerialNumber: dtr?.serialNumber || 'NA',
+                locationName: dtr?.locations?.name || 'NA',
+                locationAddress: dtr?.locations?.address || 'NA',
+                // Get connected meters information
+                connectedMeters: dtr?.meters?.map(meter => ({
+                    meterNumber: meter.meterNumber,
+                    serialNumber: meter.serialNumber,
+                    manufacturer: meter.manufacturer,
+                    model: meter.model,
+                    type: meter.type,
+                    status: meter.status
+                })) || [],
+                meterCount: dtr?.meters?.length || 0,
+                raisedBy: raisedBy ? `${raisedBy.firstName} ${raisedBy.lastName}` : null,
+                assignedTo: assignedTo ? `${assignedTo.firstName} ${assignedTo.lastName}` : null,
+                raisedByEmail: raisedBy?.email || null,
+                assignedToEmail: assignedTo?.email || null,
+                createdAt: ticket.createdAt,
+                updatedAt: ticket.updatedAt
+            };
+
+            return mappedTicket;
         } catch (error) {
             console.error(' TicketDB.getTicketById: Database error:', error);
             throw error;
         }
     }
 
-    static async getTicketsByConsumerId(consumerId) {
+    static async getTicketsByDtrId(dtrId) {
         try {
             return await prisma.tickets.findMany({
-                where: { consumerId },
+                where: { dtrId },
                 include: {
                     users_raisedBy: {
                         select: {
@@ -262,7 +332,7 @@ class TicketDB {
                 orderBy: { createdAt: 'desc' }
             });
         } catch (error) {
-            console.error(' TicketDB.getTicketsByConsumerId: Database error:', error);
+            console.error(' TicketDB.getTicketsByDtrId: Database error:', error);
             throw error;
         }
     }
@@ -302,7 +372,7 @@ class TicketDB {
             return await prisma.tickets.create({
                 data: ticketData,
                 include: {
-                    consumers: true,
+                    dtrs: true,
                     users_raisedBy: true
                 }
             });

@@ -3,8 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import Buttons from '../global/Button';
 
 interface ConfirmationPageProps {
-  currentStep?: number;
   onStepChange?: (step: number) => void;
+  onBack?: () => void;
   unit_id?: string;
   meter_no?: string;
   consumer_name?: string;
@@ -15,12 +15,13 @@ interface ConfirmationPageProps {
 const ConfirmationPage: React.FC<ConfirmationPageProps> = ({
 //   currentStep = 1,
   onStepChange,
+  // onBack,
   unit_id,
   meter_no,
 //   consumer_name,
 //   property_address,
   className = ''
-}) => {
+}: ConfirmationPageProps) => {
     const navigate = useNavigate();
     const location = useLocation();
     const { unit_id: locationUnitId, meter_no: locationMeterNo } = location.state || {};

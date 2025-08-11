@@ -9,12 +9,12 @@ export const addUserSchema = z.object({
     lastName: z.string().min(1, 'Last name is required').max(100, 'Last name must be less than 100 characters'),
     phone: z.string().optional(),
     isActive: z.boolean().optional().default(true),
-    roleIds: z.array(z.number()).optional()
+    roleId: z.number().optional()
 });
 
 // Assign roles validation schema
 export const assignRolesSchema = z.object({
-    roleIds: z.array(z.number()).min(1, 'At least one role ID is required')
+    roleId: z.number().min(1, 'Role ID is required')
 });
 
 // Validation middleware

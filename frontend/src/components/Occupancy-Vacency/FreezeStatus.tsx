@@ -2,113 +2,106 @@ import React from 'react';
 import Button from '../global/Button';
 import Icon from '../global/Icon';
 
-interface StatusCard {
+interface FreezeStatusProps {
+  // onBack?: () => void;
+  title?: string;
+  subtitle?: string;
+  statusCards?: Array<{
     label: string;
     value: string;
-    icon?: string;
+    icon: string;
     valueColor?: string;
-    valueStyle?: React.CSSProperties;
-}
-
-interface TransactionStep {
+  }>;
+  transactionSteps?: Array<{
     title: string;
     description: string;
     icon: string;
+  }>;
+  onDone?: () => void;
+  loading?: boolean;
+  disabled?: boolean;
+  className?: string;
+  showButtons?: boolean;
+  customButtons?: React.ReactNode;
+  completionDate?: string;
+  whatHappensNext?: string[];
+  downloadButtonLabel?: string;
+  doneButtonLabel?: string;
+  showTransactionSummary?: boolean;
+  showWhatHappensNext?: boolean;
+  electricity_usage?: string;
+  final_reading?: string;
+  final_amount?: string;
+  // payment_method?: string;
 }
 
-interface FreezeStatusProps {
-    currentStep?: number;
-    onStepChange?: (step: number) => void;
-    title?: string;
-    subtitle?: string;
-    statusCards?: StatusCard[];
-    transactionSteps?: TransactionStep[];
-    onDone?: () => void;
-    loading?: boolean;
-    disabled?: boolean;
-    className?: string;
-    showButtons?: boolean;
-    customButtons?: React.ReactNode;
-    completionDate?: string;
-    whatHappensNext?: string[];
-    downloadButtonLabel?: string;
-    doneButtonLabel?: string;
-    showTransactionSummary?: boolean;
-    showWhatHappensNext?: boolean;
-    electricity_usage?: string;
-    final_reading?: string;
-    final_amount?: string;
-    payment_method?: string;
-}
-
-const FreezeStatus: React.FC<FreezeStatusProps> = ({
-    // currentStep = 4,
-    // onStepChange,
-    title = 'Account Successfully Frozen',
-    subtitle = 'The property has been marked as vacant and all billing has been finalized.',
-    statusCards = [
-        {
-            label: 'Electricity Usage',
-            value: '11.62 kWh',
-            icon: '/icons/bolt.svg',
-        },
-        {
-            label: 'Final Reading',
-            value: '206.83 kWh',
-            icon: '/icons/document.svg',
-        },
-        {
-            label: 'Billing Status',
-            value: 'Final Bill - Paid',
-            icon: '/icons/check-circle.svg',
-            valueColor: '#10B981',
-        },
-        {
-            label: 'Final Amount',
-            value: '₹90.43',
-            icon: '/icons/coins.svg',
-            valueColor: '#10B981',
-        },
-    ],
-    transactionSteps = [
-        {
-            title: 'Meter readings frozen successfully',
-            description: 'Final usage recorded and locked',
-            icon: '/icons/check-circle.svg',
-        },
-        {
-            title: 'Final bill generated and settled',
-            description: 'Amount: ₹90.43',
-            icon: '/icons/document.svg',
-        },
-        {
-            title: 'Future billing disabled',
-            description: 'No further charges will be generated',
-            icon: '/icons/calendar.svg',
-        },
-    ],
-    onDone,
-    loading = false,
-    disabled = false,
-    className = '',
-    showButtons = true,
-    customButtons,
-    completionDate = 'August 6, 2025 at 2:30 PM',
-    whatHappensNext = [
-        'Property is now marked as vacant in the system',
-        'Meter readings are permanently frozen',
-        'Receipt has been generated for your records',
-        'You can reactivate this property when a new tenant moves in'
-    ],
-    downloadButtonLabel = 'Download Receipt',
-    doneButtonLabel = 'Done',
-    showTransactionSummary = true,
-    showWhatHappensNext = true,
-    electricity_usage,
-    final_reading,
-    final_amount,
-    // payment_method,
-}) => {
+const FreezeStatus = ({
+  // onBack,
+  title = 'Account Successfully Frozen',
+  subtitle = 'The property has been marked as vacant and all billing has been finalized.',
+  statusCards = [
+    {
+      label: 'Electricity Usage',
+      value: '11.62 kWh',
+      icon: '/icons/bolt.svg',
+    },
+    {
+      label: 'Final Reading',
+      value: '206.83 kWh',
+      icon: '/icons/document.svg',
+    },
+    {
+      label: 'Billing Status',
+      value: 'Final Bill - Paid',
+      icon: '/icons/check-circle.svg',
+      valueColor: '#10B981',
+    },
+    {
+      label: 'Final Amount',
+      value: '₹90.43',
+      icon: '/icons/coins.svg',
+      valueColor: '#10B981',
+    },
+  ],
+  transactionSteps = [
+    {
+      title: 'Meter readings frozen successfully',
+      description: 'Final usage recorded and locked',
+      icon: '/icons/check-circle.svg',
+    },
+    {
+      title: 'Final bill generated and settled',
+      description: 'Amount: ₹90.43',
+      icon: '/icons/document.svg',
+    },
+    {
+      title: 'Future billing disabled',
+      description: 'No further charges will be generated',
+      icon: '/icons/calendar.svg',
+    },
+  ],
+  onDone,
+  loading = false,
+  disabled = false,
+  className = '',
+  showButtons = true,
+  customButtons,
+  completionDate = 'August 6, 2025 at 2:30 PM',
+  whatHappensNext = [
+    'Property is now marked as vacant in the system',
+    'Meter readings are permanently frozen',
+    'Receipt has been generated for your records',
+    'You can reactivate this property when a new tenant moves in'
+  ],
+  downloadButtonLabel = 'Download Receipt',
+  doneButtonLabel = 'Done',
+  showTransactionSummary = true,
+  showWhatHappensNext = true,
+  electricity_usage,
+  final_reading,
+  final_amount,
+  // payment_method,
+}: FreezeStatusProps) => {
     // Use props data if available, otherwise use defaults
     const finalStatusCards = statusCards.map(card => {
         if (card.label === 'Electricity Usage' && electricity_usage) {
@@ -191,7 +184,7 @@ const FreezeStatus: React.FC<FreezeStatusProps> = ({
                                 </header>
                                 <p 
                                     className="text-2xl font-bold text-gray-900 font-manrope"
-                                    style={card.valueStyle || { color: card.valueColor || 'var(--color-text-primary)' }}
+                                    style={{ color: card.valueColor || 'var(--color-text-primary)' }}
                                 >
                                     {card.value}
                                 </p>

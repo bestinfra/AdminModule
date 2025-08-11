@@ -15,8 +15,6 @@ const tableColumns = [
     // Add actions column if you want to show action buttons
 ];
 
-
-
 export default function Users() {
     const navigate = useNavigate();
     const [users, setUsers] = useState<
@@ -185,10 +183,13 @@ export default function Users() {
                     totalUsers: 4,
                     activeUsers: 3,
                     inactiveUsers: 1,
-                    totalAdmins: 1,
-                    totalAccountants: 1,
-                    totalModerators: 1,
                     totalRoles: 4,
+                    roleBreakdown: {
+                        Admin: 1,
+                        Accountant: 1,
+                        Moderator: 1,
+                        User: 1
+                    }
                 });
             })
             .finally(() => setStatsLoading(false));
@@ -206,19 +207,19 @@ export default function Users() {
             },
             {
                 title: 'Total Admins',
-                value: userStats.totalAdmins,
+                value: userStats.roleBreakdown?.Admin || 0,
                 icon: '/icons/admin.svg',
                 subtitle1: 'This Month',
             },
             {
                 title: 'Total Accountants',
-                value: userStats.totalAccountants,
+                value: userStats.roleBreakdown?.Accountant || 0,
                 icon: '/icons/accountant.svg',
                 subtitle1: 'This Month',
             },
             {
                 title: 'Total Moderators',
-                value: userStats.totalModerators,
+                value: userStats.roleBreakdown?.Moderator || 0,
                 icon: '/icons/moderator.svg',
                 subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
             },

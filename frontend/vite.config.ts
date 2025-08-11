@@ -29,6 +29,18 @@ export default defineConfig({
       ],
     }),
   ],
+  build: {
+    target: 'esnext',
+    modulePreload: false,
+    rollupOptions: {
+      output: {
+        format: 'es',
+        entryFileNames: '[name].[hash].js',
+        chunkFileNames: '[name].[hash].js',
+        assetFileNames: '[name].[hash].[ext]'
+      }
+    }
+  },
   // ],
   resolve: {
     alias: {
@@ -59,6 +71,11 @@ export default defineConfig({
         secure: false,
       },
       '/api/apps': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/api/tickets': {
         target: 'http://localhost:3001',
         changeOrigin: true,
         secure: false,
