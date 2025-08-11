@@ -29,6 +29,18 @@ export default defineConfig({
       ],
     }),
   ],
+  build: {
+    target: 'esnext',
+    modulePreload: false,
+    rollupOptions: {
+      output: {
+        format: 'es',
+        entryFileNames: '[name].[hash].js',
+        chunkFileNames: '[name].[hash].js',
+        assetFileNames: '[name].[hash].[ext]'
+      }
+    }
+  },
   // ],
   resolve: {
     alias: {
