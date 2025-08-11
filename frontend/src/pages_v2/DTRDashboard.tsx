@@ -654,7 +654,6 @@ const DTRDashboard: React.FC = () => {
                   layout: "grid",
                   gap: "gap-4",
                   gridColumns: 3,
-                  gridRows: 2,
                   span: { col: 3, row: 1 },
                     className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                   columns: [
@@ -690,7 +689,6 @@ const DTRDashboard: React.FC = () => {
                     layout: "grid",
                     gap: "gap-4",
                     gridColumns: 2,
-                    gridRows: 2,
                     span: { col: 2, row: 1 },
                     className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                     columns: [

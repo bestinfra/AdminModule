@@ -3,8 +3,7 @@ import type { ReactNode } from 'react';
 
 interface ThemeContextType {  /*Total 38 colors*/
     theme: {
-        // Primary brand colors
-      
+        // Primary brand colors  
         colorPrimary: string;              // Main brand color (blue)
         colorPrimaryAlt: string;           // Alternative primary color
         colorPrimaryLight: string;         // Lighter shade of primary
