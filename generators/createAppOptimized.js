@@ -148,7 +148,7 @@ function copyAssets(baseDir, formData) {
         'postpaid': ['Postpaid.tsx'],
         'tickets': ['Tickets.tsx', 'TicketView.tsx', 'AddTicket.tsx'], // Tickets includes all ticket pages
         'asset_management': ['AssetManagement.tsx'],
-        'meters': ['Meters.tsx', 'MeterDetails.tsx']
+        'meter_management': ['Meters.tsx', 'MeterDetails.tsx', 'AddMeter.tsx'] // Add meter management support
     };
 
     if (fs.existsSync(sourcePagesV2Dir)) {
