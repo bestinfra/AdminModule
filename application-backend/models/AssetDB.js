@@ -5,13 +5,45 @@ const prisma = new PrismaClient();
 class AssetDB {
     static async getAllAssets() {
         try {
-            const assets = await prisma.locations.findMany({
+            // Get all locations with their types
+            const allLocations = await prisma.locations.findMany({
                 include: {
                     location_types: true
                 },
                 orderBy: { createdAt: 'desc' }
             });
-            return assets;
+
+            // Create a map for quick lookup
+            const locationMap = new Map();
+            const rootLocations = [];
+
+            // First pass: create all location objects
+            allLocations.forEach(location => {
+                locationMap.set(location.id, {
+                    hierarchy_id: location.id,
+                    hierarchy_name: location.name,
+                    hierarchy_type_title: location.location_types?.name || 'Unknown',
+                    children: []
+                });
+            });
+
+            // Second pass: build the hierarchy
+            allLocations.forEach(location => {
+                const locationObj = locationMap.get(location.id);
+                
+                if (location.parentId === null) {
+                    // This is a root location
+                    rootLocations.push(locationObj);
+                } else {
+                    // This is a child location
+                    const parent = locationMap.get(location.parentId);
+                    if (parent) {
+                        parent.children.push(locationObj);
+                    }
+                }
+            });
+
+            return rootLocations;
         } catch (error) {
             console.error('Error getting all assets:', error);
             throw error;
