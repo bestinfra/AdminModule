@@ -1,32 +1,39 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '../global/PageC';
-import Search from '@components/global/Search';
-import Dropdown from '@components/global/Dropdown';
-import DGCard from './DGCard';
 
 const DGDashboard: React.FC = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
   const cardsPerPage = 6;
 
-  // Enhanced mock data for DG sets with more comprehensive information
+  // Enhanced mock data for DG sets with smart meter data only
   const dgSets = [
     {
       id: 'DG001',
-      name: 'DG Set 1',
-      location: 'Building A - Basement',
+      name: 'DG Set #1',
+      location: 'Plant A - Building 1',
       status: 'running' as const,
-      load: 75,
-      fuel: 45,
-      runningHoursToday: '8.5 hrs',
-      runningHoursTotal: '2,450 hrs',
-      efficiency: '3.0 kWh/L',
-      efficiencyTrend: 'down' as const,
-      alerts: { count: 2, type: 'warning' as const },
-      lastUpdate: '2 min ago',
+      // Smart meter electrical parameters
+      voltage: { r: 230, y: 232, b: 229, avg: 230 },
+      current: { r: 100, y: 98, b: 102, avg: 100 },
+      activePower: 147, // kW
+      reactivePower: 30, // kVAR
+      apparentPower: 162, // kVA
+      powerFactor: 0.90,
+      frequency: 50.1, // Hz
+      energyToday: 300, // kWh
+      energyTotal: 125000, // kWh
+      // Calculated metrics
+      loadFactor: 73.5, // (147 kW / 200 kW rated) * 100
+      voltageUnbalance: 1.3, // %
+      frequencyStability: 0.2, // %
+      runtimeHours: 7.5, // inferred from electrical activity
+      peakLoadToday: 180, // kW
+      lastUpdate: 'Just now',
+      // Smart meter alerts
+      alerts: { count: 1, type: 'warning' as const },
       // Additional data for better display
       category: 'Industrial Power',
       health: 'Live' as const,
@@ -37,12 +44,12 @@ const DGDashboard: React.FC = () => {
       website: 'powercorp.com',
       modules: [
         { name: 'Power Monitoring' },
-        { name: 'Fuel Management' },
+        { name: 'Energy Management' },
         { name: 'Alert System' }
       ],
       connectedApis: [
         { name: 'SCADA System', status: 'connected' as const },
-        { name: 'Fuel Sensor', status: 'connected' as const },
+        { name: 'Smart Meter', status: 'connected' as const },
         { name: 'Load Monitor', status: 'connected' as const }
       ],
       meters: { total: 15, active: 12, inactive: 3 },
@@ -50,19 +57,26 @@ const DGDashboard: React.FC = () => {
     },
     {
       id: 'DG002',
-      name: 'DG Set 2',
-      location: 'Building B - Ground Floor',
-      status: 'stopped' as const,
-      load: 0,
-      fuel: 80,
-      runningHoursToday: '0 hrs',
-      runningHoursTotal: '1,890 hrs',
-      efficiency: '2.8 kWh/L',
-      efficiencyTrend: 'down' as const,
-      alerts: { count: 0, type: 'warning' as const },
-      lastUpdate: '15 min ago',
+      name: 'DG Set #2',
+      location: 'Plant A - Building 2',
+      status: 'running' as const,
+      voltage: { r: 231, y: 230, b: 232, avg: 231 },
+      current: { r: 85, y: 87, b: 86, avg: 86 },
+      activePower: 120, // kW
+      reactivePower: 25, // kVAR
+      apparentPower: 130, // kVA
+      powerFactor: 0.92,
+      frequency: 50.0, // Hz
+      energyToday: 280, // kWh
+      energyTotal: 98000, // kWh
+      loadFactor: 60.0, // (120 kW / 200 kW rated) * 100
+      voltageUnbalance: 0.9, // %
+      frequencyStability: 0.0, // %
+      runtimeHours: 6.5, // inferred from electrical activity
+      peakLoadToday: 150, // kW
+      lastUpdate: '2 min ago',
       category: 'Emergency Power',
-      health: 'Down' as const,
+      health: 'Live' as const,
       company: 'PowerCorp Industries',
       subdomain: 'dg002.powercorp.com',
       created: '2023-03-22',
@@ -70,30 +84,38 @@ const DGDashboard: React.FC = () => {
       website: 'powercorp.com',
       modules: [
         { name: 'Emergency Control' },
-        { name: 'Battery Backup' }
+        { name: 'Energy Monitoring' }
       ],
       connectedApis: [
-        { name: 'Emergency System', status: 'disconnected' as const },
-        { name: 'Battery Monitor', status: 'connected' as const }
+        { name: 'Emergency System', status: 'connected' as const },
+        { name: 'Smart Meter', status: 'connected' as const }
       ],
-      meters: { total: 8, active: 0, inactive: 8 },
-      tickets: { count: 0, href: '/tickets/dg002' }
+      meters: { total: 8, active: 8, inactive: 0 },
+      tickets: { count: 0, href: '/tickets/dg002' },
+      alerts: { count: 0, type: 'info' as const }
     },
     {
       id: 'DG003',
-      name: 'DG Set 3',
-      location: 'Building C - Roof',
-      status: 'fault' as const,
-      load: 0,
-      fuel: 65,
-      runningHoursToday: '0 hrs',
-      runningHoursTotal: '3,120 hrs',
-      efficiency: '2.5 kWh/L',
-      efficiencyTrend: 'down' as const,
-      alerts: { count: 5, type: 'critical' as const },
+      name: 'DG Set #3',
+      location: 'Plant B - Building 1',
+      status: 'running' as const,
+      voltage: { r: 229, y: 231, b: 230, avg: 230 },
+      current: { r: 75, y: 78, b: 76, avg: 76.3 },
+      activePower: 95, // kW
+      reactivePower: 20, // kVAR
+      apparentPower: 105, // kVA
+      powerFactor: 0.90,
+      frequency: 50.2, // Hz
+      energyToday: 240, // kWh
+      energyTotal: 75000, // kWh
+      loadFactor: 47.5, // (95 kW / 200 kW rated) * 100
+      voltageUnbalance: 0.9, // %
+      frequencyStability: 0.4, // %
+      runtimeHours: 5.8, // inferred from electrical activity
+      peakLoadToday: 120, // kW
       lastUpdate: '1 min ago',
       category: 'Industrial Power',
-      health: 'Down' as const,
+      health: 'Live' as const,
       company: 'PowerCorp Industries',
       subdomain: 'dg003.powercorp.com',
       created: '2022-11-08',
@@ -105,26 +127,34 @@ const DGDashboard: React.FC = () => {
         { name: 'Fault Detection' }
       ],
       connectedApis: [
-        { name: 'Power Controller', status: 'error' as const },
-        { name: 'Fault Sensor', status: 'connected' as const },
-        { name: 'Load Balancer', status: 'disconnected' as const }
+        { name: 'Power Controller', status: 'connected' as const },
+        { name: 'Smart Meter', status: 'connected' as const },
+        { name: 'Load Balancer', status: 'connected' as const }
       ],
-      meters: { total: 22, active: 0, inactive: 22 },
-      tickets: { count: 5, href: '/tickets/dg003' }
+      meters: { total: 22, active: 22, inactive: 0 },
+      tickets: { count: 0, href: '/tickets/dg003' },
+      alerts: { count: 0, type: 'info' as const }
     },
     {
       id: 'DG004',
-      name: 'DG Set 4',
-      location: 'Building D - Basement',
+      name: 'DG Set #4',
+      location: 'Plant B - Building 2',
       status: 'running' as const,
-      load: 60,
-      fuel: 55,
-      runningHoursToday: '6.2 hrs',
-      runningHoursTotal: '2,100 hrs',
-      efficiency: '3.2 kWh/L',
-      efficiencyTrend: 'up' as const,
-      alerts: { count: 1, type: 'warning' as const },
-      lastUpdate: '5 min ago',
+      voltage: { r: 230, y: 233, b: 231, avg: 231.3 },
+      current: { r: 90, y: 92, b: 91, avg: 91 },
+      activePower: 135, // kW
+      reactivePower: 28, // kVAR
+      apparentPower: 145, // kVA
+      powerFactor: 0.93,
+      frequency: 50.1, // Hz
+      energyToday: 320, // kWh
+      energyTotal: 110000, // kWh
+      loadFactor: 67.5, // (135 kW / 200 kW rated) * 100
+      voltageUnbalance: 1.3, // %
+      frequencyStability: 0.2, // %
+      runtimeHours: 8.2, // inferred from electrical activity
+      peakLoadToday: 170, // kW
+      lastUpdate: '3 min ago',
       category: 'Industrial Power',
       health: 'Live' as const,
       company: 'PowerCorp Industries',
@@ -134,30 +164,38 @@ const DGDashboard: React.FC = () => {
       website: 'powercorp.com',
       modules: [
         { name: 'Efficiency Monitor' },
-        { name: 'Fuel Optimization' },
+        { name: 'Energy Analytics' },
         { name: 'Performance Analytics' }
       ],
       connectedApis: [
         { name: 'Efficiency System', status: 'connected' as const },
-        { name: 'Fuel Monitor', status: 'connected' as const },
+        { name: 'Smart Meter', status: 'connected' as const },
         { name: 'Performance Tracker', status: 'connected' as const }
       ],
-      meters: { total: 18, active: 17, inactive: 1 },
-      tickets: { count: 1, href: '/tickets/dg004' }
+      meters: { total: 18, active: 18, inactive: 0 },
+      tickets: { count: 1, href: '/tickets/dg004' },
+      alerts: { count: 1, type: 'warning' as const }
     },
     {
       id: 'DG005',
-      name: 'DG Set 5',
-      location: 'Building E - Ground Floor',
+      name: 'DG Set #5',
+      location: 'Plant C - Building 1',
       status: 'running' as const,
-      load: 45,
-      fuel: 70,
-      runningHoursToday: '7.8 hrs',
-      runningHoursTotal: '1,750 hrs',
-      efficiency: '2.9 kWh/L',
-      efficiencyTrend: 'up' as const,
-      alerts: { count: 0, type: 'warning' as const },
-      lastUpdate: '3 min ago',
+      voltage: { r: 228, y: 230, b: 229, avg: 229 },
+      current: { r: 60, y: 62, b: 61, avg: 61 },
+      activePower: 80, // kW
+      reactivePower: 18, // kVAR
+      apparentPower: 88, // kVA
+      powerFactor: 0.91,
+      frequency: 49.9, // Hz
+      energyToday: 200, // kWh
+      energyTotal: 65000, // kWh
+      loadFactor: 40.0, // (80 kW / 200 kW rated) * 100
+      voltageUnbalance: 0.9, // %
+      frequencyStability: 0.2, // %
+      runtimeHours: 4.3, // inferred from electrical activity
+      peakLoadToday: 100, // kW
+      lastUpdate: '5 min ago',
       category: 'Support Power',
       health: 'Live' as const,
       company: 'PowerCorp Industries',
@@ -171,26 +209,34 @@ const DGDashboard: React.FC = () => {
       ],
       connectedApis: [
         { name: 'Support Controller', status: 'connected' as const },
-        { name: 'Load Manager', status: 'connected' as const }
+        { name: 'Smart Meter', status: 'connected' as const }
       ],
-      meters: { total: 12, active: 11, inactive: 1 },
-      tickets: { count: 0, href: '/tickets/dg005' }
+      meters: { total: 12, active: 12, inactive: 0 },
+      tickets: { count: 0, href: '/tickets/dg005' },
+      alerts: { count: 0, type: 'info' as const }
     },
     {
       id: 'DG006',
-      name: 'DG Set 6',
-      location: 'Building F - Basement',
-      status: 'stopped' as const,
-      load: 0,
-      fuel: 90,
-      runningHoursToday: '0 hrs',
-      runningHoursTotal: '2,890 hrs',
-      efficiency: '2.7 kWh/L',
-      efficiencyTrend: 'down' as const,
-      alerts: { count: 2, type: 'warning' as const },
-      lastUpdate: '20 min ago',
+      name: 'DG Set #6',
+      location: 'Plant C - Building 2',
+      status: 'running' as const,
+      voltage: { r: 231, y: 230, b: 232, avg: 231 },
+      current: { r: 82, y: 84, b: 83, avg: 83 },
+      activePower: 110, // kW
+      reactivePower: 22, // kVAR
+      apparentPower: 120, // kVA
+      powerFactor: 0.92,
+      frequency: 50.0, // Hz
+      energyToday: 260, // kWh
+      energyTotal: 85000, // kWh
+      loadFactor: 55.0, // (110 kW / 200 kW rated) * 100
+      voltageUnbalance: 0.9, // %
+      frequencyStability: 0.0, // %
+      runtimeHours: 6.9, // inferred from electrical activity
+      peakLoadToday: 140, // kW
+      lastUpdate: '1 min ago',
       category: 'Legacy Power',
-      health: 'Maintenance' as const,
+      health: 'Live' as const,
       company: 'PowerCorp Industries',
       subdomain: 'dg006.powercorp.com',
       created: '2021-12-03',
@@ -201,25 +247,33 @@ const DGDashboard: React.FC = () => {
         { name: 'Maintenance Mode' }
       ],
       connectedApis: [
-        { name: 'Legacy System', status: 'disconnected' as const },
-        { name: 'Maintenance Monitor', status: 'connected' as const }
+        { name: 'Legacy System', status: 'connected' as const },
+        { name: 'Smart Meter', status: 'connected' as const }
       ],
-      meters: { total: 10, active: 0, inactive: 10 },
-      tickets: { count: 2, href: '/tickets/dg006' }
+      meters: { total: 10, active: 10, inactive: 0 },
+      tickets: { count: 0, href: '/tickets/dg006' },
+      alerts: { count: 0, type: 'info' as const }
     },
     {
       id: 'DG007',
-      name: 'DG Set 7',
-      location: 'Building G - Roof',
+      name: 'DG Set #7',
+      location: 'Plant D - Building 1',
       status: 'running' as const,
-      load: 85,
-      fuel: 35,
-      runningHoursToday: '9.1 hrs',
-      runningHoursTotal: '3,450 hrs',
-      efficiency: '3.1 kWh/L',
-      efficiencyTrend: 'up' as const,
-      alerts: { count: 1, type: 'warning' as const },
-      lastUpdate: '1 min ago',
+      voltage: { r: 232, y: 234, b: 233, avg: 233 },
+      current: { r: 95, y: 98, b: 96, avg: 96.3 },
+      activePower: 155, // kW
+      reactivePower: 32, // kVAR
+      apparentPower: 165, // kVA
+      powerFactor: 0.94,
+      frequency: 50.2, // Hz
+      energyToday: 380, // kWh
+      energyTotal: 140000, // kWh
+      loadFactor: 77.5, // (155 kW / 200 kW rated) * 100
+      voltageUnbalance: 0.9, // %
+      frequencyStability: 0.4, // %
+      runtimeHours: 7.5, // inferred from electrical activity
+      peakLoadToday: 190, // kW
+      lastUpdate: '2 min ago',
       category: 'Critical Power',
       health: 'Live' as const,
       company: 'PowerCorp Industries',
@@ -234,27 +288,35 @@ const DGDashboard: React.FC = () => {
       ],
       connectedApis: [
         { name: 'Critical Controller', status: 'connected' as const },
-        { name: 'Performance Monitor', status: 'connected' as const },
+        { name: 'Smart Meter', status: 'connected' as const },
         { name: 'Redundancy Checker', status: 'connected' as const }
       ],
-      meters: { total: 25, active: 24, inactive: 1 },
-      tickets: { count: 1, href: '/tickets/dg007' }
+      meters: { total: 25, active: 25, inactive: 0 },
+      tickets: { count: 1, href: '/tickets/dg007' },
+      alerts: { count: 1, type: 'warning' as const }
     },
     {
       id: 'DG008',
-      name: 'DG Set 8',
-      location: 'Building H - Basement',
-      status: 'fault' as const,
-      load: 0,
-      fuel: 40,
-      runningHoursToday: '0 hrs',
-      runningHoursTotal: '2,200 hrs',
-      efficiency: '2.6 kWh/L',
-      efficiencyTrend: 'down' as const,
-      alerts: { count: 3, type: 'critical' as const },
-      lastUpdate: '10 min ago',
+      name: 'DG Set #8',
+      location: 'Plant D - Building 2',
+      status: 'running' as const,
+      voltage: { r: 230, y: 231, b: 230, avg: 230.3 },
+      current: { r: 70, y: 72, b: 71, avg: 71 },
+      activePower: 95, // kW
+      reactivePower: 20, // kVAR
+      apparentPower: 105, // kVA
+      powerFactor: 0.90,
+      frequency: 50.1, // Hz
+      energyToday: 220, // kWh
+      energyTotal: 72000, // kWh
+      loadFactor: 47.5, // (95 kW / 200 kW rated) * 100
+      voltageUnbalance: 0.4, // %
+      frequencyStability: 0.2, // %
+      runtimeHours: 5.1, // inferred from electrical activity
+      peakLoadToday: 120, // kW
+      lastUpdate: '4 min ago',
       category: 'Backup Power',
-      health: 'Down' as const,
+      health: 'Live' as const,
       company: 'PowerCorp Industries',
       subdomain: 'dg008.powercorp.com',
       created: '2023-02-28',
@@ -265,41 +327,36 @@ const DGDashboard: React.FC = () => {
         { name: 'Fault Detection' }
       ],
       connectedApis: [
-        { name: 'Backup Controller', status: 'error' as const },
-        { name: 'Fault Detector', status: 'connected' as const },
-        { name: 'System Monitor', status: 'disconnected' as const }
+        { name: 'Backup Controller', status: 'connected' as const },
+        { name: 'Smart Meter', status: 'connected' as const },
+        { name: 'System Monitor', status: 'connected' as const }
       ],
-      meters: { total: 14, active: 0, inactive: 14 },
-      tickets: { count: 3, href: '/tickets/dg008' }
+      meters: { total: 14, active: 14, inactive: 0 },
+      tickets: { count: 0, href: '/tickets/dg008' },
+      alerts: { count: 0, type: 'info' as const }
     }
-  ];
-
-  const statusOptions = [
-    { value: 'all', label: 'All Status' },
-    { value: 'running', label: 'Running' },
-    { value: 'stopped', label: 'Stopped' },
-    { value: 'fault', label: 'Fault' }
   ];
 
   const filteredDGSets = dgSets.filter(dg => {
     const matchesSearch = dg.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          dg.location.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          dg.id.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || dg.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    return matchesSearch;
   });
 
-  // Reset to first page when search or filter changes
+  // Reset to first page when search changes
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter]);
+  }, [searchQuery]);
 
-  // Calculate summary statistics
+  // Calculate summary statistics based on smart meter data only
   const runningCount = dgSets.filter(dg => dg.status === 'running').length;
-  const faultCount = dgSets.filter(dg => dg.status === 'fault').length;
-  const stoppedCount = dgSets.filter(dg => dg.status === 'stopped').length;
   const totalAlerts = dgSets.reduce((sum, dg) => sum + dg.alerts.count, 0);
-  const avgLoad = Math.round(dgSets.reduce((sum, dg) => sum + dg.load, 0) / dgSets.length);
+  const avgActivePower = Math.round(dgSets.reduce((sum, dg) => sum + dg.activePower, 0) / dgSets.length);
+  const avgPowerFactor = (dgSets.reduce((sum, dg) => sum + dg.powerFactor, 0) / dgSets.length).toFixed(2);
+  const avgVoltageUnbalance = (dgSets.reduce((sum, dg) => sum + dg.voltageUnbalance, 0) / dgSets.length).toFixed(1);
+  const totalEnergyGenerated = dgSets.reduce((sum, dg) => sum + dg.energyToday, 0);
+  const avgFrequencyStability = (dgSets.reduce((sum, dg) => sum + dg.frequencyStability, 0) / dgSets.length).toFixed(1);
 
   const dashboardConfig = {
     sections: [
@@ -334,7 +391,7 @@ const DGDashboard: React.FC = () => {
         ],
       },
 
-      // Summary Cards
+      // Summary Cards - Updated for smart meter data only
       {
         layout: {
           type: 'grid' as const,
@@ -346,54 +403,71 @@ const DGDashboard: React.FC = () => {
           {
             name: 'Card',
             props: {
-              title: 'Running',
-              value: runningCount.toString(),
-              icon: '/icons/check-circle.svg',
-              bg: 'bg-green-100',
+              title: 'Running DG Sets',
+              value: '8',
+              previousValue: 'Out of 10 total DG sets',
               subtitle1: 'Active DG Sets',
-              onValueClick: () => setStatusFilter('running'),
+              subtitle2: 'Updated 5 mins ago',
+              showTrend: true,
+              comparisonValue: '+2',
+              icon: '/icons/dg-active.svg',
+              bg: 'bg-green-100',
+              valueFontSize: 'text-2xl',
+              onValueClick: () => console.log('View running DG sets'),
             },
           },
           {
             name: 'Card',
             props: {
-              title: 'Fault',
-              value: faultCount.toString(),
-              icon: '/icons/close.svg',
-              bg: 'bg-red-100',
-              subtitle1: 'Critical Issues',
-              onValueClick: () => setStatusFilter('fault'),
-            },
-          },
-          {
-            name: 'Card',
-            props: {
-              title: 'Stopped',
-              value: stoppedCount.toString(),
-              icon: '/icons/minus.svg',
-              bg: 'bg-blue-100',
-              subtitle1: 'Inactive Sets',
-              onValueClick: () => setStatusFilter('stopped'),
-            },
-          },
-          {
-            name: 'Card',
-            props: {
-              title: 'Alerts',
-              value: totalAlerts.toString(),
-              icon: '/icons/alert-triangle.svg',
-              bg: 'bg-yellow-100',
-              subtitle1: 'Total Warnings',
-            },
-          },
-          {
-            name: 'Card',
-            props: {
-              title: 'Avg Load',
-              value: `${avgLoad}%`,
+              title: 'Total Energy',
+              value: '2200 kWh',
+              previousValue: 'Yesterday: 2100 kWh',
+              subtitle1: 'Generated Today',
+              subtitle2: 'Cumulative for all sites',
+              showTrend: true,
+              comparisonValue: '+100',
               icon: '/icons/bolt.svg',
-              bg: 'bg-gray-100',
-              subtitle1: 'System Load',
+              bg: 'bg-blue-100',
+            },
+          },
+          {
+            name: 'Card',
+            props: {
+              title: 'Avg Power Factor',
+              value: '0.92',
+              previousValue: 'Best: 0.98 | Lowest: 0.86',
+              subtitle1: 'Electrical Efficiency',
+              subtitle2: '3 sites below limit',
+              showTrend: true,
+              comparisonValue: '-0.01',
+              icon: '/icons/trend-up.svg',
+              bg: 'bg-purple-100',
+            },
+          },
+          {
+            name: 'Card',
+            props: {
+              title: 'Active Alerts',
+              value: '3',
+              previousValue: 'Last 24 hrs: 5',
+              subtitle1: 'Total Warnings',
+              subtitle2: 'Click to view details',
+              icon: '/icons/alert.svg',
+              bg: 'bg-yellow-100',
+            },
+          },
+          {
+            name: 'Card',
+            props: {
+              title: 'Average Load',
+              value: '117 kW',
+              previousValue: 'Peak Today: 134 kW',
+              subtitle1: 'Active Power',
+              subtitle2: 'Across running DGs',
+              showTrend: true,
+              comparisonValue: '-5',
+              icon: '/icons/gauge.svg',
+              bg: 'bg-teal-100',
             },
           },
         ],
@@ -429,16 +503,7 @@ const DGDashboard: React.FC = () => {
                     name: 'search'
                   }
           },
-          {
-            name: 'Dropdown',
-            props: {
-              name: 'statusFilter',
-              value: statusFilter,
-              onChange: (e: { target: { name: string; value: string | string[] } }) => setStatusFilter(e.target.value as string),
-              options: statusOptions,
-                    className: 'w-48',
-                  },
-                }
+
               ]
             },
             // DG Sets Grid Row
@@ -456,13 +521,15 @@ const DGDashboard: React.FC = () => {
             plant: dg.location.split(' - ')[0] || 'Plant',
             building: dg.location.split(' - ')[1] || 'Building',
             status: dg.status,
-            load: dg.load,
-            fuel: dg.fuel,
-            runningHoursToday: dg.runningHoursToday,
-            runningHoursTotal: dg.runningHoursTotal,
-            efficiency: dg.efficiency,
-            efficiencyTrend: dg.efficiencyTrend,
+            // Smart meter data only
+            activePower: dg.activePower,
+            powerFactor: dg.powerFactor,
+            frequency: dg.frequency,
+            voltageUnbalance: dg.voltageUnbalance,
+            energyToday: dg.energyToday,
+            loadFactor: dg.loadFactor,
             lastUpdate: dg.lastUpdate,
+            alerts: dg.alerts,
             onViewDetails: () => navigate(`/dg-detail/${dg.id}`),
           },
                   }))
@@ -509,7 +576,7 @@ const DGDashboard: React.FC = () => {
             </span>
             {Array.from({ length: Math.ceil(filteredDGSets.length / cardsPerPage) }, (_, i) => (
               <button
-                key={i + 1}
+                key={i + 1} 
                 onClick={() => setCurrentPage(i + 1)}
                 className={`w-8 h-8 rounded-lg font-medium transition-colors ${
                   currentPage === i + 1

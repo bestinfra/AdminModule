@@ -3,6 +3,14 @@ import { createPortal } from 'react-dom';
 import Button from '@components/global/Button';
 import Form from '@components/Form/Form';
 import type { FormInputConfig, FormInputValue } from '@components/Form/types';
+import Tabs from '@components/global/Tabs';
+
+interface TabItem {
+  label: string;
+  content: React.ReactNode;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+}
 
 interface ModalProps {
   isOpen: boolean;
@@ -33,6 +41,35 @@ interface ModalProps {
   formInitialData?: Record<string, FormInputValue>;
   formErrorMessages?: Record<string, string>;
   formId?: string;
+  gridLayout?: {
+    gridRows: number;
+    gridColumns: number;
+    gap: string;
+    className?: string;
+  };
+  // Tabs props
+  showTabs?: boolean;
+  tabs?: TabItem[];
+  defaultTab?: number;
+  activeTabIndex?: number;
+  onTabChange?: (index: number) => void;
+  // Tabs styling props
+  tabsClassName?: string;
+  tabsContainerClassName?: string;
+  tabsTabListClassName?: string;
+  tabsTabButtonClassName?: string;
+  tabsActiveTabButtonClassName?: string;
+  tabsInactiveTabButtonClassName?: string;
+  tabsContentClassName?: string;
+  tabsOrientation?: 'horizontal' | 'vertical';
+  tabsSize?: 'sm' | 'md' | 'lg';
+  tabsAllowTabSwitch?: boolean;
+  tabsShowTabIcons?: boolean;
+  tabsShowTabLabels?: boolean;
+  tabsEnableAnimations?: boolean;
+  tabsAnimationDuration?: number;
+  tabsAriaLabel?: string;
+  tabsTabAriaLabel?: string;
 }
 
 const Modal: React.FC<ModalProps> = React.memo(({
@@ -61,7 +98,14 @@ const Modal: React.FC<ModalProps> = React.memo(({
   confirmButtonVariant = 'primary',
   formInitialData,
   formErrorMessages,
-  formId
+  formId,
+  gridLayout,
+  // Tabs props
+  showTabs = false,
+  tabs = [],
+  defaultTab = 0,
+  activeTabIndex,
+  onTabChange,
 }) => {
   const uniqueModalId = modalId || `modal-${Math.random().toString(36).substr(2, 9)}`;
   
@@ -198,15 +242,24 @@ const Modal: React.FC<ModalProps> = React.memo(({
 
               <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white  ">
                 <section id={`${uniqueModalId}-description`} className="space-y-4">
+                  {/* Tabs at the top of content */}
+                  {showTabs && tabs && tabs.length > 0 && (
+                    <div className="">
+                      <Tabs
+                        tabs={tabs}
+                        defaultTab={defaultTab}
+                        activeTabIndex={activeTabIndex}
+                        onTabChange={onTabChange}
+                      />
+                    </div>
+                  )}
+
                   {children || (
                     <>
                       {showForm && formFields.length > 0 ? (
                         <Form
-                          inputs={formFields.map(field => ({
-                            ...field,
-                            col: 1,
-                            colSpan: 3
-                          }))}
+                          key={`form-${activeTabIndex || 0}`} // Force re-render when tab changes
+                          inputs={formFields}
                           onSubmit={handleFormSubmit}
                           submitLabel={saveButtonLabel}
                           cancelLabel={cancelButtonLabel}
@@ -217,7 +270,7 @@ const Modal: React.FC<ModalProps> = React.memo(({
                           formBackground=""
                           padding="p-0"
                           border="none"
-                          gridLayout={{
+                          gridLayout={gridLayout || {
                             gridRows: formFields.length,
                             gridColumns: 3,
                             gap: "gap-4"

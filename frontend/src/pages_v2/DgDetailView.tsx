@@ -26,64 +26,64 @@ const DgDetailView: React.FC = () => {
   const navigate = useNavigate();
   const { dgId } = useParams<{ dgId: string }>();
 
-  // Activity log state with dummy data
+  // Activity log state with smart meter focused data
   const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([
     {
       id: 1,
-      description: "DG Set started successfully",
+      description: "DG Set electrical output detected",
       timestamp: "2025-08-10T08:00:00",
       status: "Completed",
-      author: "System Operator",
+      author: "Smart Meter",
     },
     {
       id: 2,
-      description: "Load increased to 71%",
+      description: "Load increased to 71% - Active Power: 147 kW",
       timestamp: "2025-08-10T08:15:00",
       status: "In Progress",
-      author: "Auto System",
+      author: "Power Monitor",
     },
     {
       id: 3,
-      description: "Fuel level alert - 60% remaining",
+      description: "Power factor optimization completed - PF: 0.90",
       timestamp: "2025-08-10T09:30:00",
-      status: "Warning",
-      author: "Monitoring System",
-    },
-    {
-      id: 4,
-      description: "Power factor optimized to 0.90",
-      timestamp: "2025-08-10T10:00:00",
       status: "Completed",
-      author: "Auto System",
-    },
-    {
-      id: 5,
-      description: "Maintenance schedule reminder",
-      timestamp: "2025-08-10T11:00:00",
-      status: "Pending",
-      author: "Maintenance System",
-      subText: "Next maintenance due in 50 hours",
-    },
-    {
-      id: 6,
-      description: "Voltage imbalance detected - 0.7%",
-      timestamp: "2025-08-10T12:00:00",
-      status: "Monitoring",
       author: "Power Quality Monitor",
     },
     {
+      id: 4,
+      description: "Voltage imbalance detected - 0.7%",
+      timestamp: "2025-08-10T10:00:00",
+      status: "Warning",
+      author: "Voltage Monitor",
+    },
+    {
+      id: 5,
+      description: "Frequency stability alert - deviation: 0.2%",
+      timestamp: "2025-08-10T11:00:00",
+      status: "Monitoring",
+      author: "Frequency Monitor",
+      subText: "Frequency variation within acceptable limits",
+    },
+    {
+      id: 6,
+      description: "Energy generation milestone - 125,000 kWh total",
+      timestamp: "2025-08-10T12:00:00",
+      status: "Completed",
+      author: "Energy Meter",
+    },
+    {
       id: 7,
-      description: "Running hours updated - 1250:45 total",
+      description: "Reactive power optimization - 30 kVAR",
       timestamp: "2025-08-10T12:30:00",
       status: "Completed",
-      author: "Hour Meter",
+      author: "Power Factor Controller",
     },
     {
       id: 8,
-      description: "Emergency stop test completed",
+      description: "Daily energy generation - 300 kWh",
       timestamp: "2025-08-10T13:00:00",
       status: "Completed",
-      author: "Safety System",
+      author: "Energy Monitor",
     },
   ]);
 
@@ -154,56 +154,56 @@ const DgDetailView: React.FC = () => {
     },
   ]);
 
-  // Engine Health data for StatusCard
-  const engineHealthMetrics = [
+  // Electrical system metrics for StatusCard
+  const electricalSystemMetrics = [
     {
-      icon: "/icons/shield.svg",
-      label: "Oil Pressure",
-      value: "4.5 bar",
+      icon: "/icons/lightning.svg",
+      label: "Active Power",
+      value: "147 kW",
     },
     {
-      icon: "/icons/gear.svg",
-      label: "Engine Temp",
-      value: "85°C",
+      icon: "/icons/gauge.svg",
+      label: "Power Factor",
+      value: "0.90",
     },
     {
-      icon: "/icons/thermometer.svg",
-      label: "Coolant Temp",
-      value: "90°C",
+      icon: "/icons/frequency.svg",
+      label: "Frequency",
+      value: "50.1 Hz",
     },
     {
-      icon: "/icons/battery.svg",
-      label: "Battery Voltage",
-      value: "12.8 V",
+      icon: "/icons/voltage.svg",
+      label: "Voltage Unbalance",
+      value: "0.7%",
     },
     {
-      icon: "/icons/power.svg",
-      label: "Start Attempts",
-      value: "3",
+      icon: "/icons/energy.svg",
+      label: "Energy Today",
+      value: "300 kWh",
     },
     {
-      icon: "/icons/power.svg",
-      label: "Successful Starts",
-      value: "2",
+      icon: "/icons/trending.svg",
+      label: "Load Factor",
+      value: "73.5%",
     },
   ];
 
-  // Additional DG operational data
+  // Additional DG operational data based on smart meter
   const dgOperationalData = {
     performance: {
-      efficiency: "85.2%",
-      fuelConsumption: "12.5 L/hour",
-      powerOutput: "625 kW",
-      reactivePower: "30 kVAR",
-      apparentPower: "626 kVA",
+      efficiency: "85.2%", // Calculated from power factor and load factor
+      powerOutput: "147 kW", // Active power from meter
+      reactivePower: "30 kVAR", // From meter
+      apparentPower: "162 kVA", // From meter
+      loadFactor: "73.5%", // (147 kW / 200 kW rated) * 100
     },
-    maintenance: {
-      lastService: "2025-07-15",
-      nextService: "2025-09-15",
-      serviceInterval: "500 hours",
-      remainingHours: "50 hours",
-      totalServices: "8",
-      lastTechnician: "John Smith",
+    electrical: {
+      voltageStability: "99.8%", // Based on voltage variations
+      frequencyStability: "99.6%", // Based on frequency variations
+      powerQuality: "Excellent", // Based on PF and voltage unbalance
+      lastOptimization: "2025-08-10T10:00:00",
+      totalOptimizations: "15",
+      lastTechnician: "Power Quality System",
     },
     alerts: {
       critical: 1,
@@ -211,14 +211,13 @@ const DgDetailView: React.FC = () => {
       info: 3,
       resolved: 15,
     },
-    fuel: {
-      currentLevel: "60%",
-      currentVolume: "1200 L",
-      consumptionToday: "150 L",
-      consumptionThisMonth: "4500 L",
-      lastRefill: "2025-08-01",
-      refillAmount: "1000 L",
-      theftAlerts: 0,
+    energy: {
+      currentGeneration: "300 kWh",
+      generationThisMonth: "8,500 kWh",
+      lastPeakLoad: "180 kW",
+      averageLoad: "147 kW",
+      energyEfficiency: "0.90 PF",
+      voltageUnbalance: "0.7%",
     },
   };
 
@@ -246,126 +245,136 @@ const DgDetailView: React.FC = () => {
     },
   ];
 
-  // DG performance history data
+  // DG performance history data based on smart meter
   const performanceHistory = [
     {
       date: "2025-08-01",
       load: "65%",
-      efficiency: "87.1%",
-      fuelConsumption: "11.8 L/h",
+      powerFactor: "0.87",
+      energyGenerated: "280 kWh",
+      voltageUnbalance: "0.5%",
     },
     {
       date: "2025-08-02",
       load: "72%",
-      efficiency: "85.9%",
-      fuelConsumption: "12.9 L/h",
+      powerFactor: "0.89",
+      energyGenerated: "310 kWh",
+      voltageUnbalance: "0.8%",
     },
     {
       date: "2025-08-03",
       load: "68%",
-      efficiency: "86.5%",
-      fuelConsumption: "12.2 L/h",
+      powerFactor: "0.88",
+      energyGenerated: "290 kWh",
+      voltageUnbalance: "0.6%",
     },
     {
       date: "2025-08-04",
       load: "75%",
-      efficiency: "84.8%",
-      fuelConsumption: "13.1 L/h",
+      powerFactor: "0.86",
+      energyGenerated: "330 kWh",
+      voltageUnbalance: "1.2%",
     },
     {
       date: "2025-08-05",
       load: "71%",
-      efficiency: "85.2%",
-      fuelConsumption: "12.5 L/h",
+      powerFactor: "0.90",
+      energyGenerated: "300 kWh",
+      voltageUnbalance: "0.7%",
     },
     {
       date: "2025-08-06",
       load: "69%",
-      efficiency: "86.8%",
-      fuelConsumption: "12.0 L/h",
+      powerFactor: "0.91",
+      energyGenerated: "285 kWh",
+      voltageUnbalance: "0.4%",
     },
     {
       date: "2025-08-07",
       load: "73%",
-      efficiency: "85.6%",
-      fuelConsumption: "12.7 L/h",
+      powerFactor: "0.88",
+      energyGenerated: "315 kWh",
+      voltageUnbalance: "0.9%",
     },
     {
       date: "2025-08-08",
       load: "67%",
-      efficiency: "87.3%",
-      fuelConsumption: "11.9 L/h",
+      powerFactor: "0.92",
+      energyGenerated: "275 kWh",
+      voltageUnbalance: "0.3%",
     },
     {
       date: "2025-08-09",
       load: "74%",
-      efficiency: "84.9%",
-      fuelConsumption: "13.0 L/h",
+      powerFactor: "0.87",
+      energyGenerated: "325 kWh",
+      voltageUnbalance: "1.1%",
     },
     {
       date: "2025-08-10",
       load: "71%",
-      efficiency: "85.2%",
-      fuelConsumption: "12.5 L/h",
+      powerFactor: "0.90",
+      energyGenerated: "300 kWh",
+      voltageUnbalance: "0.7%",
     },
   ];
 
-  // DG maintenance history
-  const maintenanceHistory = [
+  // DG electrical maintenance history
+  const electricalMaintenanceHistory = [
     {
       id: 1,
       date: "2025-07-15",
-      type: "Scheduled Service",
-      technician: "John Smith",
+      type: "Power Factor Optimization",
+      technician: "Power Quality System",
       hours: "1200",
-      cost: "$2,500",
+      cost: "$500",
       status: "Completed",
     },
     {
       id: 2,
       date: "2025-06-15",
-      type: "Oil Change",
-      technician: "Mike Johnson",
+      type: "Voltage Calibration",
+      technician: "Electrical System",
       hours: "1150",
-      cost: "$800",
+      cost: "$300",
       status: "Completed",
     },
     {
       id: 3,
       date: "2025-05-15",
-      type: "Filter Replacement",
-      technician: "Sarah Wilson",
+      type: "Frequency Stabilization",
+      technician: "Frequency Controller",
       hours: "1100",
-      cost: "$1,200",
+      cost: "$400",
       status: "Completed",
     },
     {
       id: 4,
       date: "2025-04-15",
-      type: "Scheduled Service",
-      technician: "John Smith",
+      type: "Power Quality Check",
+      technician: "Power Quality System",
       hours: "1050",
-      cost: "$2,300",
+      cost: "$250",
       status: "Completed",
     },
     {
       id: 5,
       date: "2025-03-15",
-      type: "Emergency Repair",
-      technician: "Mike Johnson",
+      type: "Emergency Power Restoration",
+      technician: "Auto System",
       hours: "1000",
-      cost: "$3,500",
+      cost: "$0",
       status: "Completed",
     },
   ];
 
-  // DG alert history
+  // DG alert history based on electrical parameters
   const alertHistory = [
     {
       id: 1,
       timestamp: "2025-08-10T12:00:00",
       type: "Warning",
-      message: "Fuel level below 70%",
+      message: "Voltage imbalance detected - 0.7%",
       status: "Active",
     },
     {
@@ -379,30 +388,30 @@ const DgDetailView: React.FC = () => {
       id: 3,
       timestamp: "2025-08-10T09:15:00",
       type: "Warning",
-      message: "Engine temperature approaching limit",
+      message: "Frequency deviation approaching limit",
       status: "Resolved",
     },
     {
       id: 4,
       timestamp: "2025-08-10T08:45:00",
       type: "Critical",
-      message: "Voltage imbalance detected",
+      message: "Power quality below threshold",
       status: "Active",
     },
     {
       id: 5,
       timestamp: "2025-08-10T08:00:00",
       type: "Info",
-      message: "DG Set started successfully",
+      message: "DG electrical output detected",
       status: "Resolved",
     },
   ];
 
-  const rpmChartData = {
-    label: "RPM (last hour)",
-    value: "1557 RPM",
-    icon: "/icons/heartbeat.svg",
-    data: [45, 67, 89, 76, 54, 78, 92, 85, 67, 89, 76, 54],
+  const powerQualityChartData = {
+    label: "Power Factor (last hour)",
+    value: "0.90 PF",
+    icon: "/icons/lightning.svg",
+    data: [0.87, 0.89, 0.91, 0.88, 0.90, 0.92, 0.89, 0.91, 0.88, 0.90, 0.91, 0.89],
   };
 
   // Handle Excel export
@@ -414,14 +423,14 @@ const DgDetailView: React.FC = () => {
       const dgOverviewData = [
         { Metric: "DG Set", Value: `DG Set ${dgId} – Plant A` },
         { Metric: "Location", Value: "Plant A • 40.7128° N, 74.0060° W" },
-        { Metric: "Status", Value: "Fault" },
-        { Metric: "Running Hours Today", Value: "05:41" },
-        { Metric: "Total Running Hours", Value: "1250:45" },
-        { Metric: "Load", Value: "71%" },
-        { Metric: "Fuel Level", Value: "60% (1200 L)" },
-        { Metric: "Power Factor Average", Value: "0.90" },
+        { Metric: "Status", Value: "Running" },
+        { Metric: "Active Power", Value: "147 kW" },
+        { Metric: "Power Factor", Value: "0.90" },
         { Metric: "Frequency", Value: "50.1 Hz" },
-        { Metric: "Voltage Imbalance", Value: "0.7%" },
+        { Metric: "Voltage Unbalance", Value: "0.7%" },
+        { Metric: "Load Factor", Value: "73.5%" },
+        { Metric: "Energy Today", Value: "300 kWh" },
+        { Metric: "Total Energy", Value: "125,000 kWh" },
       ];
 
       // Prepare Electrical Parameters data
@@ -519,7 +528,7 @@ const DgDetailView: React.FC = () => {
               gap: "gap-6",
               className: "p-4 border border-primary-border rounded-xl bg-background-secondary items-center",
               rows: [
-                // Row 1: Left side - Running Hours Card, Right side - System Status Card
+                // Row 1: Left side - Electrical Status Card, Right side - Power Quality Card
                 {
                   layout: "grid",
                   gap: "gap-6",
@@ -528,11 +537,11 @@ const DgDetailView: React.FC = () => {
                     {
                       name: "Card",
                       props: {
-                        title: "Running Hours",
-                        value: "05:41 / 1250:45",
-                        icon: "/icons/clock.svg",
-                        subtitle1: "Today / Total",
-                        subtitle2: "Current operational time",
+                        title: "Electrical Status",
+                        value: "147 kW / 0.90 PF",
+                        icon: "/icons/lightning.svg",
+                        subtitle1: "Active Power / Power Factor",
+                        subtitle2: "Current electrical output",
                         bg: "bg-blue-50",
                         className: "",
                       },
@@ -541,11 +550,11 @@ const DgDetailView: React.FC = () => {
                     {
                       name: "Card",
                       props: {
-                        title: "Load & Fuel Status",
-                        value: "71% / 60%",
+                        title: "Power Quality",
+                        value: "50.1 Hz / 0.7%",
                         icon: "/icons/gauge.svg",
-                        subtitle1: "Load / Fuel Level",
-                        subtitle2: "Current operational metrics",
+                        subtitle1: "Frequency / V Unbalance",
+                        subtitle2: "Electrical system health",
                         bg: "bg-green-50",
                       },
                       span: { col: 1, row: 1 },
@@ -564,24 +573,24 @@ const DgDetailView: React.FC = () => {
                         name: "StatusCard",
                         span: { col: 1, row: 1 },
                         props: {
-                          title: "System Status",
+                          title: "Electrical System Metrics",
                           titleProps: {
                             size: "md",
                             weight: "bold",
                           },
                           metrics: [
                             {
-                              icon: "/icons/power.svg",
-                              label: "Load",
-                              value: "0.90",
+                              icon: "/icons/lightning.svg",
+                              label: "Active Power",
+                              value: "147 kW",
                               progressBar: {
-                                percentage: 90,
+                                percentage: 73.5,
                                 color: "primary",
                               },
                             },
                             {
                               icon: "/icons/frequency.svg",
-                              label: "Fuel",
+                              label: "Frequency",
                               value: "50.1 Hz",
                               progressBar: {
                                 percentage: 100,
@@ -594,7 +603,6 @@ const DgDetailView: React.FC = () => {
                       },
                     ],
                   },
-                // Row 2: Left side - Load & Fuel Status Card
               ],
             },
           },
@@ -622,80 +630,80 @@ const DgDetailView: React.FC = () => {
               className: "",
             },
             components: [
-              // Combined Row: Fuel & Efficiency, Engine Health, and Communication Device
-              // Fuel & Efficiency Card
+              // Combined Row: Power Quality, Electrical Health, and Communication Device
+              // Power Quality Card
               {
                 name: "StatusCard",
                 props: {
-                  title: "Fuel & Efficiency",
+                  title: "Power Quality & Efficiency",
                   titleProps: {
                     size: "md",
                     weight: "bold",
                   },
                   metrics: [
                     {
-                      icon: "/icons/fuel.svg",
-                      label: "Fuel Level",
-                      value: "60% (1200 L)",
+                      icon: "/icons/lightning.svg",
+                      label: "Power Factor",
+                      value: "0.90",
                       progressBar: {
-                        percentage: 60,
+                        percentage: 90,
                         color: "primary",
                       },
                     },
                     {
-                      icon: "/icons/consumption.svg",
-                      label: "Consumption",
-                      value: "12.5 L/h",
-                    },
-                    {
-                      icon: "/icons/efficiency.svg",
-                      label: "Efficiency",
-                      value: "85.2%",
-                    },
-                    {
-                      icon: "/icons/refill.svg",
-                      label: "Last Refill",
-                      value: "2025-08-01",
+                      icon: "/icons/energy.svg",
+                      label: "Energy Generated",
+                      value: "300 kWh",
                     },
                     {
                       icon: "/icons/trending.svg",
-                      label: "Trend",
-                      value: "Stable",
+                      label: "Load Factor",
+                      value: "73.5%",
+                    },
+                    {
+                      icon: "/icons/voltage.svg",
+                      label: "Voltage Stability",
+                      value: "99.8%",
+                    },
+                    {
+                      icon: "/icons/frequency.svg",
+                      label: "Frequency Stability",
+                      value: "99.6%",
                     },
                   ],
 
                   className: "bg-white p-6 border border-primary-border h-fit",
                   buttons: [
                     {
-                      label: "Refill Request",
+                      label: "Optimize Power Factor",
                       variant: "primary",
-                      onClick: () => console.log("Refill Request clicked"),
+                      onClick: () => console.log("Power Factor Optimization clicked"),
                     },
                   ],
                 },
               },
-              // Engine Health StatusCard
+              // Electrical Health StatusCard
               {
                 name: "StatusCard",
                 props: {
-                  title: "Engine Health",
+                  title: "Electrical System Health",
                   titleProps: {
                     size: "md",
                     weight: "bold",
                   },
                   metrics: [
                     {
-                      icon: "/icons/power.svg",
-                      label: "Load Status",
-                      value: "71% (625 kW)",
+                      icon: "/icons/lightning.svg",
+                      label: "Active Power",
+                      value: "147 kW (73.5%)",
                       progressBar: {
-                        percentage: 71,
+                        percentage: 73.5,
                         color: "secondary",
                       },
                     },
-                    ...engineHealthMetrics,
+                    ...electricalSystemMetrics,
                   ],
-                  chartData: rpmChartData,
+                  chartData: powerQualityChartData,
                   className: "bg-white p-6 border border-primary-border",
                   buttons: [
                     {
@@ -772,8 +780,8 @@ const DgDetailView: React.FC = () => {
               {
                 name: "SectionHeader",
                 props: {
-                  title: "Performance Analytics",
-                  subtitle: "Electrical Parameters and Engine Health Metrics",
+                  title: "Electrical Performance Analytics",
+                  subtitle: "Power Quality and Electrical System Metrics",
                   className: "",
                 },
               },
@@ -827,32 +835,32 @@ const DgDetailView: React.FC = () => {
                   },
                 },
               },
-              // Engine Health Bar Chart
+              // Power Quality Bar Chart
               {
                 name: "BarChart",
                 props: {
                   xAxisData: [
-                    "Oil Pressure",
-                    "Engine Temp",
-                    "Coolant Temp",
-                    "Battery Voltage",
+                    "Power Factor",
+                    "Frequency (Hz)",
+                    "Voltage Unbalance (%)",
+                    "Load Factor (%)",
                   ],
                   seriesData: [
                     {
                       name: "Current Values",
-                      data: [4.5, 85, 90, 24.5],
+                      data: [0.90, 50.1, 0.7, 73.5],
                     },
                   ],
                   seriesColors: ["#8B5CF6"],
                   height: "400px",
                   showHeader: true,
-                  headerTitle: "Engine Health Metrics",
+                  headerTitle: "Power Quality Metrics",
                   dateRange: "Real-time",
                   showDownloadButton: true,
                   headerHeight: "h-12",
-                  ariaLabel: "Engine health metrics visualization chart",
+                  ariaLabel: "Power quality metrics visualization chart",
                   onDownload: () => {
-                    console.log("Downloading engine health chart");
+                    console.log("Downloading power quality chart");
                     // Add download logic here
                   },
                 },
@@ -869,7 +877,7 @@ const DgDetailView: React.FC = () => {
               {
                 name: "SectionHeader",
                 props: {
-                  title: "Operational Data & Monitoring",
+                  title: "Electrical Data & Monitoring",
                   subtitle: "Electrical Parameters and System Alerts",
                   className: "",
                 },
@@ -917,7 +925,7 @@ const DgDetailView: React.FC = () => {
                   entries: activityLog,
                   maxHeight: "h-96",
                   showHeader: true,
-                  headerTitle: "System Alerts & Activity Log",
+                  headerTitle: "Electrical System Alerts & Activity Log",
                   dateRange: "Last 24 hours",
                   headerClassName: "h-96",
                 },
@@ -936,20 +944,20 @@ const DgDetailView: React.FC = () => {
               {
                 name: "Card",
                 props: {
-                  title: "Load & Fuel Status",
-                  value: "71% / 60%",
-                  icon: "/icons/gauge.svg",
-                  subtitle1: "Current operational metrics",
+                  title: "Power Quality",
+                  value: "0.90 PF",
+                  icon: "/icons/lightning.svg",
+                  subtitle1: "Electrical performance metrics",
                   bg: "bg-gray-50",
                 },
               },
               {
                 name: "Card",
                 props: {
-                  title: "Power Quality",
-                  value: "0.90 PF",
-                  icon: "/icons/lightning.svg",
-                  subtitle1: "Electrical performance metrics",
+                  title: "Load Factor",
+                  value: "73.5%",
+                  icon: "/icons/gauge.svg",
+                  subtitle1: "System utilization",
                   bg: "bg-gray-50",
                 },
               },
@@ -977,7 +985,7 @@ const DgDetailView: React.FC = () => {
               {
                 name: "SectionHeader",
                 props: {
-                  title: "Performance History (Last 10 Days)",
+                  title: "Electrical Performance History (Last 10 Days)",
                   titleLevel: 3,
                   titleSize: "md",
                   titleVariant: "colorPrimaryDark",
@@ -994,22 +1002,23 @@ const DgDetailView: React.FC = () => {
                   columns: [
                     { key: "date", label: "Date" },
                     { key: "load", label: "Load (%)" },
-                    { key: "efficiency", label: "Efficiency (%)" },
-                    { key: "fuelConsumption", label: "Fuel Consumption (L/h)" },
+                    { key: "powerFactor", label: "Power Factor" },
+                    { key: "energyGenerated", label: "Energy Generated (kWh)" },
+                    { key: "voltageUnbalance", label: "Voltage Unbalance (%)" },
                   ],
                   loading: false,
                   searchable: true,
                   pagination: true,
                   showActions: false,
                   showHeader: true,
-                  headerTitle: "Daily Performance Metrics",
+                  headerTitle: "Daily Electrical Performance Metrics",
                   height: 300,
                   className: "w-full",
                 },
               },
             ],
           },
-          // Maintenance History Table Section
+          // Electrical Maintenance History Table Section
           {
             layout: {
               type: "grid" as const,
@@ -1020,7 +1029,7 @@ const DgDetailView: React.FC = () => {
               {
                 name: "SectionHeader",
                 props: {
-                  title: "Maintenance History",
+                  title: "Electrical System Maintenance History",
                   titleLevel: 3,
                   titleSize: "md",
                   titleVariant: "colorPrimaryDark",
@@ -1033,11 +1042,11 @@ const DgDetailView: React.FC = () => {
               {
                 name: "Table",
                 props: {
-                  data: maintenanceHistory,
+                  data: electricalMaintenanceHistory,
                   columns: [
                     { key: "date", label: "Date" },
                     { key: "type", label: "Service Type" },
-                    { key: "technician", label: "Technician" },
+                    { key: "technician", label: "System" },
                     { key: "hours", label: "Running Hours" },
                     { key: "cost", label: "Cost" },
                     { key: "status", label: "Status" },
@@ -1047,85 +1056,15 @@ const DgDetailView: React.FC = () => {
                   pagination: true,
                   showActions: false,
                   showHeader: true,
-                  headerTitle: "Service Records",
+                  headerTitle: "Electrical System Records",
                   height: 300,
                   className: "w-full",
                 },
               },
             ],
           },
-          // DG Status Cards
-        //   {
-        //     layout: {
-        //       type: "grid",
-        //       columns: 4,
-        //       gap: "gap-4",
-        //       className: "",
-        //     },
-        //     components: [
-        //       {
-        //         name: "Card",
-        //         props: {
-        //           title: "Location",
-        //           value: "Plant A • 40.7128° N, 74.0060° W",
-        //           icon: "/icons/location.svg",
-        //           subtitle1: "Geographic coordinates",
-        //           bg: "bg-blue-50",
-        //         },
-        //       },
-        //       {
-        //         name: "Card",
-        //         props: {
-        //           title: "Running Hours Today",
-        //           value: "05:41",
-        //           icon: "/icons/clock.svg",
-        //           subtitle1: "Current day operation",
-        //           bg: "bg-green-50",
-        //         },
-        //       },
-        //       {
-        //         name: "Card",
-        //         props: {
-        //           title: "Total Running Hours",
-        //           value: "1250:45",
-        //           icon: "/icons/timer.svg",
-        //           subtitle1: "Lifetime operation",
-        //           bg: "bg-purple-50",
-        //         },
-        //       },
-        //       {
-        //         name: "Card",
-        //         props: {
-        //           title: "Status",
-        //           value: "Fault",
-        //           icon: "/icons/alert-triangle.svg",
-        //           subtitle1: "Last update: 10/8/2025, 12:24:43 IST",
-        //           bg: "bg-red-50",
-        //         },
-        //       },
-        //     ],
-        //   },
         ]}
       />
-
-     
-      {/* Quick Actions */}
-      {/* <div className="">
-                <div className="bg-white rounded-lg border border-gray-200 p-6">
-                    <h3 className="text-lg font-semibold text-gray-900">Quick Actions</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        <button className="w-full bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 transition-colors font-medium">
-                            Start DG
-                        </button>
-                        <button className="w-full bg-red-600 text-white py-3 px-4 rounded-lg hover:bg-red-700 transition-colors font-medium">
-                            Stop DG
-                        </button>
-                        <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                            Emergency Stop
-                        </button>
-                    </div>
-                </div>
-            </div> */}
     </div>
   );
 };
