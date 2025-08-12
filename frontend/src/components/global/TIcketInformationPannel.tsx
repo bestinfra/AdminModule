@@ -20,8 +20,6 @@ interface Ticket {
     meterId:string;
     mobile:string;
     connectionType:string;
-
-
 }
 
 interface ActivityLogEntry {
@@ -33,64 +31,22 @@ interface ActivityLogEntry {
     author?: string;
 }
 
+interface TicketInformationPannelProps {
+    ticket: Ticket;
+    activityLog?: ActivityLogEntry[];
+    rightStatus?: {
+        text: string;
+        variant?: 'success' | 'warning' | 'error' | 'info' | 'default';
+        onClick?: () => void;
+    };
+}
 
-// interface TicketInformationPannelProps {
-//     ticket: Ticket;
-//     activityLog?: ActivityLogEntry[];
-//     rightStatus?: {
-//         text: string;
-//         variant?: 'success' | 'warning' | 'error' | 'info' | 'default';
-//         onClick?: () => void;
-//     };
-// }
-
-export default function TicketInformationPannel() {
-
-    const [ticket, setTicket] = useState<Ticket | null>(null);
-    const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([]);
-
-    useEffect(() => {
-        const fetchedTicket: Ticket = {
-            id: 1,
-            ticketNumber: '336',
-            subject: 'Connection Issue with Meter',
-            status: 'Open',
-            customerName: 'Airborne General Store',
-            category: 'Connection Issue',
-            priority: 'High',
-            assignedTo: 'BI - Tech Team',
-            createdAt: new Date().toISOString(),
-            lastUpdated: new Date().toISOString(),
-            description: 'Issue with meter connection.',
-            uid: '#56B0000',
-            location: 'Hydrabad',
-            email: 'ravin1109@gmail.com',
-            unitNumber: 'N/A',
-            meterId: 'A9211434',
-            mobile: '9989923312',
-            connectionType: 'NA',
-        };
-
-        const fetchedActivity: ActivityLogEntry[] = [
-            {
-                id: 1,
-                description: 'Ticket created',
-                timestamp: new Date().toISOString(),
-                status: 'Open',
-                author: 'System',
-            },
-            {
-                id: 2,
-                description: 'Assigned to Technician A',
-                timestamp: new Date().toISOString(),
-                status: 'In Progress',
-                author: 'Admin',
-            },
-        ];
-
-        setTicket(fetchedTicket);
-        setActivityLog(fetchedActivity);
-    }, []);
+export default function TicketInformationPannel({ 
+    ticket, 
+    activityLog = [], 
+    rightStatus 
+}: TicketInformationPannelProps) {
+    // Component is now purely presentational - all data comes from props
 
     if (!ticket) {
         return <div>Loading Ticket Info...</div>;
@@ -146,7 +102,7 @@ export default function TicketInformationPannel() {
                                             },
                                         ],
                                     },
-                                    rightStatus: {
+                                    rightStatus: rightStatus || {
                                         text: ticket.status,
                                         variant: 'default',
                                     },
@@ -213,16 +169,4 @@ export default function TicketInformationPannel() {
             />
         </Suspense>
     );
-}
- // export default function TicketInformationPannel({ 
-//     ticket, 
-//     activityLog = [], 
-//     rightStatus 
-// }: TicketInformationPannelProps) {
-//     // Component is now purely presentational - all data comes from props
-//     return (
-//         <Suspense fallback={<div>Loading...</div>}>
-// 
-//         </Suspense>
-//     );
-// } 
+} 
