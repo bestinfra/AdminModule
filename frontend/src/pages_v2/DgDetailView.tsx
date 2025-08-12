@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Page from "@/components/global/PageC";
-import { Pagination } from "antd";
 
 // Interface for ActivityLogEntry
 interface ActivityLogEntry {
@@ -27,7 +26,7 @@ const DgDetailView: React.FC = () => {
   const { dgId } = useParams<{ dgId: string }>();
 
   // Activity log state with smart meter focused data
-  const [activityLog, setActivityLog] = useState<ActivityLogEntry[]>([
+  const [activityLog, _setActivityLog] = useState<ActivityLogEntry[]>([
     {
       id: 1,
       description: "DG Set electrical output detected",
@@ -88,7 +87,7 @@ const DgDetailView: React.FC = () => {
   ]);
 
   // Electrical Parameters Table Data state
-  const [electricalParamsTableData, setElectricalParamsTableData] = useState<ElectricalParameterData[]>([
+  const [electricalParamsTableData, _setElectricalParamsTableData] = useState<ElectricalParameterData[]>([
     {
       parameter: "Voltage (V)",
       r: "230 V",
@@ -189,37 +188,37 @@ const DgDetailView: React.FC = () => {
   ];
 
   // Additional DG operational data based on smart meter
-  const dgOperationalData = {
-    performance: {
-      efficiency: "85.2%", // Calculated from power factor and load factor
-      powerOutput: "147 kW", // Active power from meter
-      reactivePower: "30 kVAR", // From meter
-      apparentPower: "162 kVA", // From meter
-      loadFactor: "73.5%", // (147 kW / 200 kW rated) * 100
-    },
-    electrical: {
-      voltageStability: "99.8%", // Based on voltage variations
-      frequencyStability: "99.6%", // Based on frequency variations
-      powerQuality: "Excellent", // Based on PF and voltage unbalance
-      lastOptimization: "2025-08-10T10:00:00",
-      totalOptimizations: "15",
-      lastTechnician: "Power Quality System",
-    },
-    alerts: {
-      critical: 1,
-      warning: 2,
-      info: 3,
-      resolved: 15,
-    },
-    energy: {
-      currentGeneration: "300 kWh",
-      generationThisMonth: "8,500 kWh",
-      lastPeakLoad: "180 kW",
-      averageLoad: "147 kW",
-      energyEfficiency: "0.90 PF",
-      voltageUnbalance: "0.7%",
-    },
-  };
+  // const dgOperationalData = {
+  //   performance: {
+  //     efficiency: "85.2%", // Calculated from power factor and load factor
+  //     powerOutput: "147 kW", // Active power from meter
+  //     reactivePower: "30 kVAR", // From meter
+  //     apparentPower: "162 kVA", // From meter
+  //     loadFactor: "73.5%", // (147 kW / 200 kW rated) * 100
+  //   },
+  //   electrical: {
+  //     voltageStability: "99.8%", // Based on voltage variations
+  //     frequencyStability: "99.6%", // Based on frequency variations
+  //     powerQuality: "Excellent", // Based on PF and voltage unbalance
+  //     lastOptimization: "2025-08-10T10:00:00",
+  //     totalOptimizations: "15",
+  //     lastTechnician: "Power Quality System",
+  //   },
+  //   alerts: {
+  //     critical: 1,
+  //     warning: 2,
+  //     info: 3,
+  //     resolved: 15,
+  //   },
+  //   energy: {
+  //     currentGeneration: "300 kWh",
+  //     generationThisMonth: "8,500 kWh",
+  //     lastPeakLoad: "180 kW",
+  //     averageLoad: "147 kW",
+  //     energyEfficiency: "0.90 PF",
+  //     voltageUnbalance: "0.7%",
+  //   },
+  // };
 
   // Electrical metrics data for ElectricalMetricsCard
   const electricalMetrics = [
@@ -369,43 +368,43 @@ const DgDetailView: React.FC = () => {
   ];
 
   // DG alert history based on electrical parameters
-  const alertHistory = [
-    {
-      id: 1,
-      timestamp: "2025-08-10T12:00:00",
-      type: "Warning",
-      message: "Voltage imbalance detected - 0.7%",
-      status: "Active",
-    },
-    {
-      id: 2,
-      timestamp: "2025-08-10T10:30:00",
-      type: "Info",
-      message: "Power factor optimization completed",
-      status: "Resolved",
-    },
-    {
-      id: 3,
-      timestamp: "2025-08-10T09:15:00",
-      type: "Warning",
-      message: "Frequency deviation approaching limit",
-      status: "Resolved",
-    },
-    {
-      id: 4,
-      timestamp: "2025-08-10T08:45:00",
-      type: "Critical",
-      message: "Power quality below threshold",
-      status: "Active",
-    },
-    {
-      id: 5,
-      timestamp: "2025-08-10T08:00:00",
-      type: "Info",
-      message: "DG electrical output detected",
-      status: "Resolved",
-    },
-  ];
+  // const alertHistory = [
+  //   {
+  //     id: 1,
+  //     timestamp: "2025-08-10T12:00:00",
+  //     type: "Warning",
+  //     message: "Voltage imbalance detected - 0.7%",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 2,
+  //     timestamp: "2025-08-10T10:30:00",
+  //     type: "Info",
+  //     message: "Power factor optimization completed",
+  //     status: "Resolved",
+  //   },
+  //   {
+  //     id: 3,
+  //     timestamp: "2025-08-10T09:15:00",
+  //     type: "Warning",
+  //     message: "Frequency deviation approaching limit",
+  //     status: "Resolved",
+  //   },
+  //   {
+  //     id: 4,
+  //     timestamp: "2025-08-10T08:45:00",
+  //     type: "Critical",
+  //     message: "Power quality below threshold",
+  //     status: "Active",
+  //   },
+  //   {
+  //     id: 5,
+  //     timestamp: "2025-08-10T08:00:00",
+  //     type: "Info",
+  //     message: "DG electrical output detected",
+  //     status: "Resolved",
+  //   },
+  // ];
 
   const powerQualityChartData = {
     label: "Power Factor (last hour)",

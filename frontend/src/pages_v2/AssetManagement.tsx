@@ -2,37 +2,49 @@ import { Suspense, useState } from 'react';
 import { lazy } from 'react';
 const Page = lazy(() => import('@/components/global/PageC'));
 
-interface HierarchyNode {
-    hierarchy_id: string | number;
-    hierarchy_name: string;
-    hierarchy_type_title: string;
-    children?: HierarchyNode[];
-}
+// interface HierarchyNode {
+//     hierarchy_id: string | number;
+//     hierarchy_name: string;
+//     hierarchy_type_title: string;
+//     children?: HierarchyNode[];
+// }
 
-interface AreaNode {
-    name: string;
-}
+// interface AreaNode {
+//     name: string;
+// }
 
-interface LocationNode {
-    name: string;
-    Areas: AreaNode[];
-}
+// interface LocationNode {
+//     name: string;
+//     Areas: AreaNode[];
+// }
 
-interface LocationData {
-    Location: LocationNode[];
-}
+// interface LocationData {
+//     Location: LocationNode[];
+// }
 
 interface SubAreaNode {
     name: string;
+    backgroundColor?: string;
+    borderColor?: string;
+    textColor?: string;
+    icon?: string;
 }
 
 interface AreaWithSubAreasNode {
     name: string;
+    backgroundColor?: string;
+    borderColor?: string;
+    textColor?: string;
+    icon?: string;
     SubAreas: SubAreaNode[];
 }
 
 interface LocationWithSubAreasNode {
     name: string;
+    backgroundColor?: string;
+    borderColor?: string;
+    textColor?: string;
+    icon?: string;
     Areas: AreaWithSubAreasNode[];
 }
 
@@ -85,204 +97,64 @@ export default function AssetManagment() {
         }
     ];
 
-    const dummyLocationData: LocationData = {
-        "Location": [
-            {
-                "name": "Hyderabad",
-                "Areas": [
-                    { "name": "Banjara Hills" },
-                    { "name": "Gachibowli" },
-                    { "name": "Hitech City" }
-                ]
-            },
-            {
-                "name": "Chennai",
-                "Areas": [
-                    { "name": "Anna Nagar" },
-                    { "name": "Marina Beach" },
-                    { "name": "Besant Nagar" }
-                ]
-            },
-            {
-                "name": "Mumbai",
-                "Areas": [
-                    { "name": "Andheri" },
-                    { "name": "Bandra" },
-                    { "name": "Juhu" }
-                ]
-            },
-            {
-                "name": "Delhi",
-                "Areas": [
-                    { "name": "Connaught Place" },
-                    { "name": "Saket" },
-                    { "name": "Dwarka" }
-                ]
-            },
-            {
-                "name": "Kolkata",
-                "Areas": [
-                    { "name": "Salt Lake" },
-                    { "name": "Park Street" },
-                    { "name": "Alipore" }
-                ]
-            },
-            {
-                "name": "Bangalore",
-                "Areas": [
-                    { "name": "MG Road" },
-                    { "name": "Indiranagar" },
-                    { "name": "Whitefield" }
-                ]
-            },
-            {
-                "name": "Pune",
-                "Areas": [
-                    { "name": "Koregaon Park" },
-                    { "name": "Baner" },
-                    { "name": "Hinjewadi" }
-                ]
-            },
-            {
-                "name": "Ahmedabad",
-                "Areas": [
-                    { "name": "Satellite" },
-                    { "name": "SG Highway" },
-                    { "name": "Navrangpura" }
-                ]
-            },
-            {
-                "name": "Jaipur",
-                "Areas": [
-                    { "name": "Malviya Nagar" },
-                    { "name": "C Scheme" },
-                    { "name": "Vaishali Nagar" }
-                ]
-            },
-            {
-                "name": "Surat",
-                "Areas": [
-                    { "name": "Adajan" },
-                    { "name": "Vesu" },
-                    { "name": "Piplod" }
-                ]
-            },
-            {
-                "name": "Lucknow",
-                "Areas": [
-                    { "name": "Gomti Nagar" },
-                    { "name": "Hazratganj" },
-                    { "name": "Indira Nagar" }
-                ]
-            },
-            {
-                "name": "Coimbatore",
-                "Areas": [
-                    { "name": "Peelamedu" },
-                    { "name": "Gandhipuram" },
-                    { "name": "RS Puram" }
-                ]
-            },
-            {
-                "name": "Chandigarh",
-                "Areas": [
-                    { "name": "Sector 17" },
-                    { "name": "Manimajra" },
-                    { "name": "Sector 22" }
-                ]
-            },
-            {
-                "name": "Bhopal",
-                "Areas": [
-                    { "name": "MP Nagar" },
-                    { "name": "Arera Colony" },
-                    { "name": "New Market" }
-                ]
-            },
-            {
-                "name": "Visakhapatnam",
-                "Areas": [
-                    { "name": "MVP Colony" },
-                    { "name": "Dwaraka Nagar" },
-                    { "name": "Beach Road" }
-                ]
-            },
-            {
-                "name": "Nagpur",
-                "Areas": [
-                    { "name": "Ramdas Peth" },
-                    { "name": "Dharampeth" },
-                    { "name": "Civil Lines" }
-                ]
-            },
-            {
-                "name": "Thiruvananthapuram",
-                "Areas": [
-                    { "name": "Kowdiar" },
-                    { "name": "Pattom" },
-                    { "name": "Technopark" }
-                ]
-            },
-            {
-                "name": "Patna",
-                "Areas": [
-                    { "name": "Kankarbagh" },
-                    { "name": "Bailey Road" },
-                    { "name": "Rajendranagar" }
-                ]
-            },
-            {
-                "name": "Indore",
-                "Areas": [
-                    { "name": "Vijay Nagar" },
-                    { "name": "Sarafa Bazaar" },
-                    { "name": "Palasia" }
-                ]
-            },
-            {
-                "name": "Goa",
-                "Areas": [
-                    { "name": "Panaji" },
-                    { "name": "Calangute" },
-                    { "name": "Candolim" }
-                ]
-            }
-        ]
-    };
-
+   
     const dummyLocation2Data: Location2Data = {
         "Location": [
             {
                 "name": "Hyderabad",
+                "backgroundColor": "#e3f2fd",
+                "borderColor": "",
+                'textColor':'#424242',
                 "Areas": [
                     {
                         "name": "Banjara Hills",
                         "SubAreas": [
-                            { "name": "Road No 1" },
-                            { "name": "Road No 12" },
-                            { "name": "Journalist Colony" }
+                            { 
+                                "name": "Road No 1"
+                            },
+                            { 
+                                "name": "Road No 12"
+                            },
+                            { 
+                                "name": "Journalist Colony"
+                            }
                         ]
                     },
                     {
                         "name": "Gachibowli",
                         "SubAreas": [
-                            { "name": "Wipro Circle" },
-                            { "name": "Nallagandla" },
-                            { "name": "Tata Nagar" }
+                            { 
+                                "name": "Wipro Circle"
+                            },
+                            { 
+                                "name": "Nallagandla"
+                            },
+                            { 
+                                "name": "Tata Nagar"
+                            }
                         ]
                     },
                     {
                         "name": "Hitech City",
                         "SubAreas": [
-                            { "name": "Cyber Towers" },
-                            { "name": "Mindspace" },
-                            { "name": "Raidurg" }
+                            { 
+                                "name": "Cyber Towers"
+                            },
+                            { 
+                                "name": "Mindspace"
+                            },
+                            { 
+                                "name": "Raidurg"
+                            }
                         ]
                     }
                 ]
             },
             {
                 "name": "Warangal",
+                "backgroundColor": "#e3f2fd",
+                "borderColor": "",
+                'textColor':'#424242',
                 "Areas": [
                     {
                         "name": "Hanamkonda",
@@ -310,209 +182,99 @@ export default function AssetManagment() {
                     }
                 ]
             },
-            {
-                "name": "Nizamabad",
-                "Areas": [
-                    {
-                        "name": "Kamareddy",
-                        "SubAreas": [
-                            { "name": "Housing Board" },
-                            { "name": "Rajampet" },
-                            { "name": "Shivaji Chowk" }
-                        ]
-                    },
-                    {
-                        "name": "Bodhan",
-                        "SubAreas": [
-                            { "name": "Shakkar Nagar" },
-                            { "name": "Aziz Nagar" },
-                            { "name": "Dargha Road" }
-                        ]
-                    },
-                    {
-                        "name": "Armoor",
-                        "SubAreas": [
-                            { "name": "Mahatma Nagar" },
-                            { "name": "Ramalakshmi Nagar" },
-                            { "name": "Market Area" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Khammam",
-                "Areas": [
-                    {
-                        "name": "Wyra",
-                        "SubAreas": [
-                            { "name": "Lakshmipuram" },
-                            { "name": "Gokul Nagar" },
-                            { "name": "Wyra Road" }
-                        ]
-                    },
-                    {
-                        "name": "Madhira",
-                        "SubAreas": [
-                            { "name": "Old Bus Stand" },
-                            { "name": "Chowrastha" },
-                            { "name": "Station Area" }
-                        ]
-                    },
-                    {
-                        "name": "Manchikanti Nagar",
-                        "SubAreas": [
-                            { "name": "Green Park" },
-                            { "name": "Manchikanti Colony" },
-                            { "name": "New Layout" }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Karimnagar",
-                "Areas": [
-                    {
-                        "name": "Mancherial",
-                        "SubAreas": [
-                            { "name": "Coal Mine Colony" },
-                            { "name": "Shivaji Nagar" },
-                            { "name": "Ram Nagar" }
-                        ]
-                    },
-                    {
-                        "name": "Sircilla",
-                        "SubAreas": [
-                            { "name": "Textile Market" },
-                            { "name": "Sircilla Colony" },
-                            { "name": "Main Road" }
-                        ]
-                    },
-                    {
-                        "name": "Vemulawada",
-                        "SubAreas": [
-                            { "name": "Temple Street" },
-                            { "name": "Vemulawada Colony" },
-                            { "name": "New Bus Stand" }
-                        ]
-                    }
-                ]
-            }
+            // {
+            //     "name": "Nizamabad",
+            //     "Areas": [
+            //         {
+            //             "name": "Kamareddy",
+            //             "SubAreas": [
+            //                 { "name": "Housing Board" },
+            //                 { "name": "Rajampet" },
+            //                 { "name": "Shivaji Chowk" }
+            //             ]
+            //         },
+            //         {
+            //             "name": "Bodhan",
+            //             "SubAreas": [
+            //                 { "name": "Shakkar Nagar" },
+            //                 { "name": "Aziz Nagar" },
+            //                 { "name": "Dargha Road" }
+            //             ]
+            //         },
+            //         {
+            //             "name": "Armoor",
+            //             "SubAreas": [
+            //                 { "name": "Mahatma Nagar" },
+            //                 { "name": "Ramalakshmi Nagar" },
+            //                 { "name": "Market Area" }
+            //             ]
+            //         }
+            //     ]
+            // },
+            // {   
+            //     "name": "Khammam",
+            //     "Areas": [
+            //         {
+            //             "name": "Wyra",
+            //             "SubAreas": [
+            //                 { "name": "Lakshmipuram" },
+            //                 { "name": "Gokul Nagar" },
+            //                 { "name": "Wyra Road" }
+            //             ]
+            //         },
+            //         {
+            //             "name": "Madhira",
+            //             "SubAreas": [
+            //                 { "name": "Old Bus Stand" },
+            //                 { "name": "Chowrastha" },
+            //                 { "name": "Station Area" }
+            //             ]
+            //         },
+            //         {
+            //             "name": "Manchikanti Nagar",
+            //             "SubAreas": [
+            //                 { "name": "Green Park" },
+            //                 { "name": "Manchikanti Colony" },
+            //                 { "name": "New Layout" }
+            //             ]
+            //         }
+            //     ]
+            // },
+            // {
+            //     "name": "Karimnagar",
+            //     "Areas": [
+            //         {
+            //             "name": "Mancherial",
+            //             "SubAreas": [
+            //                 { "name": "Coal Mine Colony" },
+            //                 { "name": "Shivaji Nagar" },
+            //                 { "name": "Ram Nagar" }
+            //             ]
+            //         },
+            //         {
+            //             "name": "Sircilla",
+            //             "SubAreas": [
+            //                 { "name": "Textile Market" },
+            //                 { "name": "Sircilla Colony" },
+            //                 { "name": "Main Road" }
+            //             ]
+            //         },
+            //         {
+            //             "name": "Vemulawada",
+            //             "SubAreas": [
+            //                 { "name": "Temple Street" },
+            //                 { "name": "Vemulawada Colony" },
+            //                 { "name": "New Bus Stand" }
+            //             ]
+            //         }
+            //     ]
+            // }
         ]
     };
 
-    // --- Convert location data to TopLevelHierarchy format ---
-    function convertToTopLevelHierarchyFormat(locationData: LocationData) {
-        const nodes: { id: string | number; name: string; hierarchy_type_title: string; children?: any[] }[] = [];
-        
-        locationData.Location.forEach((location, index) => {
-            const locationNode = {
-                id: `location-${index}`,
-                name: location.name,
-                hierarchy_type_title: 'Location',
-                children: location.Areas.map((area, areaIndex) => ({
-                    id: `area-${index}-${areaIndex}`,
-                    name: area.name,
-                    hierarchy_type_title: 'Areas'
-                }))
-            };
-            nodes.push(locationNode);
-        });
-        
-        return nodes;
-    }
 
-    // --- Convert Location2 data to TopLevelHierarchy format (with SubAreas) ---
-    function convertLocation2ToTopLevelHierarchyFormat(location2Data: Location2Data) {
-        const nodes: { id: string | number; name: string; hierarchy_type_title: string; children?: any[] }[] = [];
-        
-        location2Data.Location.forEach((location, locationIndex) => {
-            const locationNode = {
-                id: `location2-${locationIndex}`,
-                name: location.name,
-                hierarchy_type_title: 'Location',
-                children: location.Areas.map((area, areaIndex) => ({
-                    id: `area2-${locationIndex}-${areaIndex}`,
-                    name: area.name,
-                    hierarchy_type_title: 'Areas',
-                    children: area.SubAreas.map((subArea, subAreaIndex) => ({
-                        id: `subarea2-${locationIndex}-${areaIndex}-${subAreaIndex}`,
-                        name: subArea.name,
-                        hierarchy_type_title: 'SubAreas'
-                    }))
-                }))
-            };
-            nodes.push(locationNode);
-        });
-        
-        return nodes;
-    }
-
-    // --- Convert to OrgChart format ---
-    function convertToOrgChartFormat(locationData: LocationData): HierarchyNode[] {
-        return locationData.Location.map((location, index) => ({
-            hierarchy_id: `location-${index}`,
-            hierarchy_name: location.name,
-            hierarchy_type_title: 'Location',
-            children: location.Areas.map((area, areaIndex) => ({
-                hierarchy_id: `area-${index}-${areaIndex}`,
-                hierarchy_name: area.name,
-                hierarchy_type_title: 'Areas'
-            }))
-        }));
-    }
-
-    // --- Convert Location2 to OrgChart format (with SubAreas) ---
-    function convertLocation2ToOrgChartFormat(location2Data: Location2Data): HierarchyNode[] {
-        return location2Data.Location.map((location, locationIndex) => ({
-            hierarchy_id: `location2-${locationIndex}`,
-            hierarchy_name: location.name,
-            hierarchy_type_title: 'Location',
-            children: location.Areas.map((area, areaIndex) => ({
-                hierarchy_id: `area2-${locationIndex}-${areaIndex}`,
-                hierarchy_name: area.name,
-                hierarchy_type_title: 'Areas',
-                children: area.SubAreas.map((subArea, subAreaIndex) => ({
-                    hierarchy_id: `subarea2-${locationIndex}-${areaIndex}-${subAreaIndex}`,
-                    hierarchy_name: subArea.name,
-                    hierarchy_type_title: 'SubAreas'
-                }))
-            }))
-        }));
-    }
-
-    // --- Generate data for components ---
-    // You can switch between Location and Location2 data here
-    const useLocation2Data = true; // Set to false to use original Location data
-    
-    const topLevelNodes = useLocation2Data 
-        ? convertLocation2ToTopLevelHierarchyFormat(dummyLocation2Data)
-        : convertToTopLevelHierarchyFormat(dummyLocationData);
-    
-    const orgChartData = useLocation2Data 
-        ? convertLocation2ToOrgChartFormat(dummyLocation2Data)
-        : convertToOrgChartFormat(dummyLocationData);
-
-    // --- Generate form fields for each tab (moved after useLocation2Data is defined) ---
+    // --- Generate form fields for each tab ---
     const generateFormFieldsForTab = (tabIndex: number) => {
-        // const locationData = useLocation2Data ? dummyLocation2Data : dummyLocationData;
-        
-        // Extract all location names
-        // const locationNames = locationData.Location.map(location => location.name);
-        
-        // Extract all area names
-        // const areaNames = locationData.Location.flatMap(location => 
-        //     location.Areas.map(area => area.name)
-        // );
-        
-        // Extract all subarea names (if using Location2Data)
-        // const subAreaNames = useLocation2Data 
-        //     ? (locationData as Location2Data).Location.flatMap(location => 
-        //         location.Areas.flatMap(area => 
-        //             area.SubAreas.map((subArea: SubAreaNode) => subArea.name)
-        //         )
-        //     )
-        //     : [];
-
         switch (tabIndex) {
             case 0: // Add Asset Name - Search and Input fields
                 return [
@@ -594,14 +356,6 @@ export default function AssetManagment() {
         }
     };
 
-    // --- OrgChart expects a single root node ---
-    const orgChartRoot: HierarchyNode = {
-        hierarchy_id: 'root',
-        hierarchy_name: useLocation2Data ? 'All Locations (3-Level)' : 'All Locations',
-        hierarchy_type_title: 'Root',
-        children: orgChartData,
-    };
-
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Page  
@@ -647,22 +401,45 @@ export default function AssetManagment() {
                                         {
                                             name: 'TopLevelHierarchy',
                                             props: {
-                                                nodes: topLevelNodes,
-                                                title: useLocation2Data ? 'Location Hierarchy (3-Level)' : 'Location Hierarchy', // Dynamic title
+                                                nodes: dummyLocation2Data.Location.map((location, locationIndex) => ({
+                                                    id: `location-${locationIndex}`,
+                                                    name: location.name,
+                                                    hierarchy_type_title: 'Location',
+                                                    children: location.Areas.map((area, areaIndex) => ({
+                                                        id: `area-${locationIndex}-${areaIndex}`,
+                                                        name: area.name,
+                                                        hierarchy_type_title: 'Area',
+                                                        children: area.SubAreas.map((subArea, subAreaIndex) => ({
+                                                            id: `subarea-${locationIndex}-${areaIndex}-${subAreaIndex}`,
+                                                            name: subArea.name,
+                                                            hierarchy_type_title: 'SubArea'
+                                                        }))
+                                                    }))
+                                                })),
+                                                title: 'Location Hierarchy (3-Level)',
                                             },
                                         },
                                     ],
                                 },
+                       
                                 {
                                     layout: 'row',
                                     span: { col: 3, row: 1 },
-                                    className: 'h-full',
+                                    className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
                                     columns: [
                                         {
-                                            name: 'OrgChartAlt',
+                                            name: 'NodeChart',
                                             props: {
-                                                data: [orgChartRoot],
-                                                // height: '400px',
+                                                data: dummyLocation2Data,
+                                                width: '100%',
+                                                height: '100%',
+                                                enableZoom: true,
+                                                minZoom: 0.3,
+                                                maxZoom: 2,
+                                                initialZoom: 0.8,
+                                                layout: 'horizontal', // Change to 'vertical' for vertical layout
+                                                EdgeStyleLayout: 'polyline', // Try different styles: 'straight', 'elbow', 'curved', 'spline', 'arc', 'step', 'bezier', 'polyline'
+
                                             },
                                         },
                                     ],

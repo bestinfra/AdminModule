@@ -25,7 +25,6 @@ export async function exportModules(modules: Module[]): Promise<Blob> {
         '@types/react-dom': 'latest',
         typescript: 'latest',
         tailwindcss: 'latest',
-        postcss: 'latest',
         autoprefixer: 'latest'
       }
     }, null, 2),
@@ -59,12 +58,7 @@ export async function exportModules(modules: Module[]): Promise<Blob> {
   },
   plugins: [],
 }`,
-    'postcss.config.js': `module.exports = {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}`,
+    
     'pages/_app.tsx': `import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 
@@ -173,7 +167,6 @@ export async function generateAppProject(formData: any): Promise<Blob> {
         vite: '^4.1.0',
         '@vitejs/plugin-react': '^3.1.0',
         tailwindcss: '^3.2.7',
-        postcss: '^8.4.21',
         autoprefixer: '^10.4.14'
       },
       devDependencies: {
@@ -241,12 +234,6 @@ export default {
   darkMode: 'class'
 }`,
     
-    'postcss.config.js': `export default {
-  plugins: {
-    tailwindcss: {},
-    autoprefixer: {},
-  },
-}`,
     
     'index.html': `<!doctype html>
 <html lang="en">

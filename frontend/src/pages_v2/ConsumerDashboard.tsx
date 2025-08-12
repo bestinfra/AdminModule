@@ -1,7 +1,7 @@
 import React, { useState, Suspense } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
-import { exportChartData } from '@/utils/excelExport';
+// import { exportChartData } from '@/utils/excelExport';
 // import { Pagination } from 'antd';
 
 // Constants
@@ -184,28 +184,28 @@ const ConsumerDashboard: React.FC = () => {
             'Nov',
             'Dec',
         ],
-        seriesData: [
-            {
-                name: 'Bills Generated',
-                data: [
-                    260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
-                ],
-            },
-            {
-                name: 'Paid',
-                data: [
-                    240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
-                ],
-            },
-            {
-                name: 'Pending',
-                data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
-            },
-            {
-                name: 'Overdue',
-                data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
-            },
-        ],
+        // seriesData: [
+        //     {
+        //         name: 'Bills Generated',
+        //         data: [
+        //             260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
+        //         ],
+        //     },
+        //     {
+        //         name: 'Paid',
+        //         data: [
+        //             240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
+        //         ],
+        //     },
+        //     {
+        //         name: 'Pending',
+        //         data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
+        //     },
+        //     {
+        //         name: 'Overdue',
+        //         data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
+        //     },
+        // ],
         seriesColors: [
             '#3B82F6', // Blue for Bills Generated
             '#10B981', // Green for Paid
@@ -215,9 +215,9 @@ const ConsumerDashboard: React.FC = () => {
     });
 
     // Chart download handler
-    const handleChartDownload = () => {
-        exportChartData(billingChartData.xAxisData, billingChartData.seriesData, 'billing-vs-collection-data');
-    };
+    // const handleChartDownload = () => {
+    //     exportChartData(billingChartData.xAxisData, 'billing-vs-collection-data');
+    // };
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
@@ -233,7 +233,6 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: "grid",
                                     gap: "gap-4",
                                     gridColumns: 2,
-                                    gridRows: 2,
                                     span: { col: 2, row: 1 },
                                     className: 'border border-primary-border rounded-3xl p-4 bg-primary-lightest',
                                     columns: [
@@ -260,7 +259,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
                                             },
-                                            span: { col: 1, row: 1 },
+                                            span: { col: 1 as const, row: 1 as const },
                                         })),
                                     ],
                                 },
@@ -268,7 +267,6 @@ const ConsumerDashboard: React.FC = () => {
                                     layout: "grid",
                                     gap: "gap-4",
                                     gridColumns: 2,
-                                    gridRows: 2,
                                     span: { col: 2, row: 1 },
                                     className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                                     columns: [
@@ -308,7 +306,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 showTrend: card.showTrend,
                                                 comparisonValue: card.comparisonValue,
                                             },
-                                            span: { col: 1, row: 1 },
+                                            span: { col: 1 as const, row: 1 as const },
                                         })),
                                     ],
                                 },
@@ -323,50 +321,43 @@ const ConsumerDashboard: React.FC = () => {
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-4',
-                                    span:{col:2,row:1},
+                                    gap: 'gap-1',
+                                    span:{col:2 as const,row:1 as const},
                                     className: '',
                                     columns: [
-                                        {
-                                            name: "SectionHeader",
-                                            props: {
-                                                title: "Consumption Metrics",
-                                                titleLevel: 2,
-                                                titleSize: "md",
-                                                titleVariant: "colorPrimaryDark",
-                                                titleWeight: "normal",
-                                                titleAlign: "left",
-                                                rightComponent:{
-                                                    name: "TimeRangeSelector",
-                                                    props: {
-                                                        availableTimeRanges: ["Graph", "Table"],
-                                                        selectedTimeRange: selectedTimeRange,
-                                                        handleTimeRangeChange: handleTimeRangeChange,
-                                                        timeRangeLabels: {},
-                                                    },
-                                                }
-                                            },
-                                        },
+                                        // {
+                                        //     name: "Holder",
+                                        //     props: {
+                                        //         title:"Daily consumption metrics",
+                                        //         subtitle: "Monthly billing statistics and collection data",
+                                        //         className: "border-none rounded-t-3xl",
+                                        //     },
+                                        // },
                                         {
                                             name: 'BarChart',
                                             props: {
                                                 xAxisData:
                                                     billingChartData.xAxisData,
-                                                seriesData:
-                                                    billingChartData.seriesData,
+                                                // seriesData:
+                                                //     billingChartData.seriesData,
                                                 seriesColors:
                                                     billingChartData.seriesColors,
                                                 height: '400px',
-                                                headerTitle: ' Consumption Metrics',
                                                 showHeader: true,
-                                                dateRange: '8 Jun, 2025 - 9 Aug, 2025',
-                                                className:'p-4',
+                                                headerTitle:'Consumption Metrics',
+                                                dateRange: '(7 Jun, 2025 - 8 Aug, 2025)',
                                                 showDownloadButton: true,
+                                                showViewToggle: false,
+                                                viewToggleOptions: [
+                                                    'Graph',
+                                                    'Table',
+                                                ],
+                                                showTableView: true,
                                                 ariaLabel:
                                                     'Monthly billing statistics chart',
                                                 yAxisMax: 300,
                                                 yAxisStep: 50,
-                                                onDownload: handleChartDownload,
+                                                onDownload: "",
                                             },
                                         },
                                     ],
@@ -383,49 +374,57 @@ const ConsumerDashboard: React.FC = () => {
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-0',
-                                    span:{col:1,row:1},
+                                    gap: 'gap-1',
+                                    span:{col:1 as const,row:1 as const},
                                     className: 'bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1',
                                     columns: [
-                                        // {
-                                        //     name: 'PieChart',
-                                        //     props: {
-                                        //         data: METER_STATUS_DATA,
-                                        //         height: 330,
-                                        //         showLegend: false,
-                                        //         showNoDataMessage: false,
-                                        //         showHeader: false,
-                                        //         className: 'p-4',
-                                        //         onClick: (
-                                        //             segmentName?: string
-                                        //         ) => {
-                                        //             if (
-                                        //                 segmentName ===
-                                        //                 'Communicating'
-                                        //             )
-                                        //                 navigate(
-                                        //                     '/connect-disconnect/communicating'
-                                        //                 );
-                                        //             else if (
-                                        //                 segmentName ===
-                                        //                 'Non-Communicating'
-                                        //             )
-                                        //                 navigate(
-                                        //                     '/connect-disconnect/non-communicating'
-                                        //                 );
-                                        //             else
-                                        //                 navigate(
-                                        //                     '/connect-disconnect'
-                                        //                 );
-                                        //         },
-                                        //     },
-                                        // },
+                                        {
+                                            name: "Holder",
+                                            props: {
+                                                title: "Meter Status",
+                                                subtitle: "Distribution of communicating and non-communicating meters",
+                                                className: "border-none rounded-t-3xl ",
+                                            },
+                                        },
+                                        {
+                                            name: 'PieChart',
+                                            props: {
+                                                data: METER_STATUS_DATA,
+                                                height: 330,
+                                                showLegend: false,
+                                                showNoDataMessage: false,
+                                                showHeader: false,
+                                                className: 'p-4',
+                                                onClick: (
+                                                    segmentName?: string
+                                                ) => {
+                                                    if (
+                                                        segmentName ===
+                                                        'Communicating'
+                                                    )
+                                                        navigate(
+                                                            '/connect-disconnect/communicating'
+                                                        );
+                                                    else if (
+                                                        segmentName ===
+                                                        'Non-Communicating'
+                                                    )
+                                                        navigate(
+                                                            '/connect-disconnect/non-communicating'
+                                                        );
+                                                    else
+                                                        navigate(
+                                                            '/connect-disconnect'
+                                                        );
+                                                },
+                                            },
+                                        },
                                     ],
                                 },
                                 {
                                     layout: 'column',
-                                    gap: 'gap-0',
-                                    span:{col:1,row:1},
+                                    gap: 'gap-1',
+                                    span:{col:1 as const,row:1 as const},
                                     className: '',
                                     columns: [
                                         {

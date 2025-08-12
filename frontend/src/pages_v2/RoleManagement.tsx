@@ -33,10 +33,6 @@ export default function RoleManagement() {
         description: ''
     });
 
-    useEffect(() => {
-        fetchRoles();
-    }, []);
-
     const fetchRoles = async () => {
         try {
             setLoading(true);
@@ -98,110 +94,14 @@ export default function RoleManagement() {
                             {
                                 id: 3,
                                 username: 'airborne',
-                                firstName: 'Airborne',
-                                lastName: 'General Store',
+                                firstName: 'AIRBORNE',
+                                lastName: '',
                                 email: 'airborne@example.com',
                                 isActive: true,
                             },
                         ],
                         permissions: [
-                            { id: 4, name: 'manage_financial', description: 'Can manage financial data' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                    {
-                        id: 4,
-                        name: 'Moderator',
-                        users: [
-                            {
-                                id: 4,
-                                username: 'akhil',
-                                firstName: 'Akhil',
-                                lastName: 'Bandaru',
-                                email: 'akhil@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 5, name: 'moderate_content', description: 'Can moderate content' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                    {
-                        id: 5,
-                        name: 'Accountant',
-                        users: [
-                            {
-                                id: 5,
-                                username: 'testaccountant',
-                                firstName: 'TestAccountant',
-                                lastName: '',
-                                email: 'testaccountant@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 6, name: 'manage_financial', description: 'Can manage financial data' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                    {
-                        id: 6,
-                        name: 'Moderator',
-                        users: [
-                            {
-                                id: 6,
-                                username: 'testmoderator',
-                                firstName: 'TestModerator',
-                                lastName: '',
-                                email: 'testmoderator@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 7, name: 'moderate_content', description: 'Can moderate content' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                    {
-                        id: 7,
-                        name: 'admin',
-                        users: [
-                            {
-                                id: 7,
-                                username: 'gmr_demo',
-                                firstName: 'GMR_DEMO',
-                                lastName: '',
-                                email: 'gmr_demo@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 8, name: 'manage_users', description: 'Can manage users' },
-                            { id: 9, name: 'manage_roles', description: 'Can manage roles' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                    {
-                        id: 8,
-                        name: 'User',
-                        users: [
-                            {
-                                id: 8,
-                                username: 'neo',
-                                firstName: 'Neo',
-                                lastName: 'Travels',
-                                email: 'neo@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 10, name: 'view_dashboard', description: 'Can view dashboard' },
+                            { id: 4, name: 'view_reports', description: 'Can view reports' },
                         ],
                         createdAt: new Date().toISOString(),
                         updatedAt: new Date().toISOString(),
@@ -212,6 +112,11 @@ export default function RoleManagement() {
             setLoading(false);
         }
     };
+
+    // Load data on component mount
+    useEffect(() => {
+        fetchRoles();
+    }, []);
 
     const handleDeleteClick = (row: any) => {
         setRoleToDelete(row);

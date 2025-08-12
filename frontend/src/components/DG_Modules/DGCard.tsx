@@ -19,7 +19,7 @@ interface DGCardProps {
 }
 
 const DGCard: React.FC<DGCardProps> = ({
-  id,
+  // id,
   name,
   plant,
   building,

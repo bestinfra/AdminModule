@@ -23,17 +23,8 @@ interface UsageData {
     }>;
 }
 
-interface AdvanceAmountDetail {
-    id: number;
-    date: string;
-    amount: string;
-    type: string;
-    status: string;
-    description: string;
-}
-
 interface UsageSummaryPageProps {
-    currentStep?: number;
+    // currentStep?: number;
     onStepChange?: (step: number) => void;
     meter_no?: string;
     unit_id?: string;
@@ -46,7 +37,8 @@ interface UsageSummaryPageProps {
 }
 
 const UsageSummaryPage: React.FC<UsageSummaryPageProps> = ({
-    currentStep = 2,
+    // currentStep = 2,
+    // currentStep = 2,
     onStepChange,
     meter_no: propMeterNo,
     unit_id: propUnitId,
@@ -72,9 +64,9 @@ const UsageSummaryPage: React.FC<UsageSummaryPageProps> = ({
     const [error, setError] = useState<string | null>(null);
     const [showOtherCharges, setShowOtherCharges] = useState(false);
     const [showAdvanceAmount, setShowAdvanceAmount] = useState(false);
-    const [paymentType, setPaymentType] = useState('prepaid');
-    const [advanceAmount, setAdvanceAmount] = useState('0.00');
-    const [adhocCreditCharges, setAdhocCreditCharges] = useState('0.00');
+    // const [paymentType, setPaymentType] = useState('prepaid');
+    // const [advanceAmount, setAdvanceAmount] = useState('0.00');
+    // const [adhocCreditCharges, setAdhocCreditCharges] = useState('0.00');
     const [editingField, setEditingField] = useState<string | null>(null);
     const [editedValues, setEditedValues] = useState({
         previous_reading: '',
@@ -93,11 +85,11 @@ const UsageSummaryPage: React.FC<UsageSummaryPageProps> = ({
         items: [],
         finalAmount: []
     });
-    const [advanceAmountDetails, setAdvanceAmountDetails] = useState<AdvanceAmountDetail[]>([
-        { id: 1, date: '2024-03-15', amount: '2000.00', type: 'Prepaid', status: 'Completed', description: 'Last Month Bill' },
-        { id: 2, date: '2024-03-10', amount: '2500.00', type: 'Prepaid', status: 'Completed', description: 'Payment Made' },
-        { id: 3, date: '2024-03-05', amount: '5000.00', type: 'Prepaid', status: 'Pending', description: 'Balance Amount' }
-    ]);
+    // const [advanceAmountDetails, setAdvanceAmountDetails] = useState<any[]>([
+    //     { id: 1, date: '2024-03-15', amount: '2000.00', type: 'Prepaid', status: 'Completed', description: 'Last Month Bill' },
+    //     { id: 2, date: '2024-03-10', amount: '2500.00', type: 'Prepaid', status: 'Completed', description: 'Payment Made' },
+    //     { id: 3, date: '2024-03-05', amount: '5000.00', type: 'Prepaid', status: 'Pending', description: 'Balance Amount' }
+    // ]);
 
     const formatTimestamp = (timestamp: string): string => {
         if (!timestamp) return '';
@@ -335,7 +327,7 @@ const UsageSummaryPage: React.FC<UsageSummaryPageProps> = ({
                 items: [
                     { 
                         label: 'Advance Amount',
-                        cost: `₹${advanceAmount}`,
+                        cost: `₹0.00`, // Fixed: was using undefined advanceAmount
                         isExpandable: true,
                         type: 'advance'
                     },

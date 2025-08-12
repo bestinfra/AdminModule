@@ -1,10 +1,11 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { Suspense, useState, useEffect } from 'react';
 import Page from '@/components/global/PageC';
+import type { SectionConfig } from '@/components/global/PageC';
 import Button from '@/components/global/Button';
 import Modal from '@/components/global/Modal';
 import LoadingSpinner from '@/components/global/LoadingSpinner';
-import meterConnectionAPI, { MeterConnectionAPI } from '@api/meterConnection';
+import meterConnectionAPI, { MeterConnectionAPI } from '@/api/meterConnection';
 import * as React from 'react';
 
 interface MeterData {
@@ -906,618 +907,747 @@ const ConnectDisconnect: React.FC = () => {
         },
     ];
 
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <div className="">
-                <Page
-                    sections={[
-                        // Page Header Section
+    // Helper function to build sections array conditionally
+    const buildSections = (): SectionConfig[] => {
+        const baseSections: SectionConfig[] = [
+            // Page Header Section
+            {
+                layout: {
+                    type: 'row' as const,
+                    gap: 'gap-4' as const,
+                    rows: [
                         {
-                            layout: {
-                                type: 'row',
-                                gap: 'gap-4',
-                                rows: [
-                                    {
-                                        layout: 'row',
-                                        columns: [
+                            layout: 'row',
+                            columns: [
+                                {
+                                    name: 'PageHeader',
+                                    props: {
+                                        title: 'Connect / Disconnect Meters',
+                                        onBackClick: () =>
+                                            window.history.back(),
+                                        backButtonText:
+                                            'Back to Dashboard',
+                                        buttonsLabel: 'Refresh All',
+                                        variant: 'primary',
+                                        onClick:
+                                            refreshAllMeterStatuses,
+                                        showMenu: true,
+                                        showDropdown: true,
+                                        menuItems: [
                                             {
-                                                name: 'PageHeader',
-                                                props: {
-                                                    title: 'Connect / Disconnect Meters',
-                                                    onBackClick: () =>
-                                                        window.history.back(),
-                                                    backButtonText:
-                                                        'Back to Dashboard',
-                                                    buttonsLabel: 'Refresh All',
-                                                    variant: 'primary',
-                                                    onClick:
-                                                        refreshAllMeterStatuses,
-                                                    showMenu: true,
-                                                    showDropdown: true,
-                                                    menuItems: [
-                                                        {
-                                                            id: 'export-csv',
-                                                            label: 'Export CSV',
-                                                        },
-                                                        {
-                                                            id: 'recent-activity',
-                                                            label: 'Recent Activity',
-                                                        },
-                                                    ],
-                                                    onMenuItemClick: (
-                                                        itemId: string
-                                                    ) => {
-                                                        console.log(
-                                                            `Filter by: ${itemId}`
-                                                        );
-                                                        if (
-                                                            itemId ===
-                                                            'export-csv'
-                                                        ) {
-                                                            console.log(
-                                                                'Export CSV action'
-                                                            );
-                                                        } else if (
-                                                            itemId ===
-                                                            'recent-activity'
-                                                        ) {
-                                                            window.location.href =
-                                                                '/tickets-filtered?filter=all';
-                                                        }
-                                                    },
-                                                },
+                                                id: 'export-csv',
+                                                label: 'Export CSV',
+                                            },
+                                            {
+                                                id: 'recent-activity',
+                                                label: 'Recent Activity',
                                             },
                                         ],
+                                        onMenuItemClick: (
+                                            itemId: string
+                                        ) => {
+                                            console.log(
+                                                `Filter by: ${itemId}`
+                                            );
+                                            if (
+                                                itemId ===
+                                                'export-csv'
+                                            ) {
+                                                console.log(
+                                                    'Export CSV action'
+                                                );
+                                            } else if (
+                                                itemId ===
+                                                'recent-activity'
+                                            ) {
+                                                window.location.href =
+                                                    '/tickets-filtered?filter=all';
+                                            }
+                                        },
                                     },
-                                ],
-                            },
+                                },
+                            ],
                         },
-                        // Error Message Section
-                        ...(error
-                            ? [
+                    ],
+                },
+            },
+            // Error Message Section
+            ...(error
+                ? [
+                      {
+                          layout: {
+                              type: 'row' as const,
+                              gap: 'gap-4' as const,
+                              rows: [
                                   {
-                                      layout: {
-                                          type: 'row' as const,
-                                          gap: 'gap-4',
-                                          rows: [
-                                              {
-                                                  layout: 'row' as const,
-                                                  columns: [
-                                                      {
-                                                          name: 'div',
-                                                          props: {
-                                                              className:
-                                                                  'mb-4 p-4 bg-danger-light text-danger rounded-lg',
-                                                              children: (
-                                                                  <div className="flex items-center justify-between">
-                                                                      <div>
-                                                                          <span>
-                                                                              {
-                                                                                  error
-                                                                              }
-                                                                          </span>
-                                                                      </div>
-                                                                      <button
-                                                                          onClick={() =>
-                                                                              setError(
-                                                                                  null
-                                                                              )
-                                                                          }
-                                                                          className="text-danger hover:text-danger-alt">
-                                                                          ×
-                                                                      </button>
-                                                                  </div>
-                                                              ),
-                                                          },
-                                                      },
-                                                  ],
+                                      layout: 'row' as const,
+                                      columns: [
+                                          {
+                                              name: 'div',
+                                              props: {
+                                                  className:
+                                                      'mb-4 p-4 bg-danger-light text-danger rounded-lg',
+                                                  children: (
+                                                      <div className="flex items-center justify-between">
+                                                          <div>
+                                                              <span>
+                                                                  {
+                                                                      error
+                                                                  }
+                                                              </span>
+                                                          </div>
+                                                          <button
+                                                              onClick={() =>
+                                                                  setError(
+                                                                      null
+                                                                  )
+                                                              }
+                                                              className="text-danger hover:text-danger-alt">
+                                                              ×
+                                                          </button>
+                                                      </div>
+                                                  ),
                                               },
-                                          ],
-                                      },
+                                          },
+                                      ],
                                   },
-                              ]
-                            : []),
-                        // Loading Section
-                        ...(isLoading
-                            ? [
+                              ],
+                          },
+                      },
+                  ]
+                : []),
+            // Loading Section
+            ...(isLoading
+                ? [
+                      {
+                          layout: {
+                              type: 'row' as const,
+                              gap: 'gap-4' as const,
+                              rows: [
                                   {
-                                      layout: {
-                                          type: 'row' as const,
-                                          gap: 'gap-4',
-                                          rows: [
-                                              {
-                                                  layout: 'row' as const,
-                                                  columns: [
-                                                      {
-                                                          name: 'div',
-                                                          props: {
-                                                              className:
-                                                                  'mb-4 flex items-center justify-center',
-                                                              children: (
-                                                                  <>
-                                                                      <LoadingSpinner />
-                                                                      <span className="ml-2">
-                                                                          Refreshing
-                                                                          connection
-                                                                          statuses...
-                                                                      </span>
-                                                                  </>
-                                                              ),
-                                                          },
-                                                      },
-                                                  ],
+                                      layout: 'row' as const,
+                                      columns: [
+                                          {
+                                              name: 'div',
+                                              props: {
+                                                  className:
+                                                      'mb-4 flex items-center justify-center',
+                                                  children: (
+                                                      <>
+                                                          <LoadingSpinner />
+                                                          <span className="ml-2">
+                                                              Refreshing
+                                                              connection
+                                                              statuses...
+                                                          </span>
+                                                      </>
+                                                  ),
                                               },
-                                          ],
-                                      },
+                                          },
+                                      ],
                                   },
-                              ]
-                            : []),
-                        // Debug Panel Section
-                        ...(debugMode
-                            ? [
+                              ],
+                          },
+                      },
+                  ]
+                : []),
+            // Debug Panel Section
+            ...(debugMode
+                ? [
+                      {
+                          layout: {
+                              type: 'row' as const,
+                              gap: 'gap-4' as const,
+                              rows: [
                                   {
-                                      layout: {
-                                          type: 'row' as const,
-                                          gap: 'gap-4',
-                                          rows: [
-                                              {
-                                                  layout: 'row' as const,
-                                                  columns: [
-                                                      {
-                                                          name: 'div',
-                                                          props: {
-                                                              className:
-                                                                  'mb-6 bg-primary-lightest dark:bg-primary-dark-light rounded-lg p-4',
-                                                              children: (
-                                                                  <div>
-                                                                      <h3 className="text-lg font-semibold mb-4">
-                                                                          🔧
-                                                                          Debug
-                                                                          Panel
-                                                                      </h3>
-                                                                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                                                                          <div>
-                                                                              <h4 className="font-medium mb-2">
-                                                                                  API
-                                                                                  Logs
-                                                                              </h4>
-                                                                              <div className="bg-black text-secondary p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
-                                                                                  {apiLogs.length ===
-                                                                                  0 ? (
-                                                                                      <div className="text-neutral">
-                                                                                          No
-                                                                                          API
-                                                                                          calls
-                                                                                          yet...
-                                                                                      </div>
-                                                                                  ) : (
-                                                                                      apiLogs.map(
-                                                                                          (
-                                                                                              log,
-                                                                                              index
-                                                                                          ) => (
-                                                                                              <div
-                                                                                                  key={
-                                                                                                      index
-                                                                                                  }
-                                                                                                  className="mb-1">
-                                                                                                  {
-                                                                                                      log
-                                                                                                  }
-                                                                                              </div>
-                                                                                          )
-                                                                                      )
-                                                                                  )}
-                                                                              </div>
-                                                                              <button
-                                                                                  onClick={() =>
-                                                                                      setApiLogs(
-                                                                                          []
-                                                                                      )
-                                                                                  }
-                                                                                  className="mt-2 text-sm text-primary hover:text-primary-dark">
-                                                                                  Clear
-                                                                                  Logs
-                                                                              </button>
-                                                                          </div>
-                                                                          <div>
-                                                                              <h4 className="font-medium mb-2">
-                                                                                  Last
-                                                                                  API
-                                                                                  Response
-                                                                              </h4>
-                                                                              <div className="bg-black text-warning p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
-                                                                                  {lastApiResponse ? (
-                                                                                      <pre>
-                                                                                          {JSON.stringify(
-                                                                                              lastApiResponse,
-                                                                                              null,
-                                                                                              2
-                                                                                          )}
-                                                                                      </pre>
-                                                                                  ) : (
-                                                                                      <div className="text-neutral">
-                                                                                          No
-                                                                                          API
-                                                                                          response
-                                                                                          yet...
-                                                                                      </div>
-                                                                                  )}
-                                                                              </div>
-                                                                          </div>
-                                                                      </div>
-                                                                      <div className="mt-4">
-                                                                          <h4 className="font-medium mb-3">
+                                      layout: 'row' as const,
+                                      columns: [
+                                          {
+                                              name: 'div',
+                                              props: {
+                                                  className:
+                                                      'mb-6 bg-primary-lightest dark:bg-primary-dark-light rounded-lg p-4',
+                                                  children: (
+                                                      <div>
+                                                          <h3 className="text-lg font-semibold mb-4">
+                                                              🔧
+                                                              Debug
+                                                              Panel
+                                                          </h3>
+                                                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                                                              <div>
+                                                                  <h4 className="font-medium mb-2">
+                                                                      API
+                                                                      Logs
+                                                                  </h4>
+                                                                  <div className="bg-black text-secondary p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
+                                                                      {apiLogs.length ===
+                                                                      0 ? (
+                                                                          <div className="text-neutral">
+                                                                              No
                                                                               API
-                                                                              Tests
-                                                                          </h4>
-                                                                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
-                                                                              <Button
-                                                                                  label="Test Connectivity"
-                                                                                  variant="outline"
-                                                                                  onClick={
-                                                                                      testApiConnectivity
-                                                                                  }
-                                                                                  disabled={
-                                                                                      isLoading
-                                                                                  }
-                                                                              />
-                                                                              <Button
-                                                                                  label="Test Get Status"
-                                                                                  variant="outline"
-                                                                                  onClick={() =>
-                                                                                      refreshMeterStatus(
-                                                                                          'A9345717'
-                                                                                      )
-                                                                                  }
-                                                                                  disabled={
-                                                                                      isLoading
-                                                                                  }
-                                                                              />
-                                                                              <Button
-                                                                                  label="Test Connect"
-                                                                                  variant="success"
-                                                                                  onClick={() => {
-                                                                                      const meter =
-                                                                                          meters.find(
-                                                                                              (
-                                                                                                  m
-                                                                                              ) =>
-                                                                                                  m.meterNo ===
-                                                                                                  'A9345717'
-                                                                                          );
-                                                                                      if (
-                                                                                          meter
-                                                                                      ) {
-                                                                                          setSelectedMeter(
-                                                                                              meter
-                                                                                          );
-                                                                                          setActionType(
-                                                                                              'connect'
-                                                                                          );
-                                                                                          setReason(
-                                                                                              'Debug test connection'
-                                                                                          );
-                                                                                          setIsModalOpen(
-                                                                                              true
-                                                                                          );
-                                                                                      }
-                                                                                  }}
-                                                                                  disabled={
-                                                                                      isLoading
-                                                                                  }
-                                                                              />
-                                                                              <Button
-                                                                                  label="Test Disconnect"
-                                                                                  variant="danger"
-                                                                                  onClick={() => {
-                                                                                      const meter =
-                                                                                          meters.find(
-                                                                                              (
-                                                                                                  m
-                                                                                              ) =>
-                                                                                                  m.meterNo ===
-                                                                                                  'A9345717'
-                                                                                          );
-                                                                                      if (
-                                                                                          meter
-                                                                                      ) {
-                                                                                          setSelectedMeter(
-                                                                                              meter
-                                                                                          );
-                                                                                          setActionType(
-                                                                                              'disconnect'
-                                                                                          );
-                                                                                          setReason(
-                                                                                              'Debug test disconnection'
-                                                                                          );
-                                                                                          setIsModalOpen(
-                                                                                              true
-                                                                                          );
-                                                                                      }
-                                                                                  }}
-                                                                                  disabled={
-                                                                                      isLoading
-                                                                                  }
-                                                                              />
+                                                                              calls
+                                                                              yet...
                                                                           </div>
-                                                                          <div className="mt-4 p-3 bg-warning-alt rounded-md">
-                                                                              <h5 className="font-medium text-warning mb-2">
-                                                                                  🔍
-                                                                                  Troubleshooting
-                                                                                  Tips
-                                                                              </h5>
-                                                                              <ul className="text-sm text-warning space-y-1">
-                                                                                  <li>
-                                                                                      •
-                                                                                      If
-                                                                                      you
-                                                                                      see
-                                                                                      "Failed
-                                                                                      to
-                                                                                      fetch",
-                                                                                      it's
-                                                                                      likely
-                                                                                      a
-                                                                                      CORS
-                                                                                      or
-                                                                                      network
-                                                                                      issue
-                                                                                  </li>
-                                                                                  <li>
-                                                                                      •
-                                                                                      Check
-                                                                                      browser
-                                                                                      console
-                                                                                      (F12)
-                                                                                      for
-                                                                                      detailed
-                                                                                      error
-                                                                                      messages
-                                                                                  </li>
-                                                                                  <li>
-                                                                                      •
-                                                                                      Ensure
-                                                                                      API
-                                                                                      server
-                                                                                      is
-                                                                                      running
-                                                                                      at:
-                                                                                      https://arcticterntech.in:8443
-                                                                                  </li>
-                                                                                  <li>
-                                                                                      •
-                                                                                      Try
-                                                                                      "Test
-                                                                                      Connectivity"
-                                                                                      first
-                                                                                      to
-                                                                                      verify
-                                                                                      basic
-                                                                                      connection
-                                                                                  </li>
-                                                                                  <li>
-                                                                                      •
-                                                                                      Check
-                                                                                      your
-                                                                                      network
-                                                                                      firewall/proxy
-                                                                                      settings
-                                                                                  </li>
-                                                                              </ul>
-                                                                          </div>
-                                                                      </div>
-                                                                  </div>
-                                                              ),
-                                                          },
-                                                      },
-                                                  ],
-                                              },
-                                          ],
-                                      },
-                                  },
-                              ]
-                            : []),
-                        // Overview Cards Section
-                        {
-                            layout: {
-                                type: 'grid' as const,
-                                columns: 4,
-                                gap: 'gap-4',
-                                rows: [
-                                    {
-                                        layout: 'grid' as const,
-                                        gridColumns: 4,
-                                        gap: 'gap-4',
-                                        columns: overviewCards.map((card) => ({
-                                            name: 'Card',
-                                            props: { ...card, bg: "bg-stat-icon-gradient" },
-                                        })),
-                                    },
-                                ],
-                            },
-                        },
-                        // Quick Actions Section
-                        ...(selectedMeters.length > 0
-                            ? [
-                                  {
-                                      layout: {
-                                          type: 'row' as const,
-                                          gap: 'gap-4',
-                                          rows: [
-                                              {
-                                                  layout: 'row' as const,
-                                                  columns: [
-                                                      {
-                                                          name: 'div',
-                                                          props: {
-                                                              className: 'mb-8',
-                                                              children: (
-                                                                  <div>
-                                                                      <div className="flex items-center justify-between mb-4">
-                                                                          <h3 className="text-lg font-semibold text-neutral-darker dark:text-white">
-                                                                              Quick
-                                                                              Actions
-                                                                          </h3>
-                                                                          <div className="flex items-center gap-2">
-                                                                              <span className="text-xs text-neutral dark:text-neutral-light">
-                                                                                  Last
-                                                                                  updated:
-                                                                              </span>
-                                                                              <span className="text-xs font-medium text-neutral dark:text-neutral-light">
-                                                                                  {new Date().toLocaleTimeString()}
-                                                                              </span>
-                                                                          </div>
-                                                                      </div>
-                                                                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-                                                                          {quickActionsData.map(
+                                                                      ) : (
+                                                                          apiLogs.map(
                                                                               (
-                                                                                  action,
+                                                                                  log,
                                                                                   index
                                                                               ) => (
                                                                                   <div
                                                                                       key={
                                                                                           index
                                                                                       }
-                                                                                      className="bg-white flex flex-col gap-4 dark:bg-primary-dark-light rounded-xl p-4 border border-neutral-light dark:border-dark-border shadow-lg">
-                                                                                      <h3 className="text-lg font-semibold text-neutral-darker dark:text-white">
-                                                                                          {
-                                                                                              action.title
-                                                                                          }
-                                                                                      </h3>
-                                                                                      <div className="flex flex-col items-center gap-3">
-                                                                                          <Button
-                                                                                              label={action.title
-                                                                                                  .replace(
-                                                                                                      'Bulk ',
-                                                                                                      ''
-                                                                                                  )
-                                                                                                  .replace(
-                                                                                                      ' Meters',
-                                                                                                      ' Selected'
-                                                                                                  )}
-                                                                                              variant={
-                                                                                                  action.variant
-                                                                                              }
-                                                                                              onClick={
-                                                                                                  action.action
-                                                                                              }
-                                                                                              disabled={
-                                                                                                  action.disabled
-                                                                                              }
-                                                                                              className="w-full max-w-xs"
-                                                                                          />
-                                                                                          <span
-                                                                                              className={`text-xs font-medium px-2 py-1 rounded-full ${
-                                                                                                  action.variant ===
-                                                                                                  'danger'
-                                                                                                      ? 'text-danger dark:text-danger bg-danger-light dark:bg-danger-light'
-                                                                                                      : 'text-accent dark:text-accent bg-accent-light dark:bg-accent-light'
-                                                                                              }`}>
-                                                                                              {action.selectedCount
-                                                                                                  ? `${action.selectedCount} Selected`
-                                                                                                  : 'Real-time'}
-                                                                                          </span>
-                                                                                      </div>
+                                                                                      className="mb-1">
+                                                                                      {
+                                                                                          log
+                                                                                      }
                                                                                   </div>
                                                                               )
-                                                                          )}
-                                                                      </div>
+                                                                          )
+                                                                      )}
                                                                   </div>
-                                                              ),
-                                                          },
-                                                      },
-                                                  ],
+                                                                  <button
+                                                                      onClick={() =>
+                                                                          setApiLogs(
+                                                                              []
+                                                                          )
+                                                                      }
+                                                                      className="mt-2 text-sm text-primary hover:text-primary-dark">
+                                                                      Clear
+                                                                      Logs
+                                                                  </button>
+                                                              </div>
+                                                              <div>
+                                                                  <h4 className="font-medium mb-2">
+                                                                      Last
+                                                                      API
+                                                                      Response
+                                                                  </h4>
+                                                                  <div className="bg-black text-warning p-3 rounded-md font-mono text-sm h-32 overflow-y-auto">
+                                                                      {lastApiResponse ? (
+                                                                          <pre>
+                                                                              {JSON.stringify(
+                                                                                  lastApiResponse,
+                                                                                  null,
+                                                                                  2
+                                                                              )}
+                                                                          </pre>
+                                                                      ) : (
+                                                                          <div className="text-neutral">
+                                                                              No
+                                                                              API
+                                                                              response
+                                                                              yet...
+                                                                          </div>
+                                                                      )}
+                                                                  </div>
+                                                              </div>
+                                                          </div>
+                                                          <div className="mt-4">
+                                                              <h4 className="font-medium mb-3">
+                                                                  API
+                                                                  Tests
+                                                              </h4>
+                                                              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+                                                                  <Button
+                                                                      label="Test Connectivity"
+                                                                      variant="outline"
+                                                                      onClick={
+                                                                          testApiConnectivity
+                                                                      }
+                                                                      disabled={
+                                                                          isLoading
+                                                                      }
+                                                                  />
+                                                                  <Button
+                                                                      label="Test Get Status"
+                                                                      variant="outline"
+                                                                      onClick={() =>
+                                                                          refreshMeterStatus(
+                                                                              'A9345717'
+                                                                          )
+                                                                      }
+                                                                      disabled={
+                                                                          isLoading
+                                                                      }
+                                                                  />
+                                                                  <Button
+                                                                      label="Test Connect"
+                                                                      variant="success"
+                                                                      onClick={() => {
+                                                                          const meter =
+                                                                              meters.find(
+                                                                                  (
+                                                                                      m
+                                                                                  ) =>
+                                                                                      m.meterNo ===
+                                                                                      'A9345717'
+                                                                          );
+                                                                          if (
+                                                                              meter
+                                                                          ) {
+                                                                              setSelectedMeter(
+                                                                                  meter
+                                                                              );
+                                                                              setActionType(
+                                                                                  'connect'
+                                                                              );
+                                                                              setReason(
+                                                                                  'Debug test connection'
+                                                                              );
+                                                                              setIsModalOpen(
+                                                                                  true
+                                                                              );
+                                                                          }
+                                                                      }}
+                                                                      disabled={
+                                                                          isLoading
+                                                                      }
+                                                                  />
+                                                                  <Button
+                                                                      label="Test Disconnect"
+                                                                      variant="danger"
+                                                                      onClick={() => {
+                                                                          const meter =
+                                                                              meters.find(
+                                                                                  (
+                                                                                      m
+                                                                                  ) =>
+                                                                                      m.meterNo ===
+                                                                                      'A9345717'
+                                                                          );
+                                                                          if (
+                                                                              meter
+                                                                          ) {
+                                                                              setSelectedMeter(
+                                                                                  meter
+                                                                              );
+                                                                              setActionType(
+                                                                                  'disconnect'
+                                                                              );
+                                                                              setReason(
+                                                                                  'Debug test disconnection'
+                                                                              );
+                                                                              setIsModalOpen(
+                                                                                  true
+                                                                              );
+                                                                          }
+                                                                      }}
+                                                                      disabled={
+                                                                          isLoading
+                                                                      }
+                                                                  />
+                                                              </div>
+                                                              <div className="mt-4 p-3 bg-warning-alt rounded-md">
+                                                                  <h5 className="font-medium text-warning mb-2">
+                                                                      🔍
+                                                                      Troubleshooting
+                                                                      Tips
+                                                                  </h5>
+                                                                  <ul className="text-sm text-warning space-y-1">
+                                                                      <li>
+                                                                          •
+                                                                          If
+                                                                          you
+                                                                          see
+                                                                          "Failed
+                                                                          to
+                                                                          fetch",
+                                                                          it's
+                                                                          likely
+                                                                          a
+                                                                          CORS
+                                                                          or
+                                                                          network
+                                                                          issue
+                                                                      </li>
+                                                                      <li>
+                                                                          •
+                                                                          Check
+                                                                          browser
+                                                                          console
+                                                                          (F12)
+                                                                          for
+                                                                          detailed
+                                                                          error
+                                                                          messages
+                                                                      </li>
+                                                                      <li>
+                                                                          •
+                                                                          Ensure
+                                                                          API
+                                                                          server
+                                                                          is
+                                                                          running
+                                                                          at:
+                                                                          https://arcticterntech.in:8443
+                                                                      </li>
+                                                                      <li>
+                                                                          •
+                                                                          Try
+                                                                          "Test
+                                                                          Connectivity"
+                                                                          first
+                                                                          to
+                                                                          verify
+                                                                          basic
+                                                                          connection
+                                                                      </li>
+                                                                      <li>
+                                                                          •
+                                                                          Check
+                                                                          your
+                                                                          network
+                                                                          firewall/proxy
+                                                                          settings
+                                                                      </li>
+                                                                  </ul>
+                                                              </div>
+                                                          </div>
+                                                      </div>
+                                                  ),
                                               },
-                                          ],
-                                      },
+                                          },
+                                      ],
                                   },
-                              ]
-                            : []),
-                        // Meter Table Section
+                              ],
+                          },
+                      },
+                  ]
+                : []),
+            // Overview Cards Section
+            {
+                layout: {
+                    type: 'grid' as const,
+                    columns: 4 as const,
+                    gap: 'gap-4' as const,
+                    rows: [
                         {
-                            layout: {
-                                type: 'row' as const,
-                                gap: 'gap-4',
-                                rows: [
-                                    {
-                                        layout: 'row' as const,
-                                        columns: [
-                                            {
-                                                name: 'Table',
-                                                props: {
-                                                    data: tableData,
-                                                    columns: columns,
-                                                    actions: actions,
-                                                    showActions: true,
-                                                    searchable: true,
-                                                    pagination: true,
-                                                    rowsPerPageOptions: [
-                                                        5, 10, 15, 25,
-                                                    ],
-                                                    initialRowsPerPage: 10,
-                                                    selectable: true,
-                                                    selectedRows:
-                                                        selectedMeters,
-                                                    onSelectionChange: (
-                                                        selectedIds: string[]
-                                                    ) => {
-                                                        const currentPageIds =
-                                                            tableData.map(
-                                                                (row) => row.id
-                                                            );
-                                                        const allCurrentPageSelected =
-                                                            currentPageIds.every(
-                                                                (id) =>
-                                                                    selectedIds.includes(
-                                                                        id
-                                                                    )
-                                                            );
-
-                                                        if (
-                                                            allCurrentPageSelected &&
-                                                            selectedIds.length ===
-                                                                currentPageIds.length
-                                                        ) {
-                                                            const allFilteredIds =
-                                                                filteredMeters.map(
-                                                                    (meter) =>
-                                                                        meter.id
-                                                                );
-                                                            setSelectedMeters(
-                                                                allFilteredIds
-                                                            );
-                                                        } else {
-                                                            setSelectedMeters(
-                                                                selectedIds
-                                                            );
-                                                        }
-                                                    },
-                                                    emptyMessage:
-                                                        'No meters found',
-                                                    showHeader: true,
-                                                    headerTitle:
-                                                        'Meter Connection Status',
-                                                    dateRange:
-                                                        'Jan 2024 - Dec 2024',
-                                                    selectedTimeRange:
-                                                        selectedTimeRange,
-                                                    onTimeRangeChange:
-                                                        handleTimeRangeChange,
-                                                    timeRangeLabels:
-                                                        timeRangeLabels,
-                                                },
-                                            },
-                                        ],
-                                    },
-                                ],
-                            },
+                            layout: 'grid' as const,
+                            gridColumns: 4 as const,
+                            gap: 'gap-4' as const,
+                            columns: overviewCards.map((card) => ({
+                                name: 'Card',
+                                props: { ...card, bg: "bg-stat-icon-gradient" },
+                            })),
                         },
-                    ]}
-                />
+                    ],
+                },
+            },
+            // Quick Actions Section
+            ...(selectedMeters.length > 0
+                ? [
+                      {
+                          layout: {
+                              type: 'row' as const,
+                              gap: 'gap-4' as const,
+                              rows: [
+                                  {
+                                      layout: 'row' as const,
+                                      columns: [
+                                          {
+                                              name: 'div',
+                                              props: {
+                                                  className: 'mb-8',
+                                                  children: (
+                                                      <div>
+                                                          <div className="flex items-center justify-between mb-4">
+                                                              <h3 className="text-lg font-semibold text-neutral-darker dark:text-white">
+                                                                  Quick
+                                                                  Actions
+                                                              </h3>
+                                                              <div className="flex items-center gap-2">
+                                                                  <span className="text-xs text-neutral dark:text-neutral-light">
+                                                                      Last
+                                                                      updated:
+                                                                  </span>
+                                                                  <span className="text-xs font-medium text-neutral dark:text-neutral-light">
+                                                                      {new Date().toLocaleTimeString()}
+                                                                  </span>
+                                                              </div>
+                                                          </div>
+                                                          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+                                                              {quickActionsData.map(
+                                                                  (
+                                                                      action,
+                                                                      index
+                                                                  ) => (
+                                                                      <div
+                                                                          key={
+                                                                              index
+                                                                          }
+                                                                          className="bg-white flex flex-col gap-4 dark:bg-primary-dark-light rounded-xl p-4 border border-neutral-light dark:border-dark-border shadow-lg">
+                                                                          <h3 className="text-lg font-semibold text-neutral-darker dark:text-white">
+                                                                              {
+                                                                                  action.title
+                                                                              }
+                                                                          </h3>
+                                                                          <div className="flex flex-col items-center gap-3">
+                                                                              <Button
+                                                                                  label={action.title
+                                                                                      .replace(
+                                                                                          'Bulk ',
+                                                                                          ''
+                                                                                      )
+                                                                                      .replace(
+                                                                                          ' Meters',
+                                                                                          ' Selected'
+                                                                                      )}
+                                                                                  variant={
+                                                                                      action.variant
+                                                                                  }
+                                                                                  onClick={
+                                                                                      action.action
+                                                                                  }
+                                                                                  disabled={
+                                                                                      action.disabled
+                                                                                  }
+                                                                                  className="w-full max-w-xs"
+                                                                              />
+                                                                              <span
+                                                                                  className={`text-xs font-medium px-2 py-1 rounded-full ${
+                                                                                      action.variant ===
+                                                                                      'danger'
+                                                                                          ? 'text-danger dark:text-danger bg-danger-light dark:bg-danger-light'
+                                                                                          : 'text-accent dark:text-accent bg-accent-light dark:bg-accent-light'
+                                                                                  }`}>
+                                                                                  {action.selectedCount
+                                                                                      ? `${action.selectedCount} Selected`
+                                                                                      : 'Real-time'}
+                                                                              </span>
+                                                                          </div>
+                                                                      </div>
+                                                                  )
+                                                              )}
+                                                          </div>
+                                                      </div>
+                                                  ),
+                                              },
+                                          },
+                                      ],
+                                  },
+                              ],
+                          },
+                      },
+                  ]
+                : []),
+            // Meter Table Section
+            {
+                layout: {
+                    type: 'row' as const,
+                    gap: 'gap-4' as const,
+                    rows: [
+                        {
+                            layout: 'row' as const,
+                            columns: [
+                                {
+                                    name: 'Table',
+                                    props: {
+                                        data: tableData,
+                                        columns: columns,
+                                        actions: actions,
+                                        showActions: true,
+                                        searchable: true,
+                                        pagination: true,
+                                        rowsPerPageOptions: [
+                                            5, 10, 15, 25,
+                                        ],
+                                        initialRowsPerPage: 10,
+                                        selectable: true,
+                                        selectedRows:
+                                            selectedMeters,
+                                        onSelectionChange: (
+                                            selectedIds: string[]
+                                        ) => {
+                                            const currentPageIds =
+                                                tableData.map(
+                                                    (row) => row.id
+                                                );
+                                            const allCurrentPageSelected =
+                                                currentPageIds.every(
+                                                    (id) =>
+                                                        selectedIds.includes(
+                                                            id
+                                                        )
+                                                );
 
-                {/* Modal Component - Outside PageC structure */}
-                <Modal
+                                            if (
+                                                allCurrentPageSelected &&
+                                                selectedIds.length ===
+                                                    currentPageIds.length
+                                            ) {
+                                                const allFilteredIds =
+                                                    filteredMeters.map(
+                                                        (meter) =>
+                                                            meter.id
+                                                    );
+                                                setSelectedMeters(
+                                                    allFilteredIds
+                                                );
+                                            } else {
+                                                setSelectedMeters(
+                                                    selectedIds
+                                                );
+                                            }
+                                        },
+                                        emptyMessage:
+                                            'No meters found',
+                                        showHeader: true,
+                                        headerTitle:
+                                            'Meter Connection Status',
+                                        dateRange:
+                                            'Jan 2024 - Dec 2024',
+                                        selectedTimeRange:
+                                            selectedTimeRange,
+                                        onTimeRangeChange:
+                                            handleTimeRangeChange,
+                                        timeRangeLabels:
+                                            timeRangeLabels,
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+        ];
+
+        // Add conditional sections
+        if (error) {
+            baseSections.push({
+                layout: {
+                    type: 'row' as const,
+                    gap: 'gap-4' as const,
+                    rows: [
+                        {
+                            layout: 'row' as const,
+                            columns: [
+                                {
+                                    name: 'div',
+                                    props: {
+                                        className: 'mb-4 p-4 bg-danger-light text-danger rounded-lg',
+                                        children: (
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <span>{error}</span>
+                                                </div>
+                                                <button
+                                                    onClick={() => setError(null)}
+                                                    className="text-danger hover:text-danger-alt">
+                                                    ×
+                                                </button>
+                                            </div>
+                                        ),
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+        }
+
+        if (isLoading) {
+            baseSections.push({
+                layout: {
+                    type: 'row' as const,
+                    gap: 'gap-4' as const,
+                    rows: [
+                        {
+                            layout: 'row' as const,
+                            columns: [
+                                {
+                                    name: 'div',
+                                    props: {
+                                        className: 'mb-4 flex items-center justify-center',
+                                        children: (
+                                            <>
+                                                <LoadingSpinner />
+                                                <span className="ml-2">
+                                                    Refreshing connection statuses...
+                                                </span>
+                                            </>
+                                        ),
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+        }
+
+        if (debugMode) {
+            baseSections.push({
+                layout: {
+                    type: 'row' as const,
+                    gap: 'gap-4' as const,
+                    rows: [
+                        {
+                            layout: 'row' as const,
+                            columns: [
+                                {
+                                    name: 'div',
+                                    props: {
+                                        className: 'mb-4 p-4 bg-info-light text-info rounded-lg',
+                                        children: (
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <span>Debug Mode Active</span>
+                                                </div>
+                                            </div>
+                                        ),
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+        }
+
+        if (selectedMeters.length > 0) {
+            baseSections.push({
+                layout: {
+                    type: 'row' as const,
+                    gap: 'gap-4' as const,
+                    rows: [
+                        {
+                            layout: 'row' as const,
+                            columns: [
+                                {
+                                    name: 'div',
+                                    props: {
+                                        className: 'mb-4 p-4 bg-warning-light text-warning rounded-lg',
+                                        children: (
+                                            <div className="flex items-center justify-between">
+                                                <div>
+                                                    <span>{selectedMeters.length} meter(s) selected</span>
+                                                </div>
+                                            </div>
+                                        ),
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+            });
+        }
+
+        return baseSections;
+    };
+
+    return (
+        <Suspense fallback={<LoadingSpinner />}>
+            <Page
+                sections={buildSections()}
+            />
+
+            {/* Modal Component - Outside Page structure */}
+            <Modal
                     size="lg"
                     isOpen={isModalOpen}
                     onClose={() => {
@@ -1643,7 +1773,6 @@ const ConnectDisconnect: React.FC = () => {
                         </div>
                     </div>
                 </Modal>
-            </div>
         </Suspense>
     );
 };

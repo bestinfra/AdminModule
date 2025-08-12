@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { TableData } from '@/components/global/Table';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import { exportChartData } from '@/utils/excelExport';
 import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
+import BACKEND_URL from '../config';
 
 const DTRDashboard: React.FC = () => {
     const navigate = useNavigate();
@@ -11,16 +12,159 @@ const DTRDashboard: React.FC = () => {
     // State for time range toggle
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
 
-    // Chart data variables
-    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const alertSeries = [
-        {
-            name: 'Alerts',
-            data: [12, 19, 3, 5, 2, 3, 7, 8, 9, 10, 11, 12]
-        }
-    ];
-    const alertColors = ['#163b7c'];
+    // State for API data
+    const [dtrStatsData, setDtrStatsData] = useState<any>({});
+    const [dtrConsumptionData, setDtrConsumptionData] = useState<{
+        daily: { totalKwh: string | number; totalKvah: string | number; totalKw: string | number; totalKva: string | number };
+        monthly: { totalKwh: string | number; totalKvah: string | number; totalKw: string | number; totalKva: string | number };
+    }>({
+        daily: { totalKwh: 0, totalKvah: 0, totalKw: 0, totalKva: 0 },
+        monthly: { totalKwh: 0, totalKvah: 0, totalKw: 0, totalKva: 0 },
+    });
+    const [dtrTableData, setDtrTableData] = useState<TableData[]>([]);
+    const [alertsData, setAlertsData] = useState<any[]>([]);
+    const [serverPagination, setServerPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 10
+    });
+
+    // Chart data variables (alerts trends)
+    const [chartMonths, setChartMonths] = useState<string[]>([]);
+    const [chartSeries, setChartSeries] = useState<{ name: string; data: number[] }[]>([]);
+    const alertColors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#9467bd', '#d62728'];
     const statsRange = selectedTimeRange;
+
+    // API Functions
+    const fetchDTRStats = async () => {
+        // setLoading(prev => ({ ...prev, stats: true }));
+        try {
+            const response = await fetch(`${BACKEND_URL}/dtrs/stats`);
+            const data = await response.json();
+            
+            if (data.success) {
+                // Consolidated API returns { data: { row1: {...}, row2: { daily: {...}, monthly: {...} } } }
+                const row1 = data.data?.row1 || {};
+                const row2 = data.data?.row2 || {};
+                setDtrStatsData(row1);
+                setDtrConsumptionData({
+                    daily: row2.daily || { totalKwh: 0, totalKvah: 0, totalKw: 0, totalKva: 0 },
+                    monthly: row2.monthly || { totalKwh: 0, totalKvah: 0, totalKw: 0, totalKva: 0 },
+                });
+            } else {
+                throw new Error(data.message || 'Failed to fetch DTR stats');
+            }
+        } catch (error) {
+            console.error('Error fetching DTR stats:', error);
+            // Fallback to demo data
+            setDtrStatsData({});
+        } finally {
+            // setLoading(prev => ({ ...prev, stats: false }));
+        }
+    };
+
+    const fetchDTRTable = async (page = 1, limit = 10) => {
+        // setLoading(prev => ({ ...prev, table: true }));
+        try {
+            const params = new URLSearchParams();
+            params.append('page', String(page));
+            params.append('pageSize', String(limit));
+            
+            const response = await fetch(`${BACKEND_URL}/dtrs?${params.toString()}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setDtrTableData(data.data);
+                setServerPagination({
+                    currentPage: data.page || 1,
+                    totalPages: Math.ceil(data.total / data.pageSize) || 1,
+                    totalItems: data.total || 0,
+                    itemsPerPage: data.pageSize || 10,
+                });
+            } else {
+                throw new Error(data.message || 'Failed to fetch DTR table');
+            }
+        } catch (error) {
+            console.error('Error fetching DTR table:', error);
+            // Fallback to demo data
+            setDtrTableData([]);
+        } finally {
+            // setLoading(prev => ({ ...prev, table: false }));
+        }
+    };
+
+    const fetchDTRAlerts = async () => {
+        // setLoading(prev => ({ ...prev, alerts: true }));
+        try {
+            const response = await fetch(`${BACKEND_URL}/dtrs/alerts`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setAlertsData(data.data);
+            } else {
+                throw new Error(data.message || 'Failed to fetch DTR alerts');
+            }
+        } catch (error) {
+            console.error('Error fetching DTR alerts:', error);
+            // Fallback to demo data
+            setAlertsData([]);
+        } finally {
+            // setLoading(prev => ({ ...prev, alerts: false }));
+        }
+    };
+
+    const fetchDTRAlertsTrends = async () => {
+        // setLoading(prev => ({ ...prev, trends: true }));
+        try {
+            const response = await fetch(`${BACKEND_URL}/dtrs/alerts/trends`);
+            const data = await response.json();
+            
+            if (data.success) {
+                const rows: Array<{
+                    month: string;
+                    detected_count: number;
+                    analyzing_count: number;
+                    repairing_count: number;
+                    resolved_count: number;
+                    unresolved_count: number;
+                }> = data.data || [];
+
+                const monthsList = rows.map(r => r.month);
+                const detected = rows.map(r => r.detected_count || 0);
+                const analyzing = rows.map(r => r.analyzing_count || 0);
+                const repairing = rows.map(r => r.repairing_count || 0);
+                const resolved = rows.map(r => r.resolved_count || 0);
+                const unresolved = rows.map(r => r.unresolved_count || 0);
+
+                setChartMonths(monthsList);
+                setChartSeries([
+                    { name: 'Detected', data: detected },
+                    { name: 'Analyzing', data: analyzing },
+                    { name: 'Repairing', data: repairing },
+                    { name: 'Resolved', data: resolved },
+                    { name: 'Unresolved', data: unresolved },
+                ]);
+            } else {
+                throw new Error(data.message || 'Failed to fetch DTR alerts trends');
+            }
+        } catch (error) {
+            console.error('Error fetching DTR alerts trends:', error);
+            // Fallback to demo data
+            setChartMonths([]);
+            setChartSeries([]);
+        } finally {
+            // setLoading(prev => ({ ...prev, trends: false }));
+        }
+    };
+
+    // Load data on component mount
+    useEffect(() => {
+        fetchDTRStats();
+        fetchDTRTable();
+        fetchDTRAlerts();
+        fetchDTRAlertsTrends();
+    }, []);
 
     // Handle Excel download for all DTR Dashboard data
     const handleExportData = () => {
@@ -30,7 +174,7 @@ const DTRDashboard: React.FC = () => {
             const workbook = XLSX.utils.book_new();
 
             // Prepare DTR Statistics data
-            const dtrStatsData = dtrStatsCards.map(stat => ({
+            const dtrStatsExportData = dtrStatsCards.map(stat => ({
                 'Metric': stat.title,
                 'Value': stat.value,
                 'Subtitle': stat.subtitle1 || '',
@@ -47,19 +191,20 @@ const DTRDashboard: React.FC = () => {
                 'Last Communication': dtr.lastCommunication,
             }));
 
-            // Prepare Daily Consumption data
-            const dailyConsumptionExportData = dailyConsumptionCards.map(card => ({
-                'Metric': card.title,
-                'Value': card.value,
-                'Subtitle': card.subtitle1 || '',
-            }));
+            // Prepare Daily/Monthly Consumption data from API state
+            const dailyConsumptionExportData = [
+                { Metric: 'Total kWh', Value: dtrConsumptionData.daily.totalKwh, Subtitle: "Today's Active Energy" },
+                { Metric: 'Total kVAh', Value: dtrConsumptionData.daily.totalKvah, Subtitle: "Today's Apparent Energy" },
+                { Metric: 'Total kW', Value: dtrConsumptionData.daily.totalKw, Subtitle: 'Current Active Power' },
+                { Metric: 'Total kVA', Value: dtrConsumptionData.daily.totalKva, Subtitle: 'Current Apparent Power' },
+            ];
 
-            // Prepare Monthly Consumption data
-            const monthlyConsumptionExportData = monthlyConsumptionCards.map(card => ({
-                'Metric': card.title,
-                'Value': card.value,
-                'Subtitle': card.subtitle1 || '',
-            }));
+            const monthlyConsumptionExportData = [
+                { Metric: 'Total kWh', Value: dtrConsumptionData.monthly.totalKwh, Subtitle: 'Monthly Active Energy' },
+                { Metric: 'Total kVAh', Value: dtrConsumptionData.monthly.totalKvah, Subtitle: 'Monthly Apparent Energy' },
+                { Metric: 'Avg kW', Value: dtrConsumptionData.monthly.totalKw, Subtitle: 'Monthly Average Power' },
+                { Metric: 'Avg kVA', Value: dtrConsumptionData.monthly.totalKva, Subtitle: 'Monthly Average Apparent' },
+            ];
 
             // Prepare Daily Alerts data
             const dailyAlertsExportData = dailyAlertsData.map(alert => ({
@@ -75,20 +220,23 @@ const DTRDashboard: React.FC = () => {
                 'Status': alert.status,
             }));
 
-            // Prepare Chart Performance data
-            const chartPerformanceData = months.map((month, index) => ({
-                'Month': month,
-                'Alerts': alertSeries[0].data[index],
-            }));
+            // Prepare Alerts Trends data for export
+            const alertsTrendsExportData = chartMonths.map((month, index) => {
+                const row: Record<string, string | number> = { Month: month };
+                chartSeries.forEach(series => {
+                    row[series.name] = series.data[index] ?? 0;
+                });
+                return row;
+            });
 
             // Convert data to worksheets
-            const dtrStatsSheet = XLSX.utils.json_to_sheet(dtrStatsData);
+            const dtrStatsSheet = XLSX.utils.json_to_sheet(dtrStatsExportData);
             const dtrTableSheet = XLSX.utils.json_to_sheet(dtrTableExportData);
             const dailyConsumptionSheet = XLSX.utils.json_to_sheet(dailyConsumptionExportData);
             const monthlyConsumptionSheet = XLSX.utils.json_to_sheet(monthlyConsumptionExportData);
             const dailyAlertsSheet = XLSX.utils.json_to_sheet(dailyAlertsExportData);
             const monthlyAlertsSheet = XLSX.utils.json_to_sheet(monthlyAlertsExportData);
-            const chartPerformanceSheet = XLSX.utils.json_to_sheet(chartPerformanceData);
+            const chartPerformanceSheet = XLSX.utils.json_to_sheet(alertsTrendsExportData);
 
             // Add worksheets to workbook
             XLSX.utils.book_append_sheet(workbook, dtrStatsSheet, 'DTR Statistics');
@@ -117,7 +265,7 @@ const DTRDashboard: React.FC = () => {
 
     // Chart download handler (for chart-specific export)
     const handleChartDownload = () => {
-        exportChartData(months, alertSeries, 'dtr-statistics-data');
+        exportChartData(chartMonths, chartSeries, 'dtr-alerts-trends');
     };
 
     // Handle DTR table actions
@@ -126,13 +274,18 @@ const DTRDashboard: React.FC = () => {
         navigate(`/dtr-detail/${row.dtrId}`);
     };
 
+    // Handle table pagination
+    const handlePageChange = (page: number, limit: number) => {
+        fetchDTRTable(page, limit);
+    };
 
 
-  // DTR statistics cards data - Using only daily data consistently
+
+  // DTR statistics cards data - Using API data
   const dtrStatsCards = [
     {
       title: "Total DTRs",
-      value: 29,
+      value: dtrStatsData.totalDtrs || dtrStatsData?.row1?.totalDtrs || 0,
       icon: "/icons/dtr.svg",
       subtitle1: "Total Transformer Units",
       onValueClick: () => navigate("/dtr-statistics/total-dtrs"),
@@ -140,58 +293,58 @@ const DTRDashboard: React.FC = () => {
     },
     {
       title: "Total LT Feeders",
-      value: 33,
+      value: dtrStatsData.totalLtFeeders || dtrStatsData?.row1?.totalLtFeeders || 0,
       icon: "/icons/feeder.svg",
       subtitle1: "Connected to DTRs",
       onValueClick: () => navigate("/dtr-statistics/total-lt-feeders"),
     },
     {
       title: "Today's Fuse Blown",
-      value: 1,
+      value: dtrStatsData.totalFuseBlown || dtrStatsData?.row1?.totalFuseBlown || 0,
       icon: "/icons/power_failure.svg",
-      subtitle1: "0.03% of Total DTRs",
+      subtitle1: `${dtrStatsData.fuseBlownPercentage || dtrStatsData?.row1?.fuseBlownPercentage || 0}% of Total DTRs`,
       onValueClick: () => navigate("/dtr-statistics/total-fuse-blown"),
     },
     {
       title: "Overloaded Feeders",
-      value: 0,
+      value: dtrStatsData.overloadedFeeders || dtrStatsData?.row1?.overloadedFeeders || 0,
       icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total Feeders",
+      subtitle1: `${dtrStatsData.overloadedPercentage || dtrStatsData?.row1?.overloadedPercentage || 0}% of Total Feeders`,
       onValueClick: () => navigate("/dtr-statistics/overloaded-feeders"),
     },
     {
       title: "Underloaded Feeders",
-      value: 33,
+      value: dtrStatsData.underloadedFeeders || dtrStatsData?.row1?.underloadedFeeders || 0,
       icon: "/icons/dtr.svg",
-      subtitle1: "100.0% of Total Feeders",
+      subtitle1: `${dtrStatsData.underloadedPercentage || dtrStatsData?.row1?.underloadedPercentage || 0}% of Total Feeders`,
       onValueClick: () => navigate("/dtr-statistics/underloaded-feeders"),
     },
     {
       title: "LT Side Fuse Blown",
-      value: 1,
+      value: dtrStatsData.ltSideFuseBlown || dtrStatsData?.row1?.ltSideFuseBlown || 0,
       icon: "/icons/power_failure.svg",
-      subtitle1: "1 Incident Today",
+      subtitle1: "Incidents Today",
       onValueClick: () => navigate("/dtr-statistics/lt-side-fuse-blown"),
     },
     {
       title: "Unbalanced DTRs",
-      value: 0,
+      value: dtrStatsData.unbalancedDtrs || dtrStatsData?.row1?.unbalancedDtrs || 0,
       icon: "/icons/dtr.svg",
-      subtitle1: "0.00% of Total DTRs",
+      subtitle1: `${dtrStatsData.unbalancedPercentage || dtrStatsData?.row1?.unbalancedPercentage || 0}% of Total DTRs`,
       onValueClick: () => navigate("/dtr-statistics/unbalanced-dtrs"),
     },
     {
       title: "Power Failure Feeders",
-      value: 0,
+      value: dtrStatsData.powerFailureFeeders || dtrStatsData?.row1?.powerFailureFeeders || 0,
       icon: "/icons/power_failure.svg",
-      subtitle1: "0.00% of Feeders",
+      subtitle1: `${dtrStatsData.powerFailurePercentage || dtrStatsData?.row1?.powerFailurePercentage || 0}% of Feeders`,
       onValueClick: () => navigate("/dtr-statistics/power-failure-feeders"),
     },
     {
       title: "HT Side Fuse Blown",
-      value: 0,
+      value: dtrStatsData.htSideFuseBlown || dtrStatsData?.row1?.htSideFuseBlown || 0,
       icon: "/icons/power_failure.svg",
-      subtitle1: "0 Incident Today",
+      subtitle1: "Incidents Today",
       onValueClick: () => navigate("/dtr-statistics/ht-side-fuse-blown"),
     },
   ];
@@ -200,45 +353,45 @@ const DTRDashboard: React.FC = () => {
     const dailyConsumptionCards = [
         {
             title: "Total kWh",
-            value: "3,847.32",
+            value: String(dtrConsumptionData.daily.totalKwh || 0),
             icon: "/icons/energy.svg",
             subtitle1: "Today's Active Energy",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Total kVAh",
-            value: "3,892.45",
+            value: String(dtrConsumptionData.daily.totalKvah || 0),
             icon: "/icons/energy.svg",
             subtitle1: "Today's Apparent Energy",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Total kW",
-            value: "6.10",
+            value: String(dtrConsumptionData.daily.totalKw || 0),
             icon: "/icons/energy.svg",
             subtitle1: "Current Active Power",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Total kVA",
-            value: "6.26",
+            value: String(dtrConsumptionData.daily.totalKva || 0),
             icon: "/icons/energy.svg",
             subtitle1: "Current Apparent Power",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Active DTRs",
-            value: 29,
+            value: Number(dtrStatsData?.activeDtrs || 0),
             icon: "/icons/dtr.svg",
-            subtitle1: "100.00% of Total DTRs",
+            subtitle1: `${dtrStatsData?.activePercentage ?? 0}% of Total DTRs`,
             iconStyle: FILTER_STYLES.WHITE, // White icon for Active DTRs
             bg:'bg-[var(--color-secondary)]'
         },
         {
             title: "In-Active DTRs",
-            value: 0,
+            value: Number(dtrStatsData?.inactiveDtrs || 0),
             icon: "/icons/dtr.svg",
-            subtitle1: "0.00% of Total DTRs",
+            subtitle1: `${dtrStatsData?.inactivePercentage ?? 0}% of Total DTRs`,
             iconStyle: FILTER_STYLES.WHITE, // White icon for In-Active DTRs
             bg: 'bg-[var(--color-danger)]'
         },
@@ -248,45 +401,45 @@ const DTRDashboard: React.FC = () => {
     const monthlyConsumptionCards = [
         {
             title: "Total kWh",
-            value: "111,931.96",
+            value: String(dtrConsumptionData.monthly.totalKwh || 0),
             icon: "/icons/consumption.svg",
             subtitle1: "Monthly Active Energy",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Total kVAh",
-            value: "113,369.06",
+            value: String(dtrConsumptionData.monthly.totalKvah || 0),
             icon: "/icons/consumption.svg",
             subtitle1: "Monthly Apparent Energy",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Avg kW",
-            value: "5.87",
+            value: String(dtrConsumptionData.monthly.totalKw || 0),
             icon: "/icons/consumption.svg",
             subtitle1: "Monthly Average Power",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Avg kVA",
-            value: "6.02",
+            value: String(dtrConsumptionData.monthly.totalKva || 0),
             icon: "/icons/consumption.svg",
             subtitle1: "Monthly Average Apparent",
             bg: "bg-stat-icon-gradient",
         },
         {
             title: "Active DTRs",
-            value: 29,
+            value: Number(dtrStatsData?.activeDtrs || 0),
             icon: "/icons/dtr.svg",
-            subtitle1: "100.00% of Total DTRs",
+            subtitle1: `${dtrStatsData?.activePercentage ?? 0}% of Total DTRs`,
             iconStyle: FILTER_STYLES.WHITE, // White icon for Active DTRs
             bg: 'bg-[var(--color-secondary)]',
         },
         {
             title: "In-Active DTRs",
-            value: 0,
+            value: Number(dtrStatsData?.inactiveDtrs || 0),
             icon: "/icons/dtr.svg",
-            subtitle1: "0.00% of Total DTRs",
+            subtitle1: `${dtrStatsData?.inactivePercentage ?? 0}% of Total DTRs`,
             iconStyle: FILTER_STYLES.WHITE, // White icon for In-Active DTRs
             bg: 'bg-[var(--color-danger)]',
         },
@@ -311,143 +464,143 @@ const DTRDashboard: React.FC = () => {
     },
     { key: "lastCommunication", label: "Last Communication" },
   ];
-  const dtrTableData = [
-    {
-      dtrId: "TRANSFORMER-01",
-      dtrName: "TGNP_DTR-01",
-      feedersCount: 1,
-      streetName: "Waddepally",
-      city: "Warangal",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:30:25",
-    },
-    {
-      dtrId: "TRANSFORMER-02",
-      dtrName: "TGNP_DTR-02",
-      feedersCount: 1,
-      streetName: "Sun city",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:28:15",
-    },
-    {
-      dtrId: "TRANSFORMER-03",
-      dtrName: "TGNP_DTR-03",
-      feedersCount: 4,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:25:42",
-    },
-    {
-      dtrId: "TRANSFORMER-04",
-      dtrName: "TGNP_DTR-04",
-      feedersCount: 1,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:22:18",
-    },
-    {
-      dtrId: "TRANSFORMER-05",
-      dtrName: "TGNP_DTR-05",
-      feedersCount: 1,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:20:33",
-    },
-    {
-      dtrId: "TRANSFORMER-06",
-      dtrName: "TGNP_DTR-06",
-      feedersCount: 1,
-      streetName: "Prashanth Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:18:55",
-    },
-    {
-      dtrId: "TRANSFORMER-07",
-      dtrName: "TGNP_DTR-07",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:15:27",
-    },
-    {
-      dtrId: "TRANSFORMER-08",
-      dtrName: "TGNP_DTR-08",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:12:44",
-    },
-    {
-      dtrId: "TRANSFORMER-09",
-      dtrName: "TGNP_DTR-09",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:10:18",
-    },
-    {
-      dtrId: "TRANSFORMER-10",
-      dtrName: "TGNP_DTR-10",
-      feedersCount: 1,
-      streetName: "Hyder Nagar",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:08:32",
-    },
-    {
-      dtrId: "TRANSFORMER-11",
-      dtrName: "TGNP_DTR-11",
-      feedersCount: 2,
-      streetName: "Gachibowli",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:05:15",
-    },
-    {
-      dtrId: "TRANSFORMER-12",
-      dtrName: "TGNP_DTR-12",
-      feedersCount: 3,
-      streetName: "Madhapur",
-      city: "Hyderabad",
-      commStatus: "Inactive",
-      lastCommunication: "2024-07-24 18:45:22",
-    },
-    {
-      dtrId: "TRANSFORMER-13",
-      dtrName: "TGNP_DTR-13",
-      feedersCount: 1,
-      streetName: "HITEC City",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:02:48",
-    },
-    {
-      dtrId: "TRANSFORMER-14",
-      dtrName: "TGNP_DTR-14",
-      feedersCount: 2,
-      streetName: "Jubilee Hills",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 14:00:12",
-    },
-    {
-      dtrId: "TRANSFORMER-15",
-      dtrName: "TGNP_DTR-15",
-      feedersCount: 1,
-      streetName: "Banjara Hills",
-      city: "Hyderabad",
-      commStatus: "Active",
-      lastCommunication: "2024-07-25 13:58:35",
-    },
-  ];
+  // const dtrTableData = [
+  //   {
+  //     dtrId: "TRANSFORMER-01",
+  //     dtrName: "TGNP_DTR-01",
+  //     feedersCount: 1,
+  //     streetName: "Waddepally",
+  //     city: "Warangal",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:30:25",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-02",
+  //     dtrName: "TGNP_DTR-02",
+  //     feedersCount: 1,
+  //     streetName: "Sun city",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:28:15",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-03",
+  //     dtrName: "TGNP_DTR-03",
+  //     feedersCount: 4,
+  //     streetName: "Prashanth Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:25:42",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-04",
+  //     dtrName: "TGNP_DTR-04",
+  //     feedersCount: 1,
+  //     streetName: "Prashanth Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:22:18",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-05",
+  //     dtrName: "TGNP_DTR-05",
+  //     feedersCount: 1,
+  //     streetName: "Prashanth Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:20:33",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-06",
+  //     dtrName: "TGNP_DTR-06",
+  //     feedersCount: 1,
+  //     streetName: "Prashanth Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:18:55",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-07",
+  //     dtrName: "TGNP_DTR-07",
+  //     feedersCount: 1,
+  //     streetName: "Hyder Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:15:27",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-08",
+  //     dtrName: "TGNP_DTR-08",
+  //     feedersCount: 1,
+  //     streetName: "Hyder Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:12:44",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-09",
+  //     dtrName: "TGNP_DTR-09",
+  //     feedersCount: 1,
+  //     streetName: "Hyder Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:10:18",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-10",
+  //     dtrName: "TGNP_DTR-10",
+  //     feedersCount: 1,
+  //     streetName: "Hyder Nagar",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:08:32",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-11",
+  //     dtrName: "TGNP_DTR-11",
+  //     feedersCount: 2,
+  //     streetName: "Gachibowli",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:05:15",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-12",
+  //     dtrName: "TGNP_DTR-12",
+  //     feedersCount: 3,
+  //     streetName: "Madhapur",
+  //     city: "Hyderabad",
+  //     commStatus: "Inactive",
+  //     lastCommunication: "2024-07-24 18:45:22",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-13",
+  //     dtrName: "TGNP_DTR-13",
+  //     feedersCount: 1,
+  //     streetName: "HITEC City",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:02:48",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-14",
+  //     dtrName: "TGNP_DTR-14",
+  //     feedersCount: 2,
+  //     streetName: "Jubilee Hills",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 14:00:12",
+  //   },
+  //   {
+  //     dtrId: "TRANSFORMER-15",
+  //     dtrName: "TGNP_DTR-15",
+  //     feedersCount: 1,
+  //     streetName: "Banjara Hills",
+  //     city: "Hyderabad",
+  //     commStatus: "Active",
+  //     lastCommunication: "2024-07-25 13:58:35",
+  //   },
+  // ];
 
 
     // Dummy data for Latest Alerts table
@@ -559,10 +712,10 @@ const DTRDashboard: React.FC = () => {
         setSelectedTimeRange(range as 'Daily' | 'Monthly');
     };
 
-    // Get current alerts data based on selected time range
-    const getCurrentAlertsData = () => {
-        return selectedTimeRange === 'Daily' ? dailyAlertsData : monthlyAlertsData;
-    };
+    // Remove unused function
+    // const getCurrentAlertsData = () => {
+    //     return alertsData;
+    // };
 
 
     // Dummy data for DTR Alert Statistics
@@ -654,7 +807,6 @@ const DTRDashboard: React.FC = () => {
                   layout: "grid",
                   gap: "gap-4",
                   gridColumns: 3,
-                  gridRows: 2,
                   span: { col: 3, row: 1 },
                     className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                   columns: [
@@ -682,7 +834,7 @@ const DTRDashboard: React.FC = () => {
                           onValueClick: stat.onValueClick,
                           bg: stat.bg || "bg-stat-icon-gradient",
                         },
-                        span: { col: 1, row: 1 },
+                        span: { col: 1 as const, row: 1 as const },
                       })),
                   ],
                 },
@@ -690,7 +842,6 @@ const DTRDashboard: React.FC = () => {
                     layout: "grid",
                     gap: "gap-4",
                     gridColumns: 2,
-                    gridRows: 2,
                     span: { col: 2, row: 1 },
                     className:'border border-primary-border rounded-3xl p-4 bg-background-secondary',
                     columns: [
@@ -727,7 +878,7 @@ const DTRDashboard: React.FC = () => {
                                  iconStyle: card.iconStyle, // Only for Active/In-Active DTRs
                                  bg: card.bg || "bg-stat-icon-gradient",
                              },
-                             span: { col: 1, row: 1 },
+                             span: { col: 1 as const, row: 1 as const },
                          }))
                     ],
                 },
@@ -750,7 +901,6 @@ const DTRDashboard: React.FC = () => {
                                         {
                                             name: 'Table',
                                             props: {
-                                                                                              
                                                 data: dtrTableData,
                                                 columns: dtrTableColumns,
                                                 showHeader: true,
@@ -758,7 +908,6 @@ const DTRDashboard: React.FC = () => {
                                                 headerClassName:'h-18',
                                                 searchable: true, 
                                                 sortable: true,
-                                                pagination: true,
                                                 initialRowsPerPage: 10,
                                                 showActions: true,
                                                 text: 'DTR Management Table',
@@ -766,6 +915,8 @@ const DTRDashboard: React.FC = () => {
                                                     navigate(`/dtr-detail/${row.dtrId}`),
                                                 onView: handleViewDTR,
                                                 availableTimeRanges: [],
+                                                onPageChange: handlePageChange,
+                                                pagination: serverPagination,
                                             },
                                         },
                                     ],
@@ -784,8 +935,8 @@ const DTRDashboard: React.FC = () => {
                           {
                             name: 'BarChart',
                             props: {
-                                xAxisData: months,
-                                seriesData: alertSeries,
+                                xAxisData: chartMonths,
+                                seriesData: chartSeries,
                                 seriesColors: alertColors,
                                 height: 300,
                                 showLegendInteractions: true,
@@ -799,7 +950,7 @@ const DTRDashboard: React.FC = () => {
                              {
                                  name: 'Table',
                                  props: {
-                                     data: getCurrentAlertsData(),
+                                     data: alertsData,
                                      columns: alertsTableColumns,
                                      showHeader: true,
                                      headerTitle: 'Latest Alerts',

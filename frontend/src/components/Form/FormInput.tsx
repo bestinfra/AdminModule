@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useCallback, useRef, useState } from "react";
 import type {
   FormInputProps,
-  FormInputEvent,
+  FormInputEvent, 
   CommonInputProps,
   FormInputValue,
 } from "@components/Form/types";
@@ -360,6 +360,28 @@ const FormInput: React.FC<FormInputProps> = ({
         const textInputType = allowedTextInputTypes.includes(type as any)
           ? type
           : "text";
+        
+        if (rightIcon) {
+          return (
+            <div className="relative">
+              <input
+                {...commonProps}
+                ref={inputRef}
+                key={name}
+                type={textInputType}
+                value={stringValue}
+                placeholder={placeholder || label}
+                className={finalClassName}
+              />
+              <img
+                src={rightIcon}
+                alt="icon"
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 pointer-events-none"
+              />
+            </div>
+          );
+        }
+        
         return (
           <div className="relative">
             <input

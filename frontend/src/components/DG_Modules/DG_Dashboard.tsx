@@ -350,13 +350,13 @@ const DGDashboard: React.FC = () => {
   }, [searchQuery]);
 
   // Calculate summary statistics based on smart meter data only
-  const runningCount = dgSets.filter(dg => dg.status === 'running').length;
-  const totalAlerts = dgSets.reduce((sum, dg) => sum + dg.alerts.count, 0);
-  const avgActivePower = Math.round(dgSets.reduce((sum, dg) => sum + dg.activePower, 0) / dgSets.length);
-  const avgPowerFactor = (dgSets.reduce((sum, dg) => sum + dg.powerFactor, 0) / dgSets.length).toFixed(2);
-  const avgVoltageUnbalance = (dgSets.reduce((sum, dg) => sum + dg.voltageUnbalance, 0) / dgSets.length).toFixed(1);
-  const totalEnergyGenerated = dgSets.reduce((sum, dg) => sum + dg.energyToday, 0);
-  const avgFrequencyStability = (dgSets.reduce((sum, dg) => sum + dg.frequencyStability, 0) / dgSets.length).toFixed(1);
+  // const runningCount = dgSets.filter(dg => dg.status === 'running').length;
+  // const totalAlerts = dgSets.reduce((sum, dg) => sum + dg.alerts.count, 0);
+  // const avgActivePower = Math.round(dgSets.reduce((sum, dg) => sum + dg.activePower, 0) / dgSets.length);
+  // const avgPowerFactor = (dgSets.reduce((sum, dg) => sum + dg.powerFactor, 0) / dgSets.length).toFixed(2);
+  // const avgVoltageUnbalance = (dgSets.reduce((sum, dg) => sum + dg.voltageUnbalance, 0) / dgSets.length).toFixed(1);
+  // const totalEnergyGenerated = dgSets.reduce((sum, dg) => sum + dg.energyToday, 0);
+  // const avgFrequencyStability = (dgSets.reduce((sum, dg) => sum + dg.frequencyStability, 0) / dgSets.length).toFixed(1);
 
   const dashboardConfig = {
     sections: [
