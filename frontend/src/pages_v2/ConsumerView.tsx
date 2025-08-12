@@ -178,7 +178,7 @@ const ConsumerView: React.FC = () => {
                 console.error('Error fetching consumer data:', err);
                 
                 // Use mock data for development/testing
-                console.log('Using mock data for consumer:', uid);
+                console.log('Using mock data for consumer:', );
                 const mockConsumerData = {
                     name: uid === 'BI25GMRA001' ? 'Airborne General Store' : 
                           uid === 'BI25GMRA002' ? 'Neo Travels' : 
@@ -497,7 +497,7 @@ const ConsumerView: React.FC = () => {
                                                         consumer.voltage
                                                             ?.rPhase || '0.0'
                                                     }
-                                                    icon="/icons/consumption.svg"
+                                                    icon=""
                                                     subtitle1="Volts"
                                                 />
                                                 <Card
@@ -506,7 +506,7 @@ const ConsumerView: React.FC = () => {
                                                         consumer.voltage
                                                             ?.yPhase || '0.0'
                                                     }
-                                                    icon="/icons/consumption.svg"
+                                                    icon=""
                                                     subtitle1="Volts"
                                                 />
                                                 <Card
@@ -515,7 +515,7 @@ const ConsumerView: React.FC = () => {
                                                         consumer.voltage
                                                             ?.bPhase || '0.0'
                                                     }
-                                                    icon="/icons/consumption.svg"
+                                                    icon=""
                                                     subtitle1="Volts"
                                                 />
                                             </div>

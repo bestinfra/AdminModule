@@ -14,7 +14,7 @@ interface IconProps {
 const Icon: React.FC<IconProps> = ({
     src,
     alt = 'Icon',
-    className = 'w-7 h-7 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-4 sm:h-4',
+    className,
     iconStyle,
     width,
     height,
@@ -42,7 +42,7 @@ const Icon: React.FC<IconProps> = ({
         <img 
             src={src} 
             alt={alt} 
-            className={className}
+            className={className || 'w-7 h-7 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-4 sm:h-4'}
             style={finalIconStyle}
             width={width}
             height={height}

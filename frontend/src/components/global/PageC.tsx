@@ -34,7 +34,6 @@ import UnitDetailsCard from '../Ticket/UnitDetailsCard';
 import ActivityLogCard from '../Ticket/ActivityLogCard';
 import ChatComponent from '../Ticket/ChatComponent';
 import PageInformation from './PageInformation';
-import SubappPanel from './SubAppPanel';
 import Permissions from './Permissions';
 import SummaryInfo from './SummaryInfo';
 import TicketConversationPanel from '../TicketConversationPanel';
@@ -49,6 +48,11 @@ import ConfirmationPage from '../Occupancy-Vacency/ConfirmationPage';
 import UsageSummaryPage from '../Occupancy-Vacency/UsageSummartPage';
 import Payment from '../Occupancy-Vacency/Payment';
 import FreezeStatus from '../Occupancy-Vacency/FreezeStatus';
+import ApplicationCard from './ApplicationCard';
+import StatusCard from './StatusCard';
+import DGCard from '../DG_Modules/DGCard';
+import ElectricalMetricsCard from './ElectricalMetricsCard';
+import NodeChart from './NodeChart';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -84,7 +88,6 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     Carousel,
     LoginV2,
     PageInformation,
-    SubappPanel,
     SummaryInfo,
     TicketConversationPanel,
     TicketInformationPannel,
@@ -97,8 +100,13 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     OccupancyHeader,
     ConfirmationPage,
     UsageSummaryPage,
+    ElectricalMetricsCard,
     Payment,
     FreezeStatus,
+    ApplicationCard,
+    StatusCard,
+    DGCard,
+    NodeChart,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
@@ -132,7 +140,7 @@ interface LayoutConfig {
     rows?: RowConfig[];
 }
 
-interface SectionConfig {
+export interface SectionConfig {
     layout: LayoutConfig;
     components?: Array<
         | string
@@ -326,7 +334,7 @@ const Page: React.FC<PageProps> = ({
     style = {},
 }) => {
     return (
-        <div className={`w-full h-full  flex flex-col gap-4 grid-cols-5`} style={style}>
+        <div className={`w-full h-full  flex flex-col gap-4 grid-cols- 5  `} style={style}>
             {sections.map((section, idx) => {
                 if (section.layout && section.layout.rows) {
                     const sectionClass = getLayoutClass(section.layout);
@@ -518,5 +526,4 @@ const Page: React.FC<PageProps> = ({
     );
 };
 
-export type { SectionConfig };
 export default Page;

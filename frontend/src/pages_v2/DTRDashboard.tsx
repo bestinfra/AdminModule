@@ -173,79 +173,28 @@ const DTRDashboard: React.FC = () => {
             // Create a new workbook
             const workbook = XLSX.utils.book_new();
 
-            // Prepare DTR Statistics data
+            // Prepare DTR Statistics data (widgets)
             const dtrStatsExportData = dtrStatsCards.map(stat => ({
                 'Metric': stat.title,
                 'Value': stat.value,
                 'Subtitle': stat.subtitle1 || '',
             }));
 
-            // Prepare DTR Table data
-            const dtrTableExportData = dtrTableData.map(dtr => ({
-                'DTR ID': dtr.dtrId,
-                'DTR Name': dtr.dtrName,
-                'Feeders Count': dtr.feedersCount,
-                'Street Name': dtr.streetName,
-                'City': dtr.city,
-                'Communication Status': dtr.commStatus,
-                'Last Communication': dtr.lastCommunication,
+            // Prepare Consumption Widgets data (energy consumption cards)
+            const currentConsumptionCards = getCurrentConsumptionCards();
+            const consumptionWidgetsExportData = currentConsumptionCards.map(card => ({
+                'Metric': card.title,
+                'Value': card.value,
+                'Subtitle': card.subtitle1 || '',
             }));
-
-            // Prepare Daily/Monthly Consumption data from API state
-            const dailyConsumptionExportData = [
-                { Metric: 'Total kWh', Value: dtrConsumptionData.daily.totalKwh, Subtitle: "Today's Active Energy" },
-                { Metric: 'Total kVAh', Value: dtrConsumptionData.daily.totalKvah, Subtitle: "Today's Apparent Energy" },
-                { Metric: 'Total kW', Value: dtrConsumptionData.daily.totalKw, Subtitle: 'Current Active Power' },
-                { Metric: 'Total kVA', Value: dtrConsumptionData.daily.totalKva, Subtitle: 'Current Apparent Power' },
-            ];
-
-            const monthlyConsumptionExportData = [
-                { Metric: 'Total kWh', Value: dtrConsumptionData.monthly.totalKwh, Subtitle: 'Monthly Active Energy' },
-                { Metric: 'Total kVAh', Value: dtrConsumptionData.monthly.totalKvah, Subtitle: 'Monthly Apparent Energy' },
-                { Metric: 'Avg kW', Value: dtrConsumptionData.monthly.totalKw, Subtitle: 'Monthly Average Power' },
-                { Metric: 'Avg kVA', Value: dtrConsumptionData.monthly.totalKva, Subtitle: 'Monthly Average Apparent' },
-            ];
-
-            // Prepare Daily Alerts data
-            const dailyAlertsExportData = dailyAlertsData.map(alert => ({
-                'Alert': alert.alert,
-                'Date': alert.date,
-                'Status': alert.status,
-            }));
-
-            // Prepare Monthly Alerts data
-            const monthlyAlertsExportData = monthlyAlertsData.map(alert => ({
-                'Alert': alert.alert,
-                'Date': alert.date,
-                'Status': alert.status,
-            }));
-
-            // Prepare Alerts Trends data for export
-            const alertsTrendsExportData = chartMonths.map((month, index) => {
-                const row: Record<string, string | number> = { Month: month };
-                chartSeries.forEach(series => {
-                    row[series.name] = series.data[index] ?? 0;
-                });
-                return row;
-            });
 
             // Convert data to worksheets
             const dtrStatsSheet = XLSX.utils.json_to_sheet(dtrStatsExportData);
-            const dtrTableSheet = XLSX.utils.json_to_sheet(dtrTableExportData);
-            const dailyConsumptionSheet = XLSX.utils.json_to_sheet(dailyConsumptionExportData);
-            const monthlyConsumptionSheet = XLSX.utils.json_to_sheet(monthlyConsumptionExportData);
-            const dailyAlertsSheet = XLSX.utils.json_to_sheet(dailyAlertsExportData);
-            const monthlyAlertsSheet = XLSX.utils.json_to_sheet(monthlyAlertsExportData);
-            const chartPerformanceSheet = XLSX.utils.json_to_sheet(alertsTrendsExportData);
+            const consumptionWidgetsSheet = XLSX.utils.json_to_sheet(consumptionWidgetsExportData);
 
-            // Add worksheets to workbook
-            XLSX.utils.book_append_sheet(workbook, dtrStatsSheet, 'DTR Statistics');
-            XLSX.utils.book_append_sheet(workbook, dtrTableSheet, 'DTR Table');
-            XLSX.utils.book_append_sheet(workbook, dailyConsumptionSheet, 'Daily Consumption');
-            XLSX.utils.book_append_sheet(workbook, monthlyConsumptionSheet, 'Monthly Consumption');
-            XLSX.utils.book_append_sheet(workbook, dailyAlertsSheet, 'Daily Alerts');
-            XLSX.utils.book_append_sheet(workbook, monthlyAlertsSheet, 'Monthly Alerts');
-            XLSX.utils.book_append_sheet(workbook, chartPerformanceSheet, 'Performance Metrics');
+            // Add only widgets worksheets to workbook
+            XLSX.utils.book_append_sheet(workbook, dtrStatsSheet, 'DTR Statistics Widgets');
+            XLSX.utils.book_append_sheet(workbook, consumptionWidgetsSheet, 'Consumption Widgets');
 
             // Generate Excel file
             const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
@@ -255,7 +204,7 @@ const DTRDashboard: React.FC = () => {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = 'dtr-dashboard-complete-data.xlsx';
+            link.download = 'dtr-dashboard-widgets.xlsx';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -609,103 +558,103 @@ const DTRDashboard: React.FC = () => {
         { key: 'date', label: 'Occured On' },
     ];
 
-    // Daily alerts data
-    const dailyAlertsData = [
-        {
-            alert: 'Overload detected on DTR-01',
-            date: '2024-07-25 14:30',
-            status: 'Active',
-        },
-        { 
-            alert: 'Fuse blown on DTR-03', 
-            date: '2024-07-25 13:15', 
-            status: 'Resolved' 
-        },
-        { 
-            alert: 'Power failure on DTR-07', 
-            date: '2024-07-25 12:45', 
-            status: 'Active' 
-        },
-        {
-            alert: 'Low voltage detected on DTR-02',
-            date: '2024-07-25 11:20',
-            status: 'Active',
-        },
-        {
-            alert: 'Communication lost on DTR-05',
-            date: '2024-07-25 10:30',
-            status: 'Resolved',
-        },
-        {
-            alert: 'High temperature on DTR-08',
-            date: '2024-07-25 09:15',
-            status: 'Active',
-        },
-        {
-            alert: 'Unbalanced load on DTR-11',
-            date: '2024-07-25 08:45',
-            status: 'Active',
-        },
-        {
-            alert: 'Low power factor on DTR-14',
-            date: '2024-07-25 08:00',
-            status: 'Resolved',
-        },
-        {
-            alert: 'Frequency deviation on DTR-12',
-            date: '2024-07-25 07:30',
-            status: 'Active',
-        },
-        {
-            alert: 'Phase loss detected on DTR-15',
-            date: '2024-07-25 07:00',
-            status: 'Active',
-        },
-    ];
+    // Daily alerts data - commented out as unused
+    // const dailyAlertsData = [
+    //     {
+    //         alert: 'Overload detected on DTR-01',
+    //         date: '2024-07-25 14:30',
+    //         status: 'Active',
+    //     },
+    //     { 
+    //         alert: 'Fuse blown on DTR-03', 
+    //         date: '2024-07-25 13:15', 
+    //         status: 'Resolved' 
+    //     },
+    //     { 
+    //         alert: 'Power failure on DTR-07', 
+    //         date: '2024-07-25 12:45', 
+    //         status: 'Active' 
+    //     },
+    //     {
+    //         alert: 'Low voltage detected on DTR-02',
+    //         date: '2024-07-25 11:20',
+    //         status: 'Active',
+    //     },
+    //     {
+    //         alert: 'Communication lost on DTR-05',
+    //         date: '2024-07-25 10:30',
+    //         status: 'Resolved',
+    //     },
+    //     {
+    //         alert: 'High temperature on DTR-08',
+    //         date: '2024-07-25 09:15',
+    //         status: 'Active',
+    //     },
+    //     {
+    //         alert: 'Unbalanced load on DTR-11',
+    //         date: '2024-07-25 08:45',
+    //         status: 'Active',
+    //     },
+    //     {
+    //         alert: 'Low power factor on DTR-14',
+    //         date: '2024-07-25 08:00',
+    //         status: 'Resolved',
+    //     },
+    //     {
+    //         alert: 'Frequency deviation on DTR-12',
+    //         date: '2024-07-25 07:30',
+    //         status: 'Active',
+    //     },
+    //     {
+    //         alert: 'Phase loss detected on DTR-15',
+    //         date: '2024-07-25 07:00',
+    //         status: 'Active',
+    //     },
+    // ];
 
-    // Monthly alerts data
-    const monthlyAlertsData = [
-        {
-            alert: 'Monthly overload summary - DTR-01',
-            date: 'July 2024',
-            status: 'Active',
-        },
-        {
-            alert: 'Monthly fuse blown incidents - DTR-03',
-            date: 'July 2024',
-            status: 'Resolved'
-        },
-        {
-            alert: 'Monthly power failure report - DTR-07',
-            date: 'July 2024',
-            status: 'Active'
-        },
-        {
-            alert: 'Monthly voltage fluctuation - DTR-02',
-            date: 'July 2024',
-            status: 'Active',
-        },
-        {
-            alert: 'Monthly communication issues - DTR-05',
-            date: 'July 2024',
-            status: 'Resolved',
-        },
-        {
-            alert: 'Monthly temperature monitoring - DTR-08',
-            date: 'July 2024',
-            status: 'Active',
-        },
-        {
-            alert: 'Monthly maintenance alert - DTR-04',
-            date: 'July 2024',
-            status: 'Scheduled',
-        },
-        {
-            alert: 'Monthly performance report - DTR-06',
-            date: 'July 2024',
-            status: 'Completed',
-        },
-    ];
+    // Monthly alerts data - commented out as unused
+    // const monthlyAlertsData = [
+    //     {
+    //         alert: 'Monthly overload summary - DTR-01',
+    //         date: 'July 2024',
+    //         status: 'Active',
+    //     },
+    //     {
+    //         alert: 'Monthly fuse blown incidents - DTR-03',
+    //         date: 'July 2024',
+    //         status: 'Resolved'
+    //     },
+    //     {
+    //         alert: 'Monthly power failure report - DTR-07',
+    //         date: 'July 2024',
+    //         status: 'Active'
+    //     },
+    //     {
+    //         alert: 'Monthly voltage fluctuation - DTR-02',
+    //         date: 'July 2024',
+    //         status: 'Active',
+    //     },
+    //     {
+    //         alert: 'Monthly communication issues - DTR-05',
+    //         date: 'July 2024',
+    //         status: 'Resolved',
+    //     },
+    //     {
+    //         alert: 'Monthly temperature monitoring - DTR-08',
+    //         date: 'July 2024',
+    //         status: 'Active',
+    //     },
+    //     {
+    //         alert: 'Monthly maintenance alert - DTR-04',
+    //         date: 'July 2024',
+    //         status: 'Scheduled',
+    //     },
+    //     {
+    //         alert: 'Monthly performance report - DTR-06',
+    //         date: 'July 2024',
+    //         status: 'Completed',
+    //     },
+    // ];
 
     // Function to handle time range change
     const handleTimeRangeChange = (range: string) => {
