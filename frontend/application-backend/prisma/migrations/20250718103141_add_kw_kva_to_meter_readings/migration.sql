@@ -1,3 +1,0 @@
--- AlterTable
-ALTER TABLE "meter_readings" ADD COLUMN     "kVA" DOUBLE PRECISION,
-ADD COLUMN     "kW" DOUBLE PRECISION;
