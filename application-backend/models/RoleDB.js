@@ -3,11 +3,24 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class RoleDB {
-    static async getAllRoles() {
+    static async getAllRoles(locationId = null) {
         try {
+            let whereClause = {};
+            
+            // If locationId is provided, filter roles by users in that location
+            if (locationId) {
+                whereClause.users = {
+                    some: {
+                        locationId: locationId
+                    }
+                };
+            }
+            
             const roles = await prisma.roles.findMany({
+                where: whereClause,
                 include: {
                     users: {
+                        where: locationId ? { locationId: locationId } : {},
                         select: {
                             id: true,
                             username: true,

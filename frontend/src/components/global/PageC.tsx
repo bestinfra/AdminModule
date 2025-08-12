@@ -132,7 +132,7 @@ interface LayoutConfig {
     rows?: RowConfig[];
 }
 
-interface SectionConfig {
+export interface SectionConfig {
     layout: LayoutConfig;
     components?: Array<
         | string
@@ -518,5 +518,4 @@ const Page: React.FC<PageProps> = ({
     );
 };
 
-export type { SectionConfig };
 export default Page;

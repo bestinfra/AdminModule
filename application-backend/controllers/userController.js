@@ -5,7 +5,10 @@ export const getAllUsers = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         
-        const result = await UserDB.getAllUsers(page, limit);
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        const result = await UserDB.getAllUsers(page, limit, userLocationId);
         
         // Format the data for the frontend table
         const formatted = result.data.map((u, idx) => ({
@@ -24,7 +27,9 @@ export const getAllUsers = async (req, res) => {
             success: true,
             data: formatted,
             pagination: result.pagination,
-            message: 'Users retrieved successfully'
+            message: 'Users retrieved successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('getAllUsers: Error fetching users:', error);
@@ -38,11 +43,16 @@ export const getAllUsers = async (req, res) => {
 
 export const getUserStats = async (req, res) => {
     try {
-        const stats = await UserDB.getUserStats();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        const stats = await UserDB.getUserStats(userLocationId);
         
         res.json({
             success: true,
-            data: stats
+            data: stats,
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error(' getUserStats: Error fetching user stats:', error);

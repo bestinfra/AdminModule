@@ -658,6 +658,7 @@ export class ApiClient {
         'Content-Type': 'application/json',
         ...options.headers,
       },
+      credentials: 'include', // Include cookies for authentication
       ...options,
     });
 
@@ -680,6 +681,7 @@ export class ApiClient {
         ...options.headers,
       },
       body: JSON.stringify(data),
+      credentials: 'include', // Include cookies for authentication
       ...options,
     });
 
@@ -702,6 +704,7 @@ export class ApiClient {
         ...options.headers,
       },
       body: JSON.stringify(data),
+      credentials: 'include', // Include cookies for authentication
       ...options,
     });
 
@@ -723,6 +726,7 @@ export class ApiClient {
         'Content-Type': 'application/json',
         ...options.headers,
       },
+      credentials: 'include', // Include cookies for authentication
       ...options,
     });
 

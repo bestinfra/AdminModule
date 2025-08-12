@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
 import meters from './routes/meters.js';
 import consumers from './routes/consumers.js';
@@ -32,13 +33,12 @@ const corsOptions = {
             'http://localhost:3000',
             'http://localhost:5173',
             'https://www.test35.bestinfra.app',
-            'http://localhost:4180'
+            `http://localhost:${process.env.PORT || 4180}`
         ];
         
         if (allowedOrigins.indexOf(origin) !== -1 || process.env.CORS_ORIGIN === '*') {
             callback(null, true);
         } else {
-            console.log(`CORS blocked origin: ${origin}`);
             callback(new Error('Not allowed by CORS'));
         }
     },
@@ -46,8 +46,9 @@ const corsOptions = {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
-console.log(corsOptions);
+
 app.use(cors(corsOptions));
+app.use(cookieParser()); // Add cookie parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -81,29 +82,29 @@ app.use('*', (req, res) => {
 async function startServer() {
     try {
         await prisma.$connect();
-        console.log('✅ Connected to database successfully');
+        console.log('Connected to database successfully');
         
         await initializeCronJobs();
-        console.log('✅ Cron jobs initialized successfully');
+        console.log('Cron jobs initialized successfully');
         
         app.listen(PORT, () => {
-            console.log(`🚀 Backend running on port ${PORT}`);
-            console.log(`📊 API Documentation: http://localhost:${PORT}/api/health`);
+            console.log(`Backend running on port ${PORT}`);
+            console.log(`API Documentation: http://localhost:${PORT}/api/health`);
         });
     } catch (error) {
-        console.error('❌ Server startup failed:', error);
+        console.error('Server startup failed:', error);
         process.exit(1);
     }
 }
 
 process.on('SIGINT', async () => {
-    console.log('\n🛑 Shutting down server...');
+    console.log('\nShutting down server...');
     await prisma.$disconnect();
     process.exit(0);
 });
 
 process.on('SIGTERM', async () => {
-    console.log('\n🛑 Shutting down server...');
+    console.log('\nShutting down server...');
     await prisma.$disconnect();
     process.exit(0);
 });
