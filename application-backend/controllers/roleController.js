@@ -2,7 +2,10 @@ import RoleDB from '../models/RoleDB.js';
 
 export const getAllRoles = async (req, res) => {
     try {
-        const roles = await RoleDB.getAllRoles();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        const roles = await RoleDB.getAllRoles(userLocationId);
         // Map to clean structure
         const mappedRoles = roles.map(role => ({
             id: role.id,
@@ -26,7 +29,9 @@ export const getAllRoles = async (req, res) => {
         res.json({
             success: true,
             data: mappedRoles,
-            message: 'Roles retrieved successfully'
+            message: 'Roles retrieved successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error fetching roles:', error);

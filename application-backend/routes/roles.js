@@ -1,8 +1,12 @@
 import express from 'express';
 import { getAllRoles, addRole, getRoleById, updateRole, deleteRole, assignPermissionsToRole, getRoleStats } from '../controllers/roleController.js';
 import { validateRoleData, addRoleSchema, assignPermissionsSchema } from '../validations/roleValidation.js';
+import { populateUserFromCookies } from '../utils/cookieUtils.js';
 
 const router = express.Router();
+
+router.use(populateUserFromCookies);
+
 
 router.get('/', getAllRoles);
 router.get('/stats', getRoleStats);

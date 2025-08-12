@@ -4,13 +4,21 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 class UserDB {
-    static async getAllUsers(page = 1, limit = 10) {
+    static async getAllUsers(page = 1, limit = 10, locationId = null) {
         try {
             const skip = (page - 1) * limit;
             
-            const totalCount = await prisma.users.count();
+            const whereClause = {};
+            
+            // If locationId is provided, filter users by location
+            if (locationId) {
+                whereClause.locationId = locationId;
+            }
+            
+            const totalCount = await prisma.users.count({ where: whereClause });
             
             const users = await prisma.users.findMany({
+                where: whereClause,
                 include: {
                     roles: true,
                     departments: true
@@ -39,9 +47,17 @@ class UserDB {
         }
     }
 
-    static async getUserStats() {
+    static async getUserStats(locationId = null) {
         try {
+            const whereClause = {};
+            
+            // If locationId is provided, filter users by location
+            if (locationId) {
+                whereClause.locationId = locationId;
+            }
+            
             const users = await prisma.users.findMany({
+                where: whereClause,
                 include: {
                     roles: true
                 }

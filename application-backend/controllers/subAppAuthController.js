@@ -11,26 +11,21 @@ const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '24h';
 const parsePostgresJson = (jsonValue) => {
     try {
         const str = jsonValue.toString().trim();
-        console.log(`   🔍 Parsing JSON value: "${str}"`);
         
         if (str.startsWith('{') && str.endsWith('}')) {
             // PostgreSQL array format: {1,2,4}
             const result = str.slice(1, -1).split(',').map(id => parseInt(id.trim()));
-            console.log(`   ✅ Parsed PostgreSQL format: ${result}`);
             return result;
         } else if (str.includes(',') && !str.startsWith('[') && !str.startsWith('{')) {
             // PostgreSQL array format without braces: 1,2,4
             const result = str.split(',').map(id => parseInt(id.trim()));
-            console.log(`   ✅ Parsed comma-separated format: ${result}`);
             return result;
         } else {
             // Standard JSON format: [1,2,4]
             const result = JSON.parse(str);
-            console.log(`   ✅ Parsed standard JSON format: ${result}`);
             return result;
         }
     } catch (error) {
-        console.error(`❌ Error parsing JSON value: "${jsonValue}"`, error.message);
         return [];
     }
 };
@@ -51,7 +46,6 @@ const generateSubAppToken = (userId, appId = null, userRoles = [], userPermissio
 export const subAppLogin = async (req, res) => {
     try {
         const { identifier, password, appId } = req.body;
-        console.log('🔐 subAppLogin called', { identifier, appId });
 
         // Validate required fields
         if (!identifier || !password) {
@@ -80,21 +74,14 @@ export const subAppLogin = async (req, res) => {
         });
 
         if (!user) {
-            console.warn('⚠️ subAppLogin: User not found for identifier', identifier);
+
             return res.status(401).json({
                 success: false,
                 message: 'Invalid username/email or password'
             });
         }
 
-        console.log('👤 User found', {
-            userId: user.id,
-            username: user.username,
-            accessLevel: user.accessLevel,
-            hasRole: !!user.roles,
-            roleName: user.roles?.name || null,
-            rolePermCount: user.roles?.role_permissions?.length || 0
-        });
+
 
         // Check if user is active
         if (!user.isActive) {
@@ -126,20 +113,12 @@ export const subAppLogin = async (req, res) => {
         const userRoles = user.roles ? [user.roles.name] : [];
         const userPermissions = [];
 
-        // Log raw role_permissions content for debugging
-        if (user.roles?.role_permissions) {
-            console.log('🔎 Raw role_permissions rows:', user.roles.role_permissions.map(rp => ({
-                id: rp.id,
-                permissionIdType: typeof rp.permissionId,
-                permissionIdValue: rp.permissionId
-            })));
-        }
+
         
         // Extract permissions from role_permissions
         if (user.roles?.role_permissions) {
             user.roles.role_permissions.forEach(rolePerm => {
                 if (rolePerm.permissionId === null || rolePerm.permissionId === undefined) {
-                    console.log('   ⚠️ role_permission has null/undefined permissionId', { rolePermId: rolePerm.id });
                     return;
                 }
                 try {
@@ -149,13 +128,10 @@ export const subAppLogin = async (req, res) => {
                         : (typeof parsed === 'number' && !Number.isNaN(parsed))
                             ? [parsed]
                             : [];
-                    console.log('   📥 Parsed permission IDs from rolePerm', { rolePermId: rolePerm.id, permissionIds: idsArray });
                 } catch (e) {
-                    console.error('   ❌ Failed parsing permissionId for rolePerm', { rolePermId: rolePerm.id, value: rolePerm.permissionId, error: e.message });
+                    // Failed parsing permissionId for rolePerm
                 }
             });
-        } else {
-            console.log('   ⚠️ User has no role_permissions associated');
         }
         
         // Fetch permission names from permission IDs
@@ -175,7 +151,6 @@ export const subAppLogin = async (req, res) => {
             
             // Remove duplicates
             const uniquePermissionIds = [...new Set(allPermissionIds)];
-            console.log(`   📋 Unique permission IDs: ${uniquePermissionIds.join(', ')}`);
             
             // Fetch permission names from the permissions table
             if (uniquePermissionIds.length > 0) {
@@ -186,31 +161,14 @@ export const subAppLogin = async (req, res) => {
                         }
                     }
                 });
-                console.log('   📦 permissions rows fetched:', permissions.length);
                 userPermissions.push(...permissions.map(p => p.name));
-                console.log(`   📋 Permission names: ${permissions.map(p => p.name).join(', ')}`);
             }
         }
         
-        // Check if user has permissions
-        if (userPermissions.length === 0) {
-            console.log(`⚠️ Warning: User ${user.username} has NO permissions in JWT token`);
-        } else {
-            console.log(`✅ User ${user.username} has ${userPermissions.length} permissions`, userPermissions);
-        }
+
         
         // Generate sub-app specific token with roles, permissions, and location
-        console.log(`🎫 Generating JWT token for user ${user.username}...`);
-        console.log(`   📋 Token payload:`, {
-            userId: user.id,
-            appId: appId,
-            roles: userRoles,
-            permissions: userPermissions,
-            locationId: user.locationId
-        });
-        
         const token = generateSubAppToken(user.id, appId, userRoles, userPermissions, user.locationId);
-        console.log(`   ✅ JWT token generated successfully (length=${token.length})`);
 
         // Map accessLevel to role (fallback)
         const accessLevelToRole = {
@@ -223,29 +181,36 @@ export const subAppLogin = async (req, res) => {
         
         const userRole = userRoles.length > 0 ? userRoles[0] : (accessLevelToRole[user.accessLevel] || 'accountant');
         
-        console.log(`📤 Sending login response for user ${user.username}...`, {
+
+        
+        // Store user details in cookies for easy access in controllers
+        const userDetailsCookie = {
             userId: user.id,
             username: user.username,
+            email: user.email,
+            firstName: user.firstName,
+            lastName: user.lastName,
             role: userRole,
-            rolesCount: userRoles.length,
-            permissionsCount: userPermissions.length,
-            locationId: user.locationId
-        });
+            roles: userRoles,
+            permissions: userPermissions,
+            accessLevel: user.accessLevel,
+            locationId: user.locationId,
+            appId: appId
+        };
         
-        // Set secure HTTP-only cookies for the token
-        res.cookie('accessToken', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Only HTTPS in production
-            sameSite: 'strict',
+        res.cookie('userDetails', JSON.stringify(userDetailsCookie), {
+            httpOnly: false, // Allow JavaScript access
+            secure: false, // Allow HTTP in development
+            sameSite: 'none', // Most permissive for cross-origin
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
             path: '/'
         });
         
-        // Also set a non-httpOnly cookie for client-side access if needed
-        res.cookie('token', token, {
-            httpOnly: false,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+        // Store token in cookie
+        res.cookie('accessToken', token, {
+            httpOnly: true,
+            secure: false, // Allow HTTP in development
+            sameSite: 'none', // Most permissive for cross-origin
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
             path: '/'
         });
@@ -277,7 +242,7 @@ export const subAppLogin = async (req, res) => {
             }
         });
         
-        console.log(`✅ Login response sent successfully for user ${user.username}`);
+
 
     } catch (error) {
         console.error('Sub-app login error:', error);
@@ -291,7 +256,15 @@ export const subAppLogin = async (req, res) => {
 // Verify sub-app token
 export const verifySubAppToken = async (req, res) => {
     try {
-        console.log('🔎 verifySubAppToken for userId', req.user?.userId);
+
+        
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated'
+            });
+        }
+        
         const user = await prisma.users.findFirst({
             where: { id: req.user.userId },
             include: {
@@ -305,19 +278,14 @@ export const verifySubAppToken = async (req, res) => {
         });
         
         if (!user) {
-            console.warn('⚠️ verifySubAppToken: User not found');
+    
             return res.status(404).json({
                 success: false,
                 message: 'User not found'
             });
         }
 
-        console.log('👤 verifySubAppToken user', {
-            userId: user.id,
-            username: user.username,
-            roleName: user.roles?.name || null,
-            rolePermCount: user.roles?.role_permissions?.length || 0
-        });
+
 
         // Extract user roles and permissions
         const userRoles = user.roles ? [user.roles.name] : [];
@@ -333,9 +301,6 @@ export const verifySubAppToken = async (req, res) => {
                         : (typeof parsed === 'number' && !Number.isNaN(parsed))
                             ? [parsed]
                             : [];
-                    console.log('   📥 Parsed permission IDs from rolePerm', { rolePermId: rolePerm.id, permissionIds: idsArray });
-                } else {
-                    console.log('   ⚠️ role_permission has null/undefined permissionId', { rolePermId: rolePerm.id });
                 }
             });
         }
@@ -355,14 +320,11 @@ export const verifySubAppToken = async (req, res) => {
                 }
             });
             const uniquePermissionIds = [...new Set(allPermissionIds)];
-            console.log('   📋 Unique permission IDs', uniquePermissionIds);
             if (uniquePermissionIds.length > 0) {
                 const permissions = await prisma.permissions.findMany({
                     where: { id: { in: uniquePermissionIds } }
                 });
-                console.log('   📦 permissions rows fetched:', permissions.length);
                 userPermissions.push(...permissions.map(p => p.name));
-                console.log('   📋 Permission names', userPermissions);
             }
         }
         
@@ -418,14 +380,14 @@ export const logout = async (req, res) => {
         res.clearCookie('accessToken', { path: '/' });
         res.clearCookie('token', { path: '/' });
         
-        console.log('🔓 User logged out successfully');
+
         
         res.json({
             success: true,
             message: 'Logout successful'
         });
     } catch (error) {
-        console.error('❌ Logout error:', error);
+        console.error('Logout error:', error);
         res.status(500).json({
             success: false,
             message: 'Logout failed'
@@ -436,6 +398,13 @@ export const logout = async (req, res) => {
 // Get sub-app user profile
 export const getSubAppProfile = async (req, res) => {
     try {
+        if (!req.user || !req.user.userId) {
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated'
+            });
+        }
+        
         const user = await prisma.users.findUnique({
             where: { id: req.user.userId }
         });

@@ -5,21 +5,11 @@ export const getDTRTable = async (req, res) => {
     try {
         const { page, pageSize, search, status, locationId } = req.query;
         
-        // Get user's location from JWT token with enhanced debugging
+        // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
-        
-        console.log('🔍 DTR Table Request Debug:', {
-            userId: req.user?.userId,
-            userLocationId: userLocationId,
-            queryLocationId: locationId,
-            userRoles: req.user?.roles,
-            userPermissions: req.user?.permissions?.length || 0
-        });
         
         // If user has a specific location, override the query locationId
         const effectiveLocationId = userLocationId || (locationId ? parseInt(locationId) : undefined);
-        
-        console.log('📍 Effective Location ID:', effectiveLocationId);
         
         const result = await DTRDB.getDTRTable({
             page: page ? parseInt(page) : 1,
@@ -113,7 +103,11 @@ export const getFeedersForDTR = async (req, res) => {
 
 export const getDTRAlerts = async (req, res) => {
     try {
-        const alerts = await DTRDB.getDTRAlerts();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        // Pass locationId to DTRDB method (null = all data, locationId = filtered data)
+        const alerts = await DTRDB.getDTRAlerts(userLocationId);
         
         // Map alerts to match frontend table columns exactly
         const mappedAlerts = alerts.map(alert => ({
@@ -125,7 +119,9 @@ export const getDTRAlerts = async (req, res) => {
         res.json({
             success: true,
             data: mappedAlerts,
-            message: 'DTR alerts fetched successfully'
+            message: 'DTR alerts fetched successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error fetching DTR alerts:', error);
@@ -139,11 +135,18 @@ export const getDTRAlerts = async (req, res) => {
 
 export const getDTRAlertsTrends = async (req, res) => {
     try {
-        const trends = await DTRDB.getDTRAlertsTrends();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        // Pass locationId to DTRDB method (null = all data, locationId = filtered data)
+        const trends = await DTRDB.getDTRAlertsTrends(userLocationId);
+        
         res.json({
             success: true,
             data: trends,
-            message: 'DTR alerts trends fetched successfully'
+            message: 'DTR alerts trends fetched successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error fetching DTR alerts trends:', error);
@@ -263,11 +266,18 @@ export const getInstantaneousStats = async (req, res) => {
 
 export const getConsolidatedDTRStats = async (req, res) => {
     try {
-        const stats = await DTRDB.getConsolidatedDTRStats();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        // Pass locationId to DTRDB method (null = all data, locationId = filtered data)
+        const stats = await DTRDB.getConsolidatedDTRStats(userLocationId);
+        
         res.json({
             success: true,
             data: stats,
-            message: 'Consolidated DTR stats fetched successfully'
+            message: 'Consolidated DTR stats fetched successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error fetching consolidated DTR stats:', error);
