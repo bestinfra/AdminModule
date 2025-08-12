@@ -4,12 +4,29 @@ import { getDateTime, getDateInYMDFormat, getDateInMYFormat, fillMissingDatesDyn
 export const getDTRTable = async (req, res) => {
     try {
         const { page, pageSize, search, status, locationId } = req.query;
+        
+        // Get user's location from JWT token with enhanced debugging
+        const userLocationId = req.user?.locationId;
+        
+        console.log('🔍 DTR Table Request Debug:', {
+            userId: req.user?.userId,
+            userLocationId: userLocationId,
+            queryLocationId: locationId,
+            userRoles: req.user?.roles,
+            userPermissions: req.user?.permissions?.length || 0
+        });
+        
+        // If user has a specific location, override the query locationId
+        const effectiveLocationId = userLocationId || (locationId ? parseInt(locationId) : undefined);
+        
+        console.log('📍 Effective Location ID:', effectiveLocationId);
+        
         const result = await DTRDB.getDTRTable({
             page: page ? parseInt(page) : 1,
             pageSize: pageSize ? parseInt(pageSize) : 20,
             search: search || '',
             status: status || undefined,
-            locationId: locationId ? parseInt(locationId) : undefined
+            locationId: effectiveLocationId
         });
 
         // Map the data to match frontend table columns exactly
@@ -29,7 +46,8 @@ export const getDTRTable = async (req, res) => {
             total: result.total,
             page: result.page,
             pageSize: result.pageSize,
-            message: 'DTR table fetched successfully'
+            message: 'DTR table fetched successfully',
+            userLocation: userLocationId
         });
     } catch (error) {
         console.error('Error fetching DTR table:', error);
@@ -329,6 +347,108 @@ export const getDTRConsumptionAnalytics = async (req, res) => {
         res.status(500).json({
             status: 'error',
             message: 'An error occurred while fetching DTR consumption analytics',
+            errorId: error.code || 'INTERNAL_SERVER_ERROR',
+        });
+    }
+};
+
+export const getIndividualDTRAlerts = async (req, res) => {
+    try {
+        const { dtrId } = req.params;
+        const alerts = await DTRDB.getIndividualDTRAlerts(dtrId);
+        
+        // Map alerts to match frontend table columns exactly
+        const mappedAlerts = alerts.map(alert => ({
+            alert: alert.faultType || 'NA',
+            date: alert.createdAt ? new Date(alert.createdAt).toLocaleString() : 'NA',
+            status: alert.status || 'NA',
+            dtrNumber: alert.dtrs?.dtrNumber || 'NA',
+            location: alert.dtrs?.locations?.name || 'NA'
+        }));
+
+        res.json({
+            success: true,
+            data: mappedAlerts,
+            message: 'Individual DTR alerts fetched successfully'
+        });
+    } catch (error) {
+        console.error('Error fetching individual DTR alerts:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch individual DTR alerts',
+            error: error.message
+        });
+    }
+};
+
+export const getKVAMetrics = async (req, res) => {
+    try {
+        const { dtrId } = req.params;
+        
+        const kvaOnDaily = await DTRDB.getKVAMetrics(dtrId, 'daily');
+        const kvaOnMonthly = await DTRDB.getKVAMetrics(dtrId, 'monthly');
+        
+        const { dailyxAxisData, dailysums } = kvaOnDaily.reduce(
+            (acc, item) => {
+                acc.dailyxAxisData.push(item.kva_date);
+                acc.dailysums.push((item.total_kva || 0).toFixed(2));
+                return acc;
+            },
+            { dailyxAxisData: [], dailysums: [] }
+        );
+        
+        const daily = fillMissingDatesDyno(
+            dailyxAxisData,
+            dailysums,
+            'DD MMM, YYYY',
+            'day'
+        );
+        
+        const { monthlyxAxisData, monthlysums } = kvaOnMonthly.reduce(
+            (acc, item) => {
+                acc.monthlyxAxisData.push(
+                    getDateInMYFormat(item.kva_date)
+                );
+                acc.monthlysums.push((item.total_kva || 0).toFixed(2));
+                return acc;
+            },
+            { monthlyxAxisData: [], monthlysums: [] }
+        );
+        
+        const monthly = fillMissingDatesDyno(
+            monthlyxAxisData,
+            monthlysums,
+            'DD MMM, YYYY',
+            'month'
+        );
+
+        const dailyData = {
+            xAxisData: daily.dates,
+            sums: daily.values,
+        };
+
+        const monthlyData = {
+            xAxisData: monthly.dates,
+            sums: monthly.values,
+        };
+        
+        res.status(200).json({
+            status: 'success',
+            data: {
+                dailyData,
+                monthlyData,
+            },
+        });
+    } catch (error) {
+        console.error('Error fetching DTR kVA metrics:', {
+            error: error.message,
+            stack: error.stack,
+            timestamp: getDateTime(),
+        });
+
+        res.status(500).json({
+            status: 'error',
+            message: 'An error occurred while fetching DTR kVA metrics',
             errorId: error.code || 'INTERNAL_SERVER_ERROR',
         });
     }

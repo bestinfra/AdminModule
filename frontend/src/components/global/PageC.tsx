@@ -132,7 +132,7 @@ interface LayoutConfig {
     rows?: RowConfig[];
 }
 
-interface SectionConfig {
+export interface SectionConfig {
     layout: LayoutConfig;
     components?: Array<
         | string

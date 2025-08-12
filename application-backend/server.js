@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import { PrismaClient } from '@prisma/client';
 import meters from './routes/meters.js';
 import consumers from './routes/consumers.js';
@@ -48,6 +49,7 @@ const corsOptions = {
 };
 console.log(corsOptions);
 app.use(cors(corsOptions));
+app.use(cookieParser()); // Add cookie parser middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

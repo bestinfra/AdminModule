@@ -35,14 +35,15 @@ const parsePostgresJson = (jsonValue) => {
     }
 };
 
-// Generate JWT Token for sub-apps with roles and permissions
-const generateSubAppToken = (userId, appId = null, userRoles = [], userPermissions = []) => {
+// Generate JWT Token for sub-apps with roles, permissions, and location
+const generateSubAppToken = (userId, appId = null, userRoles = [], userPermissions = [], locationId = null) => {
     return jwt.sign({ 
         userId, 
         appId,
         type: 'sub-app',
         roles: userRoles,
-        permissions: userPermissions
+        permissions: userPermissions,
+        locationId
     }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
@@ -60,7 +61,7 @@ export const subAppLogin = async (req, res) => {
             });
         }
 
-        // Find user by email or username with roles and permissions
+        // Find user by email or username with roles, permissions, and location
         let user = await prisma.users.findFirst({
             where: {
                 OR: [
@@ -73,7 +74,8 @@ export const subAppLogin = async (req, res) => {
                     include: {
                         role_permissions: true
                     }
-                }
+                },
+                locations: true
             }
         });
 
@@ -197,16 +199,17 @@ export const subAppLogin = async (req, res) => {
             console.log(`✅ User ${user.username} has ${userPermissions.length} permissions`, userPermissions);
         }
         
-        // Generate sub-app specific token with roles and permissions
+        // Generate sub-app specific token with roles, permissions, and location
         console.log(`🎫 Generating JWT token for user ${user.username}...`);
         console.log(`   📋 Token payload:`, {
             userId: user.id,
             appId: appId,
             roles: userRoles,
-            permissions: userPermissions
+            permissions: userPermissions,
+            locationId: user.locationId
         });
         
-        const token = generateSubAppToken(user.id, appId, userRoles, userPermissions);
+        const token = generateSubAppToken(user.id, appId, userRoles, userPermissions, user.locationId);
         console.log(`   ✅ JWT token generated successfully (length=${token.length})`);
 
         // Map accessLevel to role (fallback)
@@ -225,7 +228,26 @@ export const subAppLogin = async (req, res) => {
             username: user.username,
             role: userRole,
             rolesCount: userRoles.length,
-            permissionsCount: userPermissions.length
+            permissionsCount: userPermissions.length,
+            locationId: user.locationId
+        });
+        
+        // Set secure HTTP-only cookies for the token
+        res.cookie('accessToken', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production', // Only HTTPS in production
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            path: '/'
+        });
+        
+        // Also set a non-httpOnly cookie for client-side access if needed
+        res.cookie('token', token, {
+            httpOnly: false,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000, // 24 hours
+            path: '/'
         });
         
         res.json({
@@ -241,7 +263,14 @@ export const subAppLogin = async (req, res) => {
                     role: userRole,
                     roles: userRoles,
                     permissions: userPermissions,
-                    accessLevel: user.accessLevel
+                    accessLevel: user.accessLevel,
+                    locationId: user.locationId,
+                    location: user.locations ? {
+                        id: user.locations.id,
+                        name: user.locations.name,
+                        code: user.locations.code,
+                        address: user.locations.address
+                    } : null
                 },
                 token,
                 appId
@@ -270,7 +299,8 @@ export const verifySubAppToken = async (req, res) => {
                     include: {
                         role_permissions: true
                     }
-                }
+                },
+                locations: true
             }
         });
         
@@ -359,7 +389,14 @@ export const verifySubAppToken = async (req, res) => {
                     role: userRole,
                     roles: userRoles,
                     permissions: userPermissions,
-                    accessLevel: user.accessLevel
+                    accessLevel: user.accessLevel,
+                    locationId: user.locationId,
+                    location: user.locations ? {
+                        id: user.locations.id,
+                        name: user.locations.name,
+                        code: user.locations.code,
+                        address: user.locations.address
+                    } : null
                 },
                 appId: req.user.appId
             }
@@ -370,6 +407,28 @@ export const verifySubAppToken = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Token verification failed'
+        });
+    }
+};
+
+// Logout function to clear cookies
+export const logout = async (req, res) => {
+    try {
+        // Clear all authentication cookies
+        res.clearCookie('accessToken', { path: '/' });
+        res.clearCookie('token', { path: '/' });
+        
+        console.log('🔓 User logged out successfully');
+        
+        res.json({
+            success: true,
+            message: 'Logout successful'
+        });
+    } catch (error) {
+        console.error('❌ Logout error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Logout failed'
         });
     }
 };

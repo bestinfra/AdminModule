@@ -72,7 +72,7 @@ model consumers {
   updatedAt            DateTime
   bills                bills[]
   consumer_documents   consumer_documents[]
-  locations            locations            @relation(fields: [locationId], references: [id])
+  locations            locations            @relation("consumersToLocations", fields: [locationId], references: [id])
   notifications        notifications[]
   prepaid_accounts     prepaid_accounts?
 }
@@ -204,7 +204,7 @@ model dtrs {
   dtr_faults          dtr_faults[]
   dtr_maintenance     dtr_maintenance[]
   dtr_readings        dtr_readings[]
-  locations           locations         @relation(fields: [locationId], references: [id])
+  locations           locations         @relation("dtrsToLocations", fields: [locationId], references: [id])
   meters              meters[]
   tickets             tickets[]
 }
@@ -232,12 +232,13 @@ model locations {
   pincode         String?
   createdAt       DateTime       @default(now())
   updatedAt       DateTime
-  consumers       consumers?
-  dtrs            dtrs[]
+  consumers       consumers?          @relation("consumersToLocations")
+  dtrs            dtrs[]            @relation("dtrsToLocations")
   location_types  location_types @relation(fields: [locationTypeId], references: [id])
   locations       locations?     @relation("locationsTolocations", fields: [parentId], references: [id])
   other_locations locations[]    @relation("locationsTolocations")
-  meters          meters[]
+  meters          meters[]          @relation("metersToLocations")
+  users           users[]           @relation("usersToLocations")
 }
 
 model login_history {
@@ -339,7 +340,7 @@ model meters {
   meter_configurations   meter_configurations?
   meter_readings         meter_readings[]
   dtrs                   dtrs?                    @relation(fields: [dtrId], references: [id])
-  locations              locations                @relation(fields: [locationId], references: [id])
+  locations              locations                @relation("metersToLocations", fields: [locationId], references: [id])
   potential_transformers potential_transformers[]
   tamper_events          tamper_events[]
 
@@ -511,6 +512,7 @@ model users {
   lockoutUntil                        DateTime?
   departmentId                        Int?
   roleId                              Int?
+  locationId                          Int?
   accessLevel                         AccessLevel          @default(NORMAL)
   createdAt                           DateTime             @default(now())
   updatedAt                           DateTime
@@ -524,6 +526,7 @@ model users {
   user_sessions                       user_sessions[]
   departments                         departments?         @relation(fields: [departmentId], references: [id])
   roles                              roles?               @relation(fields: [roleId], references: [id])
+  locations                          locations?           @relation("usersToLocations", fields: [locationId], references: [id])
 }
 
 model raw_xml_import {

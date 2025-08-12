@@ -850,6 +850,129 @@ class DTRDB {
             throw error;
         }
     }
+
+    static async getIndividualDTRAlerts(dtrId) {
+        try {
+            const alerts = await prisma.dtr_faults.findMany({
+                where: {
+                    dtrId: parseInt(dtrId)
+                },
+                include: {
+                    dtrs: {
+                        include: {
+                            locations: true
+                        }
+                    }
+                },
+                orderBy: { createdAt: 'desc' }
+            });
+            return alerts;
+        } catch (error) {
+            console.error('Error fetching individual DTR alerts:', error);
+            throw error;
+        }
+    }
+
+    static async getKVAMetrics(dtrId, period) {
+        try {
+            // Get all meters associated with this DTR
+            const meters = await prisma.meters.findMany({
+                where: { dtrId: parseInt(dtrId) },
+                select: { id: true }
+            });
+            
+            const meterIds = meters.map(m => m.id);
+            
+            if (meterIds.length === 0) {
+                return [];
+            }
+
+            if (period === 'daily') {
+                const d1 = new Date();
+                const sdf = (date) => getDateInYMDFormat(date);
+                const presDate = sdf(new Date(d1.setDate(d1.getDate() - 62)));
+                d1.setDate(d1.getDate() + 62);
+                const nextDate = sdf(new Date(d1));
+
+                let whereClause = {
+                    meterId: { in: meterIds },
+                    readingDate: {
+                        gte: new Date(presDate),
+                        lt: new Date(nextDate)
+                    }
+                };
+
+                const result = await prisma.meter_readings.groupBy({
+                    by: ['readingDate'],
+                    where: whereClause,
+                    _count: {
+                        id: true
+                    },
+                    _sum: {
+                        kVA: true
+                    },
+                    orderBy: {
+                        readingDate: 'asc'
+                    }
+                });
+
+                return result.map(item => ({
+                    kva_date: getDateInYMDFormat(item.readingDate),
+                    count: item._count.id,
+                    total_kva: item._sum.kVA || 0
+                }));
+
+            }
+            // monthly
+            const d1 = new Date();
+            const sdf = (date) => getDateInYMDFormat(date);
+            const presDate = sdf(new Date(d1.setMonth(d1.getMonth() - 13)));
+            d1.setMonth(d1.getMonth() + 14);
+            const nextDate = sdf(new Date(d1));
+
+            let whereClause = {
+                meterId: { in: meterIds },
+                readingDate: {
+                    gte: new Date(presDate),
+                    lt: new Date(nextDate)
+                }
+            };
+
+            const result = await prisma.meter_readings.groupBy({
+                by: ['readingDate'],
+                where: whereClause,
+                _count: {
+                    id: true
+                },
+                _sum: {
+                    kVA: true
+                },
+                orderBy: {
+                    readingDate: 'asc'
+                }
+            });
+
+            // Group by month
+            const monthlyData = {};
+            result.forEach(item => {
+                const monthKey = getDateInYMDFormat(item.readingDate).slice(0, 7); // YYYY-MM format
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        kva_date: monthKey,
+                        count: 0,
+                        total_kva: 0
+                    };
+                }
+                monthlyData[monthKey].count += item._count.id;
+                monthlyData[monthKey].total_kva += item._sum.kVA || 0;
+            });
+
+            return Object.values(monthlyData).sort((a, b) => a.kva_date.localeCompare(b.kva_date));
+        } catch (error) {
+            console.error('Error fetching DTR kVA metrics:', error);
+            throw error;
+        }
+    }
 }
 
 export default DTRDB; 
