@@ -834,7 +834,7 @@ const DTRDashboard: React.FC = () => {
                           onValueClick: stat.onValueClick,
                           bg: stat.bg || "bg-stat-icon-gradient",
                         },
-                        span: { col: 1, row: 1 },
+                        span: { col: 1 as const, row: 1 as const },
                       })),
                   ],
                 },
@@ -878,7 +878,7 @@ const DTRDashboard: React.FC = () => {
                                  iconStyle: card.iconStyle, // Only for Active/In-Active DTRs
                                  bg: card.bg || "bg-stat-icon-gradient",
                              },
-                             span: { col: 1, row: 1 },
+                             span: { col: 1 as const, row: 1 as const },
                          }))
                     ],
                 },

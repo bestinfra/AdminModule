@@ -258,10 +258,7 @@ function createBaseSchema(input: FormInputConfig): z.ZodTypeAny {
 
     case 'number':
       return z.coerce
-        .number({
-          invalid_type_error: `${label} must be a valid number`,
-          required_error: `${label} is required`
-        })
+        .number()
         .refine(
           (val) => !isNaN(val) && isFinite(val),
           { message: `${label} must be a valid number` }
@@ -471,11 +468,11 @@ function applyValidationRules(schema: z.ZodTypeAny, input: FormInputConfig): z.Z
     // Custom validation
     if (custom) {
       enhancedSchema = enhancedSchema.refine(
-        (val) => {
+        (val: any) => {
           const customError = custom(val);
           return !customError;
         },
-        (val) => ({ message: custom(val) || 'Invalid value' })
+        { message: 'Invalid value' }
       );
     }
   }
@@ -505,7 +502,7 @@ export function validateFormData(data: Record<string, FormInputValue>, inputs: F
   } catch (error) {
     if (error instanceof z.ZodError) {
       const errors: Record<string, string> = {};
-      error.errors.forEach((err) => {
+      error.issues.forEach((err) => {
         const fieldName = err.path.join('.');
         errors[fieldName] = err.message;
       });
@@ -523,7 +520,7 @@ export function validateField(value: FormInputValue, input: FormInputConfig): st
     return null;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const fieldError = error.errors.find(err => err.path[0] === input.name);
+      const fieldError = error.issues.find(err => err.path[0] === input.name);
       return fieldError ? fieldError.message : null;
     }
     return 'Validation failed';

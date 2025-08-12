@@ -24,12 +24,11 @@ class OptimizedDeployer {
       host: 'localhost',
       port: 5432,
       user: 'postgres',
-      password: 'root1234',
+      password: 'kiran@123',
       templateDb: 'subapp_db'
     };
   }
 
-  // Initialize port registry
   initializePortRegistry() {
     const dataDir = path.dirname(this.portRegistryPath);
     if (!fs.existsSync(dataDir)) {
