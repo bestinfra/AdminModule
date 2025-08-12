@@ -127,10 +127,6 @@ const App: React.FC = () => {
                             <Route path="/add-data-logger" element={<AddDataLogger />} />
                             <Route path="/roles-permissions" element={<RolesPermissions />} />
                             <Route path="/filter-style-controller" element={<FilterStyleController />} />
-<<<<<<< HEAD
-                            <Route path="/final-usage-summary" element={<FinalUsageSummary />} />
-                            <Route path="/confirmation" element={<Confirmation/>}/>
-=======
                             <Route path="/payment" element={<Payment amount="100" />} />
                             <Route path="/freeze-status" element={<FreezeStatus />} />
                             <Route path="/confirmation" element={<ConfirmationPage />} />
@@ -138,7 +134,6 @@ const App: React.FC = () => {
                        
                             {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
                             <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
->>>>>>> b0278cf5dba8e0a8bdf9418e216f4ddbabbbb69f
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
