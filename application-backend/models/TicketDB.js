@@ -4,9 +4,19 @@ import { getDateInYMDFormat } from '../utils/utils.js';
 const prisma = new PrismaClient();
 
 class TicketDB {
-    static async getTicketStats() {
+    static async getTicketStats(locationId = null) {
         try {            
+            const whereClause = {};
+            
+            // If locationId is provided, filter tickets by DTR location
+            if (locationId) {
+                whereClause.dtrs = {
+                    locationId: locationId
+                };
+            }
+            
             const tickets = await prisma.tickets.findMany({
+                where: whereClause,
                 select: {
                     status: true
                 }
@@ -33,7 +43,7 @@ class TicketDB {
         }
     }
 
-    static async getTicketsTable(page = 1, limit = 10, filters = {}) {
+    static async getTicketsTable(page = 1, limit = 10, filters = {}, locationId = null) {
         try {
             
             const skip = (page - 1) * limit;
@@ -70,6 +80,23 @@ class TicketDB {
                     contains: filters.ticketNumber,
                     mode: 'insensitive'
                 };
+            }
+            
+            // If locationId is provided, filter tickets by DTR location
+            if (locationId) {
+                // Handle case where dtrs filter already exists
+                if (whereClause.dtrs) {
+                    whereClause.dtrs = {
+                        AND: [
+                            whereClause.dtrs,
+                            { locationId: locationId }
+                        ]
+                    };
+                } else {
+                    whereClause.dtrs = {
+                        locationId: locationId
+                    };
+                }
             }
 
             const totalCount = await prisma.tickets.count({
@@ -174,7 +201,7 @@ class TicketDB {
         }
     }
 
-    static async getLastTwelveMonthsTrends() {
+    static async getLastTwelveMonthsTrends(locationId = null) {
         try {
             const today = new Date();
             const months = [];
@@ -188,13 +215,22 @@ class TicketDB {
             const startMonth = new Date(today.getFullYear(), today.getMonth() - 11, 1);
             const endMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
+            const whereClause = {
+                createdAt: {
+                    gte: startMonth,
+                    lt: endMonth
+                }
+            };
+            
+            // If locationId is provided, filter tickets by DTR location
+            if (locationId) {
+                whereClause.dtrs = {
+                    locationId: locationId
+                };
+            }
+
             const tickets = await prisma.tickets.findMany({
-                where: {
-                    createdAt: {
-                        gte: startMonth,
-                        lt: endMonth
-                    }
-                },
+                where: whereClause,
                 select: {
                     status: true,
                     createdAt: true
