@@ -2,11 +2,6 @@ const fs = require('fs');
 const path = require('path');
 const { copyTemplateDirectory, loadAndProcessTemplate, processTemplate } = require('./utils/templateProcessor');
 
-/**
- * Generate frontend application structure
- * @param {string} baseDir - Base directory for the project
- * @param {Object} formData - Form data with app configuration
- */
 function generateFrontend(baseDir, formData) {
   const {
     appName,
@@ -28,14 +23,12 @@ function generateFrontend(baseDir, formData) {
 
   const frontendDir = path.join(baseDir, 'frontend');
   
-  // Create variables for template replacement
   const variables = {
     appName: appName || 'Admin App',
     projectFolderName: appName?.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'my-admin-app',
     companyName: companyName || 'Company',
     adminFirstName: adminFirstName || 'Admin',
     adminLastName: adminLastName || 'User',
-    // New color variables from BrandPersonalization
     colorPrimaryBg: formData.colorPrimaryBg || '#efefef',
     colorPrimaryBgLight: formData.colorPrimaryBgLight || '#dce7ec',
     colorPrimaryLightest: formData.colorPrimaryLightest || '#f5f8fc',
@@ -73,14 +66,11 @@ function generateFrontend(baseDir, formData) {
     backendPort: backendPort || 4000
   };
 
-  // Copy template directory (excluding App.tsx which will be processed separately)
   const templateDir = path.join(__dirname, 'templates', 'frontend');
   copyTemplateDirectory(templateDir, frontendDir, variables, ['App.tsx.template']);
 
-  // Generate authentication components FIRST (before App.tsx)
   generateAuthComponents(frontendDir, variables);
   
-  // Generate additional files that need complex logic
   generateAppComponent(frontendDir, variables);
   generateContextFiles(frontendDir, variables);
   generateHooksFiles(frontendDir, variables);
@@ -94,17 +84,10 @@ function generateFrontend(baseDir, formData) {
   console.log('Frontend generated successfully');
 }
 
-/**
- * Generate the main App.tsx component
- */
 function generateAppComponent(frontendDir, variables) {
-  // Calculate conditional cases based on selected modules
   const modules = variables.modules || [];
-  
-  // Generate imports based on selected modules
   const imports = [];
   
-  // Array-based module configuration
   const moduleConfig = [
     {
       name: 'dashboard',
@@ -113,7 +96,6 @@ function generateAppComponent(frontendDir, variables) {
       subModules: [
         { name: 'consumer_dashboard', component: 'ConsumerDashboard', route: '/consumer-dashboard', title: 'Consumer Dashboard' },
         { name: 'dtr_dashboard', component: 'DTRDashboard', route: '/dtr-dashboard', title: 'DTR Dashboard' },
-        { name: 'super_admin_dashboard', component: 'SuperAdminDashboard', route: '/super-admin', title: 'Super Admin Dashboard' }
       ]
     },
     {
@@ -126,11 +108,13 @@ function generateAppComponent(frontendDir, variables) {
       ]
     },
     {
-      name: 'user_management',
+      name: 'user_management_default',
       title: 'User Management',
       icon: '/icons/user.svg',
       subModules: [
         { name: 'users', component: 'Users', route: '/users', title: 'Users' },
+        { name: 'user_detail', component: 'UserDetail', route: '/users/:userId', title: 'User Detail' },
+        { name: 'add_user', component: 'AddUser', route: '/add-user', title: 'Add User' },
         { name: 'role_management', component: 'RoleManagement', route: '/role-management', title: 'Role Management' }
       ]
     },
@@ -140,7 +124,6 @@ function generateAppComponent(frontendDir, variables) {
       icon: '/icons/workflow-setting-alt.svg',
       subModules: [
         { name: 'asset_management', component: 'AssetManagement', route: '/asset-management', title: 'Assets' },
-        { name: 'feeders', component: 'Feeders', route: '/feeders', title: 'Feeders' }
       ]
     },
     {
@@ -148,7 +131,8 @@ function generateAppComponent(frontendDir, variables) {
       title: 'Meter Management',
       icon: '/icons/meter-bolt.svg',
       subModules: [
-        { name: 'meters', component: 'Meters', route: '/meters', title: 'Meters' },
+        { name: 'data_logger_master', component: 'DataLogger', route: '/data-logger', title: 'Data Logger' },
+        { name: 'meter_list', component: 'MetersList', route: '/meters', title: 'Meter List' },
         { name: 'meter_details', component: 'MeterDetails', route: '/meter-details/:meterId', title: 'Meter Details' },
         { name: 'add_meter', component: 'AddMeter', route: '/add-meter', title: 'Add Meter' }
       ]
@@ -162,13 +146,20 @@ function generateAppComponent(frontendDir, variables) {
         { name: 'ticket_view', component: 'TicketView', route: '/tickets/:ticketId', title: 'Ticket Details' },
         { name: 'add_ticket', component: 'AddTicket', route: '/add-ticket', title: 'Add Ticket' }
       ]
+    },
+    {
+      name: 'consumer',
+      title: 'Consumer Management',
+      icon: '/icons/customer-service.svg',
+      subModules: [
+        { name: 'consumer', component: 'Consumers', route: '/consumers', title: 'Consumer Management' },
+        { name: 'consumer_view', component: 'ConsumerView', route: '/consumers/:consumerId', title: 'Consumer View' }
+      ]
     }
   ];
 
-  // Process each selected module independently
-  const processedComponents = new Set(); // Track processed components to avoid duplicates
+  const processedComponents = new Set(); 
   
-  // Create a mapping of all available sub-modules for easy lookup
   const allSubModules = [];
   moduleConfig.forEach(parentModule => {
     parentModule.subModules.forEach(subModule => {
@@ -177,62 +168,93 @@ function generateAppComponent(frontendDir, variables) {
   });
   
   modules.forEach(selectedModule => {
-    // Find the sub-module in the config
     const subModule = allSubModules.find(sub => sub.name === selectedModule);
     if (subModule && !processedComponents.has(subModule.component)) {
-      // Use @ alias for imports
       imports.push(`import ${subModule.component} from '@/pages/${subModule.component}';`);
       processedComponents.add(subModule.component);
     }
+    
+    if (selectedModule === 'meter_list') {
+      const meterDetailsSubModule = allSubModules.find(sub => sub.name === 'meter_details');
+      if (meterDetailsSubModule && !processedComponents.has(meterDetailsSubModule.component)) {
+        imports.push(`import ${meterDetailsSubModule.component} from '@/pages/${meterDetailsSubModule.component}';`);
+        processedComponents.add(meterDetailsSubModule.component);
+      }
+    }
+    
+    if (selectedModule === 'consumer') {
+      const consumerViewSubModule = allSubModules.find(sub => sub.name === 'consumer_view');
+      if (consumerViewSubModule && !processedComponents.has(consumerViewSubModule.component)) {
+        imports.push(`import ${consumerViewSubModule.component} from '@/pages/${consumerViewSubModule.component}';`);
+        processedComponents.add(consumerViewSubModule.component);
+      }
+    }
+    
+    if (selectedModule === 'users') {
+      const userDetailSubModule = allSubModules.find(sub => sub.name === 'user_detail');
+      if (userDetailSubModule && !processedComponents.has(userDetailSubModule.component)) {
+        imports.push(`import ${userDetailSubModule.component} from '@/pages/${userDetailSubModule.component}';`);
+        processedComponents.add(userDetailSubModule.component);
+      }
+      
+      const addUserSubModule = allSubModules.find(sub => sub.name === 'add_user');
+      if (addUserSubModule && !processedComponents.has(addUserSubModule.component)) {
+        imports.push(`import ${addUserSubModule.component} from '@/pages/${addUserSubModule.component}';`);
+        processedComponents.add(addUserSubModule.component);
+      }
+    }
+    
+    if (selectedModule === 'tickets') {
+      const ticketViewSubModule = allSubModules.find(sub => sub.name === 'ticket_view');
+      if (ticketViewSubModule && !processedComponents.has(ticketViewSubModule.component)) {
+        imports.push(`import ${ticketViewSubModule.component} from '@/pages/${ticketViewSubModule.component}';`);
+        processedComponents.add(ticketViewSubModule.component);
+      }
+      
+      const addTicketSubModule = allSubModules.find(sub => sub.name === 'add_ticket');
+      if (addTicketSubModule && !processedComponents.has(addTicketSubModule.component)) {
+        imports.push(`import ${addTicketSubModule.component} from '@/pages/${addTicketSubModule.component}';`);
+        processedComponents.add(addTicketSubModule.component);
+      }
+    }
   });
   
-  // Add Navigate import if we need fallback routes
   if (!modules.includes('dashboard') && modules.length > 0) {
     imports.push('import { Navigate } from \'react-router-dom\';');
   }
   
   variables.imports = imports.join('\n');
   
-  // Routes are now generated from the moduleConfig array
 
-  // Generate routes based on selected modules
   const routes = [];
-  const processedRoutes = new Set(); // Track processed routes to avoid duplicates
+  const processedRoutes = new Set(); 
   
-  // Handle dashboard sub-modules first
   const dashboardSubModules = ['consumer_dashboard', 'dtr_dashboard'];
   const selectedDashboardModules = modules.filter(module => dashboardSubModules.includes(module));
   let mainDashboard = null;
   
   if (selectedDashboardModules.length === 1) {
-    // If only one dashboard sub-module is selected, use it as the main dashboard
     const selectedModule = selectedDashboardModules[0];
     const subModule = allSubModules.find(sub => sub.name === selectedModule);
     if (subModule) {
       mainDashboard = subModule.component;
-      // For single dashboard, only add the / route
       routes.push(`<Route path="/" element={<${mainDashboard} />} />`);
     }
   } else if (selectedDashboardModules.length > 1) {
-    // If multiple dashboard sub-modules are selected, use the first one as default
     const firstSelectedModule = selectedDashboardModules[0];
     const subModule = allSubModules.find(sub => sub.name === firstSelectedModule);
     if (subModule) {
       mainDashboard = subModule.component;
-      // For multiple dashboards, add both / and /dashboard routes
       routes.push(`<Route path="/" element={<${mainDashboard} />} />`);
       routes.push(`<Route path="/dashboard" element={<${mainDashboard} />} />`);
     }
   }
   
-  // Process each selected module for routes (excluding dashboard sub-modules that were already handled)
   modules.forEach(selectedModule => {
-    // Skip dashboard sub-modules as they were already handled above
     if (dashboardSubModules.includes(selectedModule)) {
       return;
     }
     
-    // Find the sub-module in the config
     const subModule = allSubModules.find(sub => sub.name === selectedModule);
     if (subModule) {
       const routeKey = `${subModule.route}-${subModule.component}`;
@@ -240,10 +262,71 @@ function generateAppComponent(frontendDir, variables) {
         routes.push(`<Route path="${subModule.route}" element={<${subModule.component} />} />`);
         processedRoutes.add(routeKey);
       }
+      
+      if (selectedModule === 'meter_list') {
+        const meterDetailsSubModule = allSubModules.find(sub => sub.name === 'meter_details');
+        if (meterDetailsSubModule) {
+          const detailsRouteKey = `${meterDetailsSubModule.route}-${meterDetailsSubModule.component}`;
+          if (!processedRoutes.has(detailsRouteKey)) {
+            routes.push(`<Route path="${meterDetailsSubModule.route}" element={<${meterDetailsSubModule.component} />} />`);
+            processedRoutes.add(detailsRouteKey);
+          }
+        }
+      }
+      
+      if (selectedModule === 'consumer') {
+        const consumerViewSubModule = allSubModules.find(sub => sub.name === 'consumer_view');
+        if (consumerViewSubModule) {
+          const viewRouteKey = `${consumerViewSubModule.route}-${consumerViewSubModule.component}`;
+          if (!processedRoutes.has(viewRouteKey)) {
+            routes.push(`<Route path="${consumerViewSubModule.route}" element={<${consumerViewSubModule.component} />} />`);
+            processedRoutes.add(viewRouteKey);
+          }
+        }
+      }
+      
+      if (selectedModule === 'users') {
+        const userDetailSubModule = allSubModules.find(sub => sub.name === 'user_detail');
+        if (userDetailSubModule) {
+          const detailRouteKey = `${userDetailSubModule.route}-${userDetailSubModule.component}`;
+          if (!processedRoutes.has(detailRouteKey)) {
+            routes.push(`<Route path="${userDetailSubModule.route}" element={<${userDetailSubModule.component} />} />`);
+            processedRoutes.add(detailRouteKey);
+          }
+        }
+        
+        const addUserSubModule = allSubModules.find(sub => sub.name === 'add_user');
+        if (addUserSubModule) {
+          const addUserRouteKey = `${addUserSubModule.route}-${addUserSubModule.component}`;
+          if (!processedRoutes.has(addUserRouteKey)) {
+            routes.push(`<Route path="${addUserSubModule.route}" element={<${addUserSubModule.component} />} />`);
+            processedRoutes.add(addUserRouteKey);
+          }
+        }
+      }
+      
+      if (selectedModule === 'tickets') {
+        const ticketViewSubModule = allSubModules.find(sub => sub.name === 'ticket_view');
+        if (ticketViewSubModule) {
+          const viewRouteKey = `${ticketViewSubModule.route}-${ticketViewSubModule.component}`;
+          if (!processedRoutes.has(viewRouteKey)) {
+            routes.push(`<Route path="${ticketViewSubModule.route}" element={<${ticketViewSubModule.component} />} />`);
+            processedRoutes.add(viewRouteKey);
+          }
+        }
+        
+        const addTicketSubModule = allSubModules.find(sub => sub.name === 'add_ticket');
+        if (addTicketSubModule) {
+          const addTicketRouteKey = `${addTicketSubModule.route}-${addTicketSubModule.component}`;
+          if (!processedRoutes.has(addTicketRouteKey)) {
+            routes.push(`<Route path="${addTicketSubModule.route}" element={<${addTicketSubModule.component} />} />`);
+            processedRoutes.add(addTicketRouteKey);
+          }
+        }
+      }
     }
   });
   
-  // Add specific dashboard routes only if multiple dashboard sub-modules are selected
   if (selectedDashboardModules.length > 1) {
     selectedDashboardModules.forEach(selectedModule => {
       const subModule = allSubModules.find(sub => sub.name === selectedModule);
@@ -257,18 +340,15 @@ function generateAppComponent(frontendDir, variables) {
     });
   }
   
-  // If no modules selected, show a welcome page
   if (modules.length === 0) {
     routes.push('<Route path="/" element={<div className="flex items-center justify-center min-h-screen"><h1 className="text-2xl font-bold">Welcome to ' + variables.appName + '</h1></div>} />');
   }
   
   variables.routes = routes.join('\n              ');
   
-  // Set basic app variables
   variables.appName = variables.appName || 'Admin App';
   variables.companyName = variables.companyName || 'Company';
   
-  // Define module to page title mappings
   const modulePageTitles = {
     'dtr_dashboard': [
       { path: '/dtr-dashboard', title: 'DTR Dashboard' }
@@ -280,7 +360,9 @@ function generateAppComponent(frontendDir, variables) {
       { path: '/super-admin', title: 'Super Admin Dashboard' }
     ],
     'users': [
-      { path: '/users', title: 'Users' }
+      { path: '/users', title: 'Users' },
+      { path: '/users/:userId', title: 'User Detail' },
+      { path: '/add-user', title: 'Add User' }
     ],
     'role_management': [
       { path: '/role-management', title: 'Role Management' }
@@ -299,18 +381,28 @@ function generateAppComponent(frontendDir, variables) {
     'asset_management': [
       { path: '/asset-management', title: 'Asset Management' }
     ],
-    'meters': [
-      { path: '/meters', title: 'Meters' },
+    'data_logger_master': [
+      { path: '/data-logger', title: 'Data Logger' }
+    ],
+    'meter_list': [
+      { path: '/meters', title: 'Meter List' },
       { path: '/meter-details/:meterId', title: 'Meter Details' }
     ],
-    // Feeders is included in dtr_dashboard module
+    'meter_details': [
+      { path: '/meter-details/:meterId', title: 'Meter Details' }
+    ],
+    'add_meter': [
+      { path: '/add-meter', title: 'Add Meter' }
+    ],
+    'consumer': [
+      { path: '/consumers', title: 'Consumer Management' },
+      { path: '/consumers/:consumerId', title: 'Consumer View' }
+    ]
   };
 
-  // Generate page titles for AppLayout (only for selected modules)
   const pageTitles = [];
-  const addedPaths = new Set(); // Track added paths to prevent duplicates
+  const addedPaths = new Set();
   
-  // Process each selected module for page titles independently
   modules.forEach(module => {
     if (modulePageTitles[module]) {
       modulePageTitles[module].forEach(pageTitle => {
@@ -322,17 +414,14 @@ function generateAppComponent(frontendDir, variables) {
     }
   });
   
-  // Add dynamic dashboard routes based on selected dashboard sub-modules
   if (mainDashboard) {
     if (selectedDashboardModules.length === 1) {
-      // If only one dashboard sub-module is selected, use it only for the / route
       const selectedModule = selectedDashboardModules[0];
       const subModule = allSubModules.find(sub => sub.name === selectedModule);
       if (subModule) {
         pageTitles.push(`    '/': '${subModule.title}'`);
       }
     } else if (selectedDashboardModules.length > 1) {
-      // If multiple dashboard sub-modules are selected, use the first one for both / and /dashboard routes
       const firstSelectedModule = selectedDashboardModules[0];
       const subModule = allSubModules.find(sub => sub.name === firstSelectedModule);
       if (subModule) {
@@ -344,22 +433,17 @@ function generateAppComponent(frontendDir, variables) {
   
   variables.pageTitles = pageTitles.join(',\n');
   
-  // Initialize menuItems variable
   variables.menuItems = '';
   
-  // Generate menu items for AppLayout (only for selected modules)
   const menuItems = [];
   
-  // Handle dashboard sub-modules for menu items
   if (selectedDashboardModules.length === 1) {
-    // If only one dashboard sub-module is selected, add it as the main dashboard
     const selectedModule = selectedDashboardModules[0];
     const subModule = allSubModules.find(sub => sub.name === selectedModule);
     if (subModule) {
       menuItems.push(`    { title: '${subModule.title}', icon: '/icons/dashboard.svg', link: '/' }`);
     }
   } else if (selectedDashboardModules.length > 1) {
-    // If multiple dashboard sub-modules are selected, add the first one as main dashboard
     const firstSelectedModule = selectedDashboardModules[0];
     const subModule = allSubModules.find(sub => sub.name === firstSelectedModule);
     if (subModule) {
@@ -367,73 +451,34 @@ function generateAppComponent(frontendDir, variables) {
     }
   }
   
-  if (modules.includes('users')) {
-    menuItems.push('    { title: \'Users\', icon: \'/icons/user.svg\', link: \'/users\' }');
-  }
+  modules.forEach(selectedModule => {
+    if (dashboardSubModules.includes(selectedModule)) {
+      return;
+    }
+    
+    const subModule = allSubModules.find(sub => sub.name === selectedModule);
+    if (subModule) {
+      const icon = getModuleIcon(selectedModule);
+      menuItems.push(`    { title: '${subModule.title}', icon: '${icon}', link: '${subModule.route}' }`);
+    } else {
+      const parentModule = moduleConfig.find(m => m.name === selectedModule);
+      if (parentModule && parentModule.subModules) {
+        if (parentModule.subModules.length === 1) {
+          const sub = parentModule.subModules[0];
+          menuItems.push(`    { title: '${sub.title}', icon: '${parentModule.icon}', link: '${sub.route}' }`);
+        } else {
+          menuItems.push(`    {\n      title: '${parentModule.title}',\n      icon: '${parentModule.icon}',\n      hasSubmenu: true,\n      submenu: [\n`);
+          parentModule.subModules.forEach(sub => {
+            menuItems.push(`        {\n          title: '${sub.title}',\n          link: '${sub.route}',\n        },\n`);
+          });
+          menuItems.push(`      ],\n    },\n`);
+        }
+      }
+    }
+  });
   
-  if (modules.includes('role_management')) {
-    menuItems.push('    { title: \'Role Management\', icon: \'/icons/roles.svg\', link: \'/role-management\' }');
-  }
+  variables.menuItems = menuItems.join(',\n');
   
-  if (modules.includes('prepaid')) {
-    menuItems.push('    { title: \'Prepaid Bills\', icon: \'/icons/bills.svg\', link: \'/bills/prepaid\' }');
-  }
-  
-  if (modules.includes('postpaid')) {
-    menuItems.push('    { title: \'Postpaid Bills\', icon: \'/icons/bills.svg\', link: \'/bills/postpaid\' }');
-  }
-  
-  if (modules.includes('tickets')) {
-    menuItems.push('    { title: \'Tickets\', icon: \'/icons/customer-service.svg\', link: \'/tickets\' }');
-  }
-  
-  if (modules.includes('asset_management')) {
-    menuItems.push('    { title: \'Assets\', icon: \'/icons/workflow-setting-alt.svg\', link: \'/asset-management\' }');
-  }
-  
-  if (modules.includes('meters')) {
-    menuItems.push('    { title: \'Meters\', icon: \'/icons/meter-bolt.svg\', link: \'/meters\' }');
-  }
-  
-  // Define user submenus based on selected user-related modules
-  const userSubmenus = [];
-  if (modules.includes('users')) {
-    userSubmenus.push({ title: 'Users', link: '/users' });
-  }
-  if (modules.includes('role_management')) {
-    userSubmenus.push({ title: 'Role Management', link: '/role-management' });
-  }
-  
-  // Create smart user menu
-  if (userSubmenus.length === 0) {
-    // No user modules selected - don't add anything
-  } else if (userSubmenus.length === 1) {
-    // Single user module - make it the main menu
-    const singleUser = userSubmenus[0];
-    variables.menuItems += '    {\n';
-    variables.menuItems += `      title: '${singleUser.title}',\n`;
-    variables.menuItems += '      icon: \'/icons/user.svg\',\n';
-    variables.menuItems += `      link: '${singleUser.link}',\n`;
-    variables.menuItems += '    },\n';
-  } else {
-    // Multiple user modules - create parent with submenus
-    variables.menuItems += '    {\n';
-    variables.menuItems += '      title: \'Users\',\n';
-    variables.menuItems += '      icon: \'/icons/user.svg\',\n';
-    variables.menuItems += '      hasSubmenu: true,\n';
-    variables.menuItems += '      submenu: [\n';
-    userSubmenus.forEach(submenu => {
-      variables.menuItems += '        {\n';
-      variables.menuItems += `          title: '${submenu.title}',\n`;
-      variables.menuItems += `          link: '${submenu.link}',\n`;
-      variables.menuItems += '        },\n';
-    });
-    variables.menuItems += '      ],\n';
-    variables.menuItems += '    },\n';
-  }
-  // variables.menuItems = menuItems.join(',\n');
-  
-  // Process the App.tsx template
   const templatePath = path.join(__dirname, 'templates', 'frontend', 'src', 'App.tsx.template');
   const outputPath = path.join(frontendDir, 'src', 'App.tsx');
   
@@ -448,11 +493,31 @@ function generateAppComponent(frontendDir, variables) {
   }
 }
 
-/**
- * Generate context files
- */
+function getModuleIcon(moduleName) {
+  const iconMap = {
+    'users': '/icons/user.svg',
+    'user_detail': '/icons/user.svg',
+    'add_user': '/icons/user.svg',
+    'role_management': '/icons/roles.svg',
+    'prepaid': '/icons/bills.svg',
+    'postpaid': '/icons/bills.svg',
+    'tickets': '/icons/customer-service.svg',
+    'ticket_view': '/icons/customer-service.svg',
+    'asset_management': '/icons/workflow-setting-alt.svg',
+    'data_logger_master': '/icons/meter-bolt.svg',
+    'meter_list': '/icons/meter-bolt.svg',
+    'meter_details': '/icons/meter-bolt.svg',
+    'add_meter': '/icons/meter-bolt.svg',
+    'consumer': '/icons/customer-service.svg',
+    'consumer_view': '/icons/customer-service.svg',
+    'consumer_dashboard': '/icons/dashboard.svg',
+    'dtr_dashboard': '/icons/dashboard.svg'
+  };
+  
+  return iconMap[moduleName] || '/icons/apps-icon.svg';
+}
+
 function generateContextFiles(frontendDir, variables) {
-  // Generate context folder (singular) for AppContext
   const contextDir = path.join(frontendDir, 'src', 'context');
   fs.mkdirSync(contextDir, { recursive: true });
 
@@ -461,11 +526,9 @@ function generateContextFiles(frontendDir, variables) {
   const appContextPath = path.join(contextDir, 'AppContext.tsx');
   fs.writeFileSync(appContextPath, appContextContent);
 
-  // Generate contexts folder (plural) for additional context providers
   const contextsDir = path.join(frontendDir, 'src', 'contexts');
   fs.mkdirSync(contextsDir, { recursive: true });
 
-  // Copy FilterStyleContext from the main frontend
   const sourceFilterStyleContext = path.join(__dirname, '..', 'frontend', 'src', 'contexts', 'FilterStyleContext.tsx', 'api');
   const targetFilterStyleContext = path.join(contextsDir, 'FilterStyleContext.tsx');
   
@@ -477,14 +540,10 @@ function generateContextFiles(frontendDir, variables) {
   }
 }
 
-/**
- * Generate hooks files
- */
 function generateHooksFiles(frontendDir, variables) {
   const hooksDir = path.join(frontendDir, 'src', 'hooks');
   fs.mkdirSync(hooksDir, { recursive: true });
 
-  // Copy useIconFilterStyle hook from the main frontend
   const sourceIconFilterHook = path.join(__dirname, '..', 'frontend', 'src', 'hooks', 'useIconFilterStyle.ts');
   const targetIconFilterHook = path.join(hooksDir, 'useIconFilterStyle.ts');
   
@@ -496,14 +555,10 @@ function generateHooksFiles(frontendDir, variables) {
   }
 }
 
-/**
- * Generate component files
- */
 function generateComponentFiles(frontendDir, variables) {
   const componentsDir = path.join(frontendDir, 'src', 'components');
   fs.mkdirSync(componentsDir, { recursive: true });
 
-  // Generate each component
   const componentTemplates = [
     'Input.tsx.template',
     'FederatedWrapper.tsx.template',
@@ -521,9 +576,6 @@ function generateComponentFiles(frontendDir, variables) {
   });
 }
 
-/**
- * Generate TypeScript definitions
- */
 function generateTypeDefinitions(frontendDir, variables) {
   const typesDir = path.join(frontendDir, 'src', 'types');
   fs.mkdirSync(typesDir, { recursive: true });
@@ -534,9 +586,6 @@ function generateTypeDefinitions(frontendDir, variables) {
   fs.writeFileSync(federationPath, federationContent);
 }
 
-/**
- * Generate theme file
- */
 function generateThemeFile(frontendDir, variables) {
   const themeTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'Theme.jsx.template');
   const themeContent = loadAndProcessTemplate(themeTemplate, variables);
@@ -544,9 +593,6 @@ function generateThemeFile(frontendDir, variables) {
   fs.writeFileSync(themePath, themeContent);
 }
 
-/**
- * Generate README file
- */
 function generateReadme(frontendDir, variables) {
   const readmeTemplate = path.join(__dirname, 'templates', 'frontend', 'README.md.template');
   const readmeContent = loadAndProcessTemplate(readmeTemplate, variables);
@@ -554,9 +600,6 @@ function generateReadme(frontendDir, variables) {
   fs.writeFileSync(readmePath, readmeContent);
 }
 
-/**
- * Generate environment file for frontend
- */
 function generateEnvFile(frontendDir, variables) {
   const envContent = `# Frontend Environment Configuration
 # Backend API Configuration
@@ -585,14 +628,10 @@ VITE_BACKEND_ENV_URL=http://localhost:${variables.backendPort}/api/env
   console.log('✅ Created frontend .env file with backend connection');
 }
 
-/**
- * Generate authentication components
- */
 function generateAuthComponents(frontendDir, variables) {
   const authDir = path.join(frontendDir, 'src', 'components', 'auth');
   fs.mkdirSync(authDir, { recursive: true });
 
-  // Generate LocalAuthWrapper
   const authWrapperTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'auth', 'LocalAuthWrapper.tsx.template');
   if (fs.existsSync(authWrapperTemplate)) {
     const authWrapperContent = loadAndProcessTemplate(authWrapperTemplate, variables);
@@ -600,7 +639,6 @@ function generateAuthComponents(frontendDir, variables) {
     fs.writeFileSync(authWrapperPath, authWrapperContent);
   }
 
-  // Generate LocalProtectedRoute
   const protectedRouteTemplate = path.join(__dirname, 'templates', 'frontend', 'src', 'components', 'auth', 'LocalProtectedRoute.tsx.template');
   if (fs.existsSync(protectedRouteTemplate)) {
     const protectedRouteContent = loadAndProcessTemplate(protectedRouteTemplate, variables);
@@ -608,7 +646,6 @@ function generateAuthComponents(frontendDir, variables) {
     fs.writeFileSync(protectedRoutePath, protectedRouteContent);
   }
 
-  // Verify that both files were created
   const authWrapperPath = path.join(authDir, 'LocalAuthWrapper.tsx');
   const protectedRoutePath = path.join(authDir, 'LocalProtectedRoute.tsx');
   
@@ -622,9 +659,6 @@ function generateAuthComponents(frontendDir, variables) {
   console.log('✅ Generated authentication components');
 }
 
-/**
- * Generate API utilities for frontend
- */
 function generateApiUtils(frontendDir, variables) {
   const apiDir = path.join(frontendDir, 'src', 'api');
   fs.mkdirSync(apiDir, { recursive: true });
@@ -789,18 +823,13 @@ export default apiClient;
   fs.writeFileSync(apiUtilsPath, apiUtilsContent);
   console.log('✅ Created API utilities for frontend-backend connection');
   
-  // Copy additional API files that sub-apps need
   copyApiFiles(frontendDir, variables);
 }
 
-/**
- * Copy necessary API files from main frontend to sub-app
- */
 function copyApiFiles(frontendDir, variables) {
   const apiDir = path.join(frontendDir, 'src', 'api');
   const sourceApiDir = path.join(__dirname, '..', 'frontend', 'src', 'api');
   
-  // Files to copy from main frontend API
   const filesToCopy = [
     'subAppAuth.ts',
     'meterConnection.ts',
@@ -813,10 +842,8 @@ function copyApiFiles(frontendDir, variables) {
     
     if (fs.existsSync(sourcePath)) {
       try {
-        // Read the source file
         let content = fs.readFileSync(sourcePath, 'utf8');
         
-        // Update the BACKEND_URL import for sub-apps
         if (fileName === 'subAppAuth.ts') {
           content = content.replace(
             "import BACKEND_URL from '../config';",
