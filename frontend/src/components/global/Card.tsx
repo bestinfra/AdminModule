@@ -64,13 +64,13 @@ const Card = ({
                                 role="img"
                                 aria-label={
                                     comparisonValue && comparisonValue > 0
-                                        ? 'Trending Up'
-                                        : 'Trending Down'
+                                            ? 'Trending Up'
+                                            : 'Trending Down'
                                 }
-                                className={`bg-secondary rounded-full p-1.5 md:p-1 sm:p-0.5 ${
+                                className={`rounded-full p-1.5 md:p-1 sm:p-0.5 ${
                                     comparisonValue && comparisonValue > 0
                                         ? 'bg-secondary'
-                                        : 'bg-danger'
+                                        : 'bg-warning'
                                 }`}>
                                 <img
                                     src={

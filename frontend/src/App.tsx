@@ -49,10 +49,12 @@ import Dashboard from './pages_v2/ConsumerDashboard';
 import ConsumerDetailView from './pages_v2/ConsumerDetailView';
 import Payment from './components/Occupancy-Vacency/Payment';
 import FreezeStatus from './components/Occupancy-Vacency/FreezeStatus';
-import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';     
-
+import UsageSummaryPage from './components/Occupancy-Vacency/UsageSummartPage';
+import DG_Dashboard from './components/DG_Modules/DG_Dashboard';
+import DgDetailView from './pages_v2/DgDetailView';
 import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
 import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';
+    
 const App: React.FC = () => {
     return (
         <AppProvider>
@@ -122,7 +124,8 @@ const App: React.FC = () => {
                             <Route path="/freeze-status" element={<FreezeStatus />} />
                             <Route path="/confirmation" element={<ConfirmationPage />} />
                             <Route path="/usage-summary" element={<UsageSummaryPage />} />
-                       
+                            <Route path="/dg-dashboard" element={<DG_Dashboard />} />
+                            <Route path="/dg-detail/:dgId" element={<DgDetailView />} />
                             {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
                             <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
                             {/* <Route path="/meters-list" element={<MetersList />} /> */}

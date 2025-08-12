@@ -9,6 +9,9 @@ interface PageInformationItem {
   align?: "start" | "center" | "end" | "between";
   gap?: string;
   statusIndicator?: boolean; // New prop to show blinking status indicator
+  onClick?: () => void; // Click handler for the item
+  clickable?: boolean; // Whether the item is clickable
+  className?: string; // Custom className for styling
 }
 
 interface PageInformationRow {
@@ -26,6 +29,9 @@ interface PageInformationProps {
   layout?: "row" | "column";
   align?: "start" | "center" | "end" | "between";
   gap?: string;
+  onClick?: () => void; // Click handler for simple mode
+  clickable?: boolean; // Whether simple mode is clickable
+  itemClassName?: string; // Custom className for simple mode
 
   // Section header mode
   isSectionHeader?: boolean;
@@ -79,6 +85,9 @@ const PageInformation: React.FC<PageInformationProps> = ({
   layout = "column",
   align = "start",
   gap = "gap-1",
+  onClick,
+  clickable,
+  itemClassName,
 
   // Section header mode
   isSectionHeader,
@@ -98,7 +107,11 @@ const PageInformation: React.FC<PageInformationProps> = ({
 
     return (
       <div className={`w-full h-full ${wrapperClassName}`} style={style}>
-        <div className={`${layoutClass} ${alignClass}`}>
+        <div 
+          className={`${layoutClass} ${alignClass} ${itemClassName || ''}`}
+          onClick={onClick}
+          style={{ cursor: clickable ? 'pointer' : 'default' }}
+        >
           <div className="text-sm font-medium text-gray-600">{title}</div>
           <div className="text-base text-gray-900">{value}</div>
         </div>
@@ -143,7 +156,9 @@ const PageInformation: React.FC<PageInformationProps> = ({
                   return (
                     <div
                       key={itemIndex}
-                      className={`flex flex-col w-full ${itemGap} ${itemAlignClass} ${itemSpanClasses}`}
+                      className={`flex flex-col w-full ${itemGap} ${itemAlignClass} ${itemSpanClasses} ${item.className || ''}`}
+                      onClick={item.onClick}
+                      style={{ cursor: item.clickable ? 'pointer' : 'default' }}
                     >
                       <div className="text-md font-normal text-TextSecondary">
                         {item.title}

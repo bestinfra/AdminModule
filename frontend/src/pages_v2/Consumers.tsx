@@ -173,7 +173,7 @@ const Consumers: React.FC = () => {
         menuItems: [
             { id: 'occupied', label: 'Occupied' },
             { id: 'vacant', label: 'Vacant' },
-            { id: 'high-usage', label: 'High Usage' },
+            { id: 'high-usage', label: '' },
         ],
         onMenuItemClick: (itemId: string) => {
             setMenuValue(itemId);

@@ -1,7 +1,7 @@
 import React, { memo, useMemo, useCallback, useRef, useState } from "react";
 import type {
   FormInputProps,
-  FormInputEvent,
+  FormInputEvent, 
   CommonInputProps,
   FormInputValue,
 } from "@components/Form/types";
@@ -102,7 +102,7 @@ const FormInput: React.FC<FormInputProps> = ({
     const fileValue = value === null ? null : (value as FileList);
     const fileSingleValue = value === null ? null : (value as File);
 
-    const finalClassName = `${commonProps.className} ${icon ? "pr-12" : ""} ${rightIcon ? "pr-12" : ""} ${
+    const finalClassName = `${commonProps.className} ${icon ? "pl-12" : ""} ${rightIcon ? "pr-12" : ""} ${
       showError ? "border-red-500" : ""
     }`.trim();
 
@@ -116,7 +116,7 @@ const FormInput: React.FC<FormInputProps> = ({
             type={showPassword ? 'text' : 'password'}
             value={stringValue}
             placeholder={placeholder || label}
-            className={finalClassName + ' pr-12'}
+            className={finalClassName}
           />
           <button
             type="button"
@@ -131,7 +131,7 @@ const FormInput: React.FC<FormInputProps> = ({
                 <g id="Layer_16" data-name="Layer 16">
                   <path d="m419.72 419.72-327.46-327.45-.07-.08a19 19 0 0 0 -26.78 27l28.67 28.67a332.64 332.64 0 0 0 -88.19 89 34.22 34.22 0 0 0 0 38.38c59.97 88.76 155.04 140.76 250.11 140.11a271.6 271.6 0 0 0 90.46-15.16l46.41 46.41a19 19 0 0 0 26.94-26.79zm-163.72-55.98a107.78 107.78 0 0 1 -98.17-152.18l29.95 29.95a69.75 69.75 0 0 0 82.71 82.71l29.95 29.95a107.23 107.23 0 0 1 -44.44 9.57z"/>
                   <path d="m506.11 236.81c-59.97-88.81-155.04-140.81-250.11-140.16a271.6 271.6 0 0 0 -90.46 15.16l46 46a107.78 107.78 0 0 1 142.63 142.63l63.74 63.74a332.49 332.49 0 0 0 88.2-89 34.22 34.22 0 0 0 0-38.37z"/>
-                  <path d="m256 186.26a69.91 69.91 0 0 0 -14.49 1.52l82.71 82.7a69.74 69.74 0 0 0 -68.22-84.22z"/>
+                  <path d="m256 186.26a69.91 69.74 0 0 0 -14.49 1.52l82.71 82.7a69.74 69.74 0 0 0 -68.22-84.22z"/>
                 </g>
               </svg>
             ) : (
@@ -141,6 +141,11 @@ const FormInput: React.FC<FormInputProps> = ({
               </svg>
             )}
           </button>
+          {rightIcon && (
+            <div className="absolute right-12 top-1/2 transform -translate-y-1/2 pointer-events-none">
+              <img src={rightIcon} alt="" className="w-5 h-5 opacity-60" />
+            </div>
+          )}
         </div>
       );
     }
@@ -148,22 +153,36 @@ const FormInput: React.FC<FormInputProps> = ({
     switch (type) {
       case "textarea":
         return (
-          <TextareaInput
-            {...commonProps}
-            className={finalClassName}
-            value={stringValue}
-            placeholder={placeholder || label}
-          />
+          <div className="relative">
+            <TextareaInput
+              {...commonProps}
+              className={finalClassName}
+              value={stringValue}
+              placeholder={placeholder || label}
+            />
+            {rightIcon && (
+              <div className="absolute right-3 top-3 pointer-events-none">
+                <img src={rightIcon} alt="" className="w-5 h-5 opacity-60" />
+              </div>
+            )}
+          </div>
         );
       case "select":
         return (
-          <SelectInput
-            {...commonProps}
-            className={finalClassName}
-            value={stringValue}
-            placeholder={placeholder || `Select ${label}`}
-            options={options}
-          />
+          <div className="relative">
+            <SelectInput
+              {...commonProps}
+              className={finalClassName}
+              value={stringValue}
+              placeholder={placeholder || `Select ${label}`}
+              options={options}
+            />
+            {rightIcon && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <img src={rightIcon} alt="" className="w-5 h-5 opacity-60" />
+              </div>
+            )}
+          </div>
         );
       case "file":
         return (
@@ -364,18 +383,25 @@ const FormInput: React.FC<FormInputProps> = ({
         }
         
         return (
-          <input
-            {...commonProps}
-            ref={inputRef}
-            key={name}
-            type={textInputType}
-            value={stringValue}
-            placeholder={placeholder || label}
-            className={finalClassName}
-          />
+          <div className="relative">
+            <input
+              {...commonProps}
+              ref={inputRef}
+              key={name}
+              type={textInputType}
+              value={stringValue}
+              placeholder={placeholder || label}
+              className={finalClassName}
+            />
+            {rightIcon && (
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <img src={rightIcon} alt="" className="w-5 h-5 opacity-60" />
+              </div>
+            )}
+          </div>
         );
     }
-  }, [type, value, commonProps, placeholder, label, options, icon, fileInputRefs, description, name, onInputChange, input, showError, error, required, disabled, inputClassName, showError, showPassword, setShowPassword, rightIcon]);
+  }, [type, value, commonProps, placeholder, label, options, icon, rightIcon, fileInputRefs, description, name, onInputChange, input, showError, error, required, disabled, inputClassName, showError, showPassword, setShowPassword]);
 
   return (
     <div className={`w-full  ${inputClassName || ""}`}>

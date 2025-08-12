@@ -47,13 +47,13 @@ interface ModalProps {
     gap: string;
     className?: string;
   };
-  // ModalTabs props
+  // Tabs props
   showTabs?: boolean;
   tabs?: TabItem[];
   defaultTab?: number;
   activeTabIndex?: number;
   onTabChange?: (index: number) => void;
-  // ModalTabs styling props
+  // Tabs styling props
   tabsClassName?: string;
   tabsContainerClassName?: string;
   tabsTabListClassName?: string;
@@ -289,9 +289,9 @@ const Modal: React.FC<ModalProps> = React.memo(({
                   {children || (
                     <>
                       {showForm && formFields.length > 0 ? (
-                                                 <Form
-                           key={`form-${activeTabIndex || 0}`} // Force re-render when tab changes
-                           inputs={formFields}
+                        <Form
+                          key={`form-${activeTabIndex || 0}`} // Force re-render when tab changes
+                          inputs={formFields}
                           onSubmit={handleFormSubmit}
                           submitLabel={saveButtonLabel}
                           cancelLabel={cancelButtonLabel}

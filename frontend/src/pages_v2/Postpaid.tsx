@@ -8,30 +8,35 @@ const cardData = [
         value: '₹18,300.00',
         icon: '/icons/total-recharge-collection.svg',
         subtitle2: '4 Total Bills Generated',
+        previousValue: 'vs. ₹17,000.00 Yesterday',
     },
     {
         title: 'Outstanding Amount',
         value: '₹11,000.00',
         icon: '/icons/wallet.svg',
         subtitle2: '2 Pending Bills',
+        previousValue: 'vs. ₹10,500.00 Yesterday',
     },
     {
         title: 'Overdue Amount',
         value: '₹3,200.00',
         icon: '/icons/credit-issued.svg',
         subtitle2: '1 Overdue Bills',
+        previousValue: 'vs. ₹2,800.00 Yesterday',
     },
     {
         title: 'Total Amount Paid',
         value: '₹7,300.00',
         icon: '/icons/paid.svg',
         subtitle2: '2 Consumer Paid',
+        previousValue: 'vs. ₹6,000.00 Yesterday',
     },
     {
         title: 'Realization Rate',
         value: '39.89%',
-        icon: '/icons/percentage.svg',
+        icon: '/icons/average.svg',
         subtitle2: '2 Consumer Paid',
+        previousValue: 'vs. 35.00% Yesterday',
     },
 ];
 
@@ -357,7 +362,7 @@ export default function Postpaid() {
                                                 onChange: handleSearchChange,
                                                 placeholder:
                                                     'Search bills by consumer name, UID, or bill number...',
-                                                className: 'w-full',
+                                                className: 'w-full ',
                                                 showShortcut: true,
                                                 isLoading: false,
                                                 name: 'billSearch',
@@ -377,17 +382,19 @@ export default function Postpaid() {
                                 {
                                     layout: 'grid',
                                     gridColumns: 1,
+                                    className:'pb-4',
                                     columns: [
                                         {
                                             name: 'Table',
                                             props: {
                                                 data: filteredData,
                                                 columns: tableColumns,
-                                                searchable: false,
+                                                searchable: true,
                                                 pagination: true,
                                                 rowsPerPageOptions: [
                                                     5, 10, 15, 25,
                                                 ],
+                                                search:true,
                                                 initialRowsPerPage: 10,
                                                 emptyMessage: search
                                                     ? 'No bills found matching your search'
