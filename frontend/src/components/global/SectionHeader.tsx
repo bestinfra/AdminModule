@@ -157,7 +157,7 @@ interface SectionHeaderProps {
   titleParts?: {
     prefix?: string;
     suffix?: string;
-    suffixVariant?: "default" | "primary" | "secondary" | "muted" | "success" | "warning" | "danger";
+    suffixVariant?: "default" | "primary" | "secondary" | "muted" | "success" | "warning" | "danger"  ;
     suffixClassName?: string;
     suffixOnClick?: () => void;
   };

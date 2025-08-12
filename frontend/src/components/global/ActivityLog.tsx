@@ -59,7 +59,7 @@ const ActivityLog: React.FC<ActivityLogProps> = ({
 
     if (loading) {
         return (
-            <section className={`bg-white rounded-lg  border border-gray-200 p-4  ${className}`}>
+            <section className={`bg-white rounded-lg  border border-primary-border p-4  ${className}`}>
                 <header>
                     <h2 className="text-md font-semibold text-gray-800 ">{title}</h2>
                 </header>
@@ -85,7 +85,7 @@ const ActivityLog: React.FC<ActivityLogProps> = ({
     }
 
     return (
-        <section className={`bg-white rounded-lg  border border-gray-200 p-4 flex flex-col gap-4${className}`}>
+            <section className={`bg-white rounded-lg  border border-primary-border p-4 flex flex-col gap-4${className}`}>
             <header>
                 <h2 className="text-md font-semibold text-gray-800">{title}</h2>
             </header>

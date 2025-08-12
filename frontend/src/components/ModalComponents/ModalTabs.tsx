@@ -103,11 +103,11 @@ const ModalTabs: React.FC<ModalTabsProps> = ({
 
   // Default styling classes
   const defaultContainerClasses = 'w-full flex flex-col gap-4';
-  const defaultTabListClasses = 'flex border border-PrimaryBorder dark:border-dark-border rounded-full p-1 h-12 gap-2';
-  const defaultTabButtonClasses = 'px-6 text-base font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center gap-2';
+  const defaultTabListClasses = 'flex border justify-between  border-primary-border dark:border-dark-border rounded-full p-1 h-12 gap-2 overflow-hidden';
+  const defaultTabButtonClasses = 'px-6 text-base font-medium rounded-full transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 flex-shrink-0 min-w-0';
   const defaultActiveTabButtonClasses = 'text-background-color bg-primary text-white dark:bg-primary dark:text-white';
   const defaultInactiveTabButtonClasses = 'text-subinfo hover:bg-gray-100 dark:hover:bg-gray-700';
-  const defaultContentClasses = 'w-full';
+  const defaultContentClasses = 'w-full overflow-hidden';
 
   // Size classes
   const sizeClasses = {
@@ -186,7 +186,7 @@ const ModalTabs: React.FC<ModalTabsProps> = ({
       role="tablist"
       aria-label={ariaLabel}
     >
-      <div className={finalTabListClasses}>
+      <div className={`${finalTabListClasses} overflow-hidden`}>
         {tabs.map((tab, index) => {
           const isActive = currentTab === index;
           const isDisabled = tab.disabled || !allowTabSwitch;
@@ -213,7 +213,7 @@ const ModalTabs: React.FC<ModalTabsProps> = ({
                 </span>
               )}
               {showTabLabels && (
-                <span className="truncate">
+                <span className="truncate max-w-full">
                   {tab.label}
                 </span>
               )}

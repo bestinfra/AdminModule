@@ -36,7 +36,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 1,
             title: 'Total Consumers',
             value: '292',
-            icon: '/icons/account.svg',
+            icon: '/icons/units.svg',
             subtitle1: '284 Active',
             subtitle2: '8 In-Active',
             onValueClick: handleTotalConsumersClick,
@@ -45,7 +45,7 @@ const ConsumerDashboard: React.FC = () => {
             id: 2,
             title: 'High-Usage Consumers',
             value: '2',
-            icon: '/icons/coins.svg',
+            icon: '/icons/heavy-user.svg',
             subtitle1: '140.09 kWh Average Consumption',
             subtitle2: '',
         },
@@ -59,6 +59,9 @@ const ConsumerDashboard: React.FC = () => {
             subtitle1: '284 Active Consumption',
             subtitle2: '8 In-Active Consumption',
             onValueClick: handleTotalConsumersClick,
+            showTrend: true,
+            comparisonValue: -10.09,
+            previousValue: 'vs. 14.09 kWh Yesterday',
         },
         {
             id: 2,
@@ -67,6 +70,9 @@ const ConsumerDashboard: React.FC = () => {
             icon: '/icons/rupee.svg',
             subtitle1: '140.09 kWh Average Billing',
             subtitle2: '',
+            showTrend: true,
+            comparisonValue: 15000,
+            previousValue: 'vs. 14090.00 Yesterday',
         },
     ]);
 
@@ -297,6 +303,8 @@ const ConsumerDashboard: React.FC = () => {
                                                 subtitle2: card.subtitle2,
                                                 onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
+                                                showTrend: card.showTrend,
+                                                comparisonValue: card.comparisonValue,
                                             },
                                             span: { col: 1 as const, row: 1 as const },
                                         })),
@@ -362,6 +370,7 @@ const ConsumerDashboard: React.FC = () => {
                             type: 'grid',
                             columns: 2,
                             gap: 'gap-4',
+                            className:'pb-4',
                             rows: [
                                 {
                                     layout: 'column',

@@ -81,23 +81,17 @@ const defaultMenus: MenuCategory[] = [
                 icon:'/icons/dashboard.svg',
                 link:'/all-tickets',
             },
-            {   
-                title: 'Bills',
-                icon: '/icons/bills.svg',
-                link: '/bills',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Prepaid',
-                        link: '/prepaid',
-                    },
-                    {
-                        title: 'Postpaid',
-                        link: '/postpaid',
-                    },
-                ],
+           
+            {
+              title: "Asset Managment",
+              icon: "/icons/freeze-status.svg",
+              link: "/asset-managment",
             },
-
+            {
+              title: "DG_Dashboard",
+              icon: "/icons/freeze-status.svg",
+              link: "/dg-dashboard",
+            },
       // {
       //     title:'ConsumerDetails',
       //     icon:'/icons/dashboard.svg',
@@ -105,100 +99,104 @@ const defaultMenus: MenuCategory[] = [
       // }
     ],
   },
-  {
-    category: "ADMIN SETTINGS",
-    items: [
-      // {
-      //     title: 'Asset Management',
-      //     icon: '/icons/Asset_managment.svg',
-      //     link: '/asset-managment',
-      // },
+  // {
+  //   category: "ADMIN SETTINGS",
+  //   items: [
+  //     // {
+  //     //     title: 'Asset Management',
+  //     //     icon: '/icons/Asset_managment.svg',
+  //     //     link: '/asset-managment',
+  //     // },
 
-      // {
-      //     title: 'Meter List',
-      //     icon: '/icons/meter_managment.svg',
-      //     link: '/meters',
-      // },
-      {
-        title: "User Management",
-        link: "/users",
-        icon: "/icons/user_managment.svg",
-      },
-      {
-        title: "Meter List",
-        icon: "/icons/meter_managment.svg",
-        link: "/meters",
-      },
-      {
-        title: "Asset Managment",
-        icon: "/icons/freeze-status.svg",
-        link: "/asset-managment",
-      },
-      {
-        title: "Occupancy to Vacency",
-        icon: "/icons/meter_managment.svg",
-        link: "/occupancy-status",
-      },
-      // {
-      //   title: "Payment",
-      //   icon: "/icons/payment.svg",
-      //   link: "/payment",
-      // },
-      // {
-      //   title: "Freeze Status",
-      //   icon: "/icons/freeze-status.svg",
-      //   link: "/freeze-status",
-      // },
-      {
-        title: "COnsumer Dashbaord",
-        icon: "/icons/freeze-status.svg",
-        link: "/consumer-dashboard",
-      },
-      {
-        title: "All Consumers",
-        icon: "/icons/freeze-status.svg",
-        link: "/consumers",
-      },
+  //     // {
+  //     //     title: 'Meter List',
+  //     //     icon: '/icons/meter_managment.svg',
+  //     //     link: '/meters',
+  //     // },
+    
+    
+  //     // {
+  //     //   title: "Payment",
+  //     //   icon: "/icons/payment.svg",
+  //     //   link: "/payment",
+  //     // },
+  //     // {
+  //     //   title: "Freeze Status",
+  //     //   icon: "/icons/freeze-status.svg",
+  //     //   link: "/freeze-status",
+  //     // },
+     
       
-      // {
-      //   title: "Usage Summary",
-      //   icon: "/icons/freeze-status.svg",
-      //   link: "/usage-summary",
-      // },
-      // {
-      //     title: 'SubLogin',
-      //     link: '/sub-login',
-      //     icon:'/icons/user_managment.svg',
-      // },
+  //     // {
+  //     //   title: "Usage Summary",
+  //     //   icon: "/icons/freeze-status.svg",
+  //     //   link: "/usage-summary",
+  //     // },
+  //     // {
+  //     //     title: 'SubLogin',
+  //     //     link: '/sub-login',
+  //     //     icon:'/icons/user_managment.svg',
+  //     // },
 
-      // {
-      //     title: 'User Management',
-      //     icon: '/icons/user_managment.svg',
-      //     link: '/user-management',
-      //     hasSubmenu: true,
-      //     submenu: [
+  //     // {
+  //     //     title: 'User Management',
+  //     //     icon: '/icons/user_managment.svg',
+  //     //     link: '/user-management',
+  //     //     hasSubmenu: true,
+  //     //     submenu: [
 
-      //         {
-      //             title: 'Role Management',
-      //             link: '/role-management ',
-      //         },
-      //     ],
-      // },
-      // {
-      //     title: 'User Management',
-      //     icon: '/icons/user_managment.svg',
-      //     link: '/user-management',  
-      //     hasSubmenu: true,
-      //     submenu: [
+  //     //         {
+  //     //             title: 'Role Management',
+  //     //             link: '/role-management ',
+  //     //         },
+  //     //     ],
+  //     // },
+  //     // {
+  //     //     title: 'User Management',
+  //     //     icon: '/icons/user_managment.svg',
+  //     //     link: '/user-management',  
+  //     //     hasSubmenu: true,
+  //     //     submenu: [
 
-      //         {
-      //             title: 'Role Management',
-      //             link: '/role-management ',
-      //         },
-      //     ],
-      // },
-    ],
+  //     //         {
+  //     //             title: 'Role Management',
+  //     //             link: '/role-management ',
+  //     //         },
+  //     //     ],
+  //     // },
+  //   ],
+  // },
+  {
+    category: "GMR  SETTINGS",
+    items: [ 
+      {
+      title: "Consumer Dashbaord",
+      icon: "/icons/freeze-status.svg",
+      link: "/consumer-dashboard",
+    },
+    {
+      title: "All Consumers",
+      icon: "/icons/freeze-status.svg",
+      link: "/consumers",
+    },
+    {   
+      title: 'Bills',
+      icon: '/icons/bills.svg',
+      link: '/bills',
+      hasSubmenu: true,
+      submenu: [
+          {
+              title: 'Prepaid',
+              link: '/prepaid',
+          },
+          {
+              title: 'Postpaid',
+              link: '/postpaid',
+          },
+      ],
   },
+  ]
+  }
   // {
   //   category: "GMR Client",
   //   items: [
