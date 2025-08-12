@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "username": "superadmin",
+    "email": "mainhost.bestinfra@gmail.com",
+    "password": "$2b$10$G/Pw5fszFZpKWv/ci9cBeOa7Ca4ckfWBrG7OOMWRw7UoT8bzVefE6",
+    "role": "admin",
+    "createdAt": "2025-07-10T05:27:22.570Z",
+    "updatedAt": "2025-07-10T05:27:22.573Z"
+  }
+]

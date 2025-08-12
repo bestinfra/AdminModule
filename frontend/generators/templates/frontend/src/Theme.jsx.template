@@ -1,0 +1,51 @@
+import React, { useEffect } from 'react';
+
+export const Theme = ({ children }) => {
+    useEffect(() => {
+        // Apply theme configuration directly to CSS variables
+        const themeConfig = {
+            colorPrimaryBg: '{{colorPrimaryBg}}',
+            colorPrimaryBgLight: '{{colorPrimaryBgLight}}',
+            colorPrimaryLightest: '{{colorPrimaryLightest}}',
+            colorSecondary: '{{colorSecondary}}',
+            colorSecondaryLight: '{{colorSecondaryLight}}',
+            colorSecondaryPositive: '{{colorSecondaryPositive}}',
+            colorSecondaryPositiveLight: '{{colorSecondaryPositiveLight}}',
+            colorTextPrimary: '{{colorTextPrimary}}',
+            colorTextSecondary: '{{colorTextSecondary}}',
+            colorPrimaryBorder: '{{colorPrimaryBorder}}',
+            colorWarning: '{{colorWarning}}',
+            colorWarningAlt: '{{colorWarningAlt}}',
+            colorWarningLight: '{{colorWarningLight}}',
+            colorDanger: '{{colorDanger}}',
+            colorDangerAlt: '{{colorDangerAlt}}',
+            colorDangerLight: '{{colorDangerLight}}',
+            colorInfo: '{{colorInfo}}',
+            colorNeutralDark: '{{colorNeutralDark}}',
+            colorNeutralDarker: '{{colorNeutralDarker}}',
+            colorNeutralLightest: '{{colorNeutralLightest}}',
+            colorAccentLight: '{{colorAccentLight}}',
+            colorShadowPrimary: '{{colorShadowPrimary}}',
+            colorShadowSecondary: '{{colorShadowSecondary}}',
+            colorPrimaryDark: '{{colorPrimaryDark}}',
+            colorPrimaryDarkLight: '{{colorPrimaryDarkLight}}',
+            colorDarkPrimary: '{{colorDarkPrimary}}',
+            colorDarkSecondary: '{{colorDarkSecondary}}',
+            colorDarkBorder: '{{colorDarkBorder}}',
+            colorPrimaryGradient: '{{colorPrimaryGradient}}',
+            colorPrimaryDarkGradient: '{{colorPrimaryDarkGradient}}',
+            colorGradientSecondary: '{{colorGradientSecondary}}',
+            colorStatIconGradient: '{{colorStatIconGradient}}'
+        };
+
+        // Apply theme to CSS variables
+        Object.entries(themeConfig).forEach(([key, value]) => {
+            document.documentElement.style.setProperty(
+                `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`,
+                value
+            );
+        });
+    }, []);
+
+    return <div>{children}</div>;
+}; 

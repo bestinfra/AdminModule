@@ -1,0 +1,210 @@
+project:
+  name: "AdminModule"
+  description: "React TypeScript Admin Module with Ticketing System"
+  version: "0.0.0"
+  type: "module"
+  private: true
+
+build:
+  tool: "vite"
+  target: "esnext"
+  minify: false
+  cssCodeSplit: false
+  server:
+    port: 3000
+
+scripts:
+  dev: "vite"
+  build: "tsc -b && vite build"
+  lint: "eslint ."
+  preview: "vite preview"
+
+dependencies:
+  core:
+    react: "^19.1.0"
+    react-dom: "^19.1.0"
+    react-router-dom: "^7.6.1"
+  
+  ui_components:
+    antd: "^5.25.2"
+    react-icons: "^5.5.0"
+    react-color: "^2.19.3"
+  
+  charts:
+    echarts-for-react: "^3.0.2"
+    "@types/echarts": "^4.9.22"
+  
+  utilities:
+    lodash: "^4.17.21"
+    uuid: "^11.1.0"
+    js-cookie: "^3.0.5"
+    jszip: "^3.10.1"
+    prop-types: "^15.8.1"
+  
+  drag_and_drop:
+    react-dnd: "^16.0.1"
+    react-dnd-html5-backend: "^16.0.1"
+  
+  module_federation:
+    vite-plugin-federation: "^0.0.1"
+    "@originjs/vite-plugin-federation": "^1.4.1"
+
+devDependencies:
+  build_tools:
+    vite: "^6.3.5"
+    "@vitejs/plugin-react": "^4.4.1"
+    typescript: "~5.8.3"
+  
+  styling:
+    tailwindcss: "^4.1.7"
+    "@tailwindcss/vite": "^4.1.7"
+    "@tailwindcss/aspect-ratio": "^0.4.2"
+    "@tailwindcss/forms": "^0.5.10"
+    "@tailwindcss/typography": "^0.5.16"
+  
+  linting:
+    eslint: "^9.25.0"
+    "@eslint/js": "^9.25.0"
+    typescript-eslint: "^8.30.1"
+    eslint-plugin-react-hooks: "^5.2.0"
+    eslint-plugin-react-refresh: "^0.4.19"
+    globals: "^16.0.0"
+  
+  type_definitions:
+    "@types/react": "^19.1.2"
+    "@types/react-dom": "^19.1.2"
+    "@types/react-router-dom": "^5.3.3"
+    "@types/react-color": "^3.0.13"
+    "@types/uuid": "^10.0.0"
+    "@types/js-cookie": "^3.0.6"
+    "@types/lodash": "^4.17.16"
+    "@types/prop-types": "^15.7.14"
+    "@types/node": "^22.15.21"
+
+module_federation:
+  name: "ticketing"
+  filename: "remoteEntry.js"
+  exposes:
+    - "./Ticket": "./src/pages/ticket_module/Ticket.tsx"
+    - "./NewDashboard": "./src/pages/NewDashboard.tsx"
+    - "./ThemeProvider": "./src/providers/ThemeProvider.tsx"
+    - "./useTheme": "./src/providers/ThemeProvider.tsx"
+  shared:
+    - "react"
+    - "react-dom"
+
+project_structure:
+  src:
+    components:
+      forms:
+        - "Input.tsx"
+      global:
+        - "Button.tsx"
+        - "Card.tsx"
+        - "Header.tsx"
+        - "Holder.tsx"
+        - "LoadingSpinner.tsx"
+        - "Sidebar.tsx"
+        - "Table.tsx"
+        - "TimeRangeSelector.tsx"
+      layout:
+        - "MainLayout.tsx"
+      skeletons:
+        - "CardSkeleton.tsx"
+        - "TableSkeleton.tsx"
+    
+    pages:
+      - "Dashboard.tsx"
+      - "ModuleSelection.tsx"
+      - "NotFound.tsx"
+      ticket_module:
+        - "Ticket.tsx"
+      PageBuilder:
+        - "Canvas.tsx"
+        - "ComponentPalette.tsx"
+        - "PageBuilder.tsx"
+        - "GridOptionsModal.tsx"
+        - "types.ts"
+        components:
+          - "CardBlock.tsx"
+          - "Column.tsx"
+          - "ComponentWrapper.tsx"
+          - "DroppableArea.tsx"
+          - "Row.tsx"
+          - "TableBlock.tsx"
+          - "TextBlock.tsx"
+    
+    graphs:
+      - "BarChart.tsx"
+      - "LineChart.tsx"
+      - "PieChart.tsx"
+      - "RadarChart.tsx"
+      - "index.ts"
+    
+    context:
+      - "AppContext.tsx"
+    
+    providers:
+      - "index.ts"
+      - "ThemeProvider.tsx"
+    
+    api:
+      - "exportModules.ts"
+    
+    types:
+      - "module.ts"
+    
+    styles:
+      - "default.css"
+      - "global.css"
+
+features:
+  - "Ticket Management System"
+  - "Dashboard with Analytics"
+  - "Drag & Drop Page Builder"
+  - "Theme Provider (Dark/Light Mode)"
+  - "Responsive Design"
+  - "Chart Visualizations"
+  - "Module Federation Support"
+  - "TypeScript Support"
+  - "Tailwind CSS Styling"
+
+ui_components:
+  - "Data Tables"
+  - "Cards with Metrics"
+  - "Charts (Bar, Line, Pie, Radar)"
+  - "Forms and Inputs"
+  - "Loading Skeletons"
+  - "Navigation (Header, Sidebar)"
+  - "Modal Components"
+  - "Theme Toggle"
+
+assets:
+  fonts:
+    - "Manrope (Multiple Weights)"
+  icons:
+    - "Dashboard Icons"
+    - "Action Icons (Edit, Delete, View)"
+    - "Navigation Icons"
+    - "Status Icons"
+  images:
+    - "Logos"
+    - "App Screenshots"
+
+configuration_files:
+  - "vite.config.ts"
+  - "tailwind.config.js"
+  - "tsconfig.json"
+  - "eslint.config.js"
+  - "package.json"
+
+development:
+  language: "TypeScript"
+  framework: "React 19"
+  bundler: "Vite"
+  styling: "Tailwind CSS"
+  state_management: "React Context"
+  routing: "React Router DOM"
+  charts: "ECharts"
+  ui_library: "Ant Design"
+  module_system: "ES Modules" 
