@@ -1,5 +1,5 @@
 {
-  "nextPort": 4186,
+  "nextPort": 4189,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -62,8 +62,8 @@
       "path": "C:\\xampp\\htdocs\\kiran-backend"
     },
     "test": {
-      "port": 4025,
-      "deployedAt": "2025-07-21T06:55:57.393Z",
+      "port": 4187,
+      "deployedAt": "2025-08-12T03:31:59.274Z",
       "path": "C:\\xampp\\htdocs\\test-backend"
     },
     "kittu": {
@@ -753,10 +753,10 @@
     },
     "test37": {
       "port": 4181,
-      "deployedAt": "2025-08-08T18:06:35.985Z",
-      "path": "C:\\xampp\\htdocs\\test37-backend"
+      "deployedAt": "2025-08-11T04:52:11.927Z",
+      "path": "C:\\xampp\\htdocs\\good-backend"
     },
-    "test38": {
+    "charger": {
       "port": 4182,
       "deployedAt": "2025-08-08T18:10:33.247Z",
       "path": "C:\\xampp\\htdocs\\test38-backend"
@@ -775,6 +775,16 @@
       "port": 4185,
       "deployedAt": "2025-08-11T08:54:12.054Z",
       "path": "C:\\xampp\\htdocs\\test42-backend"
+    },
+    "testing101": {
+      "port": 4186,
+      "deployedAt": "2025-08-11T11:33:41.435Z",
+      "path": "C:\\xampp\\htdocs\\testing101-backend"
+    },
+    "qwerty1234": {
+      "port": 4188,
+      "deployedAt": "2025-08-12T04:39:30.323Z",
+      "path": "C:\\xampp\\htdocs\\qwerty1234-backend"
     }
   }
 }

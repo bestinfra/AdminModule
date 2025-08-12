@@ -639,7 +639,7 @@ const ConsumerDetailView: React.FC = () => {
             rows: [
               {
                 layout: "column",
-                gap: "gap-0",
+                gap: "gap-1",
                 className: "bg-white border border-primary-border rounded-3xl  col-span-1",
                 columns: [
                   {
@@ -666,7 +666,7 @@ const ConsumerDetailView: React.FC = () => {
               },
               {
                 layout: "column",
-                gap: "gap-0",
+                gap: "gap-1",
                 className: "bg-white border border-primary-border rounded-3xl  col-span-1",
                 columns: [
                   {

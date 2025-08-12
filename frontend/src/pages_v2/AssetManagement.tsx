@@ -706,7 +706,7 @@ export default function AssetManagment() {
                     {
                         layout: {
                             type: 'column',
-                            gap: 'gap-0',
+                            gap: 'gap-1',
                             rows: [
                                 {
                                     layout: 'row',

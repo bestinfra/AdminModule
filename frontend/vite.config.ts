@@ -4,10 +4,11 @@ import federation from '@originjs/vite-plugin-federation'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
 
+// https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    tailwindcss(),
     react(),
+    tailwindcss(),
     federation({
       name: 'SuperAdmin',
       filename: 'remoteEntry.js',
@@ -31,17 +32,9 @@ export default defineConfig({
   ],
   build: {
     target: 'esnext',
-    modulePreload: false,
-    rollupOptions: {
-      output: {
-        format: 'es',
-        entryFileNames: '[name].[hash].js',
-        chunkFileNames: '[name].[hash].js',
-        assetFileNames: '[name].[hash].[ext]'
-      }
-    }
+    minify: false,
+    cssCodeSplit: false,
   },
-  // ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -57,40 +50,6 @@ export default defineConfig({
       '@types': path.resolve(__dirname, './src/types'),
       '@pages_v2': path.resolve(__dirname, './src/pages_v2'),
     },
-  },
-  server: {
-    port: 5173,
-    strictPort: true, // Force the port to be 5173
-    fs: {
-      allow: ['..'],
-    },
-    proxy: {
-      '/api/auth': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/api/apps': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/api/tickets': {
-        target: 'http://localhost:3001',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/api/sub-app-auth': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/api/sub-app/auth': {
-        target: 'http://localhost:4000',
-        changeOrigin: true,
-        secure: false,
-      }
-    }
   },
   preview: {
     port: 3000,

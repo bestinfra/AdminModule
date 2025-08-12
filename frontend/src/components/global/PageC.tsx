@@ -235,23 +235,50 @@ const getSpanClasses = (
 
     if (typeof span === 'number') {
         // Handle number span (col-span only)
-        if (span >= 1 && span <= 12) {
-            return `col-span-${span}`;
+        switch (span) {
+            case 1: return 'col-span-1';
+            case 2: return 'col-span-2';
+            case 3: return 'col-span-3';
+            case 4: return 'col-span-4';
+            case 5: return 'col-span-5';
+            case 6: return 'col-span-6';
+            case 7: return 'col-span-7';
+            case 8: return 'col-span-8';
+            case 9: return 'col-span-9';
+            case 10: return 'col-span-10';
+            case 11: return 'col-span-11';
+            case 12: return 'col-span-12';
+            default: return '';
         }
-        return '';
     }
 
     const classes = [];
     if (span.col) {
         // Handle col span with any number
-        if (span.col >= 1 && span.col <= 12) {
-            classes.push(`col-span-${span.col}`);
+        switch (span.col) {
+            case 1: classes.push('col-span-1'); break;
+            case 2: classes.push('col-span-2'); break;
+            case 3: classes.push('col-span-3'); break;
+            case 4: classes.push('col-span-4'); break;
+            case 5: classes.push('col-span-5'); break;
+            case 6: classes.push('col-span-6'); break;
+            case 7: classes.push('col-span-7'); break;
+            case 8: classes.push('col-span-8'); break;
+            case 9: classes.push('col-span-9'); break;
+            case 10: classes.push('col-span-10'); break;
+            case 11: classes.push('col-span-11'); break;
+            case 12: classes.push('col-span-12'); break;
         }
     }
     if (span.row) {
         // Handle row span with any number
-        if (span.row >= 1 && span.row <= 6) {
-            classes.push(`row-span-${span.row}`);
+        switch (span.row) {
+            case 1: classes.push('row-span-1'); break;
+            case 2: classes.push('row-span-2'); break;
+            case 3: classes.push('row-span-3'); break;
+            case 4: classes.push('row-span-4'); break;
+            case 5: classes.push('row-span-5'); break;
+            case 6: classes.push('row-span-6'); break;
         }
     }
 
@@ -299,7 +326,7 @@ const Page: React.FC<PageProps> = ({
     style = {},
 }) => {
     return (
-        <div className={`w-full h-full  flex flex-col gap-4`} style={style}>
+        <div className={`w-full h-full  flex flex-col gap-4 grid-cols-5`} style={style}>
             {sections.map((section, idx) => {
                 if (section.layout && section.layout.rows) {
                     const sectionClass = getLayoutClass(section.layout);
@@ -491,4 +518,5 @@ const Page: React.FC<PageProps> = ({
     );
 };
 
+export type { SectionConfig };
 export default Page;
