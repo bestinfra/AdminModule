@@ -56,182 +56,182 @@ interface SidebarProps {
   onLogout?: () => void;
 }
 
-const defaultMenus: MenuCategory[] = [
-  {
-    category: "GENERAL",
-    items: [
-      {
-        title: "SuperAdmin Dashboard",
-        icon: "/icons/dashboard.svg",
-        link: "/superadmin",
-      },
-      // {
-      //     title: 'DTR Dashboard',
-      //     icon: '/icons/dashboard.svg',
-      //     link: '/dtr-dashboard',
-      // },
-      {
-        title: "Tickets",
-        icon: "/icons/customer-service.svg",
-        link: "/tickets",
-      },
+// const defaultMenus: MenuCategory[] = [
+//   {
+//     category: "GENERAL",
+//     items: [
+//       {
+//         title: "SuperAdmin Dashboard",
+//         icon: "/icons/dashboard.svg",
+//         link: "/superadmin",
+//       },
+//       // {
+//       //     title: 'DTR Dashboard',
+//       //     icon: '/icons/dashboard.svg',
+//       //     link: '/dtr-dashboard',
+//       // },
+//       {
+//         title: "Tickets",
+//         icon: "/icons/customer-service.svg",
+//         link: "/tickets",
+//       },
 
-            {
-                title:'All Tickets',
-                icon:'/icons/dashboard.svg',
-                link:'/all-tickets',
-            },
+//             {
+//                 title:'All Tickets',
+//                 icon:'/icons/dashboard.svg',
+//                 link:'/all-tickets',
+//             },
            
-            {
-              title: "Asset Managment",
-              icon: "/icons/freeze-status.svg",
-              link: "/asset-managment",
-            },
-            {
-              title: "DG_Dashboard",
-              icon: "/icons/freeze-status.svg",
-              link: "/dg-dashboard",
-            },
-      // {
-      //     title:'ConsumerDetails',
-      //     icon:'/icons/dashboard.svg',
-      //     link:'/consumer-details',
-      // }
-    ],
-  },
-  // {
-  //   category: "ADMIN SETTINGS",
-  //   items: [
-  //     // {
-  //     //     title: 'Asset Management',
-  //     //     icon: '/icons/Asset_managment.svg',
-  //     //     link: '/asset-managment',
-  //     // },
+//             {
+//               title: "Asset Managment",
+//               icon: "/icons/freeze-status.svg",
+//               link: "/asset-managment",
+//             },
+//             {
+//               title: "DG_Dashboard",
+//               icon: "/icons/freeze-status.svg",
+//               link: "/dg-dashboard",
+//             },
+//       // {
+//       //     title:'ConsumerDetails',
+//       //     icon:'/icons/dashboard.svg',
+//       //     link:'/consumer-details',
+//       // }
+//     ],
+//   },
+//   // {
+//   //   category: "ADMIN SETTINGS",
+//   //   items: [
+//   //     // {
+//   //     //     title: 'Asset Management',
+//   //     //     icon: '/icons/Asset_managment.svg',
+//   //     //     link: '/asset-managment',
+//   //     // },
 
-  //     // {
-  //     //     title: 'Meter List',
-  //     //     icon: '/icons/meter_managment.svg',
-  //     //     link: '/meters',
-  //     // },
+//   //     // {
+//   //     //     title: 'Meter List',
+//   //     //     icon: '/icons/meter_managment.svg',
+//   //     //     link: '/meters',
+//   //     // },
     
     
-  //     // {
-  //     //   title: "Payment",
-  //     //   icon: "/icons/payment.svg",
-  //     //   link: "/payment",
-  //     // },
-  //     // {
-  //     //   title: "Freeze Status",
-  //     //   icon: "/icons/freeze-status.svg",
-  //     //   link: "/freeze-status",
-  //     // },
+//   //     // {
+//   //     //   title: "Payment",
+//   //     //   icon: "/icons/payment.svg",
+//   //     //   link: "/payment",
+//   //     // },
+//   //     // {
+//   //     //   title: "Freeze Status",
+//   //     //   icon: "/icons/freeze-status.svg",
+//   //     //   link: "/freeze-status",
+//   //     // },
      
       
-  //     // {
-  //     //   title: "Usage Summary",
-  //     //   icon: "/icons/freeze-status.svg",
-  //     //   link: "/usage-summary",
-  //     // },
-  //     // {
-  //     //     title: 'SubLogin',
-  //     //     link: '/sub-login',
-  //     //     icon:'/icons/user_managment.svg',
-  //     // },
+//   //     // {
+//   //     //   title: "Usage Summary",
+//   //     //   icon: "/icons/freeze-status.svg",
+//   //     //   link: "/usage-summary",
+//   //     // },
+//   //     // {
+//   //     //     title: 'SubLogin',
+//   //     //     link: '/sub-login',
+//   //     //     icon:'/icons/user_managment.svg',
+//   //     // },
 
-  //     // {
-  //     //     title: 'User Management',
-  //     //     icon: '/icons/user_managment.svg',
-  //     //     link: '/user-management',
-  //     //     hasSubmenu: true,
-  //     //     submenu: [
+//   //     // {
+//   //     //     title: 'User Management',
+//   //     //     icon: '/icons/user_managment.svg',
+//   //     //     link: '/user-management',
+//   //     //     hasSubmenu: true,
+//   //     //     submenu: [
 
-  //     //         {
-  //     //             title: 'Role Management',
-  //     //             link: '/role-management ',
-  //     //         },
-  //     //     ],
-  //     // },
-  //     // {
-  //     //     title: 'User Management',
-  //     //     icon: '/icons/user_managment.svg',
-  //     //     link: '/user-management',  
-  //     //     hasSubmenu: true,
-  //     //     submenu: [
+//   //     //         {
+//   //     //             title: 'Role Management',
+//   //     //             link: '/role-management ',
+//   //     //         },
+//   //     //     ],
+//   //     // },
+//   //     // {
+//   //     //     title: 'User Management',
+//   //     //     icon: '/icons/user_managment.svg',
+//   //     //     link: '/user-management',  
+//   //     //     hasSubmenu: true,
+//   //     //     submenu: [
 
-  //     //         {
-  //     //             title: 'Role Management',
-  //     //             link: '/role-management ',
-  //     //         },
-  //     //     ],
-  //     // },
-  //   ],
-  // },
-  {
-    category: "GMR  SETTINGS",
-    items: [ 
-      {
-      title: "Consumer Dashbaord",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumer-dashboard",
-    },
-    {
-      title: "All Consumers",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumers",
-    },
-    {   
-      title: 'Bills',
-      icon: '/icons/bills.svg',
-      link: '/bills',
-      hasSubmenu: true,
-      submenu: [
-          {
-              title: 'Prepaid',
-              link: '/prepaid',
-          },
-          {
-              title: 'Postpaid',
-              link: '/postpaid',
-          },
-      ],
-  },
-  ]
-  }
-  // {
-  //   category: "GMR Client",
-  //   items: [
-  //     {
-  //       title: "Dashboard",
-  //       link: "/consumer-dashboard",
-  //       icon: "/icons/dashboard.svg",
-  //     },
-  //     {
-  //       title: "All Consumer",
-  //       link: "/consumers",
-  //       icon: "/icons/units.svg",
-  //     },
+//   //     //         {
+//   //     //             title: 'Role Management',
+//   //     //             link: '/role-management ',
+//   //     //         },
+//   //     //     ],
+//   //     // },
+//   //   ],
+//   // },
+//   {
+//     category: "GMR  SETTINGS",
+//     items: [ 
+//       {
+//       title: "Consumer Dashbaord",
+//       icon: "/icons/freeze-status.svg",
+//       link: "/consumer-dashboard",
+//     },
+//     {
+//       title: "All Consumers",
+//       icon: "/icons/freeze-status.svg",
+//       link: "/consumers",
+//     },
+//     {   
+//       title: 'Bills',
+//       icon: '/icons/bills.svg',
+//       link: '/bills',
+//       hasSubmenu: true,
+//       submenu: [
+//           {
+//               title: 'Prepaid',
+//               link: '/prepaid',
+//           },
+//           {
+//               title: 'Postpaid',
+//               link: '/postpaid',
+//           },
+//       ],
+//   },
+//   ]
+//   }
+//   // {
+//   //   category: "GMR Client",
+//   //   items: [
+//   //     {
+//   //       title: "Dashboard",
+//   //       link: "/consumer-dashboard",
+//   //       icon: "/icons/dashboard.svg",
+//   //     },
+//   //     {
+//   //       title: "All Consumer",
+//   //       link: "/consumers",
+//   //       icon: "/icons/units.svg",
+//   //     },
 
-  //     {
-  //       title: "Bills",
-  //       icon: "/icons/user_managment.svg",
-  //       link: "/user-management",
-  //       hasSubmenu: true,
-  //       submenu: [
-  //         {
-  //           title: "PostPaid",
-  //           icon: "/icons/dashboard.svg",
-  //           link: "/prepaid",
-  //         },
-  //         {
-  //           title: "Postpaid",
-  //           icon: "/icons/dashboard.svg",
-  //           link: "/postpaid",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
-];
+//   //     {
+//   //       title: "Bills",
+//   //       icon: "/icons/user_managment.svg",
+//   //       link: "/user-management",
+//   //       hasSubmenu: true,
+//   //       submenu: [
+//   //         {
+//   //           title: "PostPaid",
+//   //           icon: "/icons/dashboard.svg",
+//   //           link: "/prepaid",
+//   //         },
+//   //         {
+//   //           title: "Postpaid",
+//   //           icon: "/icons/dashboard.svg",
+//   //           link: "/postpaid",
+//   //         },
+//   //       ],
+//   //     },
+//   //   ],
+//   // },
+// ];
 
 const defaultProps: Partial<
   Omit<SidebarProps, "isCollapsed" | "onThemeToggle">
@@ -263,7 +263,7 @@ const defaultProps: Partial<
 const Sidebar = ({
     currentPath,
     onNavigate,
-    menus = defaultMenus,
+    menus = [],
     appDownload = defaultProps.appDownload,
     footer = defaultProps.footer,
     showThemeToggle = true,
@@ -350,8 +350,8 @@ const Sidebar = ({
             // Bills parent if any billing permission exists
             if (perms.includes('bills') || perms.includes('prepaid') || perms.includes('postpaid')) {
                 const billsChildren: SubMenuItem[] = [];
-                if (perms.includes('prepaid')) billsChildren.push({ title: 'Prepaid', link: '/prepaid' });
-                if (perms.includes('postpaid')) billsChildren.push({ title: 'Postpaid', link: '/postpaid' });
+                if (perms.includes('prepaid')) billsChildren.push({ title: 'Prepaid', link: '/bills/prepaid' });
+                if (perms.includes('postpaid')) billsChildren.push({ title: 'Postpaid', link: '/bills/postpaid' });
                 if (billsChildren.length > 0) {
                     items.push({ title: 'Bills', icon: '/icons/bills.svg', hasSubmenu: true, submenu: billsChildren });
                 }
