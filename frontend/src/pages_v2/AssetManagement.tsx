@@ -128,7 +128,8 @@ export default function AssetManagment() {
                         label: 'Choose an asset below to assign this as a Sub Node.',
                         labelClassName: 'text-sm text-TextSecondary dark:text-gray-400',
                         checkboxLabelClassName: 'text-TextSecondary font-normal',
-                        onChange: handleCheckboxChange
+                        onChange: handleCheckboxChange,
+                        value: isSubNodeChecked
                     }
                 ];
 
@@ -357,6 +358,8 @@ export default function AssetManagment() {
                                                 onSave: async (formData: Record<string, any>) => {
                                                     console.log('Asset form data:', formData);
                                                     console.log('Active tab:', activeTab);
+                                                    console.log('isSubNodeChecked state:', isSubNodeChecked);
+                                                    console.log('formData.isSubNode:', formData.isSubNode);
                                                     
                                                     try {
                                                         let apiData;
@@ -366,8 +369,9 @@ export default function AssetManagment() {
                                                                 apiData = {
                                                                     location_type_name: formData.assetTitle,
                                                                     location_names: formData.assetName ? [formData.assetName] : [],
-                                                                    parent_location: formData.isSubNode ? formData.selectedParentAsset : null
+                                                                    parent_location: formData.isSubNode && formData.parentAssetSearch ? formData.parentAssetSearch : null
                                                                 };
+                                                                console.log('API data being sent:', apiData);
                                                                 break;
                                                                 
                                                             case 1: // Upload List

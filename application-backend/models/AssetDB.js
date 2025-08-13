@@ -13,15 +13,9 @@ class AssetDB {
                 orderBy: { createdAt: 'desc' }
             });
 
-            // Filter by user location if provided
-            let filteredLocations = allLocations;
+            console.log(`Total locations found: ${allLocations.length}`);
             if (userLocationId) {
-                // Find the user's location and all its descendants
-                const userLocation = allLocations.find(loc => loc.id === userLocationId);
-                if (userLocation) {
-                    const descendants = this.getDescendants(allLocations, userLocationId);
-                    filteredLocations = [userLocation, ...descendants];
-                }
+                console.log(`User location ID: ${userLocationId}`);
             }
 
             // Create a map for quick lookup
@@ -29,7 +23,7 @@ class AssetDB {
             const rootLocations = [];
 
             // First pass: create all location objects
-            filteredLocations.forEach(location => {
+            allLocations.forEach(location => {
                 locationMap.set(location.id, {
                     hierarchy_id: location.id,
                     hierarchy_name: location.name,
@@ -39,11 +33,11 @@ class AssetDB {
             });
 
             // Second pass: build the hierarchy
-            filteredLocations.forEach(location => {
+            allLocations.forEach(location => {
                 const locationObj = locationMap.get(location.id);
                 
-                if (location.parentId === null || (userLocationId && location.parentId === userLocationId)) {
-                    // This is a root location (or user's location becomes root when filtering)
+                if (location.parentId === null) {
+                    // This is a root location
                     rootLocations.push(locationObj);
                 } else {
                     // This is a child location
@@ -54,6 +48,24 @@ class AssetDB {
                 }
             });
 
+            console.log(`Root locations found: ${rootLocations.length}`);
+            
+            // If user location filtering is requested, filter the results
+            if (userLocationId) {
+                const userLocation = allLocations.find(loc => loc.id === userLocationId);
+                if (userLocation) {
+                    console.log(`User location found: ${userLocation.name}`);
+                    // Find the user's location in the hierarchy and return only that branch
+                    const userLocationInHierarchy = this.findLocationInHierarchy(rootLocations, userLocationId);
+                    if (userLocationInHierarchy) {
+                        console.log(`Returning filtered hierarchy for user location: ${userLocation.name}`);
+                        return [userLocationInHierarchy];
+                    }
+                } else {
+                    console.log(`User location ${userLocationId} not found, returning all assets`);
+                }
+            }
+
             return rootLocations;
         } catch (error) {
             console.error('Error getting all assets:', error);
@@ -61,22 +73,18 @@ class AssetDB {
         }
     }
 
-    // Helper method to get all descendants of a location
-    static getDescendants(allLocations, locationId) {
-        const descendants = [];
-        const queue = [locationId];
-        
-        while (queue.length > 0) {
-            const currentId = queue.shift();
-            const children = allLocations.filter(loc => loc.parentId === currentId);
-            
-            children.forEach(child => {
-                descendants.push(child);
-                queue.push(child.id);
-            });
+    // Helper method to find a location in the hierarchy
+    static findLocationInHierarchy(nodes, locationId) {
+        for (const node of nodes) {
+            if (node.hierarchy_id === locationId) {
+                return node;
+            }
+            if (node.children && node.children.length > 0) {
+                const found = this.findLocationInHierarchy(node.children, locationId);
+                if (found) return found;
+            }
         }
-        
-        return descendants;
+        return null;
     }
 
     static async addAsset(data) {
