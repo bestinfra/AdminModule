@@ -24,7 +24,7 @@ class OptimizedDeployer {
       host: 'localhost',
       port: 5432,
       user: 'postgres',
-      password: 'kiran@123',
+      password: 'password',
       templateDb: 'subapp_db'
     };
   }
