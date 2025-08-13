@@ -320,7 +320,6 @@ export const createApp = async (req, res) => {
 
                 // Create enabled modules
                 if (modules && modules.length > 0) {
-                    // Add role_management automatically if user_management_default is selected
                     let modulesToCreate = [...modules];
                     if (modules.includes('user_management_default') && !modules.includes('role_management')) {
                         modulesToCreate.push('role_management');

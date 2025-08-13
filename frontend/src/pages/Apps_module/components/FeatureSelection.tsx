@@ -145,7 +145,6 @@ const FeatureSelection: React.FC<FeatureSelectionProps> = ({ formData, errors, o
     onModuleToggle(nestedKey, newModules);
   };
 
-  // Select all modules
   const selectAllModules = () => {
     const allModuleKeys = moduleConfig.flatMap(module => {
       const keys = [module.key];
