@@ -2,25 +2,7 @@ import { Suspense, useState } from 'react';
 import { lazy } from 'react';
 const Page = lazy(() => import('@/components/global/PageC'));
 
-// interface HierarchyNode {
-//     hierarchy_id: string | number;
-//     hierarchy_name: string;
-//     hierarchy_type_title: string;
-//     children?: HierarchyNode[];
-// }
 
-// interface AreaNode {
-//     name: string;
-// }
-
-// interface LocationNode {
-//     name: string;
-//     Areas: AreaNode[];
-// }
-
-// interface LocationData {
-//     Location: LocationNode[];
-// }
 
 interface SubAreaNode {
     name: string;
@@ -73,10 +55,16 @@ const DownloadIcon = () => (
 export default function AssetManagment() {
     const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState(0);
+    const [isSubNodeChecked, setIsSubNodeChecked] = useState(false);
 
     const handleTabChange = (newTabIndex: number) => {
         setActiveTab(newTabIndex);
+        setIsSubNodeChecked(false); // Reset checkbox state when switching tabs
         console.log('Switched to tab:', newTabIndex);
+    };
+
+    const handleCheckboxChange = (checked: boolean) => {
+        setIsSubNodeChecked(checked);
     };
 
     const tabs = [
@@ -277,7 +265,7 @@ export default function AssetManagment() {
     const generateFormFieldsForTab = (tabIndex: number) => {
         switch (tabIndex) {
             case 0: // Add Asset Name - Search and Input fields
-                return [
+                const baseFields = [
                     {
                         name: 'assetTitle',
                         type: 'text',
@@ -304,9 +292,27 @@ export default function AssetManagment() {
                         type: 'checkbox',
                         label: 'Choose an asset below to assign this as a Sub Node.',
                         labelClassName: 'text-sm text-TextSecondary dark:text-gray-400',
-                        checkboxLabelClassName: 'text-TextSecondary font-normal'
+                        checkboxLabelClassName: 'text-TextSecondary font-normal',
+                        onChange: handleCheckboxChange
                     }
                 ];
+
+                // Add conditional field when checkbox is checked
+                if (isSubNodeChecked) {
+                    baseFields.push({
+                        name: 'parentAssetSearch',
+                        type: 'text',
+                        label: '',
+                        placeholder: 'Search for parent Node',
+                        required: true,
+                        validation: {
+                            required: 'Parent asset is required when creating a sub node'
+                        },
+                        rightIcon: '/icons/search.svg'
+                    });
+                }
+
+                return baseFields;
             
             case 1: // Upload List - Drag and Drop
                 return [
@@ -462,6 +468,7 @@ export default function AssetManagment() {
                                                 onClose: () => {
                                                     setIsAddAssetModalOpen(false);
                                                     setActiveTab(0); // Reset to first tab when closing
+                                                    setIsSubNodeChecked(false); // Reset checkbox state
                                                 },
                                                 title: 'Add New Asset',
                                                 size: 'xl',

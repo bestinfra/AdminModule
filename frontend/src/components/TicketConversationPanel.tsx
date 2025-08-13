@@ -189,7 +189,7 @@ export default function TicketConversationPanel() {
                     {
                         layout: {
                             type: 'row',
-                            className: 'w-full h-[650px]',
+                            className: 'w-full h-full',
                         },
                         components: [
                             {
