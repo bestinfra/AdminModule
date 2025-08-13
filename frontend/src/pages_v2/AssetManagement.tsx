@@ -45,7 +45,14 @@ export default function AssetManagment() {
                 const data = await response.json();
                 
                 if (data.success) {
-                    setHierarchicalData(data.data);
+                    // Check if data is N/A, null, undefined, or empty
+                    if (!data.data || data.data === 'N/A' || data.data === null || data.data === undefined || 
+                        (Array.isArray(data.data) && data.data.length === 0)) {
+                        setError('No assets data available');
+                        setHierarchicalData([]);
+                    } else {
+                        setHierarchicalData(data.data);
+                    }
                 } else {
                     setError(data.message || 'Failed to fetch assets');
                 }
@@ -57,12 +64,18 @@ export default function AssetManagment() {
             }
         };
 
-        fetchAssets();
+        fetchAssets().catch(console.error);
     }, []);
+    const [isSubNodeChecked, setIsSubNodeChecked] = useState(false);
 
     const handleTabChange = (newTabIndex: number) => {
         setActiveTab(newTabIndex);
+        setIsSubNodeChecked(false); // Reset checkbox state when switching tabs
         console.log('Switched to tab:', newTabIndex);
+    };
+
+    const handleCheckboxChange = (checked: boolean) => {
+        setIsSubNodeChecked(checked);
     };
 
     const tabs = [
@@ -87,7 +100,7 @@ export default function AssetManagment() {
     const generateFormFieldsForTab = (tabIndex: number) => {
         switch (tabIndex) {
             case 0: // Add Asset Name - Search and Input fields
-                return [
+                const baseFields = [
                     {
                         name: 'assetTitle',
                         type: 'text',
@@ -114,9 +127,27 @@ export default function AssetManagment() {
                         type: 'checkbox',
                         label: 'Choose an asset below to assign this as a Sub Node.',
                         labelClassName: 'text-sm text-TextSecondary dark:text-gray-400',
-                        checkboxLabelClassName: 'text-TextSecondary font-normal'
+                        checkboxLabelClassName: 'text-TextSecondary font-normal',
+                        onChange: handleCheckboxChange
                     }
                 ];
+
+                // Add conditional field when checkbox is checked
+                if (isSubNodeChecked) {
+                    baseFields.push({
+                        name: 'parentAssetSearch',
+                        type: 'text',
+                        label: '',
+                        placeholder: 'Search for parent Node',
+                        required: true,
+                        validation: {
+                            required: 'Parent asset is required when creating a sub node'
+                        },
+                        rightIcon: '/icons/search.svg'
+                    });
+                }
+
+                return baseFields;
             
             case 1: // Upload List - Drag and Drop
                 return [
@@ -204,7 +235,7 @@ export default function AssetManagment() {
         return (
             <div className="flex items-center justify-center h-screen">
                 <div className="text-center">
-                    <div className="text-red-600 text-xl mb-4">⚠️</div>
+                    <div className="text-red-600 text-xl mb-4"></div>
                     <p className="text-red-600 font-semibold">Error loading assets</p>
                     <p className="text-gray-600 mt-2">{error}</p>
                     <button 
@@ -312,6 +343,7 @@ export default function AssetManagment() {
                                                 onClose: () => {
                                                     setIsAddAssetModalOpen(false);
                                                     setActiveTab(0); // Reset to first tab when closing
+                                                    setIsSubNodeChecked(false); // Reset checkbox state
                                                 },
                                                 title: 'Add New Asset',
                                                 size: 'xl',
