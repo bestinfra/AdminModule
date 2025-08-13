@@ -179,6 +179,11 @@ const defaultMenus: MenuCategory[] = [
       icon: "/icons/freeze-status.svg",
       link: "/consumers",
     },
+    {
+        title: "Error",
+        icon: "/icons/freeze-status.svg",
+        link: "/error",
+      },
     {   
       title: 'Bills',
       icon: '/icons/bills.svg',

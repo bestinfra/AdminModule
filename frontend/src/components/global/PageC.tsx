@@ -53,6 +53,7 @@ import StatusCard from './StatusCard';
 import DGCard from '../DG_Modules/DGCard';
 import ElectricalMetricsCard from './ElectricalMetricsCard';
 import NodeChart from './NodeChart';
+import Error from '../Error/Error';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -107,6 +108,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     StatusCard,
     DGCard,
     NodeChart,
+    Error,
 };
 
 type LayoutType = 'row' | 'column' | 'grid';
