@@ -1,6 +1,18 @@
 import { z } from 'zod';
 
-// Individual asset schema
+// Location-based asset schema for the current addAsset method
+const locationAssetSchema = z.object({
+    location_type_name: z.string().min(1, 'Location type name is required'),
+    parent_location: z.string().optional().nullable(),
+    location_names: z.array(z.string()).optional().default([]),
+    code: z.string().optional(),
+    address: z.string().optional(),
+    pincode: z.string().optional(),
+    latitude: z.number().optional().nullable(),
+    longitude: z.number().optional().nullable()
+});
+
+// Individual asset schema (for future use)
 const assetSchema = z.object({
     name: z.string().min(1, 'Asset name is required'),
     type: z.string().min(1, 'Asset type is required'),
@@ -15,12 +27,12 @@ const assetSchema = z.object({
     specifications: z.record(z.any()).optional()
 });
 
-// Single asset validation schema
-export const addAssetSchema = assetSchema;
+// Single location asset validation schema
+export const addAssetSchema = locationAssetSchema;
 
 // Bulk upload validation schema
 export const bulkUploadAssetsSchema = z.object({
-    assets: z.array(assetSchema).min(1, 'At least one asset is required')
+    assets: z.array(locationAssetSchema).min(1, 'At least one asset is required')
 });
 
 // Validation middleware

@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class AssetDB {
-    static async getAllAssets() {
+    static async getAllAssets(userLocationId = null) {
         try {
             // Get all locations with their types
             const allLocations = await prisma.locations.findMany({
@@ -13,12 +13,23 @@ class AssetDB {
                 orderBy: { createdAt: 'desc' }
             });
 
+            // Filter by user location if provided
+            let filteredLocations = allLocations;
+            if (userLocationId) {
+                // Find the user's location and all its descendants
+                const userLocation = allLocations.find(loc => loc.id === userLocationId);
+                if (userLocation) {
+                    const descendants = this.getDescendants(allLocations, userLocationId);
+                    filteredLocations = [userLocation, ...descendants];
+                }
+            }
+
             // Create a map for quick lookup
             const locationMap = new Map();
             const rootLocations = [];
 
             // First pass: create all location objects
-            allLocations.forEach(location => {
+            filteredLocations.forEach(location => {
                 locationMap.set(location.id, {
                     hierarchy_id: location.id,
                     hierarchy_name: location.name,
@@ -28,11 +39,11 @@ class AssetDB {
             });
 
             // Second pass: build the hierarchy
-            allLocations.forEach(location => {
+            filteredLocations.forEach(location => {
                 const locationObj = locationMap.get(location.id);
                 
-                if (location.parentId === null) {
-                    // This is a root location
+                if (location.parentId === null || (userLocationId && location.parentId === userLocationId)) {
+                    // This is a root location (or user's location becomes root when filtering)
                     rootLocations.push(locationObj);
                 } else {
                     // This is a child location
@@ -50,8 +61,28 @@ class AssetDB {
         }
     }
 
+    // Helper method to get all descendants of a location
+    static getDescendants(allLocations, locationId) {
+        const descendants = [];
+        const queue = [locationId];
+        
+        while (queue.length > 0) {
+            const currentId = queue.shift();
+            const children = allLocations.filter(loc => loc.parentId === currentId);
+            
+            children.forEach(child => {
+                descendants.push(child);
+                queue.push(child.id);
+            });
+        }
+        
+        return descendants;
+    }
+
     static async addAsset(data) {
         try {
+            console.log('AssetDB.addAsset called with data:', data);
+            
             let parentLocationId = null;
 
             // Set default parent_location to null if empty
@@ -59,7 +90,11 @@ class AssetDB {
                 data.parent_location = null;
             }
 
-            if (data.parent_location && data.parent_location !== '0') {
+            // If locationId is provided (from user's location), use it as parent
+            if (data.locationId) {
+                parentLocationId = data.locationId;
+                console.log('Using user locationId as parent:', parentLocationId);
+            } else if (data.parent_location && data.parent_location !== '0') {
                 const parentLocation = await prisma.locations.findFirst({
                     where: {
                         name: data.parent_location
@@ -73,13 +108,18 @@ class AssetDB {
                 }
 
                 parentLocationId = parentLocation.id;
+                console.log('Found parent location:', parentLocationId);
             }
+
+            console.log('Final parentLocationId:', parentLocationId);
 
             // If only location_type_name is provided
             if (
                 data.location_type_name &&
                 (!data.location_names || data.location_names.length === 0)
             ) {
+                console.log('Creating only location type:', data.location_type_name);
+                
                 const existingLocationType = await prisma.location_types.findFirst({
                     where: {
                         name: data.location_type_name
@@ -87,6 +127,7 @@ class AssetDB {
                 });
 
                 if (existingLocationType) {
+                    console.log('Location type already exists:', existingLocationType.id);
                     return {
                         status: 'warning',
                         message: 'Location type already exists',
@@ -102,6 +143,7 @@ class AssetDB {
                     }
                 });
 
+                console.log('Created new location type:', newLocationType.id);
                 return {
                     status: 'success',
                     message: 'Location type added successfully',
@@ -112,6 +154,8 @@ class AssetDB {
 
             // Handle case with location_names
             if (data.location_names && data.location_names.length > 0) {
+                console.log('Processing location names:', data.location_names);
+                
                 if (!data.location_type_name) {
                     throw new Error(
                         'location_type_name is required when inserting location names'
@@ -128,6 +172,7 @@ class AssetDB {
                 });
 
                 if (!existingLocationType) {
+                    console.log('Creating new location type:', data.location_type_name);
                     // Create new location type
                     const newLocationType = await prisma.location_types.create({
                         data: {
@@ -135,8 +180,10 @@ class AssetDB {
                         }
                     });
                     locationTypeId = newLocationType.id;
+                    console.log('Created location type with ID:', locationTypeId);
                 } else {
                     locationTypeId = existingLocationType.id;
+                    console.log('Using existing location type ID:', locationTypeId);
                 }
 
                 if (locationTypeId === null) {
@@ -147,6 +194,8 @@ class AssetDB {
 
                 const results = [];
                 for (const locationName of data.location_names) {
+                    console.log('Processing location name:', locationName);
+                    
                     // Check if location name already exists
                     const existingLocation = await prisma.locations.findFirst({
                         where: {
@@ -157,6 +206,7 @@ class AssetDB {
                     });
 
                     if (existingLocation) {
+                        console.log('Location already exists:', existingLocation.id);
                         results.push({
                             name: locationName,
                             status: 'warning',
@@ -166,16 +216,19 @@ class AssetDB {
                         continue;
                     }
 
+                    console.log('Creating new location:', locationName);
                     // Insert new location
                     const newLocation = await prisma.locations.create({
                         data: {
                             name: locationName,
                             code: locationName,
                             locationTypeId: locationTypeId,
-                            parentId: parentLocationId
+                            parentId: parentLocationId,
+                            updatedAt: new Date()
                         }
                     });
 
+                    console.log('Successfully created location:', newLocation.id);
                     results.push({
                         name: locationName,
                         status: 'success',
@@ -184,6 +237,7 @@ class AssetDB {
                     });
                 }
 
+                console.log('All locations processed. Results:', results);
                 return {
                     status: 'success',
                     message: 'Locations and location type processed',
