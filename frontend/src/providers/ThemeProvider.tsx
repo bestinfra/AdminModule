@@ -99,7 +99,7 @@ const defaultTheme = {
     colorDarkBorder: 'rgba(9, 27, 59, 1)',
     colorSecondaryPositive: 'rgba(2, 148, 71, 1)',
     colorSecondaryPositiveLight: 'rgba(52, 199, 89, 0.15)', /*changed*/
-    colorWarning: 'rgba(237, 140, 34, 1)',
+    colorWarning: 'rgba(237, 140, 34, 1)',  
     colorWarningAlt: 'rgba(255, 209, 8, 1)',
     colorWarningLight: 'rgba(255, 180, 0, 0.15)', /*changed*/
     colorDanger: 'rgba(220, 39, 44, 1)',

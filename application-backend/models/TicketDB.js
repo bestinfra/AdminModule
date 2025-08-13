@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import { getDateInYMDFormat } from '../utils/utils.js';
+import { getDateInYMDFormat, generateTicketNumber } from '../utils/utils.js';
 
 const prisma = new PrismaClient();
 
@@ -403,17 +403,88 @@ class TicketDB {
         }
     }
 
+    static async generateTicketNumber() {
+        try {
+            console.log('🔄 Generating ticket number...');
+            const ticketCount = await prisma.tickets.count();
+            console.log('Current ticket count in database:', ticketCount);
+            
+            const generatedNumber = generateTicketNumber(ticketCount);
+            console.log('Generated ticket number:', generatedNumber);
+            
+            return generatedNumber;
+        } catch (error) {
+            console.error('❌ TicketDB.generateTicketNumber: Database error:', error);
+            throw error;
+        }
+    }
+
     static async createTicket(ticketData) {
         try {
-            return await prisma.tickets.create({
-                data: ticketData,
+            console.log('=== TicketDB.createTicket START ===');
+            console.log('Input ticket data:', ticketData);
+            
+            // Generate unique ticket number
+            console.log('🔄 Generating ticket number...');
+            const ticketNumber = await this.generateTicketNumber();
+            console.log('✅ Generated ticket number:', ticketNumber);
+            
+            // Get current user ID from the session (this should be passed from controller)
+            const raisedById = ticketData.raisedById || 1; // Default to user ID 1 if not provided
+            console.log('Using raisedById:', raisedById);
+            
+            const ticketCreateData = {
+                ...ticketData,
+                ticketNumber,
+                raisedById,
+                status: ticketData.status || 'OPEN',
+                createdAt: new Date(),
+                updatedAt: new Date()
+            };
+            console.log('Final data for Prisma create:', ticketCreateData);
+            
+            console.log('🔄 Creating ticket in database...');
+            const ticket = await prisma.tickets.create({
+                data: ticketCreateData,
                 include: {
-                    dtrs: true,
-                    users_raisedBy: true
+                    dtrs: {
+                        include: {
+                            locations: true
+                        }
+                    },
+                    users_tickets_raisedByIdTousers: {
+                        select: {
+                            username: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true
+                        }
+                    },
+                    users_tickets_assignedToIdTousers: {
+                        select: {
+                            username: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true
+                        }
+                    }
                 }
             });
+
+            console.log('✅ Ticket created successfully in database');
+            console.log('Created ticket ID:', ticket.id);
+            console.log('Ticket number:', ticket.ticketNumber);
+            console.log('=== TicketDB.createTicket END ===');
+            
+            return ticket;
         } catch (error) {
-            console.error(' TicketDB.createTicket: Database error:', error);
+            console.error('❌ TicketDB.createTicket: Database error:', error);
+            console.error('Error details:', {
+                message: error.message,
+                code: error.code,
+                meta: error.meta,
+                stack: error.stack
+            });
             throw error;
         }
     }

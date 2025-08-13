@@ -1,5 +1,5 @@
 {
-  "nextPort": 4222,
+  "nextPort": 4221,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -793,25 +793,25 @@
     },
     "test101": {
       "port": 4190,
-      "deployedAt": "2025-08-12T07:28:43.293Z",
-      "path": "C:\\xampp\\htdocs\\test101-backend"
+      "deployedAt": "2025-08-12T17:08:08.091Z",
+      "path": "C:\\xampp\\htdocs\\test45-backend"
     },
-    "test102": {
+    "test46": {
       "port": 4191,
-      "deployedAt": "2025-08-12T12:00:00.649Z",
-      "path": "C:\\xampp\\htdocs\\test102-backend"
+      "deployedAt": "2025-08-13T05:01:15.424Z",
+      "path": "C:\\xampp\\htdocs\\test46-backend"
     },
-    "test103": {
+    "test47": {
       "port": 4192,
-      "deployedAt": "2025-08-12T12:14:14.950Z",
-      "path": "C:\\xampp\\htdocs\\test103-backend"
+      "deployedAt": "2025-08-13T05:19:05.257Z",
+      "path": "C:\\xampp\\htdocs\\test47-backend"
     },
-    "test104": {
+    "test48": {
       "port": 4193,
-      "deployedAt": "2025-08-12T12:15:36.762Z",
-      "path": "C:\\xampp\\htdocs\\test104-backend"
+      "deployedAt": "2025-08-13T05:59:00.061Z",
+      "path": "C:\\xampp\\htdocs\\test48-backend"
     },
-    "test105": {
+    "test49": {
       "port": 4194,
       "deployedAt": "2025-08-12T12:44:51.599Z",
       "path": "C:\\xampp\\htdocs\\test105-backend"
@@ -935,11 +935,6 @@
       "port": 4219,
       "deployedAt": "2025-08-12T18:43:53.248Z",
       "path": "C:\\xampp\\htdocs\\module25-backend"
-    },
-    "doeramon": {
-      "port": 4221,
-      "deployedAt": "2025-08-13T05:53:37.116Z",
-      "path": "C:\\xampp\\htdocs\\doeramon-backend"
     }
   }
 }

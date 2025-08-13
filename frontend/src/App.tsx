@@ -54,13 +54,14 @@ import DG_Dashboard from './components/DG_Modules/DG_Dashboard';
 import DgDetailView from './pages_v2/DgDetailView';
 import ConfirmationPage from './components/Occupancy-Vacency/ConfirmationPage';
 import OccupancyStatus from './components/Occupancy-Vacency/OccupancyStatus';
-    
+import Error from './components/Error/Error';
 const App: React.FC = () => {
     return (
         <AppProvider>
             <AuthProvider>
                 <FilterStyleProvider initialStyle="BRAND_GREEN">
                     <Router>
+                   
                     <Routes>
                         <Route path="/login" element={<Login />} /> 
                         <Route path="/sub-login" element={<SubLogin />} />
@@ -80,6 +81,7 @@ const App: React.FC = () => {
                                 path="/data-logger/:dataLoggerId"
                                 element={<DataLoggerDashboard />}
                             />
+                            <Route path='/error' element={<Error error={true}  title='Server' message='this is an dummy error' />} />
                             <Route path='/consumer-detail-view/:consumerId' element={<ConsumerDetailView />} />
                             <Route path='/consumer-detail-view' element={<ConsumerDetailView />} />
                             <Route path="/meters" element={<Meters />} />
@@ -89,6 +91,7 @@ const App: React.FC = () => {
                             <Route path="/pagedemo" element={<PageDemo />} />
                             <Route path="/consumer-dashboard" element={<Dashboard />} />  
                             <Route path="/dtr-dashboard" element={<DTRDashboard />} />
+
                             <Route path="/dtr-detail/:dtrId" element={<DTRDetailPage/>}/>
                             <Route path="/individual-detail" element={<IndividualDetailPage/>}/>
                             <Route path="/apps" element={<AppManagement />} />

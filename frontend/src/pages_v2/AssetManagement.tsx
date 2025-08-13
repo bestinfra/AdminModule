@@ -48,7 +48,7 @@ export default function AssetManagment() {
                     // Check if data is N/A, null, undefined, or empty
                     if (!data.data || data.data === 'N/A' || data.data === null || data.data === undefined || 
                         (Array.isArray(data.data) && data.data.length === 0)) {
-                        setError('No assets data available');
+                        setError('No nodes data available');
                         setHierarchicalData([]);
                     } else {
                         setHierarchicalData(data.data);
@@ -57,8 +57,7 @@ export default function AssetManagment() {
                     setError(data.message || 'Failed to fetch assets');
                 }
             } catch (err) {
-                console.error('Error fetching assets:', err);
-                setError('Failed to fetch assets from server');
+                setError('We were unable to load your Assets. try again later.');
             } finally {
                 setLoading(false);
             }
@@ -128,7 +127,8 @@ export default function AssetManagment() {
                         label: 'Choose an asset below to assign this as a Sub Node.',
                         labelClassName: 'text-sm text-TextSecondary dark:text-gray-400',
                         checkboxLabelClassName: 'text-TextSecondary font-normal',
-                        onChange: handleCheckboxChange
+                        onChange: handleCheckboxChange,
+                        value: isSubNodeChecked
                     }
                 ];
 
@@ -230,96 +230,87 @@ export default function AssetManagment() {
         );
     }
 
-    // Show error state
-    if (error) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <div className="text-red-600 text-xl mb-4"></div>
-                    <p className="text-red-600 font-semibold">Error loading assets</p>
-                    <p className="text-gray-600 mt-2">{error}</p>
-                    <button 
-                        onClick={() => window.location.reload()} 
-                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
+    // Define sections with Error component always present
+    const sections = [
+        {
+            layout: {
+                type: 'column' as const,
+                gap: 'gap-4',
+                rows: [
+                    {
+                        layout: 'column' as const,
+                        columns: [
+                            // Only show Error component when there's an actual error
+                            {
+                                name: 'Error',
+                                props: {
+                                    message: error, 
+                                    onRetry: () => window.location.reload(),
+                                    showRetry: true,
+                                },
+                                span: { col: 1, row: 1 },
+                            },
 
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Page  
-                sections={[
-                    {
-                        layout: {
-                            type: 'column',
-                            gap: 'gap-4',
-                            rows: [
-                                {
-                                    layout: 'row',
-                                    columns: [
-                                        {
-                                            name: 'PageHeader',
-                                            props: {
-                                                title: 'Asset Management',
-                                                onBackClick: () => window.history.back(),
-                                                backButtonText: 'Back to Dashboard',
-                                                buttonsLabel: 'Add Asset',
-                                                variant: 'primary',
-                                                onClick: () => {
-                                                    console.log('Add Asset');
-                                                    setIsAddAssetModalOpen(true);
-                                                },  
-                                            },
-                                        },
-                                    ],
+                            {
+                                name: 'PageHeader',
+                                props: {
+                                    title: 'Asset Management',
+                                    onBackClick: () => window.history.back(),
+                                    backButtonText: 'Back to Dashboard',
+                                    buttonsLabel: 'Add Asset',
+                                    variant: 'primary',
+                                    onClick: () => {
+                                        console.log('Add Asset');
+                                        setIsAddAssetModalOpen(true);
+                                    },  
+                                    span: { col: 1, row: 1 },
                                 },
-                            ],
-                        },
+                            },
+                        ],
                     },
+                ],
+            },
+        },
+        {
+            layout: {
+                type: 'grid' as const,
+                columns: 4,
+                className: 'h-full',
+                rows: [
                     {
-                        layout: {
-                            type: 'grid',
-                            columns: 4,
-                            className: 'h-full',
-                            rows: [
-                                {
-                                    layout: 'row',
-                                    className:
-                                        'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
-                                    columns: [
-                                        {
-                                            name: 'TopLevelHierarchy',
-                                            props: {
-                                                nodes: mapHierarchyRecursively(hierarchicalData),
-                                                title: 'Asset Hierarchy',
-                                            },
-                                        },
-                                    ],
+                        layout: 'row' as const,
+                        className:
+                            'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                        columns: [
+                            {
+                                name: 'TopLevelHierarchy',
+                                props: {
+                                    nodes: mapHierarchyRecursively(hierarchicalData),
+                                    title: 'Asset Hierarchy',
                                 },
-                       
-                                {
-                                    layout: 'row',
-                                    span: { col: 3, row: 1 },
-                                    className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
-                                    columns: [
-                                        {
-                                            name: 'NodeChart',
-                                            props: {
-                                                data: {
-                                                    Location: mapHierarchyForNodeChart(hierarchicalData)
-                                                },
-                                                width: '100%',
-                                                height: '100%',
-                                                enableZoom: true,
-                                                minZoom: 0.3,
-                                                maxZoom: 2,
-                                                initialZoom: 0.8,
-                                                layout: 'horizontal', // Change to 'vertical' for vertical layout
-                                                EdgeStyleLayout: 'polyline', // Try different styles: 'straight', 'elbow', 'curved', 'spline', 'arc', 'step', 'bezier', 'polyline'
+                            },
+                        ],
+                    },
+                   
+                    {
+                        layout: 'row' as const,
+                        span: { col: 3, row: 1 },
+                        className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                        columns: [
+                            {
+                                name: 'NodeChart',
+                                props: {
+                                    data: {
+                                        Location: mapHierarchyForNodeChart(hierarchicalData)
+                                    },
+                                    width: '100%',
+                                    height: '100%',
+                                    enableZoom: true,
+                                    minZoom: 0.3,
+                                    maxZoom: 2,
+                                    initialZoom: 0.8,
+                                    layout: 'horizontal', // Change to 'vertical' for vertical layout
+                                    EdgeStyleLayout: 'polyline', // Try different styles: 'straight', 'elbow', 'curved', 'spline', 'arc', 'step', 'bezier', 'polyline'
 
                                             },
                                         },
@@ -354,10 +345,63 @@ export default function AssetManagment() {
                                                 onTabChange: handleTabChange,
                                                 showForm: true,
                                                 formFields: currentFormFields,
-                                                onSave: (formData: Record<string, any>) => {
+                                                onSave: async (formData: Record<string, any>) => {
                                                     console.log('Asset form data:', formData);
                                                     console.log('Active tab:', activeTab);
-                                                    // TODO: Implement asset creation logic based on active tab
+                                                    console.log('isSubNodeChecked state:', isSubNodeChecked);
+                                                    console.log('formData.isSubNode:', formData.isSubNode);
+                                                    
+                                                    try {
+                                                        let apiData;
+                                                        
+                                                        switch (activeTab) {
+                                                            case 0: // Add Asset Name
+                                                                apiData = {
+                                                                    location_type_name: formData.assetTitle,
+                                                                    location_names: formData.assetName ? [formData.assetName] : [],
+                                                                    parent_location: formData.isSubNode && formData.parentAssetSearch ? formData.parentAssetSearch : null
+                                                                };
+                                                                console.log('API data being sent:', apiData);
+                                                                break;
+                                                                
+                                                            case 1: // Upload List
+                                                                // Handle file upload logic here
+                                                                console.log('File upload not implemented yet');
+                                                                setIsAddAssetModalOpen(false);
+                                                                return;
+                                                                
+                                                            case 2: // Template
+                                                                console.log('Template download not implemented yet');
+                                                                setIsAddAssetModalOpen(false);
+                                                                return;
+                                                                
+                                                            default:
+                                                                apiData = formData;
+                                                        }
+                                                        
+                                                        const response = await fetch(`${BACKEND_URL}/assets`, {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify(apiData)
+                                                        });
+                                                        
+                                                        const result = await response.json();
+                                                        
+                                                        if (result.success) {
+                                                            console.log('Asset added successfully:', result);
+                                                            // Refresh the asset list
+                                                            window.location.reload();
+                                                        } else {
+                                                            console.error('Failed to add asset:', result.message);
+                                                            alert(`Failed to add asset: ${result.message}`);
+                                                        }
+                                                    } catch (error) {
+                                                        console.error('Error adding asset:', error);
+                                                        alert('Error adding asset. Please try again.');
+                                                    }
+                                                    
                                                     setIsAddAssetModalOpen(false);
                                                 },
                                                 saveButtonLabel: getSaveButtonLabel(),
