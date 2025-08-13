@@ -127,7 +127,8 @@ export default function AssetManagment() {
                         label: 'Choose an asset below to assign this as a Sub Node.',
                         labelClassName: 'text-sm text-TextSecondary dark:text-gray-400',
                         checkboxLabelClassName: 'text-TextSecondary font-normal',
-                        onChange: handleCheckboxChange
+                        onChange: handleCheckboxChange,
+                        value: isSubNodeChecked
                     }
                 ];
 
@@ -311,73 +312,123 @@ export default function AssetManagment() {
                                     layout: 'horizontal', // Change to 'vertical' for vertical layout
                                     EdgeStyleLayout: 'polyline', // Try different styles: 'straight', 'elbow', 'curved', 'spline', 'arc', 'step', 'bezier', 'polyline'
 
+                                            },
+                                        },
+                                    ],
                                 },
-                            },
-                        ],
+                            ],
+                        },
                     },
-                ],
-            },
-        },
-        {
-            layout: {
-                type: 'column' as const,
-                gap: 'gap-0',
-                rows: [
                     {
-                        layout: 'row' as const,
-                        columns: [
-                            {
-                                name: 'Modal',
-                                props: {
-                                    isOpen: isAddAssetModalOpen,
-                                    onClose: () => {
-                                        setIsAddAssetModalOpen(false);
-                                        setActiveTab(0); // Reset to first tab when closing
-                                        setIsSubNodeChecked(false); // Reset checkbox state
-                                    },
-                                    title: 'Add New Asset',
-                                    size: 'xl',
-                                    showCloseIcon: true,
-                                    showTabs: true,
-                                    tabs: tabs,
-                                    activeTabIndex: activeTab,
-                                    onTabChange: handleTabChange,
-                                    showForm: true,
-                                    formFields: currentFormFields,
-                                    onSave: (formData: Record<string, any>) => {
-                                        console.log('Asset form data:', formData);
-                                        console.log('Active tab:', activeTab);
-                                        // TODO: Implement asset creation logic based on active tab
-                                        setIsAddAssetModalOpen(false);
-                                    },
-                                    saveButtonLabel: getSaveButtonLabel(),
-                                    cancelButtonLabel: 'Cancel',
-                                    cancelButtonVariant: 'secondary',
-                                    confirmButtonVariant: 'primary',
-                                    formId: 'add-asset-form',
-                                    gridLayout: {
-                                        gridRows: currentFormFields.length,
-                                        gridColumns: 1,
-                                        gap: 'gap-4'
-                                    },
-                                    tabsSize: 'md',
-                                    tabsShowTabIcons: true,
-                                    tabsShowTabLabels: true,
-                                    tabsTabListClassName: 'bg-gray-50 border-gray-200',
-                                    tabsActiveTabButtonClassName: 'bg-blue-600 text-white',
-                                    tabsInactiveTabButtonClassName: 'text-gray-600 hover:bg-gray-100',
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-0',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: isAddAssetModalOpen,
+                                                onClose: () => {
+                                                    setIsAddAssetModalOpen(false);
+                                                    setActiveTab(0); // Reset to first tab when closing
+                                                    setIsSubNodeChecked(false); // Reset checkbox state
+                                                },
+                                                title: 'Add New Asset',
+                                                size: 'xl',
+                                                showCloseIcon: true,
+                                                showTabs: true,
+                                                tabs: tabs,
+                                                activeTabIndex: activeTab,
+                                                onTabChange: handleTabChange,
+                                                showForm: true,
+                                                formFields: currentFormFields,
+                                                onSave: async (formData: Record<string, any>) => {
+                                                    console.log('Asset form data:', formData);
+                                                    console.log('Active tab:', activeTab);
+                                                    console.log('isSubNodeChecked state:', isSubNodeChecked);
+                                                    console.log('formData.isSubNode:', formData.isSubNode);
+                                                    
+                                                    try {
+                                                        let apiData;
+                                                        
+                                                        switch (activeTab) {
+                                                            case 0: // Add Asset Name
+                                                                apiData = {
+                                                                    location_type_name: formData.assetTitle,
+                                                                    location_names: formData.assetName ? [formData.assetName] : [],
+                                                                    parent_location: formData.isSubNode && formData.parentAssetSearch ? formData.parentAssetSearch : null
+                                                                };
+                                                                console.log('API data being sent:', apiData);
+                                                                break;
+                                                                
+                                                            case 1: // Upload List
+                                                                // Handle file upload logic here
+                                                                console.log('File upload not implemented yet');
+                                                                setIsAddAssetModalOpen(false);
+                                                                return;
+                                                                
+                                                            case 2: // Template
+                                                                console.log('Template download not implemented yet');
+                                                                setIsAddAssetModalOpen(false);
+                                                                return;
+                                                                
+                                                            default:
+                                                                apiData = formData;
+                                                        }
+                                                        
+                                                        const response = await fetch(`${BACKEND_URL}/assets`, {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify(apiData)
+                                                        });
+                                                        
+                                                        const result = await response.json();
+                                                        
+                                                        if (result.success) {
+                                                            console.log('Asset added successfully:', result);
+                                                            // Refresh the asset list
+                                                            window.location.reload();
+                                                        } else {
+                                                            console.error('Failed to add asset:', result.message);
+                                                            alert(`Failed to add asset: ${result.message}`);
+                                                        }
+                                                    } catch (error) {
+                                                        console.error('Error adding asset:', error);
+                                                        alert('Error adding asset. Please try again.');
+                                                    }
+                                                    
+                                                    setIsAddAssetModalOpen(false);
+                                                },
+                                                saveButtonLabel: getSaveButtonLabel(),
+                                                cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
+                                                confirmButtonVariant: 'primary',
+                                                formId: 'add-asset-form',
+                                                gridLayout: {
+                                                    gridRows: currentFormFields.length,
+                                                    gridColumns: 1,
+                                                    gap: 'gap-4'
+                                                },
+                                                tabsSize: 'md',
+                                                tabsShowTabIcons: true,
+                                                tabsShowTabLabels: true,
+                                                tabsTabListClassName: 'bg-gray-50 border-gray-200',
+                                                tabsActiveTabButtonClassName: 'bg-blue-600 text-white',
+                                                tabsInactiveTabButtonClassName: 'text-gray-600 hover:bg-gray-100',
+                                            },
+                                        },
+                                    ],
                                 },
-                            },
-                        ],
+                            ],
+                        },
                     },
-                ],
-            },
-        },
-    ];
-
-    return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Page sections={sections} />
+                ]}
+            />
         </Suspense>
     );
 }

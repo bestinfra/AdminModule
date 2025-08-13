@@ -3,6 +3,7 @@ import MeterDB from '../models/MeterDB.js';
 // Get all meters
 export const getAllMeters = async (req, res) => {
     try {
+        const userLocationId = req.user?.locationId;
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         const filters = {
@@ -11,7 +12,7 @@ export const getAllMeters = async (req, res) => {
             manufacturer: req.query.manufacturer && req.query.manufacturer !== 'all' ? req.query.manufacturer : undefined,
             location: req.query.location && req.query.location !== 'all' ? req.query.location : undefined,
         };
-        const metersData = await MeterDB.getMetersTable(page, limit, filters);
+        const metersData = await MeterDB.getMetersTable(page, limit, filters, userLocationId);
         const formatted = metersData.data.map((m, idx) => {
             return {
                 sNo: (page - 1) * limit + idx + 1,
@@ -27,7 +28,9 @@ export const getAllMeters = async (req, res) => {
         res.json({
             success: true,
             data: formatted,
-            pagination: metersData.pagination
+            pagination: metersData.pagination,
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error fetching meters:', error);
@@ -42,6 +45,8 @@ export const getAllMeters = async (req, res) => {
 export const getMeterById = async (req, res) => {
     try {
         const { id } = req.params;
+        const userLocationId = req.user?.locationId;
+        
         const meter = await MeterDB.findById(id);
         
         if (!meter) {
@@ -51,10 +56,20 @@ export const getMeterById = async (req, res) => {
             });
         }
 
+        // Check if user has access to this meter based on location
+        if (userLocationId && meter.locationId !== userLocationId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied: You can only access meters from your assigned location'
+            });
+        }
+
         res.json({
             success: true,
             data: meter,
-            message: 'Meter retrieved successfully'
+            message: 'Meter retrieved successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error fetching meter:', error);
@@ -69,13 +84,21 @@ export const getMeterById = async (req, res) => {
 export const createMeter = async (req, res) => {
     try {
         const meterData = req.validatedData;
+        const userLocationId = req.user?.locationId;
+
+        // Assign user's location to the new meter if available
+        if (userLocationId) {
+            meterData.locationId = userLocationId;
+        }
 
         const newMeter = await MeterDB.create(meterData);
 
         res.status(201).json({
             success: true,
             data: newMeter,
-            message: 'Meter created successfully'
+            message: 'Meter created successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error creating meter:', error);
@@ -90,13 +113,27 @@ export const updateMeter = async (req, res) => {
     try {
         const { id } = req.params;
         const updateData = req.body;
+        const userLocationId = req.user?.locationId;
+
+        // Check if user has access to this meter based on location
+        if (userLocationId) {
+            const existingMeter = await MeterDB.findById(id);
+            if (existingMeter && existingMeter.locationId !== userLocationId) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Access denied: You can only update meters from your assigned location'
+                });
+            }
+        }
 
         const updatedMeter = await MeterDB.updateMeter(id, updateData);
 
         res.json({
             success: true,
             data: updatedMeter,
-            message: 'Meter updated successfully'
+            message: 'Meter updated successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error updating meter:', error);
@@ -111,12 +148,27 @@ export const updateMeter = async (req, res) => {
 export const deleteMeter = async (req, res) => {
     try {
         const { id } = req.params;
+        const userLocationId = req.user?.locationId;
+
+        // Check if user has access to this meter based on location
+        if (userLocationId) {
+            const existingMeter = await MeterDB.findById(id);
+            if (existingMeter && existingMeter.locationId !== userLocationId) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Access denied: You can only delete meters from your assigned location'
+                });
+            }
+        }
+
         const deletedMeter = await MeterDB.deleteMeter(id);
 
         res.json({
             success: true,
             data: deletedMeter,
-            message: 'Meter deleted successfully'
+            message: 'Meter deleted successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error deleting meter:', error);
@@ -130,7 +182,8 @@ export const deleteMeter = async (req, res) => {
 
 export const getMeterStats = async (req, res) => {
     try {
-        const stats = await MeterDB.getMeterStats();
+        const userLocationId = req.user?.locationId;
+        const stats = await MeterDB.getMeterStats(userLocationId);
         res.json({
             success: true,
             data: {
@@ -138,7 +191,9 @@ export const getMeterStats = async (req, res) => {
                 makes: stats.makes,
                 types: stats.types,
                 connectionTypes: stats.connectionTypes
-            }
+            },
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('❌ getMeterStats: Error fetching meter stats:', error);
@@ -153,6 +208,8 @@ export const getMeterStats = async (req, res) => {
 export const getMeterView = async (req, res) => {
     try {
         const { id } = req.params;
+        const userLocationId = req.user?.locationId;
+        
         const meter = await MeterDB.getMeterView(id);
         if (!meter) {
             return res.status(404).json({
@@ -160,9 +217,20 @@ export const getMeterView = async (req, res) => {
                 message: 'Meter not found'
             });
         }
+
+        // Check if user has access to this meter based on location
+        if (userLocationId && meter.locationId !== userLocationId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied: You can only access meters from your assigned location'
+            });
+        }
+
         res.json({
             success: true,
-            data: meter
+            data: meter,
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('❌ getMeterView: Error fetching meter:', error);
@@ -176,7 +244,8 @@ export const getMeterView = async (req, res) => {
 
 export const getDataLoggersList = async (req, res) => {
     try {
-        const dataLoggers = await MeterDB.getDataLoggersList();
+        const userLocationId = req.user?.locationId;
+        const dataLoggers = await MeterDB.getDataLoggersList(userLocationId);
         
         const formatted = dataLoggers.map((logger, idx) => ({
             sNo: idx + 1,
@@ -216,7 +285,9 @@ export const getDataLoggersList = async (req, res) => {
         res.json({
             success: true,
             data: formatted,
-            message: 'Data loggers retrieved successfully'
+            message: 'Data loggers retrieved successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('❌ getDataLoggersList: Error fetching data loggers:', error);
@@ -231,6 +302,7 @@ export const getDataLoggersList = async (req, res) => {
 export const getMeterHistory = async (req, res) => {
     try {
         const { id } = req.params;
+        const userLocationId = req.user?.locationId;
         
         const meter = await MeterDB.getMeterHistory(id);
         
@@ -238,6 +310,14 @@ export const getMeterHistory = async (req, res) => {
             return res.status(404).json({
                 success: false,
                 message: 'Meter not found'
+            });
+        }
+
+        // Check if user has access to this meter based on location
+        if (userLocationId && meter.locationId !== userLocationId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Access denied: You can only access meters from your assigned location'
             });
         }
 
@@ -256,7 +336,9 @@ export const getMeterHistory = async (req, res) => {
         res.json({
             success: true,
             data: formattedMeter,
-            message: 'Meter details retrieved successfully'
+            message: 'Meter details retrieved successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('❌ getMeterHistory: Error fetching meter history:', error);

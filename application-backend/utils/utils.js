@@ -123,4 +123,9 @@ export function fillMissingDatesDyno(dates, values, format = 'DD MMM, YYYY', typ
     result.values = values;
     
     return result;
+}
+
+// Generates a ticket number with prefix and sequential numbering
+export function generateTicketNumber(count) {
+    return `TCKT-${String(count + 1).padStart(4, '0')}`;
 } 

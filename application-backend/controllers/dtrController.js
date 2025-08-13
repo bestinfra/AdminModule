@@ -8,7 +8,7 @@ export const getDTRTable = async (req, res) => {
         // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
         
-        // If user has a specific location, override the query locationId
+        // If user has a specific location, use it; otherwise use query locationId or undefined
         const effectiveLocationId = userLocationId || (locationId ? parseInt(locationId) : undefined);
         
         const result = await DTRDB.getDTRTable({
@@ -106,8 +106,13 @@ export const getDTRAlerts = async (req, res) => {
         // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
         
+        // Only pass locationId if it's not null/undefined (null = show all data)
+        const locationIdForFilter = userLocationId || null;
+        
+        
+        
         // Pass locationId to DTRDB method (null = all data, locationId = filtered data)
-        const alerts = await DTRDB.getDTRAlerts(userLocationId);
+        const alerts = await DTRDB.getDTRAlerts(locationIdForFilter);
         
         // Map alerts to match frontend table columns exactly
         const mappedAlerts = alerts.map(alert => ({
@@ -138,8 +143,11 @@ export const getDTRAlertsTrends = async (req, res) => {
         // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
         
+        // Only pass locationId if it's not null/undefined (null = show all data)
+        const locationIdForFilter = userLocationId || null;
+        
         // Pass locationId to DTRDB method (null = all data, locationId = filtered data)
-        const trends = await DTRDB.getDTRAlertsTrends(userLocationId);
+        const trends = await DTRDB.getDTRAlertsTrends(locationIdForFilter);
         
         res.json({
             success: true,
@@ -269,8 +277,11 @@ export const getConsolidatedDTRStats = async (req, res) => {
         // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
         
+        // Only pass locationId if it's not null/undefined (null = show all data)
+        const locationIdForFilter = userLocationId || null;
+        
         // Pass locationId to DTRDB method (null = all data, locationId = filtered data)
-        const stats = await DTRDB.getConsolidatedDTRStats(userLocationId);
+        const stats = await DTRDB.getConsolidatedDTRStats(locationIdForFilter);
         
         res.json({
             success: true,
