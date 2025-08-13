@@ -111,12 +111,12 @@ const MessageBubble: React.FC<{
     };
 
     const getFileIcon = (type: string) => {
-        if (type.startsWith('image/')) return '🖼️';
-        if (type.startsWith('video/')) return '🎥';
-        if (type.startsWith('audio/')) return '🎵';
-        if (type.includes('pdf')) return '📄';
-        if (type.includes('word') || type.includes('document')) return '📝';
-        if (type.includes('excel') || type.includes('spreadsheet')) return '📊';
+        if (type.startsWith('image/')) return '';
+        if (type.startsWith('video/')) return '';
+        if (type.startsWith('audio/')) return '';
+        if (type.includes('pdf')) return '';
+        if (type.includes('word') || type.includes('document')) return '';
+        if (type.includes('excel') || type.includes('spreadsheet')) return '';
         return '📎';
     };
 
@@ -393,7 +393,7 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
     };
 
     return (
-        <div className={`flex flex-col w-full h-[650px] bg-white border border-primary-border rounded-lg  ${className}`}>
+        <div className={`flex flex-col w-full  bg-white border border-primary-border rounded-lg  ${className}`}>
             {/* Header */}
 
             {/* Messages Container */}
