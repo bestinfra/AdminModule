@@ -48,7 +48,7 @@ export default function AssetManagment() {
                     // Check if data is N/A, null, undefined, or empty
                     if (!data.data || data.data === 'N/A' || data.data === null || data.data === undefined || 
                         (Array.isArray(data.data) && data.data.length === 0)) {
-                        setError('No assets data available');
+                        setError('No nodes data available');
                         setHierarchicalData([]);
                     } else {
                         setHierarchicalData(data.data);
@@ -58,7 +58,17 @@ export default function AssetManagment() {
                 }
             } catch (err) {
                 console.error('Error fetching assets:', err);
-                setError('Failed to fetch assets from server');
+                let errorMessage = 'Failed to fetch assets';
+                
+                if (err instanceof Error) {
+                    errorMessage = `${err.message} - ${err.stack || 'No stack trace available'}`;
+                } else if (typeof err === 'string') {
+                    errorMessage = err;
+                } else if (err && typeof err === 'object') {
+                    errorMessage = JSON.stringify(err, null, 2);
+                }
+                
+                setError(errorMessage);
             } finally {
                 setLoading(false);
             }
@@ -230,161 +240,157 @@ export default function AssetManagment() {
         );
     }
 
-    // Show error state
-    if (error) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <div className="text-red-600 text-xl mb-4"></div>
-                    <p className="text-red-600 font-semibold">Error loading assets</p>
-                    <p className="text-gray-600 mt-2">{error}</p>
-                    <button 
-                        onClick={() => window.location.reload()} 
-                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
+    // Define sections with Error component always present
+    const sections = [
+        {
+            layout: {
+                type: 'column' as const,
+                gap: 'gap-4',
+                rows: [
+                    {
+                        layout: 'column' as const,
+                        columns: [
+                            // Only show Error component when there's an actual error
+                            {
+                                name: 'Error',
+                                props: {
+                                    error: error, // Just pass true to show the component
+                                    title: 'Error loading assets',
+                                    message: error, // This will show your actual error message from useState
+                                    onRetry: () => window.location.reload(),
+                                    showRetry: true,
+                                },
+                                span: { col: 1, row: 1 },
+                            },
+
+                            {
+                                name: 'PageHeader',
+                                props: {
+                                    title: 'Asset Management',
+                                    onBackClick: () => window.history.back(),
+                                    backButtonText: 'Back to Dashboard',
+                                    buttonsLabel: 'Add Asset',
+                                    variant: 'primary',
+                                    onClick: () => {
+                                        console.log('Add Asset');
+                                        setIsAddAssetModalOpen(true);
+                                    },  
+                                    span: { col: 1, row: 1 },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        {
+            layout: {
+                type: 'grid' as const,
+                columns: 4,
+                className: 'h-full',
+                rows: [
+                    {
+                        layout: 'row' as const,
+                        className:
+                            'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                        columns: [
+                            {
+                                name: 'TopLevelHierarchy',
+                                props: {
+                                    nodes: mapHierarchyRecursively(hierarchicalData),
+                                    title: 'Asset Hierarchy',
+                                },
+                            },
+                        ],
+                    },
+                   
+                    {
+                        layout: 'row' as const,
+                        span: { col: 3, row: 1 },
+                        className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                        columns: [
+                            {
+                                name: 'NodeChart',
+                                props: {
+                                    data: {
+                                        Location: mapHierarchyForNodeChart(hierarchicalData)
+                                    },
+                                    width: '100%',
+                                    height: '100%',
+                                    enableZoom: true,
+                                    minZoom: 0.3,
+                                    maxZoom: 2,
+                                    initialZoom: 0.8,
+                                    layout: 'horizontal', // Change to 'vertical' for vertical layout
+                                    EdgeStyleLayout: 'polyline', // Try different styles: 'straight', 'elbow', 'curved', 'spline', 'arc', 'step', 'bezier', 'polyline'
+
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        {
+            layout: {
+                type: 'column' as const,
+                gap: 'gap-0',
+                rows: [
+                    {
+                        layout: 'row' as const,
+                        columns: [
+                            {
+                                name: 'Modal',
+                                props: {
+                                    isOpen: isAddAssetModalOpen,
+                                    onClose: () => {
+                                        setIsAddAssetModalOpen(false);
+                                        setActiveTab(0); // Reset to first tab when closing
+                                        setIsSubNodeChecked(false); // Reset checkbox state
+                                    },
+                                    title: 'Add New Asset',
+                                    size: 'xl',
+                                    showCloseIcon: true,
+                                    showTabs: true,
+                                    tabs: tabs,
+                                    activeTabIndex: activeTab,
+                                    onTabChange: handleTabChange,
+                                    showForm: true,
+                                    formFields: currentFormFields,
+                                    onSave: (formData: Record<string, any>) => {
+                                        console.log('Asset form data:', formData);
+                                        console.log('Active tab:', activeTab);
+                                        // TODO: Implement asset creation logic based on active tab
+                                        setIsAddAssetModalOpen(false);
+                                    },
+                                    saveButtonLabel: getSaveButtonLabel(),
+                                    cancelButtonLabel: 'Cancel',
+                                    cancelButtonVariant: 'secondary',
+                                    confirmButtonVariant: 'primary',
+                                    formId: 'add-asset-form',
+                                    gridLayout: {
+                                        gridRows: currentFormFields.length,
+                                        gridColumns: 1,
+                                        gap: 'gap-4'
+                                    },
+                                    tabsSize: 'md',
+                                    tabsShowTabIcons: true,
+                                    tabsShowTabLabels: true,
+                                    tabsTabListClassName: 'bg-gray-50 border-gray-200',
+                                    tabsActiveTabButtonClassName: 'bg-blue-600 text-white',
+                                    tabsInactiveTabButtonClassName: 'text-gray-600 hover:bg-gray-100',
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+    ];
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Page  
-                sections={[
-                    {
-                        layout: {
-                            type: 'column',
-                            gap: 'gap-4',
-                            rows: [
-                                {
-                                    layout: 'row',
-                                    columns: [
-                                        {
-                                            name: 'PageHeader',
-                                            props: {
-                                                title: 'Asset Management',
-                                                onBackClick: () => window.history.back(),
-                                                backButtonText: 'Back to Dashboard',
-                                                buttonsLabel: 'Add Asset',
-                                                variant: 'primary',
-                                                onClick: () => {
-                                                    console.log('Add Asset');
-                                                    setIsAddAssetModalOpen(true);
-                                                },  
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        layout: {
-                            type: 'grid',
-                            columns: 4,
-                            className: 'h-full',
-                            rows: [
-                                {
-                                    layout: 'row',
-                                    className:
-                                        'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
-                                    columns: [
-                                        {
-                                            name: 'TopLevelHierarchy',
-                                            props: {
-                                                nodes: mapHierarchyRecursively(hierarchicalData),
-                                                title: 'Asset Hierarchy',
-                                            },
-                                        },
-                                    ],
-                                },
-                       
-                                {
-                                    layout: 'row',
-                                    span: { col: 3, row: 1 },
-                                    className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
-                                    columns: [
-                                        {
-                                            name: 'NodeChart',
-                                            props: {
-                                                data: {
-                                                    Location: mapHierarchyForNodeChart(hierarchicalData)
-                                                },
-                                                width: '100%',
-                                                height: '100%',
-                                                enableZoom: true,
-                                                minZoom: 0.3,
-                                                maxZoom: 2,
-                                                initialZoom: 0.8,
-                                                layout: 'horizontal', // Change to 'vertical' for vertical layout
-                                                EdgeStyleLayout: 'polyline', // Try different styles: 'straight', 'elbow', 'curved', 'spline', 'arc', 'step', 'bezier', 'polyline'
-
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    },
-                    {
-                        layout: {
-                            type: 'column',
-                            gap: 'gap-0',
-                            rows: [
-                                {
-                                    layout: 'row',
-                                    columns: [
-                                        {
-                                            name: 'Modal',
-                                            props: {
-                                                isOpen: isAddAssetModalOpen,
-                                                onClose: () => {
-                                                    setIsAddAssetModalOpen(false);
-                                                    setActiveTab(0); // Reset to first tab when closing
-                                                    setIsSubNodeChecked(false); // Reset checkbox state
-                                                },
-                                                title: 'Add New Asset',
-                                                size: 'xl',
-                                                showCloseIcon: true,
-                                                showTabs: true,
-                                                tabs: tabs,
-                                                activeTabIndex: activeTab,
-                                                onTabChange: handleTabChange,
-                                                showForm: true,
-                                                formFields: currentFormFields,
-                                                onSave: (formData: Record<string, any>) => {
-                                                    console.log('Asset form data:', formData);
-                                                    console.log('Active tab:', activeTab);
-                                                    // TODO: Implement asset creation logic based on active tab
-                                                    setIsAddAssetModalOpen(false);
-                                                },
-                                                saveButtonLabel: getSaveButtonLabel(),
-                                                cancelButtonLabel: 'Cancel',
-                                                cancelButtonVariant: 'secondary',
-                                                confirmButtonVariant: 'primary',
-                                                formId: 'add-asset-form',
-                                                gridLayout: {
-                                                    gridRows: currentFormFields.length,
-                                                    gridColumns: 1,
-                                                    gap: 'gap-4'
-                                                },
-                                                tabsSize: 'md',
-                                                tabsShowTabIcons: true,
-                                                tabsShowTabLabels: true,
-                                                tabsTabListClassName: 'bg-gray-50 border-gray-200',
-                                                tabsActiveTabButtonClassName: 'bg-blue-600 text-white',
-                                                tabsInactiveTabButtonClassName: 'text-gray-600 hover:bg-gray-100',
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    },
-                ]}
-            />
+            <Page sections={sections} />
         </Suspense>
     );
 }
