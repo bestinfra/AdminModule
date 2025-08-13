@@ -1,4 +1,4 @@
-import { useState,useEffect,Suspense } from 'react';
+import { Suspense } from 'react';
 import PageC from '@/components/global/PageC';
 
 interface Ticket {

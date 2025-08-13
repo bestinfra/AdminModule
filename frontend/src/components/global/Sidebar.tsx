@@ -350,8 +350,8 @@ const Sidebar = ({
             // Bills parent if any billing permission exists
             if (perms.includes('bills') || perms.includes('prepaid') || perms.includes('postpaid')) {
                 const billsChildren: SubMenuItem[] = [];
-                if (perms.includes('prepaid')) billsChildren.push({ title: 'Prepaid', link: '/prepaid' });
-                if (perms.includes('postpaid')) billsChildren.push({ title: 'Postpaid', link: '/postpaid' });
+                if (perms.includes('prepaid')) billsChildren.push({ title: 'Prepaid', link: '/bills/prepaid' });
+                if (perms.includes('postpaid')) billsChildren.push({ title: 'Postpaid', link: '/bills/postpaid' });
                 if (billsChildren.length > 0) {
                     items.push({ title: 'Bills', icon: '/icons/bills.svg', hasSubmenu: true, submenu: billsChildren });
                 }

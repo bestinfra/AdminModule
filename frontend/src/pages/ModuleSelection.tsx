@@ -53,7 +53,8 @@ const ModuleSelection: React.FC = () => {
         }
         setSelectedPages(newSelectedPages);
     };
-
+    console.log('selectedModules', selectedModules);
+    console.log('selectedPages', selectedPages);
     const handleExport = async () => {
         try {
             setIsExporting(true);

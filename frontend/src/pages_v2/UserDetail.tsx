@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import PageC from '@/components/global/PageC';
+import Page from '@/components/global/PageC';
 
 
 const UserDetail: React.FC = () => {
@@ -154,7 +154,7 @@ const UserDetail: React.FC = () => {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <PageC
+            <Page
                 sections={[
                     {
                         layout: {

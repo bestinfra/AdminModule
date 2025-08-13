@@ -1,37 +1,14 @@
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect } from 'react';
 import { lazy } from 'react';
+import BACKEND_URL from '../config';
 const Page = lazy(() => import('@/components/global/PageC'));
 
-
-
-interface SubAreaNode {
-    name: string;
-    backgroundColor?: string;
-    borderColor?: string;
-    textColor?: string;
-    icon?: string;
-}
-
-interface AreaWithSubAreasNode {
-    name: string;
-    backgroundColor?: string;
-    borderColor?: string;
-    textColor?: string;
-    icon?: string;
-    SubAreas: SubAreaNode[];
-}
-
-interface LocationWithSubAreasNode {
-    name: string;
-    backgroundColor?: string;
-    borderColor?: string;
-    textColor?: string;
-    icon?: string;
-    Areas: AreaWithSubAreasNode[];
-}
-
-interface Location2Data {
-    Location: LocationWithSubAreasNode[];
+// --- Types ---
+interface HierarchyNode {
+    hierarchy_id: string | number;
+    hierarchy_name: string;
+    hierarchy_type_title: string;
+    children?: HierarchyNode[];
 }
 
 const PlusIcon = () => (
@@ -55,6 +32,40 @@ const DownloadIcon = () => (
 export default function AssetManagment() {
     const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState(0);
+    const [hierarchicalData, setHierarchicalData] = useState<HierarchyNode[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+
+    // Fetch hierarchical assets from API
+    useEffect(() => {
+        const fetchAssets = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(`${BACKEND_URL}/assets`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    // Check if data is N/A, null, undefined, or empty
+                    if (!data.data || data.data === 'N/A' || data.data === null || data.data === undefined || 
+                        (Array.isArray(data.data) && data.data.length === 0)) {
+                        setError('No assets data available');
+                        setHierarchicalData([]);
+                    } else {
+                        setHierarchicalData(data.data);
+                    }
+                } else {
+                    setError(data.message || 'Failed to fetch assets');
+                }
+            } catch (err) {
+                console.error('Error fetching assets:', err);
+                setError('Failed to fetch assets from server');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAssets().catch(console.error);
+    }, []);
     const [isSubNodeChecked, setIsSubNodeChecked] = useState(false);
 
     const handleTabChange = (newTabIndex: number) => {
@@ -84,182 +95,6 @@ export default function AssetManagment() {
             icon: <DownloadIcon />
         }
     ];
-
-   
-    const dummyLocation2Data: Location2Data = {
-        "Location": [
-            {
-                "name": "Hyderabad",
-                "backgroundColor": "#e3f2fd",
-                "borderColor": "",
-                'textColor':'#424242',
-                "Areas": [
-                    {
-                        "name": "Banjara Hills",
-                        "SubAreas": [
-                            { 
-                                "name": "Road No 1"
-                            },
-                            { 
-                                "name": "Road No 12"
-                            },
-                            { 
-                                "name": "Journalist Colony"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Gachibowli",
-                        "SubAreas": [
-                            { 
-                                "name": "Wipro Circle"
-                            },
-                            { 
-                                "name": "Nallagandla"
-                            },
-                            { 
-                                "name": "Tata Nagar"
-                            }
-                        ]
-                    },
-                    {
-                        "name": "Hitech City",
-                        "SubAreas": [
-                            { 
-                                "name": "Cyber Towers"
-                            },
-                            { 
-                                "name": "Mindspace"
-                            },
-                            { 
-                                "name": "Raidurg"
-                            }
-                        ]
-                    }
-                ]
-            },
-            {
-                "name": "Warangal",
-                "backgroundColor": "#e3f2fd",
-                "borderColor": "",
-                'textColor':'#424242',
-                "Areas": [
-                    {
-                        "name": "Hanamkonda",
-                        "SubAreas": [
-                            { "name": "Subedari" },
-                            { "name": "Kishanpura" },
-                            { "name": "Balasamudram" }
-                        ]
-                    },
-                    {
-                        "name": "Kazipet",
-                        "SubAreas": [
-                            { "name": "Fatimanagar" },
-                            { "name": "Teachers Colony" },
-                            { "name": "Fathenagar" }
-                        ]
-                    },
-                    {
-                        "name": "Fort Road",
-                        "SubAreas": [
-                            { "name": "Saraswati Nagar" },
-                            { "name": "Krishna Nagar" },
-                            { "name": "Fort Park" }
-                        ]
-                    }
-                ]
-            },
-            // {
-            //     "name": "Nizamabad",
-            //     "Areas": [
-            //         {
-            //             "name": "Kamareddy",
-            //             "SubAreas": [
-            //                 { "name": "Housing Board" },
-            //                 { "name": "Rajampet" },
-            //                 { "name": "Shivaji Chowk" }
-            //             ]
-            //         },
-            //         {
-            //             "name": "Bodhan",
-            //             "SubAreas": [
-            //                 { "name": "Shakkar Nagar" },
-            //                 { "name": "Aziz Nagar" },
-            //                 { "name": "Dargha Road" }
-            //             ]
-            //         },
-            //         {
-            //             "name": "Armoor",
-            //             "SubAreas": [
-            //                 { "name": "Mahatma Nagar" },
-            //                 { "name": "Ramalakshmi Nagar" },
-            //                 { "name": "Market Area" }
-            //             ]
-            //         }
-            //     ]
-            // },
-            // {   
-            //     "name": "Khammam",
-            //     "Areas": [
-            //         {
-            //             "name": "Wyra",
-            //             "SubAreas": [
-            //                 { "name": "Lakshmipuram" },
-            //                 { "name": "Gokul Nagar" },
-            //                 { "name": "Wyra Road" }
-            //             ]
-            //         },
-            //         {
-            //             "name": "Madhira",
-            //             "SubAreas": [
-            //                 { "name": "Old Bus Stand" },
-            //                 { "name": "Chowrastha" },
-            //                 { "name": "Station Area" }
-            //             ]
-            //         },
-            //         {
-            //             "name": "Manchikanti Nagar",
-            //             "SubAreas": [
-            //                 { "name": "Green Park" },
-            //                 { "name": "Manchikanti Colony" },
-            //                 { "name": "New Layout" }
-            //             ]
-            //         }
-            //     ]
-            // },
-            // {
-            //     "name": "Karimnagar",
-            //     "Areas": [
-            //         {
-            //             "name": "Mancherial",
-            //             "SubAreas": [
-            //                 { "name": "Coal Mine Colony" },
-            //                 { "name": "Shivaji Nagar" },
-            //                 { "name": "Ram Nagar" }
-            //             ]
-            //         },
-            //         {
-            //             "name": "Sircilla",
-            //             "SubAreas": [
-            //                 { "name": "Textile Market" },
-            //                 { "name": "Sircilla Colony" },
-            //                 { "name": "Main Road" }
-            //             ]
-            //         },
-            //         {
-            //             "name": "Vemulawada",
-            //             "SubAreas": [
-            //                 { "name": "Temple Street" },
-            //                 { "name": "Vemulawada Colony" },
-            //                 { "name": "New Bus Stand" }
-            //             ]
-            //         }
-            //     ]
-            // }
-        ]
-    };
-
 
     // --- Generate form fields for each tab ---
     const generateFormFieldsForTab = (tabIndex: number) => {
@@ -362,6 +197,58 @@ export default function AssetManagment() {
         }
     };
 
+    // Recursive function to map all hierarchy levels
+    const mapHierarchyRecursively = (nodes: HierarchyNode[]): any[] => {
+        return nodes.map(node => ({
+            id: node.hierarchy_id,
+            name: node.hierarchy_name,
+            hierarchy_type_title: node.hierarchy_type_title,
+            children: node.children ? mapHierarchyRecursively(node.children) : []
+        }));
+    };
+
+    // Recursive function to map hierarchy for NodeChart
+    const mapHierarchyForNodeChart = (nodes: HierarchyNode[]): any[] => {
+        return nodes.map(node => ({
+            name: node.hierarchy_name,
+            backgroundColor: "#e3f2fd",
+            borderColor: "",
+            textColor: "#424242",
+            Areas: node.children ? mapHierarchyForNodeChart(node.children) : []
+        }));
+    };
+
+    // Show loading state
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Loading assets...</p>
+                </div>
+            </div>
+        );
+    }
+
+    // Show error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                    <div className="text-red-600 text-xl mb-4"></div>
+                    <p className="text-red-600 font-semibold">Error loading assets</p>
+                    <p className="text-gray-600 mt-2">{error}</p>
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        Retry
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <Suspense fallback={<div>Loading...</div>}>
             <Page  
@@ -407,22 +294,8 @@ export default function AssetManagment() {
                                         {
                                             name: 'TopLevelHierarchy',
                                             props: {
-                                                nodes: dummyLocation2Data.Location.map((location, locationIndex) => ({
-                                                    id: `location-${locationIndex}`,
-                                                    name: location.name,
-                                                    hierarchy_type_title: 'Location',
-                                                    children: location.Areas.map((area, areaIndex) => ({
-                                                        id: `area-${locationIndex}-${areaIndex}`,
-                                                        name: area.name,
-                                                        hierarchy_type_title: 'Area',
-                                                        children: area.SubAreas.map((subArea, subAreaIndex) => ({
-                                                            id: `subarea-${locationIndex}-${areaIndex}-${subAreaIndex}`,
-                                                            name: subArea.name,
-                                                            hierarchy_type_title: 'SubArea'
-                                                        }))
-                                                    }))
-                                                })),
-                                                title: 'Location Hierarchy (3-Level)',
+                                                nodes: mapHierarchyRecursively(hierarchicalData),
+                                                title: 'Asset Hierarchy',
                                             },
                                         },
                                     ],
@@ -436,7 +309,9 @@ export default function AssetManagment() {
                                         {
                                             name: 'NodeChart',
                                             props: {
-                                                data: dummyLocation2Data,
+                                                data: {
+                                                    Location: mapHierarchyForNodeChart(hierarchicalData)
+                                                },
                                                 width: '100%',
                                                 height: '100%',
                                                 enableZoom: true,
