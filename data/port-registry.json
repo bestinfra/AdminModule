@@ -1,5 +1,5 @@
 {
-  "nextPort": 4195,
+  "nextPort": 4221,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -813,8 +813,128 @@
     },
     "test49": {
       "port": 4194,
-      "deployedAt": "2025-08-13T06:18:57.130Z",
-      "path": "C:\\xampp\\htdocs\\test49-backend"
+      "deployedAt": "2025-08-12T12:44:51.599Z",
+      "path": "C:\\xampp\\htdocs\\test105-backend"
+    },
+    "test106": {
+      "port": 4195,
+      "deployedAt": "2025-08-12T13:25:36.154Z",
+      "path": "C:\\xampp\\htdocs\\test106-backend"
+    },
+    "test1099": {
+      "port": 4196,
+      "deployedAt": "2025-08-12T13:40:19.958Z",
+      "path": "C:\\xampp\\htdocs\\test1099-backend"
+    },
+    "module1": {
+      "port": 4197,
+      "deployedAt": "2025-08-12T16:21:19.214Z",
+      "path": "C:\\xampp\\htdocs\\module1-backend"
+    },
+    "module2": {
+      "port": 4198,
+      "deployedAt": "2025-08-12T16:23:03.813Z",
+      "path": "C:\\xampp\\htdocs\\module2-backend"
+    },
+    "module3": {
+      "port": 4199,
+      "deployedAt": "2025-08-12T16:24:03.943Z",
+      "path": "C:\\xampp\\htdocs\\module3-backend"
+    },
+    "module4": {
+      "port": 4200,
+      "deployedAt": "2025-08-12T16:25:22.598Z",
+      "path": "C:\\xampp\\htdocs\\module4-backend"
+    },
+    "module5": {
+      "port": 4201,
+      "deployedAt": "2025-08-12T16:28:33.145Z",
+      "path": "C:\\xampp\\htdocs\\module5-backend"
+    },
+    "module6": {
+      "port": 4202,
+      "deployedAt": "2025-08-12T16:36:01.625Z",
+      "path": "C:\\xampp\\htdocs\\module6-backend"
+    },
+    "module7": {
+      "port": 4203,
+      "deployedAt": "2025-08-12T16:39:29.185Z",
+      "path": "C:\\xampp\\htdocs\\module7-backend"
+    },
+    "module8": {
+      "port": 4204,
+      "deployedAt": "2025-08-12T16:40:32.119Z",
+      "path": "C:\\xampp\\htdocs\\module8-backend"
+    },
+    "module9": {
+      "port": 4206,
+      "deployedAt": "2025-08-12T16:41:42.209Z",
+      "path": "C:\\xampp\\htdocs\\module9-backend"
+    },
+    "module10": {
+      "port": 4207,
+      "deployedAt": "2025-08-12T17:06:49.904Z",
+      "path": "C:\\xampp\\htdocs\\module10-backend"
+    },
+    "module11": {
+      "port": 4208,
+      "deployedAt": "2025-08-12T17:08:06.697Z",
+      "path": "C:\\xampp\\htdocs\\module11-backend"
+    },
+    "module12": {
+      "port": 4209,
+      "deployedAt": "2025-08-12T17:11:03.089Z",
+      "path": "C:\\xampp\\htdocs\\module12-backend"
+    },
+    "module13": {
+      "port": 4210,
+      "deployedAt": "2025-08-12T17:12:05.340Z",
+      "path": "C:\\xampp\\htdocs\\module13-backend"
+    },
+    "module14": {
+      "port": 4211,
+      "deployedAt": "2025-08-12T17:14:14.912Z",
+      "path": "C:\\xampp\\htdocs\\module14-backend"
+    },
+    "module15": {
+      "port": 4212,
+      "deployedAt": "2025-08-12T17:20:04.710Z",
+      "path": "C:\\xampp\\htdocs\\module15-backend"
+    },
+    "module16": {
+      "port": 4213,
+      "deployedAt": "2025-08-12T17:24:21.856Z",
+      "path": "C:\\xampp\\htdocs\\module16-backend"
+    },
+    "module17": {
+      "port": 4214,
+      "deployedAt": "2025-08-12T17:30:36.814Z",
+      "path": "C:\\xampp\\htdocs\\module17-backend"
+    },
+    "module18": {
+      "port": 4215,
+      "deployedAt": "2025-08-12T17:31:53.597Z",
+      "path": "C:\\xampp\\htdocs\\module18-backend"
+    },
+    "module19": {
+      "port": 4216,
+      "deployedAt": "2025-08-12T17:44:35.112Z",
+      "path": "C:\\xampp\\htdocs\\module19-backend"
+    },
+    "module20": {
+      "port": 4217,
+      "deployedAt": "2025-08-12T17:51:53.751Z",
+      "path": "C:\\xampp\\htdocs\\module20-backend"
+    },
+    "module21": {
+      "port": 4218,
+      "deployedAt": "2025-08-12T18:01:51.087Z",
+      "path": "C:\\xampp\\htdocs\\module21-backend"
+    },
+    "module25": {
+      "port": 4219,
+      "deployedAt": "2025-08-12T18:43:53.248Z",
+      "path": "C:\\xampp\\htdocs\\module25-backend"
     }
   }
 }

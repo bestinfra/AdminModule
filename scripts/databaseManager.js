@@ -9,7 +9,7 @@ class DatabaseManager {
       host: 'localhost',
       port: 5432,
       user: 'postgres',
-      password: 'root1234',
+      password: 'password',
       templateDb: 'subapp_db'
     };
   }
