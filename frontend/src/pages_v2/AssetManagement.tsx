@@ -57,18 +57,7 @@ export default function AssetManagment() {
                     setError(data.message || 'Failed to fetch assets');
                 }
             } catch (err) {
-                console.error('Error fetching assets:', err);
-                let errorMessage = 'Failed to fetch assets';
-                
-                if (err instanceof Error) {
-                    errorMessage = `${err.message} - ${err.stack || 'No stack trace available'}`;
-                } else if (typeof err === 'string') {
-                    errorMessage = err;
-                } else if (err && typeof err === 'object') {
-                    errorMessage = JSON.stringify(err, null, 2);
-                }
-                
-                setError(errorMessage);
+                setError('We were unable to load your Assets. try again later.');
             } finally {
                 setLoading(false);
             }
@@ -254,9 +243,7 @@ export default function AssetManagment() {
                             {
                                 name: 'Error',
                                 props: {
-                                    error: error, // Just pass true to show the component
-                                    title: 'Error loading assets',
-                                    message: error, // This will show your actual error message from useState
+                                    message: error, 
                                     onRetry: () => window.location.reload(),
                                     showRetry: true,
                                 },

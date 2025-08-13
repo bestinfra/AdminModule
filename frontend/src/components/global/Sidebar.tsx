@@ -167,7 +167,7 @@ const defaultMenus: MenuCategory[] = [
   //   ],
   // },
   {
-    category: "GMR  SETTINGS",
+    category: "GMR  Modules",
     items: [ 
       {
       title: "Consumer Dashbaord",
@@ -200,6 +200,27 @@ const defaultMenus: MenuCategory[] = [
           },
       ],
   },
+  ]
+  },
+  {
+    category: "TGNPDCL  Modules",
+    items: [ 
+      {
+      title: "DTR Dashboard",
+      icon: "/icons/freeze-status.svg",
+      link: "/dtr-dashboard",
+    },
+    {
+      title: "DTR INdividual Detail",
+      icon: "/icons/freeze-status.svg",
+      link: "/consumers",
+    },
+    {
+        title: "Feeders",
+        icon: "/icons/freeze-status.svg",
+        link: "/feeders",
+      },
+  
   ]
   }
   // {
