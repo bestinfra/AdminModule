@@ -36,15 +36,36 @@ class DTRDB {
             })
         ]);
 
-        // Get feeders count for each DTR
+        // Get feeders count and latest communication date for each DTR
         const dtrsWithFeedersCount = await Promise.all(
             data.map(async (dtr) => {
                 const feedersCount = await prisma.meters.count({
                     where: { dtrId: dtr.id }
                 });
+
+                // Get latest reading date for this DTR's meters
+                const meters = await prisma.meters.findMany({
+                    where: { dtrId: dtr.id },
+                    select: { id: true }
+                });
+
+                let lastCommunication = null;
+                if (meters.length > 0) {
+                    const meterIds = meters.map(m => m.id);
+                    const latestReading = await prisma.meter_readings.findFirst({
+                        where: {
+                            meterId: { in: meterIds }
+                        },
+                        orderBy: { readingDate: 'desc' },
+                        select: { readingDate: true }
+                    });
+                    lastCommunication = latestReading?.readingDate || null;
+                }
+
                 return {
                     ...dtr,
-                    feedersCount
+                    feedersCount,
+                    lastCommunication
                 };
             })
         );
@@ -113,9 +134,19 @@ class DTRDB {
         }
     }
 
-    static async getDTRAlerts() {
+    static async getDTRAlerts(locationId = null) {
         try {
+            const where = {};
+            
+            // If locationId is provided, filter by location
+            if (locationId) {
+                where.dtrs = {
+                    locationId: locationId
+                };
+            }
+            
             const alerts = await prisma.dtr_faults.findMany({
+                where,
                 include: {
                     dtrs: {
                         include: {
@@ -132,7 +163,9 @@ class DTRDB {
         }
     }
 
-    static async getDTRAlertsTrends() {
+
+
+    static async getDTRAlertsTrends(locationId = null) {
         try {
             const today = new Date();
             const months = [];
@@ -146,13 +179,22 @@ class DTRDB {
             const startMonth = new Date(today.getFullYear(), today.getMonth() - 11, 1);
             const endMonth = new Date(today.getFullYear(), today.getMonth() + 1, 1);
 
+            const where = {
+                createdAt: {
+                    gte: startMonth,
+                    lt: endMonth
+                }
+            };
+            
+            // If locationId is provided, filter by location
+            if (locationId) {
+                where.dtrs = {
+                    locationId: locationId
+                };
+            }
+
             const faults = await prisma.dtr_faults.findMany({
-                where: {
-                    createdAt: {
-                        gte: startMonth,
-                        lt: endMonth
-                    }
-                },
+                where,
                 select: {
                     status: true,
                     createdAt: true
@@ -179,6 +221,8 @@ class DTRDB {
             throw error;
         }
     }
+
+
 
     static async getDTRStats() {
         try {
@@ -281,16 +325,61 @@ class DTRDB {
         }
     }
 
-    static async getConsolidatedDTRStats() {
+    static async getConsolidatedDTRStats(locationId = null) {
         try {
+            // Build where clause for DTRs
+            const dtrWhere = {};
+            if (locationId) {
+                dtrWhere.locationId = locationId;
+            }
+            
             // Get basic DTR stats
-            const totalDTRs = await prisma.dtrs.count();
-            const totalLTFeeders = await prisma.meters.count();
-            const activeDTRs = await prisma.dtrs.count({ where: { status: 'ACTIVE' } });
-            const inactiveDTRs = await prisma.dtrs.count({ where: { status: 'INACTIVE' } });
+            const totalDTRs = await prisma.dtrs.count({ where: dtrWhere });
+            
+            // Get DTR IDs for this location (if filtering)
+            let dtrIds = null;
+            if (locationId) {
+                const dtrsInLocation = await prisma.dtrs.findMany({
+                    where: dtrWhere,
+                    select: { id: true }
+                });
+                dtrIds = dtrsInLocation.map(d => d.id);
+            }
+            
+            // Get total LT feeders
+            let totalLTFeeders;
+            if (locationId && dtrIds.length > 0) {
+                totalLTFeeders = await prisma.meters.count({
+                    where: { dtrId: { in: dtrIds } }
+                });
+            } else {
+                totalLTFeeders = await prisma.meters.count();
+            }
+            
+            const activeDTRs = await prisma.dtrs.count({ 
+                where: { 
+                    status: 'ACTIVE',
+                    ...dtrWhere
+                } 
+            });
+            const inactiveDTRs = await prisma.dtrs.count({ 
+                where: { 
+                    status: 'INACTIVE',
+                    ...dtrWhere
+                } 
+            });
 
             // Get meter readings for calculations
-            const meterIds = (await prisma.meters.findMany({ select: { id: true } })).map(m => m.id);
+            let meterIds;
+            if (locationId && dtrIds.length > 0) {
+                meterIds = (await prisma.meters.findMany({ 
+                    where: { dtrId: { in: dtrIds } },
+                    select: { id: true } 
+                })).map(m => m.id);
+            } else {
+                meterIds = (await prisma.meters.findMany({ select: { id: true } })).map(m => m.id);
+            }
+            
             const latestReadings = await Promise.all(
                 meterIds.map(async meterId =>
                     await prisma.meter_readings.findFirst({
@@ -317,13 +406,15 @@ class DTRDB {
             // Calculate overloaded/underloaded stats
             const overloadedDTRs = await prisma.dtrs.count({
                 where: {
-                    loadPercentage: { gt: 90 }
+                    loadPercentage: { gt: 90 },
+                    ...dtrWhere
                 }
             });
 
             const underloadedDTRs = await prisma.dtrs.count({
                 where: {
-                    loadPercentage: { lt: 30 }
+                    loadPercentage: { lt: 30 },
+                    ...dtrWhere
                 }
             });
 
@@ -339,14 +430,31 @@ class DTRDB {
             const percent = (num, denom) => denom > 0 ? +(num / denom * 100).toFixed(2) : 0;
 
             // Get consumption stats
-            const agg = await prisma.meter_readings.aggregate({
-                _sum: {
-                    kWh: true,
-                    kVAh: true,
-                    kW: true,
-                    kVA: true
-                }
-            });
+            let agg;
+            if (locationId && dtrIds.length > 0) {
+                agg = await prisma.meter_readings.aggregate({
+                    where: {
+                        meters: {
+                            dtrId: { in: dtrIds }
+                        }
+                    },
+                    _sum: {
+                        kWh: true,
+                        kVAh: true,
+                        kW: true,
+                        kVA: true
+                    }
+                });
+            } else {
+                agg = await prisma.meter_readings.aggregate({
+                    _sum: {
+                        kWh: true,
+                        kVAh: true,
+                        kW: true,
+                        kVA: true
+                    }
+                });
+            }
 
             // Format data according to the specified structure
             return {
@@ -390,6 +498,8 @@ class DTRDB {
             throw error;
         }
     }
+
+
 
     static async getFeederStats(dtrId) {
         try {
@@ -752,14 +862,14 @@ class DTRDB {
 
                 let whereClause = {
                     meterId: { in: meterIds },
-                    consumptionDate: {
+                    readingDate: {
                         gte: new Date(presDate),
                         lt: new Date(nextDate)
                     }
                 };
 
-                const result = await prisma.consumption.groupBy({
-                    by: ['consumptionDate'],
+                const result = await prisma.meter_readings.groupBy({
+                    by: ['readingDate'],
                     where: whereClause,
                     _count: {
                         id: true
@@ -768,12 +878,12 @@ class DTRDB {
                         consumption: true
                     },
                     orderBy: {
-                        consumptionDate: 'asc'
+                        readingDate: 'asc'
                     }
                 });
 
                 return result.map(item => ({
-                    consumption_date: getDateInYMDFormat(item.consumptionDate),
+                    consumption_date: getDateInYMDFormat(item.readingDate),
                     count: item._count.id,
                     total_consumption: item._sum.consumption || 0
                 }));
@@ -788,14 +898,14 @@ class DTRDB {
 
             let whereClause = {
                 meterId: { in: meterIds },
-                consumptionDate: {
+                readingDate: {
                     gte: new Date(presDate),
                     lt: new Date(nextDate)
                 }
             };
 
-            const result = await prisma.consumption.groupBy({
-                by: ['consumptionDate'],
+            const result = await prisma.meter_readings.groupBy({
+                by: ['readingDate'],
                 where: whereClause,
                 _count: {
                     id: true
@@ -804,14 +914,14 @@ class DTRDB {
                     consumption: true
                 },
                 orderBy: {
-                    consumptionDate: 'asc'
+                    readingDate: 'asc'
                 }
             });
 
             // Group by month
             const monthlyData = {};
             result.forEach(item => {
-                const monthKey = getDateInYMDFormat(item.consumptionDate).slice(0, 7); // YYYY-MM format
+                const monthKey = getDateInYMDFormat(item.readingDate).slice(0, 7); // YYYY-MM format
                 if (!monthlyData[monthKey]) {
                     monthlyData[monthKey] = {
                         consumption_date: monthKey,
@@ -826,6 +936,129 @@ class DTRDB {
             return Object.values(monthlyData).sort((a, b) => a.consumption_date.localeCompare(b.consumption_date));
         } catch (error) {
             console.error('Error fetching DTR main graph analytics:', error);
+            throw error;
+        }
+    }
+
+    static async getIndividualDTRAlerts(dtrId) {
+        try {
+            const alerts = await prisma.dtr_faults.findMany({
+                where: {
+                    dtrId: parseInt(dtrId)
+                },
+                include: {
+                    dtrs: {
+                        include: {
+                            locations: true
+                        }
+                    }
+                },
+                orderBy: { createdAt: 'desc' }
+            });
+            return alerts;
+        } catch (error) {
+            console.error('Error fetching individual DTR alerts:', error);
+            throw error;
+        }
+    }
+
+    static async getKVAMetrics(dtrId, period) {
+        try {
+            // Get all meters associated with this DTR
+            const meters = await prisma.meters.findMany({
+                where: { dtrId: parseInt(dtrId) },
+                select: { id: true }
+            });
+            
+            const meterIds = meters.map(m => m.id);
+            
+            if (meterIds.length === 0) {
+                return [];
+            }
+
+            if (period === 'daily') {
+                const d1 = new Date();
+                const sdf = (date) => getDateInYMDFormat(date);
+                const presDate = sdf(new Date(d1.setDate(d1.getDate() - 62)));
+                d1.setDate(d1.getDate() + 62);
+                const nextDate = sdf(new Date(d1));
+
+                let whereClause = {
+                    meterId: { in: meterIds },
+                    readingDate: {
+                        gte: new Date(presDate),
+                        lt: new Date(nextDate)
+                    }
+                };
+
+                const result = await prisma.meter_readings.groupBy({
+                    by: ['readingDate'],
+                    where: whereClause,
+                    _count: {
+                        id: true
+                    },
+                    _sum: {
+                        kVA: true
+                    },
+                    orderBy: {
+                        readingDate: 'asc'
+                    }
+                });
+
+                return result.map(item => ({
+                    kva_date: getDateInYMDFormat(item.readingDate),
+                    count: item._count.id,
+                    total_kva: item._sum.kVA || 0
+                }));
+
+            }
+            // monthly
+            const d1 = new Date();
+            const sdf = (date) => getDateInYMDFormat(date);
+            const presDate = sdf(new Date(d1.setMonth(d1.getMonth() - 13)));
+            d1.setMonth(d1.getMonth() + 14);
+            const nextDate = sdf(new Date(d1));
+
+            let whereClause = {
+                meterId: { in: meterIds },
+                readingDate: {
+                    gte: new Date(presDate),
+                    lt: new Date(nextDate)
+                }
+            };
+
+            const result = await prisma.meter_readings.groupBy({
+                by: ['readingDate'],
+                where: whereClause,
+                _count: {
+                    id: true
+                },
+                _sum: {
+                    kVA: true
+                },
+                orderBy: {
+                    readingDate: 'asc'
+                }
+            });
+
+            // Group by month
+            const monthlyData = {};
+            result.forEach(item => {
+                const monthKey = getDateInYMDFormat(item.readingDate).slice(0, 7); // YYYY-MM format
+                if (!monthlyData[monthKey]) {
+                    monthlyData[monthKey] = {
+                        kva_date: monthKey,
+                        count: 0,
+                        total_kva: 0
+                    };
+                }
+                monthlyData[monthKey].count += item._count.id;
+                monthlyData[monthKey].total_kva += item._sum.kVA || 0;
+            });
+
+            return Object.values(monthlyData).sort((a, b) => a.kva_date.localeCompare(b.kva_date));
+        } catch (error) {
+            console.error('Error fetching DTR kVA metrics:', error);
             throw error;
         }
     }

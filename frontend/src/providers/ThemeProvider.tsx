@@ -101,9 +101,6 @@ const defaultTheme = {
     colorSecondaryPositiveLight: 'rgba(52, 199, 89, 0.15)', /*changed*/
     colorWarning: 'rgba(237, 140, 34, 1)',
     colorWarningAlt: 'rgba(255, 209, 8, 1)',
-    colorGoodToGo: 'rgba(255, 209, 8, 1)',
-    colorGoodToGoLight: 'rgba(52, 199, 89, 0.15)',
-
     colorWarningLight: 'rgba(255, 180, 0, 0.15)', /*changed*/
     colorDanger: 'rgba(220, 39, 44, 1)',
     colorDangerAlt: 'rgba(255, 124, 92, 1)',
@@ -150,34 +147,6 @@ interface ThemeProviderProps {
     initialTheme?: Partial<ThemeContextType['theme']>;
 }
 
-// Function to update Tailwind theme layer with CSS custom properties
-const updateTailwindThemeLayer = (themeVariables: Record<string, string>) => {
-    // Remove existing dynamic theme style if it exists
-    const existingStyle = document.getElementById('dynamic-tailwind-theme');
-    if (existingStyle) {
-        existingStyle.remove();
-    }
-
-    // Create CSS variables string
-    const cssVariables = Object.entries(themeVariables)
-        .map(([key, value]) => {
-            const cssVarName = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-            return `--${cssVarName}: ${value};`;
-        })
-        .join('\n    ');
-
-    // Create the CSS content for the theme layer
-    const cssContent = `@theme {
-    ${cssVariables}
-}`;
-
-    // Create and inject the style element
-    const styleElement = document.createElement('style');
-    styleElement.id = 'dynamic-tailwind-theme';
-    styleElement.textContent = cssContent;
-    document.head.appendChild(styleElement);
-};
-
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     children,
     initialTheme = {},
@@ -192,17 +161,12 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
             ...prev,
             ...newTheme,
         }));
-        
-        // Update CSS custom properties on document element (existing functionality)
-        Object.entries(newTheme).forEach(([key, value]) => {    
+        Object.entries(newTheme).forEach(([key, value]) => {
             document.documentElement.style.setProperty(
                 `--${key.replace(/([A-Z])/g, '-$1').toLowerCase()}`,
                 value
             );
         });
-
-        // Update Tailwind theme layer with new variables
-        updateTailwindThemeLayer(newTheme);
     };
 
     return (

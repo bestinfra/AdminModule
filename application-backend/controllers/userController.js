@@ -5,7 +5,10 @@ export const getAllUsers = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
         
-        const result = await UserDB.getAllUsers(page, limit);
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        const result = await UserDB.getAllUsers(page, limit, userLocationId);
         
         // Format the data for the frontend table
         const formatted = result.data.map((u, idx) => ({
@@ -14,7 +17,7 @@ export const getAllUsers = async (req, res) => {
             name: u.name || `${u.firstName || ''} ${u.lastName || ''}`.trim(),
             email: u.email,
             phone: u.phone || u.phoneNumber || '-',
-            role: u.user_roles && u.user_roles.length > 0 ? u.user_roles.map(ur => ur.roles?.name).join(', ') : '',
+            role: u.roles?.name || '-',
             client: u.departments?.name || '-',
             lastActive: u.lastActive || '-',
             createdDate: u.createdAt ? new Date(u.createdAt).toLocaleDateString() : '-',
@@ -24,7 +27,9 @@ export const getAllUsers = async (req, res) => {
             success: true,
             data: formatted,
             pagination: result.pagination,
-            message: 'Users retrieved successfully'
+            message: 'Users retrieved successfully',
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('getAllUsers: Error fetching users:', error);
@@ -38,11 +43,16 @@ export const getAllUsers = async (req, res) => {
 
 export const getUserStats = async (req, res) => {
     try {
-        const stats = await UserDB.getUserStats();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        const stats = await UserDB.getUserStats(userLocationId);
         
         res.json({
             success: true,
-            data: stats
+            data: stats,
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error(' getUserStats: Error fetching user stats:', error);
@@ -159,20 +169,20 @@ export const assignRolesToUser = async (req, res) => {
     try {
         const { id } = req.params;
         // Use validated data from middleware
-        const { roleIds } = req.validatedData;
+        const { roleId } = req.validatedData;
 
-        const updatedUser = await UserDB.assignRolesToUser(parseInt(id), roleIds);
+        const updatedUser = await UserDB.assignRolesToUser(parseInt(id), [roleId]);
         
         res.json({
             success: true,
             data: updatedUser,
-            message: 'Roles assigned successfully'
+            message: 'Role assigned successfully'
         });
     } catch (error) {
-        console.error(' assignRolesToUser: Error assigning roles:', error);
+        console.error(' assignRolesToUser: Error assigning role:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to assign roles',
+            message: 'Failed to assign role',
             error: error.message
         });
     }

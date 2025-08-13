@@ -153,8 +153,8 @@ const Consumers: React.FC = () => {
               )
             : consumers;
 
+    // Remove unused function
     // const handlePageChange = (page: number) => {
-    //     // Handle page change logic here
     //     console.log('Page changed to:', page);
     // };
 
@@ -173,7 +173,7 @@ const Consumers: React.FC = () => {
         menuItems: [
             { id: 'occupied', label: 'Occupied' },
             { id: 'vacant', label: 'Vacant' },
-            { id: 'high-usage', label: 'High Usage' },
+            { id: 'high-usage', label: '' },
         ],
         onMenuItemClick: (itemId: string) => {
             setMenuValue(itemId);

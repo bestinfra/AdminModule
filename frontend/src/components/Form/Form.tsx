@@ -93,7 +93,7 @@ const useFormValidation = (
       } catch (error) {
         if (error instanceof z.ZodError) {
           const errors: Record<string, string> = {};
-          error.errors.forEach((err: z.ZodIssue) => {
+          error.issues.forEach((err: z.ZodIssue) => {
             const fieldName = err.path.join('.');
             errors[fieldName] = err.message;
           });

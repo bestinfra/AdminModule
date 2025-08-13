@@ -33,7 +33,7 @@ Handles authentication for sub-applications using the existing user database.
 
 **Usage:**
 ```typescript
-import { login, verifyToken, getProfile } from '@api/subAppAuth';
+import { login, verifyToken, getProfile } from '@/api/subAppAuth';
 
 // Login
 const result = await login({
@@ -70,7 +70,7 @@ import {
   clearAuthData, 
   isAuthenticated, 
   logout 
-} from '@api/subAppAuth';
+} from '@/api/subAppAuth';
 
 // Get stored authentication data
 const token = getStoredToken();
@@ -137,7 +137,7 @@ import TestSubAppAuth from '@components/TestSubAppAuth';
 ## Example Usage
 
 ```typescript
-import { login } from '@api/subAppAuth';
+import { login } from '@/api/subAppAuth';
 
 const handleLogin = async (credentials) => {
   try {

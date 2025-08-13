@@ -3,7 +3,7 @@ import Page from "@/components/global/PageC";
 import type { CarouselSlide } from "@/components/global/Carousel";
 import { useState } from "react";
 import type { FormInputValue } from "@/components/Form/types";
-import { login } from "@api/subAppAuth";
+import { login } from "@/api/subAppAuth";
 
 const slides: CarouselSlide[] = [
   {
@@ -239,7 +239,7 @@ If you have any questions about this Privacy Policy, please contact us.`;
               type: "grid",
               className: "rounded-lg min-h-screen",
               columns: 5,
-              gap: "gap-0",
+              gap: "gap-1",
               gridRows: 1,
               rows: [
                 {
@@ -342,7 +342,7 @@ If you have any questions about this Privacy Policy, please contact us.`;
             layout: {
               type: "row",
               className: "",
-              gap: "gap-0",
+              gap: "gap-1",
             },
             components: [
               {

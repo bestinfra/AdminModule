@@ -188,7 +188,7 @@ const OccupancyStatus: React.FC<OccupancyStatusProps> = ({  }) => {
             layout: {
               type: "column",
               className: "bg-background-secondary h-100vh",
-              gap: "gap-0",
+              gap: "gap-1",
               rows: [
                 {
                   layout: "row",

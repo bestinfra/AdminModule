@@ -3,6 +3,14 @@ import { createPortal } from 'react-dom';
 import Button from '@components/global/Button';
 import Form from '@components/Form/Form';
 import type { FormInputConfig, FormInputValue } from '@components/Form/types';
+import ModalTabs from '@components/ModalComponents/ModalTabs';
+
+interface TabItem {
+  label: string;
+  content: React.ReactNode;
+  icon?: React.ReactNode;
+  disabled?: boolean;
+}
 
 interface ModalProps {
   isOpen: boolean;
@@ -39,6 +47,29 @@ interface ModalProps {
     gap: string;
     className?: string;
   };
+  // Tabs props
+  showTabs?: boolean;
+  tabs?: TabItem[];
+  defaultTab?: number;
+  activeTabIndex?: number;
+  onTabChange?: (index: number) => void;
+  // Tabs styling props
+  tabsClassName?: string;
+  tabsContainerClassName?: string;
+  tabsTabListClassName?: string;
+  tabsTabButtonClassName?: string;
+  tabsActiveTabButtonClassName?: string;
+  tabsInactiveTabButtonClassName?: string;
+  tabsContentClassName?: string;
+  tabsOrientation?: 'horizontal' | 'vertical';
+  tabsSize?: 'sm' | 'md' | 'lg';
+  tabsAllowTabSwitch?: boolean;
+  tabsShowTabIcons?: boolean;
+  tabsShowTabLabels?: boolean;
+  tabsEnableAnimations?: boolean;
+  tabsAnimationDuration?: number;
+  tabsAriaLabel?: string;
+  tabsTabAriaLabel?: string;
 }
 
 const Modal: React.FC<ModalProps> = React.memo(({
@@ -63,12 +94,34 @@ const Modal: React.FC<ModalProps> = React.memo(({
   onSave,
   saveButtonLabel = 'Save',
   cancelButtonLabel = 'Cancel',
-  cancelButtonVariant = 'secondary',
+  // cancelButtonVariant = 'secondary',
   confirmButtonVariant = 'primary',
   formInitialData,
   formErrorMessages,
   formId,
-  gridLayout
+  gridLayout,
+  // ModalTabs props
+  showTabs = false,
+  tabs = [],
+  defaultTab = 0,
+  activeTabIndex,
+  onTabChange,
+  tabsClassName = '',
+  tabsContainerClassName = '',
+  tabsTabListClassName = '',
+  tabsTabButtonClassName = '',
+  tabsActiveTabButtonClassName = '',
+  tabsInactiveTabButtonClassName = '',
+  tabsContentClassName = '',
+  tabsOrientation = 'horizontal',
+  tabsSize = 'md',
+  tabsAllowTabSwitch = true,
+  tabsShowTabIcons = true,
+  tabsShowTabLabels = true,
+  tabsEnableAnimations = true,
+  tabsAnimationDuration = 200,
+  tabsAriaLabel = 'Modal tabs',
+  tabsTabAriaLabel = 'tab'
 }) => {
   const uniqueModalId = modalId || `modal-${Math.random().toString(36).substr(2, 9)}`;
   
@@ -205,11 +258,40 @@ const Modal: React.FC<ModalProps> = React.memo(({
 
               <main className="px-6 py-6 dark:bg-primary-dark text-main dark:text-white  ">
                 <section id={`${uniqueModalId}-description`} className="space-y-4">
+                  {/* ModalTabs at the top of content */}
+                  {showTabs && tabs && tabs.length > 0 && (
+                    <div className="">
+                      <ModalTabs
+                        tabs={tabs}
+                        defaultTab={defaultTab}
+                        activeTabIndex={activeTabIndex}
+                        onTabChange={onTabChange}
+                        className={tabsClassName}
+                        containerClassName={tabsContainerClassName}
+                        tabListClassName={tabsTabListClassName}
+                        tabButtonClassName={tabsTabButtonClassName}
+                        activeTabButtonClassName={tabsActiveTabButtonClassName}
+                        inactiveTabButtonClassName={tabsInactiveTabButtonClassName}
+                        contentClassName={tabsContentClassName}
+                        orientation={tabsOrientation}
+                        size={tabsSize}
+                        allowTabSwitch={tabsAllowTabSwitch}
+                        showTabIcons={tabsShowTabIcons}
+                        showTabLabels={tabsShowTabLabels}
+                        enableAnimations={tabsEnableAnimations}
+                        animationDuration={tabsAnimationDuration}
+                        ariaLabel={tabsAriaLabel}
+                        tabAriaLabel={tabsTabAriaLabel}
+                      />
+                    </div>
+                  )}
+
                   {children || (
                     <>
                       {showForm && formFields.length > 0 ? (
-                                                 <Form
-                           inputs={formFields}
+                        <Form
+                          key={`form-${activeTabIndex || 0}`} // Force re-render when tab changes
+                          inputs={formFields}
                           onSubmit={handleFormSubmit}
                           submitLabel={saveButtonLabel}
                           cancelLabel={cancelButtonLabel}
@@ -251,11 +333,6 @@ const Modal: React.FC<ModalProps> = React.memo(({
                 <footer className="flex justify-end gap-3 px-6 py-4 border-t border-primary-border dark:border-primary-dark-light bg-white dark:bg-primary-dark rounded-b-xl">
                   {showForm && formFields.length > 0 ? (
                     <>
-                      <Button
-                        label={cancelButtonLabel}
-                        variant={cancelButtonVariant}
-                        onClick={onClose}
-                      />
                       <Button
                         label={saveButtonLabel}
                         onClick={() => {

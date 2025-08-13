@@ -138,17 +138,48 @@ function copyAssets(baseDir, formData) {
     const sourcePagesV2Dir = path.join(sourceFrontendDir, 'src', 'pages_v2');
     const destPagesDir = path.join(frontendDir, 'src', 'pages');
     
-    // Module to page file mapping
+    // Module to page file mapping - Updated to match frontendGenerator.js structure
     const moduleToPageMapping = {
-        'consumer_dashboard': ['ConsumerDashboard.tsx'], // Consumer dashboard component (becomes main dashboard)
-        'dtr_dashboard': ['DTRDashboard.tsx', 'Feeders.tsx'], // DTR Dashboard includes Feeders (becomes main dashboard)
-        'users': ['Users.tsx'],
+        // Dashboard modules
+        'consumer_dashboard': ['ConsumerDashboard.tsx'],
+        'dtr_dashboard': ['DTRDashboard.tsx', 'Feeders.tsx'],
+        
+        // User management modules
+        'users': ['Users.tsx', 'UserDetail.tsx', 'AddUser.tsx'], // Users includes UserDetail and AddUser
         'role_management': ['RoleManagement.tsx'],
+        'user_management_default': ['Users.tsx', 'UserDetail.tsx', 'AddUser.tsx', 'RoleManagement.tsx'], // Parent module includes all
+        
+        // Billing modules
         'prepaid': ['Prepaid.tsx'],
         'postpaid': ['Postpaid.tsx'],
+        'bills': ['Prepaid.tsx', 'Postpaid.tsx'], // Parent module includes only prepaid and postpaid
+        
+        // Ticket modules
         'tickets': ['Tickets.tsx', 'TicketView.tsx', 'AddTicket.tsx'], // Tickets includes all ticket pages
+        
+        // Asset management
         'asset_management': ['AssetManagement.tsx'],
-        'meters': ['Meters.tsx', 'MeterDetails.tsx']
+        
+        // Meter management modules
+        'meter_list': ['Meters.tsx', 'MetersList.tsx', 'MeterDetails.tsx'], // Meter list includes all meter pages
+        'data_logger_master': ['DataLogger.tsx', 'DataLoggerDashboard.tsx'],
+        'add_meter': ['AddMeter.tsx'],
+        'meter_management': ['Meters.tsx', 'MetersList.tsx', 'MeterDetails.tsx', 'DataLogger.tsx', 'AddMeter.tsx'], // Parent module includes all
+        
+        // Consumer modules
+        'consumer': ['Consumers.tsx', 'ConsumerView.tsx'], // Consumer includes ConsumerView
+        
+        // Individual meter modules (for backward compatibility)
+        'meter_details': ['MeterDetails.tsx'],
+        'meters': ['Meters.tsx'],
+        'meters_list': ['MetersList.tsx'],
+        'consumer_view': ['ConsumerView.tsx'],
+        'user_detail': ['UserDetail.tsx'],
+        'ticket_view': ['TicketView.tsx'],
+        
+        // Additional components that might be needed
+        'add_ticket': ['AddTicket.tsx'],
+        'add_user': ['AddUser.tsx']
     };
 
     if (fs.existsSync(sourcePagesV2Dir)) {
@@ -163,12 +194,89 @@ function copyAssets(baseDir, formData) {
         // Copy only selected modules
         const selectedModules = formData.modules || [];
         
-        // Add role_management automatically if users is selected (same logic as backend)
+        // Auto-add related modules based on frontendGenerator.js logic
         let modulesToProcess = [...selectedModules];
+        
+        // Auto-add role_management if users is selected
         if (selectedModules.includes('users') && !selectedModules.includes('role_management')) {
             modulesToProcess.push('role_management');
             console.log('  🔧 Auto-added role_management (included with users)');
         }
+        
+        // Auto-add meter_details if meter_list is selected
+        if (selectedModules.includes('meter_list') && !selectedModules.includes('meter_details')) {
+            modulesToProcess.push('meter_details');
+            console.log('  🔧 Auto-added meter_details (included with meter_list)');
+        }
+        
+        // Auto-add consumer_view if consumer is selected
+        if (selectedModules.includes('consumer') && !selectedModules.includes('consumer_view')) {
+            modulesToProcess.push('consumer_view');
+            console.log('  🔧 Auto-added consumer_view (included with consumer)');
+        }
+        
+        // Auto-add user_detail if users is selected
+        if (selectedModules.includes('users') && !selectedModules.includes('user_detail')) {
+            modulesToProcess.push('user_detail');
+            console.log('  🔧 Auto-added user_detail (included with users)');
+        }
+        
+        // Auto-add ticket_view if tickets is selected
+        if (selectedModules.includes('tickets') && !selectedModules.includes('ticket_view')) {
+            modulesToProcess.push('ticket_view');
+            console.log('  🔧 Auto-added ticket_view (included with tickets)');
+        }
+        
+        // Auto-add add_ticket if tickets is selected
+        if (selectedModules.includes('tickets') && !selectedModules.includes('add_ticket')) {
+            modulesToProcess.push('add_ticket');
+            console.log('  🔧 Auto-added add_ticket (included with tickets)');
+        }
+        
+        // Auto-add add_user if users is selected
+        if (selectedModules.includes('users') && !selectedModules.includes('add_user')) {
+            modulesToProcess.push('add_user');
+            console.log('  🔧 Auto-added add_user (included with users)');
+        }
+        
+        // Handle parent module mappings
+        const parentModuleMapping = {
+            'meter_management': ['meter_list', 'data_logger_master', 'add_meter'],
+            'user_management_default': ['users', 'role_management'],
+            'bills': ['prepaid', 'postpaid']
+        };
+        
+        // Auto-add sub-modules for parent modules
+        Object.entries(parentModuleMapping).forEach(([parentModule, subModules]) => {
+            if (selectedModules.includes(parentModule)) {
+                subModules.forEach(subModule => {
+                    if (!modulesToProcess.includes(subModule)) {
+                        modulesToProcess.push(subModule);
+                        console.log(`  🔧 Auto-added ${subModule} (included with ${parentModule})`);
+                    }
+                });
+            }
+        });
+        
+        // Handle dependencies for individual sub-modules
+        const subModuleDependencies = {
+            'meter_list': ['meter_details'],
+            'consumer': ['consumer_view'],
+            'users': ['user_detail', 'add_user'],
+            'tickets': ['ticket_view', 'add_ticket']
+        };
+        
+        // Auto-add dependencies for selected sub-modules
+        Object.entries(subModuleDependencies).forEach(([subModule, dependencies]) => {
+            if (modulesToProcess.includes(subModule)) {
+                dependencies.forEach(dependency => {
+                    if (!modulesToProcess.includes(dependency)) {
+                        modulesToProcess.push(dependency);
+                        console.log(`  🔧 Auto-added ${dependency} (dependency of ${subModule})`);
+                    }
+                });
+            }
+        });
         
         console.log('📁 Copying selected modules:', selectedModules);
         console.log('📁 Processing modules (including auto-added):', modulesToProcess);

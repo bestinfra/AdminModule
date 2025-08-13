@@ -3,7 +3,12 @@ import { getDateTime } from '../utils/utils.js';
 
 export const getTicketStats = async (req, res) => {
     try {
-        const stats = await TicketDB.getTicketStats();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        // Pass locationId to TicketDB method (null = all data, locationId = filtered data)
+        const stats = await TicketDB.getTicketStats(userLocationId);
+        
         // Only send relevant stats fields
         res.json({
             success: true,
@@ -13,7 +18,9 @@ export const getTicketStats = async (req, res) => {
                 inProgress: stats.inProgress,
                 resolved: stats.resolved,
                 closed: stats.closed
-            }
+            },
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error(' getTicketStats: Error fetching ticket stats:', error);
@@ -38,22 +45,30 @@ export const getTicketsTable = async (req, res) => {
             ticketNumber: req.query.ticketNumber
         };
 
-        const ticketsData = await TicketDB.getTicketsTable(page, limit, filters);
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+
+        const ticketsData = await TicketDB.getTicketsTable(page, limit, filters, userLocationId);
         // Always return consumer name (from t.consumer.name or t.consumer.consumerNumber)
         const formatted = ticketsData.data.map((t, idx) => ({
             sNo: (page - 1) * limit + idx + 1,
             ticketNumber: t.ticketNumber,
-            consumerUid: t.consumerNumber,
+            dtrNumber: t.dtrNumber,
             subject: t.subject,
-            meterSerialNo: t.meterSerialNo,
+            // Show first meter serial number or count of meters
+            meterSerialNo: t.connectedMeters.length > 0 ? t.connectedMeters[0].serialNumber : `${t.meterCount} meters`,
             category: t.category || 'NA',
             priority: t.priority,
             status: t.status,
+            assignedTo: t.assignedTo || 'NA',
+            createdAt: t.createdAt ? new Date(t.createdAt).toLocaleDateString() : 'NA',
         }));
         res.json({
             success: true,
             data: formatted,
-            pagination: ticketsData.pagination
+            pagination: ticketsData.pagination,
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error(' getTicketsTable: Error fetching tickets table:', error);
@@ -67,7 +82,10 @@ export const getTicketsTable = async (req, res) => {
 
 export const getTicketTrends = async (req, res) => {
     try {
-        const trendsData = await TicketDB.getLastTwelveMonthsTrends();
+        // Get user's location from req.user (populated by middleware)
+        const userLocationId = req.user?.locationId;
+        
+        const trendsData = await TicketDB.getLastTwelveMonthsTrends(userLocationId);
         // Only send xAxisData and seriesData as before
         const formattedData = trendsData.map(row => ({
             month: row.month,
@@ -100,6 +118,8 @@ export const getTicketTrends = async (req, res) => {
         res.status(200).json({
             success: true,
             data: result,
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error(' getTicketTrends: Error fetching ticket trends:', {
@@ -118,7 +138,12 @@ export const getTicketTrends = async (req, res) => {
 export const getTicketById = async (req, res) => {
     try {
         const { id } = req.params;
-        const ticket = await TicketDB.getTicketById(parseInt(id));
+        const numericId = Number(id);
+        if (!Number.isFinite(numericId) || numericId <= 0) {
+            return res.status(400).json({ success: false, message: 'Invalid ticket id' });
+        }
+        
+        const ticket = await TicketDB.getTicketById(numericId);
         
         if (!ticket) {
             return res.status(404).json({
@@ -141,20 +166,20 @@ export const getTicketById = async (req, res) => {
     }
 };
 
-export const getTicketsByConsumerId = async (req, res) => {
+export const getTicketsByDtrId = async (req, res) => {
     try {
-        const { consumerId } = req.params;
-        const tickets = await TicketDB.getTicketsByConsumerId(parseInt(consumerId));
+        const { dtrId } = req.params;
+        const tickets = await TicketDB.getTicketsByDtrId(parseInt(dtrId));
         
         res.json({
             success: true,
             data: tickets
         });
     } catch (error) {
-        console.error(' getTicketsByConsumerId: Error fetching consumer tickets:', error);
+        console.error(' getTicketsByDtrId: Error fetching DTR tickets:', error);
         res.status(500).json({
             success: false,
-            message: 'Failed to fetch consumer tickets',
+            message: 'Failed to fetch DTR tickets',
             error: error.message
         });
     }

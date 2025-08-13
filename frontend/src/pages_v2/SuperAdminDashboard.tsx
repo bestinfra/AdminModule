@@ -263,7 +263,7 @@ const SuperAdminDashboard: React.FC = () => {
               rows: [
                 {
                   layout: "column",
-                  gap: "gap-0",
+                  gap: "gap-1",
                   className:
                     "bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1",
                   columns: [
@@ -296,7 +296,7 @@ const SuperAdminDashboard: React.FC = () => {
                 },
                 {
                   layout: "column",
-                  gap: "gap-0",
+                  gap: "gap-1",
                   className:
                     "bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1",
                   columns: [
@@ -376,7 +376,7 @@ const SuperAdminDashboard: React.FC = () => {
                   span: { col: 1, row: 1 },
                   columns: filteredApps.length > 0 
                     ? filteredApps.map((app: any) => ({
-                        name: "SubappPanel",
+                        name: "ApplicationCard",
                         props: app,
                       }))
                     : [{
@@ -391,7 +391,7 @@ const SuperAdminDashboard: React.FC = () => {
                 // Pagination Controls - Only show when not searching and results exist
                 ...(searchValue.trim() === '' && filteredApps.length > 0 ? [{
                   layout: "row" as const,
-                  gap: "gap-4",
+                  gap: "gap-4" as const,
                   className: "flex justify-center items-center mt-4",
                   columns: [
                     {

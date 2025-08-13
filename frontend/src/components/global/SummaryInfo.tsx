@@ -1,4 +1,5 @@
 import React from 'react';
+import Button from './Button';
 
 interface SummaryItem {
   label: string;
@@ -7,6 +8,7 @@ interface SummaryItem {
 
 interface SummaryInfoProps {
   title: string;
+  titleColor?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger' | 'accent' | 'neutral' | 'text-primary' | 'text-secondary' | 'text-tertiary' | 'text-quaternary';
   status?: {
     text: string;
     variant?: 'success' | 'warning' | 'error' | 'info' | 'default';
@@ -16,6 +18,12 @@ interface SummaryInfoProps {
     variant?: 'success' | 'warning' | 'error' | 'info' | 'default';
     onClick?: () => void;
   };
+  buttons?: Array<{
+    label: string;
+    variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'warning' | 'outline';
+    onClick?: () => void;
+    className?: string;
+  }>;
   data: {
     leftColumn: SummaryItem[];
     rightColumn: SummaryItem[];
@@ -26,8 +34,10 @@ interface SummaryInfoProps {
 
 const SummaryInfo: React.FC<SummaryInfoProps> = ({
   title,
+  titleColor = 'text-primary',
   status,
   rightStatus,
+  buttons,
   data = { leftColumn: [], rightColumn: [] },
   className = '',
   titleClassName = ''
@@ -62,6 +72,53 @@ const SummaryInfo: React.FC<SummaryInfoProps> = ({
     }
   };
 
+  // Map title color to CSS custom properties
+  const getTitleColorClass = (color: string) => {
+    switch (color) {
+      case 'primary':
+        return 'text-[var(--color-primary)]';
+      case 'secondary':
+        return 'text-[var(--color-secondary)]';
+      case 'success':
+        return 'text-[var(--color-secondary)]';
+      case 'warning':
+        return 'text-[var(--color-warning)]';
+      case 'danger':
+        return 'text-[var(--color-danger)]';
+      case 'accent':
+        return 'text-[var(--color-accent)]';
+      case 'neutral':
+        return 'text-[var(--color-neutral)]';
+      case 'text-primary':
+        return 'text-[var(--color-text-primary)]';
+      case 'text-secondary':
+        return 'text-[var(--color-text-secondary)]';
+      case 'text-tertiary':
+        return 'text-[var(--color-text-tertiary)]';
+      case 'text-quaternary':
+        return 'text-[var(--color-text-quaternary)]';
+      default:
+        return 'text-[var(--color-text-primary)]';
+    }
+  };
+
+  // Map button variants to Button component variants
+  const mapButtonVariant = (variant: string) => {
+    switch (variant) {
+      case 'success':
+        return 'success';
+      case 'danger':
+        return 'danger';
+      case 'warning':
+        return 'warning';
+      case 'outline':
+        return 'outline';
+      case 'secondary':
+        return 'secondary';
+      default:
+        return 'primary';
+    }
+  };
 
 
   return (
@@ -69,7 +126,7 @@ const SummaryInfo: React.FC<SummaryInfoProps> = ({
       {/* Header */}
       <header className="flex justify-between items-start gap-4">
         <div className="flex items-center space-x-4">
-          <h3 className={`text-md font-bold text-gray-900 ${titleClassName}`}>{title}</h3>
+          <h3 className={`text-md font-bold ${getTitleColorClass(titleColor)} ${titleClassName}`}>{title}</h3>
           {status && (
             <span
               className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusVariantStyles(
@@ -114,6 +171,21 @@ const SummaryInfo: React.FC<SummaryInfoProps> = ({
           )) || []}
         </div>
       </div>
+
+      {/* Action Buttons */}
+      {buttons && buttons.length > 0 && (
+        <footer className="flex justify-end space-x-3 ">
+          {buttons.map((button, index) => (
+            <Button
+              key={index}
+              label={button.label}
+              onClick={button.onClick}
+              variant={mapButtonVariant(button.variant || 'primary')}
+              className={button.className || ''}
+            />
+          ))}
+        </footer>
+      )}
     </section>
   );
 };

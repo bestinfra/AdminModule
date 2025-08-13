@@ -20,7 +20,6 @@ import type {
 import { clearFieldError } from '../utils';
 
 export const useStepState = () => {
-  // State for each step
   const [appBasicsData, setAppBasicsData] = useState<AppBasicsData>(INITIAL_APP_BASICS_DATA);
   const [appBasicsErrors, setAppBasicsErrors] = useState<AppBasicsErrors>({});
   

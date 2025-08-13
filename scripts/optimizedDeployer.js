@@ -24,12 +24,11 @@ class OptimizedDeployer {
       host: 'localhost',
       port: 5432,
       user: 'postgres',
-      password: 'root1234',
+      password: 'kiran@123',
       templateDb: 'subapp_db'
     };
   }
 
-  // Initialize port registry
   initializePortRegistry() {
     const dataDir = path.dirname(this.portRegistryPath);
     if (!fs.existsSync(dataDir)) {
@@ -337,7 +336,7 @@ class OptimizedDeployer {
       let adminRoleId;
       if (adminRoleExists.rows.length === 0) {
         const roleResult = await client.query(
-          'INSERT INTO roles (name, description, "isActive", "accessLevel", level) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+          'INSERT INTO roles (name, description, "isActive", "accessLevel", level, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING id',
           ['ADMIN', 'ADMIN role', true, this.mapRoleToAccessLevel('ADMIN'), this.getRoleLevel('ADMIN')]
         );
         adminRoleId = roleResult.rows[0].id;
@@ -394,7 +393,8 @@ class OptimizedDeployer {
         const fallbackHashedPassword = await this.hashPassword(credentials.adminPassword);
         
         // Create ADMIN role first
-        const createRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO roles (name, description, \\"isActive\\", \\"accessLevel\\", level) VALUES ('ADMIN', 'ADMIN role', true, 'ADMIN', 2) ON CONFLICT (name) DO NOTHING;"`;
+        const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
+        const createRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO roles (name, description, \\"isActive\\", \\"accessLevel\\", level, \\"createdAt\\", \\"updatedAt\\") VALUES ('ADMIN', 'ADMIN role', true, 'ADMIN', 2, NOW(), NOW()) ON CONFLICT (name) DO NOTHING;"`;
         
         execSync(createRoleCommand, { 
           env,
@@ -415,8 +415,6 @@ class OptimizedDeployer {
         const roleId = roleIdMatch ? roleIdMatch[1] : '1';
         
         const insertCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO users (username, email, password, \\"firstName\\", \\"lastName\\", \\"isActive\\", \\"accessLevel\\", \\"roleId\\", \\"createdAt\\", \\"updatedAt\\") VALUES ('${credentials.adminUsername}', '${credentials.adminEmail}', '${fallbackHashedPassword}', '${credentials.adminFirstName}', '${credentials.adminLastName}', true, 'ADMIN', ${roleId}, NOW(), NOW());"`;
-        
-        const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
         
         execSync(insertCommand, { 
           env,
@@ -444,10 +442,11 @@ class OptimizedDeployer {
       return;
     }
     
+    let client;
     try {
       console.log(`👥 Inserting new accounts for ${appName}...`);
       
-      const client = new Client({
+      client = new Client({
         host: this.dbConfig.host,
         port: this.dbConfig.port,
         user: this.dbConfig.user,
@@ -487,7 +486,7 @@ class OptimizedDeployer {
         let roleId;
         if (roleExists.rows.length === 0) {
           const roleResult = await client.query(
-            'INSERT INTO roles (name, description, "isActive", "accessLevel", level) VALUES ($1, $2, $3, $4, $5) RETURNING id',
+            'INSERT INTO roles (name, description, "isActive", "accessLevel", level, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING id',
             [account.role, `${account.role} role`, true, this.mapRoleToAccessLevel(account.role), this.getRoleLevel(account.role)]
           );
           roleId = roleResult.rows[0].id;
@@ -550,7 +549,7 @@ class OptimizedDeployer {
     } catch (error) {
       console.error(`❌ Failed to insert new accounts:`, error.message);
       console.error(`Stack trace:`, error.stack);
-      await client?.end();
+      try { await client?.end(); } catch (_) {}
       
       // Try fallback method
       try {
@@ -574,10 +573,10 @@ class OptimizedDeployer {
         );
         
         if (permissionExists.rows.length === 0) {
-          const result = await client.query(
-            'INSERT INTO permissions (name) VALUES ($1) RETURNING id',
-            [moduleName]
-          );
+                  const result = await client.query(
+          'INSERT INTO permissions (code, name, description, "isActive", "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id',
+          [moduleName, moduleName, `${moduleName} permission`, true]
+        );
           permissionIds.push(result.rows[0].id);
         } else {
           permissionIds.push(permissionExists.rows[0].id);
@@ -607,26 +606,20 @@ class OptimizedDeployer {
         }
         
         if (rolePermissionIds.length > 0) {
-          // Store all permission IDs as JSON array for this role
-          const permissionIdsJson = JSON.stringify(rolePermissionIds);
-          
-          // Check if role_permission already exists
-          const existingRolePermission = await client.query(
-            'SELECT id FROM role_permissions WHERE "roleId" = $1',
-            [role.id]
-          );
-          
-          if (existingRolePermission.rows.length === 0) {
-            await client.query(
-              'INSERT INTO role_permissions ("roleId", "permissionId") VALUES ($1, $2)',
-              [role.id, permissionIdsJson]
+          // Insert individual role_permission records for each permission
+          for (const permissionId of rolePermissionIds) {
+            // Check if this specific role_permission already exists
+            const existingRolePermission = await client.query(
+              'SELECT id FROM role_permissions WHERE "roleId" = $1 AND "permissionId" = $2',
+              [role.id, permissionId]
             );
-          } else {
-            // Update existing role permission
-            await client.query(
-              'UPDATE role_permissions SET "permissionId" = $1 WHERE "roleId" = $2',
-              [permissionIdsJson, role.id]
-            );
+            
+            if (existingRolePermission.rows.length === 0) {
+              await client.query(
+                'INSERT INTO role_permissions ("roleId", "permissionId", "isGranted", "createdAt", "updatedAt") VALUES ($1, $2, $3, NOW(), NOW())',
+                [role.id, permissionId, true]
+              );
+            }
           }
         }
       }
@@ -645,12 +638,13 @@ class OptimizedDeployer {
     const roleMap = {
       'ADMIN': 'ADMIN',
       'SUPER_ADMIN': 'SUPER_ADMIN',
-      'MODERATOR': 'MODERATOR',
-      'ACCOUNTANT': 'ACCOUNTANT'
+      // Map app-specific roles to valid AccessLevel enum values in application-backend schema
+      'MODERATOR': 'ELEVATED',
+      'ACCOUNTANT': 'NORMAL'
     };
     // Handle case-insensitive role names
     const upperRole = role.toUpperCase();
-    return roleMap[upperRole] || roleMap[role] || 'ACCOUNTANT';
+    return roleMap[upperRole] || roleMap[role] || 'NORMAL';
   }
 
   // Helper method to get role level
@@ -731,13 +725,21 @@ class OptimizedDeployer {
         // Hash password for fallback method
         const fallbackHashedPassword = await this.hashPassword(account.password);
         
-        // Insert role if not exists
-        const insertRoleCommand = `INSERT INTO roles (name, description, "isActive", "accessLevel", level) VALUES ('${account.role}', '${account.role} role', true, '${this.mapRoleToAccessLevel(account.role)}', ${this.getRoleLevel(account.role)}) ON CONFLICT (name) DO NOTHING;`;
+        // Insert role if not exists (ensure timestamps)
+        const insertRoleCommand = `INSERT INTO roles (name, description, "isActive", "accessLevel", level, "createdAt", "updatedAt") VALUES ('${account.role}', '${account.role} role', true, '${this.mapRoleToAccessLevel(account.role)}', ${this.getRoleLevel(account.role)}, NOW(), NOW()) ON CONFLICT (name) DO NOTHING;`;
+        try {
+          const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
+          const execInsertRole = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "${insertRoleCommand}"`;
+          execSync(execInsertRole, { env, stdio: 'pipe', encoding: 'utf8' });
+        } catch (error) {
+          console.error(`⚠️  Failed executing role insert for ${account.role}: ${error.message}`);
+        }
         
         // Get role ID
         const getRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "SELECT id FROM roles WHERE name = '${account.role}';"`;
         
         try {
+          const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
           const roleResult = execSync(getRoleCommand, { 
           env,
           stdio: 'pipe',
@@ -750,30 +752,15 @@ class OptimizedDeployer {
           
           // Insert user with roleId
           const insertUserCommand = `INSERT INTO users (username, email, password, "firstName", "lastName", phone, "isActive", "accessLevel", "roleId", "createdAt", "updatedAt") VALUES ('${account.username}', '${account.email}', '${fallbackHashedPassword}', '${account.firstName}', '${account.lastName}', '${account.phone || ''}', true, '${this.mapRoleToAccessLevel(account.role)}', ${roleId}, NOW(), NOW());`;
-          
-          insertCommands.push(insertRoleCommand, insertUserCommand);
+          const env2 = { ...process.env, PGPASSWORD: this.dbConfig.password };
+          const execInsertUser = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "${insertUserCommand}"`;
+          execSync(execInsertUser, { env: env2, stdio: 'pipe', encoding: 'utf8' });
         } catch (error) {
           console.error(`⚠️  Failed to get role ID for ${account.role}: ${error.message}`);
         }
       }
       
-      // Execute commands using psql
-      const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
-      
-      for (const command of insertCommands) {
-        const psqlCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "${command}"`;
-        
-        try {
-          const { execSync } = require('child_process');
-          execSync(psqlCommand, { 
-            env,
-            stdio: 'pipe',
-            encoding: 'utf8'
-          });
-      } catch (psqlError) {
-          console.error(`⚠️  Failed to execute command: ${psqlError.message}`);
-        }
-      }
+      // Commands executed inline above
       
       console.log(`✅ New accounts inserted using fallback method`);
       
@@ -987,8 +974,11 @@ process.on('SIGTERM', () => {
 NODE_ENV=development
 PORT=${port}
 
-# Database configuration - Dynamic database for this sub-app
-DATABASE_URL=postgresql://${this.dbConfig.user}:${this.dbConfig.password}@${this.dbConfig.host}:${this.dbConfig.port}/${dbName}?schema=public
+# Database configuration - Commented out dynamic database for this sub-app
+# DATABASE_URL=postgresql://${this.dbConfig.user}:${this.dbConfig.password}@${this.dbConfig.host}:${this.dbConfig.port}/${dbName}?schema=public
+
+# Hardcoded database connection
+DATABASE_URL=postgresql://postgres:root1234@14.194.110.157:5433/host_db?schema=public
 
 # JWT configuration (optional)
 # JWT_SECRET=your-super-secret-jwt-key-change-this-in-production

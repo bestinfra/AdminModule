@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { AVAILABLE_MODULES } from '@/types/module';
-import { exportModules } from '@api/exportModules';
+import { exportModules } from '@/api/exportModules';
 import { FaSearch, FaDownload } from 'react-icons/fa';
 
 const ModuleSelection: React.FC = () => {
@@ -53,7 +53,8 @@ const ModuleSelection: React.FC = () => {
         }
         setSelectedPages(newSelectedPages);
     };
-
+    console.log('selectedModules', selectedModules);
+    console.log('selectedPages', selectedPages);
     const handleExport = async () => {
         try {
             setIsExporting(true);

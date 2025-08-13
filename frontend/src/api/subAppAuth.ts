@@ -58,7 +58,7 @@ interface ProfileResponse {
 }
 
 // Base API URL - Updated to use application-backend
-const API_BASE = `${BACKEND_URL}/sub-app/auth`;
+const API_BASE = `${BACKEND_URL}/api/sub-app/auth`;
 
 // Helper function to make API requests
 async function apiRequest<T>(
@@ -70,6 +70,7 @@ async function apiRequest<T>(
       'Content-Type': 'application/json',
       ...options.headers,
     },
+    credentials: 'include', // Include cookies for authentication
     ...options,
   });
 

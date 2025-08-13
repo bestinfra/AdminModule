@@ -35,6 +35,7 @@ export interface FormInputConfig {
   colSpan?: number;
   fullWidth?: boolean;
   icon?: string;
+  rightIcon?: string;
   showPasswordToggle?: boolean;
   accept?: string;
   onChange?: (value: FormInputValue) => void;

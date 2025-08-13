@@ -3,22 +3,31 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class RoleDB {
-    static async getAllRoles() {
+    static async getAllRoles(locationId = null) {
         try {
+            let whereClause = {};
+            
+            // If locationId is provided, filter roles by users in that location
+            if (locationId) {
+                whereClause.users = {
+                    some: {
+                        locationId: locationId
+                    }
+                };
+            }
+            
             const roles = await prisma.roles.findMany({
+                where: whereClause,
                 include: {
-                    user_roles: {
-                        include: {
-                            users: {
-                                select: {
-                                    id: true,
-                                    username: true,
-                                    firstName: true,
-                                    lastName: true,
-                                    email: true,
-                                    isActive: true
-                                }
-                            }
+                    users: {
+                        where: locationId ? { locationId: locationId } : {},
+                        select: {
+                            id: true,
+                            username: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                            isActive: true
                         }
                     },
                     role_permissions: {
@@ -61,18 +70,14 @@ class RoleDB {
                         }
                     },
                     include: {
-                        user_roles: {
-                            include: {
-                                users: {
-                                    select: {
-                                        id: true,
-                                        username: true,
-                                        firstName: true,
-                                        lastName: true,
-                                        email: true,
-                                        isActive: true
-                                    }
-                                }
+                        users: {
+                            select: {
+                                id: true,
+                                username: true,
+                                firstName: true,
+                                lastName: true,
+                                email: true,
+                                isActive: true
                             }
                         },
                         role_permissions: {
@@ -88,18 +93,14 @@ class RoleDB {
                         name: roleData.name
                     },
                     include: {
-                        user_roles: {
-                            include: {
-                                users: {
-                                    select: {
-                                        id: true,
-                                        username: true,
-                                        firstName: true,
-                                        lastName: true,
-                                        email: true,
-                                        isActive: true
-                                    }
-                                }
+                        users: {
+                            select: {
+                                id: true,
+                                username: true,
+                                firstName: true,
+                                lastName: true,
+                                email: true,
+                                isActive: true
                             }
                         },
                         role_permissions: {
@@ -123,18 +124,14 @@ class RoleDB {
             return await prisma.roles.findUnique({
                 where: { id: roleId },
                 include: {
-                    user_roles: {
-                        include: {
-                            users: {
-                                select: {
-                                    id: true,
-                                    username: true,
-                                    firstName: true,
-                                    lastName: true,
-                                    email: true,
-                                    isActive: true
-                                }
-                            }
+                    users: {
+                        select: {
+                            id: true,
+                            username: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                            isActive: true
                         }
                     },
                     role_permissions: {
@@ -168,18 +165,14 @@ class RoleDB {
                 where: { id: roleId },
                 data: roleData,
                 include: {
-                    user_roles: {
-                        include: {
-                            users: {
-                                select: {
-                                    id: true,
-                                    username: true,
-                                    firstName: true,
-                                    lastName: true,
-                                    email: true,
-                                    isActive: true
-                                }
-                            }
+                    users: {
+                        select: {
+                            id: true,
+                            username: true,
+                            firstName: true,
+                            lastName: true,
+                            email: true,
+                            isActive: true
                         }
                     },
                     role_permissions: {
@@ -197,7 +190,7 @@ class RoleDB {
 
     static async deleteRole(roleId) {
         try {
-            const usersWithRole = await prisma.user_roles.findMany({
+            const usersWithRole = await prisma.users.findMany({
                 where: { roleId }
             });
 
@@ -241,7 +234,7 @@ class RoleDB {
             
             const roles = await prisma.roles.findMany({
                 include: {
-                    user_roles: true,
+                    users: true,
                     role_permissions: true
                 }
             });
@@ -251,7 +244,7 @@ class RoleDB {
 
             const roleUserCounts = {};
             roles.forEach(role => {
-                roleUserCounts[role.name] = role.user_roles.length;
+                roleUserCounts[role.name] = role.users.length;
             });
 
             const stats = {
@@ -261,7 +254,7 @@ class RoleDB {
                 roles: roles.map(role => ({
                     id: role.id,
                     name: role.name,
-                    userCount: role.user_roles.length,
+                    userCount: role.users.length,
                     permissionCount: role.role_permissions.length
                 }))
             };

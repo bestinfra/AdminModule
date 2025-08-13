@@ -53,8 +53,8 @@ const TicketView: React.FC = () => {
         category: 'Connection Issue',
         priority: 'High',
         assignedTo: 'BI - Tech Team',
-        createdAt: 'new Date().toISOString(),',
-        lastUpdated: 'new Date().toISOString(),',
+        createdAt: new Date().toISOString(),
+        lastUpdated: new Date().toISOString(),
         description: 'Issue with meter connection',
         location:'Hydrabad',
         email:'ravin1109@gmail.com',
@@ -62,8 +62,6 @@ const TicketView: React.FC = () => {
         meterId:'A9211434',
         mobile:'9989923312',
         connectionType:'NA',
-
-
     });
 
     // Dummy activity log data
@@ -116,11 +114,18 @@ const TicketView: React.FC = () => {
     return (
         <Suspense fallback={<div>Loading...</div>}>
                 <Page
+                 style = {
+                    {
+                        position:'sticky',
+                        top:0,
+                    }
+                 }
                     sections={[
                         {   
                             layout: {
                                 type: 'column',
                                 gap: 'gap-4',
+                              
                                 
                             },
                             components: [

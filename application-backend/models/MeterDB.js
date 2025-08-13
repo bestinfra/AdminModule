@@ -8,15 +8,6 @@ class MeterDB {
         try {
             const meters = await prisma.meters.findMany({
                 include: {
-                    consumers: {
-                        select: {
-                            id: true,
-                            consumerNumber: true,
-                            name: true,
-                            email: true,
-                            primaryPhone: true
-                        }
-                    },
                     locations: {
                         select: {
                             id: true,
@@ -126,7 +117,7 @@ class MeterDB {
                     model: meterData.model,
                     type: meterData.type,
                     phase: parseInt(meterData.phase),
-                    consumerId: parseInt(meterData.consumerId),
+        
                     locationId: parseInt(meterData.locationId),
                     installationDate: new Date(getDateInYMDFormat(new Date(meterData.installationDate))),
                     dtrId: meterData.dtrId ? parseInt(meterData.dtrId) : null,
@@ -274,14 +265,6 @@ class MeterDB {
             const meters = await prisma.meters.findMany({
                 where: whereClause,
                 include: {
-                    consumers: {
-                        select: {
-                            consumerNumber: true,
-                            name: true,
-                            primaryPhone: true,
-                            email: true
-                        }
-                    },
                     locations: {
                         select: {
                             name: true,
