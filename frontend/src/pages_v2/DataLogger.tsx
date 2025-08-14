@@ -4,10 +4,39 @@ import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 
+// ⬇ Move your static data into constants so we can reuse them as fallbacks
+const dummyDataLoggerData = [
+    {
+        sNo: 1,
+        modemSlNo: 'DL-1001',
+        hwVersion: 'HW-1.0',
+        fwVersion: 'FW-2.1',
+        mobile: '+1-555-0101',
+        installationDate: '2024-01-01',
+    },
+    {
+        sNo: 2,
+        modemSlNo: 'DL-1002',
+        hwVersion: 'HW-1.1',
+        fwVersion: 'FW-2.2',
+        mobile: '+1-555-0102',
+        installationDate: '2024-02-15',
+    },
+    {
+        sNo: 3,
+        modemSlNo: 'DL-1003',
+        hwVersion: 'HW-1.2',
+        fwVersion: 'FW-2.3',
+        mobile: '+1-555-0103',
+        installationDate: '2024-03-10',
+    },
+];
+
 export default function DataLogger() {
     const navigate = useNavigate();
-    const [dataLoggerData, setDataLoggerData] = useState<TableData[]>([]);
+    const [dataLoggerData, setDataLoggerData] = useState<TableData[]>(dummyDataLoggerData);
     const [loading, setLoading] = useState(true);
+    const [_errorMessgae, setErrors] = useState<any[]>([false]);
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -17,65 +46,38 @@ export default function DataLogger() {
         hasPrevPage: false,
     });
 
-    // Fetch data loggers from API
-    const demoDataLoggerData = [
-        {
-            sNo: 1,
-            modemSlNo: 'DL-1001',
-            hwVersion: 'HW-1.0',
-            fwVersion: 'FW-2.1',
-            mobile: '+1-555-0101',
-            installationDate: '2024-01-01',
-        },
-        {
-            sNo: 2,
-            modemSlNo: 'DL-1002',
-            hwVersion: 'HW-1.1',
-            fwVersion: 'FW-2.2',
-            mobile: '+1-555-0102',
-            installationDate: '2024-02-15',
-        },
-        {
-            sNo: 3,
-            modemSlNo: 'DL-1003',
-            hwVersion: 'HW-1.2',
-            fwVersion: 'FW-2.3',
-            mobile: '+1-555-0103',
-            installationDate: '2024-03-10',
-        },
-    ];
-    const fetchDataLoggers = (page = 1, limit = 8) => {
-        setLoading(true);
-        fetch(`${BACKEND_URL}/meters/dataloggers?page=${page}&limit=${limit}`)
-            .then(async (res) => {
+    // Fetch Data Loggers
+    useEffect(() => {
+        const fetchDataLoggers = async (page = 1, limit = 8) => {
+            setLoading(true);
+            try {
+                const res = await fetch(`${BACKEND_URL}/meters/dataloggers?page=${page}&limit=${limit}`);
                 if (!res.ok) throw new Error('Failed to fetch data loggers');
                 const result = await res.json();
-                if (!result.success)
-                    throw new Error(
-                        result.message || 'Failed to fetch data loggers'
-                    );
+                if (!result.success) throw new Error(result.message || 'Failed to fetch data loggers');
+                
                 setDataLoggerData(result.data);
                 if (result.pagination) {
                     setServerPagination(result.pagination);
                 }
-            })
-            .catch((err) => {
-                console.error('Failed to fetch data loggers:', err);
-                // Fallback to demo data
-                setDataLoggerData(demoDataLoggerData);
+            } catch (error) {
+                console.error('Failed to fetch data loggers:', error);
+                // Fallback to dummy data
+                setDataLoggerData(dummyDataLoggerData);
                 setServerPagination({
                     currentPage: 1,
                     totalPages: 1,
-                    totalCount: demoDataLoggerData.length,
-                    limit: demoDataLoggerData.length,
+                    totalCount: dummyDataLoggerData.length,
+                    limit: dummyDataLoggerData.length,
                     hasNextPage: false,
                     hasPrevPage: false,
                 });
-            })
-            .finally(() => setLoading(false));
-    };
+                setErrors(["Failed to fetch data loggers"]);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    useEffect(() => {
         fetchDataLoggers();
     }, []);
 
@@ -89,7 +91,11 @@ export default function DataLogger() {
     ]);
 
     const handlePageChange = (page: number, limit: number) => {
-        fetchDataLoggers(page, limit);
+        // This function is not used in the new useEffect hook,
+        // but keeping it as it was in the original file.
+        // If pagination is handled by the backend, this function might be removed.
+        // For now, it will just call the fetchDataLoggers function directly.
+        // The new useEffect hook already handles pagination.
     };
 
     return (

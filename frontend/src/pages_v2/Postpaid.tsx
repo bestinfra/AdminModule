@@ -2,7 +2,8 @@ import React, { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 
-const cardData = [
+// ⬇ Move your static data into constants so we can reuse them as fallbacks
+const dummyCardData = [
     {
         title: 'Total Bill Amount',
         value: '₹18,300.00',
@@ -40,7 +41,7 @@ const cardData = [
     },
 ];
 
-const tableData: any[] = [
+const dummyTableData = [
     {
         billNo: 'BILL001',
         consumerName: 'Airborne General Store',
@@ -134,7 +135,49 @@ export default function Postpaid() {
     const [paymentStatus, setPaymentStatus] = useState('');
     const [search, setSearch] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
-    const [filteredData, setFilteredData] = useState(tableData);
+    const [errorMessgae, setErrors] = useState<any[]>([false]);
+    
+    // ⬇ State for API data
+    const [cardData, setCardData] = useState(dummyCardData);
+    const [tableData, setTableData] = useState(dummyTableData);
+    const [filteredData, setFilteredData] = useState(dummyTableData);
+
+    // Fetch Cards Data
+    useEffect(() => {
+        const fetchCards = async () => {
+            try {
+                const res = await fetch("/api/postpaid/cards");
+                if (!res.ok) throw new Error("Failed to fetch cards");
+                const json = await res.json();
+                setCardData(json?.data || dummyCardData);
+            } catch (error) {
+                console.error(error);
+                setCardData(dummyCardData); // fallback
+                setErrors(["Failed to fetch cards"]);
+            }
+        };
+        fetchCards();
+    }, []);
+
+    // Fetch Bills Table Data
+    useEffect(() => {
+        const fetchBills = async () => {
+            try {
+                const res = await fetch("/api/postpaid/bills");
+                if (!res.ok) throw new Error("Failed to fetch bills");
+                const json = await res.json();
+                const billsData = json?.data || dummyTableData;
+                setTableData(billsData);
+                setFilteredData(billsData);
+            } catch (error) {
+                console.error(error);
+                setTableData(dummyTableData);
+                setFilteredData(dummyTableData);
+                setErrors(["Failed to fetch bills"]);
+            }
+        };
+        fetchBills();
+    }, []);
 
     const handleAddBill = () => {
         console.log('Adding new bill...');

@@ -55,6 +55,13 @@ const Dropdown: React.FC<DropdownProps> = ({
   );
   const [focusedIndex, setFocusedIndex] = useState(-1);
   
+  // Update selectedValues when value prop changes
+  useEffect(() => {
+    if (isMultiSelect) {
+      setSelectedValues(Array.isArray(value) ? value : []);
+    }
+  }, [value, isMultiSelect]);
+  
   // REF VARIABLES
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -190,7 +197,9 @@ const Dropdown: React.FC<DropdownProps> = ({
       }
       return `${selectedValues.length} items selected`;
     }
+    // For single select, find the option that matches the current value
     const option = options.find(opt => opt.value === value);
+    console.log('Dropdown debug:', { value, options, foundOption: option });
     return option?.label || placeholder;
   };
 
@@ -198,7 +207,8 @@ const Dropdown: React.FC<DropdownProps> = ({
     if (isMultiSelect) {
       return selectedValues.length > 0;
     }
-    return value && value !== '';
+    // For single select, check if value exists and is not empty
+    return value && value !== '' && value !== undefined;
   };
 
   // RENDER

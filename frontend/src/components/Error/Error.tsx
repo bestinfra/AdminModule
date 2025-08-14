@@ -54,7 +54,7 @@ const Error: React.FC<ErrorProps> = ({
                     )}
                     
                     <div 
-                        className="p-1 h-6 w-6 text-sm font-medium cursor-pointer flex items-center justify-center"
+                        className="p-1 h-6 w-6 text-sm hover:bg-warning-light rounded-full font-medium cursor-pointer flex items-center justify-center"
                     >
                         <img 
                             src="/icons/close.svg" 
