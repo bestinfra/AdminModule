@@ -1,8 +1,9 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 
-const cardData = [
+// ⬇ Move your static data into constants so we can reuse them as fallbacks
+const dummyCardData = [
     {
         title: 'Cummulative Current Balance',
         value: '-₹55,163.58',
@@ -29,7 +30,7 @@ const cardData = [
     },
 ];
 
-const rechargeData = [
+const dummyRechargeData = [
     {
         title: 'Total Recharge Collection',
         value: '₹5,250.00',
@@ -37,7 +38,7 @@ const rechargeData = [
         subtitle1: 'vs. ₹4,800.00 Yesterday',
         subtitle2: '15 Recharges Processed',
         showTrend: true,
-        comparisonValue: 450, // Positive value for up trend
+        comparisonValue: 450,
         previousValue: 'vs. ₹4,800.00 Yesterday',
     },
     {
@@ -47,7 +48,7 @@ const rechargeData = [
         subtitle1: 'vs. 220.45 kWh Yesterday',
         subtitle2: 'Consumed from 4 Meters',
         showTrend: true,
-        comparisonValue: -38.49, // Negative value for down trend
+        comparisonValue: -38.49,
         previousValue: 'vs. 220.45 kWh Yesterday',
     },
     {
@@ -57,7 +58,7 @@ const rechargeData = [
         subtitle1: 'vs. ₹2,449.52 Yesterday',
         subtitle2: 'Deducted from 4 Consumers',
         showTrend: true,
-        comparisonValue: -247.72, // Negative value for down trend
+        comparisonValue: -247.72,
         previousValue: 'vs. ₹2,449.52 Yesterday',
     },
     {
@@ -67,7 +68,7 @@ const rechargeData = [
         subtitle1: 'vs. 8 Yesterday',
         subtitle2: 'Transactions From 12 Consumers',
         showTrend: true,
-        comparisonValue: 4, // Positive value for up trend
+        comparisonValue: 4,
         previousValue: 'vs. 8 Yesterday',
     },
     {
@@ -77,7 +78,7 @@ const rechargeData = [
         subtitle1: 'vs. 1 Yesterday',
         subtitle2: '3 sent Today',
         showTrend: true,
-        comparisonValue: 2, // Positive value for up trend
+        comparisonValue: 2,
         previousValue: 'vs. 1 Yesterday',
     },
     {
@@ -87,12 +88,12 @@ const rechargeData = [
         subtitle1: 'vs. 4 Yesterday',
         subtitle2: '2 Consumers Today',
         showTrend: true,
-        comparisonValue: -2, // Negative value for down trend
+        comparisonValue: -2,
         previousValue: 'vs. 4 Yesterday',
     },
 ];
 
-const tableData = [
+    const dummyTableData = [
     {
         sNo: 1,
         consumer: 'Airborne General Store',
@@ -152,6 +153,63 @@ const tableColumns = [
 export default function Prepaid() {
     const navigate = useNavigate();
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
+    const [errorMessgae, setErrors] = useState<any[]>([false]);
+    
+    // ⬇ State for API data
+    const [cardData, setCardData] = useState(dummyCardData);
+    const [rechargeData, setRechargeData] = useState(dummyRechargeData);
+    const [tableData, setTableData] = useState(dummyTableData);
+
+    // Fetch Cards Data
+    useEffect(() => {
+        const fetchCards = async () => {
+            try {
+                const res = await fetch("/api/prepaid/cards");
+                if (!res.ok) throw new Error("Failed to fetch cards");
+                const json = await res.json();
+                setCardData(json?.data || dummyCardData);
+            } catch (error) {
+                console.error(error);
+                setCardData(dummyCardData); // fallback
+                setErrors(["Failed to fetch cards"]);
+            }
+        };
+        fetchCards();
+    }, []);
+
+    // Fetch Recharge Data
+    useEffect(() => {
+        const fetchRecharges = async () => {
+            try {
+                const res = await fetch("/api/prepaid/recharges");
+                if (!res.ok) throw new Error("Failed to fetch recharges");
+                const json = await res.json();
+                setRechargeData(json?.data || dummyRechargeData);
+            } catch (error) {
+                console.error(error);
+                setRechargeData(dummyRechargeData);
+                setErrors([error]);
+            }
+        };
+        fetchRecharges();
+    }, []);
+
+    // Fetch Transactions Table Data
+    useEffect(() => {
+        const fetchTable = async () => {
+            try {
+                const res = await fetch("/api/prepaid/transactions");
+                if (!res.ok) throw new Error("Failed to fetch transactions");
+                const json = await res.json();
+                setTableData(json?.data || dummyTableData);
+            } catch (error) {
+                console.error(error);
+                setTableData(dummyTableData);
+                setErrors(["Failed to fetch transactions"]);
+            }
+        };
+        fetchTable();
+    }, []);
 
     const handleTimeRangeChange = (range: string) => {
         setSelectedTimeRange(range);
@@ -189,8 +247,18 @@ export default function Prepaid() {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'row',
+                                    layout: 'column',
                                     columns: [
+                                        {
+                                            name: 'Error',
+                                            props: {
+                                                message: errorMessgae,
+                                                onRetry: () => {
+                                                    console.log('Retrying...');
+                                                },
+                                                showRetry: true,
+                                            },
+                                        },
                                         {
                                             name: 'PageHeader',
                                             props: {
@@ -213,31 +281,13 @@ export default function Prepaid() {
                                                         id: 'success',
                                                         label: 'Success',
                                                     },
-                                                    {
-                                                        id: 'failed',
-                                                        label: 'Failed',
-                                                    },
-                                                    {
-                                                        id: 'pending',
-                                                        label: 'Pending',
-                                                    },
-                                                    {
-                                                        id: 'low-balance',
-                                                        label: 'Low Balance',
-                                                    },
-                                                    {
-                                                        id: 'recharge',
-                                                        label: 'Recharge',
-                                                    },
-                                                    {
-                                                        id: 'consumption',
-                                                        label: 'Consumption',
-                                                    },
+                                                   
                                                 ],
                                                 onMenuItemClick:
                                                     handleFilterChange,
                                             },
                                         },
+                                      
                                     ],
                                 },
                             ],

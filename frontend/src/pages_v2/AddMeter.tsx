@@ -12,6 +12,7 @@ export default function AddMeter() {
         {
             name: 'uid',
             type: 'text',
+            label: 'UID',
             placeholder: 'UID',
             required: true,
             row: 1,
@@ -20,6 +21,7 @@ export default function AddMeter() {
         {
             name: 'serialNumber',
             type: 'text',
+            label: 'Serial Number',
             placeholder: 'Serial Number',
             required: true,
             row: 1,
@@ -28,6 +30,7 @@ export default function AddMeter() {
         {
             name: 'location',
             type: 'text',
+            label: 'Location',
             placeholder: 'Location',
             required: true,
             row: 1,
@@ -36,6 +39,7 @@ export default function AddMeter() {
         {
             name: 'phaseType',
             type: 'dropdown',
+            label: 'Phase Type',
             placeholder: 'Phase Type',
             options: [
                 { value: '', label: 'Select Phase Type' },
@@ -49,6 +53,7 @@ export default function AddMeter() {
         {
             name: 'meterType',
             type: 'dropdown',
+            label: 'Meter Type',
             placeholder: 'Meter Type',
             options: [
                 { value: '', label: 'Select Meter Type' },
@@ -63,6 +68,7 @@ export default function AddMeter() {
         {
             name: 'paymentType',
             type: 'dropdown',
+            label: 'Payment Type',
             placeholder: 'Payment Type',
             options: [
                 { value: '', label: 'Select Payment Type' },
@@ -76,6 +82,7 @@ export default function AddMeter() {
         {
             name: 'connectedLoad',
             type: 'number',
+            label: 'Connected Load (kW)',
             placeholder: 'Connected Load (kW)',
             required: true,
             row: 3,
@@ -84,6 +91,7 @@ export default function AddMeter() {
         {
             name: 'installationDate',
             type: 'date',
+            label: 'Installation Date',
             placeholder: 'mm/dd/yyyy',
             required: true,
             row: 3,
@@ -92,6 +100,7 @@ export default function AddMeter() {
         {
             name: 'status',
             type: 'dropdown',
+            label: 'Status',
             placeholder: 'Active',
             options: [
                 { value: '', label: 'Select Status' },
@@ -106,6 +115,7 @@ export default function AddMeter() {
         {
             name: 'notes',
             type: 'textareafield',
+            label: 'Discription (optional)',
             placeholder: 'Notes (optional)',
             required: false,
             row: 4,

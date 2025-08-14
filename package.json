@@ -10,7 +10,7 @@
     "dev-backend": "cd backend && npm run dev",
     "build": "cd frontend && npm run build",
     "build-backend": "cd backend && npm run build",
-    "preview": "cd frontend && npm run preview", 
+    "preview": "cd frontend && npm run preview",
     "install-all": "cd frontend && npm install && cd ../backend && npm install"
   },
   "keywords": [
@@ -23,6 +23,7 @@
   "author": "Admin Module Team",
   "license": "MIT",
   "dependencies": {
+    "@types/pg": "^8.15.5",
     "axios": "^1.10.0",
     "bcrypt": "^6.0.0",
     "chokidar": "^3.6.0",

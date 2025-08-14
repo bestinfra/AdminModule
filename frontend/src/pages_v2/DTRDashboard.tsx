@@ -35,14 +35,27 @@ const DTRDashboard: React.FC = () => {
     const [chartSeries, setChartSeries] = useState<{ name: string; data: number[] }[]>([]);
     const alertColors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#9467bd', '#d62728'];
     const statsRange = selectedTimeRange;
+    const [errorMessages, setErrorMessages] = useState<string[]>([]);
+    
+    // State for managing which 3 errors to show (sliding window)
+    const [currentErrorIndex, setCurrentErrorIndex] = useState(0);
 
+    // Calculate which 3 errors to show
+    const visibleErrors = errorMessages.slice(currentErrorIndex, currentErrorIndex + 3);
+
+    // Reset current error index when errors change
+    useEffect(() => {
+        setCurrentErrorIndex(0);
+    }, [errorMessages.length]);
+
+  
     // API Functions
     const fetchDTRStats = async () => {
         // setLoading(prev => ({ ...prev, stats: true }));
         try {
             const response = await fetch(`${BACKEND_URL}/dtrs/stats`);
             const data = await response.json();
-            
+
             if (data.success) {
                 // Consolidated API returns { data: { row1: {...}, row2: { daily: {...}, monthly: {...} } } }
                 const row1 = data.data?.row1 || {};
@@ -53,12 +66,14 @@ const DTRDashboard: React.FC = () => {
                     monthly: row2.monthly || { totalKwh: 0, totalKvah: 0, totalKw: 0, totalKva: 0 },
                 });
             } else {
-                throw new Error(data.message || 'Failed to fetch DTR stats');
+                throw new Error(data.message || 'Failed to fetch DTR stats');// goes to catch
             }
         } catch (error) {
             console.error('Error fetching DTR stats:', error);
+            setErrorMessages(prev => [...prev, "Failed to load the Dashboard Widgets"]);
             // Fallback to demo data
             setDtrStatsData({});
+
         } finally {
             // setLoading(prev => ({ ...prev, stats: false }));
         }
@@ -86,7 +101,7 @@ const DTRDashboard: React.FC = () => {
                 throw new Error(data.message || 'Failed to fetch DTR table');
             }
         } catch (error) {
-            console.error('Error fetching DTR table:', error);
+            setErrorMessages(prev => [...prev, "Failed to load the DTR Table"]);
             // Fallback to demo data
             setDtrTableData([]);
         } finally {
@@ -106,7 +121,7 @@ const DTRDashboard: React.FC = () => {
                 throw new Error(data.message || 'Failed to fetch DTR alerts');
             }
         } catch (error) {
-            console.error('Error fetching DTR alerts:', error);
+            setErrorMessages(prev => [...prev, "Failed to load the DTR Alerts"]);
             // Fallback to demo data
             setAlertsData([]);
         } finally {
@@ -149,7 +164,7 @@ const DTRDashboard: React.FC = () => {
                 throw new Error(data.message || 'Failed to fetch DTR alerts trends');
             }
         } catch (error) {
-            console.error('Error fetching DTR alerts trends:', error);
+            setErrorMessages(prev => [...prev, "Failed to load the DTR Alerts Trends"]);
             // Fallback to demo data
             setChartMonths([]);
             setChartSeries([]);
@@ -165,6 +180,24 @@ const DTRDashboard: React.FC = () => {
         fetchDTRAlerts();
         fetchDTRAlertsTrends();
     }, []);
+
+    // Clear all error messages
+    const clearErrors = () => {
+        setErrorMessages([]);
+    };
+
+    // Remove a specific error message
+    const removeError = (indexToRemove: number) => {
+        setErrorMessages(prev => prev.filter((_, index) => index !== indexToRemove));
+        
+        // Move to next set of errors if available
+        if (currentErrorIndex + 3 < errorMessages.length) {
+            setCurrentErrorIndex(prev => prev + 1);
+        } else if (currentErrorIndex > 0) {
+            // If we're at the end, move back to show previous errors
+            setCurrentErrorIndex(prev => Math.max(0, prev - 1));
+        }
+    };
 
     // Handle Excel download for all DTR Dashboard data
     const handleExportData = () => {
@@ -717,6 +750,23 @@ const DTRDashboard: React.FC = () => {
                             className: '',
                         },
                         components: [
+                            // Render all errors in a single stacked card effect
+                            ...(errorMessages.length > 0 ? [{
+                                name: 'Error',
+                                props: {
+                                    visibleErrors: visibleErrors,
+                                    totalErrors: errorMessages.length,
+                                    onRetry: () => {
+                                        clearErrors();
+                                        fetchDTRStats();
+                                        fetchDTRTable();
+                                        fetchDTRAlerts();
+                                        fetchDTRAlertsTrends();
+                                    },
+                                    onClose: () => removeError(0), // Remove the top error
+                                    className: 'text-center',
+                                },
+                            }] : []),
                             {
                                 name: 'PageHeader',
                                 props: {

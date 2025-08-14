@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
-
+    import BACKEND_URL from '@/config';
 const MetersList: React.FC = () => {
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
@@ -110,7 +110,7 @@ const MetersList: React.FC = () => {
                 console.log('Total meters fetched:', allMeters.length);
                 
                 // Process all table data to match existing structure
-                const processedData = allMeters.map((meter: any, index: number) => ({
+                const processedData = allMeters.map((meter: any, _index: number) => ({
                     slNo: meter.sNo,
                     meterSlNo: meter.meterSerialNumber,
                     modemSlNo: meter.modemSerialNumber,

@@ -1,5 +1,5 @@
 {
-  "nextPort": 4221,
+  "nextPort": 4223,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -935,6 +935,16 @@
       "port": 4219,
       "deployedAt": "2025-08-12T18:43:53.248Z",
       "path": "C:\\xampp\\htdocs\\module25-backend"
+    },
+    "minnoth": {
+      "port": 4221,
+      "deployedAt": "2025-08-14T10:56:04.446Z",
+      "path": "C:\\xampp\\htdocs\\minnoth-backend"
+    },
+    "brnm1": {
+      "port": 4222,
+      "deployedAt": "2025-08-14T14:06:13.165Z",
+      "path": "C:\\xampp\\htdocs\\brnm1-backend"
     }
   }
 }

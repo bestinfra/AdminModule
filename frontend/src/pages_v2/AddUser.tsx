@@ -15,6 +15,7 @@ export default function AddUser() {
         {
             name: 'fullName',
             type: 'text',
+            label: 'Full Name',
             placeholder: 'Enter full name',
             required: true,
             row: 1,
@@ -23,6 +24,7 @@ export default function AddUser() {
         {
             name: 'email',
             type: 'email',
+            label: 'Email Address',
             placeholder: 'Enter email address',
             required: true,
             row: 1,
@@ -31,6 +33,7 @@ export default function AddUser() {
         {
             name: 'phone',
             type: 'tel',
+            label: 'Phone Number',
             placeholder: 'Enter phone number',
             required: true,
             row: 2,
@@ -39,6 +42,7 @@ export default function AddUser() {
         {
             name: 'password',
             type: 'password',
+            label: 'Password',
             placeholder: 'Enter password',
             required: true,
             row: 2,
@@ -47,14 +51,13 @@ export default function AddUser() {
         {
             name: 'role',
             type: 'dropdown',
+            label: 'User Role',
+            searchable:false,
             placeholder: 'Select User Role',
-            options: [
-                { value: '', label: 'Select Role' },
-                ...roles.map((role) => ({
-                    value: role.toLowerCase(),
-                    label: role,
-                })),
-            ],
+            options: roles.map((role) => ({
+                value: role.toLowerCase(),
+                label: role,
+            })),
             required: true,
             row: 3,
             col: 1,
@@ -62,14 +65,13 @@ export default function AddUser() {
         {
             name: 'parentRole',
             type: 'dropdown',
+            label: 'Parent Role',
+            searchable:false,
             placeholder: 'Select Parent Role',
-            options: [
-                { value: '', label: 'Select Parent Role' },
-                ...parentRoles.map((role) => ({
-                    value: role.toLowerCase().replace(' ', '_'),
-                    label: role,
-                })),
-            ],
+            options: parentRoles.map((role) => ({
+                value: role.toLowerCase().replace(' ', '_'),
+                label: role,
+            })),
             required: false,
             row: 3,
             col: 2,
