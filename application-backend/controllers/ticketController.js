@@ -231,17 +231,49 @@ export const assignTicket = async (req, res) => {
 
 export const createTicket = async (req, res) => {
     try {
+        console.log('=== TICKET CREATION REQUEST ===');
+        console.log('Timestamp:', new Date().toISOString());
+        console.log('Request Headers:', req.headers);
+        console.log('Request Body:', req.body);
+        console.log('User from cookies:', req.user);
+        
         // Use validated data from middleware
         const ticketData = req.validatedData;
+        console.log('Validated ticket data:', ticketData);
+        
+        // Get user's ID from req.user (populated by middleware)
+        const raisedById = req.user?.id;
+        console.log('User ID from session:', raisedById);
+        
+        if (!raisedById) {
+            console.log('❌ Authentication failed: No user ID found');
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated'
+            });
+        }
 
-        const newTicket = await TicketDB.createTicket(ticketData);
+        // Add the raisedById to the ticket data
+        const ticketDataWithUser = {
+            ...ticketData,
+            raisedById
+        };
+        console.log('Final ticket data with user:', ticketDataWithUser);
+
+        console.log('🔄 Calling TicketDB.createTicket...');
+        const newTicket = await TicketDB.createTicket(ticketDataWithUser);
+        console.log('✅ Ticket created successfully in database:', newTicket);
         
         res.status(201).json({
             success: true,
+            message: 'Ticket created successfully',
             data: newTicket
         });
+        console.log('✅ Response sent to client');
+        
     } catch (error) {
-        console.error(' createTicket: Error creating ticket:', error);
+        console.error('❌ createTicket: Error creating ticket:', error);
+        console.error('Error stack:', error.stack);
         res.status(500).json({
             success: false,
             message: 'Failed to create ticket',

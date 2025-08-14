@@ -373,11 +373,14 @@ const FormInput: React.FC<FormInputProps> = ({
                 placeholder={placeholder || label}
                 className={finalClassName}
               />
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none hover:cursor-pointer bg-background-secondary rounded-full p-2">
               <img
                 src={rightIcon}
                 alt="icon"
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 pointer-events-none"
+                className="w-5 h-5 pointer-events-none"
               />
+              </div>
+              
             </div>
           );
         }

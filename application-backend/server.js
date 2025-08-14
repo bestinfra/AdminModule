@@ -32,6 +32,7 @@ const corsOptions = {
             'http://localhost:1700',
             'http://localhost:3000',
             'http://localhost:5173',
+            'http://localhost:4221',
             'https://www.test35.bestinfra.app',
             `http://localhost:${process.env.PORT || 4180}`
         ];

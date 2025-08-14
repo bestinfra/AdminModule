@@ -135,7 +135,7 @@ export default function Postpaid() {
     const [paymentStatus, setPaymentStatus] = useState('');
     const [search, setSearch] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
-    const [errorMessgae, setErrors] = useState<any[]>([false]);
+    const [_errorMessgae, setErrors] = useState<any[]>([false]);
     
     // ⬇ State for API data
     const [cardData, setCardData] = useState(dummyCardData);

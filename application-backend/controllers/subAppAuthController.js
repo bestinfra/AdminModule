@@ -68,10 +68,11 @@ export const subAppLogin = async (req, res) => {
                     include: {
                         role_permissions: true
                     }
-                },
-                locations: true
+                }
             }
         });
+        
+
 
         if (!user) {
 
@@ -198,22 +199,29 @@ export const subAppLogin = async (req, res) => {
             appId: appId
         };
         
+
+        
+        // Set cookies with proper settings for development
         res.cookie('userDetails', JSON.stringify(userDetailsCookie), {
             httpOnly: false, // Allow JavaScript access
             secure: false, // Allow HTTP in development
-            sameSite: 'none', // Most permissive for cross-origin
+            sameSite: 'lax', // Compatible with HTTP in development
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
-            path: '/'
+            path: '/',
+            domain: undefined // Use current domain
         });
         
         // Store token in cookie
         res.cookie('accessToken', token, {
             httpOnly: true,
             secure: false, // Allow HTTP in development
-            sameSite: 'none', // Most permissive for cross-origin
+            sameSite: 'lax', // Compatible with HTTP in development
             maxAge: 24 * 60 * 60 * 1000, // 24 hours
-            path: '/'
+            path: '/',
+            domain: undefined // Use current domain
         });
+        
+
         
         res.json({
             success: true,
@@ -272,8 +280,7 @@ export const verifySubAppToken = async (req, res) => {
                     include: {
                         role_permissions: true
                     }
-                },
-                locations: true
+                }
             }
         });
         

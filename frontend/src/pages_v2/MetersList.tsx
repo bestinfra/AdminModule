@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
-
+    import BACKEND_URL from '@/config';
 const MetersList: React.FC = () => {
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
@@ -42,7 +42,8 @@ const MetersList: React.FC = () => {
     ];
 
     // Table data
-    const tableData = [
+    const [tableData, setTableData] = useState<TableData[]>([
+        
         {
             slNo: 1,
             meterSlNo: 'A9345417',
@@ -76,7 +77,61 @@ const MetersList: React.FC = () => {
             installationDate: 'NA',
             status: 'Active',
         },
-    ];
+    ]);
+
+    // Fetch data from API
+    useEffect(() => {
+        const fetchAllMeters = async () => {
+            try {
+                let allMeters: any[] = [];
+                let currentPage = 1;
+                let hasNextPage = true;
+                
+                console.log('Fetching all meters from:', `${BACKEND_URL}/meters`);
+                
+                // Fetch all pages to get all meters
+                while (hasNextPage) {
+                    const response = await fetch(`${BACKEND_URL}/meters?page=${currentPage}&limit=100`);
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        console.log(`Page ${currentPage} data:`, data.data);
+                        allMeters = [...allMeters, ...data.data];
+                        
+                        // Check if there are more pages
+                        hasNextPage = data.pagination?.hasNextPage || false;
+                        currentPage++;
+                    } else {
+                        console.error('Failed to fetch meters:', data.message);
+                        break;
+                    }
+                }
+                
+                console.log('Total meters fetched:', allMeters.length);
+                
+                // Process all table data to match existing structure
+                const processedData = allMeters.map((meter: any, _index: number) => ({
+                    slNo: meter.sNo,
+                    meterSlNo: meter.meterSerialNumber,
+                    modemSlNo: meter.modemSerialNumber,
+                    meterType: meter.meterType,
+                    meterMake: meter.meterMake,
+                    consumerName: meter.consumerName,
+                    location: meter.location,
+                    installationDate: meter.installationDate ? new Date(meter.installationDate).toLocaleDateString() : 'NA',
+                    status: 'Active', // Set default status since backend doesn't provide it
+                }));
+                
+                console.log('Processed meter data:', processedData);
+                setTableData(processedData);
+            } catch (error) {
+                console.error('Error fetching meters:', error);
+            }
+        };
+        
+        fetchAllMeters();
+    }, []);
+
 
     const tableColumns = [
         { key: 'slNo', label: 'Sl No' },

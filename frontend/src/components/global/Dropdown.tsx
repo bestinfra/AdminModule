@@ -199,7 +199,6 @@ const Dropdown: React.FC<DropdownProps> = ({
     }
     // For single select, find the option that matches the current value
     const option = options.find(opt => opt.value === value);
-    console.log('Dropdown debug:', { value, options, foundOption: option });
     return option?.label || placeholder;
   };
 

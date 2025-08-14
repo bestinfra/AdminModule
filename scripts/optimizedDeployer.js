@@ -4,10 +4,39 @@ const { execSync } = require('child_process');
 
 let Client;
 try {
-  const pg = require('pg');
-  Client = pg.Client;
+  // Try to require pg from the root node_modules first
+  const rootNodeModules = path.join(__dirname, '..', 'node_modules');
+  const pgPath = path.join(rootNodeModules, 'pg');
+  
+  if (fs.existsSync(pgPath)) {
+    // Add root node_modules to module path
+    const Module = require('module');
+    const originalRequire = Module.prototype.require;
+    Module.prototype.require = function(id) {
+      try {
+        return originalRequire.apply(this, arguments);
+      } catch (e) {
+        if (e.code === 'MODULE_NOT_FOUND') {
+          return originalRequire.call(this, path.join(rootNodeModules, id));
+        }
+        throw e;
+      }
+    };
+    
+    const pg = require('pg');
+    Client = pg.Client;
+    console.log('✅ PostgreSQL module loaded successfully from root node_modules');
+  } else {
+    // Fallback to regular require
+    const pg = require('pg');
+    Client = pg.Client;
+    console.log('✅ PostgreSQL module loaded successfully');
+  }
 } catch (error) {
   console.warn('⚠️  pg module not found. Database functionality will be disabled.');
+  console.warn('   Please ensure pg module is installed: npm install pg');
+  console.warn('   Current working directory:', process.cwd());
+  console.warn('   Script directory:', __dirname);
 }
 
 class OptimizedDeployer {
@@ -24,7 +53,7 @@ class OptimizedDeployer {
       host: 'localhost',
       port: 5432,
       user: 'postgres',
-      password: 'kiran@123',
+      password: 'root123',
       templateDb: 'subapp_db'
     };
   }

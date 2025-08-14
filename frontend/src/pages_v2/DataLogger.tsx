@@ -90,7 +90,7 @@ export default function DataLogger() {
         { key: 'installationDate', label: 'Installation Date' },
     ]);
 
-    const handlePageChange = (page: number, limit: number) => {
+    const handlePageChange = (_page: number, _limit: number) => {
         // This function is not used in the new useEffect hook,
         // but keeping it as it was in the original file.
         // If pagination is handled by the backend, this function might be removed.
