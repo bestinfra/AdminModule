@@ -4,11 +4,12 @@ export const getAllUsers = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
         
         // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
         
-        const result = await UserDB.getAllUsers(page, limit, userLocationId);
+        const result = await UserDB.getAllUsers(page, limit, userLocationId, search);
         
         // Format the data for the frontend table
         const formatted = result.data.map((u, idx) => ({
@@ -26,7 +27,14 @@ export const getAllUsers = async (req, res) => {
         res.json({
             success: true,
             data: formatted,
-            pagination: result.pagination,
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(result.total / limit),
+                totalCount: result.total,
+                limit: limit,
+                hasNextPage: page < Math.ceil(result.total / limit),
+                hasPrevPage: page > 1
+            },
             message: 'Users retrieved successfully',
             userLocation: userLocationId,
             filteredByLocation: !!userLocationId
@@ -65,27 +73,86 @@ export const getUserStats = async (req, res) => {
 };
 
 export const addUser = async (req, res) => {
+    console.log('🚀 === ADD USER API CALL STARTED ===');
+    console.log('📋 Request Headers:', req.headers);
+    console.log('📋 Request Body:', req.body);
+    console.log('📋 Validated Data:', req.validatedData);
+    console.log('👤 User from cookies:', req.user);
+    
+    // Additional debugging for roleId
+    console.log('🎭 === ROLE ID DEBUG ===');
+    console.log('📋 roleId from request body:', {
+        value: req.body.roleId,
+        type: typeof req.body.roleId,
+        truthy: !!req.body.roleId,
+        stringified: JSON.stringify(req.body.roleId)
+    });
+    console.log('📋 roleId from validated data:', {
+        value: req.validatedData.roleId,
+        type: typeof req.validatedData.roleId,
+        truthy: !!req.validatedData.roleId,
+        stringified: JSON.stringify(req.validatedData.roleId)
+    });
+    
+    // Check if roleId is being sent at all
+    console.log('🔍 === COMPLETE REQUEST BODY ANALYSIS ===');
+    console.log('📋 All request body keys:', Object.keys(req.body));
+    console.log('📋 All request body values:', Object.values(req.body));
+    console.log('📋 Request body types:', Object.entries(req.body).map(([key, value]) => ({
+        key,
+        value,
+        type: typeof value,
+        truthy: !!value
+    })));
+    
+    // Check if the role field is being sent instead of roleId
+    console.log('🎭 === ROLE FIELD CHECK ===');
+    console.log('📋 role field from request body:', {
+        value: req.body.role,
+        type: typeof req.body.role,
+        truthy: !!req.body.role
+    });
+    console.log('📋 role field from validated data:', {
+        value: req.validatedData.role,
+        type: typeof req.validatedData.role,
+        truthy: !!req.validatedData.role
+    });
+    
     try {
         // Use validated data from middleware
         const userData = req.validatedData;
+        console.log('✅ Validation passed, proceeding with user creation');
+        console.log('📊 User data to be created:', { ...userData, password: '[HIDDEN]' });
 
+        console.log('🏗️ Calling UserDB.addUser...');
         const newUser = await UserDB.addUser(userData);
+        console.log('✅ User created successfully in database');
+        console.log('📊 New user data:', { ...newUser, password: '[HIDDEN]' });
         
+        console.log('📤 Sending success response...');
         res.status(201).json({
             success: true,
             data: newUser,
             message: 'User created successfully'
         });
+        console.log('🎉 === ADD USER API CALL COMPLETED SUCCESSFULLY ===');
     } catch (error) {
-        console.error(' addUser: Error creating user:', error);
+        console.error('💥 === ADD USER API CALL FAILED ===');
+        console.error('❌ Error details:', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name
+        });
         
         if (error.message.includes('already exists')) {
+            console.log('🔄 Sending 409 conflict response');
             return res.status(409).json({
                 success: false,
                 message: error.message
             });
         }
 
+        console.log('🔄 Sending 500 error response');
         res.status(500).json({
             success: false,
             message: 'Failed to create user',
@@ -183,6 +250,46 @@ export const assignRolesToUser = async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Failed to assign role',
+            error: error.message
+        });
+    }
+};
+
+// Get all roles for dropdown
+export const getAllRoles = async (req, res) => {
+    try {
+        const roles = await UserDB.getAllRoles();
+        
+        res.json({
+            success: true,
+            data: roles,
+            message: 'Roles retrieved successfully'
+        });
+    } catch (error) {
+        console.error('getAllRoles: Error fetching roles:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch roles',
+            error: error.message
+        });
+    }
+};
+
+// Get all locations for dropdown
+export const getAllLocations = async (req, res) => {
+    try {
+        const locations = await UserDB.getAllLocations();
+        
+        res.json({
+            success: true,
+            data: locations,
+            message: 'Locations retrieved successfully'
+        });
+    } catch (error) {
+        console.error('getAllLocations: Error fetching locations:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch locations',
             error: error.message
         });
     }

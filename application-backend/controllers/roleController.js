@@ -2,12 +2,16 @@ import RoleDB from '../models/RoleDB.js';
 
 export const getAllRoles = async (req, res) => {
     try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
+        
         // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
         
-        const roles = await RoleDB.getAllRoles(userLocationId);
+        const result = await RoleDB.getAllRoles(userLocationId, page, limit, search);
         // Map to clean structure
-        const mappedRoles = roles.map(role => ({
+        const mappedRoles = result.data.map(role => ({
             id: role.id,
             name: role.name,
             users: (role.users || []).map(u => ({
@@ -29,6 +33,14 @@ export const getAllRoles = async (req, res) => {
         res.json({
             success: true,
             data: mappedRoles,
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(result.total / limit),
+                totalCount: result.total,
+                limit: limit,
+                hasNextPage: page < Math.ceil(result.total / limit),
+                hasPrevPage: page > 1
+            },
             message: 'Roles retrieved successfully',
             userLocation: userLocationId,
             filteredByLocation: !!userLocationId

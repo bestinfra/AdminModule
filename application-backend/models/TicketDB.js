@@ -373,6 +373,56 @@ class TicketDB {
         }
     }
 
+    static async getDtrDetails(dtrNumber) {
+        try {
+            const dtr = await prisma.dtrs.findUnique({
+                where: { dtrNumber },
+                include: {
+                    locations: {
+                        select: {
+                            name: true,
+                            address: true
+                        }
+                    },
+                    meters: {
+                        select: {
+                            meterNumber: true,
+                            serialNumber: true,
+                            manufacturer: true,
+                            model: true,
+                            type: true,
+                            status: true
+                        }
+                    }
+                }
+            });
+
+            if (!dtr) {
+                return null;
+            }
+
+            // Get the first meter as feeder (since feeder is the meter assigned to DTR)
+            const feeder = dtr.meters && dtr.meters.length > 0 ? dtr.meters[0] : null;
+
+            return {
+                dtrId: dtr.id,
+                dtrNumber: dtr.dtrNumber,
+                location: dtr.locations?.name || dtr.locations?.address || null,
+                feeder: feeder ? {
+                    meterNumber: feeder.meterNumber,
+                    serialNumber: feeder.serialNumber,
+                    manufacturer: feeder.manufacturer,
+                    model: feeder.model,
+                    type: feeder.type,
+                    status: feeder.status
+                } : null
+            };
+        } catch (error) {
+            console.error('TicketDB.getDtrDetails: Database error:', error);
+            throw error;
+        }
+    }
+
     static async updateTicketStatus(ticketId, status) {
         try {
             return await prisma.tickets.update({
@@ -405,86 +455,141 @@ class TicketDB {
 
     static async generateTicketNumber() {
         try {
-            console.log('🔄 Generating ticket number...');
             const ticketCount = await prisma.tickets.count();
-            console.log('Current ticket count in database:', ticketCount);
-            
             const generatedNumber = generateTicketNumber(ticketCount);
-            console.log('Generated ticket number:', generatedNumber);
-            
             return generatedNumber;
         } catch (error) {
-            console.error('❌ TicketDB.generateTicketNumber: Database error:', error);
+            console.error('TicketDB.generateTicketNumber: Database error:', error);
             throw error;
         }
     }
 
     static async createTicket(ticketData) {
         try {
-            console.log('=== TicketDB.createTicket START ===');
-            console.log('Input ticket data:', ticketData);
-            
             // Generate unique ticket number
-            console.log('🔄 Generating ticket number...');
             const ticketNumber = await this.generateTicketNumber();
-            console.log('✅ Generated ticket number:', ticketNumber);
             
-            // Get current user ID from the session (this should be passed from controller)
-            const raisedById = ticketData.raisedById || 1; // Default to user ID 1 if not provided
-            console.log('Using raisedById:', raisedById);
+            // Get current user ID from the session
+            const raisedById = ticketData.raisedById || 1;
             
+            // Prepare the data for database insertion
             const ticketCreateData = {
-                ...ticketData,
                 ticketNumber,
                 raisedById,
+                type: ticketData.type,
+                category: ticketData.category,
+                priority: ticketData.priority,
                 status: ticketData.status || 'OPEN',
+                subject: ticketData.subject,
+                description: ticketData.description,
                 createdAt: new Date(),
                 updatedAt: new Date()
             };
-            console.log('Final data for Prisma create:', ticketCreateData);
             
-            console.log('🔄 Creating ticket in database...');
-            const ticket = await prisma.tickets.create({
-                data: ticketCreateData,
-                include: {
-                    dtrs: {
-                        include: {
-                            locations: true
-                        }
-                    },
-                    users_tickets_raisedByIdTousers: {
-                        select: {
-                            username: true,
-                            firstName: true,
-                            lastName: true,
-                            email: true
-                        }
-                    },
-                    users_tickets_assignedToIdTousers: {
-                        select: {
-                            username: true,
-                            firstName: true,
-                            lastName: true,
-                            email: true
+            // Handle DTR ID - convert dtrNumber to dtrId if needed
+            if (ticketData.dtrId) {
+                // If dtrId is a string (like "DTR-002"), look up the actual ID
+                if (typeof ticketData.dtrId === 'string' && ticketData.dtrId.startsWith('DTR-')) {
+                    const dtr = await prisma.dtrs.findUnique({
+                        where: { dtrNumber: ticketData.dtrId },
+                        select: { id: true }
+                    });
+                    
+                    if (dtr) {
+                        ticketCreateData.dtrId = dtr.id;
+                    }
+                } else if (typeof ticketData.dtrId === 'number' || (typeof ticketData.dtrId === 'string' && !isNaN(ticketData.dtrId))) {
+                    // If it's already a number or can be converted to number
+                    const numericDtrId = parseInt(ticketData.dtrId);
+                    ticketCreateData.dtrId = numericDtrId;
+                }
+            }
+            
+            // Add other optional fields if they exist
+            if (ticketData.assignedToId) {
+                ticketCreateData.assignedToId = ticketData.assignedToId;
+            }
+            
+            // Try to create the ticket
+            let ticket;
+            try {
+                ticket = await prisma.tickets.create({
+                    data: ticketCreateData,
+                    include: {
+                        dtrs: {
+                            include: {
+                                locations: true
+                            }
+                        },
+                        users_tickets_raisedByIdTousers: {
+                            select: {
+                                username: true,
+                                firstName: true,
+                                lastName: true,
+                                email: true
+                            }
+                        },
+                        users_tickets_assignedToIdTousers: {
+                            select: {
+                                username: true,
+                                firstName: true,
+                                lastName: true,
+                                email: true
+                            }
                         }
                     }
+                });
+            } catch (createError) {
+                // If it's a unique constraint error on ID, try to fix the sequence
+                if (createError.message.includes('Unique constraint failed on the fields: (`id`)')) {
+                    // Get the current highest ID
+                    const highestTicket = await prisma.tickets.findFirst({
+                        orderBy: { id: 'desc' },
+                        select: { id: true }
+                    });
+                    
+                    if (highestTicket) {
+                        // Try to create with explicit ID
+                        const nextId = highestTicket.id + 1;
+                        ticketCreateData.id = nextId;
+                        
+                        ticket = await prisma.tickets.create({
+                            data: ticketCreateData,
+                            include: {
+                                dtrs: {
+                                    include: {
+                                        locations: true
+                                    }
+                                },
+                                users_tickets_raisedByIdTousers: {
+                                    select: {
+                                        username: true,
+                                        firstName: true,
+                                        lastName: true,
+                                        email: true
+                                    }
+                                },
+                                users_tickets_assignedToIdTousers: {
+                                    select: {
+                                        username: true,
+                                        firstName: true,
+                                        lastName: true,
+                                        email: true
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        throw createError;
+                    }
+                } else {
+                    throw createError;
                 }
-            });
-
-            console.log('✅ Ticket created successfully in database');
-            console.log('Created ticket ID:', ticket.id);
-            console.log('Ticket number:', ticket.ticketNumber);
-            console.log('=== TicketDB.createTicket END ===');
+            }
             
             return ticket;
         } catch (error) {
-            console.error('❌ TicketDB.createTicket: Database error:', error);
-            console.error('Error details:', {
-                message: error.message,
-                code: error.code,
-                meta: error.meta,
-                stack: error.stack
-            });
+            console.error('TicketDB.createTicket: Database error:', error);
             throw error;
         }
     }

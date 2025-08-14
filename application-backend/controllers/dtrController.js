@@ -13,14 +13,15 @@ export const getDTRTable = async (req, res) => {
         
         const result = await DTRDB.getDTRTable({
             page: page ? parseInt(page) : 1,
-            pageSize: pageSize ? parseInt(pageSize) : 20,
+            pageSize: pageSize ? parseInt(pageSize) : 10,
             search: search || '',
             status: status || undefined,
             locationId: effectiveLocationId
         });
 
         // Map the data to match frontend table columns exactly
-        const mappedData = result.data.map(dtr => ({
+        const mappedData = result.data.map((dtr, idx) => ({
+            sNo: (result.page - 1) * result.pageSize + idx + 1,
             dtrId: dtr.dtrNumber || 'NA',
             dtrName: dtr.serialNumber || 'NA',
             feedersCount: dtr.feedersCount || 0,
@@ -33,11 +34,17 @@ export const getDTRTable = async (req, res) => {
         res.json({
             success: true,
             data: mappedData,
-            total: result.total,
-            page: result.page,
-            pageSize: result.pageSize,
+            pagination: {
+                currentPage: result.page,
+                totalPages: Math.ceil(result.total / result.pageSize),
+                totalCount: result.total,
+                limit: result.pageSize,
+                hasNextPage: result.page < Math.ceil(result.total / result.pageSize),
+                hasPrevPage: result.page > 1
+            },
             message: 'DTR table fetched successfully',
-            userLocation: userLocationId
+            userLocation: userLocationId,
+            filteredByLocation: !!userLocationId
         });
     } catch (error) {
         console.error('Error fetching DTR table:', error);

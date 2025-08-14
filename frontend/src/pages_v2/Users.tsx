@@ -83,80 +83,91 @@ export default function Users() {
         fetchUsers(page, limit);
     };
 
-    const fetchUsers = (page = 1, limit = 8) => {
+    // Handle table search
+    const handleSearch = (searchTerm: string) => {
+        // Reset to first page when searching
+        fetchUsers(1, serverPagination.limit, searchTerm);
+    };
+
+    const fetchUsers = async (page = 1, limit = 8, searchTerm = '') => {
         setLoading(true);
-        const params = new URLSearchParams();
-        params.append('page', String(page));
-        params.append('limit', String(limit));
-        
-        fetch(`${BACKEND_URL}/users?${params.toString()}`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.success) {
-                    setUsers(data.data);
-                    setServerPagination({
-                        currentPage: page,
-                        totalPages: data.pagination?.totalPages || 1,
-                        totalCount: data.pagination?.totalCount || data.data.length,
-                        limit,
-                        hasNextPage: data.pagination?.hasNextPage || false,
-                        hasPrevPage: data.pagination?.hasPrevPage || false,
-                    });
-                } else {
-                    throw new Error(data.message || 'Failed to fetch users');
-                }
-            })
-            .catch((err) => {
-                console.error(err.message || 'Failed to fetch users');
-                // Demo users fallback
-                setUsers([
-                    {
-                        sNo: 1,
-                        name: 'John Doe',
-                        email: 'john.doe@email.com',
-                        phone: '+1-555-0101',
-                        role: 'Admin',
-                        client: 'Acme Corp',
-                        createdDate: '2024-01-01',
-                    },
-                    {
-                        sNo: 2,
-                        name: 'Jane Smith',
-                        email: 'jane.smith@email.com',
-                        phone: '+1-555-0102',
-                        role: 'User',
-                        client: 'Beta Inc',
-                        createdDate: '2024-02-15',
-                    },
-                    {
-                        sNo: 3,
-                        name: 'Alice Brown',
-                        email: 'alice.brown@email.com',
-                        phone: '+1-555-0103',
-                        role: 'Accountant',
-                        client: 'Gamma LLC',
-                        createdDate: '2024-03-10',
-                    },
-                    {
-                        sNo: 4,
-                        name: 'Mike Wilson',
-                        email: 'mike.wilson@email.com',
-                        phone: '+1-555-0104',
-                        role: 'Moderator',
-                        client: 'Delta Ltd',
-                        createdDate: '2024-04-05',
-                    },
-                ]);
+        try {
+            const params = new URLSearchParams();
+            params.append('page', String(page));
+            params.append('limit', String(limit));
+            
+            if (searchTerm && searchTerm.trim()) {
+                params.append('search', searchTerm.trim());
+            }
+            
+            const response = await fetch(`${BACKEND_URL}/users?${params.toString()}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setUsers(data.data);
                 setServerPagination({
-                    currentPage: 1,
-                    totalPages: 1,
-                    totalCount: 4,
-                    limit: 4,
-                    hasNextPage: false,
-                    hasPrevPage: false,
+                    currentPage: data.pagination?.currentPage || 1,
+                    totalPages: data.pagination?.totalPages || 1,
+                    totalCount: data.pagination?.totalCount || 0,
+                    limit: data.pagination?.limit || limit,
+                    hasNextPage: data.pagination?.hasNextPage || false,
+                    hasPrevPage: data.pagination?.hasPrevPage || false,
                 });
-            })
-            .finally(() => setLoading(false));
+            } else {
+                throw new Error(data.message || 'Failed to fetch users');
+            }
+        } catch (err) {
+            console.error(err instanceof Error ? err.message : 'Failed to fetch users');
+            // Demo users fallback
+            setUsers([
+                {
+                    sNo: 1,
+                    name: 'John Doe',
+                    email: 'john.doe@email.com',
+                    phone: '+1-555-0101',
+                    role: 'Admin',
+                    client: 'Acme Corp',
+                    createdDate: '2024-01-01',
+                },
+                {
+                    sNo: 2,
+                    name: 'Jane Smith',
+                    email: 'jane.smith@email.com',
+                    phone: '+1-555-0102',
+                    role: 'User',
+                    client: 'Beta Inc',
+                    createdDate: '2024-02-15',
+                },
+                {
+                    sNo: 3,
+                    name: 'Alice Brown',
+                    email: 'alice.brown@email.com',
+                    phone: '+1-555-0103',
+                    role: 'Accountant',
+                    client: 'Gamma LLC',
+                    createdDate: '2024-03-10',
+                },
+                {
+                    sNo: 4,
+                    name: 'Mike Wilson',
+                    email: 'mike.wilson@email.com',
+                    phone: '+1-555-0104',
+                    role: 'Moderator',
+                    client: 'Delta Ltd',
+                    createdDate: '2024-04-05',
+                },
+            ]);
+            setServerPagination({
+                currentPage: 1,
+                totalPages: 1,
+                totalCount: 4,
+                limit: 4,
+                hasNextPage: false,
+                hasPrevPage: false,
+            });
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -448,6 +459,7 @@ export default function Users() {
                                                 showActions: true,
                                                 serverPagination: serverPagination,
                                                 onPageChange: handlePageChange,
+                                                onSearch: handleSearch,
                                                 onView: (row: any) => {
                                                     console.log('Users: onView triggered', row);
                                                     console.log('Users: Navigating to', `/user-detail/${row.sNo}`);
