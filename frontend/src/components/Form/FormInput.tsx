@@ -354,7 +354,6 @@ const FormInput: React.FC<FormInputProps> = ({
           "password",
           "number",
           "date",
-          "tel",
           "url",
         ] as const;
         const textInputType = allowedTextInputTypes.includes(type as any)

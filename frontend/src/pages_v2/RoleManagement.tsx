@@ -23,6 +23,14 @@ export default function RoleManagement() {
     const navigate = useNavigate();
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
+    const [serverPagination, setServerPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        limit: 10,
+        hasNextPage: false,
+        hasPrevPage: false
+    });
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
@@ -33,13 +41,29 @@ export default function RoleManagement() {
         description: ''
     });
 
-    const fetchRoles = async () => {
+    const fetchRoles = async (page = 1, limit = 10, searchTerm = '') => {
         try {
             setLoading(true);
-            const res = await fetch(`${BACKEND_URL}/roles`);
+            const params = new URLSearchParams();
+            params.append('page', String(page));
+            params.append('limit', String(limit));
+            
+            if (searchTerm && searchTerm.trim()) {
+                params.append('search', searchTerm.trim());
+            }
+            
+            const res = await fetch(`${BACKEND_URL}/roles?${params.toString()}`);
             const data = await res.json();
             if (data.success) {
                 setRoles(data.data);
+                setServerPagination({
+                    currentPage: data.pagination?.currentPage || 1,
+                    totalPages: data.pagination?.totalPages || 1,
+                    totalCount: data.pagination?.totalCount || 0,
+                    limit: data.pagination?.limit || limit,
+                    hasNextPage: data.pagination?.hasNextPage || false,
+                    hasPrevPage: data.pagination?.hasPrevPage || false,
+                });
             } else {
                 throw new Error(data.message || 'Failed to fetch roles');
             }
@@ -117,6 +141,17 @@ export default function RoleManagement() {
     useEffect(() => {
         fetchRoles();
     }, []);
+
+    // Handle table pagination
+    const handlePageChange = (page: number, limit: number) => {
+        fetchRoles(page, limit);
+    };
+
+    // Handle table search
+    const handleSearch = (searchTerm: string) => {
+        // Reset to first page when searching
+        fetchRoles(1, serverPagination.limit, searchTerm);
+    };
 
     const handleDeleteClick = (row: any) => {
         setRoleToDelete(row);
@@ -409,6 +444,9 @@ export default function RoleManagement() {
                                                 pagination: true,
                                                 showActions: true,
                                                 actions: tableActions,
+                                                onPageChange: handlePageChange,
+                                                onSearch: handleSearch,
+                                                serverPagination: serverPagination,
                                                 onEdit: (row: any) => {
                                                     console.log('Edit clicked for:', row);
                                                     navigate(`/edit-role/${row.id}`, { state: { role: row } });

@@ -13,12 +13,14 @@ export const createTicketSchema = z.object({
     priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT'], {
         errorMap: () => ({ message: 'Priority must be one of: LOW, MEDIUM, HIGH, URGENT' })
     }).optional().default('MEDIUM'),
-    dtrId: z.number().positive('DTR ID must be a positive number').optional(),
+    dtrId: z.string().nullable().optional(), // Accept string or null for DTR ID
+    feederNumber: z.string().nullable().optional(), // Accept Feeder Number
+    location: z.string().nullable().optional(), // Accept Location
     assignedToId: z.number().positive('Assigned to ID must be a positive number').optional(),
     status: z.enum(['OPEN', 'ASSIGNED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'], {
         errorMap: () => ({ message: 'Status must be one of: OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED' })
     }).optional().default('OPEN'),
-    attachments: z.array(z.string().url('Attachment must be a valid URL')).optional()
+    attachments: z.any().optional() // Accept any type for attachments
 });
 
 // Update ticket status schema
@@ -37,25 +39,16 @@ export const assignTicketSchema = z.object({
 export const validateTicketData = (schema) => {
     return (req, res, next) => {
         try {
-            console.log('=== TICKET VALIDATION START ===');
-            console.log('Request body:', req.body);
-            console.log('Validation schema:', schema.description || 'No description');
-            
             const validatedData = schema.parse(req.body);
-            console.log('✅ Validation successful:', validatedData);
-            
             req.validatedData = validatedData;
-            console.log('=== TICKET VALIDATION END ===');
             next();
         } catch (error) {
-            console.log('❌ TICKET VALIDATION FAILED ===');
             if (error instanceof z.ZodError) {
                 const errors = error.errors.map(err => ({
                     field: err.path.join('.'),
                     message: err.message
                 }));
                 
-                console.log('Validation errors:', errors);
                 return res.status(400).json({
                     success: false,
                     message: 'Validation failed',
@@ -63,7 +56,6 @@ export const validateTicketData = (schema) => {
                 });
             }
             
-            console.log('Non-validation error:', error.message);
             return res.status(500).json({
                 success: false,
                 message: 'Validation error',

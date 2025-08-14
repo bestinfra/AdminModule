@@ -36,6 +36,7 @@ export const getTicketsTable = async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 10;
+        const search = req.query.search || '';
         const filters = {
             status: req.query.status,
             type: req.query.type,
@@ -48,7 +49,7 @@ export const getTicketsTable = async (req, res) => {
         // Get user's location from req.user (populated by middleware)
         const userLocationId = req.user?.locationId;
 
-        const ticketsData = await TicketDB.getTicketsTable(page, limit, filters, userLocationId);
+        const ticketsData = await TicketDB.getTicketsTable(page, limit, filters, userLocationId, search);
         // Always return consumer name (from t.consumer.name or t.consumer.consumerNumber)
         const formatted = ticketsData.data.map((t, idx) => ({
             sNo: (page - 1) * limit + idx + 1,
@@ -66,7 +67,14 @@ export const getTicketsTable = async (req, res) => {
         res.json({
             success: true,
             data: formatted,
-            pagination: ticketsData.pagination,
+            pagination: {
+                currentPage: page,
+                totalPages: Math.ceil(ticketsData.total / limit),
+                totalCount: ticketsData.total,
+                limit: limit,
+                hasNextPage: page < Math.ceil(ticketsData.total / limit),
+                hasPrevPage: page > 1
+            },
             userLocation: userLocationId,
             filteredByLocation: !!userLocationId
         });
@@ -231,22 +239,13 @@ export const assignTicket = async (req, res) => {
 
 export const createTicket = async (req, res) => {
     try {
-        console.log('=== TICKET CREATION REQUEST ===');
-        console.log('Timestamp:', new Date().toISOString());
-        console.log('Request Headers:', req.headers);
-        console.log('Request Body:', req.body);
-        console.log('User from cookies:', req.user);
-        
         // Use validated data from middleware
         const ticketData = req.validatedData;
-        console.log('Validated ticket data:', ticketData);
         
         // Get user's ID from req.user (populated by middleware)
-        const raisedById = req.user?.id;
-        console.log('User ID from session:', raisedById);
+        const raisedById = req.user?.userId || req.user?.id;
         
         if (!raisedById) {
-            console.log('❌ Authentication failed: No user ID found');
             return res.status(401).json({
                 success: false,
                 message: 'User not authenticated'
@@ -258,25 +257,55 @@ export const createTicket = async (req, res) => {
             ...ticketData,
             raisedById
         };
-        console.log('Final ticket data with user:', ticketDataWithUser);
 
-        console.log('🔄 Calling TicketDB.createTicket...');
         const newTicket = await TicketDB.createTicket(ticketDataWithUser);
-        console.log('✅ Ticket created successfully in database:', newTicket);
         
         res.status(201).json({
             success: true,
             message: 'Ticket created successfully',
             data: newTicket
         });
-        console.log('✅ Response sent to client');
         
     } catch (error) {
-        console.error('❌ createTicket: Error creating ticket:', error);
-        console.error('Error stack:', error.stack);
+        console.error('createTicket: Error creating ticket:', error);
         res.status(500).json({
             success: false,
             message: 'Failed to create ticket',
+            error: error.message
+        });
+    }
+};
+
+export const getDtrDetails = async (req, res) => {
+    try {
+        const { dtrNumber } = req.params;
+        
+        if (!dtrNumber) {
+            return res.status(400).json({
+                success: false,
+                message: 'DTR Number is required'
+            });
+        }
+
+        const dtrDetails = await TicketDB.getDtrDetails(dtrNumber);
+        
+        if (!dtrDetails) {
+            return res.status(404).json({
+                success: false,
+                message: 'DTR not found'
+            });
+        }
+
+        res.json({
+            success: true,
+            data: dtrDetails
+        });
+        
+    } catch (error) {
+        console.error('getDtrDetails: Error fetching DTR details:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch DTR details',
             error: error.message
         });
     }

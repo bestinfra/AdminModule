@@ -230,88 +230,96 @@ export default function AssetManagment() {
         );
     }
 
-    // Define sections with Error component always present
-    const sections = [
-        {
-            layout: {
-                type: 'column' as const,
-                gap: 'gap-4',
-                rows: [
-                    {
-                        layout: 'column' as const,
-                        columns: [
-                            // Only show Error component when there's an actual error
-                            {
-                                name: 'Error',
-                                props: {
-                                    message: error, 
-                                    onRetry: () => window.location.reload(),
-                                    showRetry: true,
-                                },
-                                span: { col: 1, row: 1 },
-                            },
+    // Show error state
+    if (error) {
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                    <div className="text-red-600 text-xl mb-4"></div>
+                    <p className="text-red-600 font-semibold">Error loading assets</p>
+                    <p className="text-gray-600 mt-2">{error}</p>
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                    >
+                        Retry
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
-                            {
-                                name: 'PageHeader',
-                                props: {
-                                    title: 'Asset Management',
-                                    onBackClick: () => window.history.back(),
-                                    backButtonText: 'Back to Dashboard',
-                                    buttonsLabel: 'Add Asset',
-                                    variant: 'primary',
-                                    onClick: () => {
-                                        console.log('Add Asset');
-                                        setIsAddAssetModalOpen(true);
-                                    },  
-                                    span: { col: 1, row: 1 },
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        {
-            layout: {
-                type: 'grid' as const,
-                columns: 4,
-                className: 'h-full',
-                rows: [
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Page  
+                sections={[
                     {
-                        layout: 'row' as const,
-                        className:
-                            'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
-                        columns: [
-                            {
-                                name: 'TopLevelHierarchy',
-                                props: {
-                                    nodes: mapHierarchyRecursively(hierarchicalData),
-                                    title: 'Asset Hierarchy',
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: 'Asset Management',
+                                                onBackClick: () => window.history.back(),
+                                                backButtonText: 'Back to Dashboard',
+                                                buttonsLabel: 'Add Asset',
+                                                variant: 'primary',
+                                                onClick: () => {
+                                                    console.log('Add Asset');
+                                                    setIsAddAssetModalOpen(true);
+                                                },  
+                                            },
+                                        },
+                                    ],
                                 },
-                            },
-                        ],
+                            ],
+                        },
                     },
-                   
                     {
-                        layout: 'row' as const,
-                        span: { col: 3, row: 1 },
-                        className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
-                        columns: [
-                            {
-                                name: 'NodeChart',
-                                props: {
-                                    data: {
-                                        Location: mapHierarchyForNodeChart(hierarchicalData)
-                                    },
-                                    width: '100%',
-                                    height: '100%',
-                                    enableZoom: true,
-                                    minZoom: 0.3,
-                                    maxZoom: 2,
-                                    initialZoom: 0.8,
-                                    layout: 'horizontal', // Change to 'vertical' for vertical layout
-                                    EdgeStyleLayout: 'polyline', // Try different styles: 'straight', 'elbow', 'curved', 'spline', 'arc', 'step', 'bezier', 'polyline'
-
+                        layout: {
+                            type: 'grid',
+                            columns: 4,
+                            className: 'h-full',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    className:
+                                        'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                                    columns: [
+                                        {
+                                            name: 'TopLevelHierarchy',
+                                            props: {
+                                                nodes: mapHierarchyRecursively(hierarchicalData),
+                                                title: 'Asset Hierarchy',
+                                            },
+                                        },
+                                    ],
+                                },
+                       
+                                {
+                                    layout: 'row',
+                                    span: { col: 3, row: 1 },
+                                    className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                                    columns: [
+                                        {
+                                            name: 'NodeChart',
+                                            props: {
+                                                data: {
+                                                    Location: mapHierarchyForNodeChart(hierarchicalData)
+                                                },
+                                                width: '100%',
+                                                height: '100%',
+                                                enableZoom: true,
+                                                minZoom: 0.3,
+                                                maxZoom: 2,
+                                                initialZoom: 0.8,
+                                                layout: 'horizontal',
+                                                EdgeStyleLayout: 'polyline',
                                             },
                                         },
                                     ],
@@ -333,8 +341,8 @@ export default function AssetManagment() {
                                                 isOpen: isAddAssetModalOpen,
                                                 onClose: () => {
                                                     setIsAddAssetModalOpen(false);
-                                                    setActiveTab(0); // Reset to first tab when closing
-                                                    setIsSubNodeChecked(false); // Reset checkbox state
+                                                    setActiveTab(0);
+                                                    setIsSubNodeChecked(false);
                                                 },
                                                 title: 'Add New Asset',
                                                 size: 'xl',
@@ -365,7 +373,6 @@ export default function AssetManagment() {
                                                                 break;
                                                                 
                                                             case 1: // Upload List
-                                                                // Handle file upload logic here
                                                                 console.log('File upload not implemented yet');
                                                                 setIsAddAssetModalOpen(false);
                                                                 return;
@@ -391,7 +398,6 @@ export default function AssetManagment() {
                                                         
                                                         if (result.success) {
                                                             console.log('Asset added successfully:', result);
-                                                            // Refresh the asset list
                                                             window.location.reload();
                                                         } else {
                                                             console.error('Failed to add asset:', result.message);

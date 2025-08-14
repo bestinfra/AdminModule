@@ -81,7 +81,7 @@ const App: React.FC = () => {
                                 path="/data-logger/:dataLoggerId"
                                 element={<DataLoggerDashboard />}
                             />
-                            <Route path='/error' element={<Error error={true}  title='Server' message='this is an dummy error' />} />
+                            <Route path='/error' element={<Error title='Server' message='this is an dummy error' />} />
                             <Route path='/consumer-detail-view/:consumerId' element={<ConsumerDetailView />} />
                             <Route path='/consumer-detail-view' element={<ConsumerDetailView />} />
                             <Route path="/meters" element={<Meters />} />
