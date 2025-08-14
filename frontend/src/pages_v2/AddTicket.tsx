@@ -326,7 +326,7 @@ export default function AddTicket() {
                                                     className: 'w-full',
                                                 },
                                                 formBackground:
-                                                    'bg-white dark:bg-gray-800 border border-primary-border dark:border-gray-700 p-4 rounded-3xl',
+                                                    'bg-white dark:bg-gray-800 border border-primary-border dark:border-gray-700 p-4 rounded-2xl ',
                                                 className: 'w-full',
                                                 disabled: loading,
                                                 onChange: handleFormChange,

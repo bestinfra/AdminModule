@@ -53,6 +53,7 @@ export default function AddUser() {
         {
             name: 'fullName',
             type: 'text',
+            label: 'Full Name',
             placeholder: 'Enter full name',
             required: true,
             row: 1,
@@ -61,6 +62,7 @@ export default function AddUser() {
         {
             name: 'email',
             type: 'email',
+            label: 'Email Address',
             placeholder: 'Enter email address',
             required: true,
             row: 1,
@@ -68,9 +70,9 @@ export default function AddUser() {
         },
         {
             name: 'phone',
-            type: 'text',
-            placeholder: 'Enter 10 digit phone number',
-            description: 'Enter only numbers (e.g., 9876543210)',
+            type: 'tel',
+            label: 'Phone Number',
+            placeholder: 'Enter phone number',
             required: true,
             row: 2,
             col: 1,
@@ -78,6 +80,7 @@ export default function AddUser() {
         {
             name: 'password',
             type: 'password',
+            label: 'Password',
             placeholder: 'Enter password',
             required: true,
             row: 2,
@@ -90,14 +93,13 @@ export default function AddUser() {
         {
             name: 'roleId',
             type: 'dropdown',
+            label: 'User Role',
+            searchable:false,
             placeholder: 'Select User Role',
-            options: [
-                { value: '', label: 'Select Role' },
-                ...roles.map((role) => ({
-                    value: role.id.toString(),
-                    label: role.name,
-                })),
-            ],
+            options: roles.map((role) => ({
+                value: role.id.toString(),
+                label: role.name,
+            })),
             required: true,
             row: 3,
             col: 1,

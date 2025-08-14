@@ -12,6 +12,7 @@ export default function AddDataLogger() {
         {
             name: 'dcuModemSlNo',
             type: 'text',
+            label: 'DCU/Modem Serial Number',
             placeholder: 'DCU/Modem Serial Number',
             required: true,
             row: 1,
@@ -20,6 +21,7 @@ export default function AddDataLogger() {
         {
             name: 'hardwareVersion',
             type: 'text',
+            label: 'Hardware Version',
             placeholder: 'Hardware Version',
             required: true,
             row: 1,
@@ -28,6 +30,7 @@ export default function AddDataLogger() {
         {
             name: 'firmwareVersion',
             type: 'text',
+            label: 'Firmware Version',
             placeholder: 'Firmware Version',
             required: true,
             row: 1,
@@ -36,6 +39,7 @@ export default function AddDataLogger() {
         {
             name: 'mobile',
             type: 'tel',
+            label: 'Mobile Number',
             placeholder: 'Mobile Number',
             required: true,
             row: 2,
@@ -44,6 +48,7 @@ export default function AddDataLogger() {
         {
             name: 'installationDate',
             type: 'date',
+            label: 'Installation Date',
             placeholder: 'Installation Date',
             required: true,
             row: 2,
@@ -52,6 +57,7 @@ export default function AddDataLogger() {
         {
             name: 'status',
             type: 'dropdown',
+            label: 'Status',
             placeholder: 'Select Status',
             options: [
                 { value: '', label: 'Select Status' },
@@ -118,6 +124,7 @@ export default function AddDataLogger() {
                             type: 'grid' as const,
                             columns: 1,
                             gap: 'gap-4',
+                            className:'border  border-primary-border  p-4 rounded-2xl',
                             rows: [
                                 {
                                     layout: 'grid' as const,

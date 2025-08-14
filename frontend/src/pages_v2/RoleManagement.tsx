@@ -204,7 +204,7 @@ export default function RoleManagement() {
         setShowEditModal(true);
     };
 
-    const handleSaveRole = async (data: any) => {
+    const handleSaveRole = async (data: Record<string, any>) => {
         try {
             if (showEditModal && roleToEdit) {
                 // Update existing role
@@ -279,7 +279,9 @@ export default function RoleManagement() {
             value: formData.roleName,
             placeholder: 'Enter role name',
             required: true,
-            onChange: (value: string) => setFormData(prev => ({ ...prev, roleName: value }))
+            validation: {
+                required: 'Role name is required'
+            }
         },
         {
             type: 'textarea' as const,
@@ -288,7 +290,7 @@ export default function RoleManagement() {
             value: formData.description,
             placeholder: 'Enter role description',
             required: false,
-            onChange: (value: string) => setFormData(prev => ({ ...prev, description: value }))
+            span: { col: 1, row: 1 } // This makes the description field take full width
         }
     ];
 
@@ -506,11 +508,23 @@ export default function RoleManagement() {
                                                 onClose: handleCancelModal,
                                                 title: 'Add New Role',
                                                 size: 'lg',
+                                                showCloseIcon: true,
                                                 showForm: true,
                                                 formFields: addRoleFormFields,
-                                                onSave: handleSaveRole,
+                                                onSave: (formData: Record<string, any>) => {
+                                                    console.log('Form data received:', formData);
+                                                    handleSaveRole(formData);
+                                                },
                                                 saveButtonLabel: 'Create Role',
                                                 cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
+                                                confirmButtonVariant: 'primary',
+                                                formId: 'add-role-form',
+                                                gridLayout: {
+                                                    gridRows: 2,
+                                                    gridColumns: 1,
+                                                    gap: 'gap-4'
+                                                },
                                             },
                                         },
                                     ],
@@ -536,7 +550,10 @@ export default function RoleManagement() {
                                                 size: 'lg',
                                                 showForm: true,
                                                 formFields: editRoleFormFields,
-                                                onSave: handleSaveRole,
+                                                onSave: (formData: Record<string, any>) => {
+                                                    console.log('Edit form data received:', formData);
+                                                    handleSaveRole(formData);
+                                                },
                                                 saveButtonLabel: 'Update Role',
                                                 cancelButtonLabel: 'Cancel',
                                             },

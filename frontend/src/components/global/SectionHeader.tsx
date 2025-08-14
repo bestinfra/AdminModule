@@ -197,7 +197,7 @@ const SectionHeader: React.FC<SectionHeaderProps> = ({
 }) => {
   const containerClasses =
     layout === "horizontal"
-      ? `flex items-center justify-between ${gap} ${className}`
+      ? `flex  justify-between ${gap} ${className}`
       : `flex flex-col items-start ${gap} ${className}`;
 
   // Helper to render PageC-style rightComponent

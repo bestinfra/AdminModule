@@ -62,7 +62,7 @@ export default function AddRole() {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'row' as const,
+                                    layout: 'column' as const,
                                     columns: [
                                         {
                                             name: 'PageHeader',
@@ -102,7 +102,7 @@ export default function AddRole() {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'grid' as const,
+                                    layout: 'column' as const,
                                     gridColumns: 1,
                                     gap: 'gap-3',
                                     columns: [
