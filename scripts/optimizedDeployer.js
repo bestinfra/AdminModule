@@ -51,7 +51,7 @@ class OptimizedDeployer {
     // Database configuration
     this.dbConfig = {
       host: 'localhost',
-      port: 5432,
+      port: 4233,
       user: 'postgres',
       password: 'root123',
       templateDb: 'subapp_db'
