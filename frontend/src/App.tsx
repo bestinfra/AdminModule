@@ -7,7 +7,7 @@ import Tickets from './pages_v2/Tickets';
 import ProtectedRoute from './components/auth/ProtectedRoute';
 import MainLayout from './components/layout/MainLayout';
 import PageDemo from './pages/PageDemo';
-import Login from './pages/Login';
+import Login from './pages_v2/Login';
 import DataLogger from './pages_v2/DataLogger';
 import DataLoggerDashboard from './pages_v2/DataLoggerDashboard';
 import Meters from './pages_v2/Meters';
