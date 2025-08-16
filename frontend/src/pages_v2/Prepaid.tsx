@@ -2,7 +2,6 @@ import React, { useState, Suspense, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 
-// ⬇ Move your static data into constants so we can reuse them as fallbacks
 const dummyCardData = [
     {
         title: 'Cummulative Current Balance',
@@ -153,7 +152,7 @@ const tableColumns = [
 export default function Prepaid() {
     const navigate = useNavigate();
     const [selectedTimeRange, setSelectedTimeRange] = useState('Daily');
-    const [errorMessgae, setErrors] = useState<any[]>([false]);
+    const [errorMessgae, setErrors] = useState<any[]>([]);
     
     // ⬇ State for API data
     const [cardData, setCardData] = useState(dummyCardData);
@@ -170,8 +169,41 @@ export default function Prepaid() {
                 setCardData(json?.data || dummyCardData);
             } catch (error) {
                 console.error(error);
-                setCardData(dummyCardData); // fallback
-                setErrors(["Failed to fetch cards"]);
+                // Fallback to dummy data with "N/A" values
+                setCardData([
+                    {
+                        title: 'Cummulative Current Balance',
+                        value: 'N/A',
+                        icon: '/icons/wallet.svg',
+                        subtitle1: 'N/A',
+                    },
+                    {
+                        title: 'Low Balance Consumers',
+                        value: 'N/A',
+                        icon: '/icons/low-balance.svg',
+                        subtitle1: 'N/A',
+                    },
+                    {
+                        title: 'Adhoc Credit Issued',
+                        value: 'N/A',
+                        icon: '/icons/credit-issued.svg',
+                        subtitle1: 'N/A',
+                    },
+                    {
+                        title: 'Adhoc Credit Recovered',
+                        value: 'N/A',
+                        icon: '/icons/credit-recovered.svg',
+                        subtitle1: 'N/A',
+                    },
+                ]);
+                setErrors(prev => {
+                    if (!prev.includes("Failed to fetch cards")) {
+                        const updated = [...prev, "Failed to fetch cards"];
+                        console.log('prev:', prev);
+                        return updated;
+                    }
+                    return prev;
+                });
             }
         };
         fetchCards();
@@ -187,8 +219,78 @@ export default function Prepaid() {
                 setRechargeData(json?.data || dummyRechargeData);
             } catch (error) {
                 console.error(error);
-                setRechargeData(dummyRechargeData);
-                setErrors([error]);
+                // Fallback to dummy data with "N/A" values
+                setRechargeData([
+                    {
+                        title: 'Total Recharge Collection',
+                        value: 'N/A',
+                        icon: '/icons/total-recharge-collection.svg',
+                        subtitle1: 'N/A',
+                        subtitle2: 'N/A',
+                        showTrend: false,
+                        comparisonValue: 0,
+                        previousValue: 'N/A',
+                    },
+                    {
+                        title: 'Total Units Consumed',
+                        value: 'N/A',
+                        icon: '/icons/units-consumed.svg',
+                        subtitle1: 'N/A',
+                        subtitle2: 'N/A',
+                        showTrend: false,
+                        comparisonValue: 0,
+                        previousValue: 'N/A',
+                    },
+                    {
+                        title: 'Total Amount Deducted',
+                        value: 'N/A',
+                        icon: '/icons/amount-deducted.svg',
+                        subtitle1: 'N/A',
+                        subtitle2: 'N/A',
+                        showTrend: false,
+                        comparisonValue: 0,
+                        previousValue: 'N/A',
+                    },
+                    {
+                        title: 'No.of Transactions',
+                        value: 'N/A',
+                        icon: '/icons/transactions.svg',
+                        subtitle1: 'N/A',
+                        subtitle2: 'N/A',
+                        showTrend: false,
+                        comparisonValue: 0,
+                        previousValue: 'N/A',
+                    },
+                    {
+                        title: 'Alerts Triggered',
+                        value: 'N/A',
+                        icon: '/icons/alert-triggered.svg',
+                        subtitle1: 'N/A',
+                        subtitle2: 'N/A',
+                        showTrend: false,
+                        comparisonValue: 0,
+                        previousValue: 'N/A',
+                    },
+                    {
+                        title: 'Auto Triggered Disconnects',
+                        value: 'N/A',
+                        icon: '/icons/disconnect.svg',
+                        subtitle1: 'N/A',
+                        subtitle2: 'N/A',
+                        showTrend: false,
+                        comparisonValue: 0,
+                        previousValue: 'N/A',
+                    },
+                ]);
+                setErrors(prev => {
+                    // Only add error if it's not already there
+                    if (!prev.includes("Failed to fetch recharges")) {
+                        const updated = [...prev, "Failed to fetch recharges"];
+                        console.log('prev:', prev);
+                        return updated;
+                    }
+                    return prev;
+                });
             }
         };
         fetchRecharges();
@@ -204,12 +306,47 @@ export default function Prepaid() {
                 setTableData(json?.data || dummyTableData);
             } catch (error) {
                 console.error(error);
-                setTableData(dummyTableData);
-                setErrors(["Failed to fetch transactions"]);
+                // Fallback to dummy data with "N/A" values
+                setTableData([
+                    {
+                        sNo: 0,
+                        consumer: 'N/A',
+                        transactionId: 'N/A',
+                        amount: 'N/A',
+                        date: 'N/A',
+                        status: 'N/A',
+                    }
+                ]);
+                setErrors(prev => {
+                    // Only add error if it's not already there
+                    if (!prev.includes("Failed to fetch transactions")) {
+                        const updated = [...prev, "Failed to fetch transactions"];
+                        console.log('prev:', prev);
+                        return updated;
+                    }
+                    return prev;
+                });
             }
         };
         fetchTable();
     }, []);
+
+    // Clear all error messages
+    const clearErrors = () => {
+        setErrors([]);
+    };
+
+    // Remove a specific error message
+    const removeError = (indexToRemove: number) => {
+        setErrors(prev => prev.filter((_, index) => index !== indexToRemove));
+    };
+
+    // Retry all APIs
+    const retryAllAPIs = () => {
+        clearErrors();
+        // Retry all APIs by refreshing the page
+        window.location.reload();
+    };
 
     const handleTimeRangeChange = (range: string) => {
         setSelectedTimeRange(range);
@@ -252,11 +389,11 @@ export default function Prepaid() {
                                         {
                                             name: 'Error',
                                             props: {
-                                                message: errorMessgae,
-                                                onRetry: () => {
-                                                    console.log('Retrying...');
-                                                },
+                                                visibleErrors: errorMessgae,
+                                                onRetry: retryAllAPIs,
+                                                onClose: () => removeError(0), // Remove the top error
                                                 showRetry: true,
+                                                maxVisibleErrors: 3, // Show max 3 errors at once
                                             },
                                         },
                                         {

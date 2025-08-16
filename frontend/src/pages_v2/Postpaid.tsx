@@ -135,49 +135,122 @@ export default function Postpaid() {
     const [paymentStatus, setPaymentStatus] = useState('');
     const [search, setSearch] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
-    const [_errorMessgae, setErrors] = useState<any[]>([false]);
+    const [_errorMessgae, _setErrors] = useState<any[]>([]);
+    
+    // State for tracking failed APIs
+    const [failedApis, setFailedApis] = useState<Array<{
+        id: string;
+        name: string;
+        retryFunction: () => Promise<void>;
+        errorMessage: string;
+    }>>([]);
     
     // ⬇ State for API data
     const [cardData, setCardData] = useState(dummyCardData);
     const [tableData, setTableData] = useState(dummyTableData);
     const [filteredData, setFilteredData] = useState(dummyTableData);
 
+    // API helper function to manage failed APIs
+    const runAPI = async (
+        apiId: string,
+        apiName: string,
+        apiCall: () => Promise<any>,
+        onSuccess: (data: any) => void,
+        fallbackData: any,
+        errorMessage: string
+    ) => {
+        try {
+            const result = await apiCall();
+            onSuccess(result);
+            
+            // Remove from failed APIs if it was there
+            setFailedApis(prev => prev.filter(api => api.id !== apiId));
+        } catch (error) {
+            console.error(`Error in ${apiName}:`, error);
+            
+            // Use "N/A" dummy data instead of fallbackData
+            if (apiId === 'cards') {
+                const naCardData = [
+                    { title: 'Total Bill Amount', value: 'N/A', icon: '/icons/total-recharge-collection.svg', subtitle2: 'N/A', previousValue: 'N/A' },
+                    { title: 'Outstanding Amount', value: 'N/A', icon: '/icons/wallet.svg', subtitle2: 'N/A', previousValue: 'N/A' },
+                    { title: 'Overdue Amount', value: 'N/A', icon: '/icons/credit-issued.svg', subtitle2: 'N/A', previousValue: 'N/A' },
+                    { title: 'Total Amount Paid', value: 'N/A', icon: '/icons/paid.svg', subtitle2: 'N/A', previousValue: 'N/A' },
+                    { title: 'Realization Rate', value: 'N/A', icon: '/icons/average.svg', subtitle2: 'N/A', previousValue: 'N/A' },
+                ];
+                onSuccess(naCardData);
+            } else if (apiId === 'bills') {
+                const naBillsData = [
+                    { billNo: 'N/A', consumerName: 'N/A', uid: 'N/A', meterNo: 'N/A', billDate: 'N/A', units: 'N/A', billAmount: 'N/A', dueDate: 'N/A', status: 'N/A' }
+                ];
+                onSuccess(naBillsData);
+            }
+            
+            // Add to failed APIs
+            const retryFunction = () => runAPI(apiId, apiName, apiCall, onSuccess, fallbackData, errorMessage);
+            setFailedApis(prev => {
+                // Only add if not already in the list
+                if (!prev.find(api => api.id === apiId)) {
+                    return [...prev, { id: apiId, name: apiName, retryFunction, errorMessage }];
+                }
+                return prev;
+            });
+        }
+    };
+
     // Fetch Cards Data
     useEffect(() => {
         const fetchCards = async () => {
-            try {
-                const res = await fetch("/api/postpaid/cards");
-                if (!res.ok) throw new Error("Failed to fetch cards");
-                const json = await res.json();
-                setCardData(json?.data || dummyCardData);
-            } catch (error) {
-                console.error(error);
-                setCardData(dummyCardData); // fallback
-                setErrors(["Failed to fetch cards"]);
-            }
+            const res = await fetch("/api/postpaid/cards");
+            if (!res.ok) throw new Error("Failed to fetch cards");
+            return res.json();
         };
-        fetchCards();
+        
+        runAPI(
+            'cards',
+            'Cards API',
+            fetchCards,
+            (data) => setCardData(data?.data || dummyCardData),
+            [], // Empty fallback since we handle "N/A" data in catch block
+            'Failed to fetch cards'
+        );
     }, []);
 
     // Fetch Bills Table Data
     useEffect(() => {
         const fetchBills = async () => {
-            try {
-                const res = await fetch("/api/postpaid/bills");
-                if (!res.ok) throw new Error("Failed to fetch bills");
-                const json = await res.json();
-                const billsData = json?.data || dummyTableData;
+            const res = await fetch("/api/postpaid/bills");
+            if (!res.ok) throw new Error("Failed to fetch bills");
+            return res.json();
+        };
+        
+        runAPI(
+            'bills',
+            'Bills API',
+            fetchBills,
+            (data) => {
+                const billsData = data?.data || dummyTableData;
                 setTableData(billsData);
                 setFilteredData(billsData);
-            } catch (error) {
-                console.error(error);
-                setTableData(dummyTableData);
-                setFilteredData(dummyTableData);
-                setErrors(["Failed to fetch bills"]);
-            }
-        };
-        fetchBills();
+            },
+            [], // Empty fallback since we handle "N/A" data in catch block
+            'Failed to fetch bills'
+        );
     }, []);
+
+
+
+    // Retry all failed APIs
+    const retryAllFailedAPIs = () => {
+        failedApis.forEach(api => api.retryFunction());
+    };
+
+    // Retry specific API
+    const retrySpecificAPI = (apiId: string) => {
+        const api = failedApis.find(a => a.id === apiId);
+        if (api) {
+            api.retryFunction();
+        }
+    };
 
     const handleAddBill = () => {
         console.log('Adding new bill...');
@@ -247,8 +320,20 @@ export default function Postpaid() {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'row',
+                                    layout: 'column',
                                     columns: [
+                                        // Show stacked error effect when there are failed APIs
+                                        ...(failedApis.length > 0 ? [{
+                                            name: 'Error',
+                                            props: {
+                                                visibleErrors: failedApis.map(api => api.errorMessage),
+                                                onRetry: retryAllFailedAPIs,
+                                                showRetry: true,
+                                                maxVisibleErrors: 3, // Show max 3 errors at once
+                                                failedApis: failedApis, // Pass all failed APIs for individual retry
+                                                onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                                            },
+                                        }] : []),
                                         {
                                             name: 'PageHeader',
                                             props: {

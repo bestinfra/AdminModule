@@ -1,5 +1,5 @@
 {
-  "nextPort": 4223,
+  "nextPort": 4224,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -945,6 +945,11 @@
       "port": 4222,
       "deployedAt": "2025-08-14T14:06:13.165Z",
       "path": "C:\\xampp\\htdocs\\brnm1-backend"
+    },
+    "anu": {
+      "port": 4223,
+      "deployedAt": "2025-08-14T15:32:49.310Z",
+      "path": "C:\\xampp\\htdocs\\anu-backend"
     }
   }
 }

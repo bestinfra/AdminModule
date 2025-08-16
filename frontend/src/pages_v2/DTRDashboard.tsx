@@ -175,9 +175,183 @@ const DTRDashboard: React.FC = () => {
 
     // Load data on component mount
     useEffect(() => {
+        const fetchDTRStats = async () => {
+            try {
+                const response = await fetch(`${BACKEND_URL}/dtrs/stats`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const row1 = data.data?.row1 || {};
+                    const row2 = data.data?.row2 || {};
+                    setDtrStatsData(row1);
+                    setDtrConsumptionData({
+                        daily: row2.daily || { totalKwh: 0, totalKvah: 0, totalKw: 0, totalKva: 0 },
+                        monthly: row2.monthly || { totalKwh: 0, totalKvah: 0, totalKw: 0, totalKva: 0 },
+                    });
+                } else {
+                    throw new Error(data.message || 'Failed to fetch DTR stats');
+                }
+            } catch (error) {
+                console.error('Error fetching DTR stats:', error);
+                setErrorMessages(prev => {
+                    // Only add error if it's not already there
+                    if (!prev.includes("Failed to load the Dashboard Widgets")) {
+                        return [...prev, "Failed to load the Dashboard Widgets"];
+                    }
+                    return prev;
+                });
+                // Fallback to dummy data for cards
+                setDtrStatsData({
+                    totalDtrs: "N/A",
+                    totalLtFeeders: "N/A",
+                    totalFuseBlown: "N/A",
+                    fuseBlownPercentage: "N/A",
+                    overloadedFeeders: "N/A",
+                    overloadedPercentage: "N/A",
+                    underloadedFeeders: "N/A",
+                    underloadedPercentage: "N/A",
+                    ltSideFuseBlown: "N/A",
+                    unbalancedDtrs: "N/A",
+                    unbalancedPercentage: "N/A",
+                    powerFailureFeeders: "N/A",
+                    powerFailurePercentage: "N/A",
+                    htSideFuseBlown: "N/A",
+                    activeDtrs: "N/A",
+                    inactiveDtrs: "N/A",
+                    activePercentage: "N/A",
+                    inactivePercentage: "N/A"
+                });
+                setDtrConsumptionData({
+                    daily: { totalKwh: "N/A", totalKvah: "N/A", totalKw: "N/A", totalKva: "N/A" },
+                    monthly: { totalKwh: "N/A", totalKvah: "N/A", totalKw: "N/A", totalKva: "N/A" },
+                });
+            }
+        };
         fetchDTRStats();
+    }, []);
+
+    useEffect(() => {
+        const fetchDTRTable = async () => {
+            try {
+                const params = new URLSearchParams();
+                params.append('page', '1');
+                params.append('pageSize', '10');
+                
+                const response = await fetch(`${BACKEND_URL}/dtrs?${params.toString()}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    setDtrTableData(data.data);
+                    setServerPagination({
+                        currentPage: data.page || 1,
+                        totalPages: Math.ceil(data.total / data.pageSize) || 1,
+                        totalItems: data.total || 0,
+                        itemsPerPage: data.pageSize || 10,
+                    });
+                } else {
+                    throw new Error(data.message || 'Failed to fetch DTR table');
+                }
+            } catch (error) {
+                setErrorMessages(prev => {
+                    // Only add error if it's not already there
+                    if (!prev.includes("Failed to load the DTR Table")) {
+                        return [...prev, "Failed to load the DTR Table"];
+                    }
+                    return prev;
+                });
+                // Fallback to dummy data
+                setDtrTableData([
+                    {
+                        dtrId: "N/A",
+                        dtrName: "N/A",
+                        feedersCount: "N/A",
+                        streetName: "N/A",
+                        city: "N/A",
+                        commStatus: "N/A",
+                        lastCommunication: "N/A",
+                    }
+                ]);
+            }
+        };
         fetchDTRTable();
+    }, []);
+
+    useEffect(() => {
+        const fetchDTRAlerts = async () => {
+            try {
+                const response = await fetch(`${BACKEND_URL}/dtrs/alerts`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    setAlertsData(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch DTR alerts');
+                }
+            } catch (error) {
+                setErrorMessages(prev => {
+                    // Only add error if it's not already there
+                    if (!prev.includes("Failed to load the DTR Alerts")) {
+                        return [...prev, "Failed to load the DTR Alerts"];
+                    }
+                    return prev;
+                });
+                // Fallback to dummy data
+                setAlertsData([
+                    {
+                        alert: 'N/A',
+                        date: 'N/A',
+                    }
+                ]);
+            }
+        };
         fetchDTRAlerts();
+    }, []);
+
+    useEffect(() => {
+        const fetchDTRAlertsTrends = async () => {
+            try {
+                const response = await fetch(`${BACKEND_URL}/dtrs/alerts/trends`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    const rows = data.data || [];
+                    const monthsList = rows.map((r: any) => r.month);
+                    const detected = rows.map((r: any) => r.detected_count || 0);
+                    const analyzing = rows.map((r: any) => r.analyzing_count || 0);
+                    const repairing = rows.map((r: any) => r.repairing_count || 0);
+                    const resolved = rows.map((r: any) => r.resolved_count || 0);
+                    const unresolved = rows.map((r: any) => r.unresolved_count || 0);
+
+                    setChartMonths(monthsList);
+                    setChartSeries([
+                        { name: 'Detected', data: detected },
+                        { name: 'Analyzing', data: analyzing },
+                        { name: 'Repairing', data: repairing },
+                        { name: 'Resolved', data: resolved },
+                        { name: 'Unresolved', data: unresolved },
+                    ]);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch DTR alerts trends');
+                }
+            } catch (error) {
+                setErrorMessages(prev => {
+                    // Only add error if it's not already there
+                    if (!prev.includes("Failed to load the DTR Alerts Trends")) {
+                        return [...prev, "Failed to load the DTR Alerts Trends"];
+                    }
+                    return prev;
+                });
+                // Fallback to dummy data
+                setChartMonths(['N/A']);
+                setChartSeries([
+                    { name: 'Detected', data: [0] },
+                    { name: 'Analyzing', data: [0] },
+                    { name: 'Repairing', data: [0] },
+                    { name: 'Resolved', data: [0] },
+                    { name: 'Unresolved', data: [0] },
+                ]);
+            }
+        };
         fetchDTRAlertsTrends();
     }, []);
 
@@ -832,6 +1006,7 @@ const DTRDashboard: React.FC = () => {
                           subtitle1: stat.subtitle1,
                           onValueClick: stat.onValueClick,
                           bg: stat.bg || "bg-stat-icon-gradient",
+                          
                         },
                         span: { col: 1 as const, row: 1 as const },
                       })),
