@@ -41,6 +41,7 @@ const Input = ({
                     aria-label="Search"
                     onChange={(e) => onSearch?.(e.target.value)}
                 />
+                
                 <div className="absolute inset-y-0 right-2 flex items-center gap-2">
                     {showShortcut && (
                         <div className="flex items-center gap-1 text-sm">

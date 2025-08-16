@@ -51,7 +51,7 @@ class OptimizedDeployer {
     // Database configuration
     this.dbConfig = {
       host: 'localhost',
-      port: 4233,
+      port: 5432,
       user: 'postgres',
       password: 'root123',
       templateDb: 'subapp_db'
@@ -1004,10 +1004,10 @@ NODE_ENV=development
 PORT=${port}
 
 # Database configuration - Commented out dynamic database for this sub-app
-# DATABASE_URL=postgresql://${this.dbConfig.user}:${this.dbConfig.password}@${this.dbConfig.host}:${this.dbConfig.port}/${dbName}?schema=public
+ DATABASE_URL=postgresql://${this.dbConfig.user}:${this.dbConfig.password}@${this.dbConfig.host}:${this.dbConfig.port}/${dbName}?schema=public
 
 # Hardcoded database connection
-DATABASE_URL=postgresql://postgres:root1234@14.194.110.157:5433/host_db?schema=public
+# DATABASE_URL=postgresql://postgres:root1234@14.194.110.157:5433/host_db?schema=public
 
 # JWT configuration (optional)
 # JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
