@@ -253,8 +253,10 @@ const DTRDashboard: React.FC = () => {
                     setServerPagination({
                         currentPage: data.page || 1,
                         totalPages: Math.ceil(data.total / data.pageSize) || 1,
-                        totalItems: data.total || 0,
-                        itemsPerPage: data.pageSize || 10,
+                        totalCount: data.total || 0 ,   
+                        limit: data.pageSize || 10,
+                        hasNextPage: data.hasNextPage || false,
+                        hasPrevPage: data.hasPrevPage || false,
                     });
                 } else {
                     throw new Error(data.message || 'Failed to fetch DTR table');

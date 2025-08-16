@@ -1,6 +1,11 @@
 {
-  "nextPort": 4224,
+  "nextPort": 4230,
   "deployedApps": {
+    "12345678": {
+      "port": 4227,
+      "deployedAt": "2025-08-16T10:38:59.637Z",
+      "path": "C:\\xampp\\htdocs\\12345678-backend"
+    },
     "example": {
       "port": 4001,
       "deployedAt": "2025-07-19T06:23:07.649Z",
@@ -950,6 +955,31 @@
       "port": 4223,
       "deployedAt": "2025-08-14T15:32:49.310Z",
       "path": "C:\\xampp\\htdocs\\anu-backend"
+    },
+    "test1": {
+      "port": 4224,
+      "deployedAt": "2025-08-16T06:07:35.835Z",
+      "path": "C:\\xampp\\htdocs\\test1-backend"
+    },
+    "testingsandeeep": {
+      "port": 4225,
+      "deployedAt": "2025-08-16T08:16:46.418Z",
+      "path": "C:\\xampp\\htdocs\\testingsandeeep-backend"
+    },
+    "sandeep1234": {
+      "port": 4226,
+      "deployedAt": "2025-08-16T09:51:23.898Z",
+      "path": "C:\\xampp\\htdocs\\sandeep1234-backend"
+    },
+    "sandeepl": {
+      "port": 4228,
+      "deployedAt": "2025-08-16T11:51:26.062Z",
+      "path": "C:\\xampp\\htdocs\\sandeepl-backend"
+    },
+    "sandeeptest1": {
+      "port": 4229,
+      "deployedAt": "2025-08-16T12:31:45.183Z",
+      "path": "C:\\xampp\\htdocs\\sandeeptest1-backend"
     }
   }
 }

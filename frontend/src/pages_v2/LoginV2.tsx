@@ -174,7 +174,6 @@ const LoginV2: React.FC<LoginV2Props> = ({
                gridRows: 4,
                gridColumns: 2,
                gap: "gap-4",
-               className: "grid-cols-2",
              }}
            />
 
