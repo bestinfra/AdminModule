@@ -11,6 +11,14 @@ export default function Tickets() {
     const [ticketStats, setTicketStats] = useState<any>(null);
     const [ticketTrends, setTicketTrends] = useState<any>(null);
     const [tickets, setTickets] = useState<any[]>([]);
+    const [serverPagination, setServerPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        limit: 10,
+        hasNextPage: false,
+        hasPrevPage: false
+    });
 
     // Dummy data for development
     const dummyTickets = [
@@ -115,28 +123,54 @@ export default function Tickets() {
             });
     }, []);
 
-    const fetchTicketsTable = () => {
-        fetch(`${BACKEND_URL}/tickets/table`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    setTickets(data.data);
-                } else {
-                    // Fallback to dummy data
-                    setTickets(dummyTickets);
-                }
-            })
-            .catch((err) => {
-                console.error('Failed to fetch ticket data:', err);
+    const fetchTicketsTable = async (page = 1, limit = 10, searchTerm = '') => {
+        try {
+            const params = new URLSearchParams();
+            params.append('page', String(page));
+            params.append('limit', String(limit));
+            
+            if (searchTerm && searchTerm.trim()) {
+                params.append('search', searchTerm.trim());
+            }
+            
+            const response = await fetch(`${BACKEND_URL}/tickets/table?${params.toString()}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setTickets(data.data);
+                setServerPagination({
+                    currentPage: data.pagination?.currentPage || 1,
+                    totalPages: data.pagination?.totalPages || 1,
+                    totalCount: data.pagination?.totalCount || 0,
+                    limit: data.pagination?.limit || 10,
+                    hasNextPage: data.pagination?.hasNextPage || false,
+                    hasPrevPage: data.pagination?.hasPrevPage || false,
+                });
+            } else {
                 // Fallback to dummy data
                 setTickets(dummyTickets);
-            })
-            .finally(() => {});
+            }
+        } catch (err) {
+            console.error('Failed to fetch ticket data:', err);
+            // Fallback to dummy data
+            setTickets(dummyTickets);
+        }
     };
 
     useEffect(() => {
         fetchTicketsTable();
     }, []);
+
+    // Handle table pagination
+    const handlePageChange = (page: number, limit: number) => {
+        fetchTicketsTable(page, limit);
+    };
+
+    // Handle table search
+    const handleSearch = (searchTerm: string) => {
+        // Reset to first page when searching
+        fetchTicketsTable(1, serverPagination.limit, searchTerm);
+    };
 
     // Handle ticket actions
     const handleViewTicket = (row: TableData) => {
@@ -297,6 +331,9 @@ export default function Tickets() {
                                             onEdit: handleEditTicket,
                                             onDelete: handleDeleteTicket,
                                             onView: handleViewTicket,
+                                            onPageChange: handlePageChange,
+                                            onSearch: handleSearch,
+                                            serverPagination: serverPagination,
                                             availableTimeRanges: [],
                                         },
                                     },

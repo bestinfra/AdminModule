@@ -26,8 +26,10 @@ const DTRDashboard: React.FC = () => {
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
         totalPages: 1,
-        totalItems: 0,
-        itemsPerPage: 10
+        totalCount: 0,
+        limit: 10,
+        hasNextPage: false,
+        hasPrevPage: false
     });
 
     // Chart data variables (alerts trends)
@@ -79,12 +81,16 @@ const DTRDashboard: React.FC = () => {
         }
     };
 
-    const fetchDTRTable = async (page = 1, limit = 10) => {
+    const fetchDTRTable = async (page = 1, limit = 10, searchTerm = '') => {
         // setLoading(prev => ({ ...prev, table: true }));
         try {
             const params = new URLSearchParams();
             params.append('page', String(page));
             params.append('pageSize', String(limit));
+            
+            if (searchTerm && searchTerm.trim()) {
+                params.append('search', searchTerm.trim());
+            }
             
             const response = await fetch(`${BACKEND_URL}/dtrs?${params.toString()}`);
             const data = await response.json();
@@ -92,10 +98,12 @@ const DTRDashboard: React.FC = () => {
             if (data.success) {
                 setDtrTableData(data.data);
                 setServerPagination({
-                    currentPage: data.page || 1,
-                    totalPages: Math.ceil(data.total / data.pageSize) || 1,
-                    totalItems: data.total || 0,
-                    itemsPerPage: data.pageSize || 10,
+                    currentPage: data.pagination?.currentPage || 1,
+                    totalPages: data.pagination?.totalPages || 1,
+                    totalCount: data.pagination?.totalCount || 0,
+                    limit: data.pagination?.limit || 10,
+                    hasNextPage: data.pagination?.hasNextPage || false,
+                    hasPrevPage: data.pagination?.hasPrevPage || false,
                 });
             } else {
                 throw new Error(data.message || 'Failed to fetch DTR table');
@@ -433,6 +441,12 @@ const DTRDashboard: React.FC = () => {
     // Handle table pagination
     const handlePageChange = (page: number, limit: number) => {
         fetchDTRTable(page, limit);
+    };
+
+    // Handle table search
+    const handleSearch = (searchTerm: string) => {
+        // Reset to first page when searching
+        fetchDTRTable(1, serverPagination.limit, searchTerm);
     };
 
 
@@ -1090,7 +1104,9 @@ const DTRDashboard: React.FC = () => {
                                                 onView: handleViewDTR,
                                                 availableTimeRanges: [],
                                                 onPageChange: handlePageChange,
-                                                pagination: serverPagination,
+                                                onSearch: handleSearch,
+                                                pagination: true,
+                                                serverPagination: serverPagination,
                                             },
                                         },
                                     ],

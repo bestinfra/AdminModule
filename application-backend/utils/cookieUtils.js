@@ -15,11 +15,14 @@ export const extractUserFromCookies = (req) => {
     try {
         // First try to get user details from cookies
         if (req.cookies && req.cookies.userDetails) {
-            const userDetails = JSON.parse(req.cookies.userDetails);
-            
-            
-
-            return userDetails;
+            try {
+                const userDetails = JSON.parse(req.cookies.userDetails);
+                if (userDetails && typeof userDetails === 'object') {
+                    return userDetails;
+                }
+            } catch (parseError) {
+                // Error parsing userDetails cookie
+            }
         }
         
         // Second: try to extract from accessToken cookie (JWT)
