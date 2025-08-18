@@ -11,7 +11,7 @@ interface ProfileSidebarItem {
 interface ProfileSidebarProps {
     items: ProfileSidebarItem[];
     onItemClick?: (itemId: string) => void;
-    className?: string;
+    className?: string; 
 }
 
 const ProfileSidebar: React.FC<ProfileSidebarProps> = ({

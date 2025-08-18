@@ -11,7 +11,6 @@ import Search from './Search';
 import DatePicker from './DatePicker';
 import Calendar from './Calendar';
 import ExpandableTable from './ExpandableTable';
-// import OrgChartAlt from './OrgChartAlt';
 import Holder from './Holder';
 import LoadingSpinner from './LoadingSpinner';
 import Heading from './Heading';
@@ -25,20 +24,18 @@ import SectionHeader from './SectionHeader';
 import Carousel from './Carousel';
 import LoginV2 from '@pages_v2/LoginV2';
 import { Form } from '@components/Form';
-// import ChatInput from '@components/Ticket/ChatInput';
 import TicketInfoCard from '@components/Ticket/TicketInfoCard';
-
 import ActivityLogCard from '@components/Ticket/ActivityLogCard';
 import ChatComponent from '@components/Ticket/ChatComponent';
 import PageInformation from './PageInformation';
 import Permissions from './Permissions';
 import SummaryInfo from './SummaryInfo';
 import TicketConversationPanel from '@components/Ticket/TicketConversationPanel';
-import TicketInformationPannel from './TIcketInformationPannel';
+import TicketInformationPannel from '../Ticket/TIcketInformationPannel';
 import ActivityLog from './ActivityLog';
 import ChatApplication from '@components/Ticket/ChatApplication';
-import ProfileSidebar from './ProfileSidebar';
-import ProfileContent from './ProfileContent';
+import ProfileSidebar from '../../pages_v2/ProfileSidebar';
+import ProfileContent from '../../pages_v2/ProfileContent';
 import Steps from './Steps';
 import OccupancyHeader from './OccupancyHeader';
 import ConfirmationPage from '@components/Occupancy-Vacency/ConfirmationPage';
@@ -75,7 +72,6 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     FormContainer,
     Form,
     SectionHeader,
-    // ChatInput,
     TicketInfoCard,
     ActivityLogCard,
     ChatComponent,

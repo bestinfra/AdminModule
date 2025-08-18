@@ -1,5 +1,5 @@
 {
-  "nextPort": 4230,
+  "nextPort": 4232,
   "deployedApps": {
     "12345678": {
       "port": 4227,
@@ -980,6 +980,16 @@
       "port": 4229,
       "deployedAt": "2025-08-16T12:31:45.183Z",
       "path": "C:\\xampp\\htdocs\\sandeeptest1-backend"
+    },
+    "deepak": {
+      "port": 4230,
+      "deployedAt": "2025-08-17T11:08:53.775Z",
+      "path": "C:\\xampp\\htdocs\\deepak-backend"
+    },
+    "sandeepsandy": {
+      "port": 4231,
+      "deployedAt": "2025-08-18T10:41:13.673Z",
+      "path": "C:\\xampp\\htdocs\\sandeepsandy-backend"
     }
   }
 }

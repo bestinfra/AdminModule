@@ -6,14 +6,13 @@ import { FilterStyleProvider } from '@contexts/FilterStyleContext';
 import Tickets from '@pages_v2/Tickets';
 import ProtectedRoute from '@components/auth/ProtectedRoute';
 import MainLayout from '@components/layout/MainLayout';
-import PageDemo from '@pages/PageDemo';
+import PageDemo from '@/pages_v2/PageDemo';
 import Login from '@pages_v2/Login';
 import DataLogger from '@pages_v2/DataLogger';
 import DataLoggerDashboard from '@pages_v2/DataLoggerDashboard';
 import Meters from '@pages_v2/Meters';
 import Users from '@pages_v2/Users';
 import AssetManagment from '@pages_v2/AssetManagement';
-// import Dashboard from '@pages_v2/Dashboard';
 import DTRDashboard from '@pages_v2/DTRDashboard';
 import AppManagement from '@pages/Apps_module/AppManagement';
 import AddConsumer from '@/pages_v2/AddConsumer';
@@ -43,8 +42,6 @@ import SubLogin from '@pages_v2/SubLogin';
 import DTRDetailPage from '@/pages_v2/DTRDetailPage';
 import IndividualDetailPage from '@pages_v2/IndividualDetailPage';
 import FilterStyleController from '@components/global/FilterStyleController';
-// import ConsumerVacantConfirmation from '@pages/ConsumerVacantConfirmation';
-// import ConfirmationDialogExamples from '@pages/ConfirmationDialogExamples';
 import Dashboard from '@pages_v2/ConsumerDashboard';
 import ConsumerDetailView from '@pages_v2/ConsumerDetailView';
 import Payment from '@components/Occupancy-Vacency/Payment';
@@ -128,9 +125,6 @@ const App: React.FC = () => {
                             <Route path="/usage-summary" element={<UsageSummaryPage />} />
                             <Route path="/dg-dashboard" element={<DG_Dashboard />} />
                             <Route path="/dg-detail/:dgId" element={<DgDetailView />} />
-                            {/* <Route path="/consumer-vacant-confirmation" element={<ConsumerVacantConfirmation />} />
-                            <Route path="/confirmation-dialog-examples" element={<ConfirmationDialogExamples />} /> */}
-                            {/* <Route path="/meters-list" element={<MetersList />} /> */}
                         </Route>
                     </Routes>
                 </Router>

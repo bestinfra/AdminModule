@@ -287,6 +287,16 @@ const defaultMenus: MenuCategory[] = [
         link: "/filter-style-controller",
       },
     ],
+  },    
+  {
+    category:'User Management',
+    items:[
+      {
+        title:'User Management',
+        icon: "/icons/freeze-status.svg",
+        link:'/user-management',
+      },
+    ]
   },
   {
     category: "Occupancy & Status",
