@@ -10,6 +10,7 @@ export const getAllRoles = async (req, res) => {
         const userLocationId = req.user?.locationId;
         
         const result = await RoleDB.getAllRoles(userLocationId, page, limit, search);
+        
         // Map to clean structure
         const mappedRoles = result.data.map(role => ({
             id: role.id,
@@ -30,17 +31,11 @@ export const getAllRoles = async (req, res) => {
             createdAt: role.createdAt,
             updatedAt: role.updatedAt,
         }));
+        
         res.json({
             success: true,
             data: mappedRoles,
-            pagination: {
-                currentPage: page,
-                totalPages: Math.ceil(result.total / limit),
-                totalCount: result.total,
-                limit: limit,
-                hasNextPage: page < Math.ceil(result.total / limit),
-                hasPrevPage: page > 1
-            },
+            pagination: result.pagination,
             message: 'Roles retrieved successfully',
             userLocation: userLocationId,
             filteredByLocation: !!userLocationId

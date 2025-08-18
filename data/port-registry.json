@@ -1,5 +1,5 @@
 {
-  "nextPort": 4196,
+  "nextPort": 4202,
   "deployedApps": {
     "example": {
       "port": 4001,
@@ -820,6 +820,36 @@
       "port": 4195,
       "deployedAt": "2025-08-13T16:13:27.639Z",
       "path": "C:\\xampp\\htdocs\\test50-backend"
+    },
+    "test52": {
+      "port": 4196,
+      "deployedAt": "2025-08-18T04:41:50.691Z",
+      "path": "C:\\xampp\\htdocs\\test52-backend"
+    },
+    "test53": {
+      "port": 4197,
+      "deployedAt": "2025-08-18T05:11:00.353Z",
+      "path": "C:\\xampp\\htdocs\\test53-backend"
+    },
+    "test54": {
+      "port": 4198,
+      "deployedAt": "2025-08-18T06:06:20.778Z",
+      "path": "C:\\xampp\\htdocs\\test54-backend"
+    },
+    "test55": {
+      "port": 4199,
+      "deployedAt": "2025-08-18T06:10:44.341Z",
+      "path": "C:\\xampp\\htdocs\\test55-backend"
+    },
+    "test56": {
+      "port": 4200,
+      "deployedAt": "2025-08-18T06:19:03.735Z",
+      "path": "C:\\xampp\\htdocs\\test56-backend"
+    },
+    "test57": {
+      "port": 4201,
+      "deployedAt": "2025-08-18T10:19:24.313Z",
+      "path": "C:\\xampp\\htdocs\\test57-backend"
     }
   }
 }

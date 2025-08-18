@@ -53,7 +53,7 @@ class OptimizedDeployer {
       host: 'localhost',
       port: 5432,
       user: 'postgres',
-      password: 'root123',
+      password: 'root1234',
       templateDb: 'subapp_db'
     };
   }
@@ -362,18 +362,18 @@ class OptimizedDeployer {
         ['ADMIN']
       );
       
-      let adminRoleId;
-      if (adminRoleExists.rows.length === 0) {
-        const roleResult = await client.query(
-          'INSERT INTO roles (name, description, "isActive", "accessLevel", level, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING id',
-          ['ADMIN', 'ADMIN role', true, this.mapRoleToAccessLevel('ADMIN'), this.getRoleLevel('ADMIN')]
-        );
-        adminRoleId = roleResult.rows[0].id;
-        console.log(`   ✅ Created role: ADMIN with ID: ${adminRoleId}`);
-      } else {
-        adminRoleId = adminRoleExists.rows[0].id;
-        console.log(`   ✅ Found existing ADMIN role with ID: ${adminRoleId}`);
-      }
+              let adminRoleId;
+        if (adminRoleExists.rows.length === 0) {
+          const roleResult = await client.query(
+            'INSERT INTO roles (name, description, "isActive", "accessLevel", level, "isSystem", "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING id',
+            ['ADMIN', 'ADMIN role', true, this.mapRoleToAccessLevel('ADMIN'), this.getRoleLevel('ADMIN'), false]
+          );
+          adminRoleId = roleResult.rows[0].id;
+          console.log(`   ✅ Created role: ADMIN with ID: ${adminRoleId}`);
+        } else {
+          adminRoleId = adminRoleExists.rows[0].id;
+          console.log(`   ✅ Found existing ADMIN role with ID: ${adminRoleId}`);
+        }
       
       // Insert admin user with roleId
       const insertUserQuery = `
@@ -423,7 +423,7 @@ class OptimizedDeployer {
         
         // Create ADMIN role first
         const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
-        const createRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO roles (name, description, \\"isActive\\", \\"accessLevel\\", level, \\"createdAt\\", \\"updatedAt\\") VALUES ('ADMIN', 'ADMIN role', true, 'ADMIN', 2, NOW(), NOW()) ON CONFLICT (name) DO NOTHING;"`;
+        const createRoleCommand = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "INSERT INTO roles (name, description, \\"isActive\\", \\"accessLevel\\", level, \\"isSystem\\", \\"createdAt\\", \\"updatedAt\\") VALUES ('ADMIN', 'ADMIN role', true, 'ADMIN', 2, false, NOW(), NOW()) ON CONFLICT (name) DO NOTHING;"`;
         
         execSync(createRoleCommand, { 
           env,
@@ -515,8 +515,8 @@ class OptimizedDeployer {
         let roleId;
         if (roleExists.rows.length === 0) {
           const roleResult = await client.query(
-            'INSERT INTO roles (name, description, "isActive", "accessLevel", level, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING id',
-            [account.role, `${account.role} role`, true, this.mapRoleToAccessLevel(account.role), this.getRoleLevel(account.role)]
+            'INSERT INTO roles (name, description, "isActive", "accessLevel", level, "isSystem", "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, $5, $6, NOW(), NOW()) RETURNING id',
+            [account.role, `${account.role} role`, true, this.mapRoleToAccessLevel(account.role), this.getRoleLevel(account.role), false]
           );
           roleId = roleResult.rows[0].id;
           console.log(`   ✅ Created role: ${account.role} with ID: ${roleId}`);
@@ -560,16 +560,8 @@ class OptimizedDeployer {
       }
       
       // Handle module permissions and role_permissions
-      console.log(`🔍 Debug: Processing modules for permissions:`, {
-        hasModules: !!modules,
-        modulesLength: modules ? modules.length : 0,
-        modulesData: modules ? modules.slice(0, 5) : null // Show first 5 modules for debugging
-      });
-      
       if (modules && modules.length > 0) {
         await this.setupModulePermissions(client, modules);
-      } else {
-        console.log(`ℹ️  No modules to process for permissions`);
       }
       
       await client.end();
@@ -593,26 +585,35 @@ class OptimizedDeployer {
   // Setup module permissions and role_permissions
   async setupModulePermissions(client, modules) {
     try {
-      // Insert module names directly as permissions
+      console.log(`🔧 Setting up module permissions...`);
+      
+      // Insert module names as permissions with proper column structure
       const permissionIds = [];
       for (const moduleName of modules) {
+        // Check if permission already exists by code (unique field)
         const permissionExists = await client.query(
-          'SELECT id FROM permissions WHERE name = $1',
-          [moduleName]
+          'SELECT id FROM permissions WHERE code = $1',
+          [moduleName.toUpperCase()]
         );
         
         if (permissionExists.rows.length === 0) {
-                  const result = await client.query(
-          'INSERT INTO permissions (code, name, description, "isActive", "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id',
-          [moduleName, moduleName, `${moduleName} permission`, true]
-        );
+          // Insert new permission with all required columns
+          const result = await client.query(
+            'INSERT INTO permissions (code, name, description, "isActive", "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW()) RETURNING id',
+            [
+              moduleName.toUpperCase(), // code (unique)
+              moduleName, // name
+              `${moduleName} module permission`, // description
+              true // isActive
+            ]
+          );
           permissionIds.push(result.rows[0].id);
         } else {
           permissionIds.push(permissionExists.rows[0].id);
         }
       }
       
-      // Get only existing roles (ADMIN + any roles created for new accounts)
+      // Get all existing roles
       const rolesResult = await client.query('SELECT id, name FROM roles ORDER BY name');
       const roles = rolesResult.rows;
       
@@ -625,8 +626,8 @@ class OptimizedDeployer {
         const rolePermissionIds = [];
         for (const moduleName of modulesToAssign) {
           const permissionResult = await client.query(
-            'SELECT id FROM permissions WHERE name = $1',
-            [moduleName]
+            'SELECT id FROM permissions WHERE code = $1',
+            [moduleName.toUpperCase()]
           );
           
           if (permissionResult.rows.length > 0) {
@@ -644,9 +645,15 @@ class OptimizedDeployer {
             );
             
             if (existingRolePermission.rows.length === 0) {
+              // Insert with all required columns including restrictions (JSONB)
               await client.query(
-                'INSERT INTO role_permissions ("roleId", "permissionId", "isGranted", "createdAt", "updatedAt") VALUES ($1, $2, $3, NOW(), NOW())',
-                [role.id, permissionId, true]
+                'INSERT INTO role_permissions ("roleId", "permissionId", "isGranted", restrictions, "createdAt", "updatedAt") VALUES ($1, $2, $3, $4, NOW(), NOW())',
+                [
+                  role.id, 
+                  permissionId, 
+                  true, // isGranted
+                  JSON.stringify({}) // restrictions as empty JSON object
+                ]
               );
             }
           }
@@ -692,20 +699,21 @@ class OptimizedDeployer {
   // Helper method to get modules for role level
   getModulesForRoleLevel(roleLevel, allModules) {
     // Define which modules each role level can access
+    let filteredModules;
+    
     if (roleLevel <= 1) { // SUPER_ADMIN - All modules
-      return allModules;
+      filteredModules = allModules;
     } else if (roleLevel <= 2) { // ADMIN - All modules (admin should have access to all selected modules)
-      return allModules;
+      filteredModules = allModules;
     } else if (roleLevel === 3) { // MODERATOR - Limited modules
-      const filteredModules = allModules.filter(module => 
+      filteredModules = allModules.filter(module => 
         module.includes('dashboard') ||
         module.includes('tickets') ||
         module.includes('consumer') ||
         module.includes('meter_management')
       );
-      return filteredModules;
     } else if (roleLevel === 4) { // ACCOUNTANT - Very limited modules
-      const filteredModules = allModules.filter(module => 
+      filteredModules = allModules.filter(module => 
         module.includes('dashboard') ||
         module.includes('bills') ||
         module.includes('tickets')
@@ -715,13 +723,14 @@ class OptimizedDeployer {
         !module.includes('user') && 
         !module.includes('role')
       );
-      return filteredModules;
     } else { // Default fallback
-      return allModules.filter(module => 
+      filteredModules = allModules.filter(module => 
         module.includes('dashboard') ||
         module.includes('tickets')
       );
     }
+    
+    return filteredModules;
   }
 
   // Helper method to get permissions for role level (kept for backward compatibility)
@@ -754,8 +763,8 @@ class OptimizedDeployer {
         // Hash password for fallback method
         const fallbackHashedPassword = await this.hashPassword(account.password);
         
-        // Insert role if not exists (ensure timestamps)
-        const insertRoleCommand = `INSERT INTO roles (name, description, "isActive", "accessLevel", level, "createdAt", "updatedAt") VALUES ('${account.role}', '${account.role} role', true, '${this.mapRoleToAccessLevel(account.role)}', ${this.getRoleLevel(account.role)}, NOW(), NOW()) ON CONFLICT (name) DO NOTHING;`;
+        // Insert role if not exists (ensure timestamps and all required columns)
+        const insertRoleCommand = `INSERT INTO roles (name, description, "isActive", "accessLevel", level, "isSystem", "createdAt", "updatedAt") VALUES ('${account.role}', '${account.role} role', true, '${this.mapRoleToAccessLevel(account.role)}', ${this.getRoleLevel(account.role)}, false, NOW(), NOW()) ON CONFLICT (name) DO NOTHING;`;
         try {
           const env = { ...process.env, PGPASSWORD: this.dbConfig.password };
           const execInsertRole = `psql -h ${this.dbConfig.host} -p ${this.dbConfig.port} -U ${this.dbConfig.user} -d ${dbName} -c "${insertRoleCommand}"`;
@@ -1009,9 +1018,9 @@ PORT=${port}
 # Hardcoded database connection
 DATABASE_URL=postgresql://postgres:root1234@14.194.110.157:5433/host_db?schema=public
 
-# JWT configuration (optional)
-# JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
-# JWT_EXPIRES_IN=4h
+JWT_SECRET=9+i5BzyGmvW5mbQLmqJ2uIb2jh9NeyOFyjrTXdR0KPU=
+JWT_EXPIRES_IN=1h
+JWT_REFRESH_EXPIRES_IN=7
 
 # CORS configuration
 CORS_ORIGIN=https://www.${appName}.bestinfra.app
@@ -1156,6 +1165,9 @@ APP_VERSION=1.0.0
   async deployBackend(appName, backendPath, credentials = null, newAccounts = null, modules = null) {
     console.log(`\n🚀 Starting optimized backend deployment for: ${appName}`);
     console.log(`📁 Backend source: ${backendPath}`);
+    if (modules && modules.length > 0) {
+      console.log(`📋 Modules to enable: ${modules.join(', ')}`);
+    }
     
     try {
       // Check if XAMPP htdocs exists
@@ -1222,7 +1234,6 @@ APP_VERSION=1.0.0
       console.log(`\n✅ Optimized backend deployment completed successfully!`);
       console.log(`📊 Deployment Summary:`);
       console.log(`   • App Name: ${appName}`);
-      console.log(`   • Backend Path: ${targetPath}`);
       console.log(`   • Port: ${port}`);
       console.log(`   • Database: ${dbName}`);
       console.log(`   • Root URL: http://localhost:${port}/`);
@@ -1279,6 +1290,8 @@ APP_VERSION=1.0.0
     
     console.log(`\nNext available port: ${registry.nextPort}`);
   }
+
+
 }
 
 // Export the class
