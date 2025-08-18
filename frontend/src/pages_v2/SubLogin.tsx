@@ -110,7 +110,8 @@ If you have any questions about this Privacy Policy, please contact us.`;
       const result = await login({
         identifier: data.identifier as string,
         password: data.password as string,
-        appId: window.location.hostname || 'sub-app'
+        appId: window.location.hostname || 'sub-app',
+        rememberMe: data.rememberMe as boolean
       });
 
       if (result.success && result.data) {
