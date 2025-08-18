@@ -1,6 +1,11 @@
 {
   "nextPort": 4202,
   "deployedApps": {
+    "12345678": {
+      "port": 4227,
+      "deployedAt": "2025-08-16T10:38:59.637Z",
+      "path": "C:\\xampp\\htdocs\\12345678-backend"
+    },
     "example": {
       "port": 4001,
       "deployedAt": "2025-07-19T06:23:07.649Z",

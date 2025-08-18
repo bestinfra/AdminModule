@@ -238,13 +238,13 @@ If you have any questions about this Privacy Policy, please contact us.`;
           {
             layout: {
               type: "grid",
-              // className: "rounded-lg min-h-screen",
+              className: "rounded-lg min-h-screen bg-primary-lightest",
               columns: 5,
               gap: "gap-1",
               gridRows: 1,
               rows: [
                 {
-                  layout: "row",
+                  layout: "row",  
                   className: "rounded-lg h-full p-4",
                   span: { col: 3, row: 1 },
                   columns: [

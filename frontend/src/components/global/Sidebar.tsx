@@ -220,6 +220,11 @@ const defaultMenus: MenuCategory[] = [
         icon: "/icons/freeze-status.svg",
         link: "/feeders",
       },
+      {
+        title: "Sublogin",
+        icon: "/icons/freeze-status.svg",
+        link: "/sub-login",
+      },
   
   ]
   }

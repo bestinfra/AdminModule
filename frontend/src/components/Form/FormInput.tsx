@@ -69,13 +69,13 @@ const FormInput: React.FC<FormInputProps> = ({
 
   const commonProps: CommonInputProps = useMemo(() => {
     const isTextarea = type === "textarea";
-    const baseClassName = `w-full flex items-center justify-between px-4 py-3.5 bg-white dark:bg-gray-800 text-base font-medium focus:outline-none [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:dark:bg-gray-800 [&:-webkit-autofill]:shadow-[0_0_0_1000px_white_inset] dark:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#1f2937_inset]`;
+    const baseClassName = `w-full px-4 py-3 bg-white dark:bg-gray-800 text-base font-medium focus:outline-none [&:-webkit-autofill]:bg-white [&:-webkit-autofill]:dark:bg-gray-800 [&:-webkit-autofill]:shadow-[0_0_0_1000px_white_inset] dark:[&:-webkit-autofill]:shadow-[0_0_0_1000px_#1f2937_inset] min-w-0`;
     
     const borderClassName = isTextarea 
-      ? `border border-primary-border dark:border-dark-border focus:border-primary-border ${
-          showError ? "border-red-500" : "border-gray-300"
+      ? `border border-primary-border dark:border-dark-border focus:border-primary-border rounded-lg ${
+          showError ? "border-danger" : "border-gray-300"
         }`
-      : `border px-4 py-3.5 rounded-full cursor-pointer border-primary-border dark:border-dark-border focus:border-primary-border ${
+      : `border rounded-full cursor-pointer border-primary-border dark:border-dark-border focus:border-primary-border ${
           showError ? "border-red-500" : "border-gray-300"
         }`;
 
@@ -102,8 +102,10 @@ const FormInput: React.FC<FormInputProps> = ({
     const fileValue = value === null ? null : (value as FileList);
     const fileSingleValue = value === null ? null : (value as File);
 
-    const finalClassName = `${commonProps.className} ${icon ? "pl-12" : ""} ${rightIcon ? "pr-12" : ""} ${
-      showError ? "border-red-500" : ""
+    // Ensure border radius is preserved by adding it to finalClassName if needed
+    const borderRadiusClass = type === "textarea" ? "rounded-lg" : "rounded-full";
+    const finalClassName = `${commonProps.className} ${icon ? "pl-12" : ""} ${rightIcon ? "pr-12" : ""} ${borderRadiusClass} ${
+      showError ? "border-danger" : ""
     }`.trim();
 
     if (type === 'password' && input.showPasswordToggle) {
@@ -122,7 +124,7 @@ const FormInput: React.FC<FormInputProps> = ({
             type="button"
             tabIndex={-1}
             onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1 text-neutral hover:text-text-secondary transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-neutral hover:text-text-secondary transition-colors"
             aria-label={showPassword ? 'Hide password' : 'Show password'}
             style={{ zIndex: 10 }}
           >

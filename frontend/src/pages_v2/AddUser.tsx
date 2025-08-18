@@ -107,6 +107,7 @@ export default function AddUser() {
         {
             name: 'locationId',
             type: 'dropdown',
+            label: 'User Location',
             placeholder: 'Select Location',
             options: [
                 { value: '', label: 'Select Location' },

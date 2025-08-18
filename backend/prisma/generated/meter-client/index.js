@@ -1064,7 +1064,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "D:\\OnGoing\\BestInfra Projects\\AdminModule\\backend\\prisma\\generated\\meter-client",
+      "value": "C:\\Users\\User\\Downloads\\AdminModule\\AdminModule\\backend\\prisma\\generated\\meter-client",
       "fromEnvVar": null
     },
     "config": {
@@ -1078,12 +1078,11 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "D:\\OnGoing\\BestInfra Projects\\AdminModule\\backend\\prisma\\schema.meter.prisma",
+    "sourceFilePath": "C:\\Users\\User\\Downloads\\AdminModule\\AdminModule\\backend\\prisma\\schema.meter.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../../.env"
+    "rootEnvPath": null
   },
   "relativePath": "../..",
   "clientVersion": "5.22.0",
@@ -1110,8 +1109,8 @@ const fs = require('fs')
 config.dirname = __dirname
 if (!fs.existsSync(path.join(__dirname, 'schema.prisma'))) {
   const alternativePaths = [
-    "prisma/generated/meter-client",
     "generated/meter-client",
+    "meter-client",
   ]
   
   const alternativePath = alternativePaths.find((altPath) => {
@@ -1140,7 +1139,7 @@ Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
 path.join(__dirname, "query_engine-windows.dll.node");
-path.join(process.cwd(), "prisma/generated/meter-client/query_engine-windows.dll.node")
+path.join(process.cwd(), "generated/meter-client/query_engine-windows.dll.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
-path.join(process.cwd(), "prisma/generated/meter-client/schema.prisma")
+path.join(process.cwd(), "generated/meter-client/schema.prisma")
