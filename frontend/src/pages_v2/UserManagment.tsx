@@ -8,7 +8,7 @@ import Table from '@components/global/Table';
 
 // Context
 
-// Types
+// Types    
 import type { Section } from '@components/global/Page';
 import type { TableData, Column } from '@components/global/Table';
 

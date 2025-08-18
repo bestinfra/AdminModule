@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import OrgChart from '@components/global/OrgChart';
 import Modal from '@components/global/Modal';
 import Button from '@components/global/Button';
 
@@ -266,7 +265,7 @@ export default function AssetManagement() {
         {/* Chart area */}
         <div className="flex-1 flex items-center justify-center">
           <div className="w-full h-[800px] border border-neutral-light rounded-2xl flex items-center justify-center bg-transparent">
-            <OrgChart />
+            {/* <OrgChart /> */}
           </div>
         </div>
       </div>

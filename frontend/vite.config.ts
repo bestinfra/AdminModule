@@ -43,6 +43,7 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, './src/pages'),
       '@graphs': path.resolve(__dirname, './src/graphs'),
       '@context': path.resolve(__dirname, './src/context'),
+      '@contexts': path.resolve(__dirname, './src/contexts'),
       '@providers': path.resolve(__dirname, './src/providers'),
       '@utils': path.resolve(__dirname, './src/utils'),
       '@hooks': path.resolve(__dirname, './src/hooks'),

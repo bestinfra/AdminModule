@@ -525,4 +525,4 @@ const ChatApplication: React.FC<ChatApplicationProps> = ({
     );
 };
 
-export default ChatApplication; 
+export default ChatApplication;

@@ -65,203 +65,259 @@ const defaultMenus: MenuCategory[] = [
         icon: "/icons/dashboard.svg",
         link: "/superadmin",
       },
-      // {
-      //     title: 'DTR Dashboard',
-      //     icon: '/icons/dashboard.svg',
-      //     link: '/dtr-dashboard',
-      // },
+      {
+        title: "Consumer Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/consumer-dashboard",
+      },
+      {
+        title: "DTR Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/dtr-dashboard",
+      },
+      {
+        title: "DG Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/dg-dashboard",
+      },
+      {
+        title: "Data Logger Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/data-logger",
+      },
+    ],
+  },
+  {
+    category: "Tickets & Support",
+    items: [
       {
         title: "Tickets",
         icon: "/icons/customer-service.svg",
         link: "/tickets",
       },
-
-            {
-                title:'All Tickets',
-                icon:'/icons/dashboard.svg',
-                link:'/all-tickets',
-            },
-           
-            {
-              title: "Asset Managment",
-              icon: "/icons/freeze-status.svg",
-              link: "/asset-managment",
-            },
-            {
-              title: "DG_Dashboard",
-              icon: "/icons/freeze-status.svg",
-              link: "/dg-dashboard",
-            },
-      // {
-      //     title:'ConsumerDetails',
-      //     icon:'/icons/dashboard.svg',
-      //     link:'/consumer-details',
-      // }
+      {
+        title: "All Tickets",
+        icon: "/icons/customer-service.svg",
+        link: "/all-tickets",
+      },
+      {
+        title: "Add Ticket",
+        icon: "/icons/customer-service.svg",
+        link: "/add-ticket",
+      },
     ],
   },
-  // {
-  //   category: "ADMIN SETTINGS",
-  //   items: [
-  //     // {
-  //     //     title: 'Asset Management',
-  //     //     icon: '/icons/Asset_managment.svg',
-  //     //     link: '/asset-managment',
-  //     // },
-
-  //     // {
-  //     //     title: 'Meter List',
-  //     //     icon: '/icons/meter_managment.svg',
-  //     //     link: '/meters',
-  //     // },
-    
-    
-  //     // {
-  //     //   title: "Payment",
-  //     //   icon: "/icons/payment.svg",
-  //     //   link: "/payment",
-  //     // },
-  //     // {
-  //     //   title: "Freeze Status",
-  //     //   icon: "/icons/freeze-status.svg",
-  //     //   link: "/freeze-status",
-  //     // },
-     
-      
-  //     // {
-  //     //   title: "Usage Summary",
-  //     //   icon: "/icons/freeze-status.svg",
-  //     //   link: "/usage-summary",
-  //     // },
-  //     // {
-  //     //     title: 'SubLogin',
-  //     //     link: '/sub-login',
-  //     //     icon:'/icons/user_managment.svg',
-  //     // },
-
-  //     // {
-  //     //     title: 'User Management',
-  //     //     icon: '/icons/user_managment.svg',
-  //     //     link: '/user-management',
-  //     //     hasSubmenu: true,
-  //     //     submenu: [
-
-  //     //         {
-  //     //             title: 'Role Management',
-  //     //             link: '/role-management ',
-  //     //         },
-  //     //     ],
-  //     // },
-  //     // {
-  //     //     title: 'User Management',
-  //     //     icon: '/icons/user_managment.svg',
-  //     //     link: '/user-management',  
-  //     //     hasSubmenu: true,
-  //     //     submenu: [
-
-  //     //         {
-  //     //             title: 'Role Management',
-  //     //             link: '/role-management ',
-  //     //         },
-  //     //     ],
-  //     // },
-  //   ],
-  // },
   {
-    category: "GMR  Modules",
-    items: [ 
+    category: "Consumer Management",
+    items: [
       {
-      title: "Consumer Dashbaord",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumer-dashboard",
-    },
-    {
-      title: "All Consumers",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumers",
-    },
-    {
-        title: "Error",
+        title: "All Consumers",
         icon: "/icons/freeze-status.svg",
-        link: "/error",
+        link: "/consumers",
       },
-    {   
-      title: 'Bills',
-      icon: '/icons/bills.svg',
-      link: '/bills',
-      hasSubmenu: true,
-      submenu: [
-          {
-              title: 'Prepaid',
-              link: '/prepaid',
-          },
-          {
-              title: 'Postpaid',
-              link: '/postpaid',
-          },
-      ],
-  },
-  ]
+      {
+        title: "Add Consumer",
+        icon: "/icons/freeze-status.svg",
+        link: "/add-consumer",
+      },
+      {
+        title: "Connect/Disconnect",
+        icon: "/icons/freeze-status.svg",
+        link: "/connect-consumer",
+      },
+    ],
   },
   {
-    category: "TGNPDCL  Modules",
-    items: [ 
+    category: "Meter Management",
+    items: [
       {
-      title: "DTR Dashboard",
-      icon: "/icons/freeze-status.svg",
-      link: "/dtr-dashboard",
-    },
-    {
-      title: "DTR INdividual Detail",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumers",
-    },
-    {
+        title: "Meters",
+        icon: "/icons/meter_managment.svg",
+        link: "/meters",
+        hasSubmenu: true,
+        submenu: [
+          {
+            title: "Meter List",
+            link: "/meters",
+          },
+          {
+            title: "Add Meter",
+            link: "/add-meter",
+          },
+          {
+            title: "Meter Details",
+            link: "/meter-details",
+          },
+        ],
+      },
+      {
+        title: "Data Logger",
+        icon: "/icons/meter_managment.svg",
+        link: "/data-logger",
+        hasSubmenu: true,
+        submenu: [
+          {
+            title: "Data Logger List",
+            link: "/data-logger",
+          },
+          {
+            title: "Add Data Logger",
+            link: "/add-data-logger",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "Billing & Payments",
+    items: [
+      {
+        title: "Bills",
+        icon: "/icons/bills.svg",
+        link: "/bills",
+        hasSubmenu: true,
+        submenu: [
+          {
+            title: "Prepaid",
+            link: "/prepaid",
+          },
+          {
+            title: "Postpaid",
+            link: "/postpaid",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "Asset & Infrastructure",
+    items: [
+      {
+        title: "Asset Management",
+        icon: "/icons/Asset_managment.svg",
+        link: "/asset-managment",
+      },
+      {
         title: "Feeders",
         icon: "/icons/freeze-status.svg",
         link: "/feeders",
       },
       {
-        title: "Sublogin",
+        title: "DTR Details",
+        icon: "/icons/freeze-status.svg",
+        link: "/dtr-detail",
+      },
+      {
+        title: "Individual Details",
+        icon: "/icons/freeze-status.svg",
+        link: "/individual-detail",
+      },
+    ],
+  },
+  {
+    category: "User Management",
+    items: [
+      {
+        title: "Users",
+        icon: "/icons/user_managment.svg",
+        link: "/users",
+        hasSubmenu: true,
+        submenu: [
+          {
+            title: "User List",
+            link: "/users",
+          },
+          {
+            title: "Add User",
+            link: "/add-user",
+          },
+          {
+            title: "User Details",
+            link: "/user-detail",
+          },
+        ],
+      },
+      {
+        title: "Roles & Permissions",
+        icon: "/icons/user_managment.svg",
+        link: "/role-management",
+        hasSubmenu: true,
+        submenu: [
+          {
+            title: "Role Management",
+            link: "/role-management",
+          },
+          {
+            title: "Add Role",
+            link: "/add-role",
+          },
+          {
+            title: "Edit Role",
+            link: "/edit-role",
+          },
+          {
+            title: "Roles & Permissions",
+            link: "/roles-permissions",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    category: "System & Admin",
+    items: [
+      {
+        title: "Sub Login",
         icon: "/icons/freeze-status.svg",
         link: "/sub-login",
       },
-  
-  ]
-  }
-  // {
-  //   category: "GMR Client",
-  //   items: [
-  //     {
-  //       title: "Dashboard",
-  //       link: "/consumer-dashboard",
-  //       icon: "/icons/dashboard.svg",
-  //     },
-  //     {
-  //       title: "All Consumer",
-  //       link: "/consumers",
-  //       icon: "/icons/units.svg",
-  //     },
-
-  //     {
-  //       title: "Bills",
-  //       icon: "/icons/user_managment.svg",
-  //       link: "/user-management",
-  //       hasSubmenu: true,
-  //       submenu: [
-  //         {
-  //           title: "PostPaid",
-  //           icon: "/icons/dashboard.svg",
-  //           link: "/prepaid",
-  //         },
-  //         {
-  //           title: "Postpaid",
-  //           icon: "/icons/dashboard.svg",
-  //           link: "/postpaid",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
+      {
+        title: "App Management",
+        icon: "/icons/apps-icon.svg",
+        link: "/apps",
+      },
+      {
+        title: "Components Documentation",
+        icon: "/icons/freeze-status.svg",
+        link: "/components-documentation",
+      },
+      {
+        title: "Filter Style Controller",
+        icon: "/icons/freeze-status.svg",
+        link: "/filter-style-controller",
+      },
+    ],
+  },
+  {
+    category: "Occupancy & Status",
+    items: [
+      {
+        title: "Occupancy Status",
+        icon: "/icons/freeze-status.svg",
+        link: "/occupancy-status",
+      },
+      {
+        title: "Freeze Status",
+        icon: "/icons/freeze-status.svg",
+        link: "/freeze-status",
+      },
+      {
+        title: "Payment",
+        icon: "/icons/freeze-status.svg",
+        link: "/payment",
+      },
+      {
+        title: "Confirmation",
+        icon: "/icons/freeze-status.svg",
+        link: "/confirmation",
+      },
+      {
+        title: "Usage Summary",
+        icon: "/icons/freeze-status.svg",
+        link: "/usage-summary",
+      },
+    ],
+  },
 ];
 
 const defaultProps: Partial<
@@ -837,4 +893,3 @@ const Sidebar = ({
 };
 
 export default Sidebar;
-// font-medium

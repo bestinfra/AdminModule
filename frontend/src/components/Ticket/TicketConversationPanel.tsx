@@ -1,7 +1,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
-import type { ChatMessage, ChatUser } from './ChatApplication';
+import type { ChatApplicationMessage as ChatMessage, ChatUser } from './index';
 
 interface Ticket {
     id: number;
@@ -220,4 +220,4 @@ export default function TicketConversationPanel() {
             />
         </Suspense>
     );
-} 
+}
