@@ -17,7 +17,7 @@ export default defineConfig({
         './Header': './src/components/global/Header.tsx',
         './Page': './src/components/global/PageC.tsx',
         './providers/ThemeProvider': './src/providers/ThemeProvider.tsx',
-        './Login': './src/pages_v2/SubLogin.tsx',
+        './Login': './src/pages/SubLogin.tsx',
         './context/AuthContext': './src/context/AuthContext.tsx',
         './components/auth/ProtectedRoute': './src/components/auth/ProtectedRoute.tsx',
       },
@@ -43,12 +43,13 @@ export default defineConfig({
       '@pages': path.resolve(__dirname, './src/pages'),
       '@graphs': path.resolve(__dirname, './src/graphs'),
       '@context': path.resolve(__dirname, './src/context'),
+      '@contexts': path.resolve(__dirname, './src/contexts'),
       '@providers': path.resolve(__dirname, './src/providers'),
       '@utils': path.resolve(__dirname, './src/utils'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@assets': path.resolve(__dirname, './src/assets'),
       '@types': path.resolve(__dirname, './src/types'),
-      '@pages_v2': path.resolve(__dirname, './src/pages_v2'),
+
     },
   },
   preview: {

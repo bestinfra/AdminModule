@@ -1,521 +1,529 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Page from '@/components/global/PageC';
+import BACKEND_URL from '../config';
 
-// Components
-import Page from '@components/global/Page';
-import PageHeader from '@components/global/PageHeader';
-import Table from '@components/global/Table';
-import Button from '@components/global/Button';
-
-// Context
-
-// Types
-import type { Section } from '@components/global/Page';
-import type { TableData, Column } from '@components/global/Table';
-
-// API Client
-const API_BASE_URL = 'http://localhost:4000/api';
-
-interface ApiResponse<T> {
-    success: boolean;
-    data: T;
-    message: string;
-}
-
-const apiClient = {
-    async get<T>(endpoint: string): Promise<ApiResponse<T>> {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response.json();
-    },
-    async post<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-        return response.json();
-    },
-    async put<T>(endpoint: string, data: any): Promise<ApiResponse<T>> {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        });
-        return response.json();
-    },
-    async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response.json();
-    },
-};
-
-// Interfaces
-interface Role extends TableData {
+interface Role {
     id: number;
     name: string;
-    description: string;
-    permissions: any; // Changed to any to satisfy TableData constraint
-    created_at: string;
-    updated_at?: string;
+    users: Array<{
+        id: number;
+        username: string;
+        firstName: string;
+        lastName: string;
+        email: string;
+        isActive: boolean;
+    }>;
+    permissions: Array<{ id: number; name: string; description: string }>;
+    createdAt: string;
+    updatedAt?: string;
 }
 
-interface NewRole {
-    name: string;
-    description: string;
-    permissions: string;
-}
-
-// Error Display Component
-const ErrorDisplay: React.FC<{ error: string; onClose: () => void }> = ({ error, onClose }) => (
-    <div className="bg-danger-light border border-danger rounded-lg p-4 mb-4">
-        <div className="flex items-center justify-between">
-            <div className="flex items-center">
-                <svg className="w-5 h-5 text-danger mr-2" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                </svg>
-                <span className="text-danger font-medium">{error}</span>
-            </div>
-            <button
-                onClick={onClose}
-                className="text-danger hover:text-danger-dark"
-            >
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-            </button>
-        </div>
-    </div>
-);
-
-const RoleManagement: React.FC = () => {
+export default function RoleManagement() {
     const navigate = useNavigate();
-
-    // State
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
-    const [selectedRole, setSelectedRole] = useState<Role | null>(null);
-    const [isAddingRole, setIsAddingRole] = useState(false);
-    const [newRole, setNewRole] = useState<NewRole>({
-        name: '',
-        description: '',
-        permissions: '',
+    const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
+    const [serverPagination, setServerPagination] = useState({
+        currentPage: 1,
+        totalPages: 1,
+        totalCount: 0,
+        limit: 10,
+        hasNextPage: false,
+        hasPrevPage: false
+    });
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [roleToDelete, setRoleToDelete] = useState<any>(null);
+    const [roleToEdit, setRoleToEdit] = useState<any>(null);
+    const [formData, setFormData] = useState({
+        roleName: '',
+        description: ''
     });
 
-    // Dummy Data (fallback)
-    const dummyRoles: Role[] = [
-        {
-            id: 1,
-            name: 'Super Admin',
-            description:
-                'Full system access with all permissions including user management, system configuration, and data management.',
-            permissions:
-                'create, read, update, delete, manage_users, manage_roles, system_config',
-            created_at: '2024-01-01T09:00:00Z',
-            updated_at: '2024-01-15T10:30:00Z',
-        },
-        {
-            id: 2,
-            name: 'Admin',
-            description:
-                'Administrative access with user management and most system features except critical system configuration.',
-            permissions: 'create, read, update, delete, manage_users',
-            created_at: '2024-01-02T10:15:00Z',
-            updated_at: '2024-01-14T15:45:00Z',
-        },
-        {
-            id: 3,
-            name: 'Moderator',
-            description:
-                'Moderate access with ability to manage content and basic user interactions.',
-            permissions: 'create, read, update, moderate_content',
-            created_at: '2024-01-03T14:30:00Z',
-            updated_at: '2024-01-13T11:20:00Z',
-        },
-        {
-            id: 4,
-            name: 'Accountant',
-            description:
-                'Financial data access with permissions to view and manage billing, payments, and financial reports.',
-            permissions: 'read, manage_billing, view_reports, manage_payments',
-            created_at: '2024-01-04T11:45:00Z',
-            updated_at: '2024-01-12T16:10:00Z',
-        },
-        {
-            id: 5,
-            name: 'Support Agent',
-            description:
-                'Customer support role with access to tickets, user queries, and basic system information.',
-            permissions: 'read, manage_tickets, view_customer_data',
-            created_at: '2024-01-05T13:20:00Z',
-            updated_at: '2024-01-11T09:30:00Z',
-        },
-        {
-            id: 6,
-            name: 'User',
-            description:
-                'Basic user access with limited permissions for personal account management.',
-            permissions: 'read, update_profile',
-            created_at: '2024-01-06T15:10:00Z',
-            updated_at: '2024-01-10T12:15:00Z',
-        },
-    ];
+    const fetchRoles = async (page = 1, limit = 10, searchTerm = '') => {
+        try {
+            setLoading(true);
+            const params = new URLSearchParams();
+            params.append('page', String(page));
+            params.append('limit', String(limit));
+            
+            if (searchTerm && searchTerm.trim()) {
+                params.append('search', searchTerm.trim());
+            }
+            
+            const res = await fetch(`${BACKEND_URL}/roles?${params.toString()}`);
+            const data = await res.json();
+            if (data.success) {
+                setRoles(data.data);
+                setServerPagination({
+                    currentPage: data.pagination?.currentPage || 1,
+                    totalPages: data.pagination?.totalPages || 1,
+                    totalCount: data.pagination?.totalCount || 0,
+                    limit: data.pagination?.limit || limit,
+                    hasNextPage: data.pagination?.hasNextPage || false,
+                    hasPrevPage: data.pagination?.hasPrevPage || false,
+                });
+            } else {
+                throw new Error(data.message || 'Failed to fetch roles');
+            }
+        } catch (err: any) {
+            console.error('Error fetching roles:', err);
+            alert(`Error fetching roles: ${err.message}`);
+            if (roles.length === 0) {
+                setRoles([]);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    // Effects
+    // Load data on component mount
     useEffect(() => {
         fetchRoles();
     }, []);
 
-    // API Functions
-    const fetchRoles = async () => {
-        try {
-            setLoading(true);
-            setError(null);
+    // Handle table pagination
+    const handlePageChange = (page: number, limit: number) => {
+        fetchRoles(page, limit);
+    };
 
-            try {
-                const response: ApiResponse<Role[]> = await apiClient.get('/roles');
-                if (response.success) {
-                    setRoles(response.data || []);
+    // Handle table search
+    const handleSearch = (searchTerm: string) => {
+        // Reset to first page when searching
+        fetchRoles(1, serverPagination.limit, searchTerm);
+    };
+
+    const handleDeleteClick = (row: any) => {
+        setRoleToDelete(row);
+        setShowDeleteModal(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!roleToDelete) return;
+        
+        setDeleting(true);
+        try {
+            console.log('Deleting role:', roleToDelete.id);
+            const res = await fetch(`${BACKEND_URL}/roles/${roleToDelete.id}`, {
+                method: 'DELETE',
+            });
+            if (res.ok) {
+                const result = await res.json();
+                if (result.success) {
+                    setRoles(roles.filter(role => role.id !== roleToDelete.id));
+                    alert('Role deleted successfully!');
                 } else {
-                    throw new Error(response.message || 'Failed to fetch roles');
+                    throw new Error(result.message || 'Failed to delete role');
                 }
-            } catch (apiError) {
-                console.warn('API call failed, using dummy data:', apiError);
-                // Fallback to dummy data if API is not available
-                setRoles(dummyRoles);
+            } else {
+                throw new Error(`HTTP error! status: ${res.status}`);
             }
-        } catch (err) {
-            setError('Failed to fetch roles');
-            console.error('Error fetching roles:', err);
-            // Use dummy data as fallback
-            setRoles(dummyRoles);
+        } catch (error: any) {
+            console.error('Error deleting role:', error);
+            alert(`Error deleting role: ${error.message}`);
         } finally {
-            setLoading(false);
+            setDeleting(false);
+            setShowDeleteModal(false);
+            setRoleToDelete(null);
         }
     };
 
-    // Event Handlers
-    const handleAddRole = () => {
-        setIsAddingRole(true);
-        setSelectedRole(null);
-        setNewRole({ name: '', description: '', permissions: '' });
+    const handleCancelDelete = () => {
+        setShowDeleteModal(false);
+        setRoleToDelete(null);
     };
 
-    const handleEditRole = (role: Role) => {
-        setSelectedRole(role);
-        setNewRole({
-            name: role.name,
-            description: role.description,
-            permissions: role.permissions || '',
+    const handleAddClick = () => {
+        setFormData({
+            roleName: '',
+            description: ''
         });
-        setIsAddingRole(true);
+        setShowAddModal(true);
     };
 
-    const handleDeleteRole = async (role: Role) => {
-        if (window.confirm('Are you sure you want to delete this role?')) {
-            try {
-                setLoading(true);
-
-                try {
-                    await apiClient.delete(`/roles/${role.id}`);
-                    await fetchRoles();
-                } catch (apiError) {
-                    console.warn('API call failed, using local state update:', apiError);
-                    // Fallback to local state update
-                    setRoles((prevRoles) =>
-                        prevRoles.filter((r) => r.id !== role.id)
-                    );
-                }
-            } catch (err) {
-                setError('Failed to delete role');
-                console.error('Error deleting role:', err);
-            } finally {
-                setLoading(false);
-            }
-        }
+    const handleEditClick = (row: any) => {
+        setRoleToEdit(row);
+        setFormData({
+            roleName: row.roleName || '',
+            description: row.description || ''
+        });
+        setShowEditModal(true);
     };
 
-    const handleSaveRole = async (e: React.FormEvent) => {
-        e.preventDefault();
+    const handleSaveRole = async (data: Record<string, any>) => {
+        setSaving(true);
         try {
-            setLoading(true);
-            setError(null);
-
-            try {
-                if (selectedRole) {
-                    await apiClient.put(`/roles/${selectedRole.id}`, newRole);
+            if (showEditModal && roleToEdit) {
+                console.log('Updating role:', roleToEdit.id, data);
+                const res = await fetch(`${BACKEND_URL}/roles/${roleToEdit.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: data.roleName,
+                        description: data.description
+                    })
+                });
+                if (res.ok) {
+                    const result = await res.json();
+                    if (result.success) {
+                        await fetchRoles();
+                        alert('Role updated successfully!');
+                    } else {
+                        throw new Error(result.message || 'Failed to update role');
+                    }
                 } else {
-                    await apiClient.post('/roles', newRole);
+                    throw new Error(`HTTP error! status: ${res.status}`);
                 }
-                await fetchRoles();
-            } catch (apiError) {
-                console.warn('API call failed, using local state update:', apiError);
-                // Fallback to local state update
-                if (selectedRole) {
-                    setRoles((prevRoles) =>
-                        prevRoles.map((role) =>
-                            role.id === selectedRole.id
-                                ? {
-                                      ...role,
-                                      ...newRole,
-                                      updated_at: new Date().toISOString(),
-                                  }
-                                : role
-                        )
-                    );
+            } else {
+                console.log('Creating new role:', data);
+                const res = await fetch(`${BACKEND_URL}/roles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: data.roleName,
+                        description: data.description
+                    })
+                });
+                if (res.ok) {
+                    const result = await res.json();
+                    if (result.success) {
+                        await fetchRoles();
+                        alert('Role created successfully!');
+                    } else {
+                        throw new Error(result.message || 'Failed to create role');
+                    }
                 } else {
-                    const newRoleData: Role = {
-                        id: Math.max(...roles.map((r) => r.id)) + 1,
-                        ...newRole,
-                        created_at: new Date().toISOString(),
-                        updated_at: new Date().toISOString(),
-                    };
-                    setRoles((prevRoles) => [...prevRoles, newRoleData]);
+                    throw new Error(`HTTP error! status: ${res.status}`);
                 }
             }
-
-            setIsAddingRole(false);
-            setSelectedRole(null);
-            setNewRole({ name: '', description: '', permissions: '' });
-        } catch (err) {
-            setError('Failed to save role');
-            console.error('Error saving role:', err);
+        } catch (error: any) {
+            console.error('Error saving role:', error);
+            alert(`Error saving role: ${error.message}`);
         } finally {
-            setLoading(false);
+            setSaving(false);
+            setShowAddModal(false);
+            setShowEditModal(false);
+            setRoleToEdit(null);
+            setFormData({ roleName: '', description: '' });
         }
     };
 
-    const handleManagePermissions = (role: Role) => {
-        navigate('/admin/permissions', { state: { role } });
-    };
-
-    const handleCancelForm = () => {
-        setIsAddingRole(false);
-        setSelectedRole(null);
-        setNewRole({ name: '', description: '', permissions: '' });
-    };
-
-    // Utility Functions
-    const formatDate = (dateString: string): string => {
-        if (!dateString) return 'NA';
-        const date = new Date(dateString);
-        return date.toLocaleString('en-IN', {
-            timeZone: 'Asia/Kolkata',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
+    const handleCancelModal = () => {
+        setShowAddModal(false);
+        setShowEditModal(false);
+        setRoleToEdit(null);
+        setFormData({
+            roleName: '',
+            description: ''
         });
     };
 
-    // Table columns
-    const columns: Column[] = [
+    const handleManagePermissions = (row: any) => {
+        navigate('/roles-permissions', { state: { role: row } });
+    };
+
+    // Form fields configuration for add role
+    const addRoleFormFields = [
         {
-            key: 'name',
+            type: 'input' as const,
             label: 'Role Name',
-            render: (value: string | number | boolean | null | undefined) =>
-                (value as string) || '-',
+            name: 'roleName',
+            value: formData.roleName,
+            placeholder: 'Enter role name',
+            required: true,
+            validation: {
+                required: 'Role name is required'
+            }
         },
         {
-            key: 'description',
+            type: 'textarea' as const,
             label: 'Description',
-            render: (value: string | number | boolean | null | undefined) =>
-                (value as string) || '-',
+            name: 'description',
+            value: formData.description,
+            placeholder: 'Enter role description',
+            required: false,
+            span: { col: 1, row: 1 } // This makes the description field take full width
+        }
+    ];
+
+    // Form fields configuration for edit role
+    const editRoleFormFields = [
+        {
+            type: 'input' as const,
+            label: 'Current Role',
+            name: 'currentRole',
+            value: roleToEdit?.roleName || '',
+            placeholder: 'Current role name',
+            required: true,
+            onChange: (value: string) => setFormData(prev => ({ ...prev, roleName: value })),
+            disabled: true
         },
         {
-            key: 'created_at',
-            label: 'Created Date',
-            render: (value: string | number | boolean | null | undefined) =>
-                value ? formatDate(value as string) : 'NA',
-        },
-        {
-            key: 'actions',
-            label: 'Actions',
-            render: (_, row: TableData) => {
-                const role = row as Role;
-                return (
-                    <div className="flex items-center gap-2 flex-wrap">
-                        <Button
-                            label="Manage Permissions"
-                            variant="warning"
-                            onClick={() => handleManagePermissions(role)}
-                        />
-                        <Button
-                            label="Edit"
-                            variant="warning"
-                            onClick={() => handleEditRole(role)}
-                        />
-                        <Button
-                            label="Delete"
-                            variant="danger"
-                            onClick={() => handleDeleteRole(role)}
-                        />
-                    </div>
-                );
-            },
+            type: 'dropdown' as const,
+            label: 'Select New Role',
+            name: 'roleName',
+            value: formData.roleName,
+            required: true,
+            options: [
+                { value: 'Admin', label: 'Admin' },
+                { value: 'Moderator', label: 'Moderator' },
+                { value: 'Accountant', label: 'Accountant' },
+                { value: 'User', label: 'User' }
+            ],
+            onChange: (value: string) => setFormData(prev => ({ ...prev, roleName: value }))
         },
     ];
 
-    // Role form component
-    const RoleForm = () => (
-        <div className="max-w-2xl mx-auto">
-            <div className="bg-white rounded-2xl shadow-sm p-6">
-                <div className="flex items-center gap-3 mb-6">
-                    <img
-                        src="/icons/roles.svg"
-                        alt="Role"
-                        className="w-8 h-8"
-                    />
-                    <div>
-                        <h3 className="text-lg font-semibold text-text-primary">
-                            {selectedRole ? 'Edit Role' : 'Add New Role'}
-                        </h3>
-                        <p className="text-text-secondary text-sm">
-                            {selectedRole
-                                ? 'Update role information'
-                                : 'Create a new role'}
-                        </p>
-                    </div>
-                </div>
+    // Table data for the Table component - Updated to match the image layout
+    const tableData = roles.map((role) => ({
+        id: role.id,
+        fullName: role.users.length > 0 ? role.users[0].firstName + ' ' + role.users[0].lastName : 'N/A',
+        roleName: role.name,
+        client: 'GMR', // Default client as shown in the image
+        users: role.users.length,
+        permissions: role.permissions.map((p) => p.name).join(', '),
+        createdAt: role.createdAt,
+        updatedAt: role.updatedAt || 'NA',
+    }));
 
-                <form onSubmit={handleSaveRole} className="space-y-6">
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-text-secondary">
-                            Role Name *
-                        </label>
-                        <input
-                            type="text"
-                            value={newRole.name}
-                            onChange={(e) =>
-                                setNewRole({ ...newRole, name: e.target.value })
-                            }
-                            placeholder="Enter role name"
-                            required
-                            className="w-full px-4 py-2 border border-neutral-light rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors"
-                        />
-                    </div>
+    // Table columns configuration - Updated to match the image
+    const tableColumns = [
+        { key: 'fullName', label: 'Full Name' },
+        { key: 'roleName', label: 'Role Name' },
+        { key: 'client', label: 'Client' },
+    ];
 
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold text-text-secondary">
-                            Description
-                        </label>
-                        <textarea
-                            value={newRole.description}
-                            onChange={(e) =>
-                                setNewRole({
-                                    ...newRole,
-                                    description: e.target.value,
-                                })
-                            }
-                            placeholder="Enter role description"
-                            rows={4}
-                            className="w-full px-4 py-2 border border-neutral-light rounded-lg focus:ring-2 focus:ring-primary focus:border-primary transition-colors resize-vertical"
-                        />
-                    </div>
-
-                    <div className="flex justify-end gap-3 pt-4 border-t">
-                        <Button
-                            label="Cancel"
-                            variant="outline"
-                            onClick={handleCancelForm}
-                            disabled={loading}
-                        />
-                        <Button
-                            label={
-                                loading
-                                    ? 'Saving...'
-                                    : selectedRole
-                                    ? 'Update Role'
-                                    : 'Create Role'
-                            }
-                            variant="primary"
-                            type="submit"
-                            disabled={loading}
-                        />
-                    </div>
-                </form>
-            </div>
-        </div>
-    );
-
-    // Header component
-    const headerComponent = (
-        <PageHeader
-            title="Roles Management"
-            onBackClick={() => navigate('/')}
-            backButtonText="Back"
-            buttonsLabel="Add Role"
-            variant="primary"
-            onClick={handleAddRole}
-        />
-    );
-
-    // Page sections
-    const sections: Section[] = [
+    // Actions array for the table - With icons
+    const tableActions = [
         {
-            id: 'subtitle',
-            component: (
-                <div className="mb-6">
-                    <p className="text-gray-600">Manage and configure system roles</p>
-                </div>
-            ),
+            label: 'Manage Permissions',
+            onClick: handleManagePermissions,
+            icon: '/icons/settings.svg',
         },
+                            {
+                        label: 'Edit',
+            onClick: handleEditClick,
+                        icon: '/icons/user-pen.svg',
+                    },
         {
-            id: 'error',
-            component: error ? (
-                <ErrorDisplay
-                    error={error}
-                    onClose={() => setError(null)}
-                />
-            ) : null,
-        },
-        {
-            id: 'content',
-            component: (
-                <div className="space-y-6">
-                    {isAddingRole ? (
-                        <RoleForm />
-                    ) : (
-                        <div className="bg-white rounded-2xl shadow-sm">
-                            <Table
-                                data={roles}
-                                columns={columns}
-                                loading={loading}
-                                emptyMessage="No roles found"
-                                searchable={true}
-                                sortable={true}
-                                text="Role"
-                            />
-                        </div>
-                    )}
-                </div>
-            ),
+            label: 'Delete',
+            onClick: handleDeleteClick,
+            icon: '/icons/delete.svg',
         },
     ];
 
     return (
-        <Page
-            layout="single-column"
-            sections={sections.filter((section) => section.component !== null)}
-            header={headerComponent}
-            className="p-4"
-        />
-    );
-};
+        <Suspense fallback={<div>Loading...</div>}>
+            <Page
+                sections={[
+                    // Page Header Section
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: 'Role Management',
+                                                onBackClick: () =>
+                                                    navigate('/users'),
+                                                backButtonText:
+                                                    'Back to UserManagment',
+                                                buttonsLabel: 'Add Role',
+                                                variant: 'primary',
+                                                onClick: handleAddClick,
+                                                showMenu: true,
+                                                showDropdown: false,
+                                                menuItems: [
+                                                    {
+                                                        id: 'all',
+                                                        label: 'All Roles',
+                                                    },
+                                                    {
+                                                        id: 'admin',
+                                                        label: 'Administrative Roles',
+                                                    },
+                                                    {
+                                                        id: 'user',
+                                                        label: 'User Roles',
+                                                    },
+                                                    {
+                                                        id: 'support',
+                                                        label: 'Support Roles',
+                                                    },
+                                                    {
+                                                        id: 'financial',
+                                                        label: 'Financial Roles',
+                                                    },
+                                                    {
+                                                        id: 'system',
+                                                        label: 'System Roles',
+                                                    },
+                                                ],
+                                                onMenuItemClick: (
+                                                    itemId: string
+                                                ) => {
+                                                    console.log(
+                                                        `Filter by: ${itemId}`
+                                                    );
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Table Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Table',
+                                            props: {
+                                                data: tableData,
+                                                columns: tableColumns,
+                                                loading: loading,
+                                                emptyMessage: 'No roles found',
+                                                searchable: true,
+                                                pagination: true,
+                                                showActions: true,
+                                                actions: tableActions,
+                                                onPageChange: handlePageChange,
+                                                onSearch: handleSearch,
+                                                serverPagination: serverPagination,
+                                                onEdit: (row: any) => {
+                                                    console.log('Edit clicked for:', row);
+                                                    navigate(`/edit-role/${row.id}`, { state: { role: row } });
+                                                },
+                                                onDelete: (row: any) => {
+                                                    console.log('Delete clicked for:', row);
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Delete Confirmation Modal Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: showDeleteModal,
+                                                onClose: handleCancelDelete,
+                                                title: 'Delete Role',
+                                                size: 'md',
+                                                showConfirmButton: true,
+                                                confirmButtonLabel: deleting ? 'Deleting...' : 'Delete Role',
+                                                confirmButtonVariant: 'danger',
+                                                onConfirm: handleConfirmDelete,
+                                                disabled: deleting,
+                                                message: `Are you sure you want to delete the role "${roleToDelete?.roleName}"?`,
+                                                warningMessage: 'This action cannot be undone. All users assigned to this role will lose their permissions.',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Add Role Modal Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: showAddModal,
+                                                onClose: handleCancelModal,
+                                                title: 'Add New Role',
+                                                size: 'lg',
+                                                showCloseIcon: true,
+                                                showForm: true,
+                                                formFields: addRoleFormFields,
+                                                onSave: (formData: Record<string, any>) => {
+                                                    console.log('Form data received:', formData);
+                                                    handleSaveRole(formData);
+                                                },
+                                                saveButtonLabel: saving ? 'Creating...' : 'Create Role',
+                                                cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
+                                                confirmButtonVariant: 'primary',
+                                                disabled: saving,
+                                                formId: 'add-role-form',
+                                                gridLayout: {
+                                                    gridRows: 2,
+                                                    gridColumns: 1,
+                                                    gap: 'gap-4'
+                                                },
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Edit Role Modal Section
+                    {
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row' as const,
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: showEditModal,
+                                                onClose: handleCancelModal,
+                                                title: 'Edit Role',
+                                                size: 'lg',
+                                                showForm: true,
+                                                formFields: editRoleFormFields,
+                                                onSave: (formData: Record<string, any>) => {
+                                                    console.log('Edit form data received:', formData);
+                                                    handleSaveRole(formData);
+                                                },
+                                                saveButtonLabel: saving ? 'Updating...' : 'Update Role',
+                                                cancelButtonLabel: 'Cancel',
+                                                disabled: saving,
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
 
-export default RoleManagement;
+                ]}
+            />
+        </Suspense>
+    );
+}

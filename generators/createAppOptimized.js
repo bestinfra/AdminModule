@@ -61,10 +61,11 @@ function createAppProjectOptimized(formData) {
 
     const dynamicPort = deployer.findAvailablePort();
 
-    copyAssets(baseDir, formData);
-
     const frontendFormData = { ...formData, backendPort: dynamicPort };
     generateFrontend(baseDir, frontendFormData);
+    
+    // Copy assets after frontend is generated
+    copyAssets(baseDir, formData);
 
   // --- BACKEND DEPLOYMENT START ---
   // Deploy backend to XAMPP using optimized deployer
@@ -134,8 +135,8 @@ function copyAssets(baseDir, formData) {
     const frontendDir = path.join(baseDir, 'frontend');
     const sourceFrontendDir = path.join(__dirname, '..', 'frontend');
 
-    // Prefer pages_v2 as the source for pages
-    const sourcePagesV2Dir = path.join(sourceFrontendDir, 'src', 'pages_v2');
+    // Use pages as the source for pages
+    const sourcePagesDir = path.join(sourceFrontendDir, 'src', 'pages');
     const destPagesDir = path.join(frontendDir, 'src', 'pages');
     
     // Module to page file mapping - Updated to match frontendGenerator.js structure
@@ -182,7 +183,7 @@ function copyAssets(baseDir, formData) {
         'add_user': ['AddUser.tsx']
     };
 
-    if (fs.existsSync(sourcePagesV2Dir)) {
+    if (fs.existsSync(sourcePagesDir)) {
         // Remove existing destPagesDir if it exists to avoid mixing old files
         if (fs.existsSync(destPagesDir)) {
             fs.rmSync(destPagesDir, { recursive: true, force: true });
@@ -280,7 +281,7 @@ function copyAssets(baseDir, formData) {
         
         console.log('📁 Copying selected modules:', selectedModules);
         console.log('📁 Processing modules (including auto-added):', modulesToProcess);
-        console.log('📁 Source pages directory:', sourcePagesV2Dir);
+        console.log('📁 Source pages directory:', sourcePagesDir);
         console.log('📁 Destination pages directory:', destPagesDir);
         
         modulesToProcess.forEach(module => {
@@ -290,7 +291,7 @@ function copyAssets(baseDir, formData) {
                 console.log(`     Page files: ${pageFiles.join(', ')}`);
                 
                 pageFiles.forEach(pageFile => {
-                    const sourcePath = path.join(sourcePagesV2Dir, pageFile);
+                    const sourcePath = path.join(sourcePagesDir, pageFile);
                     const destPath = path.join(destPagesDir, pageFile);
                     
                     console.log(`     Checking: ${sourcePath}`);
@@ -323,7 +324,7 @@ function copyAssets(baseDir, formData) {
         // Always copy essential files (login, etc.)
         const essentialFiles = ['SubLogin.tsx', 'LoginV2.tsx'];
         essentialFiles.forEach(file => {
-            const sourcePath = path.join(sourcePagesV2Dir, file);
+            const sourcePath = path.join(sourcePagesDir, file);
             const destPath = path.join(destPagesDir, file);
             if (fs.existsSync(sourcePath)) {
                 copyFileWithImportProcessing(sourcePath, destPath);
@@ -395,6 +396,10 @@ function copyFileWithImportProcessing(sourcePath, destPath) {
         
         // Replace all @/ imports with relative imports
         content = content.replace(/@\//g, '../');
+        
+        // Fix pages_v2 imports to use pages instead
+        content = content.replace(/@pages_v2\//g, '@pages/');
+        content = content.replace(/\.\.\/pages_v2\//g, '../pages/');
         
         // Handle specific import replacements for sub-apps
         

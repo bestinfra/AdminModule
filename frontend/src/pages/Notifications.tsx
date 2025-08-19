@@ -39,7 +39,7 @@ const tabs = [
   'System Maintenance',
 ];
 
-const notificationTypes = ['Email', 'SMS', 'App'];
+const notificationTypes = ['Email', 'SMS', 'Apps'];
 
 const Notifications: React.FC = () => {
   const [activeTab, setActiveTab] = React.useState(0);

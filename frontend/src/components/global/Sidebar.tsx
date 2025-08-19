@@ -65,203 +65,47 @@ const defaultMenus: MenuCategory[] = [
         icon: "/icons/dashboard.svg",
         link: "/superadmin",
       },
-      // {
-      //     title: 'DTR Dashboard',
-      //     icon: '/icons/dashboard.svg',
-      //     link: '/dtr-dashboard',
-      // },
+      
+      {
+        title: "DTR Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/dtr-dashboard",
+      },
+      {
+        title: "DG Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/dg-dashboard",
+      },
+      {
+        title: "Data Logger Dashboard",
+        icon: "/icons/dashboard.svg",
+        link: "/data-logger",
+      },
+    ],
+  },
+  {
+    category: "Tickets & Support",
+    items: [
+        {
+            title: "Consumer Dashboard",
+            icon: "/icons/dashboard.svg",
+            link: "/consumer-dashboard",
+          },
       {
         title: "Tickets",
         icon: "/icons/customer-service.svg",
         link: "/tickets",
       },
-
-            {
-                title:'All Tickets',
-                icon:'/icons/dashboard.svg',
-                link:'/all-tickets',
-            },
-           
-            {
-              title: "Asset Managment",
-              icon: "/icons/freeze-status.svg",
-              link: "/asset-managment",
-            },
-            {
-              title: "DG_Dashboard",
-              icon: "/icons/freeze-status.svg",
-              link: "/dg-dashboard",
-            },
-      // {
-      //     title:'ConsumerDetails',
-      //     icon:'/icons/dashboard.svg',
-      //     link:'/consumer-details',
-      // }
+      {
+        title: "All Tickets",
+        icon: "/icons/customer-service.svg",
+        link: "/all-tickets",
+      },
+      
     ],
   },
-  // {
-  //   category: "ADMIN SETTINGS",
-  //   items: [
-  //     // {
-  //     //     title: 'Asset Management',
-  //     //     icon: '/icons/Asset_managment.svg',
-  //     //     link: '/asset-managment',
-  //     // },
 
-  //     // {
-  //     //     title: 'Meter List',
-  //     //     icon: '/icons/meter_managment.svg',
-  //     //     link: '/meters',
-  //     // },
-    
-    
-  //     // {
-  //     //   title: "Payment",
-  //     //   icon: "/icons/payment.svg",
-  //     //   link: "/payment",
-  //     // },
-  //     // {
-  //     //   title: "Freeze Status",
-  //     //   icon: "/icons/freeze-status.svg",
-  //     //   link: "/freeze-status",
-  //     // },
-     
-      
-  //     // {
-  //     //   title: "Usage Summary",
-  //     //   icon: "/icons/freeze-status.svg",
-  //     //   link: "/usage-summary",
-  //     // },
-  //     // {
-  //     //     title: 'SubLogin',
-  //     //     link: '/sub-login',
-  //     //     icon:'/icons/user_managment.svg',
-  //     // },
 
-  //     // {
-  //     //     title: 'User Management',
-  //     //     icon: '/icons/user_managment.svg',
-  //     //     link: '/user-management',
-  //     //     hasSubmenu: true,
-  //     //     submenu: [
-
-  //     //         {
-  //     //             title: 'Role Management',
-  //     //             link: '/role-management ',
-  //     //         },
-  //     //     ],
-  //     // },
-  //     // {
-  //     //     title: 'User Management',
-  //     //     icon: '/icons/user_managment.svg',
-  //     //     link: '/user-management',  
-  //     //     hasSubmenu: true,
-  //     //     submenu: [
-
-  //     //         {
-  //     //             title: 'Role Management',
-  //     //             link: '/role-management ',
-  //     //         },
-  //     //     ],
-  //     // },
-  //   ],
-  // },
-  {
-    category: "GMR  Modules",
-    items: [ 
-      {
-      title: "Consumer Dashbaord",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumer-dashboard",
-    },
-    {
-      title: "All Consumers",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumers",
-    },
-    {
-        title: "Error",
-        icon: "/icons/freeze-status.svg",
-        link: "/error",
-      },
-    {   
-      title: 'Bills',
-      icon: '/icons/bills.svg',
-      link: '/bills',
-      hasSubmenu: true,
-      submenu: [
-          {
-              title: 'Prepaid',
-              link: '/prepaid',
-          },
-          {
-              title: 'Postpaid',
-              link: '/postpaid',
-          },
-      ],
-  },
-  ]
-  },
-  {
-    category: "TGNPDCL  Modules",
-    items: [ 
-      {
-      title: "DTR Dashboard",
-      icon: "/icons/freeze-status.svg",
-      link: "/dtr-dashboard",
-    },
-    {
-      title: "DTR INdividual Detail",
-      icon: "/icons/freeze-status.svg",
-      link: "/consumers",
-    },
-    {
-        title: "Feeders",
-        icon: "/icons/freeze-status.svg",
-        link: "/feeders",
-      },
-      {
-        title: "Sublogin",
-        icon: "/icons/freeze-status.svg",
-        link: "/sub-login",
-      },
-  
-  ]
-  }
-  // {
-  //   category: "GMR Client",
-  //   items: [
-  //     {
-  //       title: "Dashboard",
-  //       link: "/consumer-dashboard",
-  //       icon: "/icons/dashboard.svg",
-  //     },
-  //     {
-  //       title: "All Consumer",
-  //       link: "/consumers",
-  //       icon: "/icons/units.svg",
-  //     },
-
-  //     {
-  //       title: "Bills",
-  //       icon: "/icons/user_managment.svg",
-  //       link: "/user-management",
-  //       hasSubmenu: true,
-  //       submenu: [
-  //         {
-  //           title: "PostPaid",
-  //           icon: "/icons/dashboard.svg",
-  //           link: "/prepaid",
-  //         },
-  //         {
-  //           title: "Postpaid",
-  //           icon: "/icons/dashboard.svg",
-  //           link: "/postpaid",
-  //         },
-  //       ],
-  //     },
-  //   ],
-  // },
 ];
 
 const defaultProps: Partial<
@@ -837,4 +681,3 @@ const Sidebar = ({
 };
 
 export default Sidebar;
-// font-medium

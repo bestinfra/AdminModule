@@ -2,6 +2,7 @@ import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useApp } from '@context/AppContext';
 import TimeRangeSelector from '@components/global/TimeRangeSelector';
+import ChartSkeleton from '@components/skeletons/ChartSkeleton';
 
 interface SeriesData {
     name: string;
@@ -38,6 +39,9 @@ interface BarChartProps {
     initialViewType?: string;
     onViewTypeChange?: (viewType: string) => void;
     showTableView?: boolean;
+    
+    // Loading state
+    isLoading?: boolean;
 }
 
 const BarChart: React.FC<BarChartProps> = React.memo(
@@ -70,6 +74,7 @@ const BarChart: React.FC<BarChartProps> = React.memo(
         onViewTypeChange = () => {},
         showTableView = false,
         // tableColumns = [],
+        isLoading = false,
     }) => {
         const { isDarkMode: contextIsDarkMode } = useApp();
         const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
@@ -328,7 +333,9 @@ const BarChart: React.FC<BarChartProps> = React.memo(
             <div className="w-full h-full" role="img" aria-label={ariaLabel}>
                 {title && <span className="sr-only">{title}</span>}
                 {description && <span className="sr-only">{description}</span>}
-                {showTableView && currentViewType === 'Table' ? (
+                {isLoading ? (
+                    <ChartSkeleton height={height} />
+                ) : showTableView && currentViewType === 'Table' ? (
                     <div className="overflow-x-auto">
                         <table className="w-full text-sm">
                             <thead>

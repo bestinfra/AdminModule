@@ -1,377 +1,528 @@
-import React, { useState } from 'react';
-import { PieChart, LineChart } from '@graphs/index';
-import Card from '@components/global/Card';
-import Table from '@components/global/Table';
-import TimeRangeSelector from '@components/global/TimeRangeSelector';
-import Page from '@components/global/Page';
-import type { Section } from '@components/global/Page';
-import PageHeader from '@components/global/PageHeader';
-import type { TableData, Column } from '@components/global/Table';
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import PageC from "@/components/global/PageC";
+import { getSuperAdminDashboardStats } from "@/api/dashboardApi";
+import type { DashboardStats } from "@/api/dashboardApi";
+// @ts-ignore
+import { debounce } from "throttle-debounce";
 
-interface TableAction {
-    label: string;
-    onClick: (row: TableData) => void;
-    icon: string;
-}
-
-const SuperAdminDashboard: React.FC = () => {
-    // const [timeRange, setTimeRange] = useState('Monthly');
-    const [projectsView, setProjectsView] = useState('All');
-
-    
-    // const timeRangeOptions = ['Daily', 'Weekly', 'Monthly', 'Yearly'];
-    const projectsViewOptions = ['All', 'Active', 'Inactive', 'Maintenance'];
-
-    // Host Projects Statistics
-    const projectStats = [
-        {
-            title: 'Total Host Projects',
-            value: '24',
-            icon: '/icons/apps-icon.svg',
-            subtitle1: '18 Active',
-            subtitle2: '6 Inactive',
-            showTrend: true,
-            comparisonValue: 12.5,
-        },
-        {
-            title: 'Active Users',
-            value: '1,847',
-            icon: '/icons/total-users.svg',
-            subtitle1: '1,234 Online',
-            subtitle2: '613 Offline',
-            showTrend: true,
-            comparisonValue: 8.3,
-        },
-        {
-            title: 'System Health',
-            value: '98.7%',
-            icon: '/icons/server.svg',
-            subtitle1: 'All systems operational',
-            subtitle2: '99.2% uptime',
-            showTrend: true,
-            comparisonValue: 0.5,
-        },
-        {
-            title: 'Revenue',
-            value: '₹15,67,890',
-            icon: '/icons/total-revenue.svg',
-            subtitle1: '₹45,230 Today',
-            subtitle2: '12.8% growth',
-            showTrend: true,
-            comparisonValue: 15.2,
-        },
-    ];
-
-    // Host Projects List
-    const hostProjects = [
-        {
-            id: 'PROJ-001',
-            name: 'Smart Energy Portal',
-            domain: 'energy.example.com',
-            status: 'Active',
-            users: 234,
-            lastActivity: '2 mins ago',
-            version: '2.1.0',
-            uptime: '99.9%',
-        },
-        {
-            id: 'PROJ-002',
-            name: 'Water Management System',
-            domain: 'water.example.com',
-            status: 'Active',
-            users: 156,
-            lastActivity: '5 mins ago',
-            version: '1.8.3',
-            uptime: '99.5%',
-        },
-        {
-            id: 'PROJ-003',
-            name: 'Billing Management',
-            domain: 'billing.example.com',
-            status: 'Maintenance',
-            users: 89,
-            lastActivity: '1 hour ago',
-            version: '2.0.1',
-            uptime: '95.2%',
-        },
-        {
-            id: 'PROJ-004',
-            name: 'Customer Portal',
-            domain: 'customer.example.com',
-            status: 'Active',
-            users: 445,
-            lastActivity: '1 min ago',
-            version: '3.2.1',
-            uptime: '99.8%',
-        },
-        {
-            id: 'PROJ-005',
-            name: 'Analytics Dashboard',
-            domain: 'analytics.example.com',
-            status: 'Inactive',
-            users: 0,
-            lastActivity: '2 days ago',
-            version: '1.5.0',
-            uptime: '0%',
-        },
-    ];
-
-    const projectColumns: Column[] = [
-        { key: 'name', label: 'Project Name' },
-        { key: 'domain', label: 'Domain' },
-        { 
-            key: 'status', 
-            label: 'Status',
-            render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    value === 'Active' ? 'bg-secondary-light text-secondary' :
-                    value === 'Maintenance' ? 'bg-warning-alt text-warning' :
-                    'bg-danger-light text-danger'
-                }`}>
-                    {String(value)}
-                </span>
-            )
-        },
-        { key: 'users', label: 'Users' },
-        { key: 'lastActivity', label: 'Last Activity' },
-        { key: 'version', label: 'Version' },
-        { key: 'uptime', label: 'Uptime' },
-    ];
-
-    // System Performance Data
-    const performanceData = [
-        { value: 18, name: 'Active' },
-        { value: 3, name: 'Maintenance' },
-        { value: 3, name: 'Inactive' },
-    ];
-
-    // User Activity Chart Data
-    const userActivityData = [
-        1240, 1350, 1180, 1420, 1580, 1320, 1450, 1380, 1520, 1610, 1480, 1550,
-        1680, 1720, 1590, 1650, 1780, 1820, 1750, 1900, 1850, 1920, 1980, 2100,
-        2050, 2180, 2120, 2200, 2250, 2180
-    ];
-    const userActivityLabels = Array.from({length: 30}, (_, i) => `Day ${i + 1}`);
-
-    // Recent System Events
-    const systemEvents = [
-        {
-            id: 'EVT-001',
-            type: 'Deploy',
-            project: 'Smart Energy Portal',
-            message: 'Version 2.1.0 deployed successfully',
-            timestamp: '2 mins ago',
-            severity: 'Success',
-        },
-        {
-            id: 'EVT-002',
-            type: 'Alert',
-            project: 'Water Management System',
-            message: 'High memory usage detected',
-            timestamp: '15 mins ago',
-            severity: 'Warning',
-        },
-        {
-            id: 'EVT-003',
-            type: 'Maintenance',
-            project: 'Billing Management',
-            message: 'Scheduled maintenance started',
-            timestamp: '1 hour ago',
-            severity: 'Info',
-        },
-        {
-            id: 'EVT-004',
-            type: 'Error',
-            project: 'Analytics Dashboard',
-            message: 'Database connection failed',
-            timestamp: '2 hours ago',
-            severity: 'Error',
-        },
-    ];
-
-    const eventColumns: Column[] = [
-        { key: 'type', label: 'Type' },
-        { key: 'project', label: 'Project' },
-        { key: 'message', label: 'Message' },
-        { key: 'timestamp', label: 'Time' },
-        { 
-            key: 'severity', 
-            label: 'Severity',
-            render: (value: string | number | boolean | null | undefined | number | boolean | null | undefined) => (
-                <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    value === 'Success' ? 'bg-secondary-light text-secondary' :
-                    value === 'Warning' ? 'bg-warning-alt text-warning' :
-                    value === 'Info' ? 'bg-accent-light text-accent' :
-                    'bg-danger-light text-danger'
-                }`}>
-                    {String(value)}
-                </span>
-            )
-        },
-    ];
-
-    const tableActions: TableAction[] = [
-        { label: 'Edit', onClick: (row: TableData) => console.log('Edit:', row), icon: '/icons/edit.svg' },
-        { label: 'View', onClick: (row: TableData) => console.log('View:', row), icon: '/icons/view.svg' },
-        { label: 'Settings', onClick: (row: TableData) => console.log('Settings:', row), icon: '/icons/settings.svg' },
-    ];
-
-    // Header component
-    const headerComponent = (
-        <PageHeader
-            title="Super Admin Dashboard"
-            onBackClick={() => window.history.back()}
-            backButtonText="Back to Dashboard"
-            buttonsLabel="Add Project"
-            variant="primary"
-            onClick={() => console.log('Adding new project...')}
-            showMenu={true}
-            showDropdown={true}
-            menuItems={[
-                { id: 'create-project', label: 'Create Project', link: '/apps'}
-            ]}
-            onMenuItemClick={(itemId) => {
-                console.log(`Filter by: ${itemId}`);
-                // Apply filters based on selection
-                if (itemId === 'active' || itemId === 'inactive' || itemId === 'maintenance' || itemId === 'all') {
-                    setProjectsView(itemId === 'all' ? 'All' : itemId.charAt(0).toUpperCase() + itemId.slice(1));
-                }
-                // TODO: Implement filtering logic for other menu items
-            }}
-        />
-    );
-
-    // Overview Statistics Section
-    const overviewSection: Section = {
-        id: 'overview-stats',
-        component: (
-            <div className="bg-white dark:bg-primary-dark dark:border-dark-border rounded-xl">
-                {/* <div className="flex justify-between items-center gap-2 mb-6">
-                    <h2 className="text-lg font-semibold">System Overview</h2>
-                    <TimeRangeSelector
-                        availableTimeRanges={timeRangeOptions}
-                        selectedTimeRange={timeRange}
-                        handleTimeRangeChange={setTimeRange}
-                    />
-                </div> */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {projectStats.map((card, idx) => (
-                        <Card
-                            key={idx}
-                            title={card.title}
-                            value={card.value}
-                            icon={card.icon}    
-                            subtitle1={card.subtitle1}
-                            subtitle2={card.subtitle2}
-                            showTrend={card.showTrend}
-                            comparisonValue={card.comparisonValue}
-                        />
-                    ))}
-                </div>
-            </div>
-        )
-    };
-
-    // Host Projects Section
-    const hostProjectsSection: Section = {
-        id: 'host-projects',
-        component: (
-            <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                <div className="flex justify-between items-center gap-2 bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
-                    <h2 className="text-lg font-semibold">Host Projects</h2>
-                    <div className="flex items-center gap-2">
-                        <TimeRangeSelector
-                            availableTimeRanges={projectsViewOptions}
-                            selectedTimeRange={projectsView}
-                            handleTimeRangeChange={setProjectsView}
-                        />
-                    </div>
-                </div>
-                <div className="p-6">
-                    <Table
-                        data={hostProjects}
-                        columns={projectColumns}
-                        loading={false}
-                        searchable={true}
-                        pagination={true}
-                        showActions={true}
-                        actions={tableActions}
-                    />
-                </div>
-            </div>
-        )
-    };
-
-    // Analytics Section
-    const analyticsSection: Section = {
-        id: 'analytics',
-        component: (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-                {/* Project Status Distribution */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
-                        <h2 className="text-lg font-semibold">Project Status Distribution</h2>
-                    </div>
-                    <div className="p-6">
-                        <PieChart
-                            data={performanceData}
-                            height={250}
-                            showNoDataMessage={false}
-                            title=""
-                        />
-                    </div>
-                </div>
-
-                {/* User Activity Trends */}
-                <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                    <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
-                        <h2 className="text-lg font-semibold">User Activity Trends</h2>
-                    </div>
-                    <div className="p-6" style={{ height: '250px' }}>
-                        <LineChart
-                            data={userActivityData}
-                            xAxisData={userActivityLabels}
-                            showXAxisLabel={false}
-                        />
-                    </div>
-                </div>
-            </div>
-        )
-    };
-    // System Events Section
-    const systemEventsSection: Section = {
-        id: 'system-events',
-        component: (
-            <div className="bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-xl">
-                <div className="bg-primary-lightest dark:bg-primary-dark-light rounded-t-xl px-6 py-4">
-                    <h2 className="text-lg font-semibold">Recent System Events</h2>
-                </div>
-                <div className="p-6">
-                    <Table
-                        data={systemEvents}
-                        columns={eventColumns}
-                        loading={false}
-                        searchable={true}
-                        pagination={false}
-                        showActions={false}
-                        actions={[
-                            { label: 'View', onClick: (row) => console.log('View:', row), icon: '/icons/view.svg' },
-                            { label: 'Details', onClick: (row) => console.log('Details:', row), icon: '/icons/info.svg' },
-                        ]}
-                    />
-                </div>
-            </div>
-        )
-    };
-
-    return (
-        <Page
-            layout="single-column"
-            sections={[overviewSection, hostProjectsSection, analyticsSection, systemEventsSection]}
-            header={headerComponent}
-            className=""
-        />
-    );
+// Dummy data for fallback
+const dummyDashboardData: DashboardStats = {
+  kpiCards: {
+    totalSubApps: { value: "0", thisMonth: 0, percentageChange: "0" },
+    activeUsers: { value: "0", percentageChange: 0 },
+    dailyLogins: { value: "0", percentageChange: 0 },
+    issues: { value: "0", percentageChange: 0 }
+  },
+  charts: {
+    dailyLoginTrends: [
+      { value: 0, name: "TGNPDCL" },
+      { value: 0, name: "GMR" },
+      { value: 0, name: "Railway" },
+      { value: 0, name: "Lkea" },
+      { value: 0, name: "NTPC" }
+    ],
+    appUsageDistribution: {
+      xAxisData: ["TGNPDCL", "GMR", "Railway", "Lkea", "NTPC"],
+      seriesData: [
+        { name: "Active Users", data: [0, 0, 0, 0, 0, 0] },
+        { name: "Sessions", data: [0, 0, 0, 0, 0, 0] }
+      ]
+    }
+  },
+  recentApps: [],
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalApps: 0,
+    appsPerPage: 6
+  }
 };
 
-export default SuperAdminDashboard; 
+const SuperAdminDashboard: React.FC = () => {
+  const navigate = useNavigate();
+  
+  // State for API data
+  const [dashboardData, setDashboardData] = useState<DashboardStats>(dummyDashboardData);
+  
+  // Loading states
+  const [isDashboardLoading, setIsDashboardLoading] = useState(true);
+  
+  // State for tracking failed APIs
+  const [failedApis, setFailedApis] = useState<Array<{
+    id: string;
+    name: string;
+    retryFunction: () => Promise<void>;
+    errorMessage: string;
+  }>>([]);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [appsPerPage] = useState(6);
+  const [searchValue, setSearchValue] = useState('');
+  const [displaySearchValue, setDisplaySearchValue] = useState(''); // For immediate UI updates
+  const [isSearching, setIsSearching] = useState(false);
+
+  // Retry function for Dashboard API
+  const retryDashboardAPI = async () => {
+    setIsDashboardLoading(true);
+    try {
+      const data = await getSuperAdminDashboardStats(currentPage, appsPerPage);
+      setDashboardData(data);
+      // Remove from failed APIs on success
+      setFailedApis(prev => prev.filter(api => api.id !== 'dashboard'));
+    } catch (err: any) {
+      console.error("Error in Dashboard API:", err);
+      setDashboardData(dummyDashboardData);
+    } finally {
+      // Add a small delay to make loading state visible
+      setTimeout(() => {
+        setIsDashboardLoading(false);
+      }, 1000);
+    }
+  };
+
+  // Retry specific API
+  const retrySpecificAPI = (apiId: string) => {
+    const api = failedApis.find(a => a.id === apiId);
+    if (api) {
+      api.retryFunction();
+    }
+  };
+
+  // Debounced search function
+  const debouncedSearch = useCallback(
+    debounce(300, (searchTerm: string) => {
+      setIsSearching(true);
+      setSearchValue(searchTerm);
+      setCurrentPage(1); // Reset to first page when searching
+      // Reset searching state after a short delay
+      setTimeout(() => setIsSearching(false), 100);
+    }),
+    []
+  );
+
+  // Fetch dashboard data from backend
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      setIsDashboardLoading(true);
+      try {
+        const data = await getSuperAdminDashboardStats(currentPage, appsPerPage);
+        setDashboardData(data);
+      } catch (err: any) {
+        console.error('Error fetching dashboard data:', err);
+        setDashboardData(dummyDashboardData);
+        
+        // Add to failed APIs
+        setFailedApis(prev => {
+          if (!prev.find(api => api.id === 'dashboard')) {
+            return [...prev, { 
+              id: 'dashboard', 
+              name: 'Dashboard Data', 
+              retryFunction: retryDashboardAPI, 
+              errorMessage: 'Failed to load Dashboard Data. Please try again.' 
+            }];
+          }
+          return prev;
+        });
+      } finally {
+        // Add a small delay to make loading state visible
+        setTimeout(() => {
+          setIsDashboardLoading(false);
+        }, 1000);
+      }
+    };
+
+    fetchDashboardData();
+  }, [currentPage, appsPerPage]);
+
+  // Cleanup debounced function on unmount
+  useEffect(() => {
+    return () => {
+      debouncedSearch.cancel();
+    };
+  }, [debouncedSearch]);
+
+  // KPI Cards Data - Using real data from backend
+  const kpiCards = [
+    {
+      title: "Total Sub-Apps",
+      value: dashboardData?.kpiCards?.totalSubApps?.value || "0",
+      icon: "/icons/apps-add.svg",
+      showTrend: true,
+      comparisonValue: parseFloat(dashboardData?.kpiCards?.totalSubApps?.percentageChange || "0"),
+      subtitle1: `${dashboardData?.kpiCards?.totalSubApps?.thisMonth || 0} created this month`,
+      subtitle2: `${dashboardData?.kpiCards?.totalSubApps?.percentageChange || 0}% from last month`,
+      onValueClick: () => navigate("/sub-apps"),
+      bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
+    },
+    {
+      title: "Active Users",
+      value: dashboardData?.kpiCards?.activeUsers?.value || "0",
+      icon: "/icons/active-users.svg",
+      showTrend: true,
+      comparisonValue: dashboardData?.kpiCards?.activeUsers?.percentageChange || 0,
+      subtitle1: "Across all applications",
+      subtitle2: `${dashboardData?.kpiCards?.activeUsers?.percentageChange || 0}% from last month`,
+      onValueClick: () => navigate("/active-users"),
+      bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
+    },
+    {
+      title: "Daily Logins",
+      value: dashboardData?.kpiCards?.dailyLogins?.value || "0",
+      icon: "/icons/daily-logins.svg",
+      showTrend: true,
+      comparisonValue: dashboardData?.kpiCards?.dailyLogins?.percentageChange || 0,
+      subtitle1: "Last 24 hours",
+      subtitle2: `${dashboardData?.kpiCards?.dailyLogins?.percentageChange || 0}% from last month`,
+      onValueClick: () => navigate("/daily-logins"),
+      bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
+    },
+    {
+      title: "Issues",
+      value: dashboardData?.kpiCards?.issues?.value || "0",
+      icon: "/icons/alert-triggered.svg",
+      showTrend: true,
+      comparisonValue: dashboardData?.kpiCards?.issues?.percentageChange || 0,
+      subtitle1: "Needs attention",
+      subtitle2: `${dashboardData?.kpiCards?.issues?.percentageChange || 0}% from last month`,
+      onValueClick: () => navigate("/issues"),
+      bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
+    },
+  ];
+
+  // Daily Login Trends Data for Pie Chart - Using real data from backend
+  const dailyLoginTrendsData = dashboardData?.charts?.dailyLoginTrends || [
+    { value: 0, name: "TGNPDCL" },
+    { value: 0, name: "GMR" },
+    { value: 0, name: "Railway" },
+    { value: 0, name: "Lkea" },
+    { value: 0, name: "NTPC" },
+  ];
+
+  // App Usage Distribution Data for Bar Chart - Using real data from backend
+  const appUsageData = {
+    xAxisData: dashboardData?.charts?.appUsageDistribution?.xAxisData || ["TGNPDCL", "GMR", "Railway", "Lkea", "NTPC"],
+    seriesData: dashboardData?.charts?.appUsageDistribution?.seriesData || [
+      {
+        name: "Active Users",
+        data: [0, 0, 0, 0, 0, 0],
+      },
+      {
+        name: "Sessions",
+        data: [0, 0, 0, 0, 0, 0],
+      },
+    ],
+    seriesColors: [
+      "#3B82F6", // Blue for Active Users
+      "#10B981", // Green for Sessions
+    ],
+  };
+
+  // Recent Apps Data - Using real data from backend
+  const recentApps = dashboardData?.recentApps || [];
+  const pagination = dashboardData?.pagination;
+
+  // Filter apps based on search term
+  const filteredApps = recentApps.filter((app: any) => {
+    if (!searchValue.trim()) return true;
+    
+    const searchTerms = searchValue.toLowerCase().trim().split(/\s+/);
+    const appData = [
+      app.appName || '',
+      app.company || '',
+      app.category || '',
+      app.subdomain || '',
+      app.status || ''
+    ].join(' ').toLowerCase();
+    
+    return searchTerms.every(term => appData.includes(term));
+  });
+
+  // Pagination handlers
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    if (pagination && currentPage < pagination.totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Search handler with debouncing
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = e.target.value;
+    setDisplaySearchValue(newValue); // Update UI immediately
+    debouncedSearch(newValue); // Debounce the actual search
+  };
+
+  return (
+    <div className="">
+      <PageC
+        sections={[
+          // Error Section - Above PageHeader
+          ...(failedApis.length > 0 ? [{
+            layout: {
+              type: 'column' as const,
+              gap: 'gap-4',
+              rows: [
+                {
+                  layout: 'column' as const,
+                  columns: [
+                    {
+                      name: 'Error',
+                      props: {
+                        visibleErrors: failedApis.map(api => api.errorMessage),
+                        showRetry: true,
+                        maxVisibleErrors: 3, // Show max 3 errors at once
+                        failedApis: failedApis, // Pass all failed APIs for individual retry
+                        onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          }] : []),
+          // Header section
+          {
+            layout: {
+              type: "grid" as const,
+              columns: 1,
+              className: "",
+            },
+            components: [
+              {
+                name: "PageHeader",
+                props: {
+                  title: "Super Admin Dashboard",
+                  buttonsLabel: "Create New App",
+                  variant: "primary",
+                  onClick: () => navigate("/apps"),
+                  showMenu: true,
+                  showDropdown: true,
+                  menuItems: [
+                    { id: "create-project", label: "Create Project" },
+                    { id: "export", label: "Export Report" },
+                  ],
+                  onMenuItemClick: (itemId: string) => {
+                    switch (itemId) {
+                      case "create-project":
+                        navigate("/apps");
+                        break;
+                      case "export":
+                        // Export functionality
+                        break;
+                    }
+                  },
+                },
+              },
+            ],
+          },
+          // Main Statistics Cards
+          {
+            layout: {
+              type: "grid",
+              columns: 4,
+              gap: "gap-4",
+              className: "",
+            },
+            components: [
+              ...kpiCards.map((card) => ({
+                name: "Card",
+                props: {
+                  title: card.title,
+                  value: card.value,
+                  icon: card.icon,
+                  subtitle1: card.subtitle1,
+                  subtitle2: card.subtitle2,
+                  showTrend: card.showTrend,
+                  comparisonValue: card.comparisonValue,
+                  onValueClick: card.onValueClick,
+                  bg: card.bg,
+                  loading: card.loading,
+                },
+              })),
+            ],
+          },
+          // Charts Section - Daily Login Trends and App Usage Distribution
+          {
+            layout: {
+              type: "grid",
+              columns: 2,
+              gap: "gap-6",
+              className: "w-full",
+              rows: [
+                {
+                  layout: "column",
+                  gap: "gap-1",
+                  className:
+                    "bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1",
+                  columns: [
+                    {
+                      name: "Holder",
+                      props: {
+                        title: "Daily Login Trends",
+                        subtitle:
+                          "User login activity across all sub-applications",
+                        className: "border-none rounded-t-3xl",
+                      },
+                    },
+                    {
+                      name: "PieChart",
+                      props: {
+                        data: dailyLoginTrendsData,
+                        height: 300,
+                        showNoDataMessage: false,
+                        showHeader: false,
+                        className: "p-6",
+                        title: "",
+                        onClick: (segmentName?: string) => {
+                          if (segmentName) {
+                            navigate(`/sub-apps/${segmentName.toLowerCase().replace(/\s+/g, "-")}`);
+                          }
+                        },
+                        isLoading: isDashboardLoading,
+                      },
+                    },
+                  ],
+                },
+                {
+                  layout: "column",
+                  gap: "gap-1",
+                  className:
+                    "bg-white dark:bg-primary-dark border border-primary-border dark:border-dark-border rounded-3xl col-span-1",
+                  columns: [
+                    {
+                      name: "Holder",
+                      props: {
+                        title: "App Usage Distribution",
+                        subtitle:
+                          "Active users and sessions by sub-application",
+                        className: "border-none rounded-t-3xl",
+                      },
+                    },
+                    {
+                      name: "BarChart",
+                      props: {
+                        xAxisData: appUsageData.xAxisData,
+                        seriesData: appUsageData.seriesData,
+                        seriesColors: appUsageData.seriesColors,
+                        height: "350px",
+                        showHeader: false,
+                        showDownloadButton: true,
+                        showViewToggle: true,
+                        viewToggleOptions: ["Graph", "Table"],
+                        showTableView: true,
+                        ariaLabel: "App usage distribution chart",
+                        yAxisMax: 500,
+                        yAxisStep: 100,
+                        onDownload: () => {
+                          // Download functionality
+                        },
+                        isLoading: isDashboardLoading,
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          // SubApp Panel Section
+          {
+            layout: {
+              type: "grid",
+              columns: 1,
+              gap: "gap-3",
+              className: "w-full border border-primary-border dark:border-dark-border rounded-3xl p-3",
+              rows: [
+                // Search Bar
+                {
+                  layout: "row",
+                  gap: "gap-4",
+                  className: "flex items-center justify-between mb-4",
+                  columns: [
+                    {
+                      name: "Search",
+                      props: {
+                        value: displaySearchValue, // Use display value for immediate UI updates
+                        onChange: handleSearchChange,
+                        placeholder: "Search apps by name, company, category...",
+                        className: "flex-1 w-full",
+                        showShortcut: false,
+                        results: [],
+                        isLoading: isSearching,
+                        disabled: false,
+                        required: false,
+                        error: null,
+                        name: "search"
+                      }
+                    },
+                  ]
+                },
+                // Apps Grid
+                {
+                  layout: "grid",
+                  gap: "gap-6",
+                  gridColumns: 2,
+                  gridRows: 3,
+                  className: "p-3",
+                  span: { col: 1, row: 1 },
+                  columns: filteredApps.length > 0 
+                    ? filteredApps.map((app: any) => ({
+                        name: "ApplicationCard",
+                        props: app,
+                      }))
+                    : [{
+                        name: "Holder",
+                        props: {
+                          title: "No matching apps found",
+                          subtitle: searchValue ? `No apps match "${searchValue}"` : "No apps available",
+                          className: "col-span-3 text-center py-8",
+                        }
+                      }]
+                },
+                // Pagination Controls - Only show when not searching and results exist
+                ...(searchValue.trim() === '' && filteredApps.length > 0 ? [{
+                  layout: "row" as const,
+                  gap: "gap-4" as const,
+                  className: "flex justify-center items-center mt-4",
+                  columns: [
+                    {
+                      name: "Button",
+                      props: {
+                        variant: "primary",
+                        onClick: handlePreviousPage,
+                        disabled: currentPage <= 1,
+                        children: "← Previous",
+                        className: "px-4 py-2"
+                      }
+                    },
+                    {
+                      name: "Button",
+                      props: {
+                        variant: "primary",
+                        onClick: handleNextPage,
+                        disabled: !pagination || currentPage >= pagination.totalPages,
+                        children: "Next →",
+                        className: "px-4 py-2"
+                      }
+                    }
+                  ]
+                }] : [])
+              ],
+            },
+          },
+        ]}
+      />
+    </div>
+  );
+};
+
+export default SuperAdminDashboard;

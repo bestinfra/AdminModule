@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PageC from "@components/global/PageC";
 import { exportChartData } from "@/utils/excelExport";
@@ -29,166 +29,105 @@ type FilterType =
   | "resolved"
   | "closed";
 
-// Card data in JSON format
-const cardStats = [
+// Dummy data for fallback
+const dummyCardStats = [
   {
     title: "Total Tickets",
-    value: "6",
+    value: "N/A",
     icon: "icons/support-tickets.svg",
-    subtitle1: "Current Month",
-    subtitle2: "+12% from last month",
-    showTrend: true,
-    comparisonValue: 12,
+    subtitle1: "N/A",
+    subtitle2: "N/A",
+    showTrend: false,
+    comparisonValue: 0,
     filterType: "all" as FilterType,
   },
   {
     title: "No of Clients",
-    value: "3",
+    value: "N/A",
     icon: "icons/warning-icon.svg",
-    subtitle1: "Urgent tickets",
-    subtitle2: "+2% from last week",
-    showTrend: true,
-    comparisonValue: 2,
+    subtitle1: "N/A",
+    subtitle2: "N/A",
+    showTrend: false,
+    comparisonValue: 0,
     filterType: "high-priority" as FilterType,
   },
   {
     title: "In Progress",
-    value: "1",
+    value: "N/A",
     icon: "icons/pending-payments.svg",
-    subtitle1: "Active tickets",
-    subtitle2: "+5% from last week",
-    showTrend: true,
-    comparisonValue: 5,
+    subtitle1: "N/A",
+    subtitle2: "N/A",
+    showTrend: false,
+    comparisonValue: 0,
     filterType: "in-progress" as FilterType,
   },
   {
     title: "Resolved",
-    value: "2",
+    value: "N/A",
     icon: "icons/resolved.svg",
-    subtitle1: "This month",
-    subtitle2: "+8% from last month",
-    showTrend: true,
-    comparisonValue: 8,
+    subtitle1: "N/A",
+    subtitle2: "N/A",
+    showTrend: false,
+    comparisonValue: 0,
     filterType: "resolved" as FilterType,
   },
   {
     title: "Closed",
-    value: "1",
+    value: "N/A",
     icon: "icons/closed.svg",
-    subtitle1: "This month",
-    subtitle2: "-2% from last month",
-    showTrend: true,
-    comparisonValue: -2,
+    subtitle1: "N/A",
+    subtitle2: "N/A",
+    showTrend: false,
+    comparisonValue: 0,
     filterType: "closed" as FilterType,
   },
 ];
 
-// Chart data in JSON format
-const ticketTrendsData = {
+const dummyTicketData: TicketData[] = [
+  {
+    id: 1,
+    ticketNumber: "N/A",
+    subject: "N/A",
+    category: "N/A",
+    application: "N/A",
+    status: "N/A",
+    priority: "N/A",
+    assignedTo: "N/A",
+    createdAt: "N/A",
+  },
+];
+
+
+
+
+// Dummy chart data for fallback
+const dummyChartData = {
   xAxisData: [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
   ],
   seriesData: [
     {
       name: "Open Tickets",
-      data: [45, 52, 38, 67, 58, 42, 35, 48, 55, 62, 41, 38],
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // All zeros for "N/A" effect
     },
     {
       name: "No Of Clients Tickets",
-      data: [28, 35, 25, 42, 38, 28, 22, 32, 38, 45, 28, 25],
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
     {
       name: "Resolved Tickets",
-      data: [38, 45, 32, 58, 49, 35, 28, 41, 48, 55, 34, 31],
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
     {
       name: "Closed Tickets",
-      data: [12, 15, 8, 22, 18, 11, 7, 14, 16, 19, 10, 9],
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     },
   ],
   seriesColors: ["#163b7c", "#55b56c", "#dc272c", "#ed8c22"],
 };
 
-// Table data in JSON format
-const ticketData: TicketData[] = [
-  {
-    id: 1,
-    ticketNumber: "TICK-001",
-    subject: "System Access Issue (Technical)",
-    category: "Technical",
-    application: "Admin Portal",
-    status: "Open",
-    priority: "High",
-    assignedTo: "John Doe",
-    createdAt: "2025-01-15 10:30:00",
-  },
-  {
-    id: 2,
-    ticketNumber: "TICK-002",
-    subject: "Email Configuration (Technical)",
-    category: "Technical",
-    application: "Email System",
-    status: "In Progress",
-    priority: "Medium",
-    assignedTo: "Jane Smith",
-    createdAt: "2025-01-14 14:20:00",
-  },
-  {
-    id: 3,
-    ticketNumber: "TICK-003",
-    subject: "Software Update (Technical)",
-    category: "Technical",
-    application: "Meter Management",
-    status: "Resolved",
-    priority: "Low",
-    assignedTo: "Mike Johnson",
-    createdAt: "2025-01-13 09:15:00",
-  },
-  {
-    id: 4,
-    ticketNumber: "TICK-004",
-    subject: "Billing Dispute (Billing)",
-    category: "Billing",
-    application: "Billing System",
-    status: "Closed",
-    priority: "High",
-    assignedTo: "Sarah Wilson",
-    createdAt: "2025-01-12 16:45:00",
-  },
-  {
-    id: 5,
-    ticketNumber: "TICK-005",
-    subject: "Network Connectivity (Infrastructure)",
-    category: "Infrastructure",
-    application: "Network System",
-    status: "Open",
-    priority: "High",
-    assignedTo: "Tom Anderson",
-    createdAt: "2025-01-11 11:30:00",
-  },
-  {
-    id: 6,
-    ticketNumber: "TICK-006",
-    subject: "Password Reset (Security)",
-    category: "Security",
-    application: "User Management",
-    status: "Resolved",
-    priority: "Medium",
-    assignedTo: "Lisa Chen",
-    createdAt: "2025-01-10 13:20:00",
-  },
-];
+
 
 // Table columns configuration
 const tableColumns = [
@@ -244,25 +183,298 @@ const AllTickets: React.FC = () => {
   const { filter } = useParams<{ filter?: string }>();
 
   const [selectedTimeRange, setSelectedTimeRange] = useState("Daily");
+  
+  // State for API data
+  const [cardStatsData, setCardStatsData] = useState(dummyCardStats);
+  const [ticketTableData, setTicketTableData] = useState(dummyTicketData);
+  const [_filteredTickets, setFilteredTickets] = useState(dummyTicketData);
+  const [chartData, setChartData] = useState(dummyChartData);
+  
+  // Loading states
+  const [isCardsLoading, setIsCardsLoading] = useState(true);
+  const [isTableLoading, setIsTableLoading] = useState(true);
+  const [isChartLoading, setIsChartLoading] = useState(true);
+  
+  // State for tracking failed APIs
+  const [failedApis, setFailedApis] = useState<Array<{
+    id: string;
+    name: string;
+    retryFunction: () => Promise<void>;
+    errorMessage: string;
+  }>>([]);
 
   // Get filter from URL params, default to 'all'
   const activeFilter = (filter as FilterType) || "all";
 
+  // Simple retry function for Cards API
+  const retryCardsAPI = async () => {
+    setIsCardsLoading(true);
+    try {
+      const res = await fetch("/api/tickets/cards");
+      
+      if (!res.ok) {
+        throw new Error(`Cards API failed with status ${res.status}`);
+      }
+      
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Cards API returned non-JSON response");
+      }
+      
+      const data = await res.json();
+      setCardStatsData(data?.data || dummyCardStats);
+      
+      // Remove from failed APIs on success
+      setFailedApis(prev => prev.filter(api => api.id !== 'cards'));
+    } catch (err: any) {
+      console.error("Error in Tickets Cards:", err);
+      // Set dummy data on retry failure
+      setCardStatsData(dummyCardStats);
+      // Keep the error in failedApis for retry
+    } finally {
+      // Add a small delay to make loading state visible
+      setTimeout(() => {
+        setIsCardsLoading(false);
+      }, 1000);
+    }
+  };
+
+  // Simple retry function for Table API
+  const retryTableAPI = async () => {
+    setIsTableLoading(true);
+    try {
+      const res = await fetch("/api/tickets/table");
+      
+      if (!res.ok) {
+        throw new Error(`Table API failed with status ${res.status}`);
+      }
+      
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Table API returned non-JSON response");
+      }
+      
+      const data = await res.json();
+      const tableData = data?.data || dummyTicketData;
+      setTicketTableData(tableData);
+      setFilteredTickets(tableData);
+      
+      // Remove from failed APIs on success
+      setFailedApis(prev => prev.filter(api => api.id !== 'table'));
+    } catch (err: any) {
+      console.error("Error in Tickets Table:", err);
+      // Set dummy data on retry failure
+      setTicketTableData(dummyTicketData);
+      setFilteredTickets(dummyTicketData);
+      // Keep the error in failedApis for retry
+    } finally {
+      // Add a small delay to make loading state visible
+      setTimeout(() => {
+        setIsTableLoading(false);
+      }, 1000);
+    }
+  };
+
+  // Simple retry function for Chart API
+  const retryChartAPI = async () => {
+    setIsChartLoading(true);
+    try {
+      const res = await fetch("/api/tickets/chart");
+      
+      if (!res.ok) {
+        throw new Error(`Chart API failed with status ${res.status}`);
+      }
+      
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Chart API returned non-JSON response");
+      }
+      
+      const data = await res.json();
+      setChartData(data?.data || dummyChartData);
+      
+      // Remove from failed APIs on success
+      setFailedApis(prev => prev.filter(api => api.id !== 'chart'));
+    } catch (err: any) {
+      console.error("Error in Tickets Chart:", err);
+      // Set dummy data on retry failure
+      setChartData(dummyChartData);
+      // Keep the error in failedApis for retry
+    } finally {
+      // Add a small delay to make loading state visible
+      setTimeout(() => {
+        setIsChartLoading(false);
+      }, 1000);
+    }
+  };
+
+  // Retry specific API
+  const retrySpecificAPI = (apiId: string) => {
+    const api = failedApis.find(a => a.id === apiId);
+    if (api) {
+      api.retryFunction();
+    }
+  };
+
+  // Fetch Cards Data
+  useEffect(() => {
+    const fetchCards = async () => {
+      setIsCardsLoading(true);
+      try {
+        const res = await fetch("/api/tickets/cards");
+        
+        if (!res.ok) {
+          throw new Error(`Cards API failed with status ${res.status}`);
+        }
+        
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Cards API returned non-JSON response");
+        }
+        
+        const data = await res.json();
+        setCardStatsData(data?.data || dummyCardStats);
+      } catch (err: any) {
+        console.error("Error in Tickets Cards:", err);
+        
+        // Set N/A data from dummy data
+        setCardStatsData(dummyCardStats);
+        
+        // Add to failed APIs
+        setFailedApis(prev => {
+          if (!prev.find(api => api.id === 'cards')) {
+            return [...prev, { 
+              id: 'cards', 
+              name: 'Ticket Data', 
+              retryFunction: retryCardsAPI, 
+              errorMessage: 'Failed to load Tickets Cards. Please try again.' 
+            }];
+          }
+          return prev;
+        });
+      } finally {
+        // Add a small delay to make loading state visible
+        setTimeout(() => {
+          setIsCardsLoading(false);
+        }, 1000);
+      }
+    };
+    
+    fetchCards();
+  }, []);
+
+  // Fetch Table Data
+  useEffect(() => {
+    const fetchTable = async () => {
+      setIsTableLoading(true);
+      try {
+        const res = await fetch("/api/tickets/table");
+        
+        if (!res.ok) {
+          throw new Error(`Table API failed with status ${res.status}`);
+        }
+        
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Table API returned non-JSON response");
+        }
+        
+        const data = await res.json();
+        const tableData = data?.data || dummyTicketData;
+        setTicketTableData(tableData);
+        setFilteredTickets(tableData);
+      } catch (err: any) {
+        console.error("Error in Tickets Table:", err);
+        
+        // Set N/A data from dummy data
+        setTicketTableData(dummyTicketData);
+        setFilteredTickets(dummyTicketData);
+        
+        // Add to failed APIs
+        setFailedApis(prev => {
+          if (!prev.find(api => api.id === 'table')) {
+            return [...prev, { 
+              id: 'table', 
+              name: 'Ticket Data', 
+              retryFunction: retryTableAPI, 
+              errorMessage: 'Failed to load Tickets Table. Please try again.' 
+            }];
+          }
+          return prev;
+        });
+      } finally {
+        // Add a small delay to make loading state visible
+        setTimeout(() => {
+          setIsTableLoading(false);
+        }, 1000);
+      }
+    };
+    
+    fetchTable();
+  }, []);
+
+  // Fetch Chart Data
+  useEffect(() => {
+    const fetchChart = async () => {
+      setIsChartLoading(true);
+      try {
+        const res = await fetch("/api/tickets/chart");
+        
+        if (!res.ok) {
+          throw new Error(`Chart API failed with status ${res.status}`);
+        }
+        
+        const contentType = res.headers.get("content-type");
+        if (!contentType || !contentType.includes("application/json")) {
+          throw new Error("Chart API returned non-JSON response");
+        }
+        
+        const data = await res.json();
+        setChartData(data?.data || dummyChartData);
+      } catch (err: any) {
+        console.error("Error in Tickets Chart:", err);
+        
+        // Set N/A data from dummy data
+        setChartData(dummyChartData);
+        
+        // Add to failed APIs
+        setFailedApis(prev => {
+          if (!prev.find(api => api.id === 'chart')) {
+            return [...prev, { 
+              id: 'chart', 
+              name: 'Ticket Data', 
+              retryFunction: retryChartAPI, 
+              errorMessage: 'Failed to load Tickets Chart. Please try again.' 
+            }];
+          }
+          return prev;
+        });
+      } finally {
+        // Add a small delay to make loading state visible
+        setTimeout(() => {
+          setIsChartLoading(false);
+        }, 1000);
+      }
+    };
+    
+    fetchChart();
+  }, []);
+
   // Filter tickets based on active filter
-  const filteredTickets = useMemo(() => {
+  const filteredTicketsData = useMemo(() => {
     switch (activeFilter) {
       case "high-priority":
-        return ticketData.filter((ticket) => ticket.priority === "High");
+        return ticketTableData.filter((ticket) => ticket.priority === "High");
       case "in-progress":
-        return ticketData.filter((ticket) => ticket.status === "In Progress");
+        return ticketTableData.filter((ticket) => ticket.status === "In Progress");
       case "resolved":
-        return ticketData.filter((ticket) => ticket.status === "Resolved");
+        return ticketTableData.filter((ticket) => ticket.status === "Resolved");
       case "closed":
-        return ticketData.filter((ticket) => ticket.status === "Closed");
+        return ticketTableData.filter((ticket) => ticket.status === "Closed");
       default:
-        return ticketData;
+        return ticketTableData;
     }
-  }, [activeFilter]);
+  }, [activeFilter, ticketTableData]);
 
   const handleCardClick = useCallback(
     (filter: FilterType) => {
@@ -300,8 +512,8 @@ const AllTickets: React.FC = () => {
   // Handle Excel download for ticket trends chart
   const handleTicketTrendsDownload = () => {
     exportChartData(
-      ticketTrendsData.xAxisData,
-      ticketTrendsData.seriesData,
+      chartData.xAxisData,
+      chartData.seriesData,
       "ticket-trends-data"
     );
   };
@@ -309,6 +521,30 @@ const AllTickets: React.FC = () => {
   return (
     <PageC
       sections={[
+        // Error Section - Above PageHeader
+        ...(failedApis.length > 0 ? [{
+          layout: {
+            type: 'column' as const,
+            gap: 'gap-4',
+            rows: [
+              {
+                layout: 'column' as const,
+                columns: [
+                  {
+                    name: 'Error',
+                    props: {
+                      visibleErrors: failedApis.map(api => api.errorMessage),
+                      showRetry: true,
+                      maxVisibleErrors: 3, // Show max 3 errors at once
+                      failedApis: failedApis, // Pass all failed APIs for individual retry
+                      onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                    },
+                  },
+                ],
+              },
+            ],
+          },
+        }] : []),
         {
           layout: {
             type: "grid" as const,
@@ -366,7 +602,7 @@ const AllTickets: React.FC = () => {
                       className: "w-full",
                       gridColumns: 5 as const,
                       span: { col: 5 as const, row: 1 as const },
-                      columns: cardStats.map((card) => ({
+                      columns: cardStatsData.map((card) => ({
                         name: "Card",
                         props: {
                           title: card.title,
@@ -378,6 +614,7 @@ const AllTickets: React.FC = () => {
                           subtitle2: card.subtitle2,
                           onValueClick: () => handleCardClick(card.filterType),
                           iconStyle: ICON_FILTER_STYLE,
+                          loading: isCardsLoading,
                         },
                       })),
                     },
@@ -397,9 +634,9 @@ const AllTickets: React.FC = () => {
                         {
                           name: "BarChart",
                           props: {
-                            xAxisData: ticketTrendsData.xAxisData,
-                            seriesData: ticketTrendsData.seriesData,
-                            seriesColors: ticketTrendsData.seriesColors,
+                            xAxisData: chartData.xAxisData,
+                            seriesData: chartData.seriesData,
+                            seriesColors: chartData.seriesColors,
                             height: 320,
                             showHeader: true,
                             headerTitle: "Ticket Trends",
@@ -408,6 +645,7 @@ const AllTickets: React.FC = () => {
                             showDownloadButton: true,
                             onDownload: () => handleTicketTrendsDownload(),
                             showXAxisLabel: true,
+                            isLoading: isChartLoading,
                           },
                         },
                       ],
@@ -431,7 +669,7 @@ const AllTickets: React.FC = () => {
                     name: "Table",
                     props: {
                       columns: tableColumns,
-                      data: filter ? filteredTickets : ticketData,
+                      data: filter ? filteredTicketsData : ticketTableData,
                       searchable: true,
                       pagination: true,
                       initialRowsPerPage: 10,
@@ -451,6 +689,7 @@ const AllTickets: React.FC = () => {
                       onDelete: (row: any) =>
                         console.log("Delete ticket:", row),
                       onView: () => navigate("/ticket-view"),
+                      isLoading: isTableLoading,
                     },
                   },
                 ],

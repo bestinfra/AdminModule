@@ -11,49 +11,43 @@ import Search from './Search';
 import DatePicker from './DatePicker';
 import Calendar from './Calendar';
 import ExpandableTable from './ExpandableTable';
-import OrgChart from './OrgChart';
-// import OrgChartAlt from './OrgChartAlt';
 import Holder from './Holder';
 import LoadingSpinner from './LoadingSpinner';
 import Heading from './Heading';
 import TimeRangeSelector from './TimeRangeSelector';
-import BarChart from '../../graphs/BarChart';
-import PieChart from '../../graphs/PieChart';
+import BarChart from '@graphs/BarChart';
+import PieChart from '@graphs/PieChart';
 import TopLevelHierarchy from './TopLevelHierarchy';
 import Stepper from './Stepper';
 import FormContainer from './FormContainer';
 import SectionHeader from './SectionHeader';
 import Carousel from './Carousel';
-import LoginV2 from '../../pages_v2/LoginV2';
-import { Form } from '../Form';
-import OrgChartAlt from './OrgChartAlt';
-import IssueCardDetails from '../Ticket/IssueCardDetails';
-import ChatInput from '../Ticket/ChatInput';
-import TicketInfoCard from '../Ticket/TicketInfoCard';
-import UnitDetailsCard from '../Ticket/UnitDetailsCard';
-import ActivityLogCard from '../Ticket/ActivityLogCard';
-import ChatComponent from '../Ticket/ChatComponent';
+import LoginV2 from '@pages/LoginV2';
+import { Form } from '@components/Form';
+import TicketInfoCard from '@components/Ticket/TicketInfoCard';
+import ActivityLogCard from '@components/Ticket/ActivityLogCard';
+import ChatComponent from '@components/Ticket/ChatComponent';
 import PageInformation from './PageInformation';
 import Permissions from './Permissions';
 import SummaryInfo from './SummaryInfo';
-import TicketConversationPanel from '../TicketConversationPanel';
-import TicketInformationPannel from './TIcketInformationPannel';
+import TicketConversationPanel from '@components/Ticket/TicketConversationPanel';
+import TicketInformationPannel from '../Ticket/TIcketInformationPannel';
 import ActivityLog from './ActivityLog';
-import ChatApplication from '../ChatApplication';
-import ProfileSidebar from './ProfileSidebar';
-import ProfileContent from './ProfileContent';
+import ChatApplication from '@components/Ticket/ChatApplication';
+import ProfileSidebar from '../../pages/ProfileSidebar';
+import ProfileContent from '../../pages/ProfileContent';
 import Steps from './Steps';
 import OccupancyHeader from './OccupancyHeader';
-import ConfirmationPage from '../Occupancy-Vacency/ConfirmationPage';
-import UsageSummaryPage from '../Occupancy-Vacency/UsageSummartPage';
-import Payment from '../Occupancy-Vacency/Payment';
-import FreezeStatus from '../Occupancy-Vacency/FreezeStatus';
+import ConfirmationPage from '@components/Occupancy-Vacency/ConfirmationPage';
+import UsageSummaryPage from '@components/Occupancy-Vacency/UsageSummartPage';
+import Payment from '@components/Occupancy-Vacency/Payment';
+import FreezeStatus from '@components/Occupancy-Vacency/FreezeStatus';
 import ApplicationCard from './ApplicationCard';
 import StatusCard from './StatusCard';
-import DGCard from '../DG_Modules/DGCard';
+import DGCard from '@/components/global/DGCard';
 import ElectricalMetricsCard from './ElectricalMetricsCard';
 import NodeChart from './NodeChart';
-import Error from '../Error/Error';
+import Error from '@components/Error/Error';
 const componentMap: Record<string, React.ComponentType<any>> = {
     Card,
     Button,
@@ -67,8 +61,6 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     DatePicker,
     Calendar,
     ExpandableTable,
-    OrgChart,
-    OrgChartAlt,
     Holder,
     LoadingSpinner,
     Heading,
@@ -80,10 +72,7 @@ const componentMap: Record<string, React.ComponentType<any>> = {
     FormContainer,
     Form,
     SectionHeader,
-    IssueCardDetails,
-    ChatInput,
     TicketInfoCard,
-    UnitDetailsCard,
     ActivityLogCard,
     ChatComponent,
     Carousel,

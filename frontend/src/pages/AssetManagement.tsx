@@ -1,290 +1,408 @@
-import React, { useState } from "react";
-import OrgChart from '@components/global/OrgChart';
-import Modal from '@components/global/Modal';
-import Button from '@components/global/Button';
+import { Suspense, useState, useEffect } from 'react';
+import { lazy } from 'react';
+import BACKEND_URL from '../config';
+const Page = lazy(() => import('@/components/global/PageC'));
 
-const dummyData = [
-  {
-    name: 'GMR',
-    count: 5,
-    children: [
-      { name: 'Airborne General Store' },
-      { name: 'Neo Travels' },
-      { name: 'Mobikins' },
-      { name: 'Dormitary' },
-      { name: '10 MGW - Solar Plant' },
-    ],
-  },
-  {
-    name: 'Chennai',
-    count: 3,
-    children: [
-      {
-        name: 'Hyderabad',
-        children: [
-          { name: 'Hitech City' },
-          { name: 'Gachibowli' },
-        ],
-      },
-      { name: 'Egmore' },
-      {
-        name: 'Vizag',
-        children: [
-          { name: 'RK Beach' },
-          { name: 'Warangal' },
-        ],
-      },
-    ],
-  },
-];
+// --- Types ---
+interface HierarchyNode {
+    hierarchy_id: string | number;
+    hierarchy_name: string;
+    hierarchy_type_title: string;
+    children?: HierarchyNode[];
+}
 
-const AddAssetModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-  const [tab, setTab] = useState(0);
-  const [title, setTitle] = useState('');
-  const [name, setName] = useState('');
-  const [isSubNode, setIsSubNode] = useState(false);
+const PlusIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+    </svg>
+);
 
-  return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Add New Asset" size="md" showCloseIcon>
-      <div className="flex flex-col gap-4">
-        {/* Tabs */}
-        <div className="flex gap-2">
-          <button
-            className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-all ${tab === 0 ? 'bg-primary text-white' : 'bg-neutral-light text-neutral'}`}
-            onClick={() => setTab(0)}
-          >
-            <span className="text-lg">+</span> Add Asset Name
-          </button>
-          <button
-            className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-all ${tab === 1 ? 'bg-primary text-white' : 'bg-neutral-light text-neutral'}`}
-            onClick={() => setTab(1)}
-          >
-            <img src="/icons/list.svg" alt="Upload List" className="w-4 h-4" /> Upload List
-          </button>
-          <button
-            className={`flex items-center gap-2 px-4 py-2 rounded-full font-semibold text-sm transition-all ${tab === 2 ? 'bg-primary text-white' : 'bg-neutral-light text-neutral'}`}
-            onClick={() => setTab(2)}
-          >
-            <img src="/icons/template.svg" alt="Template" className="w-4 h-4" /> Template
-          </button>
-        </div>
-        {/* Tab Content */}
-        {tab === 0 && (
-          <>
-            <div className="flex flex-col gap-4">
-              <div className="relative">
-                <input
-                  className="w-full rounded-full border border-neutral-light px-5 py-3 text-base outline-none focus:border-primary bg-white pr-10"
-                  placeholder="Asset Title (Ex. Locations)"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <img src="/icons/search.svg" alt="search" className="w-5 h-5 opacity-60" />
-                </span>
-              </div>
-              <input
-                className="w-full rounded-full border border-neutral-light px-5 py-3 text-base outline-none focus:border-primary bg-white"
-                placeholder="Asset Name (Ex. Hyderabad)"
-                value={name}
-                onChange={e => setName(e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={isSubNode}
-                  onChange={e => setIsSubNode(e.target.checked)}
-                  className="w-5 h-5 accent-primary rounded"
-                  id="subnode"
-                />
-                <label htmlFor="subnode" className="text-neutral select-none">
-                  Choose an asset below to assign this as a <span className="text-secondary font-semibold">Sub Node</span>.
-                </label>
-              </div>
-              {isSubNode && (
-                <div className="relative">
-                  <input
-                    className="w-full rounded-full border border-neutral-light px-5 py-3 text-base outline-none focus:border-primary bg-white pr-10"
-                    placeholder="Search"
-                  />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                    <img src="/icons/search.svg" alt="search" className="w-5 h-5 opacity-60" />
-                  </span>
-                </div>
-              )}
-            </div>
-            <div className="flex gap-4 mt-4">
-              <Button label="Create" variant="primary" />
-            </div>
-          </>
-        )}
-        {tab === 1 && (
-          <>
-            <div className="flex flex-col gap-4">
-              <div className="w-full flex flex-col items-center justify-center gap-2 border-2 border-dashed border-accent bg-accent-light rounded-2xl py-10 cursor-pointer">
-                <img src="/icons/excel.svg" alt="Excel" className="w-10 h-10 mb-2 opacity-70" />
-                <div className="text-neutral font-medium">Click to upload or drag and drop</div>
-                <div className="text-accent text-sm">.xlsx or .xls files only</div>
-              </div>
-            </div>
-            <div className="flex gap-4 mt-4">
-              <Button label="Create List" variant="primary" />
-            </div>
-          </>
-        )}
-        {tab === 2 && (
-          <>
-            <div className="flex flex-col gap-4">
-              <div className="relative">
-                <input
-                  className="w-full rounded-full border border-neutral-light px-5 py-3 text-base outline-none focus:border-primary bg-white pr-28"
-                  placeholder="Asset Title (Ex. Locations)"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                />
-                <span className="absolute right-24 top-1/2 -translate-y-1/2">
-                  <span className="text-secondary font-semibold text-sm cursor-pointer">Create New</span>
-                </span>
-                <span className="absolute right-4 top-1/2 -translate-y-1/2">
-                  <img src="/icons/search.svg" alt="search" className="w-5 h-5 opacity-60" />
-                </span>
-              </div>
-            </div>
-            <div className="flex gap-4 mt-2">
-              <Button label="Download" variant="primary" />
-            </div>
-          </>
-        )}
-      </div>
-    </Modal>
-  );
-};
+const ListIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+    </svg>
+);
 
-const LocationSidebar: React.FC = () => {
-  const [mainCollapsed, setMainCollapsed] = useState(false);
-  const [collapsed, setCollapsed] = useState<{ [key: string]: boolean }>({});
+const DownloadIcon = () => (
+    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+    </svg>
+);
 
-  const toggleCollapse = (key: string) => {
-    setCollapsed((prev) => ({ ...prev, [key]: !prev[key] }));
-  };
+export default function AssetManagment() {
+    const [isAddAssetModalOpen, setIsAddAssetModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState(0);
+    const [hierarchicalData, setHierarchicalData] = useState<HierarchyNode[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  const renderTree = (nodes: any[], parentKey = '') => (
-    <div className="pl-6 border-l-2 border-neutral-light ml-4">
-      {nodes.map((node) => {
-        const hasChildren = node.children && node.children.length > 0;
-        const nodeKey = parentKey + node.name;
+    // Fetch hierarchical assets from API
+    useEffect(() => {
+        const fetchAssets = async () => {
+            setLoading(true);
+            const response = await fetch(`${BACKEND_URL}/assets`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setHierarchicalData(data.data || []);
+            }
+            setLoading(false);
+        };
+
+        fetchAssets();
+    }, []);
+    const [isSubNodeChecked, setIsSubNodeChecked] = useState(false);
+
+    const handleTabChange = (newTabIndex: number) => {
+        setActiveTab(newTabIndex);
+        setIsSubNodeChecked(false); // Reset checkbox state when switching tabs
+        console.log('Switched to tab:', newTabIndex);
+    };
+
+    const handleCheckboxChange = (checked: boolean) => {
+        setIsSubNodeChecked(checked);
+    };
+
+    const tabs = [
+        {
+            label: 'Add Asset Name',
+            content: null,
+            icon: <PlusIcon />
+        },
+        {
+            label: 'Upload List',
+            content: null,
+            icon: <ListIcon />
+        },
+        {
+            label: 'Template',
+            content: null,
+            icon: <DownloadIcon />
+        }
+    ];
+
+    // --- Generate form fields for each tab ---
+    const generateFormFieldsForTab = (tabIndex: number) => {
+        switch (tabIndex) {
+            case 0: // Add Asset Name - Search and Input fields
+                const baseFields = [
+                    {
+                        name: 'assetTitle',
+                        type: 'text',
+                        label: 'Asset Title',
+                        placeholder: 'Asset Title (Ex. Locations)',
+                        required: true,
+                        validation: {
+                            required: 'Asset title is required'
+                        },
+                        rightIcon: '/icons/search.svg'
+                    },
+                    {
+                        name: 'assetName',
+                        type: 'text',
+                        label: 'Asset Name',
+                        placeholder: 'Search and select asset name',
+                        required: true,
+                        validation: {
+                            required: 'Asset name is required'
+                        },
+                    },
+                    {
+                        name: 'isSubNode',
+                        type: 'checkbox',
+                        label: 'Choose an asset below to assign this as a Sub Node.',
+                        labelClassName: 'text-sm text-TextSecondary dark:text-gray-400',
+                        checkboxLabelClassName: 'text-TextSecondary font-normal',
+                        onChange: handleCheckboxChange,
+                        value: isSubNodeChecked
+                    }
+                ];
+
+                // Add conditional field when checkbox is checked
+                if (isSubNodeChecked) {
+                    baseFields.push({
+                        name: 'parentAssetSearch',
+                        type: 'text',
+                        label: '',
+                        placeholder: 'Search for parent Node',
+                        required: true,
+                        validation: {
+                            required: 'Parent asset is required when creating a sub node'
+                        },
+                        rightIcon: '/icons/search.svg'
+                    });
+                }
+
+                return baseFields;
+            
+            case 1: // Upload List - Drag and Drop
+                return [
+                    {
+                        name: 'uploadFile',
+                        type: 'chosenfile',
+                        label: 'Upload File',
+                        rightIcon: '/icons/search.svg',
+                        placeholder: 'Drag and drop files here or click to browse',
+                        required: true,
+                        validation: {
+                            required: 'File is required'
+                        },
+                        accept: '.csv,.xlsx,.xls',
+                        multiple: true,
+                        dragAndDrop: true
+                    },
+                ];
+            
+            case 2: // Template - Search only
+                return [
+                    {
+                        name: 'templateSearch',
+                        type: 'text',
+                        label: 'Search Templates',
+                        placeholder: 'Asset Title (Ex. Locations)',
+                        required: false,
+                        rightIcon: '/icons/search.svg'
+                    },
+                ];
+            
+            default:
+                return [];
+        }
+    };
+
+    // --- Get current form fields based on active tab ---
+    const currentFormFields = generateFormFieldsForTab(activeTab);
+
+    // --- Get current save button label ---
+    const getSaveButtonLabel = () => {
+        switch (activeTab) {
+            case 0: return 'Create Asset';
+            case 1: return 'Create List';
+            case 2: return 'Download';
+            default: return 'Save';
+        }
+    };
+
+    // Recursive function to map all hierarchy levels
+    const mapHierarchyRecursively = (nodes: HierarchyNode[]): any[] => {
+        return nodes.map(node => ({
+            id: node.hierarchy_id,
+            name: node.hierarchy_name,
+            hierarchy_type_title: node.hierarchy_type_title,
+            children: node.children ? mapHierarchyRecursively(node.children) : []
+        }));
+    };
+
+    // Recursive function to map hierarchy for NodeChart
+    const mapHierarchyForNodeChart = (nodes: HierarchyNode[]): any[] => {
+        return nodes.map(node => ({
+            name: node.hierarchy_name,
+            backgroundColor: "#e3f2fd",
+            borderColor: "",
+            textColor: "#424242",
+            Areas: node.children ? mapHierarchyForNodeChart(node.children) : []
+        }));
+    };
+
+    // Show loading state
+    if (loading) {
         return (
-          <div key={nodeKey} className="mb-2">
-            <div className="flex items-center gap-2">
-              {hasChildren ? (
-                <button
-                  className="focus:outline-none"
-                  onClick={() => toggleCollapse(nodeKey)}
-                >
-                  <svg
-                    className={`w-4 h-4 mr-1 transition-transform ${collapsed[nodeKey] ? '' : 'rotate-90'}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </button>
-              ) : (
-                <span className="w-4 h-4 mr-1" />
-              )}
-              <span className="font-medium text-neutral-darker">{node.name}</span>
-              {node.count && (
-                <span className="bg-primary text-white text-xs font-bold rounded-full px-2 py-0.5">{node.count}</span>
-              )}
+            <div className="flex items-center justify-center h-screen">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+                    <p className="mt-4 text-gray-600">Loading assets...</p>
+                </div>
             </div>
-            {hasChildren && !collapsed[nodeKey] && (
-              <div className="mt-1">
-                {renderTree(node.children, nodeKey)}
-              </div>
-            )}
-          </div>
         );
-      })}
-    </div>
-  );
+    }
 
-  return (
-    <div className="w-full h-full bg-primary-lightest rounded-2xl shadow p-4 flex flex-col" style={{ height: 900, minWidth: 300 }}>
-      <div className="font-bold text-base mb-4">Location Hierarchy</div>
-      <div>
-        <button
-          className="flex items-center justify-between w-full rounded-xl px-4 py-2 font-bold text-neutral mb-2 focus:outline-none bg-white shadow-sm border border-transparent hover:border-neutral-light transition"
-          onClick={() => setMainCollapsed((c) => !c)}
-        >
-          <span className="flex items-center gap-2">
-            <svg
-              className={`w-5 h-5 mr-1 transition-transform ${mainCollapsed ? '' : 'rotate-90'}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-            MAIN LOCATION
-          </span>
-          <span className="bg-primary text-white text-xs font-bold rounded-full px-2 py-0.5">2</span>
-        </button>
-        {!mainCollapsed && renderTree(dummyData)}
-      </div>
-    </div>
-  );
-};
 
-export default function AssetManagement() {
-  const [showAddModal, setShowAddModal] = useState(false);
-  return (
-    <div className="bg-white flex flex-col h-screen overflow-hidden">
-      {/* Header and actions */}
-      <div className="flex flex-col gap-1 px-8 pt-8 pb-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-neutral-darker">Asset Management</h1>
-            <p className="text-neutral mt-2">Manage and visualize asset hierarchy and organization structure</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-neutral">2 main locations, 14 total assets</span>
-            <button className="bg-secondary hover:bg-secondary-light text-white font-bold py-2 px-6 rounded-full text-lg" onClick={() => setShowAddModal(true)}>Add Asset</button>
-            <button className="border border-secondary text-secondary font-bold py-2 px-6 rounded-full text-lg bg-white hover:bg-secondary-light">Export Hierarchy</button>
-            <button className="border border-primary text-primary font-bold py-2 px-6 rounded-full text-lg bg-white hover:bg-primary-lightest">Settings</button>
-          </div>
-        </div>
-      </div>
-      {/* Main content: sidebar + chart */}
-      <div className="flex gap-4 px-8 pb-8" style={{ height: 900 }}>
-        {/* Location Hierarchy Sidebar */}
-        <div className="w-[320px] flex-shrink-0">
-          <LocationSidebar />
-        </div>
-        {/* Chart area */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="w-full h-[800px] border border-neutral-light rounded-2xl flex items-center justify-center bg-transparent">
-            <OrgChart />
-          </div>
-        </div>
-      </div>
-      {/* Footer */}
-      <div className="flex items-center justify-between text-sm text-neutral border-t border-neutral-light px-8 py-4">
-        <div className="flex items-center gap-4">
-          <span>Asset Management ID: ASSET-001</span>
-          <span>•</span>
-          <span>Version: 2.1.0</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>Need help?</span>
-          <a href="#" className="text-accent hover:underline">Contact Support</a>
-        </div>
-      </div>
-      {/* Add Asset Modal */}
-      <AddAssetModal isOpen={showAddModal} onClose={() => setShowAddModal(false)} />
-    </div>
-  );
-} 
 
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Page  
+                sections={[
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: 'Asset Management',
+                                                onBackClick: () => window.history.back(),
+                                                backButtonText: 'Back to Dashboard',
+                                                buttonsLabel: 'Add Asset',
+                                                variant: 'primary',
+                                                onClick: () => {
+                                                    console.log('Add Asset');
+                                                    setIsAddAssetModalOpen(true);
+                                                },  
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        layout: {
+                            type: 'grid',
+                            columns: 4,
+                            className: 'h-full',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    className:
+                                        'border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                                    columns: [
+                                        {
+                                            name: 'TopLevelHierarchy',
+                                            props: {
+                                                nodes: mapHierarchyRecursively(hierarchicalData),
+                                                title: 'Asset Hierarchy',
+                                            },
+                                        },
+                                    ],
+                                },
+                       
+                                {
+                                    layout: 'row',
+                                    span: { col: 3, row: 1 },
+                                    className: 'h-full border border-primary-border dark:border-dark-border rounded-3xl overflow-hidden',
+                                    columns: [
+                                        {
+                                            name: 'NodeChart',
+                                            props: {
+                                                data: {
+                                                    Location: mapHierarchyForNodeChart(hierarchicalData)
+                                                },
+                                                width: '100%',
+                                                height: '100%',
+                                                enableZoom: true,
+                                                minZoom: 0.3,
+                                                maxZoom: 2,
+                                                initialZoom: 0.8,
+                                                layout: 'horizontal',
+                                                EdgeStyleLayout: 'polyline',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        layout: {
+                            type: 'column',
+                            gap: 'gap-0',
+                            rows: [
+                                {
+                                    layout: 'row',
+                                    columns: [
+                                        {
+                                            name: 'Modal',
+                                            props: {
+                                                isOpen: isAddAssetModalOpen,
+                                                onClose: () => {
+                                                    setIsAddAssetModalOpen(false);
+                                                    setActiveTab(0);
+                                                    setIsSubNodeChecked(false);
+                                                },
+                                                title: 'Add New Asset',
+                                                size: 'xl',
+                                                showCloseIcon: true,
+                                                showTabs: true,
+                                                tabs: tabs,
+                                                activeTabIndex: activeTab,
+                                                onTabChange: handleTabChange,
+                                                showForm: true,
+                                                formFields: currentFormFields,
+                                                onSave: async (formData: Record<string, any>) => {
+                                                    console.log('Asset form data:', formData);
+                                                    console.log('Active tab:', activeTab);
+                                                    console.log('isSubNodeChecked state:', isSubNodeChecked);
+                                                    console.log('formData.isSubNode:', formData.isSubNode);
+                                                    
+                                                    try {
+                                                        let apiData;
+                                                        
+                                                        switch (activeTab) {
+                                                            case 0: // Add Asset Name
+                                                                apiData = {
+                                                                    location_type_name: formData.assetTitle,
+                                                                    location_names: formData.assetName ? [formData.assetName] : [],
+                                                                    parent_location: formData.isSubNode && formData.parentAssetSearch ? formData.parentAssetSearch : null
+                                                                };
+                                                                console.log('API data being sent:', apiData);
+                                                                break;
+                                                                
+                                                            case 1: // Upload List
+                                                                console.log('File upload not implemented yet');
+                                                                setIsAddAssetModalOpen(false);
+                                                                return;
+                                                                
+                                                            case 2: // Template
+                                                                console.log('Template download not implemented yet');
+                                                                setIsAddAssetModalOpen(false);
+                                                                return;
+                                                                
+                                                            default:
+                                                                apiData = formData;
+                                                        }
+                                                        
+                                                        const response = await fetch(`${BACKEND_URL}/assets`, {
+                                                            method: 'POST',
+                                                            headers: {
+                                                                'Content-Type': 'application/json',
+                                                            },
+                                                            body: JSON.stringify(apiData)
+                                                        });
+                                                        
+                                                        const result = await response.json();
+                                                        
+                                                        if (result.success) {
+                                                            console.log('Asset added successfully:', result);
+                                                            window.location.reload();
+                                                        } else {
+                                                            console.error('Failed to add asset:', result.message);
+                                                            alert(`Failed to add asset: ${result.message}`);
+                                                        }
+                                                    } catch (error) {
+                                                        console.error('Error adding asset:', error);
+                                                        alert('Error adding asset. Please try again.');
+                                                    }
+                                                    
+                                                    setIsAddAssetModalOpen(false);
+                                                },
+                                                saveButtonLabel: getSaveButtonLabel(),
+                                                cancelButtonLabel: 'Cancel',
+                                                cancelButtonVariant: 'secondary',
+                                                confirmButtonVariant: 'primary',
+                                                formId: 'add-asset-form',
+                                                gridLayout: {
+                                                    gridRows: currentFormFields.length,
+                                                    gridColumns: 1,
+                                                    gap: 'gap-4'
+                                                },
+                                                tabsSize: 'md',
+                                                tabsShowTabIcons: true,
+                                                tabsShowTabLabels: true,
+                                                tabsTabListClassName: 'bg-gray-50 border-gray-200',
+                                                tabsActiveTabButtonClassName: 'bg-blue-600 text-white',
+                                                tabsInactiveTabButtonClassName: 'text-gray-600 hover:bg-gray-100',
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                ]}
+            />
+        </Suspense>
+    );
+}
