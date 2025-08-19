@@ -1,164 +1,474 @@
-import React, { useState, Suspense } from 'react';
+import React, { useState, Suspense, useEffect } from 'react';
 import Page from '@/components/global/PageC';
 import { useNavigate } from 'react-router-dom';
 // import { exportChartData } from '@/utils/excelExport';
 // import { Pagination } from 'antd';
 
-// Constants
-
-const METER_STATUS_DATA = [
-    { value: 284, name: 'Communicating' },
-    { value: 8, name: 'Non-Communicating' },
+// Dummy data for fallback
+const dummyConsumerStatsData = [
+    {
+        id: 1,
+        title: 'Total Consumers',
+        value: 'N/A',
+        icon: '/icons/units.svg',
+        subtitle1: '0 Active',
+        subtitle2: '0 In-Active',
+        onValueClick: () => {},
+    },
+    {
+        id: 2,
+        title: 'High-Usage Consumers',
+        value: 'N/A ',
+        icon: '/icons/heavy-user.svg',
+        subtitle1: 'N/A kWh Average Consumption',
+        subtitle2: '',
+    },
 ];
 
+const dummyConsumptionBillingData = [
+    {
+        id: 1,
+        title: 'Total Consumption',
+        value: 'N/A',
+        icon: '/icons/plug-alt.svg',
+        subtitle1: '0 Active Consumption',
+        subtitle2: '0 In-Active Consumption',
+        onValueClick: () => {},
+        showTrend: true,
+        comparisonValue: 0,
+        previousValue: 'vs. N/A kWh Yesterday',
+    },
+    {
+        id: 2,
+        title: 'Total Billing',
+        value: 'N/A',
+        icon: '/icons/rupee.svg',
+        subtitle1: 'N/A kWh Average Billing',
+        subtitle2: '0 kWh Average Billing',
+        showTrend: true,
+        comparisonValue: 0,
+        previousValue: 'vs. N/A kWh Yesterday',
+    },
+];
+
+const dummyOverdueConsumersData = [
+    {
+        uid: 'N/A',
+        consumerName: 'N/A',
+        flatNo: 'N/A',
+        overdue: '0.00',
+    },
+      {
+        uid: 'N/A',
+        consumerName: 'N/A',
+        flatNo: 'N/A',
+        overdue: '0.00',
+    },
+    {
+        uid: 'N/A',
+        consumerName: 'N/A',
+        flatNo: 'N/A',
+        overdue: '0.00',
+    },
+    
+    {
+        uid: 'N/A',
+        consumerName: 'N/A',
+        flatNo: 'N/A',
+        overdue: '0.00',
+    },
+    {
+        uid: 'N/A',
+        consumerName: 'N/A',
+        flatNo: 'N/A',
+        overdue: '0.00',
+    },
+];
+
+const dummyMeterStatusData = [
+    { value: 0, name: 'Communicating' },
+    { value: 0, name: 'Non-Communicating' },
+];
+
+const dummyBillingChartData = {
+    xAxisData: [
+        'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ],
+    seriesData: [
+        {
+            name: 'Bills Generated',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        },
+        {
+            name: 'Paid',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        },
+        {
+            name: 'Pending',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        },
+        {
+            name: 'Overdue',
+            data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        },
+    ],
+    seriesColors: [
+        '#3B82F6', // Blue for Bills Generated
+        '#10B981', // Green for Paid
+        '#EF4444', // Red for Pending
+        '#F97316', // Orange for Overdue
+    ],
+};
+
 const ConsumerDashboard: React.FC = () => {
-    // const [billingView, setBillingView] = useState<'Daily' | 'Monthly'>(
-    //     'Daily'
-    // );
     const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly'>('Daily');
-    // const [useDummyData, setUseDummyData] = useState(true);
     const navigate = useNavigate();
 
-    const handleTotalConsumersClick = () => navigate('/consumers');
-    // const handleHighUsageConsumersClick = () =>
-    //     navigate('/consumers/high-usage');
+    // State for API data
+    const [consumerStatsData, setConsumerStatsData] = useState(dummyConsumerStatsData);
+    const [consumptionBillingData, setConsumptionBillingData] = useState(dummyConsumptionBillingData);
+    const [overdueConsumersData, setOverdueConsumersData] = useState(dummyOverdueConsumersData);
+    const [meterStatusData, setMeterStatusData] = useState(dummyMeterStatusData);
+    const [billingChartData, setBillingChartData] = useState(dummyBillingChartData);
+
+    // Loading states
+    const [isStatsLoading, setIsStatsLoading] = useState(true);
+    const [isBillingLoading, setIsBillingLoading] = useState(true);
+    const [isOverdueLoading, setIsOverdueLoading] = useState(true);
+    const [isMeterStatusLoading, setIsMeterStatusLoading] = useState(true);
+    const [isChartLoading, setIsChartLoading] = useState(true);
+
+    // State for tracking failed APIs
+    const [failedApis, setFailedApis] = useState<Array<{
+        id: string;
+        name: string;
+        retryFunction: () => Promise<void>;
+        errorMessage: string;
+    }>>([]);
+
 
     const handleTimeRangeChange = (range: string) => {
         setSelectedTimeRange(range as 'Daily' | 'Monthly');
     };
 
-    // const toggleDummyData = () => {
-    //     setUseDummyData(!useDummyData);
-    // };
+    // Retry functions for each API
+    const retryStatsAPI = async () => {
+        setIsStatsLoading(true);
+        try {
+            // Simulate API call - replace with actual API
+            const response = await fetch('/api/consumer/stats');
+            if (!response.ok) throw new Error('Failed to fetch stats');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            setConsumerStatsData(data);
+            setFailedApis(prev => prev.filter(api => api.id !== 'stats'));
+        } catch (err: any) {
+            console.error("Error in Stats API:", err);
+            setConsumerStatsData(dummyConsumerStatsData);
+        } finally {
+            setTimeout(() => {
+                setIsStatsLoading(false);
+            }, 1000);
+        }
+    };
 
-    const [consumerStatsData] = useState([
-        {
-            id: 1,
-            title: 'Total Consumers',
-            value: '292',
-            icon: '/icons/units.svg',
-            subtitle1: '284 Active',
-            subtitle2: '8 In-Active',
-            onValueClick: handleTotalConsumersClick,
-        },
-        {
-            id: 2,
-            title: 'High-Usage Consumers',
-            value: '2',
-            icon: '/icons/heavy-user.svg',
-            subtitle1: '140.09 kWh Average Consumption',
-            subtitle2: '',
-        },
-    ]);
-    const [consumptionBillingData] = useState([
-        {
-            id: 1,
-            title: 'Total Consumption',
-            value: '16.09 kWh',
-            icon: '/icons/plug-alt.svg',
-            subtitle1: '284 Active Consumption',
-            subtitle2: '8 In-Active Consumption',
-            onValueClick: handleTotalConsumersClick,
-            showTrend: true,
-            comparisonValue: -10.09,
-            previousValue: 'vs. 14.09 kWh Yesterday',
-        },
-        {
-            id: 2,
-            title: 'Total Billing',
-            value: '₹ 16,090.00',
-            icon: '/icons/rupee.svg',
-            subtitle1: '140.09 kWh Average Billing',
-            subtitle2: '',
-            showTrend: true,
-            comparisonValue: 15000,
-            previousValue: 'vs. 14090.00 Yesterday',
-        },
-    ]);
+    const retryBillingAPI = async () => {
+        setIsBillingLoading(true);
+        try {
+            // Simulate API call - replace with actual API
+            const response = await fetch('/api/consumer/billing');
+            if (!response.ok) throw new Error('Failed to fetch billing');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            setConsumptionBillingData(data);
+            setFailedApis(prev => prev.filter(api => api.id !== 'billing'));
+        } catch (err: any) {
+            console.error("Error in Billing API:", err);
+            setConsumptionBillingData(dummyConsumptionBillingData);
+        } finally {
+            setTimeout(() => {
+                setIsBillingLoading(false);
+            }, 1000);
+        }
+    };
 
+    const retryOverdueAPI = async () => {
+        setIsOverdueLoading(true);
+        try {
+            // Simulate API call - replace with actual API
+            const response = await fetch('/api/consumer/overdue');
+            if (!response.ok) throw new Error('Failed to fetch overdue');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            setOverdueConsumersData(data);
+            setFailedApis(prev => prev.filter(api => api.id !== 'overdue'));
+        } catch (err: any) {
+            console.error("Error in Overdue API:", err);
+            setOverdueConsumersData(dummyOverdueConsumersData);
+        } finally {
+            setTimeout(() => {
+                setIsOverdueLoading(false);
+            }, 1000);
+        }
+    };
 
-    const [overdueConsumersData] = useState([
-        {
-            uid: '2025UIDC089',
-            consumerName: 'I Lakshmana Rao',
-            flatNo: 'C089',
-            overdue: '32004.12',
-        },
-        {
-            uid: '2025UIDC088',
-            consumerName: 'G Ramaraju',
-            flatNo: 'C088',
-            overdue: '22613.91',
-        },
-        {
-            uid: '2025UIDC087',
-            consumerName: 'S Meenakshi',
-            flatNo: 'C087',
-            overdue: '18500.00',
-        },
-        {
-            uid: '2025UIDC086',
-            consumerName: 'P Srinivas',
-            flatNo: 'C086',
-            overdue: '17250.50',
-        },
-        {
-            uid: '2025UIDC085',
-            consumerName: 'A Kumar',
-            flatNo: 'C085',
-            overdue: '16000.75',
-        },
-        {
-            uid: '2025UIDC084',
-            consumerName: 'R Priya',
-            flatNo: 'C084',
-            overdue: '15400.00',
-        },
-        {
-            uid: '2025UIDC083',
-            consumerName: 'V Ramesh',
-            flatNo: 'C083',
-            overdue: '14999.99',
-        },
-        {
-            uid: '2025UIDC082',
-            consumerName: 'K Suresh',
-            flatNo: 'C082',
-            overdue: '14000.00',
-        },
-        {
-            uid: '2025UIDC081',
-            consumerName: 'M Lakshmi',
-            flatNo: 'C081',
-            overdue: '13500.00',
-        },
-        {
-            uid: '2025UIDC080',
-            consumerName: 'T Anil',
-            flatNo: 'C080',
-            overdue: '13000.00',
-        },
-        {
-            uid: '2025UIDC089',
-            consumerName: 'I Lakshmana Rao',
-            flatNo: 'C089',
-            overdue: '21679.76',
-        },
-        {
-            uid: '2025UIDC089',
-            consumerName: 'I Lakshmana Rao',
-            flatNo: 'C089',
-            overdue: '20745.27',
-        },
-        {
-            uid: '2025UIDC089',
-            consumerName: 'I Lakshmana Rao',
-            flatNo: 'C089',
-            overdue: '19731.31',
-        },
-    ]);
+    const retryMeterStatusAPI = async () => {
+        setIsMeterStatusLoading(true);
+        try {
+            // Simulate API call - replace with actual API
+            const response = await fetch('/api/consumer/meter-status');
+            if (!response.ok) throw new Error('Failed to fetch meter status');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            setMeterStatusData(data);
+            setFailedApis(prev => prev.filter(api => api.id !== 'meterStatus'));
+        } catch (err: any) {
+            console.error("Error in Meter Status API:", err);
+            setMeterStatusData(dummyMeterStatusData);
+        } finally {
+            setTimeout(() => {
+                setIsMeterStatusLoading(false);
+            }, 1000);
+        }
+    };
 
+    const retryChartAPI = async () => {
+        setIsChartLoading(true);
+        try {
+            // Simulate API call - replace with actual API
+            const response = await fetch('/api/consumer/chart');
+            if (!response.ok) throw new Error('Failed to fetch chart');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            setBillingChartData(data);
+            setFailedApis(prev => prev.filter(api => api.id !== 'chart'));
+        } catch (err: any) {
+            console.error("Error in Chart API:", err);
+            setBillingChartData(dummyBillingChartData);
+        } finally {
+            setTimeout(() => {
+                setIsChartLoading(false);
+            }, 1000);
+        }
+    };
 
+    // Retry specific API
+    const retrySpecificAPI = (apiId: string) => {
+        const api = failedApis.find(a => a.id === apiId);
+        if (api) {
+            api.retryFunction();
+        }
+    };
+
+    // Fetch data on component mount
+    useEffect(() => {
+        const fetchStats = async () => {
+            setIsStatsLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch('/api/consumer/stats');
+                if (!response.ok) throw new Error('Failed to fetch stats');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                setConsumerStatsData(data);
+            } catch (err: any) {
+                console.error('Error fetching stats:', err);
+                setConsumerStatsData(dummyConsumerStatsData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'stats')) {
+                        return [...prev, { 
+                            id: 'stats', 
+                            name: 'Consumer Stats', 
+                            retryFunction: retryStatsAPI, 
+                            errorMessage: 'Failed to load Consumer Statistics. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsStatsLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchBilling = async () => {
+            setIsBillingLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch('/api/consumer/billing');
+                if (!response.ok) throw new Error('Failed to fetch billing');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                setConsumptionBillingData(data);
+            } catch (err: any) {
+                console.error('Error fetching billing:', err);
+                setConsumptionBillingData(dummyConsumptionBillingData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'billing')) {
+                        return [...prev, { 
+                            id: 'billing', 
+                            name: 'Billing Data', 
+                            retryFunction: retryBillingAPI, 
+                            errorMessage: 'Failed to load Billing Data. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsBillingLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchOverdue = async () => {
+            setIsOverdueLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch('/api/consumer/overdue');
+                if (!response.ok) throw new Error('Failed to fetch overdue');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                setOverdueConsumersData(data);
+            } catch (err: any) {
+                console.error('Error fetching overdue:', err);
+                setOverdueConsumersData(dummyOverdueConsumersData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'overdue')) {
+                        return [...prev, { 
+                            id: 'overdue', 
+                            name: 'Overdue Data', 
+                            retryFunction: retryOverdueAPI, 
+                            errorMessage: 'Failed to load Overdue Data. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsOverdueLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchMeterStatus = async () => {
+            setIsMeterStatusLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch('/api/consumer/meter-status');
+                if (!response.ok) throw new Error('Failed to fetch meter status');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                setMeterStatusData(data);
+            } catch (err: any) {
+                console.error('Error fetching meter status:', err);
+                setMeterStatusData(dummyMeterStatusData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'meterStatus')) {
+                        return [...prev, { 
+                            id: 'meterStatus', 
+                            name: 'Meter Status', 
+                            retryFunction: retryMeterStatusAPI, 
+                            errorMessage: 'Failed to load Meter Status. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsMeterStatusLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchChart = async () => {
+            setIsChartLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch('/api/consumer/chart');
+                if (!response.ok) throw new Error('Failed to fetch chart');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                setBillingChartData(data);
+            } catch (err: any) {
+                console.error('Error fetching chart:', err);
+                setBillingChartData(dummyBillingChartData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'chart')) {
+                        return [...prev, { 
+                            id: 'chart', 
+                            name: 'Chart Data', 
+                            retryFunction: retryChartAPI, 
+                            errorMessage: 'Failed to load Chart Data. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsChartLoading(false);
+                }, 1000);
+            }
+        };
+
+        fetchStats();
+        fetchBilling();
+        fetchOverdue();
+        fetchMeterStatus();
+        fetchChart();
+    }, []);
 
     const [overdueConsumersColumns] = useState([
         { key: 'uid', label: 'UID' },
@@ -166,53 +476,6 @@ const ConsumerDashboard: React.FC = () => {
         { key: 'flatNo', label: 'Flat No' },
         { key: 'overdue', label: 'Overdue (Rs.)' },
     ]);
-
-
-
-    const [billingChartData] = useState({
-        xAxisData: [
-            'Jan',
-            'Feb',
-            'Mar',
-            'Apr',
-            'May',
-            'Jun',
-            'Jul',
-            'Aug',
-            'Sep',
-            'Oct',
-            'Nov',
-            'Dec',
-        ],
-        // seriesData: [
-        //     {
-        //         name: 'Bills Generated',
-        //         data: [
-        //             260, 255, 275, 280, 290, 285, 270, 265, 280, 275, 290, 295,
-        //         ],
-        //     },
-        //     {
-        //         name: 'Paid',
-        //         data: [
-        //             240, 235, 250, 255, 260, 250, 245, 240, 255, 250, 265, 270,
-        //         ],
-        //     },
-        //     {
-        //         name: 'Pending',
-        //         data: [15, 12, 18, 20, 25, 30, 20, 18, 22, 20, 18, 20],
-        //     },
-        //     {
-        //         name: 'Overdue',
-        //         data: [5, 8, 7, 5, 5, 5, 5, 7, 3, 5, 7, 5],
-        //     },
-        // ],
-        seriesColors: [
-            '#3B82F6', // Blue for Bills Generated
-            '#10B981', // Green for Paid
-            '#EF4444', // Red for Pending
-            '#F97316', // Orange for Overdue
-        ],
-    });
 
     // Chart download handler
     // const handleChartDownload = () => {
@@ -223,6 +486,30 @@ const ConsumerDashboard: React.FC = () => {
         <Suspense fallback={<div>Loading...</div>}>
             <Page   
                 sections={[
+                    // Error Section - Above all content
+                    ...(failedApis.length > 0 ? [{
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'column' as const,
+                                    columns: [
+                                        {
+                                            name: 'Error',
+                                            props: {
+                                                visibleErrors: failedApis.map(api => api.errorMessage),
+                                                showRetry: true,
+                                                maxVisibleErrors: 3, // Show max 3 errors at once
+                                                failedApis: failedApis, // Pass all failed APIs for individual retry
+                                                onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    }] : []),
                     {
                         layout: {
                             type: 'grid',
@@ -258,6 +545,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 subtitle2: card.subtitle2,
                                                 onValueClick: card.onValueClick,
                                                 bg: "bg-stat-icon-gradient",
+                                                loading: isStatsLoading,
                                             },
                                             span: { col: 1 as const, row: 1 as const },
                                         })),
@@ -305,6 +593,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 bg: "bg-stat-icon-gradient",
                                                 showTrend: card.showTrend,
                                                 comparisonValue: card.comparisonValue,
+                                                loading: isBillingLoading,
                                             },
                                             span: { col: 1 as const, row: 1 as const },
                                         })),
@@ -325,23 +614,12 @@ const ConsumerDashboard: React.FC = () => {
                                     span:{col:2 as const,row:1 as const},
                                     className: '',
                                     columns: [
-                                        // {
-                                        //     name: "Holder",
-                                        //     props: {
-                                        //         title:"Daily consumption metrics",
-                                        //         subtitle: "Monthly billing statistics and collection data",
-                                        //         className: "border-none rounded-t-3xl",
-                                        //     },
-                                        // },
                                         {
                                             name: 'BarChart',
                                             props: {
-                                                xAxisData:
-                                                    billingChartData.xAxisData,
-                                                // seriesData:
-                                                //     billingChartData.seriesData,
-                                                seriesColors:
-                                                    billingChartData.seriesColors,
+                                                xAxisData: billingChartData.xAxisData,
+                                                seriesData: billingChartData.seriesData,
+                                                seriesColors: billingChartData.seriesColors,
                                                 height: '400px',
                                                 showHeader: true,
                                                 headerTitle:'Consumption Metrics',
@@ -358,6 +636,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 yAxisMax: 300,
                                                 yAxisStep: 50,
                                                 onDownload: "",
+                                                isLoading: isChartLoading,
                                             },
                                         },
                                     ],
@@ -389,7 +668,7 @@ const ConsumerDashboard: React.FC = () => {
                                         {
                                             name: 'PieChart',
                                             props: {
-                                                data: METER_STATUS_DATA,
+                                                data: meterStatusData,
                                                 height: 330,
                                                 showLegend: false,
                                                 showNoDataMessage: false,
@@ -417,6 +696,7 @@ const ConsumerDashboard: React.FC = () => {
                                                             '/connect-disconnect'
                                                         );
                                                 },
+                                                isLoading: isMeterStatusLoading,
                                             },
                                         },
                                     ],
@@ -431,9 +711,8 @@ const ConsumerDashboard: React.FC = () => {
                                             name: 'Table',
                                             props: {
                                                 data: overdueConsumersData,
-                                                columns:
-                                                    overdueConsumersColumns,
-                                                loading: false,
+                                                columns: overdueConsumersColumns,
+                                                loading: isOverdueLoading,
                                                 searchable: true,
                                                 pagination: true,
                                                 showActions: true,
@@ -444,7 +723,6 @@ const ConsumerDashboard: React.FC = () => {
                                                 showHeader: true,
                                                 headerTitle: 'Overdue Consumers',
                                                 height: 330,
-                                                
                                                 onView: (row: any) =>
                                                     console.log(
                                                         'View details for',
@@ -456,35 +734,6 @@ const ConsumerDashboard: React.FC = () => {
                                                         row.uid
                                                     ),
                                                 initialRowsPerPage: 5,
-                                                // actions: [
-                                                //     {
-                                                //         label: 'Send Notice',
-                                                //         icon: '/icons/paper-plane.svg',
-                                                //         onClick: (row: any) =>
-                                                //             console.log(
-                                                //                 'Send notice to',
-                                                //                 row.uid
-                                                //             ),
-                                                //     },
-                                                //     {
-                                                //         label: 'View Details',
-                                                //         icon: '/icons/document.svg',
-                                                //         onClick: (row: any) =>
-                                                //             console.log(
-                                                //                 'View details for',
-                                                //                 row.uid
-                                                //             ),
-                                                //     },
-                                                //     {
-                                                //         label: 'Disconnect',
-                                                //         icon: '/icons/close.svg',
-                                                //         onClick: (row: any) =>
-                                                //             console.log(
-                                                //                 'Disconnect',
-                                                //                 row.uid
-                                                //             ),
-                                                //     },
-                                                // ],
                                             },
                                         },
                                     ],

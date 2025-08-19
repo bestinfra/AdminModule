@@ -6,11 +6,75 @@ import type { TableData } from '@/components/global/Table';
 import BACKEND_URL from '../config';
 import { exportChartData } from '@/utils/excelExport';
 
+// Dummy data for fallback
+const dummyTicketStats = {
+  total: 0,
+  open: 0,
+  inProgress: 0,
+  resolved: 0,
+  closed: 0
+};
+
+const dummyTicketTrends = {
+  xAxisData: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+  seriesData: [
+    {
+      name: 'Open Tickets',
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      name: 'In Progress Tickets',
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      name: 'Resolved Tickets',
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    },
+    {
+      name: 'Closed Tickets',
+      data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    }
+  ],
+  seriesColors: ['#163b7c', '#55b56c', '#dc272c', '#ed8c22']
+};
+
+const dummyTickets = [
+  {
+    id: 1,
+    ticketNumber: 'N/A',
+    dtrNumber: 'N/A',
+    subject: 'N/A',
+    priority: 'N/A',
+    status: 'N/A',
+    assignedTo: 'N/A',
+    createdAt: 'N/A',
+    category: 'N/A',
+    meterSerialNo: 'N/A',
+    description: 'N/A',
+  }
+];
+
 export default function Tickets() {
     const navigate = useNavigate();
-    const [ticketStats, setTicketStats] = useState<any>(null);
-    const [ticketTrends, setTicketTrends] = useState<any>(null);
-    const [tickets, setTickets] = useState<any[]>([]);
+    
+    // State for API data
+    const [ticketStats, setTicketStats] = useState(dummyTicketStats);
+    const [ticketTrends, setTicketTrends] = useState(dummyTicketTrends);
+    const [tickets, setTickets] = useState(dummyTickets);
+    
+    // Loading states
+    const [isStatsLoading, setIsStatsLoading] = useState(true);
+    const [isTrendsLoading, setIsTrendsLoading] = useState(true);
+    const [isTableLoading, setIsTableLoading] = useState(true);
+    
+    // State for tracking failed APIs
+    const [failedApis, setFailedApis] = useState<Array<{
+        id: string;
+        name: string;
+        retryFunction: () => Promise<void>;
+        errorMessage: string;
+    }>>([]);
+
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -20,110 +84,77 @@ export default function Tickets() {
         hasPrevPage: false
     });
 
-    // Dummy data for development
-    const dummyTickets = [
-        {
-            id: 336,
-            ticketNumber: 'TCKT-0001',
-            dtrNumber: 'DTR-001',
-            subject: 'Incorrect Bill',
-            priority: 'HIGH',
-            status: 'OPEN',
-            assignedTo: 'John Doe',
-            createdAt: '2024-01-15',
-            category: 'BILLING',
-            meterSerialNo: 'A9211434',
-            description: 'Testing connection issue with meter.',
-        },
-        {
-            id: 335,
-            ticketNumber: 'TCKT-0002',
-            dtrNumber: 'DTR-002',
-            subject: 'Voltage Fluctuation',
-            priority: 'MEDIUM',
-            status: 'IN_PROGRESS',
-            assignedTo: 'Jane Smith',
-            createdAt: '2024-01-14',
-            category: 'METER',
-            meterSerialNo: 'B9345417',
-            description: 'Meter showing connection error.',
-        },
-        {
-            id: 333,
-            ticketNumber: 'TCKT-0003',
-            dtrNumber: 'DTR-003',
-            subject: 'Meter Reading Issue',
-            priority: 'LOW',
-            status: 'RESOLVED',
-            assignedTo: 'Alice Brown',
-            createdAt: '2024-01-13',
-            category: 'METER',
-            meterSerialNo: 'C9456789',
-            description: 'Communication issue with billing system.',
+    // Retry function for Stats API
+    const retryStatsAPI = async () => {
+        setIsStatsLoading(true);
+        try {
+            const res = await fetch(`${BACKEND_URL}/tickets/stats`);
+            
+            if (!res.ok) {
+                throw new Error(`Stats API failed with status ${res.status}`);
+            }
+            
+            const contentType = res.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Stats API returned non-JSON response");
+            }
+            
+            const data = await res.json();
+            if (data.success) {
+                setTicketStats(data.data);
+                // Remove from failed APIs on success
+                setFailedApis(prev => prev.filter(api => api.id !== 'stats'));
+            } else {
+                throw new Error("Stats API returned unsuccessful response");
+            }
+        } catch (err: any) {
+            console.error("Error in Tickets Stats:", err);
+            setTicketStats(dummyTicketStats);
+        } finally {
+            // Add a small delay to make loading state visible
+            setTimeout(() => {
+                setIsStatsLoading(false);
+            }, 1000);
         }
-    ];
+    };
 
+    // Retry function for Trends API
+    const retryTrendsAPI = async () => {
+        setIsTrendsLoading(true);
+        try {
+            const res = await fetch(`${BACKEND_URL}/tickets/trends`);
+            
+            if (!res.ok) {
+                throw new Error(`Trends API failed with status ${res.status}`);
+            }
+            
+            const contentType = res.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Trends API returned non-JSON response");
+            }
+            
+            const data = await res.json();
+            if (data.success) {
+                setTicketTrends(data.data);
+                // Remove from failed APIs on success
+                setFailedApis(prev => prev.filter(api => api.id !== 'trends'));
+            } else {
+                throw new Error("Trends API returned unsuccessful response");
+            }
+        } catch (err: any) {
+            console.error("Error in Tickets Trends:", err);
+            setTicketTrends(dummyTicketTrends);
+        } finally {
+            // Add a small delay to make loading state visible
+            setTimeout(() => {
+                setIsTrendsLoading(false);
+            }, 1000);
+        }
+    };
 
-
-    // Fetch ticket stats
-    useEffect(() => {
-        fetch(`${BACKEND_URL}/tickets/stats`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    setTicketStats(data.data);
-                }
-            })
-            .catch((err) => {
-                console.error('Failed to fetch ticket stats:', err);
-                // Fallback dummy stats
-                setTicketStats({
-                    total: 156,
-                    open: 23,
-                    inProgress: 45,
-                    resolved: 67,
-                    closed: 21
-                });
-            });
-    }, []);
-
-    useEffect(() => {
-        fetch(`${BACKEND_URL}/tickets/trends`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    setTicketTrends(data.data);
-                }
-            })
-            .catch((err) => {
-                console.error('Failed to fetch ticket trends:', err);
-                // Fallback dummy trends
-                setTicketTrends({
-                    xAxisData: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    seriesData: [
-                        {
-                            name: 'Open Tickets',
-                            data: [45, 52, 38, 67, 58, 42, 35, 48, 55, 62, 41, 38]
-                        },
-                        {
-                            name: 'In Progress Tickets',
-                            data: [28, 35, 25, 42, 38, 28, 22, 32, 38, 45, 28, 25]
-                        },
-                        {
-                            name: 'Resolved Tickets',
-                            data: [38, 45, 32, 58, 49, 35, 28, 41, 48, 55, 34, 31]
-                        },
-                        {
-                            name: 'Closed Tickets',
-                            data: [12, 15, 8, 22, 18, 11, 7, 14, 16, 19, 10, 9]
-                        }
-                    ],
-                    seriesColors: ['#163b7c', '#55b56c', '#dc272c', '#ed8c22']
-                });
-            });
-    }, []);
-
-    const fetchTicketsTable = async (page = 1, limit = 10, searchTerm = '') => {
+    // Retry function for Table API
+    const retryTableAPI = async (page = 1, limit = 10, searchTerm = '') => {
+        setIsTableLoading(true);
         try {
             const params = new URLSearchParams();
             params.append('page', String(page));
@@ -133,9 +164,18 @@ export default function Tickets() {
                 params.append('search', searchTerm.trim());
             }
             
-            const response = await fetch(`${BACKEND_URL}/tickets/table?${params.toString()}`);
-            const data = await response.json();
+            const res = await fetch(`${BACKEND_URL}/tickets/table?${params.toString()}`);
             
+            if (!res.ok) {
+                throw new Error(`Table API failed with status ${res.status}`);
+            }
+            
+            const contentType = res.headers.get("content-type");
+            if (!contentType || !contentType.includes("application/json")) {
+                throw new Error("Table API returned non-JSON response");
+            }
+            
+            const data = await res.json();
             if (data.success) {
                 setTickets(data.data);
                 setServerPagination({
@@ -146,30 +186,198 @@ export default function Tickets() {
                     hasNextPage: data.pagination?.hasNextPage || false,
                     hasPrevPage: data.pagination?.hasPrevPage || false,
                 });
+                // Remove from failed APIs on success
+                setFailedApis(prev => prev.filter(api => api.id !== 'table'));
             } else {
-                // Fallback to dummy data
-                setTickets(dummyTickets);
+                throw new Error("Table API returned unsuccessful response");
             }
-        } catch (err) {
-            console.error('Failed to fetch ticket data:', err);
-            // Fallback to dummy data
+        } catch (err: any) {
+            console.error("Error in Tickets Table:", err);
             setTickets(dummyTickets);
+        } finally {
+            // Add a small delay to make loading state visible
+            setTimeout(() => {
+                setIsTableLoading(false);
+            }, 1000);
         }
     };
 
+    // Retry specific API
+    const retrySpecificAPI = (apiId: string) => {
+        const api = failedApis.find(a => a.id === apiId);
+        if (api) {
+            api.retryFunction();
+        }
+    };
+
+    // Fetch ticket stats
     useEffect(() => {
-        fetchTicketsTable();
+        const fetchStats = async () => {
+            setIsStatsLoading(true);
+            try {
+                const res = await fetch(`${BACKEND_URL}/tickets/stats`);
+                
+                if (!res.ok) {
+                    throw new Error(`Stats API failed with status ${res.status}`);
+                }
+                
+                const contentType = res.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("Stats API returned non-JSON response");
+                }
+                
+                const data = await res.json();
+                if (data.success) {
+                    setTicketStats(data.data);
+                } else {
+                    throw new Error("Stats API returned unsuccessful response");
+                }
+            } catch (err: any) {
+                console.error("Error in Tickets Stats:", err);
+                setTicketStats(dummyTicketStats);
+                
+                // Add to failed APIs
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'stats')) {
+                        return [...prev, { 
+                            id: 'stats', 
+                            name: 'Ticket Data', 
+                            retryFunction: retryStatsAPI, 
+                            errorMessage: 'Failed to load Tickets Stats. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                // Add a small delay to make loading state visible
+                setTimeout(() => {
+                    setIsStatsLoading(false);
+                }, 1000);
+            }
+        };
+        
+        fetchStats();
+    }, []);
+
+    // Fetch ticket trends
+    useEffect(() => {
+        const fetchTrends = async () => {
+            setIsTrendsLoading(true);
+            try {
+                const res = await fetch(`${BACKEND_URL}/tickets/trends`);
+                
+                if (!res.ok) {
+                    throw new Error(`Trends API failed with status ${res.status}`);
+                }
+                
+                const contentType = res.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("Trends API returned non-JSON response");
+                }
+                
+                const data = await res.json();
+                if (data.success) {
+                    setTicketTrends(data.data);
+                } else {
+                    throw new Error("Trends API returned unsuccessful response");
+                }
+            } catch (err: any) {
+                console.error("Error in Tickets Trends:", err);
+                setTicketTrends(dummyTicketTrends);
+                
+                // Add to failed APIs
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'trends')) {
+                        return [...prev, { 
+                            id: 'trends', 
+                            name: 'Ticket Data', 
+                            retryFunction: retryTrendsAPI, 
+                            errorMessage: 'Failed to load Tickets Trends. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                // Add a small delay to make loading state visible
+                setTimeout(() => {
+                    setIsTrendsLoading(false);
+                }, 1000);
+            }
+        };
+        
+        fetchTrends();
+    }, []);
+
+    // Fetch tickets table
+    useEffect(() => {
+        const fetchTable = async () => {
+            setIsTableLoading(true);
+            try {
+                const params = new URLSearchParams();
+                params.append('page', '1');
+                params.append('limit', '10');
+                
+                const res = await fetch(`${BACKEND_URL}/tickets/table?${params.toString()}`);
+                
+                if (!res.ok) {
+                    throw new Error(`Table API failed with status ${res.status}`);
+                }
+                
+                const contentType = res.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new Error("Table API returned non-JSON response");
+                }
+                
+                const data = await res.json();
+                if (data.success) {
+                    setTickets(data.data);
+                    setServerPagination({
+                        currentPage: data.pagination?.currentPage || 1,
+                        totalPages: data.pagination?.totalPages || 1,
+                        totalCount: data.pagination?.totalCount || 0,
+                        limit: data.pagination?.limit || 10,
+                        hasNextPage: data.pagination?.hasNextPage || false,
+                        hasPrevPage: data.pagination?.hasPrevPage || false,
+                    });
+                } else {
+                    throw new Error("Table API returned unsuccessful response");
+                }
+            } catch (err: any) {
+                console.error("Error in Tickets Table:", err);
+                setTickets(dummyTickets);
+                
+                // Add to failed APIs
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'table')) {
+                        return [...prev, { 
+                            id: 'table', 
+                            name: 'Ticket Data', 
+                            retryFunction: () => retryTableAPI(), 
+                            errorMessage: 'Failed to load Tickets Table. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                // Add a small delay to make loading state visible
+                setTimeout(() => {
+                    setIsTableLoading(false);
+                }, 1000);
+            }
+        };
+        
+        fetchTable();
     }, []);
 
     // Handle table pagination
     const handlePageChange = (page: number, limit: number) => {
-        fetchTicketsTable(page, limit);
+        retryTableAPI(page, limit);
     };
 
     // Handle table search
     const handleSearch = (searchTerm: string) => {
         // Reset to first page when searching
-        fetchTicketsTable(1, serverPagination.limit, searchTerm);
+        retryTableAPI(1, serverPagination.limit, searchTerm);
     };
 
     // Handle ticket actions
@@ -226,6 +434,30 @@ export default function Tickets() {
         <Suspense fallback={<div>Loading...</div>}>
         <Page
             sections={[
+                // Error Section - Above PageHeader
+                ...(failedApis.length > 0 ? [{
+                    layout: {
+                        type: 'column' as const,
+                        gap: 'gap-4',
+                        rows: [
+                            {
+                                layout: 'column' as const,
+                                columns: [
+                                    {
+                                        name: 'Error',
+                                        props: {
+                                            visibleErrors: failedApis.map(api => api.errorMessage),
+                                            showRetry: true,
+                                            maxVisibleErrors: 3, // Show max 3 errors at once
+                                            failedApis: failedApis, // Pass all failed APIs for individual retry
+                                            onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                }] : []),
                 {
                     layout: {
                         type: 'row',
@@ -258,12 +490,13 @@ export default function Tickets() {
                                     name: 'Card',
                                     props: {
                                         title: stat.label,
-                                        value: ticketStats ? ticketStats[stat.key] : 0,
+                                        value: ticketStats ? ticketStats[stat.key as keyof typeof ticketStats] : 0,
                                         icon: stat.icon,
                                         subtitle1: stat.subtitle1,
                                         subtitle2: stat.subtitle2,
                                         iconStyle: stat.iconStyle,
                                         bg: "bg-stat-icon-gradient",
+                                        loading: isStatsLoading,
                                     },
                                 })),
                             },
@@ -295,6 +528,7 @@ export default function Tickets() {
                                             ariaLabel:
                                                 'Monthly ticket statistics chart',
                                             onDownload: handleChartDownload,
+                                            isLoading: isTrendsLoading,
                                         },
                                     },
                                 ],
@@ -335,6 +569,7 @@ export default function Tickets() {
                                             onSearch: handleSearch,
                                             serverPagination: serverPagination,
                                             availableTimeRanges: [],
+                                            isLoading: isTableLoading,
                                         },
                                     },
                                 ],

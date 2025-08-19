@@ -5,6 +5,7 @@ interface LoginRequest {
   identifier: string;
   password: string;
   appId: string;
+  rememberMe?: boolean;
 }
 
 interface LoginResponse {

@@ -6,16 +6,88 @@ import type { DashboardStats } from "@/api/dashboardApi";
 // @ts-ignore
 import { debounce } from "throttle-debounce";
 
+// Dummy data for fallback
+const dummyDashboardData: DashboardStats = {
+  kpiCards: {
+    totalSubApps: { value: "0", thisMonth: 0, percentageChange: "0" },
+    activeUsers: { value: "0", percentageChange: 0 },
+    dailyLogins: { value: "0", percentageChange: 0 },
+    issues: { value: "0", percentageChange: 0 }
+  },
+  charts: {
+    dailyLoginTrends: [
+      { value: 0, name: "TGNPDCL" },
+      { value: 0, name: "GMR" },
+      { value: 0, name: "Railway" },
+      { value: 0, name: "Lkea" },
+      { value: 0, name: "NTPC" }
+    ],
+    appUsageDistribution: {
+      xAxisData: ["TGNPDCL", "GMR", "Railway", "Lkea", "NTPC"],
+      seriesData: [
+        { name: "Active Users", data: [0, 0, 0, 0, 0, 0] },
+        { name: "Sessions", data: [0, 0, 0, 0, 0, 0] }
+      ]
+    }
+  },
+  recentApps: [],
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalApps: 0,
+    appsPerPage: 6
+  }
+};
+
 const SuperAdminDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [dashboardData, setDashboardData] = useState<DashboardStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  
+  // State for API data
+  const [dashboardData, setDashboardData] = useState<DashboardStats>(dummyDashboardData);
+  
+  // Loading states
+  const [isDashboardLoading, setIsDashboardLoading] = useState(true);
+  
+  // State for tracking failed APIs
+  const [failedApis, setFailedApis] = useState<Array<{
+    id: string;
+    name: string;
+    retryFunction: () => Promise<void>;
+    errorMessage: string;
+  }>>([]);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [appsPerPage] = useState(6);
   const [searchValue, setSearchValue] = useState('');
   const [displaySearchValue, setDisplaySearchValue] = useState(''); // For immediate UI updates
   const [isSearching, setIsSearching] = useState(false);
+
+  // Retry function for Dashboard API
+  const retryDashboardAPI = async () => {
+    setIsDashboardLoading(true);
+    try {
+      const data = await getSuperAdminDashboardStats(currentPage, appsPerPage);
+      setDashboardData(data);
+      // Remove from failed APIs on success
+      setFailedApis(prev => prev.filter(api => api.id !== 'dashboard'));
+    } catch (err: any) {
+      console.error("Error in Dashboard API:", err);
+      setDashboardData(dummyDashboardData);
+    } finally {
+      // Add a small delay to make loading state visible
+      setTimeout(() => {
+        setIsDashboardLoading(false);
+      }, 1000);
+    }
+  };
+
+  // Retry specific API
+  const retrySpecificAPI = (apiId: string) => {
+    const api = failedApis.find(a => a.id === apiId);
+    if (api) {
+      api.retryFunction();
+    }
+  };
 
   // Debounced search function
   const debouncedSearch = useCallback(
@@ -32,16 +104,31 @@ const SuperAdminDashboard: React.FC = () => {
   // Fetch dashboard data from backend
   useEffect(() => {
     const fetchDashboardData = async () => {
+      setIsDashboardLoading(true);
       try {
-        setLoading(true);
         const data = await getSuperAdminDashboardStats(currentPage, appsPerPage);
         setDashboardData(data);
-        setError(null);
-      } catch (err) {
+      } catch (err: any) {
         console.error('Error fetching dashboard data:', err);
-        setError('Failed to load dashboard data');
+        setDashboardData(dummyDashboardData);
+        
+        // Add to failed APIs
+        setFailedApis(prev => {
+          if (!prev.find(api => api.id === 'dashboard')) {
+            return [...prev, { 
+              id: 'dashboard', 
+              name: 'Dashboard Data', 
+              retryFunction: retryDashboardAPI, 
+              errorMessage: 'Failed to load Dashboard Data. Please try again.' 
+            }];
+          }
+          return prev;
+        });
       } finally {
-        setLoading(false);
+        // Add a small delay to make loading state visible
+        setTimeout(() => {
+          setIsDashboardLoading(false);
+        }, 1000);
       }
     };
 
@@ -67,6 +154,7 @@ const SuperAdminDashboard: React.FC = () => {
       subtitle2: `${dashboardData?.kpiCards?.totalSubApps?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/sub-apps"),
       bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
     },
     {
       title: "Active Users",
@@ -78,6 +166,7 @@ const SuperAdminDashboard: React.FC = () => {
       subtitle2: `${dashboardData?.kpiCards?.activeUsers?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/active-users"),
       bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
     },
     {
       title: "Daily Logins",
@@ -89,6 +178,7 @@ const SuperAdminDashboard: React.FC = () => {
       subtitle2: `${dashboardData?.kpiCards?.dailyLogins?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/daily-logins"),
       bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
     },
     {
       title: "Issues",
@@ -100,16 +190,17 @@ const SuperAdminDashboard: React.FC = () => {
       subtitle2: `${dashboardData?.kpiCards?.issues?.percentageChange || 0}% from last month`,
       onValueClick: () => navigate("/issues"),
       bg: "bg-stat-icon-gradient",
+      loading: isDashboardLoading,
     },
   ];
 
   // Daily Login Trends Data for Pie Chart - Using real data from backend
   const dailyLoginTrendsData = dashboardData?.charts?.dailyLoginTrends || [
-    { value: 45, name: "TGNPDCL" },
-    { value: 25, name: "GMR" },
-    { value: 20, name: "Railway" },
-    { value: 10, name: "Lkea" },
-    { value: 10, name: "NTPC" },
+    { value: 0, name: "TGNPDCL" },
+    { value: 0, name: "GMR" },
+    { value: 0, name: "Railway" },
+    { value: 0, name: "Lkea" },
+    { value: 0, name: "NTPC" },
   ];
 
   // App Usage Distribution Data for Bar Chart - Using real data from backend
@@ -118,11 +209,11 @@ const SuperAdminDashboard: React.FC = () => {
     seriesData: dashboardData?.charts?.appUsageDistribution?.seriesData || [
       {
         name: "Active Users",
-        data: [320, 180, 150, 120, 95, 80],
+        data: [0, 0, 0, 0, 0, 0],
       },
       {
         name: "Sessions",
-        data: [450, 280, 220, 180, 140, 120],
+        data: [0, 0, 0, 0, 0, 0],
       },
     ],
     seriesColors: [
@@ -171,27 +262,34 @@ const SuperAdminDashboard: React.FC = () => {
     debouncedSearch(newValue); // Debounce the actual search
   };
 
-  // Show loading state
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading dashboard data...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Show error state - Display dashboard with zero data instead of error page
-  if (error) {
-    // Error occurred but dashboard will show with zero data
-  }
-
   return (
     <div className="">
       <PageC
         sections={[
+          // Error Section - Above PageHeader
+          ...(failedApis.length > 0 ? [{
+            layout: {
+              type: 'column' as const,
+              gap: 'gap-4',
+              rows: [
+                {
+                  layout: 'column' as const,
+                  columns: [
+                    {
+                      name: 'Error',
+                      props: {
+                        visibleErrors: failedApis.map(api => api.errorMessage),
+                        showRetry: true,
+                        maxVisibleErrors: 3, // Show max 3 errors at once
+                        failedApis: failedApis, // Pass all failed APIs for individual retry
+                        onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                      },
+                    },
+                  ],
+                },
+              ],
+            },
+          }] : []),
           // Header section
           {
             layout: {
@@ -247,8 +345,8 @@ const SuperAdminDashboard: React.FC = () => {
                   showTrend: card.showTrend,
                   comparisonValue: card.comparisonValue,
                   onValueClick: card.onValueClick,
-
                   bg: card.bg,
+                  loading: card.loading,
                 },
               })),
             ],
@@ -290,6 +388,7 @@ const SuperAdminDashboard: React.FC = () => {
                             navigate(`/sub-apps/${segmentName.toLowerCase().replace(/\s+/g, "-")}`);
                           }
                         },
+                        isLoading: isDashboardLoading,
                       },
                     },
                   ],
@@ -327,6 +426,7 @@ const SuperAdminDashboard: React.FC = () => {
                         onDownload: () => {
                           // Download functionality
                         },
+                        isLoading: isDashboardLoading,
                       },
                     },
                   ],

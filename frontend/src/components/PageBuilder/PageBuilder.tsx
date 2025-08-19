@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import ComponentPalette from '@pages/PageBuilder/ComponentPalette.tsx';
-import Canvas from '@pages/PageBuilder/Canvas.tsx';
-import GridOptionsModal from '@pages/PageBuilder/GridOptionsModal.tsx';
-import type { ComponentType } from '@pages/PageBuilder/types.ts';
+import ComponentPalette from '@components/PageBuilder/ComponentPalette.tsx';
+import Canvas from '@components/PageBuilder/Canvas.tsx';
+import GridOptionsModal from '@components/PageBuilder/GridOptionsModal.tsx';
+import type { ComponentType } from '@components/PageBuilder/types.ts';
 import { v4 as uuidv4 } from 'uuid';
 
 const PageBuilder: React.FC = () => {

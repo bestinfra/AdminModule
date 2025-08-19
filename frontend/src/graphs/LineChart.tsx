@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
+import ChartSkeleton from '@components/skeletons/ChartSkeleton';
 
 interface LineChartProps {
     title?: string;
     data?: any[];
     xAxisData?: string[];
     showXAxisLabel?: boolean;
+    height?: string | number;
+    isLoading?: boolean;
 }
 
 const LineChart: React.FC<LineChartProps> = ({
@@ -13,6 +16,8 @@ const LineChart: React.FC<LineChartProps> = ({
     data = [150, 230, 224, 218, 135, 147, 260],
     xAxisData = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
     showXAxisLabel = true,
+    height = '100%',
+    isLoading = false,
 }) => {
     const option = {
         title: {
@@ -46,6 +51,10 @@ const LineChart: React.FC<LineChartProps> = ({
             },
         ],
     };
+
+    if (isLoading) {
+        return <ChartSkeleton height={height} />;
+    }
 
     return (
         <div className="w-full h-full">

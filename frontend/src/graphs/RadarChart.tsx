@@ -1,10 +1,13 @@
 import React from 'react';
 import ReactECharts from 'echarts-for-react';
+import ChartSkeleton from '@components/skeletons/ChartSkeleton';
 
 interface RadarChartProps {
     title?: string;
     indicator?: Array<{ name: string; max: number }>;
     data?: Array<{ value: number[]; name: string }>;
+    height?: string | number;
+    isLoading?: boolean;
 }
 
 const RadarChart: React.FC<RadarChartProps> = ({
@@ -27,6 +30,8 @@ const RadarChart: React.FC<RadarChartProps> = ({
             name: 'Actual Spending',
         },
     ],
+    height = '400px',
+    isLoading = false,
 }) => {
     const option = {
         title: {
@@ -60,11 +65,15 @@ const RadarChart: React.FC<RadarChartProps> = ({
         ],
     };
 
+    if (isLoading) {
+        return <ChartSkeleton height={height} />;
+    }
+
     return (
         <div className="w-full h-full">
             <ReactECharts
                 option={option}
-                style={{ height: '400px', width: '100%' }}
+                style={{ height: height, width: '100%' }}
                 opts={{ renderer: 'svg' }}
             />
         </div>

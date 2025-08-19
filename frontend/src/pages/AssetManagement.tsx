@@ -34,36 +34,21 @@ export default function AssetManagment() {
     const [activeTab, setActiveTab] = useState(0);
     const [hierarchicalData, setHierarchicalData] = useState<HierarchyNode[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
 
     // Fetch hierarchical assets from API
     useEffect(() => {
         const fetchAssets = async () => {
-            try {
-                setLoading(true);
-                const response = await fetch(`${BACKEND_URL}/assets`);
-                const data = await response.json();
-                
-                if (data.success) {
-                    // Check if data is N/A, null, undefined, or empty
-                    if (!data.data || data.data === 'N/A' || data.data === null || data.data === undefined || 
-                        (Array.isArray(data.data) && data.data.length === 0)) {
-                        setError('No nodes data available');
-                        setHierarchicalData([]);
-                    } else {
-                        setHierarchicalData(data.data);
-                    }
-                } else {
-                    setError(data.message || 'Failed to fetch assets');
-                }
-            } catch (err) {
-                setError('We were unable to load your Assets. try again later.');
-            } finally {
-                setLoading(false);
+            setLoading(true);
+            const response = await fetch(`${BACKEND_URL}/assets`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setHierarchicalData(data.data || []);
             }
+            setLoading(false);
         };
 
-        fetchAssets().catch(console.error);
+        fetchAssets();
     }, []);
     const [isSubNodeChecked, setIsSubNodeChecked] = useState(false);
 
@@ -230,24 +215,7 @@ export default function AssetManagment() {
         );
     }
 
-    // Show error state
-    if (error) {
-        return (
-            <div className="flex items-center justify-center h-screen">
-                <div className="text-center">
-                    <div className="text-red-600 text-xl mb-4"></div>
-                    <p className="text-red-600 font-semibold">Error loading assets</p>
-                    <p className="text-gray-600 mt-2">{error}</p>
-                    <button 
-                        onClick={() => window.location.reload()} 
-                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-                    >
-                        Retry
-                    </button>
-                </div>
-            </div>
-        );
-    }
+
 
     return (
         <Suspense fallback={<div>Loading...</div>}>

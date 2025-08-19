@@ -44,7 +44,7 @@ import Payment from '@components/Occupancy-Vacency/Payment';
 import FreezeStatus from '@components/Occupancy-Vacency/FreezeStatus';
 import ApplicationCard from './ApplicationCard';
 import StatusCard from './StatusCard';
-import DGCard from '@/pages/DGCard';
+import DGCard from '@/components/global/DGCard';
 import ElectricalMetricsCard from './ElectricalMetricsCard';
 import NodeChart from './NodeChart';
 import Error from '@components/Error/Error';

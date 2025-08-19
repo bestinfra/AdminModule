@@ -23,6 +23,8 @@ export default function RoleManagement() {
     const navigate = useNavigate();
     const [roles, setRoles] = useState<Role[]>([]);
     const [loading, setLoading] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -67,70 +69,11 @@ export default function RoleManagement() {
             } else {
                 throw new Error(data.message || 'Failed to fetch roles');
             }
-        } catch (err) {
+        } catch (err: any) {
             console.error('Error fetching roles:', err);
-            // DEMO DATA FALLBACK - Updated to match the image content
+            alert(`Error fetching roles: ${err.message}`);
             if (roles.length === 0) {
-                setRoles([
-                    {
-                        id: 1,
-                        name: 'admin',
-                        users: [
-                            {
-                                id: 1,
-                                username: 'gmr',
-                                firstName: 'GMR',
-                                lastName: '',
-                                email: 'gmr@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 1, name: 'manage_users', description: 'Can manage users' },
-                            { id: 2, name: 'manage_roles', description: 'Can manage roles' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                    {
-                        id: 2,
-                        name: 'User',
-                        users: [
-                            {
-                                id: 2,
-                                username: 'lecs',
-                                firstName: 'LECS',
-                                lastName: '',
-                                email: 'lecs@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 3, name: 'view_dashboard', description: 'Can view dashboard' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                    {
-                        id: 3,
-                        name: 'Accountant',
-                        users: [
-                            {
-                                id: 3,
-                                username: 'airborne',
-                                firstName: 'AIRBORNE',
-                                lastName: '',
-                                email: 'airborne@example.com',
-                                isActive: true,
-                            },
-                        ],
-                        permissions: [
-                            { id: 4, name: 'view_reports', description: 'Can view reports' },
-                        ],
-                        createdAt: new Date().toISOString(),
-                        updatedAt: new Date().toISOString(),
-                    },
-                ]);
+                setRoles([]);
             }
         } finally {
             setLoading(false);
@@ -161,22 +104,28 @@ export default function RoleManagement() {
     const handleConfirmDelete = async () => {
         if (!roleToDelete) return;
         
+        setDeleting(true);
         try {
             console.log('Deleting role:', roleToDelete.id);
-            // Here you would make the actual API call to delete the role
-            // const res = await fetch(`${BACKEND_URL}/roles/${roleToDelete.id}`, {
-            //     method: 'DELETE',
-            // });
-            // if (res.ok) {
-            //     // Remove from local state
-            //     setRoles(roles.filter(role => role.id !== roleToDelete.id));
-            // }
-            
-            // For demo purposes, just remove from local state
-            setRoles(roles.filter(role => role.id !== roleToDelete.id));
-        } catch (error) {
+            const res = await fetch(`${BACKEND_URL}/roles/${roleToDelete.id}`, {
+                method: 'DELETE',
+            });
+            if (res.ok) {
+                const result = await res.json();
+                if (result.success) {
+                    setRoles(roles.filter(role => role.id !== roleToDelete.id));
+                    alert('Role deleted successfully!');
+                } else {
+                    throw new Error(result.message || 'Failed to delete role');
+                }
+            } else {
+                throw new Error(`HTTP error! status: ${res.status}`);
+            }
+        } catch (error: any) {
             console.error('Error deleting role:', error);
+            alert(`Error deleting role: ${error.message}`);
         } finally {
+            setDeleting(false);
             setShowDeleteModal(false);
             setRoleToDelete(null);
         }
@@ -205,54 +154,60 @@ export default function RoleManagement() {
     };
 
     const handleSaveRole = async (data: Record<string, any>) => {
+        setSaving(true);
         try {
             if (showEditModal && roleToEdit) {
-                // Update existing role
                 console.log('Updating role:', roleToEdit.id, data);
-                // Here you would make the actual API call to update the role
-                // const res = await fetch(`${BACKEND_URL}/roles/${roleToEdit.id}`, {
-                //     method: 'PUT',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(data)
-                // });
-                
-                // For demo purposes, update local state
-                setRoles(roles.map(role => 
-                    role.id === roleToEdit.id 
-                        ? { ...role, name: data.roleName, description: data.description }
-                        : role
-                ));
+                const res = await fetch(`${BACKEND_URL}/roles/${roleToEdit.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: data.roleName,
+                        description: data.description
+                    })
+                });
+                if (res.ok) {
+                    const result = await res.json();
+                    if (result.success) {
+                        await fetchRoles();
+                        alert('Role updated successfully!');
+                    } else {
+                        throw new Error(result.message || 'Failed to update role');
+                    }
+                } else {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
             } else {
-                // Create new role
                 console.log('Creating new role:', data);
-                // Here you would make the actual API call to create the role
-                // const res = await fetch(`${BACKEND_URL}/roles`, {
-                //     method: 'POST',
-                //     headers: { 'Content-Type': 'application/json' },
-                //     body: JSON.stringify(data)
-                // });
-                
-                // For demo purposes, add to local state
-                const newRole = {
-                    id: Math.max(...roles.map(r => r.id)) + 1,
-                    name: data.roleName,
-                    users: [],
-                    permissions: [],
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                };
-                setRoles([...roles, newRole]);
+                const res = await fetch(`${BACKEND_URL}/roles`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: data.roleName,
+                        description: data.description
+                    })
+                });
+                if (res.ok) {
+                    const result = await res.json();
+                    if (result.success) {
+                        await fetchRoles();
+                        alert('Role created successfully!');
+                    } else {
+                        throw new Error(result.message || 'Failed to create role');
+                    }
+                } else {
+                    throw new Error(`HTTP error! status: ${res.status}`);
+                }
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error saving role:', error);
+            alert(`Error saving role: ${error.message}`);
         } finally {
+            setSaving(false);
             setShowAddModal(false);
             setShowEditModal(false);
             setRoleToEdit(null);
-            setFormData({
-                roleName: '',
-                description: ''
-            });
+            setFormData({ roleName: '', description: '' });
         }
     };
 
@@ -480,9 +435,10 @@ export default function RoleManagement() {
                                                 title: 'Delete Role',
                                                 size: 'md',
                                                 showConfirmButton: true,
-                                                confirmButtonLabel: 'Delete Role',
+                                                confirmButtonLabel: deleting ? 'Deleting...' : 'Delete Role',
                                                 confirmButtonVariant: 'danger',
                                                 onConfirm: handleConfirmDelete,
+                                                disabled: deleting,
                                                 message: `Are you sure you want to delete the role "${roleToDelete?.roleName}"?`,
                                                 warningMessage: 'This action cannot be undone. All users assigned to this role will lose their permissions.',
                                             },
@@ -515,10 +471,11 @@ export default function RoleManagement() {
                                                     console.log('Form data received:', formData);
                                                     handleSaveRole(formData);
                                                 },
-                                                saveButtonLabel: 'Create Role',
+                                                saveButtonLabel: saving ? 'Creating...' : 'Create Role',
                                                 cancelButtonLabel: 'Cancel',
                                                 cancelButtonVariant: 'secondary',
                                                 confirmButtonVariant: 'primary',
+                                                disabled: saving,
                                                 formId: 'add-role-form',
                                                 gridLayout: {
                                                     gridRows: 2,
@@ -554,8 +511,9 @@ export default function RoleManagement() {
                                                     console.log('Edit form data received:', formData);
                                                     handleSaveRole(formData);
                                                 },
-                                                saveButtonLabel: 'Update Role',
+                                                saveButtonLabel: saving ? 'Updating...' : 'Update Role',
                                                 cancelButtonLabel: 'Cancel',
+                                                disabled: saving,
                                             },
                                         },
                                     ],

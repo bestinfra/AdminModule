@@ -1,5 +1,5 @@
 import React from 'react';
-import type { ComponentType } from '@pages/PageBuilder/types';
+import type { ComponentType } from '@components/PageBuilder/types';
 import Table from '@components/global/Table';
 
 interface TableBlockProps {

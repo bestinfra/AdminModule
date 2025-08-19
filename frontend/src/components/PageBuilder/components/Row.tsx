@@ -1,7 +1,7 @@
 import React from 'react';
-import type { ComponentType } from '@pages/PageBuilder/types';
-import DroppableArea from '@pages/PageBuilder/components/DroppableArea';
-import { renderComponent } from '@pages/PageBuilder/Canvas';
+import type { ComponentType } from '@components/PageBuilder/types';
+import DroppableArea from '@components/PageBuilder/components/DroppableArea';
+import { renderComponent } from '@components/PageBuilder/Canvas';
 
 interface RowProps {
     component: ComponentType;

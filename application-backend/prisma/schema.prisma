@@ -495,6 +495,16 @@ model user_sessions {
   users          users    @relation(fields: [userId], references: [id])
 }
 
+model refresh_tokens {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  token     String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  users     users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 model users {
   id                                  Int                  @id @default(autoincrement())
   username                            String               @unique
@@ -524,6 +534,7 @@ model users {
   user_activity_logs                  user_activity_logs[]
   user_permissions                    user_permissions[]
   user_sessions                       user_sessions[]
+  refresh_tokens                      refresh_tokens?
   departments                         departments?         @relation(fields: [departmentId], references: [id])
   roles                              roles?               @relation(fields: [roleId], references: [id])
   locations                          locations?           @relation("usersToLocations", fields: [locationId], references: [id])

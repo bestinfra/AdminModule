@@ -3,9 +3,18 @@ import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
 class RoleDB {
-    static async getAllRoles(locationId = null) {
+    static async getAllRoles(locationId = null, page = 1, limit = 10, search = '') {
         try {
+            const skip = (page - 1) * limit;
             let whereClause = {};
+            
+            // Add search functionality
+            if (search && search.trim()) {
+                whereClause.name = {
+                    contains: search.trim(),
+                    mode: 'insensitive'
+                };
+            }
             
             // If locationId is provided, filter roles by users in that location
             if (locationId) {
@@ -15,6 +24,9 @@ class RoleDB {
                     }
                 };
             }
+            
+            // Get total count for pagination
+            const total = await prisma.roles.count({ where: whereClause });
             
             const roles = await prisma.roles.findMany({
                 where: whereClause,
@@ -36,9 +48,23 @@ class RoleDB {
                         }
                     }
                 },
-                orderBy: { id: 'asc' }
+                orderBy: { id: 'asc' },
+                skip,
+                take: limit
             });
-            return roles;
+            
+            return {
+                data: roles,
+                total,
+                pagination: {
+                    currentPage: page,
+                    totalPages: Math.ceil(total / limit),
+                    totalCount: total,
+                    limit,
+                    hasNextPage: page < Math.ceil(total / limit),
+                    hasPrevPage: page > 1
+                }
+            };
         } catch (error) {
             console.error('Error getting all roles:', error);
             throw error;
@@ -63,6 +89,9 @@ class RoleDB {
                 newRole = await prisma.roles.create({
                     data: {
                         name: roleData.name,
+                        level: roleData.level || 1, // Default level to 1 if not provided
+                        accessLevel: roleData.accessLevel || 'NORMAL', // Default accessLevel to NORMAL if not provided
+                        updatedAt: new Date(), // Add current date for updatedAt
                         role_permissions: {
                             create: roleData.permissionIds.map(permissionId => ({
                                 permissionId: parseInt(permissionId)
@@ -90,7 +119,10 @@ class RoleDB {
             } else {
                 newRole = await prisma.roles.create({
                     data: {
-                        name: roleData.name
+                        name: roleData.name,
+                        level: roleData.level || 1, // Default level to 1 if not provided
+                        accessLevel: roleData.accessLevel || 'NORMAL', // Default accessLevel to NORMAL if not provided
+                        updatedAt: new Date() // Add current date for updatedAt
                     },
                     include: {
                         users: {
@@ -161,9 +193,16 @@ class RoleDB {
                 }
             }
 
+            const updateData = {
+                ...roleData,
+                level: roleData.level || 1,
+                accessLevel: roleData.accessLevel || 'NORMAL',
+                updatedAt: new Date() // Always update the updatedAt timestamp
+            };
+
             return await prisma.roles.update({
                 where: { id: roleId },
-                data: roleData,
+                data: updateData,
                 include: {
                     users: {
                         select: {

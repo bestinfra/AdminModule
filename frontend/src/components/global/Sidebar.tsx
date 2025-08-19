@@ -65,11 +65,7 @@ const defaultMenus: MenuCategory[] = [
         icon: "/icons/dashboard.svg",
         link: "/superadmin",
       },
-      {
-        title: "Consumer Dashboard",
-        icon: "/icons/dashboard.svg",
-        link: "/consumer-dashboard",
-      },
+      
       {
         title: "DTR Dashboard",
         icon: "/icons/dashboard.svg",
@@ -90,6 +86,11 @@ const defaultMenus: MenuCategory[] = [
   {
     category: "Tickets & Support",
     items: [
+        {
+            title: "Consumer Dashboard",
+            icon: "/icons/dashboard.svg",
+            link: "/consumer-dashboard",
+          },
       {
         title: "Tickets",
         icon: "/icons/customer-service.svg",
@@ -100,234 +101,11 @@ const defaultMenus: MenuCategory[] = [
         icon: "/icons/customer-service.svg",
         link: "/all-tickets",
       },
-      {
-        title: "Add Ticket",
-        icon: "/icons/customer-service.svg",
-        link: "/add-ticket",
-      },
+      
     ],
   },
-  {
-    category: "Consumer Management",
-    items: [
-      {
-        title: "All Consumers",
-        icon: "/icons/freeze-status.svg",
-        link: "/consumers",
-      },
-      {
-        title: "Add Consumer",
-        icon: "/icons/freeze-status.svg",
-        link: "/add-consumer",
-      },
-      {
-        title: "Connect/Disconnect",
-        icon: "/icons/freeze-status.svg",
-        link: "/connect-consumer",
-      },
-    ],
-  },
-  {
-    category: "Meter Management",
-    items: [
-      {
-        title: "Meters",
-        icon: "/icons/meter_managment.svg",
-        link: "/meters",
-        hasSubmenu: true,
-        submenu: [
-          {
-            title: "Meter List",
-            link: "/meters",
-          },
-          {
-            title: "Add Meter",
-            link: "/add-meter",
-          },
-          {
-            title: "Meter Details",
-            link: "/meter-details",
-          },
-        ],
-      },
-      {
-        title: "Data Logger",
-        icon: "/icons/meter_managment.svg",
-        link: "/data-logger",
-        hasSubmenu: true,
-        submenu: [
-          {
-            title: "Data Logger List",
-            link: "/data-logger",
-          },
-          {
-            title: "Add Data Logger",
-            link: "/add-data-logger",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: "Billing & Payments",
-    items: [
-      {
-        title: "Bills",
-        icon: "/icons/bills.svg",
-        link: "/bills",
-        hasSubmenu: true,
-        submenu: [
-          {
-            title: "Prepaid",
-            link: "/prepaid",
-          },
-          {
-            title: "Postpaid",
-            link: "/postpaid",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: "Asset & Infrastructure",
-    items: [
-      {
-        title: "Asset Management",
-        icon: "/icons/Asset_managment.svg",
-        link: "/asset-managment",
-      },
-      {
-        title: "Feeders",
-        icon: "/icons/freeze-status.svg",
-        link: "/feeders",
-      },
-      {
-        title: "DTR Details",
-        icon: "/icons/freeze-status.svg",
-        link: "/dtr-detail",
-      },
-      {
-        title: "Individual Details",
-        icon: "/icons/freeze-status.svg",
-        link: "/individual-detail",
-      },
-    ],
-  },
-  {
-    category: "User Management",
-    items: [
-      {
-        title: "Users",
-        icon: "/icons/user_managment.svg",
-        link: "/users",
-        hasSubmenu: true,
-        submenu: [
-          {
-            title: "User List",
-            link: "/users",
-          },
-          {
-            title: "Add User",
-            link: "/add-user",
-          },
-          {
-            title: "User Details",
-            link: "/user-detail",
-          },
-        ],
-      },
-      {
-        title: "Roles & Permissions",
-        icon: "/icons/user_managment.svg",
-        link: "/role-management",
-        hasSubmenu: true,
-        submenu: [
-          {
-            title: "Role Management",
-            link: "/role-management",
-          },
-          {
-            title: "Add Role",
-            link: "/add-role",
-          },
-          {
-            title: "Edit Role",
-            link: "/edit-role",
-          },
-          {
-            title: "Roles & Permissions",
-            link: "/roles-permissions",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    category: "System & Admin",
-    items: [
-      {
-        title: "Sub Login",
-        icon: "/icons/freeze-status.svg",
-        link: "/sub-login",
-      },
-      {
-        title: "App Management",
-        icon: "/icons/apps-icon.svg",
-        link: "/apps",
-      },
-      {
-        title: "Components Documentation",
-        icon: "/icons/freeze-status.svg",
-        link: "/components-documentation",
-      },
-      {
-        title: "Filter Style Controller",
-        icon: "/icons/freeze-status.svg",
-        link: "/filter-style-controller",
-      },
-    ],
-  },    
-  {
-    category:'User Management',
-    items:[
-      {
-        title:'User Management',
-        icon: "/icons/freeze-status.svg",
-        link:'/user-management',
-      },
-    ]
-  },
-  {
-    category: "Occupancy & Status",
-    items: [
-      {
-        title: "Occupancy Status",
-        icon: "/icons/freeze-status.svg",
-        link: "/occupancy-status",
-      },
-      {
-        title: "Freeze Status",
-        icon: "/icons/freeze-status.svg",
-        link: "/freeze-status",
-      },
-      {
-        title: "Payment",
-        icon: "/icons/freeze-status.svg",
-        link: "/payment",
-      },
-      {
-        title: "Confirmation",
-        icon: "/icons/freeze-status.svg",
-        link: "/confirmation",
-      },
-      {
-        title: "Usage Summary",
-        icon: "/icons/freeze-status.svg",
-        link: "/usage-summary",
-      },
-    ],
-  },
+
+
 ];
 
 const defaultProps: Partial<

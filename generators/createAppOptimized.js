@@ -61,10 +61,11 @@ function createAppProjectOptimized(formData) {
 
     const dynamicPort = deployer.findAvailablePort();
 
-    copyAssets(baseDir, formData);
-
     const frontendFormData = { ...formData, backendPort: dynamicPort };
     generateFrontend(baseDir, frontendFormData);
+    
+    // Copy assets after frontend is generated
+    copyAssets(baseDir, formData);
 
   // --- BACKEND DEPLOYMENT START ---
   // Deploy backend to XAMPP using optimized deployer
@@ -395,6 +396,10 @@ function copyFileWithImportProcessing(sourcePath, destPath) {
         
         // Replace all @/ imports with relative imports
         content = content.replace(/@\//g, '../');
+        
+        // Fix pages_v2 imports to use pages instead
+        content = content.replace(/@pages_v2\//g, '@pages/');
+        content = content.replace(/\.\.\/pages_v2\//g, '../pages/');
         
         // Handle specific import replacements for sub-apps
         
