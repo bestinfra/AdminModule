@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import { z } from 'zod';
 import Page from '@/components/global/PageC';
-import Step1 from '@/pages_v2/AddConsumer/Step1';
-import Step2 from '@/pages_v2/AddConsumer/Step2';
-import Step3 from '@/pages_v2/AddConsumer/Step3';
+import Step1 from '@/pages/AddConsumer/Step1';
+import Step2 from '@/pages/AddConsumer/Step2';
+import Step3 from '@/pages/AddConsumer/Step3';
 
 // Validation schemas for each step
 const personalInfoSchema = z.object({

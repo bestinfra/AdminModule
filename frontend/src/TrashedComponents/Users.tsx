@@ -22,7 +22,8 @@ const Users: React.FC = () => {
         { title: 'Active Users', value: 142, icon: '/icons/active-users.svg', subtitle1: '91.03% of Total Users' },
         { title: 'Inactive Users', value: 14, icon: '/icons/inactive-users.svg', subtitle1: '8.97% of Total Users' },
         { title: 'Admin Users', value: 8, icon: '/icons/admin-users.svg', subtitle1: '5.13% of Total Users' },
-        { title: 'Regular Users', value: 148, icon: '/icons/regular-users.svg', subtitle1: '94.87% of Total Users' },
+        { title: 'Regular Users', value: 148, icon: '/icons/regular-users.svg'
+            , subtitle1: '94.87% of Total Users' },
         { title: 'Users with Roles', value: 145, icon: '/icons/users-with-roles.svg', subtitle1: '92.95% of Total Users' },
         { title: 'Users without Roles', value: 11, icon: '/icons/users-without-roles.svg', subtitle1: '7.05% of Total Users' },
         { title: 'Last 30 Days', value: 23, icon: '/icons/recent-users.svg', subtitle1: 'New Registrations' },
@@ -46,7 +47,7 @@ const Users: React.FC = () => {
         { key: 'status', label: 'Status' },
         { key: 'lastLogin', label: 'Last Login' },
         { key: 'createdAt', label: 'Created At' },
-    ];
+    ];``
     
     const usersTableData = [
         { userId: 'USR-001', name: 'John Doe', email: 'john.doe@example.com', role: 'Admin', status: 'Active', lastLogin: '2024-01-15 10:30', createdAt: '2024-01-01' },

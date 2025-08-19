@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import BasicInformationTab from '@pages_v2/BasicInformationTab';
-import ChangePassword from '@pages_v2/ChangePassword';
-import ActivityLogTab from '@pages_v2/ActivityLogTab';
-import NotificationsTab from '@pages_v2/NotificationTab';
-import TwoStepVerificationTab from '@pages_v2/TwoStepVerificationTab';
-import AccountStatusTab from '@pages_v2/AccountStatusTab';
+import BasicInformationTab from '@pages/BasicInformationTab';
+import ChangePassword from '@pages/ChangePassword';
+import ActivityLogTab from '@pages/ActivityLogTab';
+import NotificationsTab from '@pages/NotificationTab';
+import TwoStepVerificationTab from '@pages/TwoStepVerificationTab';
+import AccountStatusTab from '@pages/AccountStatusTab';
 
 interface User {
     name?: string;
