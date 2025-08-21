@@ -66,35 +66,3 @@ export const generateMonthlyBills = async (req, res) => {
     }
 };
 
-export const getTariffByCategory = async (req, res) => {
-    try {
-        const { category, type } = req.params;
-        
-        // Handle both numeric and string category parameters
-        let categoryParam = category;
-        if (!isNaN(category)) {
-            categoryParam = parseInt(category);
-        }
-        
-        const tariff = await BillingDB.getTariffByCategory(categoryParam, type);
-        
-        if (!tariff) {
-            return res.status(404).json({
-                success: false,
-                message: 'Tariff not found for the specified category and type'
-            });
-        }
-        
-        res.json({
-            success: true,
-            data: tariff
-        });
-    } catch (error) {
-        console.error('❌ getTariffByCategory: Error fetching tariff:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch tariff',
-            error: error.message
-        });
-    }
-}; 

@@ -232,30 +232,7 @@ export const deleteUser = async (req, res) => {
     }
 };
 
-export const assignRolesToUser = async (req, res) => {
-    try {
-        const { id } = req.params;
-        // Use validated data from middleware
-        const { roleId } = req.validatedData;
 
-        const updatedUser = await UserDB.assignRolesToUser(parseInt(id), [roleId]);
-        
-        res.json({
-            success: true,
-            data: updatedUser,
-            message: 'Role assigned successfully'
-        });
-    } catch (error) {
-        console.error(' assignRolesToUser: Error assigning role:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to assign role',
-            error: error.message
-        });
-    }
-};
-
-// Get all roles for dropdown
 export const getAllRoles = async (req, res) => {
     try {
         const roles = await UserDB.getAllRoles();

@@ -1,5 +1,5 @@
 import express from 'express';
-import { getAllRoles, addRole, getRoleById, updateRole, deleteRole, assignPermissionsToRole, getRoleStats } from '../controllers/roleController.js';
+import { getAllRoles, addRole, getRoleById, updateRole, deleteRole, assignPermissionsToRole } from '../controllers/roleController.js';
 import { validateRoleData, addRoleSchema, assignPermissionsSchema } from '../validations/roleValidation.js';
 import { populateUserFromCookies } from '../utils/cookieUtils.js';
 
@@ -9,7 +9,6 @@ router.use(populateUserFromCookies);
 
 
 router.get('/', getAllRoles);
-router.get('/stats', getRoleStats);
 router.get('/:id', getRoleById);
 router.post('/', validateRoleData(addRoleSchema), addRole);
 router.put('/:id', updateRole);

@@ -40,9 +40,7 @@ function createAppProjectOptimized(formData) {
             .replace(/-+/g, '-')
             .replace(/^-|-$/g, '') || 'my-admin-app';
 
-    // Log selected modules for debugging
-    console.log('\n📋 Selected modules:', modules || []);
-    console.log('📋 Total modules selected:', (modules || []).length);
+
 
     const baseDir = path.join(
         __dirname,
@@ -66,13 +64,16 @@ function createAppProjectOptimized(formData) {
     const frontendFormData = { ...formData, backendPort: dynamicPort };
     generateFrontend(baseDir, frontendFormData);
 
+    // Generate filtered backend by modules
+    const generatedBackendDir = generateBackend(baseDir, formData);
+
   // --- BACKEND DEPLOYMENT START ---
   // Deploy backend to XAMPP using optimized deployer
   (async () => {
     try {
-      console.log('\n🚀 Deploying backend to XAMPP...');
-      // Deploy directly from application-backend
-      const applicationBackendDir = path.join(__dirname, '..', 'application-backend');
+      console.log('\nDeploying backend to XAMPP...');
+      // Deploy from generated filtered backend instead of full application-backend
+      const applicationBackendDir = generatedBackendDir;
       
       // Prepare credentials for database insertion
       const credentials = {
@@ -93,7 +94,7 @@ function createAppProjectOptimized(formData) {
       const deploymentResult = await deployer.deployBackend(projectFolderName, applicationBackendDir, credentials, newAccounts, modules);
       
       if (deploymentResult.success) {
-        console.log('\n✅ Backend deployed successfully!');
+        console.log('\nBackend deployed successfully!');
         console.log(`   • Root URL: ${deploymentResult.rootUrl}`);
         console.log(`   • Health Check: ${deploymentResult.healthUrl}`);
         console.log(`   • Port: ${deploymentResult.port}`);
@@ -106,13 +107,24 @@ function createAppProjectOptimized(formData) {
         if (deploymentResult.modulesCount > 0) {
           console.log(`   • Modules Enabled: ${deploymentResult.modulesCount}`);
         }
+        
+        // Clean up backend folder from generated-apps since it's now deployed to XAMPP
+        try {
+          const backendDir = path.join(baseDir, 'backend');
+          if (fs.existsSync(backendDir)) {
+            fs.rmSync(backendDir, { recursive: true, force: true });
+            console.log('Backend folder cleaned up from generated-apps (deployed to XAMPP)');
+          }
+        } catch (cleanupError) {
+          console.warn('Could not clean up backend folder:', cleanupError.message);
+        }
       } else {
-        console.log('\n⚠️  Backend deployment failed:', deploymentResult.error);
+        console.log('\nBackend deployment failed:', deploymentResult.error);
         console.log('   You can manually deploy using:');
         console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`);
       }
     } catch (error) {
-      console.log('\n⚠️  Backend deployment failed:', error.message);
+      console.log('\nBackend deployment failed:', error.message);
       console.log('   You can manually deploy using:');
       console.log(`   node scripts/optimizedDeployer.js deploy ${projectFolderName} ${applicationBackendDir}`);
     }
@@ -200,43 +212,36 @@ function copyAssets(baseDir, formData) {
         // Auto-add role_management if users is selected
         if (selectedModules.includes('users') && !selectedModules.includes('role_management')) {
             modulesToProcess.push('role_management');
-            console.log('  🔧 Auto-added role_management (included with users)');
         }
         
         // Auto-add meter_details if meter_list is selected
         if (selectedModules.includes('meter_list') && !selectedModules.includes('meter_details')) {
             modulesToProcess.push('meter_details');
-            console.log('  🔧 Auto-added meter_details (included with meter_list)');
         }
         
         // Auto-add consumer_view if consumer is selected
         if (selectedModules.includes('consumer') && !selectedModules.includes('consumer_view')) {
             modulesToProcess.push('consumer_view');
-            console.log('  🔧 Auto-added consumer_view (included with consumer)');
         }
         
         // Auto-add user_detail if users is selected
         if (selectedModules.includes('users') && !selectedModules.includes('user_detail')) {
             modulesToProcess.push('user_detail');
-            console.log('  🔧 Auto-added user_detail (included with users)');
         }
         
         // Auto-add ticket_view if tickets is selected
         if (selectedModules.includes('tickets') && !selectedModules.includes('ticket_view')) {
             modulesToProcess.push('ticket_view');
-            console.log('  🔧 Auto-added ticket_view (included with tickets)');
         }
         
         // Auto-add add_ticket if tickets is selected
         if (selectedModules.includes('tickets') && !selectedModules.includes('add_ticket')) {
             modulesToProcess.push('add_ticket');
-            console.log('  🔧 Auto-added add_ticket (included with tickets)');
         }
         
         // Auto-add add_user if users is selected
         if (selectedModules.includes('users') && !selectedModules.includes('add_user')) {
             modulesToProcess.push('add_user');
-            console.log('  🔧 Auto-added add_user (included with users)');
         }
         
         // Handle parent module mappings
@@ -250,10 +255,9 @@ function copyAssets(baseDir, formData) {
         Object.entries(parentModuleMapping).forEach(([parentModule, subModules]) => {
             if (selectedModules.includes(parentModule)) {
                 subModules.forEach(subModule => {
-                    if (!modulesToProcess.includes(subModule)) {
-                        modulesToProcess.push(subModule);
-                        console.log(`  🔧 Auto-added ${subModule} (included with ${parentModule})`);
-                    }
+                                if (!modulesToProcess.includes(subModule)) {
+                modulesToProcess.push(subModule);
+            }
                 });
             }
         });
@@ -270,10 +274,9 @@ function copyAssets(baseDir, formData) {
         Object.entries(subModuleDependencies).forEach(([subModule, dependencies]) => {
             if (modulesToProcess.includes(subModule)) {
                 dependencies.forEach(dependency => {
-                    if (!modulesToProcess.includes(dependency)) {
-                        modulesToProcess.push(dependency);
-                        console.log(`  🔧 Auto-added ${dependency} (dependency of ${subModule})`);
-                    }
+                                if (!modulesToProcess.includes(dependency)) {
+                modulesToProcess.push(dependency);
+            }
                 });
             }
         });
