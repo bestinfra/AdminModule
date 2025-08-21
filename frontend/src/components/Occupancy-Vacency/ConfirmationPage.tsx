@@ -108,7 +108,7 @@ const ConfirmationPage: React.FC<ConfirmationPageProps> = ({
                     />
                     <Buttons
                         label="Cancel"
-                        variant="outline"
+                        variant="secondary"
                         onClick={() => {
                             navigate(-1);
                         }}

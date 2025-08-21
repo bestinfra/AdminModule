@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@context/AuthContext';
 import { z } from 'zod';
 import Page from '@/components/global/PageC';
-import Step1 from '@/pages_v2/AddConsumer/Step1';
-import Step2 from '@/pages_v2/AddConsumer/Step2';
-import Step3 from '@/pages_v2/AddConsumer/Step3';
+import Step1 from '@/pages/AddConsumer/Step1';
+import Step2 from '@/pages/AddConsumer/Step2';
+import Step3 from '@/pages/AddConsumer/Step3';
 
 // Validation schemas for each step
-const personalInfoSchema = z.object({
+const personalInfoSchema = z.object(
+    {
     first_name: z.string().min(1, 'First name is required'),
     last_name: z.string().min(1, 'Last name is required'),
     email: z.string().email('Invalid email address'),
@@ -19,7 +20,8 @@ const personalInfoSchema = z.object({
     property_type: z.string().min(1, 'Property type is required'),
     move_in_date: z.string().min(1, 'Move-in date is required'),
     account_type: z.string().min(1, 'Account type is required'),
-});
+}
+);
 
 // Add this new schema for step 2
 const meterLocationSchema = z.object({

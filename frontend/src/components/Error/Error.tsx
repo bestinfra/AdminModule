@@ -52,7 +52,6 @@ const Error: React.FC<ErrorProps> = ({
     // Calculate which errors to show (sliding window)
     const visibleErrorSlice = internalErrors.slice(currentErrorIndex, currentErrorIndex + maxVisibleErrors);
     const hasMultipleErrors = internalErrors.length > 1;
-    const hasMoreErrors = internalErrors.length > maxVisibleErrors;
     
     // Reset current error index when errors change
     useEffect(() => {
@@ -64,18 +63,7 @@ const Error: React.FC<ErrorProps> = ({
         return null;
     }
 
-    // Handle error navigation
-    const showNextErrors = () => {
-        if (currentErrorIndex + maxVisibleErrors < internalErrors.length) {
-            setCurrentErrorIndex(prev => prev + 1);
-        }
-    };
 
-    const showPreviousErrors = () => {
-        if (currentErrorIndex > 0) {
-            setCurrentErrorIndex(prev => Math.max(0, prev - 1));
-        }
-    };
 
     // Remove a specific error internally
     const handleRemoveError = (indexToRemove: number) => {
@@ -122,7 +110,7 @@ const Error: React.FC<ErrorProps> = ({
                 })}
 
                 {/* Progress Indicator - if more than maxVisibleErrors */}
-                {hasMoreErrors && (
+                {/* {hasMoreErrors && (
                     <div className="absolute -top-8 left-0 right-0 flex justify-center items-center gap-2">
                         <button
                             onClick={showPreviousErrors}
@@ -142,7 +130,7 @@ const Error: React.FC<ErrorProps> = ({
                             →
                         </button>
                     </div>
-                )}
+                )} */}
 
                 {/* Main Error Card */}
                 <div className="relative z-10 flex items-center p-4 rounded-lg border text-warning border-warning-light bg-custom-warning">
@@ -167,29 +155,26 @@ const Error: React.FC<ErrorProps> = ({
                         </div>
 
                         <div className="flex items-center gap-3">
-                            {/* Show specific retry buttons for each failed API OR general retry button */}
+                            {/* Show retry button for the currently visible error */}
                             {failedApis.length > 0 && onRetrySpecific ? (
-                                // Show individual retry buttons for each failed API
-                                failedApis.map((api) => (
-                                    <div 
-                                        key={api.id}
-                                        onClick={() => handleRetrySpecific(api.id)}
-                                        className="flex items-center gap-2 text-sm font-medium cursor-pointer hover:bg-red-100 px-2 py-1 rounded"
-                                    >
-                                        <img 
-                                            src="/icons/refresh.svg" 
-                                            alt="Retry" 
-                                            className="w-4 h-4"
-                                        />
-                                        <p>Retry {api.name}</p>
-                                    </div>
-                                ))
+                                // Show retry button for the currently visible error
+                                <div 
+                                    onClick={() => handleRetrySpecific(failedApis[currentErrorIndex]?.id || failedApis[0].id)}
+                                    className="flex items-center gap-2 text-sm font-medium cursor-pointer hover:bg-red-100 px-2 py-1 rounded transition-colors"
+                                >
+                                    <img 
+                                        src="/icons/refresh.svg" 
+                                        alt="Retry" 
+                                        className="w-4 h-4"
+                                    />
+                                    <p>Retry {failedApis[currentErrorIndex]?.name || failedApis[0].name}</p>
+                                </div>
                             ) : (
-                                // Show general retry button only if no specific retry functions
-                                showRetry && (onRetry || onClick) && (
+                                // Show general retry button only if no specific retry functions and no failedApis
+                                showRetry && (onRetry || onClick) && failedApis.length === 0 && (
                                     <div 
                                         onClick={onRetry || onClick}
-                                        className="flex items-center gap-2 text-sm font-medium cursor-pointer hover:bg-red-100 px-2 py-1 rounded"
+                                        className="flex items-center gap-2 text-sm font-medium cursor-pointer hover:bg-red-100 px-2 py-1 rounded transition-colors"
                                     >
                                         <img 
                                             src="/icons/refresh.svg" 

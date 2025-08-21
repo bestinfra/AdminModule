@@ -13,6 +13,5 @@ export const Theme: React.FC<ThemeProps> = ({ children }) => {
         updateTheme({
         });
     }, []);
-
     return <div>{children}</div>;
 }; 

@@ -1,55 +1,142 @@
-import React, { useState } from 'react';
+import { useState, Suspense } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Page from '@/components/global/PageC';
+import type { FormInputConfig } from '@/components/Form/types';
 
-const parentRoles = ['None', 'Super Admin', 'Admin', 'Manager'];
+export default function AddRole() {
+    const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-const AddRole: React.FC = () => {
-  const [form, setForm] = useState({
-    roleName: '',
-    description: '',
-    parentRole: '',
-  });
+    // Form inputs configuration - only 2 fields as shown in the image
+    const formInputs: FormInputConfig[] = [
+        {
+            name: 'roleName',
+            type: 'text',
+            placeholder: 'Enter role name',
+            required: true,
+            row: 1,
+            col: 1,
+            colSpan: 1,
+            className: 'w-full px-3 py-2 rounded-md',
+        },
+        {
+            name: 'description',
+            type: 'textareafield',
+            label: 'Description',
+            placeholder: 'Enter role description',
+            required: false,
+            row: 2,
+            col: 1,
+            colSpan: 1,
+            className: 'w-full px-3 py-2 rounded-md',
+        },
+    ];
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+    const handleFormSubmit = async (formData: Record<string, any>) => {
+        setIsSubmitting(true);
+        try {
+            console.log('Saving role data:', formData);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            
+            console.log('Role created successfully');
+            navigate('/role-management');
+        } catch (error) {
+            console.error('Error creating role:', error);
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
-  return (
-    <div className="w-full max-w-3xl flex flex-col gap-8 p-0">
-      <div className="text-2xl font-bold">Create Role</div>
-      <form className="flex flex-col gap-4">
-        <input
-          type="text"
-          name="roleName"
-          className="rounded-full border border-primary-border px-6 py-3 text-base outline-none focus:border-primary"
-          placeholder="Enter role name"
-          value={form.roleName}
-          onChange={handleChange}
-        />
-        <textarea
-          name="description"
-          className="rounded-2xl border border-primary-border px-6 py-3 text-base outline-none focus:border-primary min-h-[80px] resize-none"
-          placeholder="Enter description"
-          value={form.description}
-          onChange={handleChange}
-        />
-        <select
-          name="parentRole"
-          className="rounded-full border border-primary-border px-6 py-3 text-base outline-none focus:border-primary text-neutral"
-          value={form.parentRole}
-          onChange={handleChange}
-        >
-          <option value="">Select Parent Role</option>
-          {parentRoles.map((role) => (
-            <option key={role} value={role}>{role}</option>
-          ))}
-        </select>
-      </form>
-      <div className="flex justify-end gap-4">
-        <button type="button" className="bg-primary hover:bg-primary-dark text-white font-bold py-3 px-10 rounded-full text-lg">Cancel</button>
-        <button type="submit" className="bg-secondary hover:bg-secondary-light text-white font-bold py-3 px-10 rounded-full text-lg">Save</button>
-      </div>
-    </div>
-  );
-};
+    const handleFormCancel = () => {
+        navigate('/role-management');
+    };
 
-export default AddRole; 
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <Page
+                sections={[
+                    // Page Header Section with Add Role button
+                    {
+                        layout: {
+                            type: 'row' as const,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'column' as const,
+                                    columns: [
+                                        {
+                                            name: 'PageHeader',
+                                            props: {
+                                                title: 'Add Role',
+                                                onBackClick: () => navigate('/role-management'),
+                                                backButtonText: 'Back to Role Management',
+                                                showMenu: false,
+                                                showDropdown: false,
+                                                actions: [
+                                                    {
+                                                        label: 'Add Role',
+                                                        variant: 'primary',
+                                                        onClick: () => {
+                                                            // This will trigger form submission
+                                                            const form = document.querySelector('form');
+                                                            if (form) {
+                                                                form.dispatchEvent(new Event('submit', { bubbles: true }));
+                                                            }
+                                                        },
+                                                        className: 'bg-green-600 hover:bg-green-700 text-white',
+                                                        disabled: isSubmitting,
+                                                    },
+                                                ],
+                                            },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                    // Form Section
+                    {
+                        layout: {
+                            type: 'grid' as const,
+                            columns: 1,
+                            gap: 'gap-4',
+                            rows: [
+                                {
+                                    layout: 'column' as const,
+                                    gridColumns: 1,
+                                    gap: 'gap-3',
+                                    columns: [
+                                        {
+                                             name: 'Form',
+                                             props: {
+                                                 inputs: formInputs,
+                                                 onSubmit: handleFormSubmit,
+                                                 submitLabel: isSubmitting ? 'Saving...' : 'Create Role',
+                                                 cancelLabel: 'Cancel',
+                                                 showFormActions: true,
+                                                 submitAction: () => {
+                                                     // This will be handled by the form's internal submit
+                                                 },
+                                                 cancelAction: handleFormCancel,
+                                                 gridLayout: {
+                                                     gridRows: 2,
+                                                     gridColumns: 1,
+                                                     gap: 'gap-1',
+                                                     className: 'w-full',
+                                                 },
+                                                //  formBackground: 'bg-white',
+                                                //  className: 'max-w-2xl mx-auto w-full p-6 space-y-6',
+                                                //  padding: 'p-6',
+                                                //  actionsClassName: 'flex justify-center gap-4 pt-4',
+                                             },
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    },
+                ]}
+            />
+        </Suspense>
+    );
+} 

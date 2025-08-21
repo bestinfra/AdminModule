@@ -32,7 +32,7 @@ const Card = ({
     previousValue, // new prop
     subtitle1,
     subtitle2,
-    loading = true,
+    loading = false,
     onValueClick, // new prop
     iconStyle, // new prop - if provided, overrides global style
     bg,

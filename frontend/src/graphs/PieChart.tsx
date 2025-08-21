@@ -1,6 +1,7 @@
 import React, { useMemo, useCallback, useState, useEffect } from 'react';
 import ReactECharts from 'echarts-for-react';
 import { useApp } from '@context/AppContext';
+import ChartSkeleton from '@components/skeletons/ChartSkeleton';
 
 interface PieChartProps {
     title?: string;
@@ -14,6 +15,7 @@ interface PieChartProps {
     showNoDataMessage?: boolean;
     onClick?: (segmentName?: string) => void;
     className?: string; // Add className prop
+    isLoading?: boolean;
 }
 
 const PieChart: React.FC<PieChartProps> = React.memo(({
@@ -34,6 +36,7 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
     showNoDataMessage = true,
     onClick,
     className, // Add className prop
+    isLoading,
 }) => {
     const { isDarkMode: contextIsDarkMode } = useApp();
     const isDarkMode = propIsDarkMode ?? contextIsDarkMode;
@@ -155,19 +158,23 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
         <div className={`w-full h-full ${className || ''}`} role="img" aria-label={ariaLabel}>
             {title && <span className="sr-only">{title}</span>}
             {description && <span className="sr-only">{description}</span>}
-            <ReactECharts
-                option={option}
-                className="w-full"
-                style={{ height: typeof height === 'number' ? `${height}px` : height }}
-                opts={{ renderer: 'svg' }}
-                onEvents={{
-                    click: (params: any) => {
-                        if (onClick) {
-                            onClick(params.name);
+            {isLoading ? (
+                <ChartSkeleton height={height} />
+            ) : (
+                <ReactECharts
+                    option={option}
+                    className="w-full"
+                    style={{ height: typeof height === 'number' ? `${height}px` : height }}
+                    opts={{ renderer: 'svg' }}
+                    onEvents={{
+                        click: (params: any) => {
+                            if (onClick) {
+                                onClick(params.name);
+                            }
                         }
-                    }
-                }}
-            />
+                    }}
+                />
+            )}
         </div>
     );
 });
