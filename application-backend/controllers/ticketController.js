@@ -193,49 +193,7 @@ export const getTicketsByDtrId = async (req, res) => {
     }
 };
 
-export const updateTicketStatus = async (req, res) => {
-    try {
-        const { id } = req.params;
-        // Use validated data from middleware
-        const { status } = req.validatedData;
 
-        const updatedTicket = await TicketDB.updateTicketStatus(parseInt(id), status);
-        
-        res.json({
-            success: true,
-            data: updatedTicket
-        });
-    } catch (error) {
-        console.error(' updateTicketStatus: Error updating ticket status:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to update ticket status',
-            error: error.message
-        });
-    }
-};
-
-export const assignTicket = async (req, res) => {
-    try {
-        const { id } = req.params;
-        // Use validated data from middleware
-        const { assignedToId } = req.validatedData;
-
-        const updatedTicket = await TicketDB.assignTicket(parseInt(id), parseInt(assignedToId));
-        
-        res.json({
-            success: true,
-            data: updatedTicket
-        });
-    } catch (error) {
-        console.error(' assignTicket: Error assigning ticket:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to assign ticket',
-            error: error.message
-        });
-    }
-};
 
 export const createTicket = async (req, res) => {
     try {

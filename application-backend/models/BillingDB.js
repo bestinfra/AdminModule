@@ -676,32 +676,7 @@ class BillingDB {
         }
     }
 
-    static async getTariffByCategory(category, type) {
-        try {
-            // Convert category string to integer if needed
-            const categoryInt = getCategoryInt(category);
-            
-            return await prisma.tariff.findFirst({
-                where: {
-                    category: categoryInt,
-                    type: type.toLowerCase(),
-                    valid_from: {
-                        lte: new Date()
-                    },
-                    OR: [
-                        { valid_to: null },
-                        { valid_to: { gte: new Date() } }
-                    ]
-                },
-                orderBy: {
-                    created_at: 'desc'
-                }
-            });
-        } catch (error) {
-            console.error('BillingDB.getTariffByCategory: Database error:', error);
-            throw error;
-        }
-    }
+    
 }
 
 export default BillingDB; 

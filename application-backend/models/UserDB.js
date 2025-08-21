@@ -293,26 +293,7 @@ class UserDB {
         }
     }
 
-    static async assignRolesToUser(userId, roleId) {
-        try {
-            // Assign single role (take the first one if multiple provided)
-            const roleIdToAssign = roleId && roleId.length > 0 ? parseInt(roleId[0]) : null;
-            
-            await prisma.users.update({
-                where: { id: userId },
-                data: {
-                    roleId: roleIdToAssign
-                }
-            });
-
-            return await this.getUserById(userId);
-        } catch (error) {
-            console.error(' UserDB.assignRolesToUser: Database error:', error);
-            throw error;
-        }
-    }
-
-    // Get all roles for dropdown
+    
     static async getAllRoles() {
         try {
             const roles = await prisma.roles.findMany({
