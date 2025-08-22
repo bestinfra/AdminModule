@@ -768,7 +768,7 @@ const Table: React.FC<TableProps> = ({
 
       {pagination &&
         (loading ? (
-          <div className="pt-4 font-manrope">
+          <div className="flex justify-between font-manrope">
             <div>
               <div className="w-20 h-8 rounded-lg skeleton-pulse" />
             </div>
@@ -784,8 +784,8 @@ const Table: React.FC<TableProps> = ({
           (serverPagination
             ? serverPagination.totalCount > serverPagination.limit
             : data.length > rowsPerPage) && (
-            <div className="font-manrope flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="font-manrope flex flex-row sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div className="flex flex-row sm:flex-row items-center sm:items-center gap-4">
                 <div className="w-40">
                   <Dropdown
                     name="rowsPerPage"
@@ -821,7 +821,7 @@ const Table: React.FC<TableProps> = ({
                   {serverPagination ? serverPagination.totalCount : data.length}
                 </span>
               </div>
-              <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+              <div className="flex flex-row sm:flex-row items-center gap-2 sm:gap-4">
                 <Button
                   label="Previous"
                   variant="outlineSecondary"

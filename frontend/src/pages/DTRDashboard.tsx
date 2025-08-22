@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import Page from "@/components/global/PageC";
 import { exportChartData } from "@/utils/excelExport";
 import { FILTER_STYLES } from "@/contexts/FilterStyleContext";
-import BACKEND_URL from "../config";
+import BACKEND_URL from '@/config';
 
 // Dummy data for fallback
 const dummyDtrStatsData = {
@@ -895,7 +895,6 @@ const DTRDashboard: React.FC = () => {
                 props: {
                   title: "DTR Dashboard",
                   onBackClick: () => window.history.back(),
-                  backButtonText: "Back to Dashboard",
                   buttonsLabel: "Export",
                   variant: "primary",
                   onClick: () => handleExportData(),
@@ -971,7 +970,6 @@ const DTRDashboard: React.FC = () => {
                         titleLevel: 2,
                         titleSize: "md",
                         titleVariant: "colorPrimaryDark",
-                        titleWeight: "normal",
                         titleAlign: "left",
                         rightComponent: {
                           name: "TimeRangeSelector",

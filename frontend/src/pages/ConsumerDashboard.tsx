@@ -58,7 +58,7 @@ const dummyOverdueConsumersData = [
         flatNo: 'N/A',
         overdue: '0.00',
     },
-      {
+    {
         uid: 'N/A',
         consumerName: 'N/A',
         flatNo: 'N/A',
@@ -70,7 +70,6 @@ const dummyOverdueConsumersData = [
         flatNo: 'N/A',
         overdue: '0.00',
     },
-    
     {
         uid: 'N/A',
         consumerName: 'N/A',
@@ -139,151 +138,28 @@ const ConsumerDashboard: React.FC = () => {
     const [isMeterStatusLoading, setIsMeterStatusLoading] = useState(true);
     const [isChartLoading, setIsChartLoading] = useState(true);
 
-    // State for tracking failed APIs
-    const [failedApis, setFailedApis] = useState<Array<{
-        id: string;
-        name: string;
-        retryFunction: () => Promise<void>;
-        errorMessage: string;
-    }>>([]);
-
+    // Simple error state like Prepaid.tsx
+    const [errorMessages, setErrors] = useState<any[]>([]);
 
     const handleTimeRangeChange = (range: string) => {
         setSelectedTimeRange(range as 'Daily' | 'Monthly');
     };
 
-    // Retry functions for each API
-    const retryStatsAPI = async () => {
-        setIsStatsLoading(true);
-        try {
-            // Simulate API call - replace with actual API
-            const response = await fetch('/api/consumer/stats');
-            if (!response.ok) throw new Error('Failed to fetch stats');
-            
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Invalid response format');
-            }
-            
-            const data = await response.json();
-            setConsumerStatsData(data);
-            setFailedApis(prev => prev.filter(api => api.id !== 'stats'));
-        } catch (err: any) {
-            console.error("Error in Stats API:", err);
-            setConsumerStatsData(dummyConsumerStatsData);
-        } finally {
-            setTimeout(() => {
-                setIsStatsLoading(false);
-            }, 1000);
-        }
+    // Clear all error messages
+    const clearErrors = () => {
+        setErrors([]);
     };
 
-    const retryBillingAPI = async () => {
-        setIsBillingLoading(true);
-        try {
-            // Simulate API call - replace with actual API
-            const response = await fetch('/api/consumer/billing');
-            if (!response.ok) throw new Error('Failed to fetch billing');
-            
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Invalid response format');
-            }
-            
-            const data = await response.json();
-            setConsumptionBillingData(data);
-            setFailedApis(prev => prev.filter(api => api.id !== 'billing'));
-        } catch (err: any) {
-            console.error("Error in Billing API:", err);
-            setConsumptionBillingData(dummyConsumptionBillingData);
-        } finally {
-            setTimeout(() => {
-                setIsBillingLoading(false);
-            }, 1000);
-        }
+    // Remove a specific error message
+    const removeError = (indexToRemove: number) => {
+        setErrors(prev => prev.filter((_, index) => index !== indexToRemove));
     };
 
-    const retryOverdueAPI = async () => {
-        setIsOverdueLoading(true);
-        try {
-            // Simulate API call - replace with actual API
-            const response = await fetch('/api/consumer/overdue');
-            if (!response.ok) throw new Error('Failed to fetch overdue');
-            
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Invalid response format');
-            }
-            
-            const data = await response.json();
-            setOverdueConsumersData(data);
-            setFailedApis(prev => prev.filter(api => api.id !== 'overdue'));
-        } catch (err: any) {
-            console.error("Error in Overdue API:", err);
-            setOverdueConsumersData(dummyOverdueConsumersData);
-        } finally {
-            setTimeout(() => {
-                setIsOverdueLoading(false);
-            }, 1000);
-        }
-    };
-
-    const retryMeterStatusAPI = async () => {
-        setIsMeterStatusLoading(true);
-        try {
-            // Simulate API call - replace with actual API
-            const response = await fetch('/api/consumer/meter-status');
-            if (!response.ok) throw new Error('Failed to fetch meter status');
-            
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Invalid response format');
-            }
-            
-            const data = await response.json();
-            setMeterStatusData(data);
-            setFailedApis(prev => prev.filter(api => api.id !== 'meterStatus'));
-        } catch (err: any) {
-            console.error("Error in Meter Status API:", err);
-            setMeterStatusData(dummyMeterStatusData);
-        } finally {
-            setTimeout(() => {
-                setIsMeterStatusLoading(false);
-            }, 1000);
-        }
-    };
-
-    const retryChartAPI = async () => {
-        setIsChartLoading(true);
-        try {
-            // Simulate API call - replace with actual API
-            const response = await fetch('/api/consumer/chart');
-            if (!response.ok) throw new Error('Failed to fetch chart');
-            
-            const contentType = response.headers.get('content-type');
-            if (!contentType || !contentType.includes('application/json')) {
-                throw new Error('Invalid response format');
-            }
-            
-            const data = await response.json();
-            setBillingChartData(data);
-            setFailedApis(prev => prev.filter(api => api.id !== 'chart'));
-        } catch (err: any) {
-            console.error("Error in Chart API:", err);
-            setBillingChartData(dummyBillingChartData);
-        } finally {
-            setTimeout(() => {
-                setIsChartLoading(false);
-            }, 1000);
-        }
-    };
-
-    // Retry specific API
-    const retrySpecificAPI = (apiId: string) => {
-        const api = failedApis.find(a => a.id === apiId);
-        if (api) {
-            api.retryFunction();
-        }
+    // Retry all APIs
+    const retryAllAPIs = () => {
+        clearErrors();
+        // Retry all APIs by refreshing the page
+        window.location.reload();
     };
 
     // Fetch data on component mount
@@ -291,28 +167,21 @@ const ConsumerDashboard: React.FC = () => {
         const fetchStats = async () => {
             setIsStatsLoading(true);
             try {
-                // Simulate API call - replace with actual API
                 const response = await fetch('/api/consumer/stats');
                 if (!response.ok) throw new Error('Failed to fetch stats');
-                
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Invalid response format');
-                }
                 
                 const data = await response.json();
                 setConsumerStatsData(data);
             } catch (err: any) {
                 console.error('Error fetching stats:', err);
+                // Keep dummy data for cards to show "N/A"
                 setConsumerStatsData(dummyConsumerStatsData);
-                setFailedApis(prev => {
-                    if (!prev.find(api => api.id === 'stats')) {
-                        return [...prev, { 
-                            id: 'stats', 
-                            name: 'Consumer Stats', 
-                            retryFunction: retryStatsAPI, 
-                            errorMessage: 'Failed to load Consumer Statistics. Please try again.' 
-                        }];
+                setErrors(prev => {
+                    console.log('Adding stats error, current errors:', prev);
+                    if (!prev.includes("Failed to fetch consumer stats")) {
+                        const updated = [...prev, "Failed to fetch consumer stats"];
+                        console.log('Updated errors after stats:', updated);
+                        return updated;
                     }
                     return prev;
                 });
@@ -326,28 +195,21 @@ const ConsumerDashboard: React.FC = () => {
         const fetchBilling = async () => {
             setIsBillingLoading(true);
             try {
-                // Simulate API call - replace with actual API
                 const response = await fetch('/api/consumer/billing');
                 if (!response.ok) throw new Error('Failed to fetch billing');
-                
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Invalid response format');
-                }
                 
                 const data = await response.json();
                 setConsumptionBillingData(data);
             } catch (err: any) {
                 console.error('Error fetching billing:', err);
+                // Keep dummy data for cards to show "N/A"
                 setConsumptionBillingData(dummyConsumptionBillingData);
-                setFailedApis(prev => {
-                    if (!prev.find(api => api.id === 'billing')) {
-                        return [...prev, { 
-                            id: 'billing', 
-                            name: 'Billing Data', 
-                            retryFunction: retryBillingAPI, 
-                            errorMessage: 'Failed to load Billing Data. Please try again.' 
-                        }];
+                setErrors(prev => {
+                    console.log('Adding billing error, current errors:', prev);
+                    if (!prev.includes("Failed to fetch billing data")) {
+                        const updated = [...prev, "Failed to fetch billing data"];
+                        console.log('Updated errors after billing:', updated);
+                        return updated;
                     }
                     return prev;
                 });
@@ -361,28 +223,21 @@ const ConsumerDashboard: React.FC = () => {
         const fetchOverdue = async () => {
             setIsOverdueLoading(true);
             try {
-                // Simulate API call - replace with actual API
                 const response = await fetch('/api/consumer/overdue');
                 if (!response.ok) throw new Error('Failed to fetch overdue');
-                
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Invalid response format');
-                }
                 
                 const data = await response.json();
                 setOverdueConsumersData(data);
             } catch (err: any) {
                 console.error('Error fetching overdue:', err);
-                setOverdueConsumersData(dummyOverdueConsumersData);
-                setFailedApis(prev => {
-                    if (!prev.find(api => api.id === 'overdue')) {
-                        return [...prev, { 
-                            id: 'overdue', 
-                            name: 'Overdue Data', 
-                            retryFunction: retryOverdueAPI, 
-                            errorMessage: 'Failed to load Overdue Data. Please try again.' 
-                        }];
+                // Don't set dummy data for table - let it show "No data available"
+                setOverdueConsumersData([]);
+                setErrors(prev => {
+                    console.log('Adding overdue error, current errors:', prev);
+                    if (!prev.includes("Failed to fetch overdue data")) {
+                        const updated = [...prev, "Failed to fetch overdue data"];
+                        console.log('Updated errors after overdue:', updated);
+                        return updated;
                     }
                     return prev;
                 });
@@ -396,28 +251,21 @@ const ConsumerDashboard: React.FC = () => {
         const fetchMeterStatus = async () => {
             setIsMeterStatusLoading(true);
             try {
-                // Simulate API call - replace with actual API
                 const response = await fetch('/api/consumer/meter-status');
                 if (!response.ok) throw new Error('Failed to fetch meter status');
-                
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Invalid response format');
-                }
                 
                 const data = await response.json();
                 setMeterStatusData(data);
             } catch (err: any) {
                 console.error('Error fetching meter status:', err);
-                setMeterStatusData(dummyMeterStatusData);
-                setFailedApis(prev => {
-                    if (!prev.find(api => api.id === 'meterStatus')) {
-                        return [...prev, { 
-                            id: 'meterStatus', 
-                            name: 'Meter Status', 
-                            retryFunction: retryMeterStatusAPI, 
-                            errorMessage: 'Failed to load Meter Status. Please try again.' 
-                        }];
+                // Don't set dummy data for chart - let it show "No data available"
+                setMeterStatusData([]);
+                setErrors(prev => {
+                    console.log('Adding meter status error, current errors:', prev);
+                    if (!prev.includes("Failed to fetch meter status")) {
+                        const updated = [...prev, "Failed to fetch meter status"];
+                        console.log('Updated errors after meter status:', updated);
+                        return updated;
                     }
                     return prev;
                 });
@@ -431,28 +279,25 @@ const ConsumerDashboard: React.FC = () => {
         const fetchChart = async () => {
             setIsChartLoading(true);
             try {
-                // Simulate API call - replace with actual API
                 const response = await fetch('/api/consumer/chart');
                 if (!response.ok) throw new Error('Failed to fetch chart');
-                
-                const contentType = response.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    throw new Error('Invalid response format');
-                }
                 
                 const data = await response.json();
                 setBillingChartData(data);
             } catch (err: any) {
                 console.error('Error fetching chart:', err);
-                setBillingChartData(dummyBillingChartData);
-                setFailedApis(prev => {
-                    if (!prev.find(api => api.id === 'chart')) {
-                        return [...prev, { 
-                            id: 'chart', 
-                            name: 'Chart Data', 
-                            retryFunction: retryChartAPI, 
-                            errorMessage: 'Failed to load Chart Data. Please try again.' 
-                        }];
+                // Don't set dummy data for chart - let it show "No data available"
+                setBillingChartData({
+                    xAxisData: [],
+                    seriesData: [],
+                    seriesColors: [],
+                });
+                setErrors(prev => {
+                    console.log('Adding chart error, current errors:', prev);
+                    if (!prev.includes("Failed to fetch chart data")) {
+                        const updated = [...prev, "Failed to fetch chart data"];
+                        console.log('Updated errors after chart:', updated);
+                        return updated;
                     }
                     return prev;
                 });
@@ -477,6 +322,8 @@ const ConsumerDashboard: React.FC = () => {
         { key: 'overdue', label: 'Overdue (Rs.)' },
     ]);
 
+
+
     // Chart download handler
     // const handleChartDownload = () => {
     //     exportChartData(billingChartData.xAxisData, 'billing-vs-collection-data');
@@ -484,13 +331,15 @@ const ConsumerDashboard: React.FC = () => {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <Page   
-                sections={[
+            <div className="sticky top-0 ">
+                <Page
+                    sections={[
                     // Error Section - Above all content
-                    ...(failedApis.length > 0 ? [{
+                    ...(errorMessages.length > 0 ? [{
                         layout: {
                             type: 'column' as const,
                             gap: 'gap-4',
+                            className:'',
                             rows: [
                                 {
                                     layout: 'column' as const,
@@ -498,11 +347,11 @@ const ConsumerDashboard: React.FC = () => {
                                         {
                                             name: 'Error',
                                             props: {
-                                                visibleErrors: failedApis.map(api => api.errorMessage),
+                                                visibleErrors: errorMessages,
+                                                onRetry: retryAllAPIs,
+                                                onClose: () => removeError(0), // Remove the top error
                                                 showRetry: true,
-                                                maxVisibleErrors: 3, // Show max 3 errors at once
-                                                failedApis: failedApis, // Pass all failed APIs for individual retry
-                                                onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                                                maxVisibleErrors: 4, // Show max 4 errors at once
                                             },
                                         },
                                     ],
@@ -604,14 +453,12 @@ const ConsumerDashboard: React.FC = () => {
                     },
                     {
                         layout: {
-                            type: 'grid',
-                            columns: 2,
+                            type: 'column',
                             gap: 'gap-4',
                             rows: [
                                 {
                                     layout: 'column',
-                                    gap: 'gap-1',
-                                    span:{col:2 as const,row:1 as const},
+                     
                                     className: '',
                                     columns: [
                                         {
@@ -620,7 +467,7 @@ const ConsumerDashboard: React.FC = () => {
                                                 xAxisData: billingChartData.xAxisData,
                                                 seriesData: billingChartData.seriesData,
                                                 seriesColors: billingChartData.seriesColors,
-                                                height: '400px',
+                                                height: 400,
                                                 showHeader: true,
                                                 headerTitle:'Consumption Metrics',
                                                 dateRange: '(7 Jun, 2025 - 8 Aug, 2025)',
@@ -715,24 +562,25 @@ const ConsumerDashboard: React.FC = () => {
                                                 loading: isOverdueLoading,
                                                 searchable: true,
                                                 pagination: true,
+                                                availableTimeRanges: [],
                                                 showActions: true,
                                                 totalItems: 1395,
                                                 itemsPerPage: 5,
                                                 currentPage: 1,
                                                 totalPages: 279,
                                                 showHeader: true,
-                                                headerTitle: 'Overdue Consumers',
+                                                headerTitle: 'Meter Latest Events',
                                                 height: 330,
                                                 onView: (row: any) =>
                                                     console.log(
                                                         'View details for',
                                                         row.uid
                                                     ),
-                                                onDelete: (row: any) =>
-                                                    console.log(
-                                                        'Delete',
-                                                        row.uid
-                                                    ),
+                                                // onDelete: (row: any) =>
+                                                //     console.log(
+                                                //         'Delete',
+                                                //         row.uid
+                                                //     ),
                                                 initialRowsPerPage: 5,
                                             },
                                         },
@@ -743,6 +591,7 @@ const ConsumerDashboard: React.FC = () => {
                     },
                 ]}
             />
+            </div>
         </Suspense>
     );
 };

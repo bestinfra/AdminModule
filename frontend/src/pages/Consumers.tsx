@@ -12,55 +12,13 @@ const columns: Column[] = [
     { key: 'reading', label: 'Current Reading' },
 ];
 
-const DUMMY_CONSUMERS = [
-    {
-        id: 1,
-        sNo: 1,
-        consumerNumber: 'BI25GMRA001',
-        name: 'Airborne General Store',
-        meter: 'A9211434',
-        reading: '177.89',
-        email: 'airborne@example.com',
-        primaryPhone: '+91 9876543210',
-        connectionType: 'COMMERCIAL',
-        category: 'COMMERCIAL',
-        sanctionedLoad: 10.0,
-        status: 'ACTIVE',
-    },
-    {
-        id: 2,
-        sNo: 2,
-        consumerNumber: 'BI25GMRA002',
-        name: 'Neo Travels',
-        meter: 'A9345417',
-        reading: '12480.54',
-        email: 'neo.travels@example.com',
-        primaryPhone: '+91 9876543211',
-        connectionType: 'COMMERCIAL',
-        category: 'COMMERCIAL',
-        sanctionedLoad: 25.0,
-        status: 'ACTIVE',
-    },
-    {
-        id: 3,
-        sNo: 4,
-        consumerNumber: 'BI25GMRA004',
-        name: 'Mobikins',
-        meter: 'A9211433',
-        reading: '1559.28',
-        email: 'mobikins@example.com',
-        primaryPhone: '+91 9876543212',
-        connectionType: 'COMMERCIAL',
-        category: 'COMMERCIAL',
-        sanctionedLoad: 15.0,
-        status: 'ACTIVE',
-    },
-];
+
 
 const Consumers: React.FC = () => {
     const [menuValue, setMenuValue] = useState('');
     const [consumers, setConsumers] = useState<TableData[]>([]);
     const [loading, setLoading] = useState(true);
+    const [errorMessages, setErrors] = useState<any[]>([]);
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -115,14 +73,22 @@ const Consumers: React.FC = () => {
             })
             .catch((err) => {
                 console.error(err.message || 'Failed to fetch consumers');
-                setConsumers(DUMMY_CONSUMERS);
+                // Don't set dummy data - let the table show "No data available"
+                setConsumers([]);
                 setServerPagination({
                     currentPage: 1,
                     totalPages: 1,
-                    totalCount: DUMMY_CONSUMERS.length,
-                    limit: DUMMY_CONSUMERS.length,
+                    totalCount: 0,
+                    limit: 8,
                     hasNextPage: false,
                     hasPrevPage: false,
+                });
+                setErrors(prev => {
+                    if (!prev.includes("Failed to fetch consumers")) {
+                        const updated = [...prev, "Failed to fetch consumers"];
+                        return updated;
+                    }
+                    return prev;
                 });
             })
             .finally(() => {
@@ -158,6 +124,22 @@ const Consumers: React.FC = () => {
     //     console.log('Page changed to:', page);
     // };
 
+    // Clear all error messages
+    const clearErrors = () => {
+        setErrors([]);
+    };
+
+    // Remove a specific error message
+    const removeError = (indexToRemove: number) => {
+        setErrors(prev => prev.filter((_, index) => index !== indexToRemove));
+    };
+
+    // Retry all APIs
+    const retryAllAPIs = () => {
+        clearErrors();
+        // Retry all APIs by refreshing the page
+        window.location.reload();
+    };
 
 
     const headerConfig = {
@@ -173,7 +155,6 @@ const Consumers: React.FC = () => {
         menuItems: [
             { id: 'occupied', label: 'Occupied' },
             { id: 'vacant', label: 'Vacant' },
-            { id: 'high-usage', label: '' },
         ],
         onMenuItemClick: (itemId: string) => {
             setMenuValue(itemId);
@@ -182,7 +163,7 @@ const Consumers: React.FC = () => {
 
     return (
         <Suspense fallback={<div>Loading...</div>}>
-            <div className="p-2 min-h-screen">
+            <div className="min-h-screen">
                 <Page
                     sections={[
                         {
@@ -194,6 +175,16 @@ const Consumers: React.FC = () => {
                                         layout: 'column',
                                         gap: 'gap-4',
                                         columns: [
+                                            {
+                                                name: 'Error',
+                                                props: {
+                                                    visibleErrors: errorMessages,
+                                                    onRetry: retryAllAPIs,
+                                                    onClose: () => removeError(0), // Remove the top error
+                                                    showRetry: true,
+                                                    maxVisibleErrors: 3, // Show max 3 errors at once
+                                                },
+                                            },
                                             {
                                                 name: 'PageHeader',
                                                 props: headerConfig,
@@ -216,8 +207,8 @@ const Consumers: React.FC = () => {
                                                     showActions: true,
                                                     serverPagination: serverPagination,
                                                     // onPageChange: handlePageChange,
-                                                    onEdit: (row: TableData) =>
-                                                        console.log('Edit:', row),
+                                                    // onEdit: (row: TableData) =>
+                                                    //     console.log('Edit:', row),
                                                     onView: (row: TableData) =>
                                                         navigate(`/consumer-detail-view/${row.consumerNumber}`),
                                                     headerTitle: 'Consumer Management',

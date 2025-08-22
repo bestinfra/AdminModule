@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import BACKEND_URL from '../config';
@@ -24,44 +24,114 @@ const DataLoggerDashboard: React.FC = () => {
     const navigate = useNavigate();
     const [dataLogger, setDataLogger] = useState<DataLoggerDetails | null>(null);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [connectedMeters, setConnectedMeters] = useState<any[]>([]);
 
-    // Demo data for the specific data logger
-    const demoDataLogger: DataLoggerDetails = {
-        sNo: 1,
-        modemSlNo: 'DL-1001',
-        hwVersion: 'HW-1.0',
-        fwVersion: 'FW-2.1',
-        mobile: '+1-555-0101',
-        installationDate: '2024-01-01',
-        status: 'Online',
-        lastCommunication: '2024-01-15T10:30:00Z',
-        batteryLevel: 85,
-        signalStrength: 92,
-        location: 'Main Distribution Center',
-        assignedMeters: 12,
-        totalReadings: 15420,
-    };
+    // Initialize summary cards with N/A values
+    const [summaryCards, setSummaryCards] = useState([
+        {
+            title: 'Status',
+            value: 'N/A',
+            icon: '/icons/status.svg',
+            subtitle1: 'N/A',
+            subtitle2: '',
+        },
+        {
+            title: 'Battery Level',
+            value: 'N/A',
+            icon: '/icons/battery-charge.svg',
+            subtitle1: 'N/A',
+            subtitle2: '',
+        },
+        {
+            title: 'Signal Strength',
+            value: 'N/A',
+            icon: '/icons/signal.svg',
+            subtitle1: 'N/A',
+            subtitle2: '',
+        },
+        {
+            title: 'Assigned Meters',
+            value: 'N/A',
+            icon: '/icons/meter.svg',
+            subtitle1: 'N/A',
+            subtitle2: '',
+        },
+    ]);
 
     useEffect(() => {
         const fetchDataLoggerDetails = async () => {
+            if (!dataLoggerId) return;
+            
             setLoading(true);
+            setError(null);
             try {
-                // Try to fetch from API first
+                // Fetch data logger details
                 const response = await fetch(`${BACKEND_URL}/meters/dataloggers/${dataLoggerId}`);
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.success) {
-                        setDataLogger(result.data);
-                    } else {
-                        throw new Error(result.message || 'Failed to fetch data logger details');
+                if (!response.ok) throw new Error('Failed to fetch data logger details');
+                
+                const result = await response.json();
+                if (result.success) {
+                    const data = result.data;
+                    setDataLogger(data);
+                    
+                    // Update summary cards with real data
+                    setSummaryCards([
+                        {
+                            title: 'Status',
+                            value: data.status || 'N/A',
+                            icon: '/icons/status.svg',
+                            subtitle1: data.lastCommunication 
+                                ? `Last Communication: ${new Date(data.lastCommunication).toLocaleString()}`
+                                : 'No communication data',
+                            subtitle2: '',
+                        },
+                        {
+                            title: 'Battery Level',
+                            value: data.batteryLevel ? `${data.batteryLevel}%` : 'N/A',
+                            icon: '/icons/battery-charge.svg',
+                            subtitle1: data.batteryLevel && data.batteryLevel < 20 
+                                ? 'Low Battery Warning' 
+                                : 'Battery OK',
+                            subtitle2: '',
+                        },
+                        {
+                            title: 'Signal Strength',
+                            value: data.signalStrength ? `${data.signalStrength}%` : 'N/A',
+                            icon: '/icons/signal.svg',
+                            subtitle1: data.signalStrength && data.signalStrength > 80 
+                                ? 'Excellent Signal' 
+                                : 'Signal OK',
+                            subtitle2: '',
+                        },
+                        {
+                            title: 'Assigned Meters',
+                            value: data.assignedMeters?.toString() || 'N/A',
+                            icon: '/icons/meter.svg',
+                            subtitle1: `Total Readings: ${data.totalReadings?.toLocaleString() || 'N/A'}`,
+                            subtitle2: '',
+                        },
+                    ]);
+
+                    // Fetch connected meters for this data logger
+                    try {
+                        const metersResponse = await fetch(`${BACKEND_URL}/meters/dataloggers/${dataLoggerId}/meters`);
+                        if (metersResponse.ok) {
+                            const metersResult = await metersResponse.json();
+                            if (metersResult.success) {
+                                setConnectedMeters(metersResult.data || []);
+                            }
+                        }
+                    } catch (metersError) {
+                        console.error('Failed to fetch connected meters:', metersError);
+                        setConnectedMeters([]);
                     }
                 } else {
-                    throw new Error('Failed to fetch data logger details');
+                    throw new Error(result.message || 'Failed to fetch data logger details');
                 }
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error fetching data logger details:', error);
-                // Fallback to demo data
-                setDataLogger(demoDataLogger);
+                setError('Failed to fetch data logger details. Please try again.');
             } finally {
                 setLoading(false);
             }
@@ -70,221 +140,127 @@ const DataLoggerDashboard: React.FC = () => {
         fetchDataLoggerDetails();
     }, [dataLoggerId]);
 
-    if (loading) {
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <Page
-                    sections={[
-                        {
-                            layout: {
-                                type: 'row',
-                                className: '',
-                            },
-                            components: [
-                                {
-                                    name: 'PageHeader',
-                                    props: {
-                                        title: 'Loading Data Logger Details...',
-                                        onBackClick: () => navigate('/data-logger'),
-                                        backButtonText: 'Back to Data Logger',
-                                    },
-                                },
-                            ],
-                        },
-                    ]}
-                />
-            </Suspense>
-        );
-    }
-
-    if (!dataLogger) {
-        return (
-            <Suspense fallback={<div>Loading...</div>}>
-                <Page
-                    sections={[
-                        {
-                            layout: {
-                                type: 'row',
-                                className: '',
-                            },
-                            components: [
-                                {
-                                    name: 'PageHeader',
-                                    props: {
-                                        title: 'Data Logger Not Found',
-                                        onBackClick: () => navigate('/data-logger'),
-                                        backButtonText: 'Back to Data Logger',
-                                    },
-                                },
-                            ],
-                        },
-                    ]}
-                />
-            </Suspense>
-        );
-    }
-
-    const summaryCards = [
-        {
-            title: 'Status',
-            value: dataLogger.status || 'Unknown',
-            icon: '/icons/status.svg',
-            subtitle1: dataLogger.lastCommunication 
-                ? `Last Communication: ${new Date(dataLogger.lastCommunication).toLocaleString()}`
-                : 'No communication data',
-            subtitle2: '',
-        },
-        {
-            title: 'Battery Level',
-            value: `${dataLogger.batteryLevel || 0}%`,
-            icon: '/icons/battery.svg',
-            subtitle1: dataLogger.batteryLevel && dataLogger.batteryLevel < 20 
-                ? 'Low Battery Warning' 
-                : 'Battery OK',
-            subtitle2: '',
-        },
-        {
-            title: 'Signal Strength',
-            value: `${dataLogger.signalStrength || 0}%`,
-            icon: '/icons/signal.svg',
-            subtitle1: dataLogger.signalStrength && dataLogger.signalStrength > 80 
-                ? 'Excellent Signal' 
-                : 'Signal OK',
-            subtitle2: '',
-        },
-        {
-            title: 'Assigned Meters',
-            value: dataLogger.assignedMeters?.toString() || '0',
-            icon: '/icons/meter.svg',
-            subtitle1: `Total Readings: ${dataLogger.totalReadings?.toLocaleString() || '0'}`,
-            subtitle2: '',
-        },
-    ];
-
-    // const dataLoggerInfo = [
-    //     { title: 'DCU/Modem Serial No.', value: dataLogger.modemSlNo },
-    //     { title: 'Hardware Version', value: dataLogger.hwVersion },
-    //     { title: 'Firmware Version', value: dataLogger.fwVersion },
-    //     { title: 'Mobile Number', value: dataLogger.mobile },
-    //     { title: 'Installation Date', value: dataLogger.installationDate },
-    //     { title: 'Location', value: dataLogger.location || 'Not specified' },
-    // ];
+    const handleRetry = () => {
+        setError(null);
+        window.location.reload();
+    };
 
     return (
-        <Suspense fallback={<div>Loading...</div>}>
-            <Page
-                sections={[
-                    {
-                        layout: {
-                            type: 'row',
-                            className: '',
+        <Page
+            sections={[
+                // Error section
+                ...(error ? [{
+                    layout: {
+                        type: 'column' as const,
+                        gap: 'gap-4',
+                    },
+                    components: [
+                        {
+                            name: 'Error',
+                            props: {
+                                visibleErrors: [error],
+                                onRetry: handleRetry,
+                                showRetry: true,
+                                maxVisibleErrors: 1,
+                            },
                         },
-                        components: [
-                            {
-                                name: 'PageHeader',
-                                props: {
-                                    title: `Data Logger: ${dataLogger.modemSlNo}`,
-                                    onBackClick: () => navigate('/data-logger'),
-                                    backButtonText: 'Back to Data Logger',
-                                    buttonsLabel: 'Edit Data Logger',
-                                    variant: 'primary',
-                                    onClick: () => console.log('Edit data logger:', dataLogger),
-                                    showMenu: true,
-                                    showDropdown: true,
-                                    menuItems: [
-                                        { id: 'configure', label: 'Configure' },
-                                        { id: 'restart', label: 'Restart Device' },
-                                        { id: 'firmware', label: 'Update Firmware' },
-                                        { id: 'maintenance', label: 'Schedule Maintenance' },
-                                        { id: 'export', label: 'Export Data' },
-                                    ],
-                                    onMenuItemClick: (itemId: string) => {
-                                        console.log(`Action: ${itemId} for data logger ${dataLogger.modemSlNo}`);
-                                    },
+                    ],
+                }] : []),
+                // Header section
+                {
+                    layout: {
+                        type: 'row' as const,
+                        className: '',
+                    },
+                    components: [
+                        {
+                            name: 'PageHeader',
+                            props: {
+                                title: loading ? 'Loading Data Logger Details...' : 
+                                       !dataLogger ? 'Data Logger Not Found' : 
+                                       `Data Logger: ${dataLogger.modemSlNo}`,
+                                onBackClick: () => navigate('/data-logger'),
+                                backButtonText: 'Back to Data Logger',
+                                buttonsLabel: dataLogger ? 'Edit Data Logger' : '',
+                                variant: 'primary',
+                                onClick: dataLogger ? () => console.log('Edit data logger:', dataLogger) : undefined,
+                                showMenu: dataLogger ? true : false,
+                                showDropdown: dataLogger ? true : false,
+                                menuItems: dataLogger ? [
+                                    { id: 'configure', label: 'Configure' },
+                                    { id: 'restart', label: 'Restart Device' },
+                                    { id: 'firmware', label: 'Update Firmware' },
+                                    { id: 'maintenance', label: 'Schedule Maintenance' },
+                                    { id: 'export', label: 'Export Data' },
+                                ] : [],
+                                onMenuItemClick: (itemId: string) => {
+                                    console.log(`Action: ${itemId} for data logger ${dataLogger?.modemSlNo}`);
                                 },
+                            },
+                        },
+                    ],
+                },
+                // Cards section (show even when loading)
+                {
+                    layout: {
+                        type: 'grid' as const,
+                        columns: 4,
+                        gap: 'gap-4',
+                        className: '',
+                    },
+                    components: summaryCards.map((card, index) => ({
+                        name: 'Card',
+                        props: {
+                            ...card,
+                            key: index,
+                            loading: loading,
+                        },
+                    })),
+                },
+                // Table section (always show)
+                {
+                    layout: {
+                        type: 'grid' as const,
+                        columns: 1,
+                        gap: 'gap-4',
+                        rows: [
+                            {
+                                layout: 'grid' as const,
+                                gridColumns: 1,
+                                gap: 'gap-4',
+                                columns: [
+                                    {
+                                        name: 'Table',
+                                        props: {
+                                            data: connectedMeters,
+                                            columns: [
+                                                { key: 'meterSlNo', label: 'Meter Serial No.' },
+                                                { key: 'consumerName', label: 'Consumer Name' },
+                                                { key: 'lastReading', label: 'Last Reading' },
+                                                { key: 'readingDate', label: 'Reading Date' },
+                                                { key: 'status', label: 'Status' },
+                                            ],
+                                            loading: loading,
+                                            showHeader: true,
+                                            headerTitle: 'Connected Meters',
+                                            // dateRange: 'Real-time data',
+                                            searchable: true,
+                                            sortable: true,
+                                            availableTimeRanges:[], 
+                                            pagination: true,
+                                            showActions: true,
+                                            text: 'Meters connected to this data logger',
+                                            emptyMessage: 'No meters connected to this data logger',
+                                            onView: (row: any) => console.log('View meter:', row),
+                                        },
+                                    },
+                                ],
                             },
                         ],
                     },
-                    {
-                        layout: {
-                            type: 'grid',
-                            columns: 4,
-                            gap: 'gap-4',
-                            className: '',
-                        },
-                        components: summaryCards.map((card, index) => ({
-                            name: 'Card',
-                            props: {
-                                ...card,
-                                key: index,
-                            },
-                        })),
-                    },
-                    {
-                        layout: {
-                            type: 'grid',
-                            columns: 1,
-                            gap: 'gap-4',
-                            rows: [
-                                {
-                                    layout: 'grid',
-                                    gridColumns: 1,
-                                    gap: 'gap-4',
-                                    columns: [
-                                        {
-                                            name: 'Table',
-                                            props: {
-                                                data: [
-                                                    {
-                                                        meterSlNo: 'A9345417',
-                                                        consumerName: 'John Doe',
-                                                        lastReading: '150.5 kWh',
-                                                        readingDate: '2024-01-15 10:30:00',
-                                                        status: 'Active',
-                                                    },
-                                                    {
-                                                        meterSlNo: 'A9345418',
-                                                        consumerName: 'Jane Smith',
-                                                        lastReading: '89.2 kWh',
-                                                        readingDate: '2024-01-15 10:29:00',
-                                                        status: 'Active',
-                                                    },
-                                                    {
-                                                        meterSlNo: 'A9345419',
-                                                        consumerName: 'Bob Johnson',
-                                                        lastReading: '234.1 kWh',
-                                                        readingDate: '2024-01-15 10:28:00',
-                                                        status: 'Active',
-                                                    },
-                                                ],
-                                                columns: [
-                                                    { key: 'meterSlNo', label: 'Meter Serial No.' },
-                                                    { key: 'consumerName', label: 'Consumer Name' },
-                                                    { key: 'lastReading', label: 'Last Reading' },
-                                                    { key: 'readingDate', label: 'Reading Date' },
-                                                    { key: 'status', label: 'Status' },
-                                                ],
-                                                loading: false,
-                                                showHeader: false,
-                                                headerTitle: 'Connected Meters',
-                                                dateRange: 'Real-time data',
-                                                searchable: true,
-                                                sortable: true,
-                                                pagination: true,
-                                                showActions: true,
-                                                text: 'Meters connected to this data logger',
-                                                emptyMessage: 'No meters connected to this data logger',
-                                                onView: (row: any) => console.log('View meter:', row),
-                                            },
-                                        },
-                                    ],
-                                },
-                            ],
-                        },
-                    },
-                ]}
-            />
-        </Suspense>
+                },
+            ]}
+        />
     );
 };
 

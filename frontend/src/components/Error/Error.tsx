@@ -138,7 +138,7 @@ const Error: React.FC<ErrorProps> = ({
                         <div className="flex items-start flex-1 gap-3">
                             <figure className="flex-shrink-0 w-5 h-5 text-warning" aria-hidden="true">
                                 <img 
-                                    src="/icons/network-error.svg" 
+                                    src="/icons/error.svg" 
                                     alt="Error icon" 
                                     className="w-full h-full"
                                 />

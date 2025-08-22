@@ -181,16 +181,16 @@ const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ user: _user }) => {
     }
 
     return (
-        <div className="bg-white rounded-lg ">
-            <div className="color-text-secondary mb-4">
+        <div className="bg-white rounded-lg flex flex-col gap-4">
+            <div className="color-text-secondary ">
                 View your recent account activities and security events
             </div>
             <div className="flex flex-col gap-4">
                 {activities.map((activity) => (
-                    <div key={activity.id} className="bg-neutral-light rounded-2xl p-5 shadow-sm">
-                        <div className="flex justify-between items-start mb-2">
+                    <div key={activity.id} className="bg-neutral-light rounded-2xl flex flex-col gap-2 p-5 shadow-sm">
+                        <div className="flex justify-between items-start ">
                             <div className="font-medium color-text-primary">{activity.description}</div>
-                            <div className="color-text-secondary text-sm whitespace-nowrap ml-4">
+                            <div className="color-text-secondary text-sm whitespace-nowrap">
                                 {activity.timestamp}
                             </div>
                         </div>
@@ -210,7 +210,7 @@ const ActivityLogTab: React.FC<ActivityLogTabProps> = ({ user: _user }) => {
                     </div>
                 ))}
             </div>
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-6 p-4 border-t border-neutral-light">
+            <div className="flex flex-row sm:flex-row justify-between items-center gap-4  p-4 border-t border-neutral-light">
                 <div className="flex items-center gap-4">
                     <select
                         value={rowsPerPage}

@@ -11,339 +11,378 @@ const ConsumerDetailView: React.FC = () => {
     // State for consumer data
   const [consumer, setConsumer] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [errors, setErrors] = useState<string[]>([]);
   const lastComm = "30/06/2025 22:31:38";
 
   // State to control chart time range
   const [selectedTimeRange, setSelectedTimeRange] = useState<'Daily' | 'Monthly' | 'Yearly'>('Daily');
 
-  // Mock consumer data for demonstration based on the image
-  const mockConsumerData = {
-    id: consumerId,
-    name: ` ${consumerId}`,
-    consumerNumber: consumerId,
-    currentBalance: "₹0.00",
-    uniqueIdentificationNo: consumerId,
-    meterSerialNumber: "A9211434",
-    occupancyStatus: "Occupied",
-    permanentAddress: "GHASL, GMR",
-    billingAddress: "GHASL, GMR",
-    mobileNo: "+91********49",
-    emailId: "************@gmail.com",
-    connectionType: "COMMERCIAL",
-    category: "COMMERCIAL",
-    sanctionedLoad: 15.0,
-    status: "ACTIVE",
-  };
+
 
   // Consumer Statistics Cards Data
-  const consumerStats = [
-    {
-      title: "R-Phase Voltage",
-      value: "233.51",
-      subtitle1: "Volts",
-      icon: "/icons/r-phase-voltage.svg",
-      bg: "bg-danger",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: "w-4 h-4",
-      width: "w-8",
-      height: "h-8",
-    },
-    {
-      title: "Y-Phase Voltage",
-      value: "0.0",
-      subtitle1: "Volts",
-      icon: "/icons/r-phase-current.svg",
-      bg: "bg-warning-alt",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: "w-4 h-4 ",
-      width: "w-8",
-      height: "h-8",
-    },
-    {
-      title: "B-Phase Voltage",
-      value: "0.0",
-      subtitle1: "Volts",
-      icon: "/icons/r-phase-current.svg",
-      bg: "bg-primary",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: "w-4 h-4",
-      width: "w-8",
-      height: "h-8",
-    },
-    {
-      title: "R-Phase Current",
-      value: "0.45",
-      subtitle1: "Amps",
-      icon: "/icons/r-phase-current.svg",
-      bg: "bg-danger",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: "w-4 h-4",
-      width: "w-8",
-      height: "h-8",
-    },
-    {
-      title: "Y-Phase Current",
-      value: "0.0",
-      subtitle1: "Amps",
-      icon: "/icons/r-phase-current.svg",
-      bg: "bg-warning-alt",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: "w-4 h-4",
-      width: "w-8",
-      height: "h-8",
-    },
-    {
-      title: "B-Phase Current",
-      value: "0.0",
-      subtitle1: "Amps",
-      icon: "/icons/r-phase-current.svg",
-      bg: "bg-primary",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: FILTER_STYLES.WHITE,
-      iconClassName: "w-4 h-4",
-      width: "w-8",
-      height: "h-8",
-    },
-  ];
+  const getConsumerStats = () => {
+    if (errors.length > 0 || !consumer) {
+      return [
+        {
+          title: "R-Phase Voltage",
+          value: "N/A",
+          subtitle1: "Volts",
+          icon: "/icons/r-phase-voltage.svg",
+          bg: "bg-danger",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: FILTER_STYLES.WHITE,
+          iconClassName: "w-4 h-4",
+          width: "w-8",
+          height: "h-8",
+        },
+        {
+          title: "Y-Phase Voltage",
+          value: "N/A",
+          subtitle1: "Volts",
+          icon: "/icons/r-phase-current.svg",
+          bg: "bg-warning-alt",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: FILTER_STYLES.WHITE,
+          iconClassName: "w-4 h-4 ",
+          width: "w-8",
+          height: "h-8",
+        },
+        {
+          title: "B-Phase Voltage",
+          value: "N/A",
+          subtitle1: "Volts",
+          icon: "/icons/r-phase-current.svg",
+          bg: "bg-primary",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: FILTER_STYLES.WHITE,
+          iconClassName: "w-4 h-4",
+          width: "w-8",
+          height: "h-8",
+        },
+        {
+          title: "R-Phase Current",
+          value: "N/A",
+          subtitle1: "Amps",
+          icon: "/icons/r-phase-current.svg",
+          bg: "bg-danger",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: FILTER_STYLES.WHITE,
+          iconClassName: "w-4 h-4",
+          width: "w-8",
+          height: "h-8",
+        },
+        {
+          title: "Y-Phase Current",
+          value: "N/A",
+          subtitle1: "Amps",
+          icon: "/icons/r-phase-current.svg",
+          bg: "bg-warning-alt",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: FILTER_STYLES.WHITE,
+          iconClassName: "w-4 h-4",
+          width: "w-8",
+          height: "h-8",
+        },
+        {
+          title: "B-Phase Current",
+          value: "N/A",
+          subtitle1: "Amps",
+          icon: "/icons/r-phase-current.svg",
+          bg: "bg-primary",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: FILTER_STYLES.WHITE,
+          iconClassName: "w-4 h-4",
+          width: "w-8",
+          height: "h-8",
+        },
+      ];
+    }
+    return [
+      {
+        title: "R-Phase Voltage",
+        value: consumer?.rPhaseVoltage || "N/A",
+        subtitle1: "Volts",
+        icon: "/icons/r-phase-voltage.svg",
+        bg: "bg-danger",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: FILTER_STYLES.WHITE,
+        iconClassName: "w-4 h-4",
+        width: "w-8",
+        height: "h-8",
+      },
+      {
+        title: "Y-Phase Voltage",
+        value: consumer?.yPhaseVoltage || "N/A",
+        subtitle1: "Volts",
+        icon: "/icons/r-phase-current.svg",
+        bg: "bg-warning-alt",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: FILTER_STYLES.WHITE,
+        iconClassName: "w-4 h-4 ",
+        width: "w-8",
+        height: "h-8",
+      },
+      {
+        title: "B-Phase Voltage",
+        value: consumer?.bPhaseVoltage || "N/A",
+        subtitle1: "Volts",
+        icon: "/icons/r-phase-current.svg",
+        bg: "bg-primary",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: FILTER_STYLES.WHITE,
+        iconClassName: "w-4 h-4",
+        width: "w-8",
+        height: "h-8",
+      },
+      {
+        title: "R-Phase Current",
+        value: consumer?.rPhaseCurrent || "N/A",
+        subtitle1: "Amps",
+        icon: "/icons/r-phase-current.svg",
+        bg: "bg-danger",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: FILTER_STYLES.WHITE,
+        iconClassName: "w-4 h-4",
+        width: "w-8",
+        height: "h-8",
+      },
+      {
+        title: "Y-Phase Current",
+        value: consumer?.yPhaseCurrent || "N/A",
+        subtitle1: "Amps",
+        icon: "/icons/r-phase-current.svg",
+        bg: "bg-warning-alt",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: FILTER_STYLES.WHITE,
+        iconClassName: "w-4 h-4",
+        width: "w-8",
+        height: "h-8",
+      },
+      {
+        title: "B-Phase Current",
+        value: consumer?.bPhaseCurrent || "N/A",
+        subtitle1: "Amps",
+        icon: "/icons/r-phase-current.svg",
+        bg: "bg-primary",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: FILTER_STYLES.WHITE,
+        iconClassName: "w-4 h-4",
+        width: "w-8",
+        height: "h-8",
+      },
+    ];
+  };
+
+  const consumerStats = getConsumerStats();
 
   // Handler for occupancy status click
   const handleOccupancyStatusClick = () => {
     navigate('/occupancy-status');
   };
 
-  // Consumer Information Data Arrays (similar to MeterDetails structure)
-  const CONSUMER_INFO_ROW_1 = [
-    { title: "Current Balance (₹)", value: mockConsumerData.currentBalance },
-    {
-      title: "Unique Identification No",
-      value: mockConsumerData.uniqueIdentificationNo,
-    },
-    { title: "Meter Serial Number", value: mockConsumerData.meterSerialNumber, statusIndicator: true },
+  // Consumer Information Data Arrays
+  const getConsumerInfoRow1 = () => {
+    if (errors.length > 0 || !consumer) {
+      return [
+        { title: "Current Balance (₹)", value: "N/A" },
+        {
+          title: "Unique Identification No",
+          value: "N/A",
+        },
+        { title: "Meter Serial Number", value: "N/A", statusIndicator: true },
+        { 
+          title: "Occupancy Status", 
+          value: "N/A",
+          onClick: handleOccupancyStatusClick,
+          clickable: true,
+          className: "hover:text-primary"
+        },
+      ];
+    }
+    return [
+      { title: "Current Balance (₹)", value: consumer?.currentBalance || "N/A" },
+      {
+        title: "Unique Identification No",
+        value: consumer?.uniqueIdentificationNo || "N/A",
+      },
+      { title: "Meter Serial Number", value: consumer?.meterSerialNumber || "N/A", statusIndicator: true },
       { 
-    title: "Occupancy Status", 
-    value: mockConsumerData.occupancyStatus,
-    onClick: handleOccupancyStatusClick,
-    clickable: true,
-    className: "hover:text-primary"
-  },
-  ];
+        title: "Occupancy Status", 
+          value: consumer?.occupancyStatus || "N/A",
+          onClick: handleOccupancyStatusClick,
+          clickable: true,
+          className: "hover:text-primary"
+      },
+    ];
+  };
 
-  const CONSUMER_INFO_ROW_2 = [
-    { title: "Permanent Address", value: mockConsumerData.permanentAddress },
-    { title: "Billing Address", value: mockConsumerData.billingAddress },
-    { title: "Mobile No", value: mockConsumerData.mobileNo },
-    { title: "Email ID", value: mockConsumerData.emailId },
-  ];
+  const CONSUMER_INFO_ROW_1 = getConsumerInfoRow1();
 
-  // Second Consumer Details Data (different data)
-  // const CONSUMER_INFO_ROW_3 = [
-  //   { title: "Connection Type", value: mockConsumerData.connectionType },
-  //   { title: "Category", value: mockConsumerData.category },
-  //   {
-  //     title: "Sanctioned Load",
-  //     value: `${mockConsumerData.sanctionedLoad} kW`,
-  //   },
-  //   { title: "Meter Status", value: mockConsumerData.status },
-  // ];
+  const getConsumerInfoRow2 = () => {
+    if (errors.length > 0 || !consumer) {
+      return [
+        { title: "Permanent Address", value: "N/A" },
+        { title: "Billing Address", value: "N/A" },
+        { title: "Mobile No", value: "N/A" },
+        { title: "Email ID", value: "N/A" },
+      ];
+    }
+    return [
+      { title: "Permanent Address", value: consumer?.permanentAddress || "N/A" },
+      { title: "Billing Address", value: consumer?.billingAddress || "N/A" },
+      { title: "Mobile No", value: consumer?.mobileNo || "N/A" },
+      { title: "Email ID", value: consumer?.emailId || "N/A" },
+    ];
+  };
 
-  // const CONSUMER_INFO_ROW_4 = [
-  //   { title: "Installation Date", value: "2023-01-15" },
-  //   { title: "Last Reading Date", value: "2024-01-20" },
-  //   { title: "Meter Type", value: "Smart Meter" },
-  //   { title: "Phase Type", value: "Three Phase" },
-  // ];
+  const CONSUMER_INFO_ROW_2 = getConsumerInfoRow2();
 
   // Current Bill Details Data
-  const BILL_DETAILS_ROW = [
-    { title: "Billing Month", value: "1/7/2025" },
-    { title: "Bill Period", value: "1/6/2025 - 30/6/2025" },
-    { title: "Due Date", value: "9/7/2025" },
-  ];
+  const getBillDetailsRow = () => {
+    if (errors.length > 0 || !consumer) {
+      return [
+        { title: "Billing Month", value: "N/A" },
+        { title: "Bill Period", value: "N/A" },
+        { title: "Due Date", value: "N/A" },
+      ];
+    }
+    return [
+      { title: "Billing Month", value: consumer?.billingMonth || "N/A" },
+      { title: "Bill Period", value: consumer?.billPeriod || "N/A" },
+      { title: "Due Date", value: consumer?.dueDate || "N/A" },
+    ];
+  };
+
+  const BILL_DETAILS_ROW = getBillDetailsRow();
 
   // Consumption Summary Cards Data
-  const consumptionSummaryCards = [
-    {
-      title: "Monthly Consumption (kWh)",
-      value: "8.45",
-      subtitle1: "Last Month: 64.78 kWh",
-      icon: "/icons/electric.svg",
-      bg: "bg-stat-icon-gradient",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
-    },
-    {
-      title: "Daily Consumption (kWh)",
-      value: "0.39",
-      subtitle1: "Yesterday: 2.03 kWh",
-      icon: "/icons/coins.svg",
-      bg: "bg-stat-icon-gradient",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
-    },
-    {
-      title: "Total Outstanding (Rs.)",
-      value: "0",
-      subtitle1: "Last Month: ₹0",
-      icon: "/icons/search.svg",
-      bg: "bg-stat-icon-gradient",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
-    },
-    {
-      title: "Bill Status",
-      value: "Overdue",
-      subtitle1: "Due Date: 9/7/2025",
-      icon: "/icons/bills2.svg",
-      bg: "bg-stat-icon-gradient",
-      valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
-      iconStyle: "BRAND_GREEN",
-    },
-  ];
-
-  // Comprehensive Chart data for different time ranges
-  const dailyChartData = {
-    xAxisData: ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
-    seriesData: [
-    {
-      name: "Energy Consumption (kWh)",
-        data: [12.5, 18.2, 16.8, 19.5, 17.3, 20.1, 14.7],
-    },
-    {
-      name: "Peak Demand (kW)",
-        data: [2.1, 3.2, 2.8, 3.5, 2.9, 3.8, 2.4],
-      },
-    ],
-    seriesColors: ["#10B981", "#3B82F6"],
-  };
-
-  const monthlyChartData = {
-    xAxisData: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-    seriesData: [
-      { name: 'Consumption (kWh)', data: [120, 140, 100, 130, 150, 170, 165, 180, 190, 175, 160, 185] }
-    ],
-    seriesColors: ["#10B981", "#3B82F6"],
-  };
-
-  const yearlyChartData = {
-    xAxisData: ['2020', '2021', '2022', '2023', '2024', '2025'],
-    seriesData: [
+  const getConsumptionSummaryCards = () => {
+    if (errors.length > 0 || !consumer) {
+      return [
+        {
+          title: "Monthly Consumption (kWh)",
+          value: "N/A",
+          subtitle1: "Last Month: N/A",
+          icon: "/icons/electric.svg",
+          bg: "bg-stat-icon-gradient",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: "BRAND_GREEN",
+        },
+        {
+          title: "Daily Consumption (kWh)",
+          value: "N/A",
+          subtitle1: "Yesterday: N/A",
+          icon: "/icons/coins.svg",
+          bg: "bg-stat-icon-gradient",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: "BRAND_GREEN",
+        },
+        {
+          title: "Total Outstanding (Rs.)",
+          value: "N/A",
+          subtitle1: "Last Month: N/A",
+          icon: "/icons/search.svg",
+          bg: "bg-stat-icon-gradient",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: "BRAND_GREEN",
+        },
+        {
+          title: "Bill Status",
+          value: "N/A",
+          subtitle1: "Due Date: N/A",
+          icon: "/icons/bills2.svg",
+          bg: "bg-stat-icon-gradient",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+          iconStyle: "BRAND_GREEN",
+        },
+      ];
+    }
+    return [
       {
-        name: "Energy Consumption (kWh)",
-        data: [1850, 2100, 1950, 2200, 2050, 1800],
+        title: "Monthly Consumption (kWh)",
+        value: consumer?.monthlyConsumption || "N/A",
+        subtitle1: `Last Month: ${consumer?.lastMonthConsumption || "N/A"}`,
+        icon: "/icons/electric.svg",
+        bg: "bg-stat-icon-gradient",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: "BRAND_GREEN",
       },
       {
-        name: "Peak Demand (kW)",
-        data: [18, 22, 20, 25, 23, 19],
+        title: "Daily Consumption (kWh)",
+        value: consumer?.dailyConsumption || "N/A",
+        subtitle1: `Yesterday: ${consumer?.yesterdayConsumption || "N/A"}`,
+        icon: "/icons/coins.svg",
+        bg: "bg-stat-icon-gradient",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: "BRAND_GREEN",
       },
-    ],
-    seriesColors: ["#10B981", "#3B82F6"],
+      {
+        title: "Total Outstanding (Rs.)",
+        value: consumer?.totalOutstanding || "N/A",
+        subtitle1: `Last Month: ${consumer?.lastMonthOutstanding || "N/A"}`,
+        icon: "/icons/search.svg",
+        bg: "bg-stat-icon-gradient",
+        valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: "BRAND_GREEN",
+      },
+      {
+        title: "Bill Status",
+        value: consumer?.billStatus || "N/A",
+        subtitle1: `Due Date: ${consumer?.dueDate || "N/A"}`,
+        icon: "/icons/bills2.svg",
+        bg: "bg-stat-icon-gradient",
+          valueFontSize: "text-lg lg:text-xl md:text-lg sm:text-base",
+        iconStyle: "BRAND_GREEN",
+      },
+    ];
+  };
+
+  const consumptionSummaryCards = getConsumptionSummaryCards();
+
+  // Chart data for different time ranges
+  const getChartDataByRange = (range: string) => {
+    if (errors.length > 0 || !consumer) {
+      return {
+        xAxisData: [],
+        seriesData: [],
+        seriesColors: ["#10B981", "#3B82F6"],
+      };
+    }
+    
+    const chartData = consumer?.chartData?.[range.toLowerCase()];
+    return {
+      xAxisData: chartData?.xAxisData || [],
+      seriesData: chartData?.seriesData || [],
+      seriesColors: chartData?.seriesColors || ["#10B981", "#3B82F6"],
+    };
   };
 
   // Dynamic chart data based on selected time range
-  const getChartData = () => {
-    switch (selectedTimeRange) {
-      case 'Daily':
-        return dailyChartData;
-      case 'Monthly':
-        return monthlyChartData;
-      case 'Yearly':
-        return yearlyChartData;
-      default:
-        return dailyChartData;
-    }
-  };
-
-  const currentChartData = getChartData();
+  const currentChartData = getChartDataByRange(selectedTimeRange);
 
   // Separate chart data for the first chart (with its own time range state)
   const [firstChartTimeRange, setFirstChartTimeRange] = useState<'Daily' | 'Monthly' | 'Yearly'>('Monthly');
-  
-  const getFirstChartData = () => {
-    switch (firstChartTimeRange) {
-      case 'Daily':
-        return dailyChartData;
-      case 'Monthly':
-        return monthlyChartData;
-      case 'Yearly':
-        return yearlyChartData;
-      default:
-        return monthlyChartData;
-    }
-  };
-
-  const firstChartData = getFirstChartData();
+  const firstChartData = getChartDataByRange(firstChartTimeRange);
 
   // Pie chart data for billing distribution
-  const billingPieData = [
-    { name: "Paid Bills", value: 65, color: "#10B981" },
-    { name: "Pending Bills", value: 20, color: "#F59E0B" },
-    { name: "Overdue Bills", value: 15, color: "#EF4444" },
-  ];
+  const getBillingPieData = () => {
+    if (errors.length > 0 || !consumer) {
+      return [];
+    }
+    return consumer?.billingDistribution || [];
+  };
+
+  const billingPieData = getBillingPieData();
 
   // Meter readings table data
-  const meterReadingsData = [
-    {
-      id: 1,
-      uid: "BI25GMRA001",
-      meterSerialNo: "A9211434",
-      companyName: "Airborne General Store",
-      unitName: "Main Unit",
-      createdOn: "2024-01-15",
-    },
-    {
-      id: 2,
-      uid: "BI25GMRA002",
-      meterSerialNo: "A9345417",
-      companyName: "Neo Travels",
-      unitName: "Office Unit",
-      createdOn: "2024-01-16",
-    },
-    {
-      id: 3,
-      uid: "BI25GMRA003",
-      meterSerialNo: "A9211433",
-      companyName: "Mobikins",
-      unitName: "Shop Unit",
-      createdOn: "2024-01-17",
-    },
+  const getMeterReadingsData = () => {
+    if (errors.length > 0 || !consumer) {
+      return [];
+    }
+    return consumer?.meterReadings || [];
+  };
 
-{
-      id: 4,
-      uid: "BI25GMRA001",
-      meterSerialNo: "A9211434",
-      companyName: "Airborne General Store",
-      unitName: "Main Unit",
-      createdOn: "2024-01-15",
-    },
-    {
-      id: 5,
-      uid: "BI25GMRA002",
-      meterSerialNo: "A9345417",
-      companyName: "Neo Travels",
-      unitName: "Office Unit",
-      createdOn: "2024-01-16",
-    },
-    {
-      id: 6,
-      uid: "BI25GMRA003",
-      meterSerialNo: "A9211433",
-      companyName: "Mobikins",
-      unitName: "Shop Unit",
-      createdOn: "2024-01-17",
-    },
-
-
-
-
-
-
-  ];
+  const meterReadingsData = getMeterReadingsData();
 
   const meterReadingsColumns = [
     { key: "uid", label: "UID" },
@@ -351,80 +390,17 @@ const ConsumerDetailView: React.FC = () => {
     { key: "companyName", label: "Company Name" },
     { key: "unitName", label: "Unit Name" },
     { key: "createdOn", label: "Created On" },
-  ];
+      ];
 
   // Payment history table data
-  const paymentHistoryData = [
-    {
-      id: 1,
-      transactionId: "TXN-001",
-      creditAmount: "₹1,250.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-01-20",
-    },
-    {
-      id: 2,
-      transactionId: "TXN-002",
-      creditAmount: "₹1,350.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-02-18",
-    },
-    {
-      id: 3,
-      transactionId: "TXN-003",
-      creditAmount: "₹1,450.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-03-25",
-    },
+  const getPaymentHistoryData = () => {
+    if (errors.length > 0 || !consumer) {
+      return [];
+    }
+    return consumer?.paymentHistory || [];
+  };
 
-    {
-      id: 4,
-      transactionId: "TXN-004",
-      creditAmount: "₹1,250.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-01-20",
-    },
-    {
-      id: 2,
-      transactionId: "TXN-002",
-      creditAmount: "₹1,350.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-02-18",
-    },
-    {
-      id: 3,
-      transactionId: "TXN-003",
-      creditAmount: "₹1,450.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-03-25",
-    },
-    {
-      id: 1,
-      transactionId: "TXN-001",
-      creditAmount: "₹1,250.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-01-20",
-    },
-    {
-      id: 2,
-      transactionId: "TXN-002",
-      creditAmount: "₹1,350.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-02-18",
-    },
-    {
-      id: 3,
-      transactionId: "TXN-003",
-      creditAmount: "₹1,450.00",
-      currentBalanceAmount: "₹0.00",
-      paymentDate: "2024-03-25",
-    },
-
-
-
-
-
-  ];
+  const paymentHistoryData = getPaymentHistoryData();
 
   const paymentHistoryColumns = [
     { key: "transactionId", label: "Transaction ID" },
@@ -434,50 +410,14 @@ const ConsumerDetailView: React.FC = () => {
   ];
 
   // Alerts table data
-  const alertsData = [
-    {
-      id: 1,
-      sNo: 1,
-      eventDescription: "High consumption alert triggered",
-      status: "Active",
-      eventDate: "2024-01-17",
-    },
-    {
-      id: 2,
-      sNo: 2,
-      eventDescription: "Payment due reminder sent",
-      status: "Resolved",
-      eventDate: "2024-03-20",
-    },
-    {
-      id: 3,
-      sNo: 3,
-      eventDescription: "Meter communication restored",
-      status: "Completed",
-      eventDate: "2024-01-25",
-    },
-    {
-      id: 4,
-      sNo: 4,
-      eventDescription: "High consumption alert triggered",
-      status: "Active",
-      eventDate: "2024-01-17",
-    },
-    {
-      id: 5,
-      sNo: 5,
-      eventDescription: "Payment due reminder sent",
-      status: "Resolved",
-      eventDate: "2024-03-20",
-    },
-    {
-      id: 6,
-      sNo: 6,
-      eventDescription: "Meter communication restored",
-      status: "Completed",
-      eventDate: "2024-01-25",
-    },
-  ];
+  const getAlertsData = () => {
+    if (errors.length > 0 || !consumer) {
+      return [];
+    }
+    return consumer?.alerts || [];
+  };
+
+  const alertsData = getAlertsData();
 
   const alertsColumns = [
     { key: "sNo", label: "S.No" },
@@ -521,44 +461,50 @@ const ConsumerDetailView: React.FC = () => {
     console.log("First chart time range changed to:", range);
   };
 
+
+
+  // Initial loading state with timeout
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000); // 3 seconds initial loading
+
+    return () => clearTimeout(timer);
+  }, []);
+
   const fetchConsumerData = async () => {
     if (!consumerId) {
-      setError("No consumer ID provided");
+      setErrors(["No consumer ID provided"]);
       setLoading(false);
       return;
     }
 
     setLoading(true);
-    setError(null);
+    setErrors([]);
 
     try {
-      // For now, use mock data instead of API call to avoid the JSON parsing error
-      // TODO: Replace with actual API call when backend is ready
-      console.log("Fetching consumer data for ID:", consumerId);
-
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 500));
-
-      // Use mock data
-      setConsumer(mockConsumerData);
-      console.log("Consumer data set:", mockConsumerData);
-
-      // Uncomment below when API is ready:
-      // const response = await fetch(`${BACKEND_URL}/consumers/${consumerId}`);
-      // if (!response.ok) {
-      //     throw new Error(`HTTP error! status: ${response.status}`);
-      // }
-      // const data = await response.json();
-      // setConsumer(data);
+      // TODO: Replace with actual API calls when backend is ready
+      const response = await fetch(`/api/consumers/${consumerId}`);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const data = await response.json();
+      setConsumer(data);
     } catch (err) {
       console.error("Error fetching consumer data:", err);
-      setError(
-        err instanceof Error
-          ? err.message
-          : "An error occurred while fetching consumer data"
-      );
-      // Fallback to mock data on error
-      setConsumer(mockConsumerData);
+      // Add multiple errors to simulate different API failures
+      setErrors([
+        "Failed to fetch consumer details",
+        "Failed to fetch billing data",
+        "Failed to fetch consumption data",
+        "Failed to fetch meter readings",
+        "Failed to fetch payment history",
+        "Failed to fetch alerts data",
+        "Failed to fetch chart data",
+        "Failed to fetch statistics",
+        "Failed to fetch occupancy status",
+        "Failed to fetch real-time data"
+      ]);
     } finally {
       setLoading(false);
     }
@@ -568,35 +514,30 @@ const ConsumerDetailView: React.FC = () => {
     fetchConsumerData();
   }, [consumerId]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Loading consumer details...</div>
-      </div>
-    );
-  }
 
-  if (error && !consumer) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-red-500 text-lg">Error: {error}</div>
-      </div>
-    );
-  }
-
-  if (!consumer) {
-    return (
-      <div className="flex items-center justify-center h-64">
-        <div className="text-lg">Consumer not found</div>
-      </div>
-    );
-  }
-
-  console.log("Rendering with consumer data:", consumer);
 
   return (
     <Page
       sections={[
+
+                // Error Display Section - Stacked Card Effect (like other pages)
+        ...(errors.length > 0 ? [{
+          layout: {
+            type: 'column' as const,
+            gap: 'gap-4',
+          },
+          components: [
+            {
+              name: 'Error',
+              props: {
+                visibleErrors: errors,
+                showRetry: true,
+                maxVisibleErrors: 3, // Show max 3 errors at once with stacked effect
+                onRetry: () => window.location.reload(),
+              },
+            },
+          ],
+        }] : []),
         // Header Section
         {
           layout: {
@@ -607,7 +548,7 @@ const ConsumerDetailView: React.FC = () => {
             {
               name: "PageHeader",
               props: {
-                title: consumer.name || "Consumer Details",
+                title: consumer ? consumer.name : "Consumer Details",
                 menuItems: menuItems,
                 showMenu: true,
                 showDropdown: true,
@@ -620,6 +561,7 @@ const ConsumerDetailView: React.FC = () => {
             },
           ],
         },
+
         // Consumer Information Section
         {
           layout: {
@@ -760,6 +702,7 @@ const ConsumerDetailView: React.FC = () => {
                     iconClassName: stat.iconClassName,
                     width: stat.width,
                     height: stat.height,
+                    loading: loading,
                   },
                   span: { col: 1, row: 1 },
                 })),
@@ -797,7 +740,9 @@ const ConsumerDetailView: React.FC = () => {
                       showHeader: false,
                       className: "px-2 flex justify-center",
                       showDownloadButton: true,
+                      
                       onDownload: () => handleChartDownload(),
+                      isLoading: loading,
                     },
                   },
                 ],
@@ -823,6 +768,7 @@ const ConsumerDetailView: React.FC = () => {
                       onTimeRangeChange: handleFirstChartTimeRangeChange,
                       showDownloadButton: true,
                       onDownload: () => handleChartDownload(),
+                      isLoading: loading,
                     },
                   },
                 ],
@@ -856,6 +802,7 @@ const ConsumerDetailView: React.FC = () => {
                 onTimeRangeChange: handleTimeRangeChange,
                 showDownloadButton: true,
                 onDownload: () => handleChartDownload(),
+                isLoading: loading,
               },
             },
           ],
@@ -869,6 +816,8 @@ const ConsumerDetailView: React.FC = () => {
             rows: [
               {
                 layout: "row",
+                className: "justify-between w-full",
+                span: { col: 2, row: 1 },
                 columns: [
                   {
                     name: "SectionHeader",
@@ -975,6 +924,7 @@ const ConsumerDetailView: React.FC = () => {
                     iconStyle: item.iconStyle,
                     className:
                       "bg-background-secondary border border-primary-border",
+                    loading: loading,
                   },
                 })),
               },
@@ -1003,6 +953,7 @@ const ConsumerDetailView: React.FC = () => {
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
                 emptyMessage: "No unit history found",
+                loading: loading,
               },
             },
           ],
@@ -1028,6 +979,7 @@ const ConsumerDetailView: React.FC = () => {
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
                 emptyMessage: "No payment records found",
+                loading: loading,
               },
             },
           ],
@@ -1053,6 +1005,7 @@ const ConsumerDetailView: React.FC = () => {
                 availableTimeRanges: [],
                 initialRowsPerPage: 3,
                 emptyMessage: "No alerts found",
+                loading: loading,
               },
             },
           ],

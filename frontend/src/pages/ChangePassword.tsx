@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Form } from '@components/Form';
 import type { FormInputConfig } from '@components/Form';
@@ -119,7 +120,7 @@ const ChangePassword: React.FC<ChangePasswordProps> = ({
   };
 
   return (
-    <section className="flex flex-col md:flex-row gap-10 w-full">
+    <section className="flex flex-row md:flex-row gap-10 w-full">
       <article className="flex-1">
         <Form
           inputs={formInputs}

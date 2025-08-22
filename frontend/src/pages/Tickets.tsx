@@ -100,8 +100,8 @@ export default function Tickets() {
             }
             
             const data = await res.json();
-            if (data.success) {
-                setTicketStats(data.data);
+                if (data.success) {
+                    setTicketStats(data.data);
                 // Remove from failed APIs on success
                 setFailedApis(prev => prev.filter(api => api.id !== 'stats'));
             } else {
@@ -134,8 +134,8 @@ export default function Tickets() {
             }
             
             const data = await res.json();
-            if (data.success) {
-                setTicketTrends(data.data);
+                if (data.success) {
+                    setTicketTrends(data.data);
                 // Remove from failed APIs on success
                 setFailedApis(prev => prev.filter(api => api.id !== 'trends'));
             } else {
@@ -329,17 +329,17 @@ export default function Tickets() {
                 }
                 
                 const data = await res.json();
-                if (data.success) {
-                    setTickets(data.data);
-                    setServerPagination({
-                        currentPage: data.pagination?.currentPage || 1,
-                        totalPages: data.pagination?.totalPages || 1,
-                        totalCount: data.pagination?.totalCount || 0,
-                        limit: data.pagination?.limit || 10,
-                        hasNextPage: data.pagination?.hasNextPage || false,
-                        hasPrevPage: data.pagination?.hasPrevPage || false,
-                    });
-                } else {
+            if (data.success) {
+                setTickets(data.data);
+                setServerPagination({
+                    currentPage: data.pagination?.currentPage || 1,
+                    totalPages: data.pagination?.totalPages || 1,
+                    totalCount: data.pagination?.totalCount || 0,
+                    limit: data.pagination?.limit || 10,
+                    hasNextPage: data.pagination?.hasNextPage || false,
+                    hasPrevPage: data.pagination?.hasPrevPage || false,
+                });
+            } else {
                     throw new Error("Table API returned unsuccessful response");
                 }
             } catch (err: any) {

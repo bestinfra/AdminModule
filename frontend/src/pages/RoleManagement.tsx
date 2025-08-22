@@ -25,6 +25,7 @@ export default function RoleManagement() {
     const [loading, setLoading] = useState(false);
     const [saving, setSaving] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [errorMessages, setErrors] = useState<string[]>([]);
     const [serverPagination, setServerPagination] = useState({
         currentPage: 1,
         totalPages: 1,
@@ -43,6 +44,29 @@ export default function RoleManagement() {
         description: ''
     });
 
+    const addError = (errorMessage: string) => {
+        setErrors(prev => {
+            // Only add error if it's not already there
+            if (!prev.includes(errorMessage)) {
+                return [...prev, errorMessage];
+            }
+            return prev;
+        });
+    };
+
+    const removeError = (indexToRemove: number) => {
+        setErrors(prev => prev.filter((_, index) => index !== indexToRemove));
+    };
+
+    const clearErrors = () => {
+        setErrors([]);
+    };
+
+    const retryAllAPIs = () => {
+        clearErrors();
+        fetchRoles();
+    };
+
     const fetchRoles = async (page = 1, limit = 10, searchTerm = '') => {
         try {
             setLoading(true);
@@ -55,6 +79,13 @@ export default function RoleManagement() {
             }
             
             const res = await fetch(`${BACKEND_URL}/roles?${params.toString()}`);
+            
+            // Check if response is ok before trying to parse JSON
+            if (!res.ok) {
+                addError(`Failed to fetch roles`);
+                return;
+            }
+            
             const data = await res.json();
             if (data.success) {
                 setRoles(data.data);
@@ -67,11 +98,13 @@ export default function RoleManagement() {
                     hasPrevPage: data.pagination?.hasPrevPage || false,
                 });
             } else {
-                throw new Error(data.message || 'Failed to fetch roles');
+                addError('Failed to fetch roles');
+                return;
             }
         } catch (err: any) {
-            console.error('Error fetching roles:', err);
-            alert(`Error fetching roles: ${err.message}`);
+            addError('Failed to fetch roles');
+            
+            // Fallback to empty roles array if this is the initial load
             if (roles.length === 0) {
                 setRoles([]);
             }
@@ -106,7 +139,6 @@ export default function RoleManagement() {
         
         setDeleting(true);
         try {
-            console.log('Deleting role:', roleToDelete.id);
             const res = await fetch(`${BACKEND_URL}/roles/${roleToDelete.id}`, {
                 method: 'DELETE',
             });
@@ -114,16 +146,17 @@ export default function RoleManagement() {
                 const result = await res.json();
                 if (result.success) {
                     setRoles(roles.filter(role => role.id !== roleToDelete.id));
-                    alert('Role deleted successfully!');
+                    addError('Role deleted successfully!');
                 } else {
-                    throw new Error(result.message || 'Failed to delete role');
+                    const errorMessage = result.message || 'Failed to delete role';
+                    addError(`Failed to delete role: ${errorMessage}`);
                 }
             } else {
-                throw new Error(`HTTP error! status: ${res.status}`);
+                addError(`Failed to delete role - HTTP error! status: ${res.status}`);
             }
         } catch (error: any) {
-            console.error('Error deleting role:', error);
-            alert(`Error deleting role: ${error.message}`);
+            const errorMessage = error?.message || 'Unknown error occurred';
+            addError(`Failed to delete role: ${errorMessage}`);
         } finally {
             setDeleting(false);
             setShowDeleteModal(false);
@@ -157,7 +190,6 @@ export default function RoleManagement() {
         setSaving(true);
         try {
             if (showEditModal && roleToEdit) {
-                console.log('Updating role:', roleToEdit.id, data);
                 const res = await fetch(`${BACKEND_URL}/roles/${roleToEdit.id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
@@ -170,15 +202,15 @@ export default function RoleManagement() {
                     const result = await res.json();
                     if (result.success) {
                         await fetchRoles();
-                        alert('Role updated successfully!');
+                        addError('Role updated successfully!');
                     } else {
-                        throw new Error(result.message || 'Failed to update role');
+                        const errorMessage = result.message || 'Failed to update role';
+                        addError(`Failed to update role: ${errorMessage}`);
                     }
                 } else {
-                    throw new Error(`HTTP error! status: ${res.status}`);
+                    addError(`Failed to update role - HTTP error! status: ${res.status}`);
                 }
             } else {
-                console.log('Creating new role:', data);
                 const res = await fetch(`${BACKEND_URL}/roles`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -191,17 +223,18 @@ export default function RoleManagement() {
                     const result = await res.json();
                     if (result.success) {
                         await fetchRoles();
-                        alert('Role created successfully!');
+                        addError('Role created successfully!');
                     } else {
-                        throw new Error(result.message || 'Failed to create role');
+                        const errorMessage = result.message || 'Failed to create role';
+                        addError(`Failed to create role: ${errorMessage}`);
                     }
                 } else {
-                    throw new Error(`HTTP error! status: ${res.status}`);
+                    addError(`Failed to create role - HTTP error! status: ${res.status}`);
                 }
             }
         } catch (error: any) {
-            console.error('Error saving role:', error);
-            alert(`Error saving role: ${error.message}`);
+            const errorMessage = error?.message || 'Unknown error occurred';
+            addError(`Failed to save role: ${errorMessage}`);
         } finally {
             setSaving(false);
             setShowAddModal(false);
@@ -303,11 +336,11 @@ export default function RoleManagement() {
             onClick: handleManagePermissions,
             icon: '/icons/settings.svg',
         },
-                            {
-                        label: 'Edit',
+        {
+            label: 'Edit',
             onClick: handleEditClick,
-                        icon: '/icons/user-pen.svg',
-                    },
+            icon: '/icons/user-pen.svg',
+        },
         {
             label: 'Delete',
             onClick: handleDeleteClick,
@@ -319,15 +352,25 @@ export default function RoleManagement() {
         <Suspense fallback={<div>Loading...</div>}>
             <Page
                 sections={[
-                    // Page Header Section
+                    // Page Header Section with Error Component
                     {
                         layout: {
                             type: 'column',
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'row',
+                                    layout: 'column',
                                     columns: [
+                                        {
+                                            name: 'Error',
+                                            props: {
+                                                visibleErrors: errorMessages,
+                                                onRetry: retryAllAPIs,
+                                                onClose: () => removeError(0), // Remove the top error
+                                                showRetry: true,
+                                                maxVisibleErrors: 3, // Show max 3 errors at once
+                                            },
+                                        },
                                         {
                                             name: 'PageHeader',
                                             props: {
@@ -367,13 +410,11 @@ export default function RoleManagement() {
                                                         label: 'System Roles',
                                                     },
                                                 ],
-                                                onMenuItemClick: (
-                                                    itemId: string
-                                                ) => {
-                                                    console.log(
-                                                        `Filter by: ${itemId}`
-                                                    );
-                                                },
+                                                // onMenuItemClick: (
+                                                //     itemId: string
+                                                // ) => {
+                                                //     // Removed console.log
+                                                // },
                                             },
                                         },
                                     ],
@@ -405,12 +446,12 @@ export default function RoleManagement() {
                                                 onSearch: handleSearch,
                                                 serverPagination: serverPagination,
                                                 onEdit: (row: any) => {
-                                                    console.log('Edit clicked for:', row);
+                                                    // Removed console.log
                                                     navigate(`/edit-role/${row.id}`, { state: { role: row } });
                                                 },
-                                                onDelete: (row: any) => {
-                                                    console.log('Delete clicked for:', row);
-                                                },
+                                                // onDelete: (row: any) => {
+                                                //     // Removed console.log
+                                                // },
                                             },
                                         },
                                     ],
@@ -468,7 +509,7 @@ export default function RoleManagement() {
                                                 showForm: true,
                                                 formFields: addRoleFormFields,
                                                 onSave: (formData: Record<string, any>) => {
-                                                    console.log('Form data received:', formData);
+                                                    // Removed console.log
                                                     handleSaveRole(formData);
                                                 },
                                                 saveButtonLabel: saving ? 'Creating...' : 'Create Role',
@@ -508,12 +549,17 @@ export default function RoleManagement() {
                                                 showForm: true,
                                                 formFields: editRoleFormFields,
                                                 onSave: (formData: Record<string, any>) => {
-                                                    console.log('Edit form data received:', formData);
+                                                    // Removed console.log
                                                     handleSaveRole(formData);
                                                 },
                                                 saveButtonLabel: saving ? 'Updating...' : 'Update Role',
                                                 cancelButtonLabel: 'Cancel',
                                                 disabled: saving,
+                                                gridLayout: {
+                                                    gridRows: 2,
+                                                    gridColumns: 1,
+                                                    gap: 'gap-4'
+                                                },
                                             },
                                         },
                                     ],

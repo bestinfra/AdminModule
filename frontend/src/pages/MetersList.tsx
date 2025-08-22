@@ -2,87 +2,58 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Page from '@/components/global/PageC';
 import type { TableData } from '@/components/global/Table';
-    import BACKEND_URL from '@/config';
+import BACKEND_URL from '@/config';
+
 const MetersList: React.FC = () => {
     const navigate = useNavigate();
     const [status, setStatus] = useState('');
     const [type, setType] = useState('');
     const [mapping, setMapping] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-    // Meter cards data - Using BRAND_GREEN (default) for all cards
-    const meterCards = [
+    // Meter cards data - Empty initially, will show skeleton while loading
+    const [meterCards, setMeterCards] = useState([
         {
             title: 'Total Meters',
-            value: 3,
+            value: '',
             icon: '/icons/meter.svg',
-            subtitle1: '3 Active',
-            subtitle2: '0 In-Active',
+            subtitle1: '',
+            subtitle2: '',
         },
         {
             title: 'Meter Makes',
-            value: 17,
+            value: '',
             icon: '/icons/meter-make.svg',
-            subtitle1: '1 Used Meter Makes',
+            subtitle1: '',
             subtitle2: '',
         },
         {
             title: 'Mapped Meters',
-            value: 3,
+            value: '',
             icon: '/icons/mapped-meter.svg',
-            subtitle1: '78 Unmapped',
-            subtitle2: '0 Replaced',
+            subtitle1: '',
+            subtitle2: '',
         },
         {
             title: 'Connection Type',
-            value: 'Prepaid',
+            value: '',
             icon: '/icons/connection-type.svg',
-            subtitle1: '3 Prepaid',
-            subtitle2: '0 Postpaid',
-        },
-    ];
-
-    // Table data
-    const [tableData, setTableData] = useState<TableData[]>([
-        
-        {
-            slNo: 1,
-            meterSlNo: 'A9345417',
-            modemSlNo: 'RFDCU_DCU101',
-            meterType: 'Prepaid',
-            meterMake: 'LnT DLMS',
-            consumerName: 'Neo Travels',
-            location: 'NA',
-            installationDate: 'NA',
-            status: 'Active',
-        },
-        {
-            slNo: 2,
-            meterSlNo: 'A9211433',
-            modemSlNo: 'RFDCU_DCU101',
-            meterType: 'Prepaid',
-            meterMake: 'LnT DLMS',
-            consumerName: 'Mobikins',
-            location: 'NA',
-            installationDate: 'NA',
-            status: 'Inactive',
-        },
-        {
-            slNo: 3,
-            meterSlNo: 'A9211434',
-            modemSlNo: 'RFDCU_DCU101',
-            meterType: 'Prepaid',
-            meterMake: 'LnT DLMS',
-            consumerName: 'Airborne General Store',
-            location: 'NA',
-            installationDate: 'NA',
-            status: 'Active',
+            subtitle1: '',
+            subtitle2: '',
         },
     ]);
+
+    // Table data
+    const [tableData, setTableData] = useState<TableData[]>([]);
 
     // Fetch data from API
     useEffect(() => {
         const fetchAllMeters = async () => {
             try {
+                setIsLoading(true);
+                setError(null);
+                
                 let allMeters: any[] = [];
                 let currentPage = 1;
                 let hasNextPage = true;
@@ -118,20 +89,56 @@ const MetersList: React.FC = () => {
                     meterMake: meter.meterMake,
                     consumerName: meter.consumerName,
                     location: meter.location,
-                    installationDate: meter.installationDate ? new Date(meter.installationDate).toLocaleDateString() : 'NA',
+                    installationDate: meter.installationDate ? new Date(meter.installationDate).toLocaleDateString() : 'N/A',
                     status: 'Active', // Set default status since backend doesn't provide it
                 }));
                 
                 console.log('Processed meter data:', processedData);
                 setTableData(processedData);
+                
+                // Update meter cards with real data only if we have meters
+                if (allMeters.length > 0) {
+                    setMeterCards([
+                        {
+                            title: 'Total Meters',
+                            value: String(allMeters.length),
+                            icon: '/icons/meter.svg',
+                            subtitle1: `${allMeters.length} Total`,
+                            subtitle2: 'Meters Available',
+                        },
+                        {
+                            title: 'Meter Makes',
+                            value: String(new Set(allMeters.map((m: any) => m.meterMake)).size),
+                            icon: '/icons/meter-make.svg',
+                            subtitle1: 'Unique Makes',
+                            subtitle2: 'Available',
+                        },
+                        {
+                            title: 'Mapped Meters',
+                            value: String(allMeters.length),
+                            icon: '/icons/mapped-meter.svg',
+                            subtitle1: 'All Meters',
+                            subtitle2: 'Mapped',
+                        },
+                        {
+                            title: 'Connection Type',
+                            value: 'Mixed',
+                            icon: '/icons/connection-type.svg',
+                            subtitle1: 'Various Types',
+                            subtitle2: 'Available',
+                        },
+                    ]);
+                }
             } catch (error) {
                 console.error('Error fetching meters:', error);
+                setError('Failed to fetch meters data. Please try again.');
+            } finally {
+                setIsLoading(false);
             }
         };
         
         fetchAllMeters();
     }, []);
-
 
     const tableColumns = [
         { key: 'slNo', label: 'Sl No' },
@@ -182,14 +189,36 @@ const MetersList: React.FC = () => {
         if (name === 'mapping') setMapping(value);
     };
 
+    const handleRetry = () => {
+        setError(null);
+        window.location.reload();
+    };
+
     return (
         <Page
             sections={[
+                // Error section
+                ...(error ? [{
+                    layout: {
+                        type: 'column' as const,
+                        gap: 'gap-4',
+                    },
+                    components: [
+                        {
+                            name: 'Error',
+                            props: {
+                                visibleErrors: [error],
+                                onRetry: handleRetry,
+                                showRetry: true,
+                                maxVisibleErrors: 1,
+                            },
+                        },
+                    ],
+                }] : []),
                 // Header section
                 {
                     layout: {
                         type: 'row' as const,
-                        className: 'mb-6',
                     },
                     components: [
                         {
@@ -236,7 +265,6 @@ const MetersList: React.FC = () => {
                         type: 'grid' as const,
                         columns: 4,
                         gap: 'gap-4',
-                        className: 'mb-4',
                     },
                     components: meterCards.map((card) => ({
                         name: 'Card',
@@ -246,8 +274,8 @@ const MetersList: React.FC = () => {
                             icon: card.icon,
                             subtitle1: card.subtitle1,
                             subtitle2: card.subtitle2,
-
                             bg: "bg-stat-icon-gradient",
+                            loading: isLoading,
                         },
                     })),
                 },
@@ -257,7 +285,6 @@ const MetersList: React.FC = () => {
                         type: 'grid' as const,
                         columns: 3,
                         gap: 'gap-4',
-                        className: 'mb-4',
                     },
                     components: [
                         {
@@ -309,8 +336,9 @@ const MetersList: React.FC = () => {
                                 searchable: true,
                                 pagination: true,
                                 initialRowsPerPage: 10,
-                                emptyMessage: 'No meters found',
+                                emptyMessage: 'No data available',
                                 className: 'w-full',
+                                loading: isLoading,
                             },
                         },
                     ],

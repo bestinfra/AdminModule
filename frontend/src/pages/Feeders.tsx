@@ -5,6 +5,54 @@ import { exportChartData } from '@/utils/excelExport';
 import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 import BACKEND_URL from '../config';
 
+
+// Dummy data for fallback
+const dummyInstantaneousStatsData = {
+    rphVolt: 'N/A',
+    yphVolt: 'N/A',
+    bphVolt: 'N/A',
+    instantKVA: 'N/A',
+    mdKVA: 'N/A',
+    rphCurr: 'N/A',
+    yphCurr: 'N/A',
+    bphCurr: 'N/A',
+    neutralCurrent: 'N/A',
+    freqHz: 'N/A',
+    rphPF: 'N/A',
+    yphPF: 'N/A',
+    bphPF: 'N/A',
+    avgPF: 'N/A',
+    cumulativeKVAh: 'N/A',
+    lastCommDate: 'N/A'
+};
+
+const dummyConsumptionAnalyticsData = {
+    xAxisData: ['N/A'],
+    seriesData: [{ name: 'Consumption', data: [0] }],
+    monthly: {
+        xAxisData: ['N/A'],
+        seriesData: [{ name: 'Consumption', data: [0] }]
+    }
+};
+
+const dummyFeederInfoData = {
+    dtr: {
+        dtrNumber: 'N/A',
+        capacity: 'N/A',
+        status: 'N/A'
+    },
+    totalFeeders: 'N/A'
+};
+
+const dummyAlertsData = [
+    {
+        alertId: 'N/A',
+        type: 'N/A',
+        feederName: 'N/A',
+        occuredOn: 'N/A',
+    }
+];
+
 // Default stats data
 const defaultStats = [
     { title: 'R-Phase Voltage', value: '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8', valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE },
@@ -52,15 +100,24 @@ const Feeders = () => {
     // Use passed feeder data if available, otherwise use default
     const feederData = passedData?.feederData;
 
-    // State for API data
-    const [instantaneousStatsData, setInstantaneousStatsData] = useState<any>({});
-    const [consumptionAnalyticsData, setConsumptionAnalyticsData] = useState<any>({});
-    const [feederInfoData, setFeederInfoData] = useState<any>({});
-    const [, setLoading] = useState({
-        instantaneous: false,
-        consumption: false,
-        feederInfo: false
-    });
+    // State for API data - initialized with dummy data
+    const [instantaneousStatsData, setInstantaneousStatsData] = useState<any>(dummyInstantaneousStatsData);
+    const [consumptionAnalyticsData, setConsumptionAnalyticsData] = useState<any>(dummyConsumptionAnalyticsData);
+    const [feederInfoData, setFeederInfoData] = useState<any>(dummyFeederInfoData);
+    const [alertsData, setAlertsData] = useState(dummyAlertsData);
+
+    // Loading states - initialized to true
+    const [isStatsLoading, setIsStatsLoading] = useState(true);
+    const [isConsumptionLoading, setIsConsumptionLoading] = useState(true);
+    const [isAlertsLoading, setIsAlertsLoading] = useState(true);
+
+    // State for tracking failed APIs
+    const [failedApis, setFailedApis] = useState<Array<{
+        id: string;
+        name: string;
+        retryFunction: () => Promise<void>;
+        errorMessage: string;
+    }>>([]);
 
     // API Functions
     const fetchInstantaneousStats = async () => {
@@ -68,7 +125,7 @@ const Feeders = () => {
         const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
         if (!numericDtrId) return;
 
-        setLoading(prev => ({ ...prev, instantaneous: true }));
+        setIsStatsLoading(true);
         try {
             const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/instantaneousStats`);
             const data = await response.json();
@@ -78,12 +135,17 @@ const Feeders = () => {
             } else {
                 throw new Error(data.message || 'Failed to fetch instantaneous stats');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching instantaneous stats:', error);
-            // Fallback to demo data
-            setInstantaneousStatsData({});
+            setInstantaneousStatsData(dummyInstantaneousStatsData);
+            setFailedApis(prev => [...prev, {
+                id: 'instantaneousStats',
+                name: 'Instantaneous Stats',
+                retryFunction: fetchInstantaneousStats,
+                errorMessage: error.message || 'Failed to fetch instantaneous stats'
+            }]);
         } finally {
-            setLoading(prev => ({ ...prev, instantaneous: false }));
+            setIsStatsLoading(false);
         }
     };
 
@@ -92,7 +154,7 @@ const Feeders = () => {
         const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
         if (!numericDtrId) return;
 
-        setLoading(prev => ({ ...prev, consumption: true }));
+        setIsConsumptionLoading(true);
         try {
             const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/consumptionAnalytics`);
             const data = await response.json();
@@ -117,12 +179,17 @@ const Feeders = () => {
             } else {
                 throw new Error(data.message || 'Failed to fetch consumption analytics');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching consumption analytics:', error);
-            // Fallback to demo data
-            setConsumptionAnalyticsData({});
+            setConsumptionAnalyticsData(dummyConsumptionAnalyticsData);
+            setFailedApis(prev => [...prev, {
+                id: 'consumptionAnalytics',
+                name: 'Consumption Analytics',
+                retryFunction: fetchConsumptionAnalytics,
+                errorMessage: error.message || 'Failed to fetch consumption analytics'
+            }]);
         } finally {
-            setLoading(prev => ({ ...prev, consumption: false }));
+            setIsConsumptionLoading(false);
         }
     };
 
@@ -131,7 +198,6 @@ const Feeders = () => {
         const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
         if (!numericDtrId) return;
 
-        setLoading(prev => ({ ...prev, feederInfo: true }));
         try {
             const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}`);
             const data = await response.json();
@@ -141,37 +207,69 @@ const Feeders = () => {
             } else {
                 throw new Error(data.message || 'Failed to fetch feeder information');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error fetching feeder information:', error);
-            // Fallback to demo data
-            setFeederInfoData({});
+            setFeederInfoData(dummyFeederInfoData);
+            setFailedApis(prev => [...prev, {
+                id: 'feederInfo',
+                name: 'Feeder Info',
+                retryFunction: fetchFeederInfo,
+                errorMessage: error.message || 'Failed to fetch feeder information'
+            }]);
+        }
+    };
+
+    const fetchAlerts = async () => {
+        // Use numeric ID from passed data or extract from dtrNumber
+        const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+        if (!numericDtrId) return;
+
+        setIsAlertsLoading(true);
+        try {
+            const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/alerts`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setAlertsData(data.data);
+            } else {
+                throw new Error(data.message || 'Failed to fetch alerts');
+            }
+        } catch (error: any) {
+            console.error('Error fetching alerts:', error);
+            setAlertsData(dummyAlertsData);
+            setFailedApis(prev => [...prev, {
+                id: 'alerts',
+                name: 'Alerts',
+                retryFunction: fetchAlerts,
+                errorMessage: error.message || 'Failed to fetch alerts'
+            }]);
         } finally {
-            setLoading(prev => ({ ...prev, feederInfo: false }));
+            setIsAlertsLoading(false);
         }
     };
 
     // Generate stats from API data or use defaults
     const getStats = () => {
-        if (instantaneousStatsData && Object.keys(instantaneousStatsData).length > 0) {
+        if (instantaneousStatsData && Object.keys(instantaneousStatsData).length > 0 && instantaneousStatsData.rphVolt !== 'N/A') {
             return [
-                { title: 'R-Phase Voltage', value: instantaneousStatsData.rphVolt?.toString() || '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8', valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE },
-                { title: 'Y-Phase Voltage', value: instantaneousStatsData.yphVolt?.toString() || '255.089', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-warning-alt)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE},
-                { title: 'B-Phase Voltage', value: instantaneousStatsData.bphVolt?.toString() || '254.417', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE},
-                { title: 'Apparent Power', value: instantaneousStatsData.instantKVA?.toString() || '19.527', icon: '/icons/consumption.svg', subtitle1: 'kVA' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN},
-                { title: 'MD-kVA', value: instantaneousStatsData.mdKVA?.toString() || '52.220', icon: '/icons/consumption.svg', subtitle1: 'kVA' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN},
-                { title: 'R-Phase Current', value: instantaneousStatsData.rphCurr?.toString() || '15.892', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE},
-                { title: 'Y-Phase Current', value: instantaneousStatsData.yphCurr?.toString() || '27.644', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-warning-alt)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE},
-                { title: 'B-Phase Current', value: instantaneousStatsData.bphCurr?.toString() || '33.984', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8',valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base' ,iconStyle: FILTER_STYLES.WHITE},
-                { title: 'Neutral Current', value: instantaneousStatsData.neutralCurrent?.toString() || '12.980', icon: '/icons/consumption.svg', subtitle1: 'Amps' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN},
-                { title: 'Frequency', value: instantaneousStatsData.freqHz?.toString() || '49.980', icon: '/icons/frequency.svg', subtitle1: 'Hz' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN},
-                { title: 'R-Phase PF', value: instantaneousStatsData.rphPF?.toString() || '1.000', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-4 h-4', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE}, 
-                { title: 'Y-Phase PF', value: instantaneousStatsData.yphPF?.toString() || '-0.987', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-warning-alt)]', iconClassName: 'w-4 h-4', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE},
-                { title: 'B-Phase PF', value: instantaneousStatsData.bphPF?.toString() || '0.998', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-4 h-4', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE},
-                { title: 'Avg PF', value: instantaneousStatsData.avgPF?.toString() || '-0.999', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN},
-                { title: 'Cummulative kVAh', value: instantaneousStatsData.cumulativeKVAh?.toString() || '77902.296', icon: '/icons/consumption.svg', subtitle1: 'kVAh' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN},
+                { title: 'R-Phase Voltage', value: instantaneousStatsData.rphVolt?.toString() || '257.686', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8', valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading },
+                { title: 'Y-Phase Voltage', value: instantaneousStatsData.yphVolt?.toString() || '255.089', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-warning-alt)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading},
+                { title: 'B-Phase Voltage', value: instantaneousStatsData.bphVolt?.toString() || '254.417', icon: '/icons/r-phase-voltage.svg', subtitle1: 'Volts', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading},
+                { title: 'Apparent Power', value: instantaneousStatsData.instantKVA?.toString() || '19.527', icon: '/icons/consumption.svg', subtitle1: 'kVA' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN, loading: isStatsLoading},
+                { title: 'MD-kVA', value: instantaneousStatsData.mdKVA?.toString() || '52.220', icon: '/icons/consumption.svg', subtitle1: 'kVA' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN, loading: isStatsLoading},
+                { title: 'R-Phase Current', value: instantaneousStatsData.rphCurr?.toString() || '15.892', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading},
+                { title: 'Y-Phase Current', value: instantaneousStatsData.yphCurr?.toString() || '27.644', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-warning-alt)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading},
+                { title: 'B-Phase Current', value: instantaneousStatsData.bphCurr?.toString() || '33.984', icon: '/icons/r-phase-current.svg', subtitle1: 'Amps', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-3 h-3', width: 'w-8', height: 'h-8',valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base' ,iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading},
+                { title: 'Neutral Current', value: instantaneousStatsData.neutralCurrent?.toString() || '12.980', icon: '/icons/consumption.svg', subtitle1: 'Amps' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN, loading: isStatsLoading},
+                { title: 'Frequency', value: instantaneousStatsData.freqHz?.toString() || '49.980', icon: '/icons/frequency.svg', subtitle1: 'Hz' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN, loading: isStatsLoading},
+                { title: 'R-Phase PF', value: instantaneousStatsData.rphPF?.toString() || '1.000', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-danger)]', iconClassName: 'w-4 h-4', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading}, 
+                { title: 'Y-Phase PF', value: instantaneousStatsData.yphPF?.toString() || '-0.987', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-warning-alt)]', iconClassName: 'w-4 h-4', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading},
+                { title: 'B-Phase PF', value: instantaneousStatsData.bphPF?.toString() || '0.998', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor', bg: 'bg-[var(--color-primary)]', iconClassName: 'w-4 h-4', width: 'w-8', height: 'h-8' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.WHITE, loading: isStatsLoading},
+                { title: 'Avg PF', value: instantaneousStatsData.avgPF?.toString() || '-0.999', icon: '/icons/power-factor.svg', subtitle1: 'Power Factor' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN, loading: isStatsLoading},
+                { title: 'Cummulative kVAh', value: instantaneousStatsData.cumulativeKVAh?.toString() || '77902.296', icon: '/icons/consumption.svg', subtitle1: 'kVAh' ,valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',iconStyle: FILTER_STYLES.BRAND_GREEN, loading: isStatsLoading},
             ];
         }
-        return defaultStats;
+        return defaultStats.map(stat => ({ ...stat, loading: isStatsLoading }));
     };
 
     // Monthly consumption data - will be updated from API
@@ -202,170 +300,329 @@ const Feeders = () => {
         };
     };
 
+    // Retry functions for each API
+    const retryStatsAPI = async () => {
+        setIsStatsLoading(true);
+        try {
+            const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+            if (!numericDtrId) return;
+
+            const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/instantaneousStats`);
+            if (!response.ok) throw new Error('Failed to fetch instantaneous stats');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            if (data.success) {
+                setInstantaneousStatsData(data.data);
+                setFailedApis(prev => prev.filter(api => api.id !== 'instantaneousStats'));
+            } else {
+                throw new Error(data.message || 'Failed to fetch instantaneous stats');
+            }
+        } catch (err: any) {
+            console.error("Error in Stats API:", err);
+            setInstantaneousStatsData(dummyInstantaneousStatsData);
+        } finally {
+            setTimeout(() => {
+                setIsStatsLoading(false);
+            }, 1000);
+        }
+    };
+
+    const retryConsumptionAPI = async () => {
+        setIsConsumptionLoading(true);
+        try {
+            const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+            if (!numericDtrId) return;
+
+            const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/consumptionAnalytics`);
+            if (!response.ok) throw new Error('Failed to fetch consumption analytics');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            if (data.status === 'success') {
+                const transformedData = {
+                    xAxisData: data.data.dailyData?.xAxisData || [],
+                    seriesData: [{
+                        name: 'Consumption',
+                        data: data.data.dailyData?.sums?.map((sum: string) => parseFloat(sum)) || []
+                    }],
+                    monthly: {
+                        xAxisData: data.data.monthlyData?.xAxisData || [],
+                        seriesData: [{
+                            name: 'Consumption',
+                            data: data.data.monthlyData?.sums?.map((sum: string) => parseFloat(sum)) || []
+                        }]
+                    }
+                };
+                setConsumptionAnalyticsData(transformedData);
+                setFailedApis(prev => prev.filter(api => api.id !== 'consumptionAnalytics'));
+            } else {
+                throw new Error(data.message || 'Failed to fetch consumption analytics');
+            }
+        } catch (err: any) {
+            console.error("Error in Consumption API:", err);
+            setConsumptionAnalyticsData(dummyConsumptionAnalyticsData);
+        } finally {
+            setTimeout(() => {
+                setIsConsumptionLoading(false);
+            }, 1000);
+        }
+    };
+
+    const retryFeederInfoAPI = async () => {
+        try {
+            const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+            if (!numericDtrId) return;
+
+            const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}`);
+            if (!response.ok) throw new Error('Failed to fetch feeder information');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            if (data.success) {
+                setFeederInfoData(data.data);
+                setFailedApis(prev => prev.filter(api => api.id !== 'feederInfo'));
+            } else {
+                throw new Error(data.message || 'Failed to fetch feeder information');
+            }
+        } catch (err: any) {
+            console.error("Error in Feeder Info API:", err);
+            setFeederInfoData(dummyFeederInfoData);
+        }
+    };
+
+    const retryAlertsAPI = async () => {
+        setIsAlertsLoading(true);
+        try {
+            const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+            if (!numericDtrId) return;
+
+            const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/alerts`);
+            if (!response.ok) throw new Error('Failed to fetch alerts');
+            
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                throw new Error('Invalid response format');
+            }
+            
+            const data = await response.json();
+            if (data.success) {
+                setAlertsData(data.data);
+                setFailedApis(prev => prev.filter(api => api.id !== 'alerts'));
+            } else {
+                throw new Error(data.message || 'Failed to fetch alerts');
+            }
+        } catch (err: any) {
+            console.error("Error in Alerts API:", err);
+            setAlertsData(dummyAlertsData);
+        } finally {
+            setTimeout(() => {
+                setIsAlertsLoading(false);
+            }, 1000);
+        }
+    };
+
+    // Retry specific API
+    const retrySpecificAPI = (apiId: string) => {
+        const api = failedApis.find(a => a.id === apiId);
+        if (api) {
+            api.retryFunction();
+        }
+    };
+
     // Load data on component mount
     useEffect(() => {
+        const fetchInstantaneousStats = async () => {
+            setIsStatsLoading(true);
+            try {
+                const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+                if (!numericDtrId) return;
+
+                const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/instantaneousStats`);
+                if (!response.ok) throw new Error('Failed to fetch instantaneous stats');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                if (data.success) {
+                    setInstantaneousStatsData(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch instantaneous stats');
+                }
+            } catch (error: any) {
+                console.error('Error fetching instantaneous stats:', error);
+                setInstantaneousStatsData(dummyInstantaneousStatsData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'instantaneousStats')) {
+                        return [...prev, { 
+                            id: 'instantaneousStats', 
+                            name: 'Instantaneous Stats', 
+                            retryFunction: retryStatsAPI, 
+                            errorMessage: 'Failed to load Instantaneous Statistics. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsStatsLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchConsumptionAnalytics = async () => {
+            setIsConsumptionLoading(true);
+            try {
+                const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+                if (!numericDtrId) return;
+
+                const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/consumptionAnalytics`);
+                if (!response.ok) throw new Error('Failed to fetch consumption analytics');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                if (data.status === 'success') {
+                    const transformedData = {
+                        xAxisData: data.data.dailyData?.xAxisData || [],
+                        seriesData: [{
+                            name: 'Consumption',
+                            data: data.data.dailyData?.sums?.map((sum: string) => parseFloat(sum)) || []
+                        }],
+                        monthly: {
+                            xAxisData: data.data.monthlyData?.xAxisData || [],
+                            seriesData: [{
+                                name: 'Consumption',
+                                data: data.data.monthlyData?.sums?.map((sum: string) => parseFloat(sum)) || []
+                            }]
+                        }
+                    };
+                    setConsumptionAnalyticsData(transformedData);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch consumption analytics');
+                }
+            } catch (error: any) {
+                setConsumptionAnalyticsData(dummyConsumptionAnalyticsData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'consumptionAnalytics')) {
+                        return [...prev, { 
+                            id: 'consumptionAnalytics', 
+                            name: 'Consumption Analytics', 
+                            retryFunction: retryConsumptionAPI, 
+                            errorMessage: 'Failed to load Consumption Analytics. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsConsumptionLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchFeederInfo = async () => {
+            try {
+                const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+                if (!numericDtrId) return;
+
+                const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}`);
+                if (!response.ok) throw new Error('Failed to fetch feeder information');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                if (data.success) {
+                    setFeederInfoData(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch feeder information');
+                }
+            } catch (error: any) {
+                setFeederInfoData(dummyFeederInfoData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'feederInfo')) {
+                        return [...prev, { 
+                            id: 'feederInfo', 
+                            name: 'Feeder Information', 
+                            retryFunction: retryFeederInfoAPI, 
+                            errorMessage: 'Failed to load Feeder Information. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            }
+        };
+
+        const fetchAlertsData = async () => {
+            setIsAlertsLoading(true);
+            try {
+                const numericDtrId = passedData?.dtrId || (dtrId && dtrId.match(/\d+/)?.[0]) || dtrId;
+                if (!numericDtrId) return;
+
+                const response = await fetch(`${BACKEND_URL}/dtrs/${numericDtrId}/alerts`);
+                if (!response.ok) throw new Error('Failed to fetch alerts');
+                
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error('Invalid response format');
+                }
+                
+                const data = await response.json();
+                if (data.success) {
+                    setAlertsData(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to fetch alerts');
+                }
+            } catch (error: any) {
+                setAlertsData(dummyAlertsData);
+                setFailedApis(prev => {
+                    if (!prev.find(api => api.id === 'alerts')) {
+                        return [...prev, { 
+                            id: 'alerts', 
+                            name: 'Alerts Data', 
+                            retryFunction: retryAlertsAPI, 
+                            errorMessage: 'Failed to load Alerts Data. Please try again.' 
+                        }];
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsAlertsLoading(false);
+                }, 1000);
+            }
+        };
+
         if (dtrId) {
             fetchInstantaneousStats();
             fetchConsumptionAnalytics();
             fetchFeederInfo();
+            fetchAlertsData();
         }
     }, [dtrId]);
 
     // Enhanced data for Alerts Table with more entries
-    const [alertsData] = useState([
-        {
-            alertId: 'ALRT-001',
-            type: 'Over Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-30 21:15:00',
-        },
-        {
-            alertId: 'ALRT-002',
-            type: 'Under Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-29 18:45:00',
-        },
-        {
-            alertId: 'ALRT-003',
-            type: 'Power Failure',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-28 14:30:00',
-        },
-        {
-            alertId: 'ALRT-004',
-            type: 'Phase Imbalance',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-27 10:20:00',
-        },
-        {
-            alertId: 'ALRT-005',
-            type: 'Over Current',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-26 08:10:00',
-        },
-        {
-            alertId: 'ALRT-006',
-            type: 'Frequency Deviation',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-25 16:45:00',
-        },
-        {
-            alertId: 'ALRT-007',
-            type: 'Power Factor Low',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-24 12:30:00',
-        },
-        {
-            alertId: 'ALRT-008',
-            type: 'Over Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-23 09:15:00',
-        },
-        {
-            alertId: 'ALRT-009',
-            type: 'Communication Loss',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-22 07:20:00',
-        },
-        {
-            alertId: 'ALRT-010',
-            type: 'Under Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-21 15:40:00',
-        },
-        {
-            alertId: 'ALRT-011',
-            type: 'Phase Imbalance',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-20 11:25:00',
-        },
-        {
-            alertId: 'ALRT-012',
-            type: 'Over Current',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-19 13:50:00',
-        },
-        {
-            alertId: 'ALRT-013',
-            type: 'Power Failure',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-18 20:35:00',
-        },
-        {
-            alertId: 'ALRT-014',
-            type: 'Frequency Deviation',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-17 18:10:00',
-        },
-        {
-            alertId: 'ALRT-015',
-            type: 'Power Factor Low',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-16 14:45:00',
-        },
-        {
-            alertId: 'ALRT-016',
-            type: 'Over Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-15 10:20:00',
-        },
-        {
-            alertId: 'ALRT-017',
-            type: 'Communication Loss',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-14 08:55:00',
-        },
-        {
-            alertId: 'ALRT-018',
-            type: 'Under Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-13 16:30:00',
-        },
-        {
-            alertId: 'ALRT-019',
-            type: 'Phase Imbalance',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-12 12:15:00',
-        },
-        {
-            alertId: 'ALRT-020',
-            type: 'Over Current',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-11 19:40:00',
-        },
-        {
-            alertId: 'ALRT-021',
-            type: 'Power Failure',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-10 22:05:00',
-        },
-        {
-            alertId: 'ALRT-022',
-            type: 'Frequency Deviation',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-09 17:30:00',
-        },
-        {
-            alertId: 'ALRT-023',
-            type: 'Power Factor Low',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-08 13:45:00',
-        },
-        {
-            alertId: 'ALRT-024',
-            type: 'Over Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-07 09:20:00',
-        },
-        {
-            alertId: 'ALRT-025',
-            type: 'Communication Loss',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-06 11:35:00',
-        },
-    ]);
-
-    // Replace feederDescriptions and feederInfo with feederData and lastComm   
     const [_feederData, _setFeederData] = useState([
         { title: 'Feeder Name', description: 'D1F1(32500114)' },
         { title: 'Rating', description: '25.00 kVA' },
@@ -395,9 +652,37 @@ const Feeders = () => {
         exportChartData(monthlyData.xAxisData, monthlyData.seriesData, 'feeder-monthly-consumption-data');
     };
 
+    // Debug: Log failedApis state
+    console.log('Feeders - failedApis:', failedApis);
+    console.log('Feeders - failedApis.length:', failedApis.length);
+
     return (
         <Page
             sections={[
+                // Error Section - Above PageHeader
+                ...(failedApis.length > 0 ? [{
+                    layout: {
+                        type: 'column' as const,
+                        gap: 'gap-4',
+                        rows: [
+                            {
+                                layout: 'column' as const,
+                                columns: [
+                                    {
+                                        name: 'Error',
+                                        props: {
+                                            visibleErrors: failedApis.map(api => api.errorMessage),
+                                            showRetry: true,
+                                            maxVisibleErrors: 3,
+                                            failedApis: failedApis,
+                                            onRetrySpecific: retrySpecificAPI,
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                }] : []),
                 {
                     layout: {
                         type: 'grid' as const,
@@ -554,6 +839,7 @@ const Feeders = () => {
                                         width: stat.width || 'w-8',
                                         height: stat.height || 'h-8',
                                         valueFontSize: stat.valueFontSize || 'text-lg lg:text-xl md:text-lg sm:text-base',
+                                        loading: stat.loading,
                                     },
                                     span: { col: 1, row: 1 },
                                 })),
@@ -585,6 +871,7 @@ const Feeders = () => {
                                             onDownload: () => handleMonthlyChartDownload(),
                                             showXAxisLabel: true,
                                             xAxisLabel: 'kWAh',
+                                            isLoading: isConsumptionLoading,
                                         },
                                     },
                                 ],
@@ -629,6 +916,7 @@ const Feeders = () => {
                                             onDownload: () => handleDailyChartDownload(),
                                             showXAxisLabel: true,
                                             xAxisLabel: 'kVA',
+                                            isLoading: isConsumptionLoading,
                                         },
                                         span: { col: 1, row: 1 },
                                     },
@@ -694,6 +982,7 @@ const Feeders = () => {
                                             showPaginationInfo: true,
                                             showRowsPerPageSelector: true,
                                             className: 'w-full',
+                                            loading: isAlertsLoading,
                                         },
                                     },
                                 ],

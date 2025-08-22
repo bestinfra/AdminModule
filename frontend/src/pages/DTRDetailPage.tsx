@@ -3,78 +3,79 @@ import { useNavigate, useParams } from 'react-router-dom';
 import PageC from '@/components/global/PageC';
 import { FILTER_STYLES } from '@/contexts/FilterStyleContext';
 
-const mockDTRData = {
-    name: 'TGNP_DTR-03',
-    dtrNo: 'DTR-001',
-    division: 'Warangal Division',
-    subDivision: 'Hanamkonda Sub-Division',
-    substation: 'Warangal Substation',
-    feeder: 'Main Feeder',
-    feederNo: 'F-001',
-    condition: '15.00 kVA',
-    capacity: '15.00 kVA',
-    address: 'Prashanth Nagar, Hyderabad, Telangana, India, 500084',
-    location: { lat: 17.470268, lng: 78.353907 },
+// Dummy data for fallback
+const dummyDTRData = {
+    name: 'N/A',
+    dtrNo: 'N/A',
+    division: 'N/A',
+    subDivision: 'N/A',
+    substation: 'N/A',
+    feeder: 'N/A',
+    feederNo: 'N/A',
+    condition: 'N/A',
+    capacity: 'N/A',
+    address: 'N/A',
+    location: { lat: 0, lng: 0 },
     stats: [
         {
             title: 'Total LT Feeders',
-            value: 4,
+            value: 'N/A',
             icon: '/icons/feeder.svg',
             subtitle1: 'Connected to DTR',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kW',
-            value: 3.73,
+            value: 'N/A',
             icon: '/icons/energy.svg',
             subtitle1: 'Active Power',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kVA',
-            value: 3.98,
+            value: 'N/A',
             icon: '/icons/energy.svg',
             subtitle1: 'Apparent Power',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kWh',
-            value: 20355.16,
+            value: 'N/A',
             icon: '/icons/energy.svg',
             subtitle1: 'Cumulative Active Energy',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Total kVAh',
-            value: 20699.25,
+            value: 'N/A',
             icon: '/icons/energy.svg',
             subtitle1: 'Cumulative Apparent Energy',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'LT Feeders Fuse Blown',
-            value: 0,
+            value: 'N/A',
             icon: '/icons/power_failure.svg',
             subtitle1: 'Requires maintenance',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Unbalanced LT Feeders',
-            value: 0,
+            value: 'N/A',
             icon: '/icons/power_failure.svg',
             subtitle1: 'Requires attention',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Power On',
-            value: '00:00:00',
+            value: 'N/A',
             icon: '/icons/power_failure.svg',
             subtitle1: '',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
         },
         {
             title: 'Power Off',
-            value: '00:00:00',
+            value: 'N/A',
             icon: '/icons/power_failure.svg',
             subtitle1: '',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
@@ -83,9 +84,9 @@ const mockDTRData = {
         },
         {
             title: 'Status',
-            value: 'B_PH CT',
+            value: 'N/A',
             icon: '/icons/units.svg',
-            subtitle1: '0000-00-00 00:00:00',
+            subtitle1: 'N/A',
             valueFontSize: 'text-lg lg:text-xl md:text-lg sm:text-base',
             bg: 'bg-[var(--color-secondary)]',
             iconStyle: FILTER_STYLES.WHITE,
@@ -93,111 +94,184 @@ const mockDTRData = {
     ],
 };
 
+const dummyDailyConsumptionData = {
+    xAxisData: ['N/A'],
+    seriesData: [
+        {
+            name: 'Consumption',
+            data: [0],
+        },
+    ],
+};
+
+const dummyFeedersData = [
+    {
+        sNo: 1,
+        feederName: 'N/A',
+        loadStatus: 'N/A',
+        condition: 'N/A',
+        capacity: 'N/A',
+        address: 'N/A',
+    }
+];
+
+const dummyAlertsData = [
+    {
+        alertId: 'N/A',
+        type: 'N/A',
+        feederName: 'N/A',
+        occuredOn: 'N/A',
+    }
+];
+
 const DTRDetailPage = () => {
     const { dtrId } = useParams();
     const navigate = useNavigate();
     
     console.log('DTR Detail Page - DTR ID:', dtrId);
     
-    // TODO: Fetch DTR data by dtrId here (using mock for now)
-    const dtr = mockDTRData;
+    // State for API data
+    const [dtr, setDtr] = useState(dummyDTRData);
+    const [dailyConsumptionData, setDailyConsumptionData] = useState(dummyDailyConsumptionData);
+    const [feedersData, setFeedersData] = useState(dummyFeedersData);
+    const [alertsData, setAlertsData] = useState(dummyAlertsData);
 
-    // Daily consumption data for charts
-    const [dailyConsumptionData, setDailyConsumptionData] = useState({
-        xAxisData: [
-            '6 May', '7 May', '8 May', '9 May', '10 May', '11 May', '12 May', '13 May', '14 May', '15 May', '16 May', '17 May', '18 May', '19 May', '20 May', '21 May', '22 May', '23 May', '24 May', '25 May', '26 May', '27 May', '28 May', '29 May', '30 May', '31 May', '1 Jun', '2 Jun', '3 Jun', '4 Jun', '5 Jun', '6 Jun', '7 Jun', '8 Jun', '9 Jun', '10 Jun', '11 Jun', '12 Jun', '13 Jun', '14 Jun', '15 Jun', '16 Jun', '17 Jun', '18 Jun', '19 Jun', '20 Jun', '21 Jun', '22 Jun', '23 Jun', '24 Jun', '25 Jun', '26 Jun', '27 Jun', '28 Jun', '29 Jun', '30 Jun', '1 Jul', '2 Jul', '3 Jul', '4 Jul', '5 Jul', '6 Jul',
-        ],
-        seriesData: [
-            {
-                name: 'Consumption',
-                data: [
-                    572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 610, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572, 572,
-                ],
-            },
-        ],
-    });
+    // Loading states
+    const [isDtrLoading, setIsDtrLoading] = useState(true);
+    const [_isConsumptionLoading, setIsConsumptionLoading] = useState(true);
+    const [isFeedersLoading, setIsFeedersLoading] = useState(true);
+    const [isAlertsLoading, setIsAlertsLoading] = useState(true);
 
+    // Simple error state like Prepaid.tsx
+    const [errorMessages, setErrors] = useState<any[]>([]);
 
+    // Clear all error messages
+    const clearErrors = () => {
+        setErrors([]);
+    };
 
-    // Feeders data
-    const [feedersData, setFeedersData] = useState([
-        {
-            sNo: 1,
-            feederName: 'D1F1(32500114)',
-            loadStatus: 'Underload',
-            condition: 'Good',
-            capacity: '30.00 kVA',
-            address: 'Waddepally, Warangal, Telangana, India, 506001',
-        },
-        {
-            sNo: 2,
-            feederName: 'D1F2(32500115)',
-            loadStatus: 'Normal',
-            condition: 'Excellent',
-            capacity: '25.00 kVA',
-            address: 'Hanamkonda, Warangal, Telangana, India, 506001',
-        },
-        {
-            sNo: 3,
-            feederName: 'D1F3(32500116)',
-            loadStatus: 'Overload',
-            condition: 'Fair',
-            capacity: '20.00 kVA',
-            address: 'Kazipet, Warangal, Telangana, India, 506001',
-        },
-        {
-            sNo: 4,
-            feederName: 'D1F4(32500117)',
-            loadStatus: 'Underload',
-            condition: 'Good',
-            capacity: '35.00 kVA',
-            address: 'Warangal Fort, Warangal, Telangana, India, 506001',
-        },
-    ]);
+    // Remove a specific error message
+    const removeError = (indexToRemove: number) => {
+        setErrors(prev => prev.filter((_, index) => index !== indexToRemove));
+    };
 
-    // Alerts data
-    const [alertsData, setAlertsData] = useState([
-        {
-            alertId: 'ALRT-001',
-            type: 'Over Voltage',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-30 21:15:00',
-        },
-        {
-            alertId: 'ALRT-002',
-            type: 'Under Voltage',
-            feederName: 'D1F2(32500115)',
-            occuredOn: '2025-06-29 18:45:00',
-        },
-        {
-            alertId: 'ALRT-003',
-            type: 'Power Failure',
-            feederName: 'D1F3(32500116)',
-            occuredOn: '2025-06-28 14:30:00',
-        },
-        {
-            alertId: 'ALRT-004',
-            type: 'Phase Imbalance',
-            feederName: 'D1F1(32500114)',
-            occuredOn: '2025-06-27 10:20:00',
-        },
-        {
-            alertId: 'ALRT-005',
-            type: 'Over Current',
-            feederName: 'D1F2(32500115)',
-            occuredOn: '2025-06-26 08:10:00',
-        },
-    ]);
+    // Retry all APIs
+    const retryAllAPIs = () => {
+        clearErrors();
+        // Retry all APIs by refreshing the page
+        window.location.reload();
+    };
 
-    const lastComm = '30/06/2025 22:31:38';
-
-    // Use setters to avoid unused variable warnings
+    // Load data on component mount
     useEffect(() => {
-        // No-op usage to avoid TS warnings
-        setDailyConsumptionData((prev) => prev);
-        setFeedersData((prev) => prev);
-        setAlertsData((prev) => prev);
-    }, []);
+        const fetchDtrData = async () => {
+            setIsDtrLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch(`/api/dtr/${dtrId}`);
+                if (!response.ok) throw new Error('Failed to fetch DTR data');
+                
+                const data = await response.json();
+                setDtr(data);
+            } catch (error) {
+                console.error('Error fetching DTR data:', error);
+                setDtr(dummyDTRData);
+                setErrors(prev => {
+                    if (!prev.includes("Failed to fetch DTR data")) {
+                        const updated = [...prev, "Failed to fetch DTR data"];
+                        return updated;
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsDtrLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchConsumptionData = async () => {
+            setIsConsumptionLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch(`/api/dtr/${dtrId}/consumption`);
+                if (!response.ok) throw new Error('Failed to fetch consumption data');
+                
+                const data = await response.json();
+                setDailyConsumptionData(data);
+            } catch (error) {
+                setDailyConsumptionData(dummyDailyConsumptionData);
+                setErrors(prev => {
+                    if (!prev.includes("Failed to fetch consumption data")) {
+                        const updated = [...prev, "Failed to fetch consumption data"];
+                        return updated;
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsConsumptionLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchFeedersData = async () => {
+            setIsFeedersLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch(`/api/dtr/${dtrId}/feeders`);
+                if (!response.ok) throw new Error('Failed to fetch feeders data');
+                
+                const data = await response.json();
+                setFeedersData(data);
+            } catch (error) {
+                setFeedersData(dummyFeedersData);
+                setErrors(prev => {
+                    if (!prev.includes("Failed to fetch feeders data")) {
+                        const updated = [...prev, "Failed to fetch feeders data"];
+                        return updated;
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsFeedersLoading(false);
+                }, 1000);
+            }
+        };
+
+        const fetchAlertsData = async () => {
+            setIsAlertsLoading(true);
+            try {
+                // Simulate API call - replace with actual API
+                const response = await fetch(`/api/dtr/${dtrId}/alerts`);
+                if (!response.ok) throw new Error('Failed to fetch alerts data');
+                
+                const data = await response.json();
+                setAlertsData(data);
+            } catch (error) {
+                setAlertsData(dummyAlertsData);
+                setErrors(prev => {
+                    if (!prev.includes("Failed to fetch alerts data")) {
+                        const updated = [...prev, "Failed to fetch alerts data"];
+                        return updated;
+                    }
+                    return prev;
+                });
+            } finally {
+                setTimeout(() => {
+                    setIsAlertsLoading(false);
+                }, 1000);
+            }
+        };
+
+        fetchDtrData();
+        fetchConsumptionData();
+        fetchFeedersData();
+        fetchAlertsData();
+    }, [dtrId]);
+
+    const lastComm = 'N/A';
 
     // Handle Excel download for all DTR data in a single file
     const handleExportData = () => {
@@ -285,15 +359,11 @@ const DTRDetailPage = () => {
         });
     };
 
-
-
     // Handle feeders export
     const handleFeedersExport = () => {
         console.log('Exporting feeders...');
         // Add feeders export logic here
     };
-
-    // Handle alerts export
 
     // Handle feeder row click
     const handleFeederClick = (feederId: string) => {
@@ -321,9 +391,36 @@ const DTRDetailPage = () => {
         });
     };
 
+    // Debug log to see current errors
+    console.log('Current errorMessages state:', errorMessages);
+
     return (
         <PageC
             sections={[
+                // Error Section - Above PageHeader
+                ...(errorMessages.length > 0 ? [{
+                    layout: {
+                        type: 'column' as const,
+                        gap: 'gap-4',
+                        rows: [
+                            {
+                                layout: 'column' as const,
+                                columns: [
+                                    {
+                                        name: 'Error',
+                                        props: {
+                                            visibleErrors: errorMessages,
+                                            onRetry: retryAllAPIs,
+                                            onClose: () => removeError(0), // Remove the top error
+                                            showRetry: true,
+                                            maxVisibleErrors: 4, // Show max 4 errors at once
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                }] : []),
                 {
                     layout: {
                         type: 'grid' as const,
@@ -337,7 +434,7 @@ const DTRDetailPage = () => {
                                     {
                                         name: 'PageHeader',
                                         props: {
-                                            title: dtr.name,
+                                            title: 'DTR Details',
                                             onBackClick: () => navigate('/dtr-dashboard'),
                                             backButtonText: 'Back to Dashboard',
                                             buttonsLabel: 'Export Data',
@@ -511,6 +608,7 @@ const DTRDetailPage = () => {
                                         bg: stat.bg || 'bg-stat-icon-gradient',
                                         valueFontSize: stat.valueFontSize || 'text-lg lg:text-xl md:text-lg sm:text-base',
                                         iconStyle: stat.iconStyle || FILTER_STYLES.BRAND_GREEN,
+                                        loading: isDtrLoading,
                                     },
                                     span: { col: 1, row: 1 },
                                 })),
@@ -564,6 +662,7 @@ const DTRDetailPage = () => {
                                                     size: 'sm'
                                                 }
                                             ],
+                                            loading: isFeedersLoading,
                                         },
                                     },
                                 ],
@@ -605,7 +704,7 @@ const DTRDetailPage = () => {
                                             showPaginationInfo: true,
                                             showRowsPerPageSelector: true,
                                             className: 'w-full',
-                                            
+                                            loading: isAlertsLoading,
                                         },
                                     },
                                 ],
