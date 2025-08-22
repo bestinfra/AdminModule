@@ -342,8 +342,8 @@
       "path": "C:\\xampp\\htdocs\\madhu40-backend"
     },
     "bottle": {
-      "port": 4096,
-      "deployedAt": "2025-07-29T18:57:17.423Z",
+      "port": 4204,
+      "deployedAt": "2025-08-21T10:40:53.819Z",
       "path": "C:\\xampp\\htdocs\\bottle-backend"
     },
     "water": {
@@ -762,9 +762,9 @@
       "path": "C:\\xampp\\htdocs\\good-backend"
     },
     "charger": {
-      "port": 4182,
-      "deployedAt": "2025-08-08T18:10:33.247Z",
-      "path": "C:\\xampp\\htdocs\\test38-backend"
+      "port": 4212,
+      "deployedAt": "2025-08-21T12:14:03.669Z",
+      "path": "C:\\xampp\\htdocs\\charger-backend"
     },
     "test39": {
       "port": 4183,
@@ -853,80 +853,70 @@
     },
     "test57": {
       "port": 4201,
-      "deployedAt": "2025-08-12T16:28:33.145Z",
-      "path": "C:\\xampp\\htdocs\\module5-backend"
+      "deployedAt": "2025-08-18T10:19:24.313Z",
+      "path": "C:\\xampp\\htdocs\\test57-backend"
     },
-    "module6": {
+    "ntpl": {
       "port": 4202,
-      "deployedAt": "2025-08-12T16:36:01.625Z",
-      "path": "C:\\xampp\\htdocs\\module6-backend"
+      "deployedAt": "2025-08-21T07:40:36.147Z",
+      "path": "C:\\xampp\\htdocs\\ntpl-backend"
     },
-    "module7": {
+    "laptop": {
       "port": 4203,
-      "deployedAt": "2025-08-12T16:39:29.185Z",
-      "path": "C:\\xampp\\htdocs\\module7-backend"
+      "deployedAt": "2025-08-21T10:13:59.485Z",
+      "path": "C:\\xampp\\htdocs\\laptop-backend"
     },
-    "module8": {
-      "port": 4204,
-      "deployedAt": "2025-08-12T16:40:32.119Z",
-      "path": "C:\\xampp\\htdocs\\module8-backend"
-    },
-    "module9": {
+    "book": {
       "port": 4206,
-      "deployedAt": "2025-08-12T16:41:42.209Z",
-      "path": "C:\\xampp\\htdocs\\module9-backend"
+      "deployedAt": "2025-08-21T10:47:04.658Z",
+      "path": "C:\\xampp\\htdocs\\book-backend"
     },
-    "module10": {
+    "pen": {
       "port": 4207,
-      "deployedAt": "2025-08-12T17:06:49.904Z",
-      "path": "C:\\xampp\\htdocs\\module10-backend"
+      "deployedAt": "2025-08-21T10:52:17.924Z",
+      "path": "C:\\xampp\\htdocs\\pen-backend"
     },
-    "module11": {
+    "phone": {
       "port": 4208,
-      "deployedAt": "2025-08-12T17:08:06.697Z",
-      "path": "C:\\xampp\\htdocs\\module11-backend"
+      "deployedAt": "2025-08-21T11:06:40.918Z",
+      "path": "C:\\xampp\\htdocs\\phone-backend"
     },
-    "module12": {
+    "bowl": {
       "port": 4209,
-      "deployedAt": "2025-08-12T17:11:03.089Z",
-      "path": "C:\\xampp\\htdocs\\module12-backend"
+      "deployedAt": "2025-08-21T11:28:32.232Z",
+      "path": "C:\\xampp\\htdocs\\bowl-backend"
     },
-    "module13": {
+    "glass": {
       "port": 4210,
-      "deployedAt": "2025-08-12T17:12:05.340Z",
-      "path": "C:\\xampp\\htdocs\\module13-backend"
+      "deployedAt": "2025-08-21T11:41:03.964Z",
+      "path": "C:\\xampp\\htdocs\\glass-backend"
     },
-    "module14": {
+    "mobile": {
       "port": 4211,
-      "deployedAt": "2025-08-12T17:14:14.912Z",
-      "path": "C:\\xampp\\htdocs\\module14-backend"
+      "deployedAt": "2025-08-21T11:58:01.861Z",
+      "path": "C:\\xampp\\htdocs\\mobile-backend"
     },
-    "module15": {
-      "port": 4212,
-      "deployedAt": "2025-08-12T17:20:04.710Z",
-      "path": "C:\\xampp\\htdocs\\module15-backend"
-    },
-    "module16": {
+    "chair": {
       "port": 4213,
-      "deployedAt": "2025-08-12T17:24:21.856Z",
-      "path": "C:\\xampp\\htdocs\\module16-backend"
+      "deployedAt": "2025-08-21T12:23:25.217Z",
+      "path": "C:\\xampp\\htdocs\\chair-backend"
     },
-    "module17": {
+    "table": {
       "port": 4214,
-      "deployedAt": "2025-08-12T17:30:36.814Z",
-      "path": "C:\\xampp\\htdocs\\module17-backend"
+      "deployedAt": "2025-08-21T12:35:58.539Z",
+      "path": "C:\\xampp\\htdocs\\table-backend"
     },
-    "module18": {
+    "bag": {
       "port": 4215,
-      "deployedAt": "2025-08-12T17:31:53.597Z",
-      "path": "C:\\xampp\\htdocs\\module18-backend"
+      "deployedAt": "2025-08-21T13:08:20.466Z",
+      "path": "C:\\xampp\\htdocs\\bag-backend"
     },
-    "module19": {
+    "spects": {
       "port": 4216,
-      "deployedAt": "2025-08-12T17:44:35.112Z",
-      "path": "C:\\xampp\\htdocs\\module19-backend"
+      "deployedAt": "2025-08-21T13:16:57.503Z",
+      "path": "C:\\xampp\\htdocs\\spects-backend"
     },
-    "module20": {
+    "bed": {
       "port": 4217,
       "deployedAt": "2025-08-12T17:51:53.751Z",
       "path": "C:\\xampp\\htdocs\\module20-backend"

@@ -204,20 +204,3 @@ export const assignPermissionsToRole = async (req, res) => {
     }
 };
 
-export const getRoleStats = async (req, res) => {
-    try {
-        const stats = await RoleDB.getRoleStats();
-        
-        res.json({
-            success: true,
-            data: stats
-        });
-    } catch (error) {
-        console.error(' getRoleStats: Error fetching role stats:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Failed to fetch role statistics',
-            error: error.message
-        });
-    }
-}; 

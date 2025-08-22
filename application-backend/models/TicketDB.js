@@ -423,35 +423,7 @@ class TicketDB {
         }
     }
 
-    static async updateTicketStatus(ticketId, status) {
-        try {
-            return await prisma.tickets.update({
-                where: { id: ticketId },
-                data: { 
-                    status,
-                    updatedAt: new Date()
-                }
-            });
-        } catch (error) {
-            console.error(' TicketDB.updateTicketStatus: Database error:', error);
-            throw error;
-        }
-    }
 
-    static async assignTicket(ticketId, assignedToId) {
-        try {
-            return await prisma.tickets.update({
-                where: { id: ticketId },
-                data: { 
-                    assignedToId,
-                    updatedAt: new Date()
-                }
-            });
-        } catch (error) {
-            console.error(' TicketDB.assignTicket: Database error:', error);
-            throw error;
-        }
-    }
 
     static async generateTicketNumber() {
         try {

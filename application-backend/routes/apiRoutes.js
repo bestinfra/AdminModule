@@ -14,9 +14,7 @@ import overall from './overall.js';
 
 const router = express.Router();
 
-// Authentication routes (public)
 
-// Define all route groups
 router.use('/meters', meters);
 router.use('/consumers', consumers);
 router.use('/assets', assets);

@@ -268,42 +268,7 @@ class RoleDB {
         }
     }
 
-    static async getRoleStats() {
-        try {
-            
-            const roles = await prisma.roles.findMany({
-                include: {
-                    users: true,
-                    role_permissions: true
-                }
-            });
-
-            const totalRoles = roles.length;
-            const totalPermissions = await prisma.permissions.count();
-
-            const roleUserCounts = {};
-            roles.forEach(role => {
-                roleUserCounts[role.name] = role.users.length;
-            });
-
-            const stats = {
-                totalRoles,
-                totalPermissions,
-                roleUserCounts,
-                roles: roles.map(role => ({
-                    id: role.id,
-                    name: role.name,
-                    userCount: role.users.length,
-                    permissionCount: role.role_permissions.length
-                }))
-            };
-            
-            return stats;
-        } catch (error) {
-            console.error(' RoleDB.getRoleStats: Database error:', error);
-            throw error;
-        }
-    }
+    
 }
 
 export default RoleDB; 
