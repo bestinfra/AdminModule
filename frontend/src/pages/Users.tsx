@@ -41,6 +41,16 @@ export default function Users() {
     const [userStats, setUserStats] = useState<any>(null);
     const [statsLoading, setStatsLoading] = useState(true);
 
+    // State for tracking failed APIs
+    const [failedApis, setFailedApis] = useState<
+        Array<{
+            id: string;
+            name: string;
+            retryFunction: () => Promise<void>;
+            errorMessage: string;
+        }>
+    >([]);
+
     // Inactive modal state
     const [showInactiveModal, setShowInactiveModal] = useState(false);
     const [userToInactive, setUserToInactive] = useState<any>(null);
@@ -89,6 +99,14 @@ export default function Users() {
         fetchUsers(1, serverPagination.limit, searchTerm);
     };
 
+    // Retry specific API
+    const retrySpecificAPI = (apiId: string) => {
+        const api = failedApis.find((a) => a.id === apiId);
+        if (api) {
+            api.retryFunction();
+        }
+    };
+
     const fetchUsers = async (page = 1, limit = 8, searchTerm = '') => {
         setLoading(true);
         try {
@@ -113,57 +131,36 @@ export default function Users() {
                     hasNextPage: data.pagination?.hasNextPage || false,
                     hasPrevPage: data.pagination?.hasPrevPage || false,
                 });
+                // Remove from failed APIs if successful
+                setFailedApis((prev) => prev.filter((api) => api.id !== "users"));
             } else {
                 throw new Error(data.message || 'Failed to fetch users');
             }
         } catch (err) {
             console.error(err instanceof Error ? err.message : 'Failed to fetch users');
-            // Demo users fallback
-            setUsers([
-                {
-                    sNo: 1,
-                    name: 'John Doe',
-                    email: 'john.doe@email.com',
-                    phone: '+1-555-0101',
-                    role: 'Admin',
-                    client: 'Acme Corp',
-                    createdDate: '2024-01-01',
-                },
-                {
-                    sNo: 2,
-                    name: 'Jane Smith',
-                    email: 'jane.smith@email.com',
-                    phone: '+1-555-0102',
-                    role: 'User',
-                    client: 'Beta Inc',
-                    createdDate: '2024-02-15',
-                },
-                {
-                    sNo: 3,
-                    name: 'Alice Brown',
-                    email: 'alice.brown@email.com',
-                    phone: '+1-555-0103',
-                    role: 'Accountant',
-                    client: 'Gamma LLC',
-                    createdDate: '2024-03-10',
-                },
-                {
-                    sNo: 4,
-                    name: 'Mike Wilson',
-                    email: 'mike.wilson@email.com',
-                    phone: '+1-555-0104',
-                    role: 'Moderator',
-                    client: 'Delta Ltd',
-                    createdDate: '2024-04-05',
-                },
-            ]);
+            setUsers([]);
             setServerPagination({
                 currentPage: 1,
                 totalPages: 1,
-                totalCount: 4,
-                limit: 4,
+                totalCount: 0,
+                limit: limit,
                 hasNextPage: false,
                 hasPrevPage: false,
+            });
+            // Add to failed APIs
+            setFailedApis((prev) => {
+                if (!prev.find((api) => api.id === "users")) {
+                    return [
+                        ...prev,
+                        {
+                            id: "users",
+                            name: "Users Table",
+                            retryFunction: () => fetchUsers(page, limit, searchTerm),
+                            errorMessage: "Failed to load Users Table. Please try again.",
+                        },
+                    ];
+                }
+                return prev;
             });
         } finally {
             setLoading(false);
@@ -175,76 +172,81 @@ export default function Users() {
     }, []);
 
     // Fetch user stats (widgets)
-    useEffect(() => {
+    const fetchUserStats = async () => {
         setStatsLoading(true);
-        fetch(`${BACKEND_URL}/users/stats`)
-            .then(async (res) => {
-                if (!res.ok) throw new Error('Failed to fetch user stats');
-                const result = await res.json();
-                if (!result.success)
-                    throw new Error(
-                        result.message || 'Failed to fetch user stats'
-                    );
-                setUserStats(result.data);
-                console.log('User stats:', result.data);
-            })
-            .catch(() => {
-                // Demo user stats fallback
-                setUserStats({
-                    totalUsers: 4,
-                    activeUsers: 3,
-                    inactiveUsers: 1,
-                    totalRoles: 4,
-                    roleBreakdown: {
-                        Admin: 1,
-                        Accountant: 1,
-                        Moderator: 1,
-                        User: 1
-                    }
-                });
-            })
-            .finally(() => setStatsLoading(false));
+        try {
+            const response = await fetch(`${BACKEND_URL}/users/stats`);
+            if (!response.ok) throw new Error('Failed to fetch user stats');
+            const result = await response.json();
+            if (!result.success)
+                throw new Error(
+                    result.message || 'Failed to fetch user stats'
+                );
+            setUserStats(result.data);
+            console.log('User stats:', result.data);
+            // Remove from failed APIs if successful
+            setFailedApis((prev) => prev.filter((api) => api.id !== "stats"));
+        } catch (err) {
+            console.error(err instanceof Error ? err.message : 'Failed to fetch user stats');
+            setUserStats(null);
+            // Add to failed APIs
+            setFailedApis((prev) => {
+                if (!prev.find((api) => api.id === "stats")) {
+                    return [
+                        ...prev,
+                        {
+                            id: "stats",
+                            name: "User Statistics",
+                            retryFunction: fetchUserStats,
+                            errorMessage: "Failed to load User Statistics. Please try again.",
+                        },
+                    ];
+                }
+                return prev;
+            });
+        } finally {
+            setStatsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserStats();
     }, []);
 
     // Widget cards array (same style as meters/tickets)
-    const userWidgets = userStats
-        ? [
-            {
-                title: 'Total Users',
-                value: userStats.totalUsers,
-                icon: '/icons/total-users.svg',
-                subtitle1: `${userStats.activeUsers} Active Users`,
-                subtitle2: `${userStats.inactiveUsers} Inactive Users`,
-            },
-            {
-                title: 'Total Admins',
-                value: userStats.roleBreakdown?.Admin || 0,
-                icon: '/icons/admin.svg',
-                subtitle1: 'This Month',
-            },
-            {
-                title: 'Total Accountants',
-                value: userStats.roleBreakdown?.Accountant || 0,
-                icon: '/icons/accountant.svg',
-                subtitle1: 'This Month',
-            },
-            {
-                title: 'Total Moderators',
-                value: userStats.roleBreakdown?.Moderator || 0,
-                icon: '/icons/moderator.svg',
-                subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
-            },
-            {
-                title: 'Total Roles',
-                value: userStats.totalRoles,
-                icon: '/icons/roles.svg',
-                subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
-            },
-        ]
-        : [];
-
-
-
+    const userWidgets = [
+        {
+            title: 'Total Users',
+            value: userStats?.totalUsers || 'N/A',
+            icon: '/icons/total-users.svg',
+            subtitle1: userStats ? `${userStats.activeUsers} Active Users` : 'N/A Active Users',
+            subtitle2: userStats ? `${userStats.inactiveUsers} Inactive Users` : 'N/A Inactive Users',
+        },
+        {
+            title: 'Total Admins',
+            value: userStats?.roleBreakdown?.Admin || 'N/A',
+            icon: '/icons/admin.svg',
+            subtitle1: 'This Month',
+        },
+        {
+            title: 'Total Accountants',
+            value: userStats?.roleBreakdown?.Accountant || 'N/A',
+            icon: '/icons/accountant.svg',
+            subtitle1: 'This Month',
+        },
+        {
+            title: 'Total Moderators',
+            value: userStats?.roleBreakdown?.Moderator || 'N/A',
+            icon: '/icons/moderator.svg',
+            subtitle1: '1 Active Users', // Adjust if you want to show actual active moderators
+        },
+        {
+            title: 'Total Roles',
+            value: userStats?.totalRoles || 'N/A',
+            icon: '/icons/roles.svg',
+            subtitle1: '1 Active Users', // Adjust if you want to show actual active roles
+        },
+    ];
 
     const handleInactiveClick = (row: any) => {
         setUserToInactive(row);
@@ -326,6 +328,36 @@ export default function Users() {
         <Suspense fallback={<div>Loading...</div>}>
             <Page
                 sections={[
+                    // Error Section (show when there are failed APIs)
+                    ...(failedApis.length > 0
+                        ? [
+                            {
+                                layout: {
+                                    type: 'column' as const,
+                                    gap: 'gap-4',
+                                    rows: [
+                                        {
+                                            layout: 'column' as const,
+                                            columns: [
+                                                {
+                                                    name: 'Error',
+                                                    props: {
+                                                        visibleErrors: failedApis.map(
+                                                            (api) => api.errorMessage
+                                                        ),
+                                                        showRetry: true,
+                                                        maxVisibleErrors: 3, // Show max 3 errors at once
+                                                        failedApis: failedApis, // Pass all failed APIs for individual retry
+                                                        onRetrySpecific: retrySpecificAPI, // Pass the retry function
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                },
+                            },
+                        ]
+                        : []),
                     // Page Header Section
                     {
                         layout: {
@@ -400,12 +432,12 @@ export default function Users() {
                     },
                     {
                         layout: {
-                            type: 'grid',
+                            type: 'grid' as const,
                             columns: 1,
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'grid',
+                                    layout: 'grid' as const,
                                     gridColumns: 2,
                                     gap: 'gap-4',
                                     columns: [
@@ -445,7 +477,7 @@ export default function Users() {
                             gap: 'gap-4',
                             rows: [
                                 {
-                                    layout: 'column',
+                                    layout: 'column' as const,
                                     columns: [
                                         {
                                             name: 'Table',
@@ -460,6 +492,7 @@ export default function Users() {
                                                 serverPagination: serverPagination,
                                                 onPageChange: handlePageChange,
                                                 onSearch: handleSearch,
+                                                headerTitle: 'User Management',
                                                 onView: (row: any) => {
                                                     console.log('Users: onView triggered', row);
                                                     console.log('Users: Navigating to', `/user-detail/${row.sNo}`);
@@ -481,13 +514,10 @@ export default function Users() {
                                                 onInactive: (row: any) => {
                                                     handleInactiveClick(row);
                                                 },
-                                                headerTitle: 'User Management',
                                                 dateRange: 'Real-time data',
                                                 text: 'User Management Table',
                                                 className: 'w-full',
-                                                emptyMessage: loading
-                                                    ? 'Loading users...'
-                                                    : 'No users found',
+                                                emptyMessage: 'No users found',
                                             },
                                         },
                                     ],
@@ -517,6 +547,11 @@ export default function Users() {
                                                 saveButtonLabel: 'Inactivate User',
                                                 cancelButtonLabel: 'Cancel',
                                                 cancelButtonVariant: 'secondary',
+                                                gridLayout: {
+                                                    gridRows: 2,
+                                                    gridColumns: 1,
+                                                    gap: 'gap-4'
+                                                },
                                             },
                                         },
                                     ],

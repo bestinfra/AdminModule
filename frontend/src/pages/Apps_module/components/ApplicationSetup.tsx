@@ -466,6 +466,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         placeholder="Select Application Category"
                                         isMultiSelect={true}
                                         error={allErrors.applicationCategory}
+                                        searchable={false}
                                     />
                                 </div>
                                 <div>
@@ -476,6 +477,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         options={projectTypeOptions}
                                         placeholder="Select Project Type"
                                         error={allErrors.projectType}
+                                        searchable={false}
                                     />
                                 </div>
                             </div>
@@ -489,6 +491,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         options={ownershipTypeOptions}
                                         placeholder="Select Ownership Type"
                                         error={allErrors.ownershipType}
+                                        searchable={false}
                                     />
                                 </div>
                                 <div>
@@ -500,6 +503,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         placeholder="Select Metering Type"
                                         isMultiSelect={true}
                                         error={allErrors.meteringType}
+                                        searchable={false}
                                     />
                                 </div>
                             </div>
@@ -514,6 +518,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         placeholder="Select Tariff Plans"
                                         isMultiSelect={true}
                                         error={allErrors.tariffPlans}
+                                        searchable={false}
                                     />
                                 </div>
                                 <div>
@@ -524,6 +529,7 @@ const ApplicationSetup: React.FC<ApplicationSetupProps> = ({ formData, errors, o
                                         options={billingModeOptions}
                                         placeholder="Select Billing Mode"
                                         error={allErrors.billingMode}
+                                        searchable={false}
                                     />
                                 </div>
                             </div>

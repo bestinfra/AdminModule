@@ -12,29 +12,29 @@ const LoginSlider: React.FC = () => {
 
   const slides: Slide[] = [
     {
-      image: '/images/smart-comm.png',
+      image: '/images/Slider1.jpg',
       title: 'Smarter Energy Management',
       description:
         'Optimize energy use with real-time monitoring, anomaly detection, and a centralized dashboard for smarter, cost-effective decisions.',
     },
     {
-      image: '/images/energy-analytics.jpg',
+      image: '/images/Slider2.jpg',
       title: 'Stay Connected, Stay Informed',
       description:
         'Access billing history, payment details, and real-time updates. Get instant reminders and manage energy anytime with complete flexibility.',
     },
     {
-      image: '/images/electric-usage.jpg',
+      image: '/images/Slider3.jpg',
       title: 'Your Energy, Your Control',
       description:
         'Track usage, monitor savings, and stay in charge with intuitive dashboards, instant insights, and easy access anytime, anywhere.',
     },
-    {
-      image: '/images/meter-eval.jpg',
-      title: 'Powering Your Experience, Effortlessly',
-      description:
-        'Manage your account, track bills, and control energy usage—all in one seamless dashboard with real-time insights and secure access.',
-    },
+    // {
+    //   image: '/images/meter-eval.jpg',
+    //   title: 'Powering Your Experience, Effortlessly',
+    //   description:
+    //     'Manage your account, track bills, and control energy usage—all in one seamless dashboard with real-time insights and secure access.',
+    // },
   ];
 
   useEffect(() => {

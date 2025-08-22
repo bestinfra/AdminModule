@@ -330,7 +330,7 @@ const BarChart: React.FC<BarChartProps> = React.memo(
 
         // Chart content component
         const chartContent = (
-            <div className="w-full h-full" role="img" aria-label={ariaLabel}>
+            <div className="w-full" role="img" aria-label={ariaLabel}>
                 {title && <span className="sr-only">{title}</span>}
                 {description && <span className="sr-only">{description}</span>}
                 {isLoading ? (

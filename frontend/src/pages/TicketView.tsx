@@ -118,6 +118,7 @@ const TicketView: React.FC = () => {
                     {
                         position:'sticky',
                         top:0,
+                        
                     }
                  }
                     sections={[

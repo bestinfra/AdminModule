@@ -37,7 +37,9 @@ export default function Meters() {
     });
 
     // Loading state
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isTableLoading, setIsTableLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
     // Modal state
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -129,196 +131,143 @@ export default function Meters() {
         },
     ];
 
-
-
-    // Demo data for fallback - Using BRAND_GREEN (default) for all cards
-    const [demoMeterData] = useState([
+    // Initialize meter data with N/A values
+    const [initialMeterData] = useState([
         {
             id: 1,
             title: 'Total Meters',
-            value: 1200,
-            subtitle1: '1100 Active',
-            subtitle2: '100 In-Active',
+            value: 'N/A',
+            subtitle1: 'N/A',
+            subtitle2: 'N/A',
             icon: 'icons/meter.svg',
         },
         {
             id: 2,
             title: 'Meter Makes',
-            value: 5,
-            subtitle1: '1 Used Meter Makes',
-            subtitle2: '',
-            icon: 'icons/meter-bolt.svg',
+            value: 'N/A',
+            subtitle1: 'N/A',
+            subtitle2: 'N/A',
+            icon: 'icons/meter-make.svg',
         },
         {
             id: 3,
-            title: 'Mapped Meters',
-            value: 3,
-            subtitle1: '86 Unmapped',
-            subtitle2: '0 Replaced',
+            title: 'Meter Types',
+            value: 'N/A',
+            subtitle1: 'N/A',
+            subtitle2: 'N/A',
             icon: 'icons/mapped-meter.svg',
         },
         {
             id: 4,
-            title: 'Connection Type',
-            value: 'Prepaid',
-            subtitle1: '3 Prepaid',
-            subtitle2: '0 Postpaid',
+            title: 'Connection Types',
+            value: 'N/A',
+            subtitle1: 'N/A',
+            subtitle2: 'N/A',
             icon: 'icons/connection-type.svg',
         },
     ]);
-    const [demoTableData] = useState([
-        {
-            sNo: 1,
-            meterSerialNumber: 'MTR-1001',
-            modemSerialNumber: 'MDM-2001',
-            meterType: 'Smart',
-            meterMake: 'MakeA',
-            consumerName: 'John Doe',
-            location: 'Building 1',
-            installationDate: '2024-01-01',
-            meterNumber: 'MTR-1001',
-        },
-        {
-            sNo: 2,
-            meterSerialNumber: 'MTR-1002',
-            modemSerialNumber: 'MDM-2002',
-            meterType: 'Digital',
-            meterMake: 'MakeB',
-            consumerName: 'Jane Smith',
-            location: 'Building 2',
-            installationDate: '2024-02-15',
-            meterNumber: 'MTR-1002',
-        },
-        {
-            sNo: 3,
-            meterSerialNumber: 'MTR-1003',
-            modemSerialNumber: 'MDM-2003',
-            meterType: 'Smart',
-            meterMake: 'MakeA',
-            consumerName: 'Alice Brown',
-            location: 'Building 3',
-            installationDate: '2024-03-10',
-            meterNumber: 'MTR-1003',
-        },
-    ]);
-    // const [demoAllMeters] = useState([
-    //     {
-    //         meterType: 'Smart',
-    //         meterMake: 'MakeA',
-    //         location: 'Building 1',
-    //     },
-    //     {
-    //         meterType: 'Digital',
-    //         meterMake: 'MakeB',
-    //         location: 'Building 2',
-    //     },
-    //     {
-    //         meterType: 'Smart',
-    //         meterMake: 'MakeA',
-    //         location: 'Building 3',
-    //     },
-    // ]);
 
-    const fetchMeters = (page = 1, limit = 8, filtersOverride = filters) => {
-        const params = new URLSearchParams();
-        params.append('page', String(page));
-        params.append('limit', String(limit));
-        if (filtersOverride.status && filtersOverride.status !== 'all')
-            params.append('status', filtersOverride.status);
-        if (filtersOverride.meterType && filtersOverride.meterType !== 'all')
-            params.append('type', filtersOverride.meterType);
-        if (filtersOverride.meterMake && filtersOverride.meterMake !== 'all')
-            params.append('manufacturer', filtersOverride.meterMake);
-        if (filtersOverride.location && filtersOverride.location !== 'all')
-            params.append('location', filtersOverride.location);
-        fetch(`${BACKEND_URL}/meters?${params.toString()}`)
-            .then((res) => res.json())
-            .then((data) => {
-                if (data.success) {
-                    setTableData(
-                        data.data.map((row: any) => ({
-                            ...row,
-                            meterMake: row.meterMake || row.manufacturer || '',
-                        }))
-                    );
-                    setServerPagination(data.pagination);
-                } else {
-                    throw new Error(
-                        data.message || 'Failed to fetch meter table'
-                    );
-                }
-            })
-            .catch((err) => {
-                console.error(err.message || 'Failed to fetch meter table');
-                setTableData(demoTableData);
-                setServerPagination({
-                    currentPage: 1,
-                    totalPages: 1,
-                    totalCount: demoTableData.length,
-                    limit: demoTableData.length,
-                    hasNextPage: false,
-                    hasPrevPage: false,
-                });
-            });
+    const fetchMeters = async (page = 1, limit = 8, filtersOverride = filters) => {
+        setIsTableLoading(true);
+        try {
+            const params = new URLSearchParams();
+            params.append('page', String(page));
+            params.append('limit', String(limit));
+            if (filtersOverride.status && filtersOverride.status !== 'all')
+                params.append('status', filtersOverride.status);
+            if (filtersOverride.meterType && filtersOverride.meterType !== 'all')
+                params.append('type', filtersOverride.meterType);
+            if (filtersOverride.meterMake && filtersOverride.meterMake !== 'all')
+                params.append('manufacturer', filtersOverride.meterMake);
+            if (filtersOverride.location && filtersOverride.location !== 'all')
+                params.append('location', filtersOverride.location);
+            
+            const response = await fetch(`${BACKEND_URL}/meters?${params.toString()}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                setTableData(
+                    data.data.map((row: any) => ({
+                        ...row,
+                        meterMake: row.meterMake || row.manufacturer || '',
+                    }))
+                );
+                setServerPagination(data.pagination);
+                setError(null);
+            } else {
+                throw new Error(data.message || 'Failed to fetch meter table');
+            }
+        } catch (err: any) {
+            console.error(err.message || 'Failed to fetch meter table');
+            setError('Failed to fetch meter data. Please try again.');
+            setTableData([]);
+        } finally {
+            setIsTableLoading(false);
+        }
     };
 
     useEffect(() => {
-        fetch(`${BACKEND_URL}/meters/stats`)
-            .then((res) => res.json())
-            .then((data) => {
+        const fetchMeterStats = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+                
+                const response = await fetch(`${BACKEND_URL}/meters/stats`);
+                const data = await response.json();
+                
                 if (data.success) {
                     const stats = data.data;
                     const cards = [
                         {
                             id: 1,
                             title: 'Total Meters',
-                            value: stats.totalMeters,
-                            subtitle1: '1100 Active',
-                            subtitle2: '',
+                            value: stats.totalMeters || 'N/A',
+                            subtitle1: `${stats.activeMeters || 'N/A'} Active`,
+                            subtitle2: `${stats.inactiveMeters || 'N/A'} Inactive`,
                             icon: 'icons/meter.svg',
                         },
                         {
                             id: 2,
                             title: 'Meter Makes',
-                            value: stats.makes?.length ?? 0,
+                            value: stats.makes?.length || 'N/A',
                             subtitle1: 'Unique Makes',
-                            subtitle2: '',
+                            subtitle2: 'Available',
                             icon: 'icons/meter-make.svg',
                         },
                         {
                             id: 3,
                             title: 'Meter Types',
-                            value: stats.types?.length ?? 0,
+                            value: stats.types?.length || 'N/A',
                             subtitle1: 'Unique Types',
-                            subtitle2: '',
+                            subtitle2: 'Available',
                             icon: 'icons/mapped-meter.svg',
                         },
                         {
                             id: 4,
                             title: 'Connection Types',
-                            value: Object.keys(stats.connectionTypes || {})
-                                .length,
+                            value: Object.keys(stats.connectionTypes || {}).length || 'N/A',
                             subtitle1: 'Unique Connection Types',
-                            subtitle2: '',
+                            subtitle2: 'Available',
                             icon: 'icons/connection-type.svg',
                         },
                     ];
                     setMeterData(cards);
                 } else {
-                    throw new Error(
-                        data.message || 'Failed to fetch meter stats'
-                    );
+                    throw new Error(data.message || 'Failed to fetch meter stats');
                 }
-            })
-            .catch((err) => {
+            } catch (err: any) {
                 console.error(err.message || 'Failed to fetch meter stats');
-                setMeterData(demoMeterData);
-            });
+                setError('Failed to fetch meter statistics. Please try again.');
+                setMeterData(initialMeterData);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchMeterStats();
         fetchMeters();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-
-
 
     const handleFilterChange = (e: {
         target: { name: string; value: string };
@@ -384,6 +333,11 @@ export default function Meters() {
         setSelectedMeter(null);
     };
 
+    const handleRetry = () => {
+        setError(null);
+        window.location.reload();
+    };
+
     const [tableColumns] = useState([
         { key: 'sNo', label: 'Sl No' },
         { key: 'meterSerialNumber', label: 'Meter SI No' },
@@ -398,27 +352,15 @@ export default function Meters() {
 
     // Generate filter options from allMeters
     const meterTypeOptions = [
-        // { value: 'all', label: 'Filter By Status' },
-        // ...Array.from(new Set(allMeters.map((row) => row.meterType)))
-        //     .filter(Boolean)
-        //     .map((type) => ({ value: type, label: type })),
         { value: 'active', label: 'Active' },
         { value: 'replaced', label: 'Replaced' },
         { value: 'inactive', label: 'Inactive' },
     ];
     const meterMakeOptions = [
-        // { value: 'all', label: 'Filter By Meter Types' },
-        // ...Array.from(new Set(allMeters.map((row) => row.meterMake)))
-        //     .filter(Boolean)
-        //     .map((make) => ({ value: make, label: make })),
         { value: 'prepaid', label: 'Prepaid' },
         { value: 'postpaid', label: 'Postpaid' },
     ];
     const locationOptions = [
-        // { value: 'all', label: 'Filter By Mapping' },
-        // ...Array.from(new Set(allMeters.map((row) => row.location)))
-        //     .filter(Boolean)
-        //     .map((loc) => ({ value: loc, label: loc })),
         { value: 'mapped', label: 'Mapped' },
         { value: 'unmapped', label: 'Unmapped' },
     ];
@@ -427,6 +369,24 @@ export default function Meters() {
         <Suspense fallback={<div>Loading...</div>}>
             <Page
                 sections={[
+                    // Error section
+                    ...(error ? [{
+                        layout: {
+                            type: 'column' as const,
+                            gap: 'gap-4',
+                        },
+                        components: [
+                            {
+                                name: 'Error',
+                                props: {
+                                    visibleErrors: [error],
+                                    onRetry: handleRetry,
+                                    showRetry: true,
+                                    maxVisibleErrors: 1,
+                                },
+                            },
+                        ],
+                    }] : []),
                     {
                         layout: {
                             type: 'row',
@@ -439,7 +399,6 @@ export default function Meters() {
                                     title: 'Meters List',
                                     onBackClick: () => window.history.back(),
                                     backButtonText: 'Back to Dashboard',
-                                    // buttonsLabel: 'Add Meter',
                                     variant: 'primary',
                                     onClick: () =>
                                         console.log('Adding new meter...'),
@@ -487,6 +446,7 @@ export default function Meters() {
                                              subtitle1: meter.subtitle1,
                                              subtitle2: meter.subtitle2,
                                              bg: "bg-stat-icon-gradient",
+                                             loading: isLoading,
                                          },
                                      })),
                                 },
@@ -513,6 +473,7 @@ export default function Meters() {
                                                 value: filters.meterType,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable: false,
                                             },
                                         },
                                         {
@@ -524,6 +485,7 @@ export default function Meters() {
                                                 value: filters.meterMake,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable: false,
                                             },
                                         },
                                         {
@@ -536,6 +498,7 @@ export default function Meters() {
                                                 value: filters.location,
                                                 onChange: handleFilterChange,
                                                 className: 'w-48',
+                                                searchable: false,
                                             },
                                         },
                                     ],
@@ -558,7 +521,8 @@ export default function Meters() {
                                             props: {
                                                 data: tableData,
                                                 columns: tableColumns,
-                                                showHeader: false,
+                                                showHeader: true,
+                                                availableTimeRanges: [],
                                                 headerTitle: 'Meter Management',
                                                 dateRange: 'Real-time data',
                                                 searchable: true,
@@ -566,8 +530,7 @@ export default function Meters() {
                                                 pagination: true,
                                                 showActions: true,
                                                 text: 'Meter Management Table',
-                                                serverPagination:
-                                                    serverPagination,
+                                                serverPagination: serverPagination,
                                                 onPageChange: handlePageChange,
                                                 onEdit: handleEditMeter,
                                                 onView: (row: TableData) =>
@@ -575,56 +538,58 @@ export default function Meters() {
                                                         `/meter-details/${row.meterNumber}`
                                                     ),
                                                 className: 'w-full',
+                                                loading: isTableLoading,
+                                                emptyMessage: 'No data available',
                                             },
                                         },
                                     ],
                                 },
                             ],
                         },
-                                         },
-                     // Edit Meter Modal Section
-                     {
-                         layout: {
-                             type: 'row',
-                             className: '',
-                         },
-                         components: [
-                             {
-                                 name: 'Modal',
-                                 props: {
-                                     isOpen: isEditModalOpen,
-                                     onClose: handleCloseModal,
-                                     title: `Edit Meter - ${selectedMeter?.meterSerialNumber || selectedMeter?.meterNumber || ''}`,
-                                     size: 'lg',
-                                     showCloseIcon: true,
-                                     backdropClosable: !isLoading,
-                                     showForm: true,
-                                     formFields: editMeterFormFields,
-                                     onSave: handleSaveMeter,
-                                     saveButtonLabel: isLoading ? "Saving..." : "Save Changes",
-                                     cancelButtonLabel: "Cancel",
-                                     formInitialData: selectedMeter ? {
-                                         meterSerialNumber: selectedMeter.meterSerialNumber || '',
-                                         modemSerialNumber: selectedMeter.modemSerialNumber || '',
-                                         meterType: selectedMeter.meterType || '',
-                                         meterMake: selectedMeter.meterMake || '',
-                                         consumerName: selectedMeter.consumerName || '',
-                                         location: selectedMeter.location || '',
-                                         installationDate: selectedMeter.installationDate || '',
-                                         status: selectedMeter.status || '',
-                                     } : {},
-                                     gridLayout: {
-                                         gridRows: 4,
-                                         gridColumns: 2,
-                                         gap: 'gap-4',
-                                         className: 'w-full',
-                                     },
-                                 },
-                             },
-                         ],
-                     },
-                 ]}
-             />
+                    },
+                    // Edit Meter Modal Section
+                    {
+                        layout: {
+                            type: 'row',
+                            className: '',
+                        },
+                        components: [
+                            {
+                                name: 'Modal',
+                                props: {
+                                    isOpen: isEditModalOpen,
+                                    onClose: handleCloseModal,
+                                    title: `Edit Meter - ${selectedMeter?.meterSerialNumber || selectedMeter?.meterNumber || ''}`,
+                                    size: 'lg',
+                                    showCloseIcon: true,
+                                    backdropClosable: !isLoading,
+                                    showForm: true,
+                                    formFields: editMeterFormFields,
+                                    onSave: handleSaveMeter,
+                                    saveButtonLabel: isLoading ? "Saving..." : "Save Changes",
+                                    cancelButtonLabel: "Cancel",
+                                    formInitialData: selectedMeter ? {
+                                        meterSerialNumber: selectedMeter.meterSerialNumber || '',
+                                        modemSerialNumber: selectedMeter.modemSerialNumber || '',
+                                        meterType: selectedMeter.meterType || '',
+                                        meterMake: selectedMeter.meterMake || '',
+                                        consumerName: selectedMeter.consumerName || '',
+                                        location: selectedMeter.location || '',
+                                        installationDate: selectedMeter.installationDate || '',
+                                        status: selectedMeter.status || '',
+                                    } : {},
+                                    gridLayout: {
+                                        gridRows: 4,
+                                        gridColumns: 2,
+                                        gap: 'gap-4',
+                                        className: 'w-full',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ]}
+            />
         </Suspense>
     );
 }

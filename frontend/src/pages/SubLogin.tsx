@@ -8,7 +8,7 @@ import { login } from "@/api/subAppAuth";
 const slides: CarouselSlide[] = [
   {
     title: "Welcome to the Sub-App!",
-    img: "/images/energy-analytics.jpg",
+    img: "/images/Slide-1.jpg",
   },
   {
     title: "Feature Highlight",

@@ -120,12 +120,12 @@ function NodeChart({
     const processHierarchicalData = (data: any, parentId: string = '', level: number = 0, xOffset: number = 0) => {
       if (!data || typeof data !== 'object') return;
       
-      const HORIZONTAL_LEVEL_GAP = 300;
-      const VERTICAL_NODE_GAP = 100;
-      const LOCATION_VERTICAL_GAP = 150;
-      const START_X = 80;
-      const START_Y = 60;
-      const NODE_HEIGHT = 50;
+      const HORIZONTAL_LEVEL_GAP = 350;
+      const VERTICAL_NODE_GAP = 120;
+      const LOCATION_VERTICAL_GAP = 180;
+      const START_X = 100;
+      const START_Y = 80;
+      const NODE_HEIGHT = 60;
       
       if (Array.isArray(data)) {
         data.forEach((item, index) => {
@@ -232,13 +232,21 @@ function NodeChart({
     processHierarchicalData(hierarchicalData);
     
     nodes.forEach((node) => {
-      const level = Math.floor(node.x / 300);
-      node.x = 80 + level * 300;
+      const level = Math.floor(node.x / 350);
+      node.x = 100 + level * 350;
       
-      const levelNodes = nodes.filter(n => Math.floor(n.x / 300) === level);
+      const levelNodes = nodes.filter(n => Math.floor(n.x / 350) === level);
       const levelIndex = levelNodes.findIndex(n => n.id === node.id);
-      const verticalGap = level === 0 ? 150 : 100;
-      node.y = 60 + levelIndex * verticalGap;
+      const verticalGap = level === 0 ? 180 : 120;
+      node.y = 80 + levelIndex * verticalGap;
+      
+      // Center nodes within their level for better visual balance
+      const levelNodeCount = levelNodes.length;
+      if (levelNodeCount > 1) {
+        const totalHeight = (levelNodeCount - 1) * verticalGap;
+        const startY = 80 - (totalHeight / 2);
+        node.y = startY + levelIndex * verticalGap;
+      }
       
       node.x = Math.round(node.x / 10) * 10;
       node.y = Math.round(node.y / 10) * 10;
@@ -408,10 +416,10 @@ function NodeChart({
   const findNodeById = (id: string) => nodes.find((n) => n.id === id);
 
   const getEdgePath = (source: Node, target: Node, zoom: number, pan: { x: number, y: number }, edgeStyle: string = 'curved') => {
-    const x1 = (source.x + 75) * zoom + pan.x;
-    const y1 = (source.y + 25) * zoom + pan.y;
-    const x2 = (target.x + 75) * zoom + pan.x;
-    const y2 = (target.y + 25) * zoom + pan.y;
+    const x1 = (source.x + 90) * zoom + pan.x;
+    const y1 = (source.y + 30) * zoom + pan.y;
+    const x2 = (target.x + 90) * zoom + pan.x;
+    const y2 = (target.y + 30) * zoom + pan.y;
     
     switch (edgeStyle) {
       case 'straight':
@@ -862,8 +870,8 @@ function NodeChart({
               position: 'absolute',
               left: node.x * zoom + pan.x,
               top: node.y * zoom + pan.y,
-              width: Math.max(180, node.label.length * 12) * zoom,
-              height: 50 * zoom,
+              width: Math.max(200, node.label.length * 14) * zoom,
+              height: 60 * zoom,
               backgroundColor: style.backgroundColor || '#ffffff',
               border: `${2 * zoom}px solid ${style.borderColor || '#e0e0e0'}`,
               borderRadius: 8 * zoom,

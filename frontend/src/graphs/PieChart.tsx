@@ -144,11 +144,10 @@ const PieChart: React.FC<PieChartProps> = React.memo(({
     if (showNoDataMessage && (!data || data.length === 0)) {
         return (
             <div className="w-full h-full flex items-center justify-center rounded-lg" 
-                 style={{ backgroundColor: getAxisColor('--color-secondary-light', '--color-primary-dark-light') }}
+                 style={{ backgroundColor: getAxisColor('', '') }}
                  role="img" aria-label={ariaLabel}>
                 <div className="text-center">
-                    <div className="text-gray-400 dark:text-gray-500 text-lg mb-2">🥧</div>
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">No data available</p>
+                    <p className="text-secondary dark:text-white text-sm">No data available</p>
                 </div>
             </div>
         );

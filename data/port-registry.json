@@ -1,5 +1,5 @@
 {
-  "nextPort": 4240,
+  "nextPort": 4251,
   "deployedApps": {
     "12345678": {
       "port": 4227,
@@ -12,8 +12,8 @@
       "path": "C:\\xampp\\htdocs\\example-backend"
     },
     "example-app": {
-      "port": 4237,
-      "deployedAt": "2025-08-19T07:59:50.515Z",
+      "port": 4248,
+      "deployedAt": "2025-08-20T09:58:45.599Z",
       "path": "C:\\xampp\\htdocs\\example-app-backend"
     },
     "madhu": {
@@ -1015,6 +1015,41 @@
       "port": 4239,
       "deployedAt": "2025-08-19T12:41:53.542Z",
       "path": "C:\\xampp\\htdocs\\demo-app-backend"
+    },
+    "gmr": {
+      "port": 4240,
+      "deployedAt": "2025-08-20T05:14:38.051Z",
+      "path": "C:\\xampp\\htdocs\\gmr-backend"
+    },
+    "sample-app": {
+      "port": 4241,
+      "deployedAt": "2025-08-20T05:28:07.859Z",
+      "path": "C:\\xampp\\htdocs\\sample-app-backend"
+    },
+    "dtr": {
+      "port": 4244,
+      "deployedAt": "2025-08-20T06:42:15.630Z",
+      "path": "C:\\xampp\\htdocs\\dtr-backend"
+    },
+    "temp-app": {
+      "port": 4246,
+      "deployedAt": "2025-08-20T08:17:53.960Z",
+      "path": "C:\\xampp\\htdocs\\temp-app-backend"
+    },
+    "dev-app": {
+      "port": 4247,
+      "deployedAt": "2025-08-20T08:59:10.643Z",
+      "path": "C:\\xampp\\htdocs\\dev-app-backend"
+    },
+    "trial-app": {
+      "port": 4249,
+      "deployedAt": "2025-08-20T10:00:01.467Z",
+      "path": "C:\\xampp\\htdocs\\trial-app-backend"
+    },
+    "pipeline": {
+      "port": 4250,
+      "deployedAt": "2025-08-21T20:57:42.273Z",
+      "path": "C:\\xampp\\htdocs\\pipeline-backend"
     }
   }
 }

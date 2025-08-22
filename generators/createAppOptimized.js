@@ -143,7 +143,7 @@ function copyAssets(baseDir, formData) {
     const moduleToPageMapping = {
         // Dashboard modules
         'consumer_dashboard': ['ConsumerDashboard.tsx'],
-        'dtr_dashboard': ['DTRDashboard.tsx', 'Feeders.tsx'],
+        'dtr_dashboard': ['DTRDashboard.tsx', 'DTRDetailPage.tsx', 'Feeders.tsx'],
         
         // User management modules
         'users': ['Users.tsx', 'UserDetail.tsx', 'AddUser.tsx'], // Users includes UserDetail and AddUser
