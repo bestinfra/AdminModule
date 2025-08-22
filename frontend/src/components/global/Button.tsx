@@ -10,9 +10,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     | "primarysmall"
     | "danger"
     | "warning"                                                                     
-    | "test"
-    | "asset"
-    | "success";
+    | "asset";
   size?: "small" | "medium" | "large";
   loading?: boolean;
   icon?: React.ReactNode;
@@ -57,15 +55,11 @@ const Button = React.memo<ButtonProps>(
       primarysmall:
         "bg-primary text-white border-primary h-8",
       danger:
-        "bg-danger text-white border-danger hover:bg-danger-alt hover:border-danger-alt hover:text-danger active:bg-danger",
+        "bg-danger text-white border-danger hover:bg-white hover:text-danger hover:border-danger",
       warning:
         "bg-warning text-white border-warning hover:bg-white hover:text-warning",
-      test:
-        "bg-primary-lightest text-secondary border-white hover:bg-secondary hover:text-white hover:border-secondary",
       asset:
         "bg-primary-lightest text-secondary border-primary-lightest hover:bg-white hover:text-secondary",
-      success:
-        "bg-secondary text-white border-secondary hover:bg-white hover:text-secondary",
     };
 
     /** Loading state */
