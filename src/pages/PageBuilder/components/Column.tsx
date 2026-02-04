@@ -24,23 +24,19 @@ const Column: React.FC<ColumnProps> = ({
 
     return (
         <div
-            key={component.id}
             onClick={handleClick}
             className="min-h-[60px] border border-dashed border-gray-200 rounded-md h-full bg-gray-50/50 hover:bg-gray-50 transition-colors duration-200">
             <DroppableArea id={component.id} onDrop={onDrop}>
-                {component.children?.map((child) => {
-                    console.log('Rendering child in column:', child);
-                    return (
-                        <div key={child.id} className="w-full">
-                            {renderComponent({
-                                component: child,
-                                onRowClick,
-                                onTextChange,
-                                onDrop,
-                            })}
-                        </div>
-                    );
-                })}
+                {component.children?.map((child) => (
+                    <div key={child.id} className="w-full">
+                        {renderComponent({
+                            component: child,
+                            onRowClick,
+                            onTextChange,
+                            onDrop,
+                        })}
+                    </div>
+                ))}
             </DroppableArea>
         </div>
     );

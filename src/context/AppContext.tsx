@@ -47,7 +47,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     const toggleSidebar = () => {
-        setIsSidebarCollapsed((prev) => !prev);
+        setIsSidebarCollapsed((prev: boolean) => !prev);
     };
 
     return (
@@ -63,7 +63,17 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({
     );
 };
 
-export const useApp = () => {
+export const useApp = (): AppContextType => {
+    // Check for global context first (for federated components)
+    const globalContext = (window as any).__FEDERATED_APP_CONTEXT__;
+    if (globalContext) {
+        const context = useContext(globalContext);
+        if (context) {
+            return context as AppContextType;
+        }
+    }
+    
+    // Fallback to local context
     const context = useContext(AppContext);
     if (context === undefined) {
         throw new Error('useApp must be used within an AppProvider');

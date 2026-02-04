@@ -34,7 +34,6 @@ export const renderComponent = ({
             case 'row':
                 return (
                     <Row
-                        key={component.id}
                         component={component}
                         onRowClick={onRowClick}
                         onTextChange={onTextChange}
@@ -44,7 +43,6 @@ export const renderComponent = ({
             case 'column':
                 return (
                     <Column
-                        key={component.id}
                         component={component}
                         onRowClick={onRowClick}
                         onTextChange={onTextChange}
@@ -54,15 +52,14 @@ export const renderComponent = ({
             case 'text':
                 return (
                     <TextBlock
-                        key={component.id}
                         component={component}
                         onTextChange={onTextChange}
                     />
                 );
             case 'card':
-                return <CardBlock key={component.id} component={component} />;
+                return <CardBlock component={component} />;
             case 'table':
-                return <TableBlock key={component.id} component={component} />;
+                return <TableBlock component={component} />;
             default:
                 return null;
         }
@@ -107,15 +104,17 @@ const Canvas: React.FC<CanvasProps> = ({
             className={`min-h-full p-6 rounded-lg border border-dashed border-gray-300 transition-colors duration-200 ${
                 isOver ? 'bg-gray-100' : 'bg-white'
             }`}>
-            {components.map((component) =>
-                renderComponent({
-                    component,
-                    onRowClick,
-                    onTextChange,
-                    onDrop,
-                    onDelete,
-                })
-            )}
+            {components.map((component) => (
+                <React.Fragment key={component.id}>
+                    {renderComponent({
+                        component,
+                        onRowClick,
+                        onTextChange,
+                        onDrop,
+                        onDelete,
+                    })}
+                </React.Fragment>
+            ))}
             {components.length === 0 && (
                 <div className="text-center py-12 text-gray-500">
                     Drag and drop components here

@@ -8,8 +8,6 @@ import {
     FaCalendarAlt,
   FaFileAlt,
   FaBell,
-  FaShoppingCart,
-  FaEnvelope,
 } from 'react-icons/fa';
 
 export interface Module {

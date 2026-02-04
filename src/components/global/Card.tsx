@@ -4,9 +4,11 @@ interface CardProps {
     icon: string;
     showTrend?: boolean;
     comparisonValue?: number;
+    previousValue?: string; // new prop
     subtitle1?: string;
     subtitle2?: string;
     loading?: boolean;
+    onValueClick?: () => void; // new prop
 }
 
 import CardSkeleton from '../skeletons/CardSkeleton';
@@ -17,22 +19,28 @@ const Card = ({
     icon,
     showTrend,
     comparisonValue,
+    previousValue, // new prop
     subtitle1,
     subtitle2,
     loading = false,
+    onValueClick, // new prop
 }: CardProps) => {
     if (loading) {
         return <CardSkeleton />;
     }
 
     return (
-        <article className="rounded-3xl bg-secondary shadow-md/20 shadow-black dark:bg-dark-primary dark:shadow-md/60 dark:shadow-black">
-            <section className="flex justify-between items-start p-6 border border-secondary-2 bg-white dark:bg-dark-secondary rounded-3xl dark:border dark:border-dark-border">
+        <article className="rounded-3xl bg-primary-lightest shadow-md/20 shadow-black dark:bg-primary-dark-light dark:shadow-md/60 dark:shadow-black  dark:border dark:border-dark-border  ">
+            <section className="flex justify-between items-start p-5 border border-primary-border bg-white dark:bg-primary-dark rounded-3xl dark:border dark:border-dark-border">
                 <div className="space-y-2">
                     <h3 className="text-base text-main dark:text-white">
                         {title}
                     </h3>
-                    <p className="text-2xl font-bold text-primary flex items-center gap-2">
+                    <p
+                        className={`text-xl font-bold flex items-center gap-2 ${onValueClick ? 'cursor-pointer hover:underline' : ''}`}
+                        style={{ color: 'var(--color-primary)' }}
+                        onClick={onValueClick}
+                    >
                         {value}
                         {showTrend && (
                             <span
@@ -44,7 +52,7 @@ const Card = ({
                                 }
                                 className={
                                     comparisonValue && comparisonValue > 0
-                                        ? 'bg-success rounded-full p-1'
+                                        ? 'bg-secondary rounded-full p-1'
                                         : 'bg-error rounded-full p-1'
                                 }>
                                 <img
@@ -59,21 +67,24 @@ const Card = ({
                             </span>
                         )}
                     </p>
+                    {previousValue && (
+                        <p className="text-xs text-gray-400 font-normal -mt-1 mb-1">{previousValue}</p>
+                    )}
                 </div>
                 {icon && (
-                    <figure className="p-2 bg-secondary dark:bg-dark-primary rounded-full w-12 h-12 flex items-center justify-center">
-                        <img src={icon} alt={`${title} Icon`} className="" />
+                    <figure className="p-2 bg-gradient-primary  dark:bg-dark-secondary rounded-full w-12 h-12 flex items-center justify-center ">
+                        <img src={icon} alt={`${title} Icon`} className="w-5 h-5" />
                     </figure>
                 )}
             </section>
-            <footer className="flex justify-between px-6 py-3 space-y-1">
+            <footer className="flex justify-between px-5 py-3 space-y-1">
                 {subtitle1 && (
-                    <p className="text-base m-0 text-main dark:text-white">
+                    <p className="text-gray-600 m-0 font-light text-main dark:text-subinfo text-sm">
                         {subtitle1}
                     </p>
                 )}
                 {subtitle2 && (
-                    <p className="text-base m-0 text-main dark:text-white">
+                            <p className="text-gray-500 m-0 font-extralight text-main dark:text-subinfo text-sm">
                         {subtitle2}
                     </p>
                 )}

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 interface SearchInputProps {
     onSearch?: (query: string) => void;
@@ -33,22 +33,22 @@ const Input = ({
                 ref={inputRef}
                 type="search"
                 placeholder={placeholder}
-                className="w-full px-4 py-3 rounded-[2.5rem] border border-light-border dark:border-dark-border dark:bg-dark-secondary dark:text-light focus:outline-none focus:ring-2"
+                className="w-full px-4 py-3 rounded-[2.5rem] border border-primary-border px-2 py-1 text-main text-sm font-light bg-white dark:bg-primary-dark rounded dark:border-dark-border dark:bg-dark-secondary dark:text-white focus:outline-none placeholder:text-primary-dark dark:placeholder:text-main"
                 aria-label="Search"
                 onChange={(e) => onSearch?.(e.target.value)}
             />
             {showShortcut && (
-                <div className="absolute right-12 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm text-light ">
-                    <kbd className="px-2 py-1 text-base font-semibold text-light bg-secondary dark:bg-dark-primary rounded">
+                <div className="absolute right-12 top-1/2 -translate-y-1/2 flex items-center gap-1 text-sm text-white ">
+                    <kbd className="px-2  text-primary-dark-light text-sm font-light bg-primary-lightest dark:bg-primary-dark-light rounded dark:text-subinfo">
                         Ctrl
                     </kbd>
-                    <span>+</span>
-                    <kbd className="px-2 py-1 text-base font-semibold text-light bg-secondary dark:bg-dark-primary rounded">
+                    <span className="text-primary-dark  dark:bg-primary-dark dark:text-subinfo">+</span>
+                    <kbd className="px-2  text-primary-dark text-sm font-light bg-primary-lightest dark:bg-primary-dark-light rounded dark:text-subinfo">
                         K
                     </kbd>
                 </div>
             )}
-            <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-secondary dark:bg-dark-primary rounded-full w-8 h-8 flex items-center justify-center">
+            <span className="absolute right-2 top-1/2 -translate-y-1/2 bg-primary-lightest dark:bg-primary-dark rounded-full w-8 h-8 flex items-center justify-center">
                 <img
                     src="/icons/search-icon.svg"
                     alt="Search"

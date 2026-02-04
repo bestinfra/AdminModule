@@ -8,12 +8,17 @@ export default defineConfig({
     react(),
     tailwindcss(),
     federation({
-      name: 'ticketing',
+      name: 'SuperAdmin',
       filename: 'remoteEntry.js',
       exposes: {
-        './Ticket': './src/pages/ticket_module/Ticket.tsx',
-        './ThemeProvider': './src/providers/ThemeProvider.tsx',
-        './useTheme': './src/providers/ThemeProvider.tsx',
+        './Dashboard': './src/pages/Dashboard.tsx',
+        './Consumers': './src/pages/Consumers.tsx',
+        './Sidebar': './src/components/global/Sidebar.tsx',
+        './Header': './src/components/global/Header.tsx',
+        './context/AppContext': './src/context/AppContext.tsx',
+        './AppProvider': './src/context/AppProvider.tsx',
+        './useApp': './src/context/AppContext.tsx',
+        './Ticket': './src/pages/AllTickets.tsx',
       },
       shared: ['react', 'react-dom'],
     }),
@@ -22,8 +27,41 @@ export default defineConfig({
     target: 'esnext',
     minify: false,
     cssCodeSplit: false,
+    rollupOptions: {
+      output: {
+        // Ensure CSS is properly bundled
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name === 'global.css') {
+            return 'assets/global.css';
+          }
+          return 'assets/[name]-[hash][extname]';
+        },
+      },
+    },
+  },
+  css: {
+    // Ensure CSS is processed during build
+    postcss: {
+      plugins: [
+        // Tailwind CSS v4 handles this automatically
+      ],
+    },
   },
   server: {
-    port: 3001,
+    port: 5173,
+    fs: {
+      allow: ['..'],
+    },
+    proxy: {
+      '/api': {
+        target: 'https://arcticterntech.in:8443',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '/attSmart')
+      }
+    }
+  },
+  preview: {
+    port: 3000,
   },
 })

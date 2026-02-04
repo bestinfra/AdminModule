@@ -1,13 +1,21 @@
 {
-  "name": "ticketing-module",
+  "name": "super-admin",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:css": "vite build --mode production",
+    "build:dev": "vite build --mode development",
+    "build:verify": "npm run build && node scripts/verify-build.js",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node server.js",
+    "dev:full": "concurrently \"npm run server\" \"npm run dev\"",
+    "federation": "npm run build && npm run preview -- --port 3000 --host",
+    "federation:debug": "npm run build && echo 'Build completed, checking files...' && ls -la dist/assets/ && npm run preview -- --port 3000 --host",
+    "federation:simple": "vite build && vite preview --port 3000 --host"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.7",
@@ -17,7 +25,9 @@
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^10.0.0",
     "antd": "^5.25.2",
+    "cors": "^2.8.5",
     "echarts-for-react": "^3.0.2",
+    "express": "^4.21.2",
     "js-cookie": "^3.0.5",
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
@@ -28,6 +38,7 @@
     "react-dnd-html5-backend": "^16.0.1",
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
+    "react-organizational-chart": "^2.2.1",
     "react-router-dom": "^7.6.1",
     "uuid": "^11.1.0",
     "vite-plugin-federation": "^0.0.1"
@@ -44,6 +55,7 @@
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@vitejs/plugin-react": "^4.4.1",
+    "concurrently": "^8.2.2",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",

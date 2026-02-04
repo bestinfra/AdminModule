@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Button from './Button';
 import Cookies from 'js-cookie';
@@ -6,9 +6,11 @@ import { useApp } from '../../context/AppContext';
 
 interface SubMenuItem {
     title: string;
-    link: string;
+    link?: string;
     icon?: string;
     count?: number;
+    hasSubmenu?: boolean;
+    submenu?: SubMenuItem[];
 }
 
 interface MenuItem {
@@ -27,6 +29,8 @@ interface MenuCategory {
 
 interface SidebarProps {
     isCollapsed: boolean;
+    currentPath?: string;
+    onNavigate?: (path: string) => void;
     menus?: MenuCategory[];
     logo?: {
         src: string;
@@ -58,32 +62,46 @@ interface SidebarProps {
 
 const defaultMenus: MenuCategory[] = [
     {
-        category: 'GENERAL',
+        category: 'MANAGEMENT',
         items: [
             {
                 title: 'Dashboard',
                 icon: '/icons/dashboard.svg',
                 link: '/',
-                count: 100,
             },
             {
-                title: 'Profile',
-                icon: '/icons/dashboard.svg',
-                link: '/user/profile',
+                title: 'DTR Dashboard',
+                icon: '/icons/dtr.svg',
+                link: '/dtr-dashboard',
             },
-        ],
-    },
-    {
-        category: 'MANAGEMENT',
-        items: [
+            {
+                title: 'Consumers',
+                icon: '/icons/customer-service.svg',
+                link: '/consumers',
+            },
+            {
+                title: 'Bills',
+                icon: '/icons/bills.svg',
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        title: 'Prepaid Transactions',
+                        link: '/bills/prepaid',
+                    },
+                    {
+                        title: 'Postpaid Bills',
+                        link: '/bills/postpaid',
+                    },
+                ],
+            },
             {
                 title: 'Tickets',
-                icon: '/icons/dashboard.svg',
+                icon: '/icons/support-tickets.svg',
                 hasSubmenu: true,
                 submenu: [
                     {
                         title: 'All Tickets',
-                        link: '/user/tickets/all',
+                        link: '/all-tickets',
                     },
                     {
                         title: 'My Tickets',
@@ -97,21 +115,29 @@ const defaultMenus: MenuCategory[] = [
                 ],
             },
             {
-                title: 'Reports',
-                icon: '/icons/dashboard.svg',
+                title: 'Apps',
+                icon: '/icons/apps-icon.svg',
+                link: '/apps',
+            },
+            // --- Asset Management menu item ---
+            // {
+            //     title: 'Asset Management',
+            //     icon: '/icons/apps-icon.svg',
+            //     link: '/asset-management',
+            // },
+            // --- End Asset Management menu item ---
+            {
+                title: 'Meter Management',
+                icon: '/icons/meter-management.svg',
                 hasSubmenu: true,
                 submenu: [
                     {
-                        title: 'Daily Reports',
-                        link: '/user/reports/daily',
+                        title: 'Data Logger Master',
+                        link: '/meter-management/data-logger-master',
                     },
                     {
-                        title: 'Weekly Reports',
-                        link: '/user/reports/weekly',
-                    },
-                    {
-                        title: 'Monthly Reports',
-                        link: '/user/reports/monthly',
+                        title: 'Meters List',
+                        link: '/meter-management/meters-list',
                     },
                 ],
             },
@@ -121,27 +147,8 @@ const defaultMenus: MenuCategory[] = [
         category: 'SETTINGS',
         items: [
             {
-                title: 'Settings',
-                icon: '/icons/dashboard.svg',
-                hasSubmenu: true,
-                submenu: [
-                    {
-                        title: 'Account Settings',
-                        link: '/user/settings/account',
-                    },
-                    {
-                        title: 'Preferences',
-                        link: '/user/settings/preferences',
-                    },
-                    {
-                        title: 'Notifications',
-                        link: '/user/settings/notifications',
-                    },
-                ],
-            },
-            {
                 title: 'Logout',
-                icon: '/icons/dashboard.svg',
+                icon: '/icons/logout.svg',
                 link: '/user/logout',
             },
         ],
@@ -152,7 +159,7 @@ const defaultProps: Partial<
     Omit<SidebarProps, 'isCollapsed' | 'onThemeToggle'>
 > = {
     logo: {
-        src: '/images/full-bi-logo.svg',
+        src: '/images/bi-blue-logo.svg',
         alt: 'Company Logo',
         collapsedSrc: '/images/changed-logo.svg',
     },
@@ -186,6 +193,8 @@ const defaultProps: Partial<
 };
 
 const Sidebar = ({
+    currentPath,
+    onNavigate,
     menus = defaultMenus,
     logo = defaultProps.logo,
     appDownload = defaultProps.appDownload,
@@ -198,7 +207,16 @@ const Sidebar = ({
     const [expandedMenus, setExpandedMenus] = useState<Record<string, boolean>>(
         {}
     );
-    const location = useLocation();
+    
+    // Use currentPath prop if provided, otherwise fallback to useLocation for standalone usage
+    let pathname = currentPath;
+    try {
+        const location = useLocation();
+        if (!pathname) pathname = location.pathname;
+    } catch (error) {
+        // useLocation failed, use currentPath or default to '/'
+        pathname = currentPath || '/';
+    }
 
     const toggleSubmenu = (menuTitle: string) => {
         setExpandedMenus((prev) => ({
@@ -213,13 +231,13 @@ const Sidebar = ({
                 isSidebarCollapsed ? 'w-20' : 'w-72'
             }`}>
             <nav
-                className={`h-screen flex flex-col justify-between items-center w-full bg-secondary dark:bg-dark-primary border-r border-r-secondary relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
+                className={`h-screen flex flex-col justify-between items-center w-full bg-primary-lightest dark:bg-primary-dark-light border-r border-r-primary-border relative dark:border-dark-border transition-[width] duration-300 ease-in-out ${
                     isSidebarCollapsed ? 'w-20' : 'w-72'
                 } ${className}`}
                 aria-label="Main navigation">
                 <div className="flex flex-col w-full h-fit overflow-hidden overflow-y-auto scrollbar-hide">
                     <header
-                        className={`sticky top-0 z-10 dark:bg-dark-secondary h-24 flex justify-center items-center ${
+                        className={`sticky top-0 z-10 dark:bg-primary-dark h-24 flex justify-center border-b border-b-primary-border dark:border-dark-border items-center ${
                             isSidebarCollapsed
                                 ? 'bg-primary px-4'
                                 : 'bg-white px-16'
@@ -227,8 +245,12 @@ const Sidebar = ({
                         <img
                             src={
                                 isSidebarCollapsed
-                                    ? logo?.collapsedSrc || logo?.src
-                                    : logo?.src
+                                    ? (isDarkMode
+                                        ? '/images/bi-white-logo.svg'
+                                        : logo?.collapsedSrc || logo?.src)
+                                    : (isDarkMode
+                                        ? '/images/bi-white-logo.svg'
+                                        : logo?.src)
                             }
                             alt={logo?.alt}
                             className={`md:block ${
@@ -236,14 +258,14 @@ const Sidebar = ({
                             }`}
                         />
                     </header>
-                    <main className="flex p-4 flex-col w-full md:block">
+                    <main className="flex p-4 flex-col w-full md:block dark:bg-primary-dark-light">
                         {menus.map((category, categoryIndex) => (
                             <section
                                 key={categoryIndex}
                                 className="flex flex-col w-full"
                                 aria-label={category.category}>
                                 {!isSidebarCollapsed && (
-                                    <h2 className="px-4 py-2 text-sm font-semibold uppercase text-rare ">
+                                    <h2 className="px-4 py-2 text-sm font-semibold uppercase text-neutral-dark  dark:text-white">
                                         {category.category}
                                     </h2>
                                 )}
@@ -259,11 +281,11 @@ const Sidebar = ({
                                                                     menuItem.title
                                                                 )
                                                             }
-                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer hover:bg-white  rounded-lg font-semibold w-full text-left ${
-                                                                location.pathname ===
+                                                            className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer rounded-lg font-semibold w-full text-left ${
+                                                                pathname ===
                                                                 menuItem.link
-                                                                    ? 'text-primary bg-white hover:text-primary'
-                                                                    : 'text-main hover:text-primary dark:text-white dark:hover:bg-dark-secondary dark:hover:text-white'
+                                                                    ? 'text-secondary bg-white dark:bg-brand-blue dark:text-white'
+                                                                    : 'text-main hover:bg-white hover:text-secondary dark:text-white dark:hover:bg-primary-dark-light  dark:hover:text-white'
                                                             }`}
                                                             aria-expanded={
                                                                 expandedMenus[
@@ -278,11 +300,11 @@ const Sidebar = ({
                                                                         menuItem.icon
                                                                     }
                                                                     alt=""
-                                                                    className={`w-6 h-6 icon-dark-filter ${
-                                                                        location.pathname ===
+                                                                    className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
+                                                                        pathname ===
                                                                         menuItem.link
                                                                             ? 'icon-filter'
-                                                                            : ''
+                                                                            : 'group-hover:icon-filter'
                                                                     }`}
                                                                     aria-hidden="true"
                                                                 />
@@ -316,59 +338,33 @@ const Sidebar = ({
                                                         {!isSidebarCollapsed && (
                                                             <ul
                                                                 id={`submenu-${menuItem.title}`}
-                                                                className={`flex flex-col overflow-hidden transition-all duration-300 ease-in-out ${
+                                                                className={`relative flex flex-col overflow-hidden transition-all duration-300 ease-in-out pl-0 ${
                                                                     expandedMenus[
-                                                                        menuItem
-                                                                            .title
+                                                                        menuItem.title
                                                                     ]
                                                                         ? 'max-h-[500px] opacity-100'
                                                                         : 'max-h-0 opacity-0'
                                                                 }`}>
+                                                                {/* Vertical line for submenu */}
+                                                                <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-gray-200"></span>
                                                                 {menuItem.submenu?.map(
                                                                     (
                                                                         subItem,
                                                                         subIndex
                                                                     ) => (
-                                                                        <li
-                                                                            key={
-                                                                                subIndex
-                                                                            }>
-                                                                            <Link
-                                                                                to={
-                                                                                    subItem.link
-                                                                                }
-                                                                                className={`flex justify-between items-center px-7 pr-4 py-2 text-sm font-semibold text-light group hover:text-primary transition-colors duration-200 ${
-                                                                                    location.pathname ===
-                                                                                    subItem.link
-                                                                                        ? 'text-primary dark:text-white dark:hover:text-white'
-                                                                                        : 'text-idle dark:hover:text-white'
-                                                                                }`}>
-                                                                                <span className="relative flex items-center">
-                                                                                    <span
-                                                                                        className={`absolute -left-4 w-1.5 h-1.5 rounded-full transition-colors duration-200 ${
-                                                                                            location.pathname ===
-                                                                                            subItem.link
-                                                                                                ? 'bg-primary dark:bg-white'
-                                                                                                : 'bg-idle '
-                                                                                        }`}></span>
-                                                                                    {
-                                                                                        subItem.title
-                                                                                    }
-                                                                                </span>
-                                                                                {subItem.count && (
-                                                                                    <span
-                                                                                        className={`w-7 h-7 rounded-full text-xs text-white font-bold flex group-hover:bg-brand justify-center hover:bg-brand items-center ${
-                                                                                            location.pathname ===
-                                                                                            subItem.link
-                                                                                                ? 'bg-brand'
-                                                                                                : 'bg-primary'
-                                                                                        }`}>
-                                                                                        {
-                                                                                            subItem.count
-                                                                                        }
-                                                                                    </span>
-                                                                                )}
-                                                                            </Link>
+                                                                        <li key={subIndex} className="relative">
+                                                                            {/* Horizontal line for each submenu item */}
+                                                                            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-5 h-0.5 bg-gray-200"></span>
+                                                                            <button
+                                                                                onClick={() => subItem.link && onNavigate?.(subItem.link)}
+                                                                                className={`block pl-8 pr-4 py-2 rounded-lg font-semibold transition-all duration-200 w-full text-left ${
+                                                                                    pathname === subItem.link
+                                                                                        ? 'bg-[linear-gradient(to_right,transparent_0_30%,white_30%_100%)] text-primary shadow'
+                                                                                        : 'text-gray-400 hover:text-primary'
+                                                                                }`}
+                                                                            >
+                                                                                {subItem.title}
+                                                                            </button>
                                                                         </li>
                                                                     )
                                                                 )}
@@ -376,25 +372,23 @@ const Sidebar = ({
                                                         )}
                                                     </div>
                                                 ) : (
-                                                    <Link
-                                                        to={
-                                                            menuItem.link || '#'
-                                                        }
-                                                        onClick={(e) => {
+                                                    <button
+                                                        onClick={() => {
                                                             if (
                                                                 menuItem.title ===
                                                                     'Logout' &&
                                                                 onLogout
                                                             ) {
-                                                                e.preventDefault();
                                                                 onLogout();
+                                                            } else if (menuItem.link) {
+                                                                onNavigate?.(menuItem.link);
                                                             }
                                                         }}
-                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group hover:bg-white dark:hover:bg-dark-secondary rounded-lg ${
-                                                            location.pathname ===
+                                                        className={`flex items-center gap-4 py-3 px-4 mb-1 text-sm cursor-pointer group rounded-lg w-full text-left ${
+                                                            pathname ===
                                                             menuItem.link
-                                                                ? 'text-primary bg-white hover:text-primary dark:bg-dark-secondary dark:text-white dark:hover:text-white'
-                                                                : 'text-main hover:text-primary dark:text-white dark:hover:text-white'
+                                                                ? 'text-primary bg-white dark:bg-primary dark:text-white'
+                                                                : 'text-main hover:bg-white hover:text-primary dark:text-white dark:hover:bg-primary-dark-light dark:hover:text-white'
                                                         }`}>
                                                         <span className="w-6 h-6 flex items-center justify-center">
                                                             <img
@@ -402,8 +396,8 @@ const Sidebar = ({
                                                                     menuItem.icon
                                                                 }
                                                                 alt=""
-                                                                className={`w-6 h-6 icon-dark-filter ${
-                                                                    location.pathname ===
+                                                                className={`w-6 h-6 icon-dark-filter transition-all duration-200 ${
+                                                                    pathname ===
                                                                     menuItem.link
                                                                         ? 'icon-filter'
                                                                         : ''
@@ -421,10 +415,10 @@ const Sidebar = ({
                                                                 {menuItem.count && (
                                                                     <span
                                                                         className={`w-7 h-7 rounded-full text-xs text-white font-bold flex justify-center group-hover:bg-brand items-center ${
-                                                                            location.pathname ===
+                                                                            pathname ===
                                                                             menuItem.link
-                                                                                ? 'bg-brand'
-                                                                                : 'bg-primary'
+                                                                                ? 'bg-primary dark:bg-secondary'
+                                                                                : 'bg-primary dark:bg-secondary'
                                                                         }`}>
                                                                         {
                                                                             menuItem.count
@@ -433,7 +427,7 @@ const Sidebar = ({
                                                                 )}
                                                             </div>
                                                         )}
-                                                    </Link>
+                                                    </button>
                                                 )}
                                             </li>
                                         )
@@ -443,7 +437,7 @@ const Sidebar = ({
                         ))}
                     </main>
                 </div>
-                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4">
+                <footer className="flex flex-col w-full justify-between gap-5 h-fit p-4 dark:bg-primary-dark-light">
                     {!isSidebarCollapsed ? (
                         <>
                             {appDownload?.enabled && (
@@ -458,7 +452,7 @@ const Sidebar = ({
                                             />
                                         </span>
 
-                                        <span className="bg-brand text-white text-xs font-medium rounded-lg px-2 py-1">
+                                        <span className="bg-secondary text-white text-xs font-medium rounded-lg px-2 py-1">
                                             New
                                         </span>
                                     </div>
@@ -467,7 +461,7 @@ const Sidebar = ({
                                             {appDownload.title}
                                         </h3>
                                         <p className="text-white text-sm font-semibold">
-                                            {appDownload.subtitle}
+                                            {""}
                                         </p>
                                     </div>
                                     <div className="flex items-center gap-2">
@@ -483,7 +477,7 @@ const Sidebar = ({
                                         />
                                         {footer?.showShareButton && (
                                             <button
-                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-secondary"
+                                                className="w-10 h-10 flex items-center justify-center bg-white rounded-full p-2 cursor-pointer transition-colors duration-300 hover:bg-primary-lightest"
                                                 aria-label="Share app"
                                                 onClick={onShareClick}>
                                                 <img
@@ -498,13 +492,13 @@ const Sidebar = ({
                                 </section>
                             )}
                             <div className="flex items-center justify-between w-full">
-                                <p className="text-xs text-light">
+                                <p className="text-xs text-light dark:text-subinfo">
                                     {footer?.copyright}
                                 </p>
 
                                 {footer?.showThemeToggle && (
                                     <button
-                                        className="w-10 h-10 border border-light-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
+                                        className="w-10 h-10 border border-primary-border dark:border-dark-border rounded-full flex justify-center items-center cursor-pointer"
                                         aria-label="Toggle dark mode"
                                         onClick={toggleTheme}>
                                         <img
